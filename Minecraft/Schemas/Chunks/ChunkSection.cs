@@ -1,3 +1,5 @@
+// This is the bane of my existence.
+
 using Minecraft.Schemas.Chunks.Palettes;
 
 namespace Minecraft.Schemas.Chunks;
@@ -40,56 +42,15 @@ public class ChunkSection {
         
         Palette palette = Palette.CreateOptimisedPalette(Blocks, 16, 8, 4);
 
+        // BLOCK COUNT
         w.WriteShort((short)palette.BlockCount());  // Number of non-air blocks in chunk section
-        // w.WriteShort((short)(dirt ? 1 : 0));  // Number of non-air blocks in chunk section
         
         // BLOCK STATES
         w.Write(palette.Serialise());
         
-        // DIRECT
-        // w.WriteUnsignedByte(15);  // Bits per entry: 15 bits per block state
-        // long[] blocks = new long[16*16*16];  // 16x16x16 blocks, all air
-        // for (int i = 0; i < blocks.Length; i++) {
-        //     blocks[i] = 11;
-        // }
-        // // blocks[0] = 11;
-        // w.WritePacketDataArray(15, blocks, false);  // 16x16x16 blocks, all air
-            
-        // INDIRECT
-        // w.WriteUnsignedByte(4);  // Bits per entry: indirect
-        // w.WritePrefixedArray([3, 11, 0], (i, writer) => writer.WriteVarInt(i));  // palette length + palette
-        // long[] blocks = new long[16 * 16 * 16];  // 16x16x16 blocks, all dirt
-        // for (int i = 0; i < blocks.Length; i++) {
-        //     blocks[i] = i % 2 == 0 ? 2 : 1;
-        // }
-        // w.WritePacketDataArray(4, blocks);  // 16x16x16 blocks, all air
-            
-        // SINGLE
-        // w.WriteUnsignedByte(0x00);  // Bits per entry: Single valued (only one block type for the whole sec)
-        // w.WriteVarInt(11);  // Our single value (air), obby is 20477
-        
         // BIOMES
-        // w.WriteUnsignedByte(0x01);  // Bits per entry: Indirect
-        // w.WriteVarInt(1); // Length of palette
-        // foreach (int biome in new[] {0x00}) {  // Biomes in the palette
-        //     w.WriteVarInt(biome);
-        // }
-        // // data array for biomes
-        // w.WritePrefixedArray([0xCCFFCCFFCCFFCCFFL], (l, writer) => writer.WriteLong((long)l));
-        
-        // w.WriteUnsignedByte(6);
-        // w.WritePacketDataArray(6, new long[64], false);
-        
         w.WriteUnsignedByte(0x00);  // Bits per entry: Single valued (only one block type for the whole sec)
         w.WriteVarInt(0);  // Our single value
-        
-        // w.WriteUnsignedByte(4);  // Bits per entry: indirect
-        // w.WritePrefixedArray([3, 11, 0], (i, writer) => writer.WriteVarInt(i));  // palette length + palette
-        // long[] biomes = new long[16 * 16 * 16];  // 16x16x16 blocks, all dirt
-        // for (int i = 0; i < biomes.Length; i++) {
-        //     biomes[i] = 2;
-        // }
-        // w.WritePacketDataArray(4, biomes);  // 16x16x16 blocks, all air
         
         return w.ToArray();
     }

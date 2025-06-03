@@ -1,9 +1,13 @@
 ﻿using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Worlds;
-using Minecraft.Implementations.Server.Worlds.Generators;
+using Minecraft.Implementations.Server.Worlds.TerrainProviders;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
+
+Console.WriteLine("Creating world...");
+World world = new(new SpawnCachedTerrainProvider(new TestingProvider(), 32), 16, 2, 10);
+Console.WriteLine("World created!");
 
 MinecraftServer server = new([
     new PlayerInfoFeature(),
@@ -22,7 +26,7 @@ MinecraftServer server = new([
             _ => $"Hello World! You are using §c{connection.Handshake!.Hostname}§r to connect"
         },
         preventsChatReports: true)),
-    new SpawnWorldFeature(new World(new TestingProvider(), 8)),
+    new SpawnWorldFeature(world),
     new PlayerLoginFeature()
 ]);
 
@@ -31,6 +35,8 @@ TcpMinecraftListener listener = new(connection => {
     server.AddConnection(connection);
     // cts.Cancel();
 }, cts.Token);
+
+Console.WriteLine("Server ready, listening...");
 await listener.Listen();
 
 await Task.Delay(-1);

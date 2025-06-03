@@ -21,7 +21,7 @@ public class PlayerLoginFeature(
         true,
         ["minecraft:overworld"],
         5,
-        8,
+        32,
         8,
         false,
         true,
@@ -46,7 +46,9 @@ public class PlayerLoginFeature(
             switch (e.Packet) {
                 // LOGIN
                 case ServerBoundLoginStartPacket ls: {
-                    e.Connection.SendPacket(new ClientBoundLoginSuccessPacket(ls.Uuid, ls.Name));
+                    e.Connection.SetCompression(1).ContinueWith(_ => {
+                        e.Connection.SendPackets(new ClientBoundLoginSuccessPacket(ls.Uuid, ls.Name));
+                    });
                     break;
                 }
                 

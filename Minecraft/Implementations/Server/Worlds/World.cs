@@ -8,12 +8,39 @@ using Minecraft.Schemas.Chunks;
 
 namespace Minecraft.Implementations.Server.Worlds;
 
-public class World(ITerrainProvider provider, int viewDistance = 8) {
+public class World(ITerrainProvider provider, int viewDistance = 8, int packetsPerTick = 10, int tickDelayMs = 100) {
     private readonly List<PlayerConnection> _players = [];
+    private const int UnloadDistanceMod = 1;
     private const string LoadedChunksDataId = "minecraftdotnet:world:loadedchunks";
+    private int UnloadDistance => viewDistance + UnloadDistanceMod;
 
     public void AddPlayer(PlayerConnection connection) {
         connection.SendPacket(new ClientBoundGameEventPacket(GameEvent.StartWaitingForLevelChunks, 0)).AsTask().ContinueWith(_2 => {
+            Queue<MinecraftPacket> waitingPackets = new();
+
+            bool disconnected = false;
+            connection.Disconnected += () => disconnected = true;
+            Task.Run(async () => {
+                while (!disconnected) {
+                    await Task.Delay(tickDelayMs);
+                    if (waitingPackets.Count == 0) {
+                        continue;
+                    }
+
+                    List<MinecraftPacket> packets = [];
+                    for (int i = 0; i < packetsPerTick; i++) {
+                        waitingPackets.TryDequeue(out MinecraftPacket? result);
+                        if (result == null) break;
+                        
+                        packets.Add(result);
+                    }
+
+                    // Console.WriteLine($"Sending {packets.Count} packets for terrain");
+                    _ = connection.SendPackets(false, packets.ToArray());
+                }
+            });
+            
+            // ON PACKET
             connection.Events.AddListener<PacketHandleEvent>(e => {
                 Vec3 pos;
                 switch (e.Packet) {
@@ -28,35 +55,41 @@ public class World(ITerrainProvider provider, int viewDistance = 8) {
                 }
 
                 ChunkPosition chunkPos = new((int)Math.Floor(pos.X / 16), (int)Math.Floor(pos.Z / 16));
-                List<ChunkPosition> loaded = GetLoadedChunks(connection);
+                HashSet<ChunkPosition> loaded = GetLoadedChunks(connection);
 
                 List<MinecraftPacket> neededPackets = [];
+                List<ChunkPosition> unloaded = [];
                 foreach (ChunkPosition loadedChunk in loaded) {
-                    if (!loadedChunk.IsWithinRadiusOf(chunkPos, viewDistance)) {
-                        neededPackets.Add(new ClientBoundUnloadChunkPacket(loadedChunk));  // not within radius, unload it
-                    }
+                    if (loadedChunk.IsWithinRadiusOf(chunkPos, UnloadDistance)) continue;
+                    
+                    neededPackets.Add(new ClientBoundUnloadChunkPacket(loadedChunk));  // not within radius, unload it
+                    unloaded.Add(loadedChunk);
+                    Console.WriteLine($"Unloading {loadedChunk.X}, {loadedChunk.Z}");
                 }
-                
+                foreach (ChunkPosition c in unloaded) {
+                    loaded.Remove(c);
+                }
+            
                 // Okay now get everything that should be loaded
-                List<ChunkPosition> visibleChunks = [];
                 for (int x = 0; x < viewDistance * 2 + 1; x++) {
                     for (int z = 0; z < viewDistance * 2 + 1; z++) {
-                        visibleChunks.Add(new ChunkPosition(x + chunkPos.X - viewDistance, z + chunkPos.Z - viewDistance));
+                        ChunkPosition chunk = new(x + chunkPos.X - viewDistance, z + chunkPos.Z - viewDistance);
+                        
+                        if (!loaded.Contains(chunk)) {
+                            // okay so we need to load chunk
+                            neededPackets.Add(GetChunkPacket(chunk));
+                            loaded.Add(chunk);
+                            Console.WriteLine($"Loading {chunk.X}, {chunk.Z}");
+                        }
                     }
                 }
+            
+                SetLoadedChunks(connection, loaded);
 
-                foreach (ChunkPosition chunk in visibleChunks) {
-                    if (!loaded.Any(c => c.Equals(chunk))) {
-                        neededPackets.Add(GetChunkPacket(chunk));
-                        Console.WriteLine($"Loading {chunk.X}, {chunk.Z}");
-                    }
-                }
-                
-                SetLoadedChunks(connection, visibleChunks);
-
-                if (neededPackets.Count != 0) {
-                    neededPackets.Add(new ClientBoundSetCenterChunkPacket(chunkPos));
-                    _ = connection.SendPackets(neededPackets.ToArray());
+                if (neededPackets.Count == 0) return;
+                neededPackets.Add(new ClientBoundSetCenterChunkPacket(chunkPos));
+                foreach (MinecraftPacket packet in neededPackets) {
+                    waitingPackets.Enqueue(packet);
                 }
             });
         });
@@ -68,30 +101,20 @@ public class World(ITerrainProvider provider, int viewDistance = 8) {
         _players.Remove(connection);
     }
 
-    public static List<ChunkPosition> GetLoadedChunks(PlayerConnection connection) {
-        if (connection.Data.TryGetValue(LoadedChunksDataId, out object? value)) return (List<ChunkPosition>)value!;
-        value = new List<ChunkPosition>();
+    public static HashSet<ChunkPosition> GetLoadedChunks(PlayerConnection connection) {
+        if (connection.Data.TryGetValue(LoadedChunksDataId, out object? value)) return (HashSet<ChunkPosition>)value!;
+        value = new HashSet<ChunkPosition>();
         connection.Data.Add(LoadedChunksDataId, value);
 
-        return (List<ChunkPosition>)value;
+        return (HashSet<ChunkPosition>)value;
     }
 
-    public static void SetLoadedChunks(PlayerConnection connection, List<ChunkPosition> chunks) {
+    public static void SetLoadedChunks(PlayerConnection connection, HashSet<ChunkPosition> chunks) {
         connection.Data[LoadedChunksDataId] = chunks;
     }
 
     public ClientBoundChunkDataAndUpdateLightPacket GetChunkPacket(ChunkPosition pos) {
-        ChunkData data = new();
-        for (int x = 0; x < 16; x++) {
-            for (int y = 0; y < 384; y++) {
-                for (int z = 0; z < 16; z++) {
-                    int absX = pos.X * 16 + x;
-                    int absZ = pos.Z * 16 + z;
-                    data.SetBlock(x, y, z, provider.GetBlock(absX, y, absZ));
-                }
-            }
-        }
-        ClientBoundChunkDataAndUpdateLightPacket packet = new(pos.X, pos.Z, data, new LightData());
+        ClientBoundChunkDataAndUpdateLightPacket packet = new(pos.X, pos.Z, provider.GetChunk(pos), LightData.FullBright);
         return packet;
     }
 }

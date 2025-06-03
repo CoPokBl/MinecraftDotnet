@@ -1,5 +1,9 @@
+using Minecraft.Schemas;
+using Minecraft.Schemas.Chunks;
+
 namespace Minecraft.Implementations.Server.Worlds;
 
 public interface ITerrainProvider {
-    public uint GetBlock(int x, int y, int z);
+    public ChunkData GetChunk(ChunkPosition chunk);
+    public IEnumerable<ChunkData> GetChunks(params ChunkPosition[] chunks);
 }

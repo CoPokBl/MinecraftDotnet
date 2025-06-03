@@ -2,6 +2,7 @@ using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
+using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
@@ -10,6 +11,8 @@ namespace Minecraft.Implementations.Server.Connections;
 
 public abstract class PlayerConnection {
     public PlayerConnectionState State = PlayerConnectionState.None;
+    public bool Compression => CompressionThreshold >= 0;
+    public int CompressionThreshold = -1;
     public ServerBoundHandshakePacket? Handshake;
     public event Action? Disconnected;
     public readonly Dictionary<string, object?> Data = new();
@@ -59,10 +62,28 @@ public abstract class PlayerConnection {
         Disconnect();
     }
 
-    public async Task SendPackets(params MinecraftPacket[] packets) {
-        foreach (MinecraftPacket packet in packets) {
-            await SendPacket(packet);
+    public async Task SetCompression(int minSize) {
+        if (State != PlayerConnectionState.Login) {
+            throw new Exception("Connection must be in login state to enable compression.");
         }
+
+        await SendPacket(new ClientBoundSetCompressionPacket(minSize));
+        CompressionThreshold = minSize;
+    }
+
+    public async Task SendPackets(bool sequentially, params MinecraftPacket[] packets) {
+        foreach (MinecraftPacket packet in packets) {
+            if (sequentially) {
+                await SendPacket(packet);
+            }
+            else {
+                _ = SendPacket(packet);
+            }
+        }
+    }
+        
+    public Task SendPackets(params MinecraftPacket[] packets) {
+        return SendPackets(true, packets);
     }
 
     public abstract ValueTask SendPacket(MinecraftPacket packet);

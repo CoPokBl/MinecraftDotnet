@@ -5,7 +5,6 @@ using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
-using Minecraft.Schemas.Chunks;
 
 namespace Minecraft.Implementations.Server.Connections;
 
@@ -13,7 +12,7 @@ public class TcpPlayerConnection(Stream stream) : PlayerConnection {
     private readonly CancellationTokenSource _cts = new();
     
     public override ValueTask SendPacket(MinecraftPacket packet) {
-        return stream.WriteAsync(packet.Serialise(), _cts.Token);
+        return stream.WriteAsync(packet.Serialise(Compression), _cts.Token);
     }
     
     public override async Task HandlePackets() {
@@ -35,7 +34,6 @@ public class TcpPlayerConnection(Stream stream) : PlayerConnection {
                     int startPos = reader.Pos;
                     int packetLength = reader.ReadVarInt();
                     int lenOfPacketLen = reader.Pos - startPos;
-                    int type = reader.ReadVarInt();
 
                     int neededBytes = packetLength - (bytesRead - lenOfPacketLen);
                     if (neededBytes > 0) {
@@ -60,7 +58,8 @@ public class TcpPlayerConnection(Stream stream) : PlayerConnection {
                     reader.Pos = startPos;
                     MinecraftPacket packet;
                     try {
-                        packet = MinecraftPacket.Deserialise(reader.Read(lenOfPacketLen + packetLength), false, State);
+                        bool compressed = lenOfPacketLen + packetLength > CompressionThreshold && CompressionThreshold >= 0;
+                        packet = MinecraftPacket.Deserialise(reader.Read(lenOfPacketLen + packetLength), false, State, compressed);
                     }
                     catch (Exception e) {
                         Log(e.ToString());
@@ -68,7 +67,7 @@ public class TcpPlayerConnection(Stream stream) : PlayerConnection {
                     }
 
                     if (!DontLog.Any(p => p.GetType().FullName!.Equals(packet.GetType().FullName))) {
-                        Log($"Got full packet: {type}, {packet.GetType().FullName}");
+                        Log($"Got full packet: {packet.GetPacketId()}, {packet.GetType().FullName}");
                     }
                     
                     HandlePacket(packet);

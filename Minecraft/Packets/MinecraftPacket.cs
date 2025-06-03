@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Config.ServerBound;
 using Minecraft.Packets.Login.ClientBound;
@@ -21,26 +22,78 @@ public abstract class MinecraftPacket {
         }
     }
 
-    public byte[] Serialise() {
-        byte[] d = GetData();
+    public byte[] Serialise(bool compress = false) {
+        byte[] data = GetData();
 
         DataWriter typeD = new();
         typeD.WriteVarInt(GetPacketId());
         byte[] typeBytes = typeD.ToArray();
 
-        DataWriter w = new();
-        w.WriteVarInt(d.Length + typeBytes.Length);  // packet size
-        w.WriteVarInt(GetPacketId());  // packet type
-        w.Write(GetData());  // the data
-        return w.ToArray();
+        if (compress) {
+            byte[] dataToCompress = new DataWriter().WriteVarInt(GetPacketId()).Write(data).ToArray();
+            byte[] compressedData = CompressZLib(dataToCompress);
+
+            int dataLengthLength = new DataWriter().WriteVarInt(dataToCompress.Length).ToArray().Length;
+
+            return new DataWriter()
+                .WriteVarInt(dataLengthLength + compressedData.Length)
+                .WriteVarInt(dataToCompress.Length)
+                .Write(compressedData)
+                .ToArray();
+        }
+        else {
+            DataWriter w = new();
+            w.WriteVarInt(data.Length + typeBytes.Length);  // packet size
+            w.WriteVarInt(GetPacketId());  // packet type
+            w.Write(data);  // the data
+            return w.ToArray();
+        }
+    }
+    
+    public static byte[] DecompressZlib(byte[] inputData) {
+        // Create a MemoryStream around the input compressed data
+        using MemoryStream input = new(inputData);
+        using ZLibStream zlibStream = new(input, CompressionMode.Decompress);
+        using MemoryStream output = new();
+        zlibStream.CopyTo(output);
+        return output.ToArray();
+    }
+    
+    public static byte[] CompressZLib(byte[] inputData, CompressionLevel compressionLevel = CompressionLevel.Optimal) {
+        using MemoryStream output = new();
+        using (ZLibStream zlibStream = new(output, compressionLevel, leaveOpen: true)) {
+            zlibStream.Write(inputData, 0, inputData.Length);
+        }
+        return output.ToArray();
     }
 
     // clientbound can help distinguish between packets
-    public static MinecraftPacket Deserialise(byte[] packet, bool clientBound, PlayerConnectionState state) {
+    public static MinecraftPacket Deserialise(byte[] packet, bool clientBound, PlayerConnectionState state, bool compressed = false) {
         DataReader r = new(packet);
         int packetSize = r.ReadVarInt();
-        int packetType = r.ReadVarInt();
-        byte[] data = r.ReadRemaining();
+
+        int packetType;
+        byte[] data;
+
+        if (compressed) {
+            int dataLength = r.ReadVarInt();
+
+            if (dataLength == 0) {
+                // it's not compressed
+                packetType = r.ReadVarInt();
+                data = r.ReadRemaining();
+            }
+            else {  // compressed packet
+                byte[] compressedData = r.ReadRemaining();
+                DataReader reader = new(DecompressZlib(compressedData));
+                packetType = reader.ReadVarInt();
+                data = reader.ReadRemaining();
+            }
+        }
+        else {
+            packetType = r.ReadVarInt();
+            data = r.ReadRemaining();
+        }
         
         switch (state) {
             case PlayerConnectionState.None:
@@ -77,7 +130,7 @@ public abstract class MinecraftPacket {
                     
                     case 0x03:
                         return clientBound
-                            ? throw new NotImplementedException()
+                            ? new ClientBoundSetCompressionPacket().ParseData(data)
                             : new ServerBoundLoginAcknowledgedPacket().ParseData(data);
                 }
                 break;
