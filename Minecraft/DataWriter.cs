@@ -98,15 +98,6 @@ public class DataWriter {
         }
         return Write(buffer);
     }
-
-    public DataWriter WriteInt(int value) {
-        byte[] buffer = new byte[4];
-        buffer[0] = (byte)(value >> 24); // High byte first (big-endian)
-        buffer[1] = (byte)(value >> 16);
-        buffer[2] = (byte)(value >> 8);
-        buffer[3] = (byte)(value & 0xFF); // Low byte last
-        return Write(buffer);
-    }
     
     // To an N-bit integer represented as a BitArray in big-endian order.
     private static BitArray ToNBitInteger(int bits, long value) {

@@ -15,7 +15,7 @@ public class DataTypesTest {
             Assert.That(redone.Z, Is.EqualTo(position.Z));
         });
 
-        byte[] norInt = new DataWriter().WriteInt(5).ToArray();
+        byte[] norInt = new DataWriter().WriteInteger(5).ToArray();
         int backInt = new DataReader(norInt).ReadInteger();
         
         Assert.That(backInt, Is.EqualTo(5));

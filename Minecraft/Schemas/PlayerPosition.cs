@@ -1,0 +1,6 @@
+namespace Minecraft.Schemas;
+
+public record PlayerPosition(Vec3 Position, Vec3 Velocity, float Yaw, float Pitch) {
+    public int ChunkX => (int)Position.X / 16;
+    public int ChunkZ => (int)Position.Z / 16;
+}

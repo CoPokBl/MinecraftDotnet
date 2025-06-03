@@ -18,6 +18,9 @@ public class ClientBoundSynchronisePlayerPositionPacket(
     public TeleportFlags Flags = teleportFlags;
     
     public ClientBoundSynchronisePlayerPositionPacket() : this(0, Vec3.Zero, Vec3.Zero, 0f, 0f, TeleportFlags.None) { }
+
+    public ClientBoundSynchronisePlayerPositionPacket(int teleportId, PlayerPosition pos, TeleportFlags flags) : 
+        this(teleportId, pos.Position, pos.Velocity, pos.Yaw, pos.Pitch, flags) { }
     
     public override int GetPacketId() {
         return 0x41;

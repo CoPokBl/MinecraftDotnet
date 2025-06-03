@@ -55,7 +55,7 @@ public class ClientBoundLoginPacket(
 
     protected override byte[] GetData() {
         DataWriter w = new DataWriter()
-            .WriteInt(EntityId)
+            .WriteInteger(EntityId)
             .WriteBoolean(IsHardcore)
             .WritePrefixedArray(Dimensions, (s, writer) => writer.WriteString(s))
             .WriteVarInt(MaxPlayers)

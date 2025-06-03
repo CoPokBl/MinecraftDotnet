@@ -168,6 +168,11 @@ public abstract class MinecraftPacket {
                             ? throw new NotImplementedException()
                             : new ServerBoundSetPlayerRotationPacket().ParseData(data);
                     
+                    case 0x21:
+                        return clientBound
+                            ? new ClientBoundUnloadChunkPacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
                     case 0x22:
                         return clientBound
                             ? new ClientBoundGameEventPacket().ParseData(data)

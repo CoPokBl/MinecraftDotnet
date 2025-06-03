@@ -1,0 +1,71 @@
+using Minecraft.Implementations.Events;
+using Minecraft.Implementations.Server.Events;
+using Minecraft.NBT.Text;
+using Minecraft.Packets;
+using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Schemas;
+
+namespace Minecraft.Implementations.Server.Connections;
+
+public abstract class PlayerConnection {
+    public PlayerConnectionState State = PlayerConnectionState.None;
+    public ServerBoundHandshakePacket? Handshake;
+    public event Action? Disconnected;
+    public readonly Dictionary<string, object?> Data = new();
+    public EventNode<ServerEvent> Events = new();  // its parent should be the server's
+
+    protected static readonly MinecraftPacket[] DontLog = [
+        new ServerBoundClientTickEndPacket(),
+        new ServerBoundKeepAlivePacketPlay(),
+        new ServerBoundSetPlayerPositionPacket(),
+        new ServerBoundSetPlayerRotationPacket(),
+        new ServerBoundSetPlayerPosAndRotPacket()
+    ];
+
+    protected void Log(string s) {
+        Console.WriteLine($"[{State}] {s}");
+    }
+
+    public void HandlePacket(MinecraftPacket packet) {
+        PacketReceiveEvent receiveEvent = new() {
+            Connection = this,
+            Packet = packet
+        };
+        Events.CallEvent(receiveEvent);
+
+        if (receiveEvent.Cancelled) {
+            return;
+        }
+
+        // Now send the cancelable handle event
+        PacketHandleEvent handleEvent = new() {
+            Connection = this,
+            Packet = packet
+        };
+        Events.CallEvent(handleEvent);
+    }
+
+    protected void InvokeDisconnected() {
+        Disconnected?.Invoke();
+    }
+
+    public async Task Kick(TextComponent msg) {
+        if (State != PlayerConnectionState.Play) {
+            Disconnect();
+            return;
+        }
+        await SendPacket(new ClientBoundDisconnectPacketPlay(msg));
+        Disconnect();
+    }
+
+    public async Task SendPackets(params MinecraftPacket[] packets) {
+        foreach (MinecraftPacket packet in packets) {
+            await SendPacket(packet);
+        }
+    }
+
+    public abstract ValueTask SendPacket(MinecraftPacket packet);
+    public abstract Task HandlePackets();
+    public abstract void Disconnect();
+}
