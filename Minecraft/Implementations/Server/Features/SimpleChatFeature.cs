@@ -45,7 +45,7 @@ public class SimpleChatFeature : IFeature {
                 FinalMessage = finalMsg
             };
 
-            handleEvent.Connection.Events.CallEvent(e);
+            handleEvent.Connection.Events.CallEventCatchErrors(e);
 
             if (e.Cancelled) {
                 return;

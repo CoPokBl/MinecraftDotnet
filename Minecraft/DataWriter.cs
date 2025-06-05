@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using Minecraft.NBT;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities.Meta;
 
 namespace Minecraft;
 
@@ -19,6 +20,36 @@ public class DataWriter {
     public DataWriter Write(byte value) {
         _data.Add(value);
         return this;
+    }
+
+    public DataWriter Write(Func<DataWriter, DataWriter> writeAction) {
+        return writeAction(this);
+    }
+
+    public DataWriter Write(Action<DataWriter> writeAction) {
+        writeAction(this);
+        return this;
+    }
+    
+    public DataWriter Write<T>(T val, Action<T, DataWriter> writeAction) {
+        writeAction(val, this);
+        return this;
+    }
+
+    public DataWriter WriteMetaParam<T>(T? val, int index, MetaFieldType type, Action<T, DataWriter> writeAction) where T : class {
+        if (val == null) {
+            return this;
+        }
+
+        return WriteUnsignedByte((byte)index).WriteVarInt((int)type).Write(val, writeAction);
+    }
+    
+    public DataWriter WriteMetaParam<T>(T? val, int index, MetaFieldType type, Action<T, DataWriter> writeAction) where T : struct {
+        if (val == null) {
+            return this;
+        }
+
+        return WriteUnsignedByte((byte)index).WriteVarInt((int)type).Write(val.Value, writeAction);
     }
 
     public DataWriter WriteVarInt(int value) {
@@ -39,6 +70,12 @@ public class DataWriter {
         return WriteDouble(value.X)
             .WriteDouble(value.Y)
             .WriteDouble(value.Z);
+    }
+    
+    public DataWriter WriteVec3(SVec3 value) {
+        return WriteShort(value.X)
+            .WriteShort(value.Y)
+            .WriteShort(value.Z);
     }
     
     // A single-precision 32-bit IEEE 754 floating point number, big endian
@@ -141,75 +178,6 @@ public class DataWriter {
        Note that since longs are sent in big endian order, the least significant bit of the first entry in a long
        will be on the last byte of the long on the wire.
      */
-    // public DataWriter WritePacketDataArray(int bitsPerEntry, long[] entries, bool prefixed = false) {
-    //     if (bitsPerEntry is < 1 or > 64) {
-    //         throw new ArgumentOutOfRangeException(nameof(bitsPerEntry), "Bits per entry must be between 1 and 64.");
-    //     }
-    //
-    //     const int bitsPerLong = 64;
-    //     int entriesPerLong = bitsPerLong / bitsPerEntry;
-    //     int totalEntries = entries.Length;
-    //
-    //     if (prefixed) {
-    //         WriteVarInt(totalEntries);
-    //     }
-    //
-    //     // Calculate how many longs we need
-    //     int longCount = (totalEntries + entriesPerLong - 1) / entriesPerLong;
-    //
-    //     for (int i = 0; i < longCount; i++) {
-    //         long value = 0;
-    //         for (int j = 0; j < entriesPerLong; j++) {
-    //             int index = i * entriesPerLong + j;
-    //             if (index < totalEntries) {
-    //                 value |= (entries[index] & ((1L << bitsPerEntry) - 1)) << (j * bitsPerEntry);
-    //             }
-    //         }
-    //         WriteLong(value);
-    //     }
-    //
-    //     return this;
-    // }
-    // public DataWriter WritePacketDataArray(int bitsPerEntry, long[] entries, bool prefixed = false) {
-    //     // Each 64-bit long can store several entries, each taking up bitsPerEntry bits.
-    //     // For example, if bitsPerEntry = 15, then each long can store 4 entries
-    //     // because 4 * 15 = 60 bits used, leaving 4 bits of padding.
-    //
-    //     int entriesPerLong = 64 / bitsPerEntry;                       // How many entries fit into one long
-    //     int longCount = (entries.Length + entriesPerLong - 1) / entriesPerLong;  // Number of longs needed
-    //
-    //     // Prepare array of longs that will hold the packed bits.
-    //     long[] packedLongs = new long[longCount];
-    //
-    //     for (int i = 0; i < entries.Length; i++) {
-    //         long entryValue = entries[i];
-    //         // Mask to ensure we only keep bitsPerEntry bits from entryValue.
-    //         // If your data does not exceed (1 << bitsPerEntry) - 1, this is just precautionary.
-    //         long maskedValue = entryValue & ((1L << bitsPerEntry) - 1);
-    //
-    //         // Which long in the packed array we are writing to:
-    //         int longIndex = i / entriesPerLong;
-    //
-    //         // Bit offset inside that long:
-    //         int bitOffset = (i % entriesPerLong) * bitsPerEntry;
-    //
-    //         // Place the bits in the correct position inside the long.
-    //         // The first entry goes into the least significant bits, etc.
-    //         packedLongs[longIndex] |= (maskedValue << bitOffset);
-    //     }
-    //
-    //     // If prefixed, write the length (number of longs) as a VarInt first.
-    //     if (prefixed) {
-    //         WriteVarInt(packedLongs.Length);
-    //     }
-    //
-    //     // Write out each packed long.
-    //     foreach (long val in packedLongs) {
-    //         WriteLong(val);
-    //     }
-    //
-    //     return this;
-    // }
     public DataWriter WritePacketDataArray(int bitsPerEntry, long[] entries, bool prefixed = false) {
         Queue<BitArray> packedBits = new(entries.Length);
         foreach (long t in entries) {
@@ -249,12 +217,6 @@ public class DataWriter {
             for (int j = 0; j < entriesPerLong; j++) {  // for every entry
                 for (int k = 0; k < bitsPerEntry; k++) {  // and every bit in every entry
                     packedBitsInLong[index++] = valsInLong[entriesPerLong - 1 - j][k];
-                }
-            }
-
-            if (entries[0] != 0) {
-                while (false) {
-                    // for breakpoint
                 }
             }
             
@@ -331,6 +293,16 @@ public class DataWriter {
         writer.Invoke(value, this);
         return this;
     }
+    
+    public DataWriter WritePrefixedOptional<T>(Optional<T> value, Action<T, DataWriter> writer) {
+        if (!value.Present) {
+            return WriteBoolean(false);
+        }
+
+        WriteBoolean(true);
+        writer.Invoke(value.Value, this);
+        return this;
+    }
 
     public DataWriter WriteNbt(ITag nbt) {
         byte[] dat = nbt.Serialise();
@@ -341,11 +313,15 @@ public class DataWriter {
         return Write(value.ToByteArray(true));
     }
 
+    public DataWriter WriteAngle(Angle angle) {
+        return Write(angle.Value);
+    }
+
     public DataWriter WritePrefixedArray<T>(T[] values, Action<T, DataWriter> writerAction) {
         return WriteVarInt(values.Length).WriteArray(values, writerAction);
     }
 
-    public DataWriter WriteArray<T>(T[] values, Action<T, DataWriter> writerAction) {
+    public DataWriter WriteArray<T>(IEnumerable<T> values, Action<T, DataWriter> writerAction) {
         foreach (T value in values) {
             writerAction.Invoke(value, this);
         }

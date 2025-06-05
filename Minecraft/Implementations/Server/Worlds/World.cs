@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Packets;
@@ -64,7 +65,7 @@ public class World(ITerrainProvider provider, int viewDistance = 8, int packetsP
                     
                     neededPackets.Add(new ClientBoundUnloadChunkPacket(loadedChunk));  // not within radius, unload it
                     unloaded.Add(loadedChunk);
-                    Console.WriteLine($"Unloading {loadedChunk.X}, {loadedChunk.Z}");
+                    // Console.WriteLine($"Unloading {loadedChunk.X}, {loadedChunk.Z}");
                 }
                 foreach (ChunkPosition c in unloaded) {
                     loaded.Remove(c);
@@ -79,7 +80,7 @@ public class World(ITerrainProvider provider, int viewDistance = 8, int packetsP
                             // okay so we need to load chunk
                             neededPackets.Add(GetChunkPacket(chunk));
                             loaded.Add(chunk);
-                            Console.WriteLine($"Loading {chunk.X}, {chunk.Z}");
+                            // Console.WriteLine($"Loading {chunk.X}, {chunk.Z}");
                         }
                     }
                 }
@@ -88,7 +89,12 @@ public class World(ITerrainProvider provider, int viewDistance = 8, int packetsP
 
                 if (neededPackets.Count == 0) return;
                 neededPackets.Add(new ClientBoundSetCenterChunkPacket(chunkPos));
-                foreach (MinecraftPacket packet in neededPackets) {
+                IEnumerable<MinecraftPacket> orderedPackets = neededPackets.OrderBy(p => {
+                    if (p is ClientBoundSetCenterChunkPacket) return 0;  // always do this first, otherwise we could get issues
+                    if (p is not ClientBoundChunkDataAndUpdateLightPacket chunkP) return 100;  // do unload packets last (for faster load, client unloads anyway)
+                    return new ChunkPosition(chunkP.ChunkX, chunkP.ChunkZ).DistanceTo(chunkPos);  // do closer chunks first for quicker load
+                });
+                foreach (MinecraftPacket packet in orderedPackets) {
                     waitingPackets.Enqueue(packet);
                 }
             });

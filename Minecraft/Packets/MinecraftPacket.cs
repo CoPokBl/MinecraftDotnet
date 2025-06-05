@@ -168,8 +168,13 @@ public abstract class MinecraftPacket {
                 switch (packetType) {
                     case 0x00:
                         return clientBound
-                            ? throw new NotImplementedException()
+                            ? new ClientBoundBundleDelimiterPacket().ParseData(data)
                             : new ServerBoundConfirmTeleportPacket().ParseData(data);
+                    
+                    case 0x01:
+                        return clientBound
+                            ? new ClientBoundSpawnEntityPacket().ParseData(data)
+                            : throw new NotImplementedException();
                     
                     case 0x07:
                         return clientBound
@@ -221,6 +226,11 @@ public abstract class MinecraftPacket {
                             ? throw new NotImplementedException()
                             : new ServerBoundSetPlayerRotationPacket().ParseData(data);
                     
+                    case 0x1F:
+                        return clientBound
+                            ? new ClientBoundTeleportEntityPacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
                     case 0x21:
                         return clientBound
                             ? new ClientBoundUnloadChunkPacket().ParseData(data)
@@ -261,6 +271,21 @@ public abstract class MinecraftPacket {
                             ? new ClientBoundLoginPacket().ParseData(data)
                             : throw new NotImplementedException();
                     
+                    case 0x2E:
+                        return clientBound
+                            ? new ClientBoundUpdateEntityPositionPacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
+                    case 0x2F:
+                        return clientBound
+                            ? new ClientBoundUpdateEntityPosAndRotPacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
+                    case 0x31:
+                        return clientBound
+                            ? new ClientBoundUpdateEntityRotationPacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
                     case 0x33:
                         return clientBound
                             ? throw new NotImplementedException()
@@ -276,6 +301,16 @@ public abstract class MinecraftPacket {
                             ? new ClientBoundCombatDeathPacket().ParseData(data)
                             : throw new NotImplementedException();
                     
+                    case 0x3E:
+                        return clientBound
+                            ? new ClientBoundPlayerInfoRemovePacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
+                    case 0x3F:
+                        return clientBound
+                            ? new ClientBoundPlayerInfoUpdatePacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
                     case 0x41:
                         return clientBound
                             ? new ClientBoundSynchronisePlayerPositionPacket().ParseData(data)
@@ -286,14 +321,29 @@ public abstract class MinecraftPacket {
                             ? new ClientBoundRespawnPacket().ParseData(data)
                             : throw new NotImplementedException();
                     
+                    case 0x4C:
+                        return clientBound
+                            ? new ClientBoundSetHeadRotationPacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
                     case 0x57:
                         return clientBound
                             ? new ClientBoundSetCenterChunkPacket().ParseData(data)
                             : throw new NotImplementedException();
                     
+                    case 0x5C:
+                        return clientBound
+                            ? new ClientBoundSetEntityMetadataPacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
                     case 0x72:
                         return clientBound
                             ? new ClientBoundSystemChatMessagePacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
+                    case 0x73:
+                        return clientBound
+                            ? new ClientBoundSetTabListHeaderFooterPacket().ParseData(data)
                             : throw new NotImplementedException();
                 }
                 break;

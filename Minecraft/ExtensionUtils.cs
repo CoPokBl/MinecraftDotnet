@@ -40,4 +40,15 @@ public static class ExtensionUtils {
             _ => (int)Math.Ceiling(Math.Log2(v + 1))
         };
     }
+
+    public static int CombineFlags<T>(this T[] flags) where T : Enum {
+        return flags.Aggregate(0, (current, flag) => current | Convert.ToInt32(flag));
+    }
+
+    public static IEnumerable<T> Combine<T>(this IEnumerable<T> first, IEnumerable<T> second) {
+        List<T> final = [];
+        final.AddRange(first);
+        final.AddRange(second);
+        return final;
+    }
 }

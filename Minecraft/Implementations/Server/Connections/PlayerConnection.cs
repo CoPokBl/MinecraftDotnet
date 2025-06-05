@@ -35,7 +35,7 @@ public abstract class PlayerConnection {
             Connection = this,
             Packet = packet
         };
-        Events.CallEvent(receiveEvent);
+        Events.CallEventCatchErrors(receiveEvent);
 
         if (receiveEvent.Cancelled) {
             return;
@@ -46,7 +46,7 @@ public abstract class PlayerConnection {
             Connection = this,
             Packet = packet
         };
-        Events.CallEvent(handleEvent);
+        Events.CallEventCatchErrors(handleEvent);
     }
 
     protected void InvokeDisconnected() {

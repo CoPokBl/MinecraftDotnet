@@ -173,7 +173,7 @@ public class PlayerLoginFeature(
                         PlayerLoginEvent loginEvent = new() {
                             Connection = e.Connection
                         };
-                        e.Connection.Events.CallEvent(loginEvent);
+                        e.Connection.Events.CallEventCatchErrors(loginEvent);
                     });
                     break;
                 }

@@ -176,7 +176,42 @@ public class TcpPlayerConnection(Stream stream) : PlayerConnection {
                                     true));
 
                             if (shi.Slot == 8) {
-                                await Kick(TextComponent.Text("Goodbye"));
+                                // await Kick(TextComponent.Text("Goodbye"));
+                                await SendPacket(new ClientBoundPlayerInfoUpdatePacket(
+                                    new ClientBoundPlayerInfoUpdatePacket.PlayerData(
+                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.AddPlayer,
+                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateDisplayName,
+                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateGameMode,
+                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateLatency,
+                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateListed,
+                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateListPriority
+                                            // ClientBoundPlayerInfoUpdatePacket.PlayerActions.InitializeChat
+                                        )
+                                        .WithPlayer(
+                                            Guid.Empty, 
+                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateDisplayName {
+                                                DisplayName = TextComponent.Text("Potato man").WithColor(TextColor.Red)
+                                            },
+                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateGameMode {
+                                                GameMode = 0
+                                            },
+                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer {
+                                                Name = "Potato",
+                                                Properties = []
+                                            },
+                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateLatency {
+                                                Latency = 200
+                                            },
+                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateListed {
+                                                Listed = true
+                                            },
+                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateListPriority {
+                                                Priority = 1
+                                            }
+                                            // new ClientBoundPlayerInfoUpdatePacket.PlayerData.InitializeChat {
+                                            //     HasData = false
+                                            // }
+                                        )));
                             }
                             break;
                         }

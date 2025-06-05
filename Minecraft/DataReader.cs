@@ -119,6 +119,13 @@ public class DataReader(byte[] data) {
         return new Vec3(x, y, z);
     }
     
+    public SVec3 ReadSVec3() {
+        short x = ReadShort();
+        short y = ReadShort();
+        short z = ReadShort();
+        return new SVec3(x, y, z);
+    }
+    
     public float ReadFloat() {
         byte[] bytes = Read(4);
         if (BitConverter.IsLittleEndian) {
@@ -184,6 +191,12 @@ public class DataReader(byte[] data) {
 
     public Guid ReadUuid() {
         return new Guid(Read(16), true);
+    }
+
+    public Angle ReadAngle() {
+        return new Angle {
+            Value = Read()
+        };
     }
     
     public T[] ReadPrefixedArray<T>(Func<DataReader, T> readerAdapter) {

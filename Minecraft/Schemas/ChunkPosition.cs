@@ -8,6 +8,10 @@ public readonly struct ChunkPosition(int x, int z) : IEquatable<ChunkPosition> {
         return Math.Abs(X - other.X) <= radius && Math.Abs(Z - other.Z) <= radius;
     }
 
+    public double DistanceTo(ChunkPosition other) {
+        return Math.Sqrt(Math.Pow(Math.Abs(x - other.X), 2) + Math.Pow(Math.Abs(z - other.Z), 2));
+    }
+
     public bool Equals(ChunkPosition other) {
         return X == other.X && Z == other.Z;
     }

@@ -32,8 +32,45 @@ public class EventNode<T> {
         };
     }
 
+    /// <summary>
+    /// Listens for an event once and then never again.
+    /// <p/>
+    /// Disconnects the listener after getting triggered once.
+    /// </summary>
+    /// <param name="callback">The listener.</param>
+    /// <typeparam name="TL">The event type to listen for.</typeparam>
+    public void OnFirst<TL>(Action<T> callback) where TL : T {
+        Action<T> actualListener = null!;
+        actualListener = obj => {
+            if (obj is not TL tl) {
+                return;
+            }
+
+            callback(tl);
+            Callback -= actualListener;
+        };
+        Callback += actualListener;
+    }
+    
     public void CallEvent(T e) {
-        Callback?.Invoke(e);
+        try {
+            Callback?.Invoke(e);
+        }
+        catch (Exception exception) {
+            Console.WriteLine("An error occured while handling an event:");
+            Console.WriteLine(exception);
+            throw;
+        }
+    }
+
+    public void CallEventCatchErrors(T e) {
+        try {
+            Callback?.Invoke(e);
+        }
+        catch (Exception exception) {
+            Console.WriteLine("An error occured while handling an event:");
+            Console.WriteLine(exception);
+        }
     }
 
     /// <summary>
