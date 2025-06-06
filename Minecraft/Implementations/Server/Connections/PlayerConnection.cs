@@ -86,7 +86,7 @@ public abstract class PlayerConnection {
         return SendPackets(true, packets);
     }
 
-    public abstract ValueTask SendPacket(MinecraftPacket packet);
+    public abstract Task SendPacket(MinecraftPacket packet);
     public abstract Task HandlePackets();
     public abstract void Disconnect();
 }

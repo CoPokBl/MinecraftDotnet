@@ -35,6 +35,16 @@ public class PlayerEntity : Entity {
                     Move(Position, Angle.FromDegrees(sr.Yaw), Angle.FromDegrees(sr.Pitch));
                     break;
                 }
+
+                case ServerBoundSwingArmPacket sa: {
+                    ClientBoundEntityAnimationPacket.AnimationType animation = sa.UsedHand switch {
+                        Hand.MainHand => ClientBoundEntityAnimationPacket.AnimationType.SwingMainArm,
+                        Hand.OffHand => ClientBoundEntityAnimationPacket.AnimationType.SwingOffhand,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+                    SendToViewers(new ClientBoundEntityAnimationPacket(NetId, animation));
+                    break;
+                }
             }
         });
     }

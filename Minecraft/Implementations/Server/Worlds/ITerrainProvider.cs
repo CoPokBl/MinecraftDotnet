@@ -5,5 +5,5 @@ namespace Minecraft.Implementations.Server.Worlds;
 
 public interface ITerrainProvider {
     public ChunkData GetChunk(ChunkPosition chunk);
-    public IEnumerable<ChunkData> GetChunks(params ChunkPosition[] chunks);
+    public IEnumerable<ChunkData> GetChunks(int count, params ChunkPosition[] chunks);
 }

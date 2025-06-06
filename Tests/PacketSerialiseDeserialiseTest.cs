@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
@@ -32,5 +33,40 @@ public class PacketSerialiseDeserialiseTest {
         MinecraftPacket de = MinecraftPacket.Deserialise(packet.Serialise(), clientBound, state);
         Console.WriteLine(de.GetType().FullName);
         Console.WriteLine(JsonConvert.SerializeObject(de));
+    }
+
+    [Test]
+    public void TestSerialiseSpeed() {
+        ClientBoundStatusResponsePacket statusResponse = new(
+            "Potato",
+            69,
+            5,
+            1,
+            [new SamplePlayer("CopokBl", "a")],
+            "Welcome to my server!", preventsChatReports: true);
+        
+        Stopwatch sw = Stopwatch.StartNew();
+        for (int i = 0; i < 20_000; i++) {
+            statusResponse.Serialise(true);
+        }
+        Console.WriteLine($"Serialise: {sw.ElapsedMilliseconds}ms");
+    }
+    
+    [Test]
+    public void TestDeSerialiseSpeed() {
+        ClientBoundStatusResponsePacket statusResponse = new(
+            "Potato",
+            69,
+            5,
+            1,
+            [new SamplePlayer("CopokBl", "a")],
+            "Welcome to my server!", preventsChatReports: true);
+        byte[] dat = statusResponse.Serialise(true);
+        
+        Stopwatch sw = Stopwatch.StartNew();
+        for (int i = 0; i < 20_000; i++) {
+            MinecraftPacket.Deserialise(dat, true, PlayerConnectionState.Status, true);
+        }
+        Console.WriteLine($"Serialise: {sw.ElapsedMilliseconds}ms");
     }
 }

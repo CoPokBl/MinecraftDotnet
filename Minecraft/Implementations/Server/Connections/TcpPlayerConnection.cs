@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using System.Net.Sockets;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ServerBound;
@@ -8,25 +10,44 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Server.Connections;
 
-public class TcpPlayerConnection(Stream stream) : PlayerConnection {
+public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) : PlayerConnection {
     private readonly CancellationTokenSource _cts = new();
+    private readonly ConcurrentQueue<MinecraftPacket> _packetQueue = new();
+    private Stream Stream => client.GetStream();
     
-    public override ValueTask SendPacket(MinecraftPacket packet) {
-        return stream.WriteAsync(packet.Serialise(Compression), _cts.Token);
+    public override Task SendPacket(MinecraftPacket packet) {
+        if (packetQueuing) {
+            _packetQueue.Enqueue(packet);
+            return Task.CompletedTask;
+        }
+        
+        return Stream.WriteAsync(packet.Serialise(Compression), _cts.Token).AsTask();
+    }
+
+    private async Task PacketSending() {
+        while (!_cts.IsCancellationRequested) {
+            await Task.Yield();
+            if (!_packetQueue.TryDequeue(out MinecraftPacket? packet)) {
+                continue;
+            }
+            
+            // Send it
+            await Stream.WriteAsync(packet.Serialise(Compression), _cts.Token);
+        }
     }
     
     public override async Task HandlePackets() {
         Log("Handling new client");
+        _ = PacketSending();
 
         byte[] buffer = new byte[short.MaxValue];
         try {
             while (!_cts.IsCancellationRequested) {
-                int bytesRead = await stream.ReadAsync(buffer, _cts.Token);
+                int bytesRead = await Stream.ReadAsync(buffer, _cts.Token);
                 if (bytesRead == 0) {
                     // connection dropped
                     Log("Zero bytes, connection dropped");
-                    InvokeDisconnected();
-                    return;
+                    throw new Exception("Received no data, broken connection?");
                 }
 
                 DataReader reader = new(buffer[..bytesRead]);
@@ -40,11 +61,10 @@ public class TcpPlayerConnection(Stream stream) : PlayerConnection {
                         Log($"partial packet, needed: {neededBytes}");
                         int bufferPos = bytesRead;
                         while (neededBytes > 0) {
-                            int newBytes = await stream.ReadAsync(buffer.AsMemory(bufferPos, buffer.Length - bufferPos), _cts.Token);
+                            int newBytes = await Stream.ReadAsync(buffer.AsMemory(bufferPos, buffer.Length - bufferPos), _cts.Token);
                             if (newBytes == 0) {
                                 Log("No DATA, dropping connection");
-                                InvokeDisconnected();
-                                return;
+                                throw new Exception("Received no data, broken connection?");
                             }
 
                             bytesRead += newBytes;

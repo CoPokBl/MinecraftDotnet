@@ -176,6 +176,11 @@ public abstract class MinecraftPacket {
                             ? new ClientBoundSpawnEntityPacket().ParseData(data)
                             : throw new NotImplementedException();
                     
+                    case 0x02:
+                        return clientBound
+                            ? new ClientBoundEntityAnimationPacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
                     case 0x07:
                         return clientBound
                             ? throw new NotImplementedException()

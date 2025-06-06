@@ -40,7 +40,7 @@ public class SimpleEntitiesFeature : IFeature {
         SendPacketsFor(entity, entity.GenerateSpawnEntityPackets());
     }
 
-    private void SendPacketsFor(Entity entity, params MinecraftPacket[] packets) {
+    public void SendPacketsFor(Entity entity, params MinecraftPacket[] packets) {
         foreach (PlayerConnection con in _server.Connections) {
             if (con.State != PlayerConnectionState.Play) {
                 continue;

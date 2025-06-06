@@ -12,7 +12,7 @@ public class TcpMinecraftListener(Action<PlayerConnection> connectionConsumer, C
 
         while (!cancel.IsCancellationRequested) {
             TcpClient client = await listener.AcceptTcpClientAsync(cancel);
-            PlayerConnection connection = new TcpPlayerConnection(client.GetStream());
+            PlayerConnection connection = new TcpPlayerConnection(client);
             ConnectionConsumer(connection);
             _ = connection.HandlePackets();
         }

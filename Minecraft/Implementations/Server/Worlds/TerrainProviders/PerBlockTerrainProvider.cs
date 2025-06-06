@@ -22,9 +22,9 @@ public abstract class PerBlockTerrainProvider : ITerrainProvider {
         return data;
     }
 
-    public IEnumerable<ChunkData> GetChunks(params ChunkPosition[] poses) {
-        ChunkData[] chunks = new ChunkData[poses.Length];
-        for (int i = 0; i < chunks.Length; i++) {
+    public IEnumerable<ChunkData> GetChunks(int count, params ChunkPosition[] poses) {
+        ChunkData[] chunks = new ChunkData[count];
+        for (int i = 0; i < count; i++) {
             chunks[i] = GetChunk(poses[i]);
         }
 

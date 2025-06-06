@@ -7,8 +7,20 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
     
     public abstract uint GetBlock(int x, int y, int z);
     
-    public new ChunkData GetChunk(ChunkPosition pos) {
-        ChunkData data = new();
+    /// <summary>
+    /// Get a chunk by splitting sections into threads.
+    /// <p/>
+    /// This is incredibly slow while using a debugger due to
+    /// the number of threads it creates.
+    /// However, it is a fair bit faster without a debugger.
+    /// </summary>
+    /// <param name="pos">The chunk coords.</param>
+    /// <returns>The generated chunk data.</returns>
+    public ChunkData GetChunk(ChunkPosition pos) {
+        ChunkData data = new() {
+            ChunkX = pos.X,
+            ChunkZ = pos.Z
+        };
         Thread[] threads = new Thread[threadCount];
         
         for (int i = 0; i < threadCount; i++) {
@@ -39,7 +51,11 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
     }
     
     public ChunkData SingleThreadedGetChunk(ChunkPosition pos) {
-        ChunkData data = new();
+        ChunkData data = new() {
+            ChunkX = pos.X,
+            ChunkZ = pos.Z
+        };
+
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 384; y++) {
                 for (int z = 0; z < 16; z++) {
@@ -52,17 +68,17 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
 
         return data;
     }
-
-    public new IEnumerable<ChunkData> GetChunks(params ChunkPosition[] poses) {
-        ChunkData[] chunks = new ChunkData[poses.Length];
+    
+    public IEnumerable<ChunkData> GetChunks(int count, params ChunkPosition[] poses) {
+        ChunkData[] chunks = new ChunkData[count];
         Thread[] threads = new Thread[threadCount];
         
         for (int i = 0; i < threadCount; i++) {
             int threadIndex = i;
             Thread t = new(() => {
-                int end = (threadIndex + 1) * poses.Length / threadCount;
+                int end = (threadIndex + 1) * count / threadCount;
                 
-                for (int j = threadIndex * poses.Length / threadCount; j < end; j++) {
+                for (int j = threadIndex * count / threadCount; j < end; j++) {
                     chunks[j] = SingleThreadedGetChunk(poses[j]);
                 }
             });
@@ -70,11 +86,11 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
             t.Start();
             threads[i] = t;
         }
-
+    
         foreach (Thread t in threads) {
             t.Join();
         }
-
+    
         return chunks;
     }
 }

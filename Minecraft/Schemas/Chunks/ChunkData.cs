@@ -5,6 +5,10 @@ public class ChunkData {
     private const int ChunkSections = WorldHeight / 16;  // number of sections in a chunk, 24 for vanilla overworld
     
     public ChunkSection[] Sections = GenerateEmptySections();  // bottom to top
+    
+    // hints for implementations
+    public int ChunkX;
+    public int ChunkZ;
 
     private static ChunkSection[] GenerateEmptySections() {
         ChunkSection[] vals = new ChunkSection[ChunkSections];

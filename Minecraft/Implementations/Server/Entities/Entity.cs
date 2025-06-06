@@ -34,4 +34,8 @@ public class Entity(int type) {
             Pitch = pitch.Value;
         }
     }
+
+    public void SendToViewers(params MinecraftPacket[] packets) {
+        Feat.SendPacketsFor(this, packets);
+    }
 }

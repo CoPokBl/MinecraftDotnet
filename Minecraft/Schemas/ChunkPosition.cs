@@ -9,7 +9,7 @@ public readonly struct ChunkPosition(int x, int z) : IEquatable<ChunkPosition> {
     }
 
     public double DistanceTo(ChunkPosition other) {
-        return Math.Sqrt(Math.Pow(Math.Abs(x - other.X), 2) + Math.Pow(Math.Abs(z - other.Z), 2));
+        return Math.Sqrt(Math.Pow(Math.Abs(X - other.X), 2) + Math.Pow(Math.Abs(Z - other.Z), 2));
     }
 
     public bool Equals(ChunkPosition other) {
