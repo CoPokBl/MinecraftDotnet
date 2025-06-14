@@ -1,12 +1,14 @@
+using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Server.Features;
 
-public class BlockBreakingFeature : IFeature {
+public class BlockBreakingFeature(bool instaMine = true) : IFeature {
     
     public void Register(MinecraftServer server) {
         server.Events.AddListener<PacketHandleEvent>(e => {
@@ -16,11 +18,22 @@ public class BlockBreakingFeature : IFeature {
             
             Console.WriteLine($"Action: {packet.ActionStatus}");
 
-            if (packet.ActionStatus != ServerBoundPlayerActionPacket.Status.StartedDigging) {
+            if (packet.ActionStatus != 
+                (instaMine ? ServerBoundPlayerActionPacket.Status.StartedDigging : ServerBoundPlayerActionPacket.Status.FinishedDigging)) {
                 return;
             }
             
             // they say they broke a block
+            BlockBreakEvent breakEvent = new() {
+                Connection = e.Connection,
+                Position = packet.Location
+            };
+            e.Connection.Events.CallEvent(breakEvent);
+
+            if (breakEvent.Cancelled) {
+                return;
+            }
+            
             MinecraftPacket changePacket = new ClientBoundBlockUpdatePacket(packet.Location, 0);
             foreach (PlayerConnection connection in server.Connections) {
                 if (connection == e.Connection) {
@@ -34,5 +47,11 @@ public class BlockBreakingFeature : IFeature {
 
     public Type[] GetDependencies() {
         return [];
+    }
+
+    public class BlockBreakEvent : ServerEvent, ICancelableEvent {
+        public required PlayerConnection Connection { get; set; }
+        public required BlockPosition Position { get; set; }
+        public bool Cancelled { get; set; } = false;
     }
 }

@@ -10,7 +10,7 @@ using Minecraft.Schemas.Chunks;
 namespace Minecraft.Implementations.Server.Worlds;
 
 public class World(ITerrainProvider provider, int viewDistance = 8, int packetsPerTick = 10, int tickDelayMs = 100) {
-    private const bool Benchmark = true;
+    private const bool Benchmark = false;
     
     private readonly List<PlayerConnection> _players = [];
     private const int UnloadDistanceMod = 1;

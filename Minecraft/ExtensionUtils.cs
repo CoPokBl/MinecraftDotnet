@@ -1,4 +1,7 @@
 using System.Collections;
+using Minecraft.Implementations.Server.Connections;
+using Minecraft.NBT.Text;
+using Minecraft.Packets.Play.ClientBound;
 
 namespace Minecraft;
 
@@ -50,5 +53,29 @@ public static class ExtensionUtils {
         final.AddRange(first);
         final.AddRange(second);
         return final;
+    }
+    
+    public static T ThrowIfNull<T>(this T? obj) where T : struct {
+        if (obj == null) {
+            throw new ArgumentNullException(nameof(obj), "object is null");
+        }
+
+        return obj.Value;
+    }
+
+    public static T ThrowIfNull<T>(this T? obj) {
+        if (obj == null) {
+            throw new ArgumentNullException(nameof(obj), "object is null");
+        }
+
+        return obj;
+    }
+
+    public static void SendSystemMessage(this PlayerConnection con, TextComponent text) {
+        con.SendPacket(new ClientBoundSystemChatMessagePacket(text, false));
+    }
+
+    public static long UnixMillis(this DateTime time) {
+        return (long)(time - DateTime.UnixEpoch).TotalMilliseconds;
     }
 }

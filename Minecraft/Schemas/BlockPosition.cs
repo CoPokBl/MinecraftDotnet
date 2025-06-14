@@ -26,4 +26,20 @@ public readonly struct BlockPosition(int x, int y, int z) : IEquatable<BlockPosi
     public override bool Equals(object? obj) {
         return obj is ChunkPosition other && Equals(other);
     }
+
+    public override string ToString() {
+        return $"{X},{Y},{Z}";
+    }
+
+    public BlockPosition GetBlockTowards(BlockFace face) {
+        return face switch {
+            BlockFace.NegY => new BlockPosition(X, Y - 1, Z),
+            BlockFace.PosY => new BlockPosition(X, Y + 1, Z),
+            BlockFace.NegZ => new BlockPosition(X, Y, Z - 1),
+            BlockFace.PosZ => new BlockPosition(X, Y, Z + 1),
+            BlockFace.NegX => new BlockPosition(X - 1, Y, Z),
+            BlockFace.PosX => new BlockPosition(X + 1, Y, Z),
+            _ => throw new ArgumentOutOfRangeException(nameof(face), face, null)
+        };
+    }
 }

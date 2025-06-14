@@ -16,7 +16,7 @@ public class Everything {
     public static async Task Start() {
         Console.WriteLine("Creating world...");
         // World world = new(new TestingProvider(), 32, 2, 10);
-        World world = new(new SpawnCachedTerrainProvider(new TestingProvider(), 32), 32, 2, 10);
+        World world = new(new CoolProvider(), 32, 2, 10);
         Console.WriteLine("World created!");
 
         MinecraftServer server = new([
@@ -94,11 +94,14 @@ public class Everything {
         });
 
         server.Events.AddListener<SimpleChatFeature.SimpleChatEvent>(e => {
-            string[] parts = e.Msg.Split(",");
-            Vec3 pos = new(double.Parse(parts[0]), double.Parse(parts[1]), double.Parse(parts[2]));
-            server.Feature<SimpleEntitiesFeature>()!.Spawn(new Entity(97) {
-                Position = pos
-            });
+            // string[] parts = e.Msg.Split(",");
+            // Vec3 pos = new(double.Parse(parts[0]), double.Parse(parts[1]), double.Parse(parts[2]));
+            // server.Feature<SimpleEntitiesFeature>()!.Spawn(new Entity(97) {
+            //     Position = pos
+            // });
+            e.Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket(
+                Random.Shared.Next(), new PlayerPosition(new Vec3(0, 100, 0), Vec3.Zero, Angle.Zero, Angle.Zero),
+                TeleportFlags.None));
         });
 
         Console.WriteLine("Server ready, listening...");

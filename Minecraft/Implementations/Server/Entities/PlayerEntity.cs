@@ -10,14 +10,14 @@ namespace Minecraft.Implementations.Server.Entities;
 public class PlayerEntity : Entity {
     public string Name;
 
-    private PlayerConnection _connection;
+    public PlayerConnection Connection;
     public Func<PlayerConnection, bool> PlayerViewableRule { get; set; } = _ => true;
     
     // Listen to movement packets so we can do stuff
     public PlayerEntity(PlayerConnection connection, string name) : base(148) {
         Name = name;
-        _connection = connection;
-        ViewableRule = con => con != _connection && PlayerViewableRule(con);
+        Connection = connection;
+        ViewableRule = con => con != Connection && PlayerViewableRule(con);
         
         connection.Events.AddListener<PacketHandleEvent>(e => {
             switch (e.Packet) {
@@ -47,6 +47,35 @@ public class PlayerEntity : Entity {
                 }
             }
         });
+    }
+    
+    public void SetVelocity(Vec3 velocity) {
+        Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket(
+            Random.Shared.Next(),
+            Vec3.Zero,
+            velocity,
+            0f,
+            0f,
+            TeleportFlags.RelativePosition | TeleportFlags.RelativeRotation));
+    }
+
+    public override void Teleport(Vec3 pos, Angle? yaw = null, Angle? pitch = null) {
+        Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket(
+            Random.Shared.Next(), 
+            new PlayerPosition(pos, Vec3.Zero, yaw ?? Angle.Zero, pitch ?? Angle.Zero),
+            TeleportFlags.None));
+    }
+    
+    public override void Teleport(PlayerPosition pos) {
+        Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket(
+            Random.Shared.Next(), 
+            pos,
+            TeleportFlags.None));
+    }
+
+    public override void SendToSelfAndViewers(params MinecraftPacket[] packets) {
+        Connection.SendPackets(packets);
+        SendToViewers(packets);
     }
 
     public override MinecraftPacket[] GenerateSpawnEntityPackets() {

@@ -39,7 +39,7 @@ public class PlayerLoginFeature(
         false
     ));
     private readonly Func<PlayerConnection, PlayerPosition> _spawnProvider =
-        spawnProvider ?? (_ => new PlayerPosition(new Vec3(0, 64, 0), Vec3.Zero, 0, 0));
+        spawnProvider ?? (_ => new PlayerPosition(new Vec3(0, 64, 0), Vec3.Zero, Angle.Zero, Angle.Zero));
 
     public void Register(MinecraftServer server) {
         server.Events.AddListener<PacketHandleEvent>(e => {

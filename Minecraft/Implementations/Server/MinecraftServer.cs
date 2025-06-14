@@ -45,13 +45,9 @@ public class MinecraftServer {
     /// by this instance.
     /// </summary>
     /// <param name="connection">The connection.</param>
-    /// <remarks>
-    /// Adding a connection to more than one server should be considered unsafe and may
-    /// not behave as expected.
-    /// </remarks>
     public void AddConnection(PlayerConnection connection) {
         Connections.Add(connection);
-        connection.Events = new EventNode<ServerEvent>(Events);
+        connection.Events.AddParent(Events);
         connection.Disconnected += () => Connections.Remove(connection);
     }
 }

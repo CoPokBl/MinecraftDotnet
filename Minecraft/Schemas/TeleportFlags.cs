@@ -13,6 +13,7 @@ public enum TeleportFlags {
     RotVelWithDeltaVelocity = 1 << 8,
     
     RelativeRotation = RelativeYaw | RelativePitch,
+    RelativePosition = RelativeX | RelativeY | RelativeZ,
     RelativeVelocity = RelativeVelocityX | RelativeVelocityY | RelativeVelocityZ,
     RelativeAll = RelativeX | RelativeY | RelativeZ | RelativeRotation | RelativeVelocity,
     None = 0,

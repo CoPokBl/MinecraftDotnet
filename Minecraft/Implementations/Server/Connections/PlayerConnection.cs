@@ -86,7 +86,22 @@ public abstract class PlayerConnection {
         return SendPackets(true, packets);
     }
 
-    public abstract Task SendPacket(MinecraftPacket packet);
+    public Task SendPacket(MinecraftPacket packet) {
+        PacketSendingEvent e = new() {
+            Connection = this,
+            Packet = packet
+        };
+        Events.CallEvent(e);
+
+        if (e.Cancelled) {
+            return Task.CompletedTask;
+        }
+        
+        // Send it
+        return SendPacketInternal(packet);
+    }
+
+    protected abstract Task SendPacketInternal(MinecraftPacket packet);
     public abstract Task HandlePackets();
     public abstract void Disconnect();
 }

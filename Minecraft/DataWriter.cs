@@ -78,6 +78,12 @@ public class DataWriter {
             .WriteShort(value.Z);
     }
     
+    public DataWriter WriteVec3(FVec3 value) {
+        return WriteFloat(value.X)
+            .WriteFloat(value.Y)
+            .WriteFloat(value.Z);
+    }
+    
     // A single-precision 32-bit IEEE 754 floating point number, big endian
     public DataWriter WriteFloat(float value) {
         byte[] buffer = BitConverter.GetBytes(value);

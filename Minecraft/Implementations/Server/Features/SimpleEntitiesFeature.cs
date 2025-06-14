@@ -1,5 +1,7 @@
+using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Entities;
+using Minecraft.Implementations.Server.Events;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
@@ -32,12 +34,17 @@ public class SimpleEntitiesFeature : IFeature {
         return [];
     }
 
-    public void Spawn(Entity entity) {
-        entity.NetId = NewNetId;
+    public void Spawn(Entity entity, int? id = null) {
+        entity.NetId = id ?? NewNetId;
         entity.Feat = this;
+        entity.Events = new EventNode<ServerEvent>(_server.Events);
         Entities.Add(entity);
         
         SendPacketsFor(entity, entity.GenerateSpawnEntityPackets());
+    }
+
+    public void Despawn(Entity entity) {
+        Entities.Remove(entity);
     }
 
     public void SendPacketsFor(Entity entity, params MinecraftPacket[] packets) {
@@ -51,6 +58,10 @@ public class SimpleEntitiesFeature : IFeature {
             }
             con.SendPackets(packets);
         }
+    }
+
+    public Entity? GetEntityById(int id) {
+        return Entities.Find(entity => entity.NetId == id);
     }
 
     public void MoveEntity(Entity entity, Vec3 newPos, Angle? yaw = null, Angle? pitch = null) {

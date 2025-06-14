@@ -15,7 +15,7 @@ public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) :
     private readonly ConcurrentQueue<MinecraftPacket> _packetQueue = new();
     private Stream Stream => client.GetStream();
     
-    public override Task SendPacket(MinecraftPacket packet) {
+    protected override Task SendPacketInternal(MinecraftPacket packet) {
         if (packetQueuing) {
             _packetQueue.Enqueue(packet);
             return Task.CompletedTask;
@@ -151,90 +151,91 @@ public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) :
                             break;
                         }
 
-                        case ServerBoundSwingArmPacket: {
-                            await SendPacket(
-                                new ClientBoundSystemChatMessagePacket(
-                                    TextComponent.Text("Swing").WithColor(TextColor.Green)
-                                        .With(TextComponent.Content(TextContent.Text(" arm"))
-                                            .WithColor(TextColor.Red)
-                                            .WithBold(true)
-                                            // .WithHoverEvent(HoverEvent.ShowEntity(
-                                            //     TextComponent.Text("POTATO").WithColor(TextColor.Red), 
-                                            //     "minecraft:cow", 
-                                            //     "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"))
-                                            .WithHoverEvent(HoverEvent.ShowText(TextComponent.Text("Hey there")))
-                                            .WithClickEvent(ClickEvent.OpenUrl("https://serble.net"))
-                                            // .WithHoverEvent(HoverEvent.ShowText(TextComponent.Text("Do it pussy").WithColor(TextColor.Aqua)))
-                                        ),
-                                    false));
-
-                            TextComponent thing = TextComponent.Text("Hello there potato")
-                                .WithClickEvent(ClickEvent.OpenUrl("https://serble.net")).WithColor(TextColor.Red);
-                            await SendPacket(new ClientBoundSystemChatMessagePacket(
-                                thing, false));
-
-                            for (int i = 0; i < 5; i++) {
-                                for (int j = 0; j < 5; j++) {
-                                    await SendPacket(new ClientBoundBlockUpdatePacket(new BlockPosition(i, 60, j), 11));
-                                }
-                            }
-                            
-                            break;
-                        }
-
-                        case ServerBoundSetPlayerPositionPacket setpos: {
-                            int x = (int)(setpos.Position.X / 16);
-                            int z = (int)(setpos.Position.Z / 16);
-                            // Log($"Setting center chunk to: {x}, {z}");
-                            await SendPacket(new ClientBoundSetCenterChunkPacket(x, z));
-                            break;
-                        }
-
-                        case ServerBoundSetHeldItemPacket shi: {
-                            await SendPacket(
-                                new ClientBoundSystemChatMessagePacket(TextComponent.Text($"Set held item to {shi.Slot}"),
-                                    true));
-
-                            if (shi.Slot == 8) {
-                                // await Kick(TextComponent.Text("Goodbye"));
-                                await SendPacket(new ClientBoundPlayerInfoUpdatePacket(
-                                    new ClientBoundPlayerInfoUpdatePacket.PlayerData(
-                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.AddPlayer,
-                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateDisplayName,
-                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateGameMode,
-                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateLatency,
-                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateListed,
-                                            ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateListPriority
-                                            // ClientBoundPlayerInfoUpdatePacket.PlayerActions.InitializeChat
-                                        )
-                                        .WithPlayer(
-                                            Guid.Empty, 
-                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateDisplayName {
-                                                DisplayName = TextComponent.Text("Potato man").WithColor(TextColor.Red)
-                                            },
-                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateGameMode {
-                                                GameMode = 0
-                                            },
-                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer {
-                                                Name = "Potato",
-                                                Properties = []
-                                            },
-                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateLatency {
-                                                Latency = 200
-                                            },
-                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateListed {
-                                                Listed = true
-                                            },
-                                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateListPriority {
-                                                Priority = 1
-                                            }
-                                            // new ClientBoundPlayerInfoUpdatePacket.PlayerData.InitializeChat {
-                                            //     HasData = false
-                                            // }
-                                        )));
-                            }
-                            break;
-                        }
+                        // TESTING STUFF
+                        // case ServerBoundSwingArmPacket: {
+                        //     await SendPacket(
+                        //         new ClientBoundSystemChatMessagePacket(
+                        //             TextComponent.Text("Swing").WithColor(TextColor.Green)
+                        //                 .With(TextComponent.Content(TextContent.Text(" arm"))
+                        //                     .WithColor(TextColor.Red)
+                        //                     .WithBold(true)
+                        //                     // .WithHoverEvent(HoverEvent.ShowEntity(
+                        //                     //     TextComponent.Text("POTATO").WithColor(TextColor.Red), 
+                        //                     //     "minecraft:cow", 
+                        //                     //     "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"))
+                        //                     .WithHoverEvent(HoverEvent.ShowText(TextComponent.Text("Hey there")))
+                        //                     .WithClickEvent(ClickEvent.OpenUrl("https://serble.net"))
+                        //                     // .WithHoverEvent(HoverEvent.ShowText(TextComponent.Text("Do it pussy").WithColor(TextColor.Aqua)))
+                        //                 ),
+                        //             false));
+                        //
+                        //     TextComponent thing = TextComponent.Text("Hello there potato")
+                        //         .WithClickEvent(ClickEvent.OpenUrl("https://serble.net")).WithColor(TextColor.Red);
+                        //     await SendPacket(new ClientBoundSystemChatMessagePacket(
+                        //         thing, false));
+                        //
+                        //     for (int i = 0; i < 5; i++) {
+                        //         for (int j = 0; j < 5; j++) {
+                        //             await SendPacket(new ClientBoundBlockUpdatePacket(new BlockPosition(i, 60, j), 11));
+                        //         }
+                        //     }
+                        //     
+                        //     break;
+                        // }
+                        //
+                        // case ServerBoundSetPlayerPositionPacket setpos: {
+                        //     int x = (int)(setpos.Position.X / 16);
+                        //     int z = (int)(setpos.Position.Z / 16);
+                        //     // Log($"Setting center chunk to: {x}, {z}");
+                        //     await SendPacket(new ClientBoundSetCenterChunkPacket(x, z));
+                        //     break;
+                        // }
+                        //
+                        // case ServerBoundSetHeldItemPacket shi: {
+                        //     await SendPacket(
+                        //         new ClientBoundSystemChatMessagePacket(TextComponent.Text($"Set held item to {shi.Slot}"),
+                        //             true));
+                        //
+                        //     if (shi.Slot == 8) {
+                        //         // await Kick(TextComponent.Text("Goodbye"));
+                        //         await SendPacket(new ClientBoundPlayerInfoUpdatePacket(
+                        //             new ClientBoundPlayerInfoUpdatePacket.PlayerData(
+                        //                     ClientBoundPlayerInfoUpdatePacket.PlayerActions.AddPlayer,
+                        //                     ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateDisplayName,
+                        //                     ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateGameMode,
+                        //                     ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateLatency,
+                        //                     ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateListed,
+                        //                     ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateListPriority
+                        //                     // ClientBoundPlayerInfoUpdatePacket.PlayerActions.InitializeChat
+                        //                 )
+                        //                 .WithPlayer(
+                        //                     Guid.Empty, 
+                        //                     new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateDisplayName {
+                        //                         DisplayName = TextComponent.Text("Potato man").WithColor(TextColor.Red)
+                        //                     },
+                        //                     new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateGameMode {
+                        //                         GameMode = 0
+                        //                     },
+                        //                     new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer {
+                        //                         Name = "Potato",
+                        //                         Properties = []
+                        //                     },
+                        //                     new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateLatency {
+                        //                         Latency = 200
+                        //                     },
+                        //                     new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateListed {
+                        //                         Listed = true
+                        //                     },
+                        //                     new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateListPriority {
+                        //                         Priority = 1
+                        //                     }
+                        //                     // new ClientBoundPlayerInfoUpdatePacket.PlayerData.InitializeChat {
+                        //                     //     HasData = false
+                        //                     // }
+                        //                 )));
+                        //     }
+                        //     break;
+                        // }
                     }
                 }
             }

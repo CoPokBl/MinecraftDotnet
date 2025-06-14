@@ -126,6 +126,13 @@ public class DataReader(byte[] data) {
         return new SVec3(x, y, z);
     }
     
+    public FVec3 ReadFVec3() {
+        float x = ReadFloat();
+        float y = ReadFloat();
+        float z = ReadFloat();
+        return new FVec3(x, y, z);
+    }
+    
     public float ReadFloat() {
         byte[] bytes = Read(4);
         if (BitConverter.IsLittleEndian) {

@@ -1,4 +1,5 @@
-﻿using TestServer.Servers.MlgRush;
+﻿using TestServer.Servers.Everything;
+using TestServer.Servers.MlgRush;
 
 await MlgRush.Start();
 

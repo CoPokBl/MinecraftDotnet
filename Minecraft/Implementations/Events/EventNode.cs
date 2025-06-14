@@ -3,15 +3,19 @@ using System.Reflection;
 namespace Minecraft.Implementations.Events;
 
 public class EventNode<T> {
-    public EventNode<T>[] Parents { get; }
+    public List<EventNode<T>> Parents { get; }
     public event Action<T>? Callback;
     
     public EventNode(params EventNode<T>[] parents) {
-        Parents = parents;
+        Parents = new List<EventNode<T>>(parents);
 
         foreach (EventNode<T> parent in parents) {
-            Callback += parent.Callback;  // We trigger our parent's callbacks
+            Callback += e => parent.Callback!(e);  // We trigger our parent's callbacks
         }
+    }
+
+    public void AddParent(EventNode<T> parent) {
+        Callback += e => parent.Callback!(e);
     }
 
     public void AddListener<TL>(Action<TL> callback) where TL : T {
@@ -39,7 +43,7 @@ public class EventNode<T> {
     /// </summary>
     /// <param name="callback">The listener.</param>
     /// <typeparam name="TL">The event type to listen for.</typeparam>
-    public void OnFirst<TL>(Action<T> callback) where TL : T {
+    public void OnFirst<TL>(Action<TL> callback) where TL : T {
         Action<T> actualListener = null!;
         actualListener = obj => {
             if (obj is not TL tl) {

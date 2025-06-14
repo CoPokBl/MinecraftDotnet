@@ -211,6 +211,11 @@ public abstract class MinecraftPacket {
                             ? throw new NotImplementedException()
                             : new ServerBoundPluginMessagePacketPlay().ParseData(data);
                     
+                    case 0x18:
+                        return clientBound
+                            ? throw new NotImplementedException()
+                            : new ServerBoundInteractPacket().ParseData(data);
+                    
                     case 0x1A:
                         return clientBound
                             ? throw new NotImplementedException()
@@ -228,7 +233,7 @@ public abstract class MinecraftPacket {
                     
                     case 0x1E:
                         return clientBound
-                            ? throw new NotImplementedException()
+                            ? new ClientBoundEntityEventPacket().ParseData(data)
                             : new ServerBoundSetPlayerRotationPacket().ParseData(data);
                     
                     case 0x1F:
@@ -244,6 +249,11 @@ public abstract class MinecraftPacket {
                     case 0x22:
                         return clientBound
                             ? new ClientBoundGameEventPacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
+                    case 0x24:
+                        return clientBound
+                            ? new ClientBoundHurtAnimationPacket().ParseData(data)
                             : throw new NotImplementedException();
                     
                     case 0x26:
@@ -309,7 +319,7 @@ public abstract class MinecraftPacket {
                     case 0x3E:
                         return clientBound
                             ? new ClientBoundPlayerInfoRemovePacket().ParseData(data)
-                            : throw new NotImplementedException();
+                            : new ServerBoundUseItemOnPacket().ParseData(data);
                     
                     case 0x3F:
                         return clientBound
