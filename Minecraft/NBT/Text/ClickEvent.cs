@@ -22,7 +22,7 @@ public record ClickEvent(string Action, params ITag?[] Fields) {
     
     /// <summary>
     /// Click event that changes the current page in the open book to the value.
-    /// <p>
+    /// <p/>
     /// This only works for text in books.
     /// </summary>
     /// <param name="page">The page to change to.</param>

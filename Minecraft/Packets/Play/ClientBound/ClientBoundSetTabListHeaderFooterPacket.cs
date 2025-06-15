@@ -20,6 +20,9 @@ public class ClientBoundSetTabListHeaderFooterPacket(TextComponent header, TextC
     }
 
     protected override MinecraftPacket ParseData(byte[] data) {
-        throw new NotImplementedException();
+        DataReader r = new(data);
+        Header = r.ReadText();
+        Footer = r.ReadText();
+        return this;
     }
 }

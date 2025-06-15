@@ -35,6 +35,14 @@ public class TextColor {
         return new TextColor(r, g, b);
     }
     
+    public static TextColor Rgb(float r, float g, float b) {
+        return new TextColor(
+            (int)(r * 255),
+            (int)(g * 255),
+            (int)(b * 255)
+        );
+    }
+    
     public static TextColor Hex(string hex) {
         if (hex.Length != 6 && hex.Length != 7) {
             throw new ArgumentException("Hex color must be 6 or 7 characters long.");
@@ -50,8 +58,52 @@ public class TextColor {
         
         return new TextColor(r, g, b);
     }
+
+    public static TextColor Parse(string val) {
+        switch (val) {
+            case "black": return Black;
+            case "dark_blue": return DarkBlue;
+            case "dark_green": return DarkGreen;
+            case "dark_aqua": return DarkAqua;
+            case "dark_red": return DarkRed;
+            case "dark_purple": return DarkPurple;
+            case "gold": return Gold;
+            case "gray": return Gray;
+            case "dark_gray": return DarkGray;
+            case "blue": return Blue;
+            case "green": return Green;
+            case "aqua": return Aqua;
+            case "red": return Red;
+            case "light_purple": return LightPurple;
+            case "yellow": return Yellow;
+            case "white": return White;
+        }
+        
+        // maybe it's hex
+        if (val[0] != '#') {
+            throw new ArgumentException("Invalid color format.", nameof(val));
+        }
+        
+        return Hex(val);
+    }
+
+    public static TextColor FromDecimal(int val) {
+        if (val is < 0 or > 0xFFFFFF) {
+            throw new ArgumentOutOfRangeException(nameof(val), "Value must be between 0 and 0xFFFFFF.");
+        }
+        
+        int r = (val >> 16) & 0xFF;
+        int g = (val >> 8) & 0xFF;
+        int b = val & 0xFF;
+        
+        return new TextColor(r, g, b);
+    }
     
     public string ToHex() {
         return $"#{R:X2}{G:X2}{B:X2}";
+    }
+
+    public int ToDecimal() {
+        return (R << 16) + (G << 8) + B;
     }
 }

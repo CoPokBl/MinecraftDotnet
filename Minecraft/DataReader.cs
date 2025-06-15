@@ -1,5 +1,7 @@
 using System.Buffers.Binary;
 using System.Text;
+using Minecraft.NBT;
+using Minecraft.NBT.Text;
 using Minecraft.Schemas;
 
 namespace Minecraft;
@@ -204,6 +206,14 @@ public class DataReader(byte[] data) {
         return new Angle {
             Value = Read()
         };
+    }
+
+    public ITag ReadNbt() {
+        return new NbtReader(this).ToTag();
+    }
+
+    public TextComponent ReadText() {
+        return TextComponent.FromTag(ReadNbt());
     }
     
     public T[] ReadPrefixedArray<T>(Func<DataReader, T> readerAdapter) {

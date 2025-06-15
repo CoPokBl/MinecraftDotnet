@@ -1,27 +1,37 @@
 namespace Minecraft.NBT.Tags;
 
-public class ListTag<T> : ITag where T : ITag {
-    private readonly T[] _tags;
-    private readonly string? _name;
+public class ListTag<T> : ListTag where T : ITag {
+    public new T[] Tags => base.Tags.Cast<T>().ToArray();
     
-    public ListTag(string? name, T[] tags) {
+    public ListTag(string? name, T[] tags) : base(name, tags.Cast<ITag>().ToArray()) {
         if (typeof(T) == typeof(ITag)) {
             throw new ArgumentException("List must only be of one type.", nameof(T));
         }
-
-        _tags = tags;
-        _name = name;
     }
-    
+}
+
+public class ListTag(string? name, ITag[] tags) : ITag {
+    public string? Name { get; set; } = name;
+    public ITag[] Tags { get; } = tags;
+
+    public ListTag WithName(string name) {
+        Name = name;
+        return this;
+    }
+
     public byte GetPrefix() {
         return NbtTagPrefix.List;
     }
+    
+    public string? GetName() {
+        return Name;
+    }
 
     public byte[] Serialise(bool noType = false) {
-        byte type = _tags.Length == 0 ? NbtTagPrefix.End : _tags[0].GetPrefix();
+        byte type = Tags.Length == 0 ? NbtTagPrefix.End : Tags[0].GetPrefix();
 
-        NbtBuilder builder = new NbtBuilder().WriteType(NbtTagPrefix.List, noType).WriteName(_name).Write(type).WriteInteger(_tags.Length);
-        foreach (T tag in _tags) {
+        NbtBuilder builder = new NbtBuilder().WriteType(NbtTagPrefix.List, noType).WriteName(Name).Write(type).WriteInteger(Tags.Length);
+        foreach (ITag tag in Tags) {
             builder.Write(tag.Serialise(true));
         }
         return builder.ToArray();

@@ -4,7 +4,7 @@ using Minecraft.NBT.Text;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSystemChatMessagePacket(TextComponent content, bool actionBar) : MinecraftPacket {
-    public ITag Content = content;
+    public TextComponent Content = content;
     public bool ActionBar = actionBar;
 
     public ClientBoundSystemChatMessagePacket() : this(TextComponent.Empty(), true) { }
@@ -22,6 +22,8 @@ public class ClientBoundSystemChatMessagePacket(TextComponent content, bool acti
 
     protected override MinecraftPacket ParseData(byte[] data) {
         DataReader r = new(data);
-        throw new NotImplementedException();
+        Content = r.ReadText();
+        ActionBar = r.ReadBoolean();
+        return this;
     }
 }

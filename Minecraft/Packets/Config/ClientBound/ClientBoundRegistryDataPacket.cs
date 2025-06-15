@@ -3,7 +3,7 @@ using Minecraft.NBT;
 namespace Minecraft.Packets.Config.ClientBound;
 
 public class ClientBoundRegistryDataPacket(string registryId, Dictionary<string, ITag?> entries) : MinecraftPacket {
-    public Dictionary<string, ITag> Entries = entries;
+    public Dictionary<string, ITag?> Entries = entries;
     public string RegistryId = registryId;
     
     public ClientBoundRegistryDataPacket() : this("", new Dictionary<string, ITag?>()) { }
@@ -19,23 +19,17 @@ public class ClientBoundRegistryDataPacket(string registryId, Dictionary<string,
                 Entries.ToArray(),
                 (entry, writer) => writer
                     .WriteString(entry.Key)
-                    .WritePrefixedOptional(entry.Value, (tag, dataWriter) => 
-                    //{
-                    //     ArrayBufferWriter<byte> buffer = new();
-                    //     TagSerializer.Serialize(buffer, tag);
-                    //     dataWriter.Write(buffer.WrittenSpan.ToArray());
-                    // }))
-            dataWriter.WriteNbt(tag)))
+                    .WritePrefixedOptional(entry.Value, (tag, dataWriter) => dataWriter.WriteNbt(tag)))
             .ToArray();
     }
 
-    // TODO: Parse the NBT properly
     protected override MinecraftPacket ParseData(byte[] data) {
         DataReader r = new(data);
         RegistryId = r.ReadString();
-        KeyValuePair<string, byte[]>[] entries = r.ReadPrefixedArray(reader => new KeyValuePair<string, byte[]>(
+        KeyValuePair<string, ITag?>[] entries = r.ReadPrefixedArray(reader => new KeyValuePair<string, ITag?>(
             reader.ReadString(),
-            reader.Read(reader.ReadVarInt())));
-        throw new NotImplementedException(); //return this;
+            reader.ReadPrefixedOptional(re => re.ReadNbt())));
+        Entries = new Dictionary<string, ITag?>(entries);
+        return this;
     }
 }

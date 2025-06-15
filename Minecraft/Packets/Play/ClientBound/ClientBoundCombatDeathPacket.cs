@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundCombatDeathPacket(int playerId, TextComponent message) : MinecraftPacket {
     public int PlayerId = playerId;
-    public ITag Message = message;
+    public TextComponent Message = message;
     
     public ClientBoundCombatDeathPacket() : this(0, TextComponent.Empty()) { }
 
@@ -21,6 +21,9 @@ public class ClientBoundCombatDeathPacket(int playerId, TextComponent message) :
     }
 
     protected override MinecraftPacket ParseData(byte[] data) {
-        throw new NotImplementedException();
+        DataReader r = new(data);
+        PlayerId = r.ReadVarInt();
+        Message = r.ReadText();
+        return this;
     }
 }

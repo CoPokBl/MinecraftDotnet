@@ -4,7 +4,7 @@ using Minecraft.NBT.Text;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundDisconnectPacketPlay(TextComponent reason) : MinecraftPacket {
-    public ITag Reason = reason;
+    public TextComponent Reason = reason;
     
     public ClientBoundDisconnectPacketPlay() : this(TextComponent.Empty()) { }
     
@@ -19,6 +19,8 @@ public class ClientBoundDisconnectPacketPlay(TextComponent reason) : MinecraftPa
     }
 
     protected override MinecraftPacket ParseData(byte[] data) {
-        throw new NotImplementedException();
+        DataReader r = new(data);
+        Reason = r.ReadText();
+        return this;
     }
 }
