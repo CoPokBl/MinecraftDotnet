@@ -1,4 +1,3 @@
-using Minecraft.NBT;
 using Minecraft.NBT.Text;
 
 namespace Minecraft.Packets.Play.ClientBound;

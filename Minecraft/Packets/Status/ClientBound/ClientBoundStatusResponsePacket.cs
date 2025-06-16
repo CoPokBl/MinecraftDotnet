@@ -98,6 +98,9 @@ public class ClientBoundStatusResponsePacket(
             SamplePlayers = players.ToArray();
         }
 
+        // TODO: This doesn't handle all text component formats
+        // make TextComponent.FromJson(string or JValue) to correctly
+        // parse it.
         if (obj.description?.text != null) {
             Description = obj.description.text;
         }

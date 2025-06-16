@@ -1,5 +1,11 @@
 namespace Minecraft.Schemas;
 
+/// <summary>
+/// Class to differentiate between a Nullable fields and an optional nullable field.
+/// </summary>
+/// <param name="present">Whether the value is present.</param>
+/// <param name="val">The value.</param>
+/// <typeparam name="T">The underlying type.</typeparam>
 public class Optional<T>(bool present, T? val) {
     public bool Present { get; } = present;
 

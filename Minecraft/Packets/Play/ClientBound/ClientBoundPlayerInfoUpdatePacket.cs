@@ -3,7 +3,7 @@ using Minecraft.NBT.Text;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket.PlayerData data) : MinecraftPacket {
-    public PlayerData Data { get; } = data;
+    public PlayerData Data = data;
 
     public ClientBoundPlayerInfoUpdatePacket() : this(new PlayerData()) { }
     
@@ -21,7 +21,7 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
     
     public class PlayerData(params PlayerActions[] actions) {
         public PlayerActions[] Actions { get; } = actions;
-        public readonly List<(Guid, IPlayerAction[])> Data = [];
+        public List<(Guid, IPlayerAction[])> Data = [];
 
         public PlayerData WithPlayer(Guid uuid, params IPlayerAction[] playerActions) {
             List<PlayerActions> needed = new(Actions);
@@ -70,6 +70,19 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
                             .WritePrefixedOptional(property.Signature, (s, dataWriter) => dataWriter.WriteString(s)))
                     .ToArray();
             }
+
+            public static AddPlayer Deserialise(DataReader r) {
+                return new AddPlayer {
+                    Name = r.ReadString(),
+                    Properties = r.ReadPrefixedArray(re => {
+                        return new Property {
+                            Name = r.ReadString(),
+                            Value = r.ReadString(),
+                            Signature = r.ReadPrefixedOptional(red => red.ReadString())
+                        };
+                    })
+                };
+            }
         }
         
         public class InitializeChat : IPlayerAction {
@@ -97,6 +110,22 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
                     .WritePrefixedArray(PublicKeySignature, (b, writer) => writer.Write(b))
                     .ToArray();
             }
+
+            public static InitializeChat Deserialise(DataReader r) {
+                if (!r.ReadBoolean()) {
+                    return new InitializeChat {
+                        HasData = false
+                    };
+                }
+
+                return new InitializeChat {
+                    HasData = true,
+                    ChatSessionId = r.ReadUuid(),
+                    PublicKeyExpiryTime = r.ReadLong(),
+                    EncodedPublicKey = r.ReadPrefixedArray(red => red.Read()),
+                    PublicKeySignature = r.ReadPrefixedArray(red => red.Read())
+                };
+            }
         }
 
         public class UpdateGameMode : IPlayerAction {
@@ -107,6 +136,12 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
                 return new DataWriter()
                     .WriteVarInt(GameMode)
                     .ToArray();
+            }
+
+            public static UpdateGameMode Deserialise(DataReader r) {
+                return new UpdateGameMode {
+                    GameMode = r.ReadVarInt()
+                };
             }
         }
         
@@ -119,6 +154,12 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
                     .WriteBoolean(Listed)
                     .ToArray();
             }
+            
+            public static UpdateListed Deserialise(DataReader r) {
+                return new UpdateListed {
+                    Listed = r.ReadBoolean()
+                };
+            }
         }
         
         public class UpdateLatency : IPlayerAction {
@@ -129,6 +170,12 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
                 return new DataWriter()
                     .WriteVarInt(Latency)
                     .ToArray();
+            }
+            
+            public static UpdateLatency Deserialise(DataReader r) {
+                return new UpdateLatency {
+                    Latency = r.ReadVarInt()
+                };
             }
         }
         
@@ -141,6 +188,12 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
                     .WritePrefixedOptional(DisplayName, (component, writer) => writer.WriteNbt(component))
                     .ToArray();
             }
+            
+            public static UpdateDisplayName Deserialise(DataReader r) {
+                return new UpdateDisplayName {
+                    DisplayName = r.ReadPrefixedOptional(re => re.ReadText())
+                };
+            }
         }
         
         public class UpdateListPriority : IPlayerAction {
@@ -152,6 +205,12 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
                     .WriteVarInt(Priority)
                     .ToArray();
             }
+            
+            public static UpdateListPriority Deserialise(DataReader r) {
+                return new UpdateListPriority {
+                    Priority = r.ReadVarInt()
+                };
+            }
         }
         
         public class UpdateHat : IPlayerAction {
@@ -162,6 +221,12 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
                 return new DataWriter()
                     .WriteBoolean(Visible)
                     .ToArray();
+            }
+            
+            public static UpdateHat Deserialise(DataReader r) {
+                return new UpdateHat {
+                    Visible = r.ReadBoolean()
+                };
             }
         }
     }
@@ -180,6 +245,32 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
     }
 
     protected override MinecraftPacket ParseData(byte[] data) {
-        throw new NotImplementedException();  // uses nbt for display name
+        DataReader r = new(data);
+        PlayerActions actions = (PlayerActions)r.Read();
+        PlayerActions[] setFlags = Enum.GetValues(typeof(PlayerActions))
+            .Cast<PlayerActions>()
+            .Where(flag => actions.HasFlag(flag))
+            .ToArray();
+
+        (Guid, PlayerData.IPlayerAction[])[] dat = r.ReadPrefixedArray((reader => {
+            return (reader.ReadUuid(), reader.ReadArray<PlayerData.IPlayerAction>(setFlags.Length, (r2, i) => {
+                return setFlags[i] switch {
+                    PlayerActions.AddPlayer => PlayerData.AddPlayer.Deserialise(r2),
+                    PlayerActions.InitializeChat => PlayerData.InitializeChat.Deserialise(r2),
+                    PlayerActions.UpdateGameMode => PlayerData.UpdateGameMode.Deserialise(r2),
+                    PlayerActions.UpdateListed => PlayerData.UpdateListed.Deserialise(r2),
+                    PlayerActions.UpdateLatency => PlayerData.UpdateLatency.Deserialise(r2),
+                    PlayerActions.UpdateDisplayName => PlayerData.UpdateDisplayName.Deserialise(r2),
+                    PlayerActions.UpdateListPriority => PlayerData.UpdateListPriority.Deserialise(r2),
+                    PlayerActions.UpdateHat => PlayerData.UpdateHat.Deserialise(r2),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+            }));
+        }));
+
+        Data = new PlayerData(setFlags) {
+            Data = dat.ToList()
+        };
+        return this;
     }
 }

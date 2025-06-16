@@ -12,6 +12,7 @@ public class PlayerEntity : Entity {
 
     public PlayerConnection Connection;
     public Func<PlayerConnection, bool> PlayerViewableRule { get; set; } = _ => true;
+    public int WaitingTeleport = -1;
     
     // Listen to movement packets so we can do stuff
     public PlayerEntity(PlayerConnection connection, string name) : base(148) {
@@ -22,17 +23,28 @@ public class PlayerEntity : Entity {
         connection.Events.AddListener<PacketHandleEvent>(e => {
             switch (e.Packet) {
                 case ServerBoundSetPlayerPositionPacket sp: {
+                    if (WaitingTeleport != -1) return;
                     Move(sp.Position);
                     break;
                 }
 
                 case ServerBoundSetPlayerPosAndRotPacket sp: {
+                    if (WaitingTeleport != -1) return;
                     Move(sp.Position, Angle.FromDegrees(sp.Yaw), Angle.FromDegrees(sp.Pitch));
                     break;
                 }
 
                 case ServerBoundSetPlayerRotationPacket sr: {
+                    if (WaitingTeleport != -1) return;
                     Move(Position, Angle.FromDegrees(sr.Yaw), Angle.FromDegrees(sr.Pitch));
+                    break;
+                }
+
+                // don't move player when they haven't sent ack for teleports
+                case ServerBoundConfirmTeleportPacket ct: {
+                    if (ct.TeleportId == WaitingTeleport) {
+                        WaitingTeleport = -1;
+                    }
                     break;
                 }
 
@@ -60,15 +72,17 @@ public class PlayerEntity : Entity {
     }
 
     public override void Teleport(Vec3 pos, Angle? yaw = null, Angle? pitch = null) {
+        WaitingTeleport = Random.Shared.Next();
         Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket(
-            Random.Shared.Next(), 
+            WaitingTeleport, 
             new PlayerPosition(pos, Vec3.Zero, yaw ?? Angle.Zero, pitch ?? Angle.Zero),
             TeleportFlags.None));
     }
     
     public override void Teleport(PlayerPosition pos) {
+        WaitingTeleport = Random.Shared.Next();
         Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket(
-            Random.Shared.Next(), 
+            WaitingTeleport, 
             pos,
             TeleportFlags.None));
     }

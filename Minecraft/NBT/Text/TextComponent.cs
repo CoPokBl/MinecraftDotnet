@@ -37,6 +37,7 @@ public class TextComponent : ITag {
         };
     }
 
+    public static implicit operator TextComponent(string msg) => Text(msg);
 
     public TextComponent With(TextComponent other) {
         Children.Add(other);

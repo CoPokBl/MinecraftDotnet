@@ -228,6 +228,14 @@ public class DataReader(byte[] data) {
         return arr;
     }
     
+    public T[] ReadArray<T>(int length, Func<DataReader, int, T> readerAdapter) {
+        T[] arr = new T[length];
+        for (int i = 0; i < length; i++) {
+            arr[i] = readerAdapter.Invoke(this, i);
+        }
+        return arr;
+    }
+    
     public byte[] ReadRemaining() {
         return data[Pos..];
     }

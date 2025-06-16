@@ -9,6 +9,8 @@ public struct Angle {
 
     public double Radians => Value/256d * (2*Math.PI);
     public double Degrees => Value/256d * 360d;
+    public float DegreesF => (float)Degrees;
+    public float RadiansF => (float)Radians;
 
     public static readonly Angle Zero = new();
 

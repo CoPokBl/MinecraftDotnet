@@ -79,7 +79,11 @@ public class NbtTest {
             TextComponent.Text("Hello")
                 .WithColor(TextColor.Red)
                 .With(TextComponent.Text(" World").WithBold()), 
-            tag => TextComponent.FromTag(tag));
+            tag => {
+                TextComponent text = TextComponent.FromTag(tag);
+                Assert.That(text.Color, Is.EqualTo(TextColor.Red));
+                Assert.That(text.Children, Has.Count.EqualTo(1));
+            });
     }
 
     private static void TestTagNoErrors(ITag tag, Action<ITag>? checker = null) {

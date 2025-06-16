@@ -1,5 +1,4 @@
 using Minecraft.Implementations.Events;
-using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Events;
 
 namespace TestServer;

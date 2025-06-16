@@ -5,8 +5,9 @@ namespace TestServer.Servers.MlgRush;
 
 public class MlgRushMapProvider : ThreadedPerBlockTerrainProvider {
     private const uint RedSandstone = 11968;
-    private const uint WhiteWool = 2093;
+    public const uint WhiteWool = 2093;
     private const uint Air = 0;
+    private const uint BlueBed = 1909;
     
     // Blocks
     private const uint PlatformBlock = RedSandstone;

@@ -4,6 +4,8 @@ public readonly struct BlockPosition(int x, int y, int z) : IEquatable<BlockPosi
     public readonly int X = x;
     public readonly int Y = y;
     public readonly int Z = z;
+    
+    public static readonly BlockPosition Zero = new(0, 0, 0);
 
     public bool IsWithinRadiusOf(BlockPosition other, int radius) {
         return Math.Abs(X - other.X) <= radius && Math.Abs(Z - other.Z) <= radius;

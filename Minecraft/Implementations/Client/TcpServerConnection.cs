@@ -2,9 +2,9 @@ using System.Collections.Concurrent;
 using System.Net.Sockets;
 using Minecraft.Packets;
 
-namespace Minecraft.Implementations.Server.Connections;
+namespace Minecraft.Implementations.Client;
 
-public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) : PlayerConnection {
+public class TcpServerConnection(TcpClient client, bool packetQueuing = false) : ServerConnection {
     private readonly CancellationTokenSource _cts = new();
     private readonly ConcurrentQueue<MinecraftPacket> _packetQueue = new();
     private Stream Stream => client.GetStream();
@@ -31,7 +31,7 @@ public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) :
     }
     
     public override async Task HandlePackets() {
-        Log("Handling new client");
+        Log("Handling server");
         if (packetQueuing) _ = PacketSending();
 
         byte[] buffer = new byte[short.MaxValue];
@@ -73,7 +73,7 @@ public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) :
                     MinecraftPacket packet;
                     try {
                         bool compressed = lenOfPacketLen + packetLength > CompressionThreshold && CompressionThreshold >= 0;
-                        packet = MinecraftPacket.Deserialise(reader.Read(lenOfPacketLen + packetLength), false, State, compressed);
+                        packet = MinecraftPacket.Deserialise(reader.Read(lenOfPacketLen + packetLength), true, State, compressed);
                     }
                     catch (NotImplementedException e) {
                         Log(e.ToString());
@@ -99,7 +99,7 @@ public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) :
     }
 
     public override void Disconnect() {
-        // disconnect the player
+        // disconnect from the server
         _cts.Cancel();
     }
 }

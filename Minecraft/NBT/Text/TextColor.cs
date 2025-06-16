@@ -106,4 +106,16 @@ public class TextColor {
     public int ToDecimal() {
         return (R << 16) + (G << 8) + B;
     }
+
+    public bool Equals(TextColor other) {
+        return R == other.R && G == other.G && B == other.B;
+    }
+
+    public override bool Equals(object? obj) {
+        return obj is TextColor other && Equals(other);
+    }
+
+    public override int GetHashCode() {
+        return ToDecimal();
+    }
 }

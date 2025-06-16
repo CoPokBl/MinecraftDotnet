@@ -15,8 +15,6 @@ public class BlockBreakingFeature(bool instaMine = true) : IFeature {
             if (e.Packet is not ServerBoundPlayerActionPacket packet) {
                 return;
             }
-            
-            Console.WriteLine($"Action: {packet.ActionStatus}");
 
             if (packet.ActionStatus != 
                 (instaMine ? ServerBoundPlayerActionPacket.Status.StartedDigging : ServerBoundPlayerActionPacket.Status.FinishedDigging)) {
@@ -29,19 +27,23 @@ public class BlockBreakingFeature(bool instaMine = true) : IFeature {
                 Position = packet.Location
             };
             e.Connection.Events.CallEvent(breakEvent);
-
+            
             if (breakEvent.Cancelled) {
+                // TODO: Tell them it wasn't broken (we don't know what the block is), for now just acknowledge that it happened.
+                e.Connection.SendPacket(new ClientBoundAcknowledgeBlockChangePacket(packet.Sequence));
                 return;
             }
             
             MinecraftPacket changePacket = new ClientBoundBlockUpdatePacket(packet.Location, 0);
             foreach (PlayerConnection connection in server.Connections) {
-                if (connection == e.Connection) {
-                    continue;
-                }
+                // if (connection == e.Connection) {
+                //     continue;
+                // }
 
                 connection.SendPacket(changePacket);
             }
+            
+            e.Connection.SendPacket(new ClientBoundAcknowledgeBlockChangePacket(packet.Sequence));
         });
     }
 

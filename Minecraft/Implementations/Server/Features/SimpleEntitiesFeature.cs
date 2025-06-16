@@ -79,10 +79,10 @@ public class SimpleEntitiesFeature : IFeature {
             return;
         }
         
-        SVec3 deltaPos = new(
-            (short)(newPos.X*4096 - entity.Position.X*4096), 
-            (short)(newPos.Y*4096 - entity.Position.Y*4096), 
-            (short)(newPos.Z*4096 - entity.Position.Z*4096));
+        FVec3 deltaPos = new(
+            (float)newPos.X - (float)entity.Position.X, 
+            (float)newPos.Y - (float)entity.Position.Y, 
+            (float)newPos.Z - (float)entity.Position.Z);
         
         MinecraftPacket packet = yaw == null || pitch == null
             ? new ClientBoundUpdateEntityPositionPacket(entity.NetId, deltaPos, false)

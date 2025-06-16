@@ -22,6 +22,11 @@ public class DataWriter {
         return this;
     }
 
+    public DataWriter Write(IWritable writable) {
+        writable.Write(this);
+        return this;
+    }
+
     public DataWriter Write(Func<DataWriter, DataWriter> writeAction) {
         return writeAction(this);
     }
@@ -290,7 +295,7 @@ public class DataWriter {
         return this;
     }
 
-    public DataWriter WritePrefixedOptional<T>(T? value, Action<T, DataWriter> writer) {
+    public DataWriter WritePrefixedOptional<T>(T? value, Action<T, DataWriter> writer) where T : class {
         if (value == null) {
             return WriteBoolean(false);
         }
@@ -302,6 +307,16 @@ public class DataWriter {
     
     public DataWriter WritePrefixedOptional<T>(Optional<T> value, Action<T, DataWriter> writer) {
         if (!value.Present) {
+            return WriteBoolean(false);
+        }
+
+        WriteBoolean(true);
+        writer.Invoke(value.Value, this);
+        return this;
+    }
+    
+    public DataWriter WritePrefixedOptional<T>(T? value, Action<T, DataWriter> writer) where T : struct {
+        if (!value.HasValue) {
             return WriteBoolean(false);
         }
 

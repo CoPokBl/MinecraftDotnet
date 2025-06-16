@@ -7,9 +7,11 @@ using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Implementations.Server.Worlds.TerrainProviders;
 using Minecraft.NBT.Text;
+using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Sound;
 
 namespace TestServer.Servers.MlgRush;
 
@@ -20,20 +22,6 @@ public static class MlgRush {
         // World world = new(new TestingProvider(), 32, 2, 10);
         World world = new(new SpawnCachedTerrainProvider(new MlgRushMapProvider(), 4), 4, 2, 10);
         Console.WriteLine("World created!");
-
-        Func<MinecraftServer, MinecraftServer> serverProvider = server => new MinecraftServer([
-            new PlayerInfoFeature(),
-            new SimpleChatFeature(),
-            new HeartbeatsFeature(3000),
-            new TabListFeature(
-                updatePeriod:1000, 
-                headerProvider:() => TextComponent.Text("MLG Rush").WithColor(TextColor.Hex("#EE7026")).WithBold(true), 
-                footerProvider:() => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic(true)),
-            new SimpleEntitiesFeature(),
-            new BlockBreakingFeature(false),
-            new PlaceOneBlockFeature(11),
-            new SimpleCombatFeature(500)
-        ]);
 
         Dictionary<PlayerConnection, int> playerIds = new();
 
@@ -98,10 +86,29 @@ public static class MlgRush {
         
         Console.WriteLine("Server ready, listening...");
         _ = listener.Listen();
+
+        const bool lifeAfterBed = true;
         
         while (run) {
+            PlayerConnection c1 = null!;
+            PlayerConnection c2 = null!;
+            
             MinecraftServer server = null!;
-            server = serverProvider.Invoke(server);
+            server = new MinecraftServer([
+                new PlayerInfoFeature(),
+                new SimpleChatFeature(),
+                new HeartbeatsFeature(3000),
+                new TabListFeature(
+                    updatePeriod:1000, 
+                    headerProvider:() => TextComponent.Text("MLG Rush").WithColor(TextColor.Hex("#EE7026")).WithBold(true), 
+                    footerProvider:() => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic(true)),
+                new SimpleEntitiesFeature(),
+                new BlockBreakingFeature(false),
+                new PlaceOneBlockFeature(con => {
+                    return con == c1 ? 2104 : 2107;  // c1: blue, c2: red
+                }, 5),
+                new SimpleCombatFeature(500)
+            ]);
             server.Events.AddListener<PlayerLoginFeature.PlayerLoginEvent>(e => {
                 e.Connection.SendPackets(
                     new ClientBoundSynchronisePlayerPositionPacket(0, new PlayerPosition(new Vec3(0, -100, 0), Vec3.Zero, Angle.Zero, Angle.Zero), TeleportFlags.None));
@@ -118,8 +125,8 @@ public static class MlgRush {
                 }
             }
 
-            PlayerConnection c1 = server.Connections[0];
-            PlayerConnection c2 = server.Connections[1];
+            c1 = server.Connections[0];
+            c2 = server.Connections[1];
             
             world.AddPlayer(c1);
             world.AddPlayer(c2);
@@ -128,6 +135,27 @@ public static class MlgRush {
             server.Feature<TabListFeature>()!.RegisterPlayer(c2);
 
             SimpleEntitiesFeature entities = server.Feature<SimpleEntitiesFeature>()!;
+
+            void Win(bool p1Won) {
+                PlayerConnection winner = p1Won ? c1 : c2;
+                PlayerConnection loser = p1Won ? c2 : c1;
+                
+                winner.Kick(TextComponent.Text("YOU WON!!!!").WithBold().WithColor(TextColor.Gold));
+                loser.Kick(TextComponent.Text("You lose, L").WithBold().WithColor(TextColor.Red));
+            }
+
+            void BroadcastMsg(TextComponent msg) {
+                c1.SendSystemMessage(msg);
+                c2.SendSystemMessage(msg);
+            }
+
+            void BroadcastPacket(MinecraftPacket packet) {
+                c1.SendPacket(packet);
+                c2.SendPacket(packet);
+            }
+
+            bool p1HasBed = true;
+            bool p2HasBed = true;
             
             // Create players
             PlayerEntity p1 = new(c1, PlayerInfoFeature.GetInfo(c1).Username.ThrowIfNull());
@@ -144,48 +172,68 @@ public static class MlgRush {
             // Start the game
             p1.Teleport(p1Spawn);
             p2.Teleport(p2Spawn);
+            
+            // Give them both blocks
+            ClientBoundSetContainerSlotPacket giveItemPacket = new(0, 0, 36, new Slot(64, 175));
+            c1.SendPacket(giveItemPacket);
+            c2.SendPacket(giveItemPacket);
 
             const int dieLevel = -10;
-            p1.Events.AddListener<EntityMoveEvent>(e => {
-                if (e.NewPos.Y < dieLevel) {
-                    e.Entity.Teleport(e.Entity == p1 ? p1Spawn : p2Spawn);
+            server.Events.AddListener<EntityMoveEvent>(e => {
+                if (!(e.NewPos.Y < dieLevel)) return;
+
+                if (lifeAfterBed) {  // check for final kill
+                    if ((e.Entity == p1 && !p1HasBed) || (e.Entity == p2 && !p2HasBed)) {
+                        Win(e.Entity == p2);
+                    }
                 }
-            });
-            p2.Events.AddListener<EntityMoveEvent>(e => {
-                if (e.NewPos.Y < dieLevel) {
-                    e.Entity.Teleport(e.Entity == p1 ? p1Spawn : p2Spawn);
-                }
+                
+                e.Entity.Teleport(e.Entity == p1 ? p1Spawn : p2Spawn);
+                ((PlayerEntity)e.Entity).Connection.SendPacket(giveItemPacket);
+                
+                // play nice sound
+                PlayerEntity killer = e.Entity == p1 ? p2 : p1;
+                killer.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket(525, SoundCategory.Players,
+                    e.Entity.NetId, 1f, 1f, 0));
+
+                TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed by {killer.Name}";
+                BroadcastMsg(msg);
             });
             
             // Win condition
             server.Events.AddListener<BlockBreakingFeature.BlockBreakEvent>(e => {
-                Console.WriteLine("FDSJLKFDJSLF");
-                e.Connection.SendSystemMessage(TextComponent.Text(e.Position.ToString()));
-                
                 if (!(e.Position.Equals(MlgRushMapProvider.P1BedPosClient) || e.Position.Equals(MlgRushMapProvider.P2BedPosClient))) {
                     return;  // not a bed
                 }
 
                 bool p1Bed = e.Position.Equals(MlgRushMapProvider.P1BedPosClient);
 
-                if (p1Bed && e.Connection == c1) {  // they broke their own bed
-                    c1.SendSystemMessage(TextComponent.Text("You can't break your own bed, it is now only broken for you."));
-                    e.Cancelled = true;
-                    return;
-                }
-
-                if (!p1Bed && e.Connection == c2) {
-                    c2.SendSystemMessage(TextComponent.Text("You can't break your own bed, it is now only broken for you."));
+                if (p1Bed && e.Connection == c1 || !p1Bed && e.Connection == c2) {  // they broke their own bed
+                    e.Connection.SendSystemMessage(TextComponent.Text("You can't break your own bed idiot")
+                        .WithColor(TextColor.Red)
+                        .WithBold());
+                    e.Connection.SendPacket(new ClientBoundBlockUpdatePacket(e.Position, (int)MlgRushMapProvider.WhiteWool));
                     e.Cancelled = true;
                     return;
                 }
                 
                 // a bed broke and it was the player person
-                PlayerConnection winner = p1Bed ? c2 : c1;
-                PlayerConnection loser = p1Bed ? c1 : c2;
-
-                winner.Kick(TextComponent.Text("YOU WON!!!!").WithBold(true).WithColor(TextColor.Gold));
-                loser.Kick(TextComponent.Text("You lose, L").WithBold(true).WithColor(TextColor.Red));
+                if (!lifeAfterBed) {
+                    Win(!p1Bed);
+                    return;
+                }
+                
+                // remove the bed
+                if (p1Bed) {
+                    p1HasBed = false;
+                    BroadcastMsg($"{p1.Name} has lost their bed!");
+                }
+                else {
+                    p2HasBed = false;
+                    BroadcastMsg($"{p2.Name} has lost their bed!");
+                }
+                
+                BroadcastPacket(new ClientBoundSoundEffectPacket(496, SoundCategory.Master, (p1Bed ? p2 : p1).Position, 1f, 1f, 0));
             });
             
         }

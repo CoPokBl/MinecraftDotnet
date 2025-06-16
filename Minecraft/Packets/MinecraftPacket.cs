@@ -181,6 +181,11 @@ public abstract class MinecraftPacket {
                             ? new ClientBoundEntityAnimationPacket().ParseData(data)
                             : throw new NotImplementedException();
                     
+                    case 0x04:
+                        return clientBound
+                            ? new ClientBoundAcknowledgeBlockChangePacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
                     case 0x07:
                         return clientBound
                             ? throw new NotImplementedException()
@@ -208,7 +213,7 @@ public abstract class MinecraftPacket {
                     
                     case 0x14:
                         return clientBound
-                            ? throw new NotImplementedException()
+                            ? new ClientBoundSetContainerSlotPacket().ParseData(data)
                             : new ServerBoundPluginMessagePacketPlay().ParseData(data);
                     
                     case 0x18:
@@ -249,7 +254,12 @@ public abstract class MinecraftPacket {
                     case 0x22:
                         return clientBound
                             ? new ClientBoundGameEventPacket().ParseData(data)
-                            : throw new NotImplementedException();
+                            : new ServerBoundPickItemFromBlock().ParseData(data);
+                    
+                    case 0x23:
+                        return clientBound
+                            ? throw new NotImplementedException()
+                            : new ServerBoundPickItemFromEntity().ParseData(data);
                     
                     case 0x24:
                         return clientBound
@@ -324,42 +334,52 @@ public abstract class MinecraftPacket {
                     case 0x3F:
                         return clientBound
                             ? new ClientBoundPlayerInfoUpdatePacket().ParseData(data)
-                            : throw new NotImplementedException();
+                            : new ServerBoundUseItemPacket().ParseData(data);
                     
                     case 0x41:
                         return clientBound
                             ? new ClientBoundSynchronisePlayerPositionPacket().ParseData(data)
-                            : throw new NotImplementedException();
+                            : throw new Exception("Invalid packet ID");
                     
                     case 0x4B:
                         return clientBound
                             ? new ClientBoundRespawnPacket().ParseData(data)
-                            : throw new NotImplementedException();
+                            : throw new Exception("Invalid packet ID");
                     
                     case 0x4C:
                         return clientBound
                             ? new ClientBoundSetHeadRotationPacket().ParseData(data)
-                            : throw new NotImplementedException();
+                            : throw new Exception("Invalid packet ID");
                     
                     case 0x57:
                         return clientBound
                             ? new ClientBoundSetCenterChunkPacket().ParseData(data)
-                            : throw new NotImplementedException();
+                            : throw new Exception("Invalid packet ID");
                     
                     case 0x5C:
                         return clientBound
                             ? new ClientBoundSetEntityMetadataPacket().ParseData(data)
-                            : throw new NotImplementedException();
+                            : throw new Exception("Invalid packet ID");
+                    
+                    case 0x6D:
+                        return clientBound
+                            ? new ClientBoundEntitySoundEffectPacket().ParseData(data)
+                            : throw new Exception("Invalid packet ID");
+                    
+                    case 0x6E:
+                        return clientBound
+                            ? new ClientBoundSoundEffectPacket().ParseData(data)
+                            : throw new Exception("Invalid packet ID");
                     
                     case 0x72:
                         return clientBound
                             ? new ClientBoundSystemChatMessagePacket().ParseData(data)
-                            : throw new NotImplementedException();
+                            : throw new Exception("Invalid packet ID");
                     
                     case 0x73:
                         return clientBound
                             ? new ClientBoundSetTabListHeaderFooterPacket().ParseData(data)
-                            : throw new NotImplementedException();
+                            : throw new Exception("Invalid packet ID");
                 }
                 break;
             
@@ -367,6 +387,6 @@ public abstract class MinecraftPacket {
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);
         }
         
-        throw new NotImplementedException($"Packet type {packetType} not implemented.");
+        throw new NotImplementedException($"Packet type 0x{packetType:X} not implemented.");
     }
 }

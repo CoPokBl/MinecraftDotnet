@@ -27,6 +27,28 @@ public class PacketSerialiseDeserialiseTest {
 
         ServerBoundChatMessagePacket cm = new();
         SerialiseAndDeserialise(cm, false, PlayerConnectionState.Play);
+
+        MinecraftPacket upi = new ClientBoundPlayerInfoUpdatePacket(
+            new ClientBoundPlayerInfoUpdatePacket.PlayerData(
+                    ClientBoundPlayerInfoUpdatePacket.PlayerActions.AddPlayer,
+                    ClientBoundPlayerInfoUpdatePacket.PlayerActions.InitializeChat,
+                    ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateLatency,
+                    ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateListed)
+                .WithPlayer(Guid.NewGuid(), new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer {
+                    Name = "Potato Man",
+                    Properties = []
+                }, new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateLatency {
+                    Latency = 5
+                }, new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateListed {
+                    Listed = false
+                }, new ClientBoundPlayerInfoUpdatePacket.PlayerData.InitializeChat {
+                    ChatSessionId = Guid.NewGuid(),
+                    EncodedPublicKey = [0,0,0,0,0,0],
+                    HasData = true,
+                    PublicKeyExpiryTime = 100L,
+                    PublicKeySignature = [0,0,01,0,05,9]
+                }));
+        SerialiseAndDeserialise(upi, true, PlayerConnectionState.Play);
     }
 
     private static void SerialiseAndDeserialise(MinecraftPacket packet, bool clientBound, PlayerConnectionState state) {

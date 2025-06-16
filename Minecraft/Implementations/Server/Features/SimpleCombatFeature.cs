@@ -1,9 +1,10 @@
 using Minecraft.Implementations.Server.Entities;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.NBT.Text;
+using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
-using Minecraft.Schemas;
+using Minecraft.Schemas.Sound;
 
 namespace Minecraft.Implementations.Server.Features;
 
@@ -45,15 +46,19 @@ public class SimpleCombatFeature(int attackCooldown = -1) : IFeature {
                 
                 entity.Data[LastHitTag] = time;
             }
+
+            MinecraftPacket soundPacket = new ClientBoundEntitySoundEffectPacket(1149, SoundCategory.Players,
+                entity.NetId, 1f, 1f, 0);
             
             if (entity is PlayerEntity p) {
-                // p.SetVelocity(attacker.Direction.Multiply(0.5) with { Y = 0.5 });
-                p.SetVelocity(attacker.Direction.Multiply(0.8) with { Y = 0.35 });
-                // p.SetVelocity(attacker.Direction.Multiply(1) with { Y = 1 });
-                p.Connection.SendPacket(
-                    new ClientBoundSystemChatMessagePacket(TextComponent.Text("You took knockback"), false));
+                // p.SetVelocity(attacker.Direction.Multiply(0.5) with { Y = 0.5 });  // Original
+                p.SetVelocity(attacker.Direction.Multiply(0.60) with { Y = 0.5 });  // Original 2.0
+                // p.SetVelocity(attacker.Direction.Multiply(0.8) with { Y = 0.35 });  // adam tweak
+                // p.SetVelocity(attacker.Direction.Multiply(1) with { Y = 1 });  // dumb
+                p.Connection.SendPacket(soundPacket);
             }
             
+            entities.SendPacketsFor(entity, soundPacket);
             entity.Hurt();
         });
     }

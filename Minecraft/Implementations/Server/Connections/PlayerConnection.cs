@@ -2,7 +2,9 @@ using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
+using Minecraft.Packets.Config.ServerBound;
 using Minecraft.Packets.Login.ClientBound;
+using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
@@ -31,6 +33,37 @@ public abstract class PlayerConnection {
     }
 
     public void HandlePacket(MinecraftPacket packet) {
+        // Handle connection state changes. Do this before handling because client will have already updated.
+        switch (packet) {
+            // handshake
+            case ServerBoundHandshakePacket hs:
+                Handshake = hs;
+                Log($"Got handshake from {hs.ProtocolVersion} client, intent: {hs.Intent}");
+
+                State = hs.Intent switch {
+                    ServerBoundHandshakePacket.Intention.Status => PlayerConnectionState.Status,
+                    ServerBoundHandshakePacket.Intention.Login => PlayerConnectionState.Login,
+                    ServerBoundHandshakePacket.Intention.Transfer => throw new NotImplementedException(
+                        "Transfer is not yet supported"),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                break;
+
+            // LOGIN
+            case ServerBoundLoginAcknowledgedPacket: {
+                State = PlayerConnectionState.Configuration; // we are done login now
+                break;
+            }
+                        
+            // CONFIG
+            case ServerBoundAcknowledgeFinishConfigurationPacket: {
+                // okay so they're ready to continue
+                Log("Client acknowledged finish configuration, switching to play state");
+                State = PlayerConnectionState.Play;
+                break;
+            }
+        }
+        
         PacketReceiveEvent receiveEvent = new() {
             Connection = this,
             Packet = packet
