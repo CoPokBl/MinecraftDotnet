@@ -356,6 +356,11 @@ public abstract class MinecraftPacket {
                             ? new ClientBoundSetHeadRotationPacket().ParseData(data)
                             : throw new Exception("Invalid packet ID");
                     
+                    case 0x50:
+                        return clientBound
+                            ? new ClientBoundSetActionBarTextPacket().ParseData(data)
+                            : throw new NotImplementedException();
+                    
                     case 0x57:
                         return clientBound
                             ? new ClientBoundSetCenterChunkPacket().ParseData(data)
@@ -364,6 +369,16 @@ public abstract class MinecraftPacket {
                     case 0x5C:
                         return clientBound
                             ? new ClientBoundSetEntityMetadataPacket().ParseData(data)
+                            : throw new Exception("Invalid packet ID");
+                    
+                    case 0x6B:
+                        return clientBound
+                            ? new ClientBoundSetTitleTextPacket().ParseData(data)
+                            : throw new Exception("Invalid packet ID");
+                    
+                    case 0x6C:
+                        return clientBound
+                            ? new ClientBoundSetTitleAnimationTimesPacket().ParseData(data)
                             : throw new Exception("Invalid packet ID");
                     
                     case 0x6D:
