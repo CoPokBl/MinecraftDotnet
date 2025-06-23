@@ -1,8 +1,10 @@
+using System.Diagnostics.Metrics;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
-using Minecraft.Implementations.Server.Entities;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
+using Minecraft.Implementations.Server.Managed.Entities.Types;
+using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
@@ -10,15 +12,15 @@ using Minecraft.Schemas;
 
 namespace TestServer.Servers.MlgRush;
 
-public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappearTime = -1) : IFeature {
+public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappearTime = -1) {
     private const double PlayerWidth = 0.6;
     private const double PlayerHeight = 1.8;
 
     // so that they don't get deleted
     private List<Timer> _timers = [];
     
-    public void Register(MinecraftServer server) {
-        server.Events.AddListener<PacketHandleEvent>(e => {
+    public void Register(World world) {
+        world.PlayerPacketEvents.AddListener<PacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundUseItemOnPacket ui) {
                 return;
             }
@@ -27,7 +29,7 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
             
             // is player inside that block?
             bool insideEntity = false;
-            foreach (Entity en in server.Feature<SimpleEntitiesFeature>()!.Entities.Where(en => en is PlayerEntity)) {
+            foreach (Entity en in world.Entities.Entities.Where(en => en is PlayerEntity)) {
                 Vec3 pos = ((PlayerEntity)en).Position;
                 Vec3 blockPos = new(target.X + 0.5, target.Y + 0.5, target.Z + 0.5);
                 if (Math.Abs(pos.X - blockPos.X) < 0.5 + PlayerWidth/2 && 
@@ -44,7 +46,7 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
             //     insideEntity = true;
             // }
 
-            if (target.Y > 10) {
+            if (target.Y > 1) {
                 insideEntity = true;
             }
 
@@ -57,10 +59,10 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
             }
             
             // PLACE IT
-            
+            int breakingEntity = Random.Shared.Next();
             MinecraftPacket packet = new ClientBoundBlockUpdatePacket(target, block.Invoke(e.Connection));
-            foreach (PlayerConnection connection in server.Connections) {
-                connection.SendPacket(packet);
+            foreach (PlayerConnection connection in world.Players.Select(p => p.Connection)) {
+                connection.SendPackets(packet, new ClientBoundSetBlockDestroyStage(breakingEntity, target, 0));
             }
             
             e.Connection.SendPacket(new ClientBoundAcknowledgeBlockChangePacket(ui.Sequence));
@@ -71,18 +73,27 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
             
             // Make it disappear
             Timer t = null!;
-            t = new Timer(_ => {
-                foreach (PlayerConnection con in server.Connections) {
-                    con.SendPacket(new ClientBoundBlockUpdatePacket(target, 0));
+            Atomic<int> s = new(0);
+            t = new Timer(state => {
+                int st = ((Atomic<int>)state!).Value;
+                if (st != 9) {
+                    // send break animation
+                    foreach (PlayerConnection con in world.Players.Select(p => p.Connection)) {
+                        con.SendPacket(new ClientBoundSetBlockDestroyStage(breakingEntity, target, (byte)st));
+                    }
+
+                    ((Atomic<int>)state).Value++;
+                    return;
+                }
+                
+                foreach (PlayerConnection con in world.Players.Select(p => p.Connection)) {
+                    con.SendPackets(new ClientBoundBlockUpdatePacket(target, 0), new ClientBoundSetBlockDestroyStage(breakingEntity, target, 16));
                 }
 
+                t.Change(-1, -1);
                 _timers.Remove(t);
-            }, null, TimeSpan.FromSeconds(disappearTime), Timeout.InfiniteTimeSpan);
+            }, s, TimeSpan.FromSeconds(disappearTime/9f), TimeSpan.FromSeconds(disappearTime/9f));
             _timers.Add(t);
         });
-    }
-
-    public Type[] GetDependencies() {
-        return [typeof(SimpleEntitiesFeature)];
     }
 }

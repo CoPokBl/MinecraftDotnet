@@ -9,7 +9,7 @@ namespace Minecraft.Schemas.Chunks;
 ///
 /// https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Data_structure
 /// </summary>
-public class ChunkSection {
+public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     /// <summary>
     /// The blocks in this section.
     /// 3D array of 16x16x16 blocks, each block is a uint representing the block state.
@@ -37,9 +37,7 @@ public class ChunkSection {
         Blocks[pos.X][pos.Y][pos.Z] = state;
     }
     
-    public byte[] Serialise() {
-        DataWriter w = new();
-        
+    public void Write(DataWriter w) {
         Palette palette = Palette.CreateOptimisedPalette(Blocks, 16, 8, 4);
 
         // BLOCK COUNT
@@ -51,7 +49,10 @@ public class ChunkSection {
         // BIOMES
         w.WriteUnsignedByte(0x00);  // Bits per entry: Single valued (only one block type for the whole sec)
         w.WriteVarInt(0);  // Our single value
-        
-        return w.ToArray();
+    }
+
+    public ChunkSection Read(DataReader r) {
+        short blockCount = r.ReadShort();
+        throw new NotImplementedException();
     }
 }

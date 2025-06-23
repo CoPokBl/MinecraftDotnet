@@ -1,6 +1,8 @@
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
+using Minecraft.Implementations.Server.Managed.Entities.Types;
+using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
@@ -8,10 +10,10 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Server.Features;
 
-public class BlockBreakingFeature(bool instaMine = true) : IFeature {
+public class BlockBreakingFeature(bool instaMine = true) {
     
-    public void Register(MinecraftServer server) {
-        server.Events.AddListener<PacketHandleEvent>(e => {
+    public void Register(World world) {
+        world.PlayerPacketEvents.AddListener<PacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundPlayerActionPacket packet) {
                 return;
             }
@@ -26,7 +28,7 @@ public class BlockBreakingFeature(bool instaMine = true) : IFeature {
                 Connection = e.Connection,
                 Position = packet.Location
             };
-            e.Connection.Events.CallEvent(breakEvent);
+            world.Events.CallEvent(breakEvent);
             
             if (breakEvent.Cancelled) {
                 // TODO: Tell them it wasn't broken (we don't know what the block is), for now just acknowledge that it happened.
@@ -35,23 +37,27 @@ public class BlockBreakingFeature(bool instaMine = true) : IFeature {
             }
             
             MinecraftPacket changePacket = new ClientBoundBlockUpdatePacket(packet.Location, 0);
-            foreach (PlayerConnection connection in server.Connections) {
+            foreach (PlayerEntity p in world.Players) {
                 // if (connection == e.Connection) {
                 //     continue;
                 // }
 
-                connection.SendPacket(changePacket);
+                p.Connection.SendPacket(changePacket);
             }
             
             e.Connection.SendPacket(new ClientBoundAcknowledgeBlockChangePacket(packet.Sequence));
         });
     }
 
+    public void Unregister() {
+        
+    }
+
     public Type[] GetDependencies() {
         return [];
     }
 
-    public class BlockBreakEvent : ServerEvent, ICancelableEvent {
+    public class BlockBreakEvent : IServerEvent, ICancelableEvent {
         public required PlayerConnection Connection { get; set; }
         public required BlockPosition Position { get; set; }
         public bool Cancelled { get; set; } = false;

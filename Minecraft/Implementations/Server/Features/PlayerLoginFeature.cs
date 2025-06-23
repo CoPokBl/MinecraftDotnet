@@ -13,7 +13,7 @@ namespace Minecraft.Implementations.Server.Features;
 public class PlayerLoginFeature(
     KnownDataPack[]? knownPacks = null, 
     Func<PlayerConnection, ClientBoundLoginPacket>? loginPacketProvider = null, 
-    Func<PlayerConnection, PlayerPosition>? spawnProvider = null) : IFeature {
+    Func<PlayerConnection, PlayerPosition>? spawnProvider = null) : IServerFeature {
     
     private readonly KnownDataPack[] _knownPacks = knownPacks ?? [new KnownDataPack("minecraft", "core", "1.21.5")];
     private readonly Func<PlayerConnection, ClientBoundLoginPacket> _loginPacketProvider = loginPacketProvider ?? (_ => new ClientBoundLoginPacket(
@@ -29,8 +29,8 @@ public class PlayerLoginFeature(
         0,
         "minecraft:overworld",
         0,
-        0x01,
-        0x00,
+        GameMode.Creative,
+        GameMode.Survival,
         false,
         false,
         null,
@@ -38,8 +38,6 @@ public class PlayerLoginFeature(
         64,
         false
     ));
-    private readonly Func<PlayerConnection, PlayerPosition> _spawnProvider =
-        spawnProvider ?? (_ => new PlayerPosition(new Vec3(0, 64, 0), Vec3.Zero, Angle.Zero, Angle.Zero));
 
     public void Register(MinecraftServer server) {
         server.Events.AddListener<PacketHandleEvent>(e => {
@@ -164,28 +162,44 @@ public class PlayerLoginFeature(
                     // We are now done config and are in play
                     // the player has logged in (pending play login)
                     // send the play login packet
-                    PlayerPosition spawn = _spawnProvider.Invoke(e.Connection);
-                    e.Connection.SendPackets(
-                        _loginPacketProvider.Invoke(e.Connection),
-                        new ClientBoundSynchronisePlayerPositionPacket(Random.Shared.Next(), spawn, TeleportFlags.None),
-                        new ClientBoundSetCenterChunkPacket(spawn.ChunkX, spawn.ChunkZ)
-                    ).ContinueWith(_ => {
-                        PlayerLoginEvent loginEvent = new() {
-                            Connection = e.Connection
-                        };
-                        e.Connection.Events.CallEventCatchErrors(loginEvent);
-                    });
+                    if (spawnProvider != null) {
+                        PlayerPosition spawn = spawnProvider.Invoke(e.Connection);
+                        e.Connection.SendPackets(
+                            _loginPacketProvider.Invoke(e.Connection),
+                            new ClientBoundSynchronisePlayerPositionPacket(Random.Shared.Next(), spawn, TeleportFlags.None),
+                            new ClientBoundSetCenterChunkPacket(spawn.ChunkX, spawn.ChunkZ)
+                        ).ContinueWith(_ => {
+                            PlayerLoginEvent loginEvent = new() {
+                                Connection = e.Connection
+                            };
+                            e.Connection.Events.CallEventCatchErrors(loginEvent);
+                        });
+                    }
+                    else {
+                        e.Connection.SendPackets(
+                            _loginPacketProvider.Invoke(e.Connection)
+                        ).ContinueWith(_ => {
+                            PlayerLoginEvent loginEvent = new() {
+                                Connection = e.Connection
+                            };
+                            e.Connection.Events.CallEventCatchErrors(loginEvent);
+                        });
+                    }
                     break;
                 }
             }
         });
+    }
+    
+    public void Unregister() {
+        
     }
 
     public Type[] GetDependencies() {
         return [];
     }
 
-    public class PlayerLoginEvent : ServerEvent {
+    public class PlayerLoginEvent : IServerEvent {
         public required PlayerConnection Connection { get; init; }
     }
 }

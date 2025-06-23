@@ -1,5 +1,7 @@
-using Minecraft.Implementations.Server.Entities;
 using Minecraft.Implementations.Server.Events;
+using Minecraft.Implementations.Server.Managed;
+using Minecraft.Implementations.Server.Managed.Entities.Types;
+using Minecraft.Implementations.Server.Worlds;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
@@ -8,11 +10,11 @@ using Minecraft.Schemas.Sound;
 
 namespace Minecraft.Implementations.Server.Features;
 
-public class SimpleCombatFeature(int attackCooldown = -1) : IFeature {
+public class SimpleCombatFeature(int attackCooldown = -1) : IWorldFeature {
     private const string LastHitTag = "minecraftdotnet:simplecombat:lasthit";
     
-    public void Register(MinecraftServer server) {
-        server.Events.AddListener<PacketHandleEvent>(e => {
+    public void Register(World world) {
+        world.PlayerPacketEvents.AddListener<PacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundInteractPacket packet) {
                 return;
             }
@@ -20,11 +22,9 @@ public class SimpleCombatFeature(int attackCooldown = -1) : IFeature {
             if (packet.Type != ServerBoundInteractPacket.InteractType.Attack) {
                 return;
             }
-
-            SimpleEntitiesFeature entities = server.Feature<SimpleEntitiesFeature>()!;
             
-            Entity? entity = entities.GetEntityById(packet.EntityId);
-            PlayerEntity attacker = (PlayerEntity)entities.Entities.Single(en => 
+            Entity? entity = world.Entities.GetEntityById(packet.EntityId);
+            PlayerEntity attacker = (PlayerEntity)world.Entities.Entities.Single(en => 
                 en is PlayerEntity pl && 
                 pl.Connection == e.Connection);
             
@@ -58,9 +58,13 @@ public class SimpleCombatFeature(int attackCooldown = -1) : IFeature {
                 p.Connection.SendPacket(soundPacket);
             }
             
-            entities.SendPacketsFor(entity, soundPacket);
+            world.Entities.SendPacketsFor(entity, soundPacket);
             entity.Hurt();
         });
+    }
+    
+    public void Unregister() {
+        
     }
 
     public Type[] GetDependencies() {

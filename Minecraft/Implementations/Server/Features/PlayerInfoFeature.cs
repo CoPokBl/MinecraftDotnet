@@ -6,7 +6,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Server.Features;
 
-public class PlayerInfoFeature : IFeature {
+public class PlayerInfoFeature : IServerFeature {
     private const string DataId = "minecraftdotnet:playerinfofeature:info";
     
     public void Register(MinecraftServer server) {
@@ -45,6 +45,10 @@ public class PlayerInfoFeature : IFeature {
                 }
             }
         });
+    }
+    
+    public void Unregister() {
+        
     }
     
     public Type[] GetDependencies() {

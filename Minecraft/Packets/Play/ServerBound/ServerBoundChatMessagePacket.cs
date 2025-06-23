@@ -46,7 +46,7 @@ public class ServerBoundChatMessagePacket(
         Signature = r.ReadPrefixedOptional(reader => r.Read(256));
         MessageCount = r.ReadVarInt();
         Acknowledged = r.Read(3);
-        Checksum = r.ReadByte();
+        Checksum = (byte)r.ReadByte();
         return this;
     }
 }

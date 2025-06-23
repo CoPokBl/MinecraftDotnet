@@ -46,7 +46,7 @@ public class ServerBoundClientInformationPacketConfig(
     protected override MinecraftPacket ParseData(byte[] data) {
         DataReader r = new(data);
         Locale = r.ReadString();
-        ViewDistance = r.ReadByte();
+        ViewDistance = (byte)r.ReadByte();
         TextChatMode = (ChatMode)r.ReadVarInt();
         ChatColors = r.ReadBoolean();
         DisplayedSkinParts = (SkinParts)r.Read();

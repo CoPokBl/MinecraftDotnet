@@ -1,15 +1,16 @@
+using System.Diagnostics;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
-using Minecraft.Implementations.Server.Entities.Events;
 using Minecraft.Implementations.Server.Events;
-using Minecraft.Implementations.Server.Features;
+using Minecraft.Implementations.Server.Managed.Entities.Events;
+using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 
-namespace Minecraft.Implementations.Server.Entities;
+namespace Minecraft.Implementations.Server.Managed.Entities.Types;
 
-public class Entity(int type) {
+public class Entity(int type) : IViewable {
     public Guid Uuid = Guid.NewGuid();
     public int Type = type;
     public Vec3 Position = Vec3.Zero;
@@ -17,11 +18,14 @@ public class Entity(int type) {
     public Angle Yaw = Angle.Zero;
     public Angle HeadYaw = Angle.Zero;
     public Func<PlayerConnection, bool> ViewableRule { get; set; } = _ => true;
-    public EventNode<ServerEvent> Events = new();
+    public EventNode<IServerEvent> Events = new();
     public readonly Dictionary<string, object?> Data = new();
     
-    public int NetId;  // should be set by an entity tracker
-    public SimpleEntitiesFeature? Feat;
+    // these should be set by an entity tracker
+    // not doing so is unsupported and will cause issues.
+    public int NetId;
+    public EntityManager? Manager = null;
+    public World? World;
 
     /// <summary>
     /// A unit vector pointing in the direction that the player is facing.
@@ -45,14 +49,18 @@ public class Entity(int type) {
     /// <param name="newPos">Their new position.</param>
     /// <param name="yaw">Their new yaw.</param>
     /// <param name="pitch">Their new pitch.</param>
-    public void Move(Vec3 newPos, Angle? yaw = null, Angle? pitch = null) {
+    /// <param name="forceTeleport">Whether to force this method to use the Teleport packet.</param>
+    public void Move(Vec3 newPos, Angle? yaw = null, Angle? pitch = null, bool forceTeleport = false) {
         EntityMoveEvent e = new() {
             Entity = this,
             NewPos = newPos
         };
         Events.CallEvent(e);
-        
-        Feat?.MoveEntity(this, newPos, yaw, pitch);
+
+        if (forceTeleport) {
+            Manager?.TeleportEntity(this, newPos, yaw ?? Angle.Zero, pitch ?? Angle.Zero);
+        }
+        else Manager?.MoveEntity(this, newPos, yaw, pitch);
         Position = newPos;
 
         if (yaw != null) {
@@ -64,12 +72,25 @@ public class Entity(int type) {
         }
     }
 
-    public virtual void Teleport(PlayerPosition pos) {
-        Move(pos.Position, pos.Yaw, pos.Pitch);
+    public void Teleport(PlayerPosition pos) {
+        Teleport(pos.Position, pos.Yaw, pos.Pitch);
     }
 
     public virtual void Teleport(Vec3 pos, Angle? yaw = null, Angle? pitch = null) {
-        Move(pos, yaw, pitch);
+        Move(pos, yaw, pitch, true);
+    }
+
+    public virtual void SetWorld(World world) {
+        if (Manager != null) {
+            Events.Parents.Remove(Manager.BaseEventNode);
+        }
+
+        World?.Entities.Despawn(this);
+        world.Entities.Spawn(this, NetId);  // this ensures that Manager will not be null
+        World = world;
+
+        Debug.Assert(Manager != null, nameof(Manager) + " != null");
+        Events.Parents.Add(Manager.BaseEventNode);
     }
 
     /// <summary>
@@ -88,6 +109,13 @@ public class Entity(int type) {
     }
 
     public void SendToViewers(params MinecraftPacket[] packets) {
-        Feat?.SendPacketsFor(this, packets);
+        if (Manager == null) {
+            throw new Exception("Entity must be in a world.");
+        }
+        Manager?.SendPacketsFor(this, packets);
+    }
+
+    public PlayerConnection[] GetViewers() {
+        return Manager?.GetViewersOf(this) ?? throw new Exception("Entity must be in a world.");
     }
 }

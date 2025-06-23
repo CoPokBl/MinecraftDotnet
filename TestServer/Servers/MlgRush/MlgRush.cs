@@ -1,9 +1,13 @@
 using Minecraft;
+using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
-using Minecraft.Implementations.Server.Entities;
-using Minecraft.Implementations.Server.Entities.Events;
+using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
+using Minecraft.Implementations.Server.Managed;
+using Minecraft.Implementations.Server.Managed.Entities.Events;
+using Minecraft.Implementations.Server.Managed.Entities.Types;
+using Minecraft.Implementations.Server.Managed.Events;
 using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Implementations.Server.Worlds.TerrainProviders;
 using Minecraft.NBT.Text;
@@ -20,50 +24,22 @@ public static class MlgRush {
     public static async Task Start() {
         Console.WriteLine("Creating world...");
         // World world = new(new TestingProvider(), 32, 2, 10);
-        World world = new(new SpawnCachedTerrainProvider(new MlgRushMapProvider(), 4), 4, 2, 10);
+        // World world = new(new SpawnCachedTerrainProvider(new MlgRushMapProvider(), 4), 4, 2, 10);
         Console.WriteLine("World created!");
 
         Dictionary<PlayerConnection, int> playerIds = new();
 
-        MinecraftServer lobby = new([
-            new PlayerInfoFeature(),
+        ManagedMinecraftServer mServer = new(
             new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket(
-                "dotnet",
-                connection.Handshake!.ProtocolVersion,
-                1,
-                1,
-                [new SamplePlayer("Potato", "4566e69f-c907-48ee-8d71-d7ba5aa00d20")],
-                "MLG Rush",
-                preventsChatReports: true)),
-            new PlayerLoginFeature(loginPacketProvider:con => {
-                int id = Random.Shared.Next();
-                playerIds.Add(con, id);
-                con.Disconnected += () => playerIds.Remove(con);
-                return new ClientBoundLoginPacket(
-                    id,
-                    true,
-                    ["minecraft:overworld"],
-                    5,
-                    32,
-                    8,
-                    false,
-                    true,
-                    false,
-                    0,
-                    "minecraft:overworld",
-                    0,
-                    0x00,
-                    0x00,
-                    false,
-                    false,
-                    null,
-                    4,
-                    64,
-                    false
-                );
-            }),
-            new PingRespondFeature()
-        ]);
+            "dotnet",
+            connection.Handshake!.ProtocolVersion,
+            1,
+            1,
+            [new SamplePlayer("Potato", "4566e69f-c907-48ee-8d71-d7ba5aa00d20")],
+            "MLG Rush",
+            preventsChatReports: true)),
+            new PingRespondFeature(),
+            new SimpleChatFeature());
 
         CancellationTokenSource cts = new();
 
@@ -75,11 +51,20 @@ public static class MlgRush {
         
         ManualResetEvent gotPlayer = new(false);
 
-        Queue<PlayerConnection> connectionQueue = new();
+        World lobbyWorld = new(mServer.Events, new TestingProvider());
+
+        Queue<PlayerEntity> connectionQueue = new();
         TcpMinecraftListener listener = new(connection => {
-            lobby.AddConnection(connection);
-            connection.Events.OnFirst<PlayerLoginFeature.PlayerLoginEvent>(e => {
-                connectionQueue.Enqueue(e.Connection);
+            mServer.AddConnection(connection);
+            connection.Events.OnFirst<PlayerPreLoginEvent>(e => {
+                e.GameMode = GameMode.Survival;
+                e.Hardcore = true;
+                e.World = lobbyWorld;
+            });
+            connection.Events.OnFirst<PlayerLoginEvent>(e => {
+                e.Player.Teleport(new Vec3(0, 100, 0));
+                Console.WriteLine("Teleported joining player in lobby");
+                connectionQueue.Enqueue(e.Player);
                 gotPlayer.Set();
             });
         }, cts.Token);
@@ -90,51 +75,52 @@ public static class MlgRush {
         const bool lifeAfterBed = true;
         
         while (run) {
-            PlayerConnection c1 = null!;
-            PlayerConnection c2 = null!;
+            // ManagedMinecraftServer server = null!;
+            // server = new ManagedMinecraftServer(
+            //     new PlayerInfoFeature(),
+            //     new SimpleChatFeature(),
+            //     new TabListFeature(
+            //         updatePeriod:1000, 
+            //         headerProvider:() => TextComponent.Text("MLG Rush").WithColor(TextColor.Hex("#EE7026")).WithBold(true), 
+            //         footerProvider:() => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic(true)),
+            //     new BlockBreakingFeature(false),
+            //     new SimpleCombatFeature(500)
+            // );
             
-            MinecraftServer server = null!;
-            server = new MinecraftServer([
-                new PlayerInfoFeature(),
-                new SimpleChatFeature(),
-                new HeartbeatsFeature(3000),
-                new TabListFeature(
-                    updatePeriod:1000, 
-                    headerProvider:() => TextComponent.Text("MLG Rush").WithColor(TextColor.Hex("#EE7026")).WithBold(true), 
-                    footerProvider:() => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic(true)),
-                new SimpleEntitiesFeature(),
-                new BlockBreakingFeature(false),
-                new PlaceOneBlockFeature(con => {
-                    return con == c1 ? 2104 : 2107;  // c1: blue, c2: red
-                }, 5),
-                new SimpleCombatFeature(500)
-            ]);
-            server.Events.AddListener<PlayerLoginFeature.PlayerLoginEvent>(e => {
-                e.Connection.SendPackets(
-                    new ClientBoundSynchronisePlayerPositionPacket(0, new PlayerPosition(new Vec3(0, -100, 0), Vec3.Zero, Angle.Zero, Angle.Zero), TeleportFlags.None));
-            });
-
+            World world = new(new EventNode<IServerEvent>(), new MlgRushMapProvider(), 4, 2, 10);
+            new SimpleCombatFeature(500).Register(world);
+            new BlockBreakingFeature(false).Register(world);
+            
+            PlayerEntity p1 = null!;
+            PlayerEntity p2 = null!;
+            
             // Get two players in
             for (int i = 0; i < 2; i++) {
                 while (true) {
                     gotPlayer.WaitOne();
                     gotPlayer.Reset();
-                    if (!connectionQueue.TryDequeue(out PlayerConnection? con)) continue;
-                    server.AddConnection(con);
+                    if (!connectionQueue.TryDequeue(out PlayerEntity? player)) continue;
+                    if (i == 0) {
+                        p1 = player;
+                    }
+                    else {
+                        p2 = player;
+                    }
                     break;
                 }
             }
-
-            c1 = server.Connections[0];
-            c2 = server.Connections[1];
             
-            world.AddPlayer(c1);
-            world.AddPlayer(c2);
+            PlayerConnection c1 = p1.Connection;
+            PlayerConnection c2 = p2.Connection;
             
-            server.Feature<TabListFeature>()!.RegisterPlayer(c1);
-            server.Feature<TabListFeature>()!.RegisterPlayer(c2);
-
-            SimpleEntitiesFeature entities = server.Feature<SimpleEntitiesFeature>()!;
+            // c1 and c2 need to be declared.
+            new PlaceOneBlockFeature(con => {
+                return con == c1 ? 2104 : 2107;  // c1: blue, c2: red
+            }, 5).Register(world);
+            
+            // TODO: Tab list
+            // server.Feature<TabListFeature>()!.RegisterPlayer(c1);
+            // server.Feature<TabListFeature>()!.RegisterPlayer(c2);
 
             void Win(bool p1Won) {
                 PlayerConnection winner = p1Won ? c1 : c2;
@@ -156,20 +142,16 @@ public static class MlgRush {
 
             bool p1HasBed = true;
             bool p2HasBed = true;
-            
-            // Create players
-            PlayerEntity p1 = new(c1, PlayerInfoFeature.GetInfo(c1).Username.ThrowIfNull());
-            PlayerEntity p2 = new(c2, PlayerInfoFeature.GetInfo(c2).Username.ThrowIfNull());
-            entities.Spawn(p1, playerIds[c1]);
-            entities.Spawn(p2, playerIds[c2]);
-            
-            await entities.InformNewPlayer(c1);
-            await entities.InformNewPlayer(c2);
 
             PlayerPosition p1Spawn = new(new Vec3(MlgRushMapProvider.P1SpawnX, 0, 0.5), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
             PlayerPosition p2Spawn = new(new Vec3(MlgRushMapProvider.P2SpawnX, 0, 0.5), Vec3.Zero, Angle.FromDegrees(90), Angle.Zero);
             
             // Start the game
+            p1.SetWorld(world);
+            p2.SetWorld(world);
+            world.AddPlayer(p1);
+            world.AddPlayer(p2);
+            
             p1.Teleport(p1Spawn);
             p2.Teleport(p2Spawn);
             
@@ -179,7 +161,7 @@ public static class MlgRush {
             c2.SendPacket(giveItemPacket);
 
             const int dieLevel = -10;
-            server.Events.AddListener<EntityMoveEvent>(e => {
+            world.Events.AddListener<EntityMoveEvent>(e => {
                 if (!(e.NewPos.Y < dieLevel)) return;
 
                 if (lifeAfterBed) {  // check for final kill
@@ -187,6 +169,9 @@ public static class MlgRush {
                         Win(e.Entity == p2);
                     }
                 }
+                
+                // Move them away for the other player to prevent tp blocking breaking
+                e.Entity.SendToViewers(new ClientBoundTeleportEntityPacket(e.Entity.NetId, new Vec3(0, -100, 0), Vec3.Zero, 0, 0, false));
                 
                 e.Entity.Teleport(e.Entity == p1 ? p1Spawn : p2Spawn);
                 ((PlayerEntity)e.Entity).Connection.SendPacket(giveItemPacket);
@@ -201,7 +186,7 @@ public static class MlgRush {
             });
             
             // Win condition
-            server.Events.AddListener<BlockBreakingFeature.BlockBreakEvent>(e => {
+            world.Events.AddListener<BlockBreakingFeature.BlockBreakEvent>(e => {
                 if (!(e.Position.Equals(MlgRushMapProvider.P1BedPosClient) || e.Position.Equals(MlgRushMapProvider.P2BedPosClient))) {
                     return;  // not a bed
                 }

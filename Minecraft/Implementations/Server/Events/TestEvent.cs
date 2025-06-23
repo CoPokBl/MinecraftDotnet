@@ -1,3 +1,3 @@
 namespace Minecraft.Implementations.Server.Events;
 
-public class TestEvent : ServerEvent;
+public class TestEvent : IServerEvent;

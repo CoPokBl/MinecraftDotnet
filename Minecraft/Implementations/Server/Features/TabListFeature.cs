@@ -1,30 +1,33 @@
 using System.Security.Cryptography;
 using System.Text;
+using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
+using Minecraft.Implementations.Server.Events;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 
 namespace Minecraft.Implementations.Server.Features;
 
-public class TabListFeature : IFeature {
+public class TabListFeature : IServerFeature {
     private readonly int _updatePeriod;
-    private readonly Func<TextComponent> _headerProvider;
-    private readonly Func<TextComponent> _footerProvider;
+    private readonly Func<PlayerConnection, TextComponent> _headerProvider;
+    private readonly Func<PlayerConnection, TextComponent> _footerProvider;
     private MinecraftServer _server = null!;
-    private readonly Func<TabListEntry[]> _entriesProvider;
+    private readonly Func<PlayerConnection, TabListEntry[]> _entriesProvider;
     private Guid[] _lastEntries = [];
     private readonly List<PlayerConnection> _recipients = [];
 
     public TabListFeature(
-        Func<TabListEntry[]>? entriesProvider = null, 
+        Func<PlayerConnection, TabListEntry[]>? entriesProvider = null, 
         int updatePeriod = -1, 
-        Func<TextComponent>? headerProvider = null, 
-        Func<TextComponent>? footerProvider = null) {
+        Func<PlayerConnection, TextComponent>? headerProvider = null, 
+        Func<PlayerConnection, TextComponent>? footerProvider = null) {
+        
         _updatePeriod = updatePeriod;
-        _headerProvider = headerProvider ?? TextComponent.Empty;
-        _footerProvider = footerProvider ?? TextComponent.Empty;
-        _entriesProvider = entriesProvider ?? (() => {
+        _headerProvider = headerProvider ?? (_ => TextComponent.Empty());
+        _footerProvider = footerProvider ?? (_ => TextComponent.Empty());
+        _entriesProvider = entriesProvider ?? (_ => {
             bool playerInfoFeature = _server.Feature<PlayerInfoFeature>() != null;
             List<TabListEntry> entries = [];
             foreach (PlayerConnection connection in _server.Connections) {
@@ -45,6 +48,10 @@ public class TabListFeature : IFeature {
         byte[] hash = SHA1.HashData(Encoding.UTF8.GetBytes(seed));
         Array.Resize(ref hash, 16); // Guid is 16 bytes
         return new Guid(hash);
+    }
+
+    public void Register(EventNode<IServerEvent> events) {
+        
     }
 
     public void Register(MinecraftServer server) {
@@ -70,14 +77,13 @@ public class TabListFeature : IFeature {
 
     public void Update() {
         // lets build the packet
-        MinecraftPacket[] packets = BuildPackets();
         foreach (PlayerConnection connection in _recipients) {
-            connection.SendPackets(packets);
+            connection.SendPackets(BuildPackets(connection));
         }
     }
 
-    private MinecraftPacket[] BuildPackets() {
-        TabListEntry[] entries = _entriesProvider.Invoke();
+    private MinecraftPacket[] BuildPackets(PlayerConnection con) {
+        TabListEntry[] entries = _entriesProvider.Invoke(con);
         
         // Okay, what do we need to remove?
         // everything from last time not in entries
@@ -121,7 +127,7 @@ public class TabListFeature : IFeature {
         }
         
         packets.Add(new ClientBoundPlayerInfoUpdatePacket(data));
-        packets.Add(new ClientBoundSetTabListHeaderFooterPacket(_headerProvider.Invoke(), _footerProvider.Invoke()));
+        packets.Add(new ClientBoundSetTabListHeaderFooterPacket(_headerProvider.Invoke(con), _footerProvider.Invoke(con)));
 
         _lastEntries = entries.Select(e => e.Uuid).ToArray();
         return packets.ToArray();
@@ -133,6 +139,10 @@ public class TabListFeature : IFeature {
         connection.Disconnected += () => {
             _recipients.Remove(connection);
         };
+    }
+    
+    public void Unregister() {
+        
     }
 
     public Type[] GetDependencies() {

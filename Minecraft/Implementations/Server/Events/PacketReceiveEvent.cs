@@ -9,7 +9,7 @@ namespace Minecraft.Implementations.Server.Events;
 /// The packet SHOULD NOT be handled from this event.
 /// This event should only be used to cancel packets.
 /// </summary>
-public class PacketReceiveEvent : ServerEvent, ICancelableEvent {
+public class PacketReceiveEvent : IServerEvent, ICancelableEvent {
     public bool Cancelled { get; set; } = false;
     public required PlayerConnection Connection { get; set; }
     public required MinecraftPacket Packet { get; set; }

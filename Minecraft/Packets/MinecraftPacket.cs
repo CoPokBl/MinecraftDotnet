@@ -186,6 +186,11 @@ public abstract class MinecraftPacket {
                             ? new ClientBoundAcknowledgeBlockChangePacket().ParseData(data)
                             : throw new NotImplementedException();
                     
+                    case 0x05:
+                        return clientBound
+                            ? new ClientBoundSetBlockDestroyStage().ParseData(data)
+                            : throw new NotImplementedException();
+                    
                     case 0x07:
                         return clientBound
                             ? throw new NotImplementedException()

@@ -5,14 +5,14 @@ using Minecraft.Implementations.Server.Events;
 namespace Minecraft.Implementations.Server;
 
 public class MinecraftServer {
-    public List<IFeature> Features { get; }
+    public List<IServerFeature> Features { get; }
     public List<PlayerConnection> Connections { get; } = [];
-    public EventNode<ServerEvent> Events { get; } = new();
+    public EventNode<IServerEvent> Events { get; } = new();
     
-    public MinecraftServer(List<IFeature>? features = null) {
+    public MinecraftServer(List<IServerFeature>? features) {
         Features = features ?? [];
 
-        foreach (IFeature feature in Features) {
+        foreach (IServerFeature feature in Features) {
             foreach (Type dependency in feature.GetDependencies()) {
                 if (Features.All(f => f.GetType() != dependency)) {
                     throw new Exception(
@@ -24,8 +24,10 @@ public class MinecraftServer {
         }
     }
 
-    public T? Feature<T>() where T : class, IFeature {
-        foreach (IFeature f in Features) {
+    public MinecraftServer(params IServerFeature[] feats) : this(feats.ToList()) { }
+
+    public T? Feature<T>() where T : class, IServerFeature {
+        foreach (IServerFeature f in Features) {
             if (f is T t) {
                 return t;
             }
@@ -34,8 +36,24 @@ public class MinecraftServer {
         return null;
     }
 
-    [Obsolete("Adding features after instantiation is not recommended and may cause issues with added features")]
-    public void AddFeature(IFeature feature) {
+    public IServerFeature? Feature(Type type) {
+        foreach (IServerFeature f in Features) {
+            if (f.GetType() == type) {
+                return f;
+            }
+        }
+
+        return null;
+    }
+
+    public void AddFeature(IServerFeature feature) {
+        foreach (Type dependency in feature.GetDependencies()) {
+            if (Features.All(f => f.GetType() != dependency)) {
+                throw new Exception(
+                    $"Dependency {dependency.FullName} of {feature.GetType().FullName} is not present.");
+            }
+        }
+        
         Features.Add(feature);
         feature.Register(this);
     }
@@ -47,7 +65,7 @@ public class MinecraftServer {
     /// <param name="connection">The connection.</param>
     public void AddConnection(PlayerConnection connection) {
         Connections.Add(connection);
-        connection.Events.AddParent(Events);
+        connection.Events.Parents.Add(Events);
         connection.Disconnected += () => Connections.Remove(connection);
     }
 }

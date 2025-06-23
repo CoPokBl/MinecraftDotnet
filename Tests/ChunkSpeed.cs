@@ -12,20 +12,20 @@ public class ChunkSpeed {
 
     [Test]
     public void GenerateChunksSpeed() {
-        const int viewDistance = 32;
-        World world = new(new TestingProvider());
-        
-        Stopwatch sw = Stopwatch.StartNew();
-        for (int i = 0; i < viewDistance*2; i++) {
-            for (int j = 0; j < viewDistance*2; j++) {
-                world.GetChunkPacket(new ChunkPosition(i, j));
-            }
-        }
-
-        TimeSpan time = sw.Elapsed;
-        int chunks = 4 * viewDistance * viewDistance;
-        double msPerChunk = time.TotalMilliseconds / chunks;
-        Console.WriteLine($"Took {time} to generate {chunks} chunks ({msPerChunk}ms/chunk)");
+        // const int viewDistance = 32;
+        // World world = new(new TestingProvider());
+        //
+        // Stopwatch sw = Stopwatch.StartNew();
+        // for (int i = 0; i < viewDistance*2; i++) {
+        //     for (int j = 0; j < viewDistance*2; j++) {
+        //         world.GetChunkPacket(new ChunkPosition(i, j));
+        //     }
+        // }
+        //
+        // TimeSpan time = sw.Elapsed;
+        // int chunks = 4 * viewDistance * viewDistance;
+        // double msPerChunk = time.TotalMilliseconds / chunks;
+        // Console.WriteLine($"Took {time} to generate {chunks} chunks ({msPerChunk}ms/chunk)");
     }
     
     [Test]
@@ -59,7 +59,7 @@ public class ChunkSpeed {
     [Test]
     public void MassVsSingle() {
         WorldGenTest(true);
-        WorldGenTest(false);
+        // WorldGenTest(false);
     }
     
     public void WorldGenTest(bool massCall) {
@@ -130,9 +130,7 @@ public class ChunkSpeed {
     
         // SetLoadedChunks(connection, loaded);
 
-        if (Benchmark) {
-            Console.WriteLine($"[{(massCall ? "MASS" : "SINGLE")}] Terrain packet generation took {sw.ElapsedMilliseconds}ms, unloading: {unloadingBench}ms, toLoad: {toLoadBench}ms");
-        }
+        
 
         if (neededPackets.Count == 0) return;
         neededPackets.Add(new ClientBoundSetCenterChunkPacket(chunkPos));
@@ -141,6 +139,11 @@ public class ChunkSpeed {
             if (p is not ClientBoundChunkDataAndUpdateLightPacket chunkP) return 100;  // do unload packets last (for faster load, client unloads anyway)
             return new ChunkPosition(chunkP.ChunkX, chunkP.ChunkZ).DistanceTo(chunkPos);  // do closer chunks first for quicker load
         });
+        
+        if (Benchmark) {
+            Console.WriteLine($"[{(massCall ? "MASS" : "SINGLE")}] Terrain packet generation took {sw.ElapsedMilliseconds}ms, unloading: {unloadingBench}ms, toLoad: {toLoadBench}ms");
+        }
+        
         foreach (MinecraftPacket packet in orderedPackets) {
             // waitingPackets.Enqueue(packet);
         }

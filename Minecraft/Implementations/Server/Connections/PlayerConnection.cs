@@ -1,5 +1,6 @@
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;
+using Minecraft.Implementations.Tags;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ServerBound;
@@ -11,14 +12,14 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Server.Connections;
 
-public abstract class PlayerConnection {
+public abstract class PlayerConnection : ITaggable {
     public PlayerConnectionState State = PlayerConnectionState.None;
     public bool Compression => CompressionThreshold >= 0;
     public int CompressionThreshold = -1;
     public ServerBoundHandshakePacket? Handshake;
     public event Action? Disconnected;
     public readonly Dictionary<string, object?> Data = new();
-    public EventNode<ServerEvent> Events = new();  // its parent should be the server's
+    public EventNode<IServerEvent> Events = new();  // its parent should be the server's
 
     protected static readonly MinecraftPacket[] DontLog = [
         new ServerBoundClientTickEndPacket(),
@@ -132,6 +133,18 @@ public abstract class PlayerConnection {
         
         // Send it
         return SendPacketInternal(packet);
+    }
+    
+    public T GetTag<T>(Tag<T> tag) {
+        return (T)Data[tag.Id]!;
+    }
+
+    public bool HasTag<T>(Tag<T> tag) {
+        return Data.ContainsKey(tag.Id);
+    }
+
+    public void SetTag<T>(Tag<T> tag, T value) {
+        Data[tag.Id] = value;
     }
 
     protected abstract Task SendPacketInternal(MinecraftPacket packet);

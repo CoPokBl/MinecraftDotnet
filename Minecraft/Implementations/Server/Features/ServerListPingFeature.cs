@@ -5,7 +5,7 @@ using Minecraft.Packets.Status.ServerBound;
 
 namespace Minecraft.Implementations.Server.Features;
 
-public class ServerListPingFeature(Func<PlayerConnection, ClientBoundStatusResponsePacket> pingResponseSupplier) : IFeature {
+public class ServerListPingFeature(Func<PlayerConnection, ClientBoundStatusResponsePacket> pingResponseSupplier) : IServerFeature {
     
     public void Register(MinecraftServer server) {
         server.Events.AddListener<PacketHandleEvent>(e => {
@@ -13,6 +13,10 @@ public class ServerListPingFeature(Func<PlayerConnection, ClientBoundStatusRespo
 
             _ = e.Connection.SendPacket(pingResponseSupplier.Invoke(e.Connection)); // don't bother waiting
         });
+    }
+    
+    public void Unregister() {
+        
     }
     
     public Type[] GetDependencies() {

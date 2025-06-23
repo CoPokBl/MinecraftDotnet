@@ -1,11 +1,12 @@
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
+using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
 
-namespace Minecraft.Implementations.Server.Entities;
+namespace Minecraft.Implementations.Server.Managed.Entities.Types;
 
 public class PlayerEntity : Entity {
     public string Name;
@@ -60,7 +61,20 @@ public class PlayerEntity : Entity {
             }
         });
     }
-    
+
+    public override void SetWorld(World world) {
+        // Change the instance that the player sees
+        if (World != null) World.RemovePlayer(this);
+        else Console.WriteLine("WORLD IS NULL, NOT REMOVING PLAYER FROM IT");
+
+        // Connection.SendPacket(new ClientBoundRespawnPacket(0, "minecraft:overworld", 0,
+        //     GameMode.Survival, GameMode.Undefined, false, false, null, 0, 64,
+        //     ClientBoundRespawnPacket.DataKeptTypes.All));
+        world.AddPlayer(this);
+        
+        base.SetWorld(world);
+    }
+
     public void SetVelocity(Vec3 velocity) {
         Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket(
             Random.Shared.Next(),
@@ -77,14 +91,7 @@ public class PlayerEntity : Entity {
             WaitingTeleport, 
             new PlayerPosition(pos, Vec3.Zero, yaw ?? Angle.Zero, pitch ?? Angle.Zero),
             TeleportFlags.None));
-    }
-    
-    public override void Teleport(PlayerPosition pos) {
-        WaitingTeleport = Random.Shared.Next();
-        Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket(
-            WaitingTeleport, 
-            pos,
-            TeleportFlags.None));
+        // base.Teleport(pos, yaw, pitch);   Don't tell everyone else
     }
 
     public override void SendToSelfAndViewers(params MinecraftPacket[] packets) {

@@ -7,7 +7,7 @@ using Minecraft.Packets.Play.ServerBound;
 
 namespace Minecraft.Implementations.Server.Features;
 
-public class SimpleChatFeature : IFeature {
+public class SimpleChatFeature : IServerFeature {
     private readonly Func<string, PlayerConnection, TextComponent> _messageProvider;
     private readonly Func<PlayerConnection, PlayerConnection, bool> _shouldReceivePredicate;  // from, to
     private MinecraftServer _server = null!;
@@ -57,12 +57,16 @@ public class SimpleChatFeature : IFeature {
             }
         });
     }
+    
+    public void Unregister() {
+        
+    }
 
     public Type[] GetDependencies() {
         return [];
     }
 
-    public class SimpleChatEvent : ServerEvent, ICancelableEvent {
+    public class SimpleChatEvent : IServerEvent, ICancelableEvent {
         public PlayerConnection Connection { get; init; }
         public string Msg { get; init; }
         public List<PlayerConnection> Recipients { get; set; }

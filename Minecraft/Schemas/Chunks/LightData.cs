@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Minecraft.Schemas.Chunks;
 
-public class LightData {
+public class LightData : IWritable {
     private const int WorldHeight = 384;  // vanilla overworld height TODO: Make dynamic or a parameter
     private const int ChunkSections = WorldHeight / 16;  // number of sections in a chunk, 24 for vanilla overworld
     
@@ -60,8 +60,7 @@ public class LightData {
         };
     }
 
-    public byte[] Serialise() {
-        DataWriter w = new();
+    public void Write(DataWriter w) {
         w.WritePrefixedArray(SkyLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
         w.WritePrefixedArray(BlockLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
         w.WritePrefixedArray(EmptySkyLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
@@ -71,6 +70,5 @@ public class LightData {
             writer.WritePrefixedArray(i, (b, dataWriter) => dataWriter.WriteUnsignedByte(b)));
         w.WritePrefixedArray(BlockLight, (i, writer) =>
             writer.WritePrefixedArray(i, (b, dataWriter) => dataWriter.WriteUnsignedByte(b)));
-        return w.ToArray();
     }
 }

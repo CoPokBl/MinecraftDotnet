@@ -15,8 +15,8 @@ public class ClientBoundLoginPacket(
     int dimensionType,
     string dimensionName,
     long hashedSeed,
-    byte gameMode,
-    byte previousGameMode,
+    GameMode gameMode,
+    GameMode previousGameMode,
     bool isDebug,
     bool isFlat,
     DeathLocation? deathLocation,
@@ -30,8 +30,8 @@ public class ClientBoundLoginPacket(
     public DeathLocation? Location = deathLocation;
     public bool IsFlat = isFlat;
     public bool IsDebug = isDebug;
-    public byte PreviousGameMode = previousGameMode;
-    public byte GameMode = gameMode;
+    public GameMode PreviousGameMode = previousGameMode;
+    public GameMode GameMode = gameMode;
     public long HashedSeed = hashedSeed;
     public string DimensionName = dimensionName;
     public int DimensionType = dimensionType;
@@ -67,8 +67,8 @@ public class ClientBoundLoginPacket(
             .WriteVarInt(DimensionType)
             .WriteString(DimensionName)
             .WriteLong(HashedSeed)
-            .WriteUnsignedByte(GameMode)
-            .WriteByte(PreviousGameMode)
+            .WriteUnsignedByte((byte)GameMode)
+            .WriteByte((int)PreviousGameMode)
             .WriteBoolean(IsDebug)
             .WriteBoolean(IsFlat);
 
@@ -102,8 +102,8 @@ public class ClientBoundLoginPacket(
         DimensionType = r.ReadVarInt();
         DimensionName = r.ReadString();
         HashedSeed = r.ReadLong();
-        GameMode = r.Read();
-        PreviousGameMode = r.ReadByte();
+        GameMode = (GameMode)r.Read();
+        PreviousGameMode = (GameMode)r.ReadByte();
         IsDebug = r.ReadBoolean();
         IsFlat = r.ReadBoolean();
         if (r.ReadBoolean()) {

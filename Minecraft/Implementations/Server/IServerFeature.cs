@@ -1,6 +1,7 @@
 namespace Minecraft.Implementations.Server;
 
-public interface IFeature {
+public interface IServerFeature {
     void Register(MinecraftServer server);
+    void Unregister();
     Type[] GetDependencies();
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Minecraft.Implementations.Events;
@@ -9,30 +10,45 @@ public class EventNode<T> {
     public EventNode(params EventNode<T>[] parents) {
         Parents = new List<EventNode<T>>(parents);
 
-        foreach (EventNode<T> parent in parents) {
-            Callback += e => parent.Callback!(e);  // We trigger our parent's callbacks
-        }
+        Callback += e => {  // Trigger parent callbacks
+            List<EventNode<T>> ps = new(Parents);  // dupe to prevent concurrent mod
+            try {
+                foreach (EventNode<T> parent in ps) {
+                    parent.Callback?.Invoke(e);
+                }
+            }
+            catch (InvalidOperationException ex) {
+                Console.WriteLine(ex);
+                throw;
+            }
+        };
     }
-
-    public void AddParent(EventNode<T> parent) {
-        Callback += e => parent.Callback!(e);
-    }
-
-    public void AddListener<TL>(Action<TL> callback) where TL : T {
-        Callback += obj => {
+    
+    public Action AddListener<TL>(Action<TL> callback) where TL : T {
+        Action<T> call = obj => {
             if (obj is not TL tl) {
                 return;
             }
 
             callback(tl);
         };
+        Callback += call;
+
+        return () => {
+            Callback -= call;
+        };
     }
 
-    public void AddListener(Type type, Action<T> callback) {
-        Callback += obj => {
+    public Action AddListener(Type type, Action<T> callback) {
+        Action<T> call = obj => {
             if (obj!.GetType().IsAssignableTo(type)) {
                 callback((T)obj);
             }
+        };
+        Callback += call;
+
+        return () => {
+            Callback -= call;
         };
     }
 
@@ -58,7 +74,13 @@ public class EventNode<T> {
     
     public void CallEvent(T e) {
         try {
+            // Stopwatch sw = Stopwatch.StartNew();
             Callback?.Invoke(e);
+            // if (sw.ElapsedMilliseconds > 0) Console.WriteLine($"Event ({e.GetType().FullName}) took {sw.ElapsedMilliseconds}ms");
+        }
+        catch (StackOverflowException) {
+            Console.WriteLine("Stack overflow occured while handling event");
+            throw;
         }
         catch (Exception exception) {
             Console.WriteLine("An error occured while handling an event:");
@@ -67,13 +89,13 @@ public class EventNode<T> {
         }
     }
 
-    public void CallEventCatchErrors(T e) {
+    public Exception? CallEventCatchErrors(T e) {
         try {
-            Callback?.Invoke(e);
+            CallEvent(e);
+            return null;
         }
-        catch (Exception exception) {
-            Console.WriteLine("An error occured while handling an event:");
-            Console.WriteLine(exception);
+        catch (Exception ex) {
+            return ex;
         }
     }
 

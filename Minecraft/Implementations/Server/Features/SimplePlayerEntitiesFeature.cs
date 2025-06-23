@@ -1,13 +1,12 @@
-using Minecraft.Implementations.Server.Entities;
+using Minecraft.Implementations.Server.Managed.Entities.Types;
 
 namespace Minecraft.Implementations.Server.Features;
 
-public class SimplePlayerEntitiesFeature : IFeature {
+public class SimplePlayerEntitiesFeature : IServerFeature {
     public List<PlayerEntity> Players = [];
     
     public void Register(MinecraftServer server) {
         server.Events.AddListener<PlayerLoginFeature.PlayerLoginEvent>(e => {
-            Console.WriteLine("SPAWNING PLAYER");
             PlayerEntity entity = new(e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username ?? "BobTheUnnamed");
             SimpleEntitiesFeature entities = server.Feature<SimpleEntitiesFeature>()!;
             entities.Spawn(entity);
@@ -18,6 +17,10 @@ public class SimplePlayerEntitiesFeature : IFeature {
                 entities.Despawn(entity);
             };
         });
+    }
+    
+    public void Unregister() {
+        
     }
 
     public Type[] GetDependencies() {

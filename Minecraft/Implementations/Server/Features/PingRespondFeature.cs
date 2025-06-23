@@ -3,7 +3,7 @@ using Minecraft.Packets.Status.ServerBound;
 
 namespace Minecraft.Implementations.Server.Features;
 
-public class PingRespondFeature : IFeature {
+public class PingRespondFeature : IServerFeature {
     
     public void Register(MinecraftServer server) {
         server.Events.AddListener<PacketHandleEvent>(e => {
@@ -11,6 +11,10 @@ public class PingRespondFeature : IFeature {
                 e.Connection.SendPacket(ping.CreateResponse());
             }
         });
+    }
+    
+    public void Unregister() {
+        
     }
 
     public Type[] GetDependencies() {

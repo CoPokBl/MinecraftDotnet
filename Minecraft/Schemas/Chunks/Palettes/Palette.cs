@@ -21,4 +21,14 @@ public abstract class Palette(int dimension, int maxBitsPerEntry, int minBitsPer
 
         return new SingleValuePalette(d, maxbpe, minbpe, firstValue);
     }
+
+    public static Palette Deserialise(int d, int maxbpe, int minbpe, int max, DataReader r) {
+        byte bitsPerEntry = r.Read();
+
+        if (bitsPerEntry == 0) {  // single value
+            return new SingleValuePalette(d, maxbpe, minbpe, (uint)r.ReadVarInt());
+        }
+
+        throw new NotImplementedException();
+    }
 }

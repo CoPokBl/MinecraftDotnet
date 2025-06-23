@@ -6,11 +6,12 @@
 // using Minecraft.Packets.Status.ClientBound;
 // using Minecraft.Schemas;
 // using Minecraft.Schemas.Entities.Meta;
+// using TestServer.Servers.Everything;
 //
-// namespace TestServer.Servers.Everything;
+// namespace TestServer.Servers.Limbo;
 //
-// public class Everything {
-//
+// public class Limbo {
+//     
 //     public static async Task Start() {
 //         Console.WriteLine("Creating world...");
 //         // World world = new(new TestingProvider(), 32, 2, 10);

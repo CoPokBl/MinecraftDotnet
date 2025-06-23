@@ -18,11 +18,16 @@ public class ClientBoundChunkDataAndUpdateLightPacket(int chunkX, int chunkZ, Ch
         return new DataWriter()
             .WriteInteger(ChunkX)
             .WriteInteger(ChunkZ)
-            .Write(Data.Serialise())
-            .Write(Light.Serialise()).ToArray();
+            .Write(Data)
+            .Write(Light).ToArray();
     }
 
     protected override MinecraftPacket ParseData(byte[] data) {
-        throw new NotImplementedException();
+        DataReader r = new(data);
+        ChunkX = r.ReadInteger();
+        ChunkZ = r.ReadInteger();
+        Data = new ChunkData().Read(r); 
+        Light = new LightData();  // TODO .Read()
+        return this;
     }
 }
