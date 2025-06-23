@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using System.Collections;
 using System.Text;
 using Minecraft.NBT;
 using Minecraft.NBT.Text;
@@ -53,36 +54,6 @@ public class DataReader(byte[] data) {
         }
 
         return value;
-    }
-    
-    public long[] ReadPacketDataArray(int bitsPerEntry, int lengthed = -1) {
-        if (bitsPerEntry is < 1 or > 64) {
-            throw new ArgumentOutOfRangeException(nameof(bitsPerEntry), "Bits per entry must be between 1 and 64.");
-        }
-
-        const int bitsPerLong = 64;
-        int entriesPerLong = bitsPerLong / bitsPerEntry;
-        int entryCount = lengthed == -1 ? ReadVarInt() : lengthed;
-
-        int longCount = (entryCount + entriesPerLong - 1) / entriesPerLong;
-        long[] result = new long[entryCount];
-
-        for (int i = 0; i < longCount; i++) {
-            long packed = ReadLong(); // assumes ReadLong reads long in big-endian order
-            // If ReadLong reads in little-endian, use: packed = IPAddress.NetworkToHostOrder(packed);
-            for (int j = 0; j < entriesPerLong; j++) {
-                int index = i * entriesPerLong + j;
-                if (index >= entryCount) {
-                    break; // finished
-                }
-
-                int shift = j * bitsPerEntry;
-                long mask = (1L << bitsPerEntry) - 1;
-                result[index] = (packed >> shift) & mask;
-            }
-        }
-
-        return result;
     }
 
     public string ReadString() {
@@ -186,6 +157,46 @@ public class DataReader(byte[] data) {
         y = SignExtend(y, 12);
 
         return new BlockPosition(x, y, z);
+    }
+    
+    // From an N-bit integer represented as a BitArray in big-endian order.
+    public static long FromNBitInteger(int bits, BitArray data) {
+        if (data.Count != bits) {
+            throw new ArgumentOutOfRangeException(nameof(data), $"Data must be {nameof(bits)} long.");
+        }
+        
+        long value = 0;
+        for (int i = 0; i < bits; i++) {
+            if (data[bits - i - 1]) {
+                value |= 1L << i;
+            }
+        }
+        
+        return value;
+    }
+    
+    public long[] ReadPacketDataArray(int bitsPerEntry, int entryCount) {
+        int entriesPerLong = 64 / bitsPerEntry;  // How many entries fit into one long
+        int longCount = (int)Math.Ceiling((double)entryCount / entriesPerLong);
+    
+        long[] entries = new long[entryCount];
+        int currentEntry = 0;
+
+        for (int i = 0; i < longCount; i++) {
+            // Read out one long of data
+            byte[] bytes = Read(sizeof(long)).Reverse().ToArray();
+            BitArray bits = new(bytes);
+
+            for (int j = 0; j < entriesPerLong; j++) {
+                long entry = FromNBitInteger(bitsPerEntry, bits.Range(j*bitsPerEntry, bitsPerEntry).Reverse());
+                entries[currentEntry++] = entry;
+                if (currentEntry == entryCount) {
+                    break;  // it's the last long
+                }
+            }
+        }
+
+        return entries;
     }
     
     // reads a signed 8-bit integer (two's complement)

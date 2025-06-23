@@ -7,7 +7,7 @@ using Minecraft.Schemas.Entities.Meta;
 
 namespace Minecraft;
 
-public class DataWriter {
+public class DataWriter : IWritable {
     private readonly List<byte> _data = [];
 
     public byte[] ToArray() => _data.ToArray();
@@ -20,6 +20,12 @@ public class DataWriter {
     public DataWriter Write(byte value) {
         _data.Add(value);
         return this;
+    }
+
+    public void Write(DataWriter w) {
+        foreach (byte b in _data) {
+            w.Write(b);
+        }
     }
 
     public DataWriter Write(IWritable writable) {
@@ -148,7 +154,7 @@ public class DataWriter {
     }
     
     // To an N-bit integer represented as a BitArray in big-endian order.
-    private static BitArray ToNBitInteger(int bits, long value) {
+    public static BitArray ToNBitInteger(int bits, long value) {
         if (bits is < 1 or > 64) {
             throw new ArgumentOutOfRangeException(nameof(bits), "Bits must be between 1 and 64.");
         }
@@ -162,12 +168,6 @@ public class DataWriter {
         }
 
         return bitArray;
-
-        // BitArray bitArray = new(bits);
-        // for (int i = 0; i < bits; i++) {
-        //     bitArray[i] = (value & (1L << i)) != 0;
-        // }
-        // return bitArray;
     }
 
     /// <summary>
@@ -189,7 +189,7 @@ public class DataWriter {
        Note that since longs are sent in big endian order, the least significant bit of the first entry in a long
        will be on the last byte of the long on the wire.
      */
-    public DataWriter WritePacketDataArray(int bitsPerEntry, long[] entries, bool prefixed = false) {
+    public DataWriter WritePacketDataArray(int bitsPerEntry, long[] entries) {
         Queue<BitArray> packedBits = new(entries.Length);
         foreach (long t in entries) {
             packedBits.Enqueue(ToNBitInteger(bitsPerEntry, t));
@@ -199,11 +199,6 @@ public class DataWriter {
         int entriesPerLong = 64 / bitsPerEntry;  // How many entries fit into one long
         int longCount = (int)Math.Ceiling((double)entries.Length / entriesPerLong);
         int paddingPerLong = 64 % bitsPerEntry;  // How many bits are left unused in each long
-        
-        // If prefixed, write the length (number of longs) as a VarInt first.
-        if (prefixed) {
-            WriteVarInt(longCount);
-        }
         
         // Manually pack the bits into big endian longs (8 bytes each).
         byte[] packedBytes = new byte[longCount * 8]; // 8 bytes per long

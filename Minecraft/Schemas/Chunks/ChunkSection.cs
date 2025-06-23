@@ -16,7 +16,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     /// <p/>
     /// Coordinate order is: X, Y, Z.
     /// </summary>
-    public uint[][][] Blocks { get; } = NewBlockSet();
+    public uint[][][] Blocks { get; private set; } = NewBlockSet();
 
     private static uint[][][] NewBlockSet() {
         uint[][][] blocks = new uint[16][][];
@@ -36,6 +36,14 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     public void SetBlock(BlockPosition pos, uint state) {
         Blocks[pos.X][pos.Y][pos.Z] = state;
     }
+
+    public uint GetBlock(int x, int y, int z) {
+        return Blocks[x][y][z];
+    }
+    
+    public uint GetBlock(BlockPosition pos) {
+        return Blocks[pos.X][pos.Y][pos.Z];
+    }
     
     public void Write(DataWriter w) {
         Palette palette = Palette.CreateOptimisedPalette(Blocks, 16, 8, 4);
@@ -52,7 +60,14 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     }
 
     public ChunkSection Read(DataReader r) {
-        short blockCount = r.ReadShort();
-        throw new NotImplementedException();
+        short blockCount = r.ReadShort();  // we don't need this
+        Palette blocksPalette = Palette.Deserialise(16, 8, 4, 8, r);
+        Palette biomesPalette = Palette.Deserialise(4, 3, 1, 3, r);  // not yet implemented
+
+        Blocks = blocksPalette.GetData();
+        if (Blocks.Length == 0) {
+            throw new Exception("Empty chunk section");
+        }
+        return this;
     }
 }

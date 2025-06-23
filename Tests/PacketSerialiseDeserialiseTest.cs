@@ -4,6 +4,7 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Chunks;
 using Newtonsoft.Json;
 
 namespace Tests;
@@ -49,12 +50,26 @@ public class PacketSerialiseDeserialiseTest {
                     PublicKeySignature = [0,0,01,0,05,9]
                 }));
         SerialiseAndDeserialise(upi, true, PlayerConnectionState.Play);
+
+        ChunkData cd = new();
+        cd.SetBlock(10, 100, 10, 10);
+        cd.SetBlock(1, 2, 3, 11);
+        cd.SetBlock(7, 53, 2, 5);
+        ClientBoundChunkDataAndUpdateLightPacket chunk = new(0, 0, cd, LightData.FullBright);
+        ClientBoundChunkDataAndUpdateLightPacket chunkDe = SerialiseAndDeserialise(chunk, true, PlayerConnectionState.Play);
+        Assert.That(chunkDe.Data.GetBlock(10, 100, 10), Is.EqualTo(10));
+        Assert.That(chunkDe.Data.GetBlock(1, 2, 3), Is.EqualTo(11));
+        Assert.That(chunkDe.Data.GetBlock(7, 53, 2), Is.EqualTo(5));
+        Assert.That(chunkDe.Data.GetBlock(2, 7, 3), Is.EqualTo(0));
     }
 
-    private static void SerialiseAndDeserialise(MinecraftPacket packet, bool clientBound, PlayerConnectionState state) {
+    private static T SerialiseAndDeserialise<T>(T packet, bool clientBound, PlayerConnectionState state) where T : MinecraftPacket {
         MinecraftPacket de = MinecraftPacket.Deserialise(packet.Serialise(), clientBound, state);
         Console.WriteLine(de.GetType().FullName);
         Console.WriteLine(JsonConvert.SerializeObject(de));
+        if (de is T t) return t;
+        Assert.Fail();
+        return null;
     }
 
     [Test]

@@ -1,5 +1,6 @@
 using System.Collections;
 using Minecraft.Implementations.Server.Connections;
+using Minecraft.Implementations.Tags;
 using Minecraft.NBT.Text;
 using Minecraft.Packets.Play.ClientBound;
 
@@ -77,5 +78,38 @@ public static class ExtensionUtils {
 
     public static long UnixMillis(this DateTime time) {
         return (long)(time - DateTime.UnixEpoch).TotalMilliseconds;
+    }
+
+    public static BitArray Range(this BitArray arr, int from, int count) {
+        BitArray result = new(count);
+        for (int i = 0; i < count; i++) {
+            result[i] = arr[from + i];
+        }
+
+        return result;
+    }
+    
+    public static BitArray Reverse(this BitArray arr) {
+        BitArray result = new(arr.Length);
+        for (int i = 0; i < arr.Length; i++) {
+            result[i] = arr[arr.Length - 1 - i];
+        }
+        return result;
+    }
+    
+    public static T? GetTagOrNull<T>(this ITaggable taggable, Tag<T> tag) {
+        if (!taggable.HasTag(tag)) {
+            return default;
+        }
+        
+        return taggable.GetTag(tag);
+    }
+    
+    public static T GetTagOrDefault<T>(this ITaggable taggable, Tag<T> tag, T defaultValue) {
+        if (!taggable.HasTag(tag)) {
+            return defaultValue;
+        }
+        
+        return taggable.GetTag(tag);
     }
 }

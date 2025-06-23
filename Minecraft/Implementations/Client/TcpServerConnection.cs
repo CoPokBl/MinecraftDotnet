@@ -7,26 +7,48 @@ namespace Minecraft.Implementations.Client;
 public class TcpServerConnection(TcpClient client, bool packetQueuing = false) : ServerConnection {
     private readonly CancellationTokenSource _cts = new();
     private readonly ConcurrentQueue<MinecraftPacket> _packetQueue = new();
-    private Stream Stream => client.GetStream();
-    
-    protected override Task SendPacketInternal(MinecraftPacket packet) {
+    private NetworkStream Stream {
+        get {
+            try {
+                return client.GetStream();
+            }
+            catch (Exception) {
+                Disconnect();
+            }
+            return null!;
+        }
+    }
+
+    protected override async Task SendPacketInternal(MinecraftPacket packet) {
         if (packetQueuing) {
             _packetQueue.Enqueue(packet);
-            return Task.CompletedTask;
+            return;
         }
-        
-        return Stream.WriteAsync(packet.Serialise(Compression), _cts.Token).AsTask();
+
+        try {
+            await Stream.WriteAsync(packet.Serialise(Compression), _cts.Token);
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            await _cts.CancelAsync();
+        }
     }
 
     private async Task PacketSending() {
-        while (!_cts.IsCancellationRequested) {
+        while (!_cts.IsCancellationRequested && client.Connected) {
             await Task.Yield();
             if (!_packetQueue.TryDequeue(out MinecraftPacket? packet)) {
                 continue;
             }
             
             // Send it
-            await Stream.WriteAsync(packet.Serialise(Compression), _cts.Token);
+            try {
+                await Stream.WriteAsync(packet.Serialise(Compression), _cts.Token);
+            }
+            catch (Exception e) {
+                Console.WriteLine(e);
+                await _cts.CancelAsync();
+            }
         }
     }
     
@@ -36,7 +58,7 @@ public class TcpServerConnection(TcpClient client, bool packetQueuing = false) :
 
         byte[] buffer = new byte[short.MaxValue];
         try {
-            while (!_cts.IsCancellationRequested) {
+            while (!_cts.IsCancellationRequested && client.Connected) {
                 int bytesRead = await Stream.ReadAsync(buffer, _cts.Token);
                 if (bytesRead == 0) {
                     // connection dropped

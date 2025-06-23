@@ -9,6 +9,7 @@ using Minecraft.Implementations.Server.Managed.Entities.Events;
 using Minecraft.Implementations.Server.Managed.Entities.Types;
 using Minecraft.Implementations.Server.Managed.Events;
 using Minecraft.Implementations.Server.Worlds;
+using Minecraft.Implementations.Server.Worlds.Features;
 using Minecraft.Implementations.Server.Worlds.TerrainProviders;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
@@ -20,6 +21,7 @@ using Minecraft.Schemas.Sound;
 namespace TestServer.Servers.MlgRush;
 
 public static class MlgRush {
+    private const int Port = 25565;
 
     public static async Task Start() {
         Console.WriteLine("Creating world...");
@@ -39,7 +41,8 @@ public static class MlgRush {
             "MLG Rush",
             preventsChatReports: true)),
             new PingRespondFeature(),
-            new SimpleChatFeature());
+            new SimpleChatFeature(),
+            new OpenToLanAdFeature("MLG Rush over LAN", Port));
 
         CancellationTokenSource cts = new();
 
@@ -70,7 +73,7 @@ public static class MlgRush {
         }, cts.Token);
         
         Console.WriteLine("Server ready, listening...");
-        _ = listener.Listen();
+        _ = listener.Listen(Port);
 
         const bool lifeAfterBed = true;
         
@@ -149,8 +152,6 @@ public static class MlgRush {
             // Start the game
             p1.SetWorld(world);
             p2.SetWorld(world);
-            world.AddPlayer(p1);
-            world.AddPlayer(p2);
             
             p1.Teleport(p1Spawn);
             p2.Teleport(p2Spawn);

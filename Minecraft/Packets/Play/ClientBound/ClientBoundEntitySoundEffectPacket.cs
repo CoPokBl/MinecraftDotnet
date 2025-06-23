@@ -1,4 +1,3 @@
-using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
 
 namespace Minecraft.Packets.Play.ClientBound;

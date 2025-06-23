@@ -64,8 +64,11 @@ public class PlayerEntity : Entity {
 
     public override void SetWorld(World world) {
         // Change the instance that the player sees
-        if (World != null) World.RemovePlayer(this);
-        else Console.WriteLine("WORLD IS NULL, NOT REMOVING PLAYER FROM IT");
+        if (World != null) {
+            World.RemovePlayer(this);
+            
+            // TODO: Send respawn packet for new world
+        }
 
         // Connection.SendPacket(new ClientBoundRespawnPacket(0, "minecraft:overworld", 0,
         //     GameMode.Survival, GameMode.Undefined, false, false, null, 0, 64,

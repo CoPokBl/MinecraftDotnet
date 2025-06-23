@@ -1,7 +1,7 @@
 namespace Minecraft.Schemas.Chunks.Palettes;
 
 public class IndirectPalette : Palette {
-    public readonly long[] Blocks;  // array that maps block -> palette index
+    public readonly long[] Blocks;  // array that maps block -> palette index (y then z then x)
     public readonly uint[] PaletteValues;  // the unique values in the palette
 
     public IndirectPalette(uint[][][] blocks, int d, int maxbpe, int minbpe) : base(d, maxbpe, minbpe) {
@@ -31,6 +31,11 @@ public class IndirectPalette : Palette {
         PaletteValues = palette.ToArray();
     }
 
+    public IndirectPalette(uint[] palette, long[] blocks, int d, int maxbpe, int minbpe) : base(d, maxbpe, minbpe) {
+        Blocks = blocks;
+        PaletteValues = palette;
+    }
+
     public override byte[] Serialise() {
         int bpe = Math.Min(Math.Max(PaletteValues.Length.MinBitsToStore(), MinBitsPerEntry), MaxBitsPerEntry);
         return new DataWriter()
@@ -38,13 +43,6 @@ public class IndirectPalette : Palette {
             .WritePrefixedArray(PaletteValues, (u, writer) => writer.WriteVarInt((int)u))
             .WritePacketDataArray(bpe, Blocks)
             .ToArray();
-        // w.WriteUnsignedByte(4);  // Bits per entry: indirect
-        // w.WritePrefixedArray([3, 11, 0], (i, writer) => writer.WriteVarInt(i));  // palette length + palette
-        // long[] blocks = new long[16 * 16 * 16];  // 16x16x16 blocks, all dirt
-        // for (int i = 0; i < blocks.Length; i++) {
-        //     blocks[i] = 2;
-        // }
-        // w.WritePacketDataArray(4, blocks);  // 16x16x16 blocks, all air
     }
 
     public override int BlockCount() {
@@ -57,5 +55,20 @@ public class IndirectPalette : Palette {
         }
 
         throw new Exception("This cannot happen");
+    }
+
+    public override uint[][][] GetData() {
+        uint[][][] data = new uint[Dimension][][];
+        int i = 0;
+        for (int y = 0; y < Dimension; y++) {
+            for (int z = 0; z < Dimension; z++) {
+                for (int x = 0; x < Dimension; x++) {
+                    if (data[x] == null!) data[x] = new uint[Dimension][];
+                    if (data[x][y] == null!) data[x][y] =  new uint[Dimension];
+                    data[x][y][z] = PaletteValues[Blocks[i++]];
+                }
+            }
+        }
+        return data;
     }
 }

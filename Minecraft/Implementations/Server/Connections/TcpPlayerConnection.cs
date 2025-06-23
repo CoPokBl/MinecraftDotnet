@@ -14,6 +14,11 @@ public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) :
             _packetQueue.Enqueue(packet);
             return Task.CompletedTask;
         }
+
+        if (!client.Connected) {
+            Disconnect();
+            return null!;
+        }
         
         return Stream.WriteAsync(packet.Serialise(Compression), _cts.Token).AsTask();
     }

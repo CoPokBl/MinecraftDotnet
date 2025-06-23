@@ -4,13 +4,14 @@ using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Managed.Entities.Events;
 using Minecraft.Implementations.Server.Worlds;
+using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Server.Managed.Entities.Types;
 
-public class Entity(int type) : IViewable {
+public class Entity(int type) : IViewable, ITaggable {
     public Guid Uuid = Guid.NewGuid();
     public int Type = type;
     public Vec3 Position = Vec3.Zero;
@@ -117,5 +118,17 @@ public class Entity(int type) : IViewable {
 
     public PlayerConnection[] GetViewers() {
         return Manager?.GetViewersOf(this) ?? throw new Exception("Entity must be in a world.");
+    }
+    
+    public T GetTag<T>(Tag<T> tag) {
+        return (T)Data[tag.Id]!;
+    }
+
+    public bool HasTag<T>(Tag<T> tag) {
+        return Data.ContainsKey(tag.Id);
+    }
+
+    public void SetTag<T>(Tag<T> tag, T value) {
+        Data[tag.Id] = value;
     }
 }

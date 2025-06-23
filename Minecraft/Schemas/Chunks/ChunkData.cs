@@ -24,6 +24,12 @@ public class ChunkData : IWritable, IDataReadable<ChunkData> {
         int chunkY = y % 16;
         Sections[chunkSection].SetBlock(x, chunkY, z, state);
     }
+
+    public uint GetBlock(int x, int y, int z) {
+        int chunkSection = y / 16;  // sections from the bottom
+        int chunkY = y % 16;
+        return Sections[chunkSection].GetBlock(x, chunkY, z);
+    }
     
     public void Write(DataWriter w) {
         // https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure
@@ -64,6 +70,7 @@ public class ChunkData : IWritable, IDataReadable<ChunkData> {
         }
         
         // NON PREFIXED CHUNK SECTION ARRAY (dependant on world height)
+        r.ReadVarInt();  // bytes used in the following chunk sections, unneeded by us
         for (int i = 0; i < ChunkSections; i++) {
             Sections[i] = new ChunkSection().Read(r);
         }

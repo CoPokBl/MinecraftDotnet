@@ -1,17 +1,17 @@
 using Minecraft.Implementations.Server.Events;
+using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Managed;
 using Minecraft.Implementations.Server.Managed.Entities.Types;
-using Minecraft.Implementations.Server.Worlds;
-using Minecraft.NBT.Text;
+using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas.Sound;
 
-namespace Minecraft.Implementations.Server.Features;
+namespace Minecraft.Implementations.Server.Worlds.Features;
 
 public class SimpleCombatFeature(int attackCooldown = -1) : IWorldFeature {
-    private const string LastHitTag = "minecraftdotnet:simplecombat:lasthit";
+    private readonly Tag<long> _lastHitTag = new("minecraftdotnet:simplecombat:lasthit");
     
     public void Register(World world) {
         world.PlayerPacketEvents.AddListener<PacketHandleEvent>(e => {
@@ -22,29 +22,36 @@ public class SimpleCombatFeature(int attackCooldown = -1) : IWorldFeature {
             if (packet.Type != ServerBoundInteractPacket.InteractType.Attack) {
                 return;
             }
+
+            Entity? entity;
+            PlayerEntity attacker;
+            try {
+                entity = world.Entities.GetEntityById(packet.EntityId);
+                attacker = (PlayerEntity)world.Entities.Entities.Single(en => 
+                    en is PlayerEntity pl && 
+                    pl.Connection == e.Connection);
             
-            Entity? entity = world.Entities.GetEntityById(packet.EntityId);
-            PlayerEntity attacker = (PlayerEntity)world.Entities.Entities.Single(en => 
-                en is PlayerEntity pl && 
-                pl.Connection == e.Connection);
-            
-            if (entity == null) {
-                e.Connection.SendPacket(
-                    new ClientBoundSystemChatMessagePacket(TextComponent.Text("You hit an entity that doesn't exist"),
-                        true));
-                return;
+                if (entity == null) {
+                    e.Connection.SendSystemMessage("You hit an entity that doesn't exist");
+                    return;
+                }
             }
+            catch (Exception exception) {
+                Console.WriteLine(exception);
+                throw;
+            }
+            
             
             // Check attack cooldown
             if (attackCooldown != -1) {
-                long lastHit = (long)entity.Data.GetValueOrDefault(LastHitTag, 0L)!;
+                long lastHit = entity.GetTagOrDefault(_lastHitTag, 0L);
                 long time = DateTime.Now.UnixMillis();
                 if (time - lastHit < attackCooldown) {
                     // too soon
                     return;
                 }
                 
-                entity.Data[LastHitTag] = time;
+                entity.SetTag(_lastHitTag, time);
             }
 
             MinecraftPacket soundPacket = new ClientBoundEntitySoundEffectPacket(1149, SoundCategory.Players,
@@ -56,6 +63,9 @@ public class SimpleCombatFeature(int attackCooldown = -1) : IWorldFeature {
                 // p.SetVelocity(attacker.Direction.Multiply(0.8) with { Y = 0.35 });  // adam tweak
                 // p.SetVelocity(attacker.Direction.Multiply(1) with { Y = 1 });  // dumb
                 p.Connection.SendPacket(soundPacket);
+            }
+            else {
+                e.Connection.SendSystemMessage("Entity is not player");
             }
             
             world.Entities.SendPacketsFor(entity, soundPacket);
