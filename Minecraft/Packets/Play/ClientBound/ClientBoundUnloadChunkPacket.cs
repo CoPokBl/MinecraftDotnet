@@ -2,16 +2,13 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundUnloadChunkPacket(int x, int z) : MinecraftPacket {
-    public int X { get; private set; } = x;
-    public int Z { get; private set; } = z;
+public class ClientBoundUnloadChunkPacket() : ClientBoundPacket {
+    public required int X;
+    public required int Z;
 
-    public ClientBoundUnloadChunkPacket(ChunkPosition pos) : this(pos.X, pos.Z) { }
-    
-    public ClientBoundUnloadChunkPacket() : this(0, 0) { }
-    
-    public override int GetPacketId() {
-        return 0x21;
+    public ClientBoundUnloadChunkPacket(ChunkPosition pos) : this() {
+        X = pos.X;
+        Z = pos.Z;
     }
 
     protected override byte[] GetData() {
@@ -20,11 +17,9 @@ public class ClientBoundUnloadChunkPacket(int x, int z) : MinecraftPacket {
             .WriteInteger(X)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Z = r.ReadInteger();
-        X = r.ReadInteger();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundUnloadChunkPacket {
+        Z = r.ReadInteger(),
+        X = r.ReadInteger()
+    };
 }

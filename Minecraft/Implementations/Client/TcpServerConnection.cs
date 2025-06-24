@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using Minecraft.Packets;
+using Minecraft.Packets.Registry;
 
 namespace Minecraft.Implementations.Client;
 
@@ -103,7 +104,7 @@ public class TcpServerConnection(TcpClient client, bool packetQueuing = false) :
                     }
 
                     if (!DontLog.Any(p => p.GetType().FullName!.Equals(packet.GetType().FullName))) {
-                        Log($"Got full packet: {packet.GetPacketId()}, {packet.GetType().FullName}");
+                        Log($"Got full packet: {PacketRegistry.GetPacketId(packet.GetType())}, {packet.GetType().FullName}");
                     }
                     
                     HandlePacket(packet);

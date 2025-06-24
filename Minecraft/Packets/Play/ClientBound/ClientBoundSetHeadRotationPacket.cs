@@ -2,15 +2,9 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundSetHeadRotationPacket(int entityId, Angle yaw) : MinecraftPacket {
-    public int EntityId = entityId;
-    public Angle Yaw = yaw;
-    
-    public ClientBoundSetHeadRotationPacket() : this(0, Angle.Zero) { }
-
-    public override int GetPacketId() {
-        return 0x4C;
-    }
+public class ClientBoundSetHeadRotationPacket : ClientBoundPacket {
+    public required int EntityId;
+    public required Angle Yaw;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -18,11 +12,9 @@ public class ClientBoundSetHeadRotationPacket(int entityId, Angle yaw) : Minecra
             .WriteAngle(Yaw)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        EntityId = r.ReadVarInt();
-        Yaw = r.ReadAngle();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetHeadRotationPacket {
+        EntityId = r.ReadVarInt(),
+        Yaw = r.ReadAngle()
+    };
 }

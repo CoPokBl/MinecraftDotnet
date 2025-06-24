@@ -51,7 +51,9 @@ public abstract class ServerConnection {
             throw new Exception("Connection must be in login state to enable compression.");
         }
 
-        await SendPacket(new ClientBoundSetCompressionPacket(minSize));
+        await SendPacket(new ClientBoundSetCompressionPacket {
+            Threshold = minSize
+        });
         CompressionThreshold = minSize;
     }
 

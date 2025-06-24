@@ -1,9 +1,7 @@
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundPlayerInputPacket(ServerBoundPlayerInputPacket.Input flags) : MinecraftPacket {
-    public Input Flags = flags;
-
-    public ServerBoundPlayerInputPacket() : this(Input.Jump) { }
+public class ServerBoundPlayerInputPacket : ServerBoundPacket {
+    public required Input Flags;
 
     [Flags]
     public enum Input {
@@ -16,18 +14,13 @@ public class ServerBoundPlayerInputPacket(ServerBoundPlayerInputPacket.Input fla
         Sprint = 0x40
     }
 
-    public override int GetPacketId() {
-        return 0x29;
-    }
-
     protected override byte[] GetData() {
         return new DataWriter()
             .WriteUnsignedByte((byte)Flags)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        Flags = (Input)new DataReader(data).Read();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPlayerInputPacket {
+        Flags = (Input)r.Read()
+    };
 }

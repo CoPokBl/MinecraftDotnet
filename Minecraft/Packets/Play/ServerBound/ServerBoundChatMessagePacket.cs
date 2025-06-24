@@ -1,27 +1,13 @@
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundChatMessagePacket(
-    string message, 
-    long timestamp, 
-    long salt, 
-    byte[] signature, 
-    int messageCount, 
-    byte[] acknowledged, 
-    byte checksum) : MinecraftPacket {
-    
-    public string Message = message;
-    public long Timestamp = timestamp;
-    public long Salt = salt;
-    public byte[]? Signature = signature;
-    public int MessageCount = messageCount;
-    public byte[] Acknowledged = acknowledged;
-    public byte Checksum = checksum;
-    
-    public ServerBoundChatMessagePacket() : this("", 0, 0, new byte[256], 0, new byte[3], 0x00) { }
-
-    public override int GetPacketId() {
-        return 0x07;
-    }
+public class ServerBoundChatMessagePacket : ServerBoundPacket {
+    public required string Message;
+    public required long Timestamp;
+    public required long Salt;
+    public byte[]? Signature;
+    public required int MessageCount;
+    public required byte[] Acknowledged;
+    public required byte Checksum;
 
     protected override byte[] GetData() {
         if (Signature != null) AssertLength(Signature, 256);
@@ -37,16 +23,14 @@ public class ServerBoundChatMessagePacket(
             .WriteByte(Checksum)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Message = r.ReadString();
-        Timestamp = r.ReadLong();
-        Salt = r.ReadLong();
-        Signature = r.ReadPrefixedOptional(reader => r.Read(256));
-        MessageCount = r.ReadVarInt();
-        Acknowledged = r.Read(3);
-        Checksum = (byte)r.ReadByte();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundChatMessagePacket {
+        Message = r.ReadString(),
+        Timestamp = r.ReadLong(),
+        Salt = r.ReadLong(),
+        Signature = r.ReadPrefixedOptional(reader => reader.Read(256)),
+        MessageCount = r.ReadVarInt(),
+        Acknowledged = r.Read(3),
+        Checksum = (byte)r.ReadByte()
+    };
 }

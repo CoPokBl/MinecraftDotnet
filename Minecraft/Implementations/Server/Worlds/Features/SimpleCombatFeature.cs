@@ -54,8 +54,14 @@ public class SimpleCombatFeature(int attackCooldown = -1) : IWorldFeature {
                 entity.SetTag(_lastHitTag, time);
             }
 
-            MinecraftPacket soundPacket = new ClientBoundEntitySoundEffectPacket(1149, SoundCategory.Players,
-                entity.NetId, 1f, 1f, 0);
+            MinecraftPacket soundPacket = new ClientBoundEntitySoundEffectPacket {
+                Category = SoundCategory.Players,
+                EntityId = entity.NetId,
+                Id = 1149, // sound id for "player.attack"
+                Volume = 1f,
+                Pitch = 1f,
+                Seed = 0L
+            };
             
             if (entity is PlayerEntity p) {
                 // p.SetVelocity(attacker.Direction.Multiply(0.5) with { Y = 0.5 });  // Original

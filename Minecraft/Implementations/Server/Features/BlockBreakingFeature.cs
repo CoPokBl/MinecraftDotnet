@@ -1,6 +1,7 @@
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
+using Minecraft.Implementations.Server.Managed;
 using Minecraft.Implementations.Server.Managed.Entities.Types;
 using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Packets;
@@ -10,7 +11,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Server.Features;
 
-public class BlockBreakingFeature(bool instaMine = true) {
+public class BlockBreakingFeature(bool instaMine = true) : IWorldFeature {
     
     public void Register(World world) {
         world.PlayerPacketEvents.AddListener<PacketHandleEvent>(e => {
@@ -29,23 +30,26 @@ public class BlockBreakingFeature(bool instaMine = true) {
                 Position = packet.Location
             };
             world.Events.CallEvent(breakEvent);
+
+            MinecraftPacket ackPacket = new ClientBoundAcknowledgeBlockChangePacket {
+                SequenceId = packet.Sequence
+            };
             
             if (breakEvent.Cancelled) {
                 // TODO: Tell them it wasn't broken (we don't know what the block is), for now just acknowledge that it happened.
-                e.Connection.SendPacket(new ClientBoundAcknowledgeBlockChangePacket(packet.Sequence));
+                e.Connection.SendPacket(ackPacket);
                 return;
             }
             
-            MinecraftPacket changePacket = new ClientBoundBlockUpdatePacket(packet.Location, 0);
+            MinecraftPacket changePacket = new ClientBoundBlockUpdatePacket {
+                BlockId = 0,
+                Location = packet.Location
+            };
             foreach (PlayerEntity p in world.Players) {
-                // if (connection == e.Connection) {
-                //     continue;
-                // }
-
                 p.Connection.SendPacket(changePacket);
             }
             
-            e.Connection.SendPacket(new ClientBoundAcknowledgeBlockChangePacket(packet.Sequence));
+            e.Connection.SendPacket(ackPacket);
         });
     }
 
@@ -60,6 +64,6 @@ public class BlockBreakingFeature(bool instaMine = true) {
     public class BlockBreakEvent : IServerEvent, ICancelableEvent {
         public required PlayerConnection Connection { get; set; }
         public required BlockPosition Position { get; set; }
-        public bool Cancelled { get; set; } = false;
+        public bool Cancelled { get; set; }
     }
 }

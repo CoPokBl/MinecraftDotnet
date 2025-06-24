@@ -2,59 +2,30 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundLoginPacket(
-    int entityId,
-    bool isHardcore,
-    string[] dimensions,
-    int maxPlayers,
-    int viewDistance,
-    int simulationDistance,
-    bool reducedDebugInfo,
-    bool enableRespawnScreen,
-    bool doLimitedCrafting,
-    int dimensionType,
-    string dimensionName,
-    long hashedSeed,
-    GameMode gameMode,
-    GameMode previousGameMode,
-    bool isDebug,
-    bool isFlat,
-    DeathLocation? deathLocation,
-    int portalCooldown,
-    int seaLevel,
-    bool enforcesSecureChat) : MinecraftPacket {
-    
-    public bool EnforcesSecureChat = enforcesSecureChat;
-    public int SeaLevel = seaLevel;
-    public int PortalCooldown = portalCooldown;
-    public DeathLocation? Location = deathLocation;
-    public bool IsFlat = isFlat;
-    public bool IsDebug = isDebug;
-    public GameMode PreviousGameMode = previousGameMode;
-    public GameMode GameMode = gameMode;
-    public long HashedSeed = hashedSeed;
-    public string DimensionName = dimensionName;
-    public int DimensionType = dimensionType;
-    public bool DoLimitedCrafting = doLimitedCrafting;
-    public bool EnableRespawnScreen = enableRespawnScreen;
-    public bool ReducedDebugInfo = reducedDebugInfo;
-    public int SimulationDistance = simulationDistance;
-    public int ViewDistance = viewDistance;
-    public int MaxPlayers = maxPlayers;
-    public string[] Dimensions = dimensions;
-    public bool IsHardcore = isHardcore;
-    public int EntityId = entityId;
-
-    public ClientBoundLoginPacket() : this(0, false, [], 0, 0, 0, 
-        false, false, false, 0, "", 0, 
-        0, 0, false, false, null, 0, 0, false) { }
-    
-    public override int GetPacketId() {
-        return 0x2B;
-    }
+public class ClientBoundLoginPacket : ClientBoundPacket {
+    public required bool EnforcesSecureChat;
+    public required int SeaLevel;
+    public required int PortalCooldown;
+    public DeathLocation? Location;
+    public required bool IsFlat;
+    public required bool IsDebug;
+    public required GameMode PreviousGameMode;
+    public required GameMode GameMode;
+    public required long HashedSeed;
+    public required string DimensionName;
+    public required int DimensionType;
+    public required bool DoLimitedCrafting;
+    public required bool EnableRespawnScreen;
+    public required bool ReducedDebugInfo;
+    public required int SimulationDistance;
+    public required int ViewDistance;
+    public required int MaxPlayers;
+    public required string[] Dimensions;
+    public required bool IsHardcore;
+    public required int EntityId;
 
     protected override byte[] GetData() {
-        DataWriter w = new DataWriter()
+        return new DataWriter()
             .WriteInteger(EntityId)
             .WriteBoolean(IsHardcore)
             .WritePrefixedArray(Dimensions, (s, writer) => writer.WriteString(s))
@@ -70,54 +41,38 @@ public class ClientBoundLoginPacket(
             .WriteUnsignedByte((byte)GameMode)
             .WriteByte((int)PreviousGameMode)
             .WriteBoolean(IsDebug)
-            .WriteBoolean(IsFlat);
-
-        if (Location == null) {
-            w.WriteBoolean(false);
-        }
-        else {
-            w.WriteBoolean(true)
-                .WriteString(Location.Dimension)
-                .WritePosition(Location.Position);
-        }
-        
-        w.WriteVarInt(PortalCooldown)
+            .WriteBoolean(IsFlat)
+            .WritePrefixedOptional(Location,
+            (location, wr) => wr
+                .WriteString(location.Dimension)
+                .WritePosition(location.Position))
+            .WriteVarInt(PortalCooldown)
             .WriteVarInt(SeaLevel)
-            .WriteBoolean(EnforcesSecureChat);
-        
-        return w.ToArray();
+            .WriteBoolean(EnforcesSecureChat)
+            .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        EntityId = r.ReadInteger();
-        IsHardcore = r.ReadBoolean();
-        Dimensions = r.ReadPrefixedArray(reader => reader.ReadString());
-        MaxPlayers = r.ReadVarInt();
-        ViewDistance = r.ReadVarInt();
-        SimulationDistance = r.ReadVarInt();
-        ReducedDebugInfo = r.ReadBoolean();
-        EnableRespawnScreen = r.ReadBoolean();
-        DoLimitedCrafting = r.ReadBoolean();
-        DimensionType = r.ReadVarInt();
-        DimensionName = r.ReadString();
-        HashedSeed = r.ReadLong();
-        GameMode = (GameMode)r.Read();
-        PreviousGameMode = (GameMode)r.ReadByte();
-        IsDebug = r.ReadBoolean();
-        IsFlat = r.ReadBoolean();
-        if (r.ReadBoolean()) {
-            Location = new DeathLocation(
-                r.ReadString(),
-                r.ReadPosition()
-            );
-        }
-        else {
-            Location = null;
-        }
-        PortalCooldown = r.ReadVarInt();
-        SeaLevel = r.ReadVarInt();
-        EnforcesSecureChat = r.ReadBoolean();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundLoginPacket {
+        EntityId = r.ReadInteger(),
+        IsHardcore = r.ReadBoolean(),
+        Dimensions = r.ReadPrefixedArray(reader => reader.ReadString()),
+        MaxPlayers = r.ReadVarInt(),
+        ViewDistance = r.ReadVarInt(),
+        SimulationDistance = r.ReadVarInt(),
+        ReducedDebugInfo = r.ReadBoolean(),
+        EnableRespawnScreen = r.ReadBoolean(),
+        DoLimitedCrafting = r.ReadBoolean(),
+        DimensionType = r.ReadVarInt(),
+        DimensionName = r.ReadString(),
+        HashedSeed = r.ReadLong(),
+        GameMode = (GameMode)r.Read(),
+        PreviousGameMode = (GameMode)r.ReadByte(),
+        IsDebug = r.ReadBoolean(),
+        IsFlat = r.ReadBoolean(),
+        Location = r.ReadPrefixedOptional(re => 
+            new DeathLocation(re.ReadString(), re.ReadPosition())),
+        PortalCooldown = r.ReadVarInt(),
+        SeaLevel = r.ReadVarInt(),
+        EnforcesSecureChat = r.ReadBoolean()
+    };
 }

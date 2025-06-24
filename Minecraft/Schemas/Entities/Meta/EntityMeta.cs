@@ -3,7 +3,6 @@ using Minecraft.NBT.Text;
 namespace Minecraft.Schemas.Entities.Meta;
 
 public class EntityMeta {
-    
     public EntityStatus? Status = null;
     public int? AirTicks = null;
     public Optional<TextComponent>? CustomName = null;

@@ -2,32 +2,16 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Config.ServerBound;
 
-public class ServerBoundClientInformationPacketConfig(
-    string locale, 
-    byte viewDistance, 
-    ChatMode chatMode, 
-    bool chatColors, 
-    SkinParts displayedSkinParts, 
-    DominantHand mainHand, 
-    bool enableTextFiltering, 
-    bool allowServerListing, 
-    ParticleStatus particleStatus) : MinecraftPacket {
-    
-    public ParticleStatus ParticleStatus = particleStatus;
-    public bool AllowServerListing = allowServerListing;
-    public bool EnableTextFiltering = enableTextFiltering;
-    public DominantHand MainHand = mainHand;
-    public SkinParts DisplayedSkinParts = displayedSkinParts;
-    public bool ChatColors = chatColors;
-    public ChatMode TextChatMode = chatMode;
-    public byte ViewDistance = viewDistance;
-    public string Locale = locale;
-
-    public ServerBoundClientInformationPacketConfig() : this("en_US", 0, ChatMode.Enabled, true, SkinParts.All, DominantHand.Right, false, true, ParticleStatus.All) { }
-
-    public override int GetPacketId() {
-        return 0x00;
-    }
+public class ServerBoundClientInformationPacketConfig : ServerBoundPacket {
+    public required ParticleStatus ParticleStatus;
+    public required bool AllowServerListing;
+    public required bool EnableTextFiltering;
+    public required DominantHand MainHand;
+    public required SkinParts DisplayedSkinParts;
+    public required bool ChatColors;
+    public required ChatMode TextChatMode;
+    public required byte ViewDistance;
+    public required string Locale;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -43,17 +27,15 @@ public class ServerBoundClientInformationPacketConfig(
             .ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Locale = r.ReadString();
-        ViewDistance = (byte)r.ReadByte();
-        TextChatMode = (ChatMode)r.ReadVarInt();
-        ChatColors = r.ReadBoolean();
-        DisplayedSkinParts = (SkinParts)r.Read();
-        MainHand = (DominantHand)r.ReadVarInt();
-        EnableTextFiltering = r.ReadBoolean();
-        AllowServerListing = r.ReadBoolean();
-        ParticleStatus = (ParticleStatus)r.ReadVarInt();
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundClientInformationPacketConfig {
+        Locale = r.ReadString(),
+        ViewDistance = (byte)r.ReadByte(),
+        TextChatMode = (ChatMode)r.ReadVarInt(),
+        ChatColors = r.ReadBoolean(),
+        DisplayedSkinParts = (SkinParts)r.Read(),
+        MainHand = (DominantHand)r.ReadVarInt(),
+        EnableTextFiltering = r.ReadBoolean(),
+        AllowServerListing = r.ReadBoolean(),
+        ParticleStatus = (ParticleStatus)r.ReadVarInt()
+    };
 }

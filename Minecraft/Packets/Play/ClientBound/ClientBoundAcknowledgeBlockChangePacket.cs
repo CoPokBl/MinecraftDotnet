@@ -1,13 +1,7 @@
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundAcknowledgeBlockChangePacket(int sequenceId) : MinecraftPacket {
-    public int SequenceId = sequenceId;
-    
-    public ClientBoundAcknowledgeBlockChangePacket() : this(0) { }
-
-    public override int GetPacketId() {
-        return 0x04;
-    }
+public class ClientBoundAcknowledgeBlockChangePacket : ClientBoundPacket {
+    public required int SequenceId;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -15,8 +9,7 @@ public class ClientBoundAcknowledgeBlockChangePacket(int sequenceId) : Minecraft
             .ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        SequenceId = new DataReader(data).ReadVarInt();
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundAcknowledgeBlockChangePacket {
+        SequenceId = r.ReadVarInt()
+    };
 }

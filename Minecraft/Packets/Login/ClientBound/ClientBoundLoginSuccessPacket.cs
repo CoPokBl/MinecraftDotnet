@@ -1,15 +1,8 @@
 namespace Minecraft.Packets.Login.ClientBound;
 
-public class ClientBoundLoginSuccessPacket(Guid uuid, string username) : MinecraftPacket {
-    public string Username = username;
-    public Guid Uuid = uuid;
-
-    public ClientBoundLoginSuccessPacket() : this(Guid.Empty, "") { }
-
-
-    public override int GetPacketId() {
-        return 0x02;
-    }
+public class ClientBoundLoginSuccessPacket : ClientBoundPacket {
+    public required string Username;
+    public required Guid Uuid;
 
     protected override byte[] GetData() {
         DataWriter w = new();
@@ -19,10 +12,8 @@ public class ClientBoundLoginSuccessPacket(Guid uuid, string username) : Minecra
         return w.ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Uuid = r.ReadUuid();
-        Username = r.ReadString();
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundLoginSuccessPacket {
+        Uuid = r.ReadUuid(),
+        Username = r.ReadString()
+    };
 }

@@ -4,32 +4,16 @@ using Newtonsoft.Json.Linq;
 
 namespace Minecraft.Packets.Status.ClientBound;
 
-public class ClientBoundStatusResponsePacket(
-    string versionName, 
-    int versionProtocol, 
-    int maxPlayers, 
-    int onlinePlayers, 
-    SamplePlayer[]? samplePlayers = null, 
-    string? description = null, 
-    string? favIcon = null, 
-    bool? enforcesSecureChat = null, 
-    bool? preventsChatReports = null) : MinecraftPacket {
-    
-    public bool? PreventsChatReports = preventsChatReports;
-    public bool? EnforcesSecureChat = enforcesSecureChat;
-    public string? FavIcon = favIcon;
-    public string? Description = description;
-    public SamplePlayer[]? SamplePlayers = samplePlayers;
-    public int OnlinePlayers = onlinePlayers;
-    public int MaxPlayers = maxPlayers;
-    public int VersionProtocol = versionProtocol;
-    public string VersionName = versionName;
-
-    public ClientBoundStatusResponsePacket() : this("dotnet", -1, 1, 1) { }
-    
-    public override int GetPacketId() {
-        return 0x00;
-    }
+public class ClientBoundStatusResponsePacket : ClientBoundPacket {
+    public bool? PreventsChatReports;
+    public bool? EnforcesSecureChat;
+    public string? FavIcon;
+    public string? Description;
+    public SamplePlayer[]? SamplePlayers;
+    public required int OnlinePlayers;
+    public required int MaxPlayers;
+    public required int VersionProtocol;
+    public required string VersionName;
 
     public string ToJson() {
         JObject data = new() {
@@ -77,46 +61,46 @@ public class ClientBoundStatusResponsePacket(
         w.WriteString(json);
         return w.ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => {
         string json = r.ReadString();
-
         dynamic obj = JsonConvert.DeserializeObject<dynamic>(json)!;
         
         // required (by notchian client)
-        VersionName = obj.version.name;
-        VersionProtocol = obj.version.protocol;
-        MaxPlayers = obj.players.max;
-        OnlinePlayers = obj.players.online;
+        ClientBoundStatusResponsePacket packet = new() {
+            VersionName = obj.version.name,
+            VersionProtocol = obj.version.protocol,
+            MaxPlayers = obj.players.max,
+            OnlinePlayers = obj.players.online
+        };
 
         if (obj.players.sample != null) {
-            List<SamplePlayer> players = new();
+            List<SamplePlayer> players = [];
             foreach (dynamic sample in obj.players.sample) {
                 players.Add(new SamplePlayer((string)sample.name, (string)sample.id));
             }
-            SamplePlayers = players.ToArray();
+            packet.SamplePlayers = players.ToArray();
         }
 
         // TODO: This doesn't handle all text component formats
         // make TextComponent.FromJson(string or JValue) to correctly
         // parse it.
         if (obj.description?.text != null) {
-            Description = obj.description.text;
+            packet.Description = obj.description.text;
         }
 
         if (obj.favicon != null) {
-            FavIcon = obj.favicon;
+            packet.FavIcon = obj.favicon;
         }
 
         if (obj.enforcesSecureChat != null) {
-            EnforcesSecureChat = obj.enforcesSecureChat;
+            packet.EnforcesSecureChat = obj.enforcesSecureChat;
         }
 
         if (obj.preventsChatReports != null) {
-            PreventsChatReports = obj.preventsChatReports;
+            packet.PreventsChatReports = obj.preventsChatReports;
         }
-
-        return this;
-    }
+        
+        return packet;
+    };
 }

@@ -1,14 +1,8 @@
 namespace Minecraft.Packets.Login.ServerBound;
 
-public class ServerBoundLoginStartPacket(string name, Guid uuid) : MinecraftPacket {
-    public Guid Uuid = uuid;
-    public string Name = name;
-
-    public ServerBoundLoginStartPacket() : this("", Guid.Empty) { }
-    
-    public override int GetPacketId() {
-        return 0x00;
-    }
+public class ServerBoundLoginStartPacket : ServerBoundPacket {
+    public required Guid Uuid;
+    public required string Name;
 
     protected override byte[] GetData() {
         DataWriter w = new();
@@ -16,11 +10,9 @@ public class ServerBoundLoginStartPacket(string name, Guid uuid) : MinecraftPack
         w.WriteUuid(Uuid);
         return w.ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Name = r.ReadString();
-        Uuid = r.ReadUuid();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundLoginStartPacket {
+        Name = r.ReadString(),
+        Uuid = r.ReadUuid()
+    };
 }

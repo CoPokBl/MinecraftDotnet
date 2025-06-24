@@ -73,7 +73,10 @@ public static class ExtensionUtils {
     }
 
     public static void SendSystemMessage(this PlayerConnection con, TextComponent text) {
-        con.SendPacket(new ClientBoundSystemChatMessagePacket(text, false));
+        con.SendPacket(new ClientBoundSystemChatMessagePacket {
+            Content = text,
+            ActionBar = false
+        });
     }
 
     public static long UnixMillis(this DateTime time) {

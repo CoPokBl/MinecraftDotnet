@@ -32,14 +32,15 @@ public static class MlgRush {
         Dictionary<PlayerConnection, int> playerIds = new();
 
         ManagedMinecraftServer mServer = new(
-            new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket(
-            "dotnet",
-            connection.Handshake!.ProtocolVersion,
-            1,
-            1,
-            [new SamplePlayer("Potato", "4566e69f-c907-48ee-8d71-d7ba5aa00d20")],
-            "MLG Rush",
-            preventsChatReports: true)),
+            new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
+                VersionName = "dotnet",
+                VersionProtocol = connection.Handshake!.ProtocolVersion,
+                OnlinePlayers = 1,
+                MaxPlayers = 1,
+                SamplePlayers = [new SamplePlayer("Potato", "4566e69f-c907-48ee-8d71-d7ba5aa00d20")],
+                Description = "MLG Rush",
+                PreventsChatReports = true
+            }),
             new PingRespondFeature(),
             new SimpleChatFeature(),
             new OpenToLanAdFeature("MLG Rush over LAN", Port));
@@ -157,7 +158,12 @@ public static class MlgRush {
             p2.Teleport(p2Spawn);
             
             // Give them both blocks
-            ClientBoundSetContainerSlotPacket giveItemPacket = new(0, 0, 36, new Slot(64, 175));
+            ClientBoundSetContainerSlotPacket giveItemPacket = new() {
+                WindowId = 0,
+                StateId = 0,
+                SlotId = 36,
+                Data = new Slot(64, 175)
+            };
             c1.SendPacket(giveItemPacket);
             c2.SendPacket(giveItemPacket);
 
@@ -172,15 +178,28 @@ public static class MlgRush {
                 }
                 
                 // Move them away for the other player to prevent tp blocking breaking
-                e.Entity.SendToViewers(new ClientBoundTeleportEntityPacket(e.Entity.NetId, new Vec3(0, -100, 0), Vec3.Zero, 0, 0, false));
+                e.Entity.SendToViewers(new ClientBoundTeleportEntityPacket {
+                    EntityId = e.Entity.NetId,
+                    Position = new Vec3(0, -100, 0),
+                    Velocity = Vec3.Zero,
+                    Yaw = Angle.Zero,
+                    Pitch = Angle.Zero,
+                    OnGround = false
+                });
                 
                 e.Entity.Teleport(e.Entity == p1 ? p1Spawn : p2Spawn);
                 ((PlayerEntity)e.Entity).Connection.SendPacket(giveItemPacket);
                 
                 // play nice sound
                 PlayerEntity killer = e.Entity == p1 ? p2 : p1;
-                killer.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket(525, SoundCategory.Players,
-                    e.Entity.NetId, 1f, 1f, 0));
+                killer.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
+                    Category = SoundCategory.Players,
+                    EntityId = e.Entity.NetId,
+                    Id = 525,  // sound id for xp level up
+                    Volume = 1f,
+                    Pitch = 1f,
+                    Seed = 0L
+                });
 
                 TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed by {killer.Name}";
                 BroadcastMsg(msg);
@@ -198,7 +217,10 @@ public static class MlgRush {
                     e.Connection.SendSystemMessage(TextComponent.Text("You can't break your own bed idiot")
                         .WithColor(TextColor.Red)
                         .WithBold());
-                    e.Connection.SendPacket(new ClientBoundBlockUpdatePacket(e.Position, (int)MlgRushMapProvider.WhiteWool));
+                    e.Connection.SendPacket(new ClientBoundBlockUpdatePacket {
+                        Location = e.Position,
+                        BlockId = (int)MlgRushMapProvider.WhiteWool
+                    });
                     e.Cancelled = true;
                     return;
                 }
@@ -219,7 +241,14 @@ public static class MlgRush {
                     BroadcastMsg($"{p2.Name} has lost their bed!");
                 }
                 
-                BroadcastPacket(new ClientBoundSoundEffectPacket(496, SoundCategory.Master, (p1Bed ? p2 : p1).Position, 1f, 1f, 0));
+                BroadcastPacket(new ClientBoundSoundEffectPacket {
+                    Id = 496,  // sound id for dragon growl
+                    Category = SoundCategory.Master,
+                    Pos = (p1Bed ? p2 : p1).Position,
+                    Volume = 1f,
+                    Pitch = 1f,
+                    Seed = 0L
+                });
             });
             
         }

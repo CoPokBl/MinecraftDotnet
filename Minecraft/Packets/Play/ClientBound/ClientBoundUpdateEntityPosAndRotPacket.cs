@@ -2,18 +2,12 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundUpdateEntityPosAndRotPacket(int entityId, FVec3 delta, Angle yaw, Angle pitch, bool onGround) : MinecraftPacket {
-    public int EntityId = entityId;
-    public FVec3 Delta = delta;
-    public Angle Yaw = yaw;
-    public Angle Pitch = pitch;
-    public bool OnGround = onGround;
-    
-    public ClientBoundUpdateEntityPosAndRotPacket() : this(0, FVec3.Zero, Angle.Zero, Angle.Zero, false) { }
-
-    public override int GetPacketId() {
-        return 0x2F;
-    }
+public class ClientBoundUpdateEntityPosAndRotPacket : ClientBoundPacket {
+    public required int EntityId;
+    public required FVec3 Delta;
+    public required Angle Yaw;
+    public required Angle Pitch;
+    public required bool OnGround;
 
     protected override byte[] GetData() {
         SVec3 deltaPos = new(
@@ -29,13 +23,15 @@ public class ClientBoundUpdateEntityPosAndRotPacket(int entityId, FVec3 delta, A
             .WriteBoolean(OnGround)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        EntityId = r.ReadVarInt();
-        SVec3 eDelta = r.ReadSVec3();
-        Delta = new FVec3((float)eDelta.X / 4096, (float)eDelta.Y / 4096, (float)eDelta.Z / 4096);
-        OnGround = r.ReadBoolean();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundUpdateEntityPosAndRotPacket {
+        EntityId = r.ReadVarInt(),
+        Delta = new FVec3(
+            (float)r.ReadShort() / 4096, 
+            (float)r.ReadShort() / 4096, 
+            (float)r.ReadShort() / 4096),
+        Yaw = r.ReadAngle(),
+        Pitch = r.ReadAngle(),
+        OnGround = r.ReadBoolean()
+    };
 }

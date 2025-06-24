@@ -2,21 +2,14 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundUseItemOnPacket(Hand hand, BlockPosition position, BlockFace face, FVec3 cursorPosition, 
-    bool insideBlock, bool worldBorderHit, int sequence) : MinecraftPacket {
-    public Hand ActiveHand = hand;
-    public BlockPosition Position = position;
-    public BlockFace Face = face;
-    public FVec3 CursorPosition = cursorPosition;
-    public bool InsideBlock = insideBlock;
-    public bool WorldBorderHit = worldBorderHit;
-    public int Sequence = sequence;
-    
-    public ServerBoundUseItemOnPacket() : this(Hand.MainHand, new BlockPosition(0, 0, 0), BlockFace.NegX, FVec3.Zero, false, false, 0) { }
-
-    public override int GetPacketId() {
-        return 0x3E;
-    }
+public class ServerBoundUseItemOnPacket : ServerBoundPacket {
+    public required Hand ActiveHand;
+    public required BlockPosition Position;
+    public required BlockFace Face;
+    public required FVec3 CursorPosition;
+    public required bool InsideBlock;
+    public required bool WorldBorderHit;
+    public required int Sequence;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -29,16 +22,14 @@ public class ServerBoundUseItemOnPacket(Hand hand, BlockPosition position, Block
             .WriteVarInt(Sequence)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        ActiveHand = (Hand)r.ReadVarInt();
-        Position = r.ReadPosition();
-        Face = (BlockFace)r.ReadVarInt();
-        CursorPosition = r.ReadFVec3();
-        InsideBlock = r.ReadBoolean();
-        WorldBorderHit = r.ReadBoolean();
-        Sequence = r.ReadVarInt();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundUseItemOnPacket {
+        ActiveHand = (Hand)r.ReadVarInt(),
+        Position = r.ReadPosition(),
+        Face = (BlockFace)r.ReadVarInt(),
+        CursorPosition = r.ReadFVec3(),
+        InsideBlock = r.ReadBoolean(),
+        WorldBorderHit = r.ReadBoolean(),
+        Sequence = r.ReadVarInt()
+    };
 }

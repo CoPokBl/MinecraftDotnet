@@ -1,9 +1,7 @@
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundSetMovementFlagsPacket(ServerBoundSetMovementFlagsPacket.Flags flags) : MinecraftPacket {
-    public Flags SetFlags = flags;
-
-    public ServerBoundSetMovementFlagsPacket() : this(Flags.None) { }
+public class ServerBoundSetMovementFlagsPacket : ServerBoundPacket {
+    public required Flags SetFlags;
     
     [Flags]
     public enum Flags {
@@ -14,19 +12,13 @@ public class ServerBoundSetMovementFlagsPacket(ServerBoundSetMovementFlagsPacket
         All = OnGround | AgainstWall
     }
 
-    public override int GetPacketId() {
-        return 0x1F;
-    }
-
     protected override byte[] GetData() {
         return new DataWriter()
             .WriteUnsignedByte((byte)SetFlags)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        SetFlags = (Flags)r.Read();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundSetMovementFlagsPacket {
+        SetFlags = (Flags)r.Read()
+    };
 }

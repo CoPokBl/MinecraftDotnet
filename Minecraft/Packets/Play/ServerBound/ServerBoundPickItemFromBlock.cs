@@ -2,15 +2,9 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundPickItemFromBlock(BlockPosition location, bool includeData) : MinecraftPacket {
-    public BlockPosition Location = location;
-    public bool IncludeData = includeData;
-    
-    public ServerBoundPickItemFromBlock() : this(BlockPosition.Zero, false) { }
-
-    public override int GetPacketId() {
-        return 0x22;
-    }
+public class ServerBoundPickItemFromBlock : ServerBoundPacket {
+    public required BlockPosition Location;
+    public required bool IncludeData;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -18,11 +12,9 @@ public class ServerBoundPickItemFromBlock(BlockPosition location, bool includeDa
             .WriteBoolean(IncludeData)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Location = r.ReadPosition();
-        IncludeData = r.ReadBoolean();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPickItemFromBlock {
+        Location = r.ReadPosition(),
+        IncludeData = r.ReadBoolean()
+    };
 }

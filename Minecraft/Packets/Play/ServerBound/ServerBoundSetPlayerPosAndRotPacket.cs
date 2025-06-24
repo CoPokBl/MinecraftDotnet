@@ -2,17 +2,11 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundSetPlayerPosAndRotPacket(Vec3 position, float yaw, float pitch, MovePlayerFlags flags) : MinecraftPacket {
-    public MovePlayerFlags Flags = flags;
-    public float Pitch = pitch;
-    public float Yaw = yaw;
-    public Vec3 Position = position;
-
-    public ServerBoundSetPlayerPosAndRotPacket() : this(Vec3.Zero, 0, 0, MovePlayerFlags.None) { }
-
-    public override int GetPacketId() {
-        return 0x1D;
-    }
+public class ServerBoundSetPlayerPosAndRotPacket : ServerBoundPacket {
+    public required MovePlayerFlags Flags;
+    public required float Pitch;
+    public required float Yaw;
+    public required Vec3 Position;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -22,13 +16,11 @@ public class ServerBoundSetPlayerPosAndRotPacket(Vec3 position, float yaw, float
             .WriteByte((int)Flags)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Position = r.ReadVec3();
-        Yaw = r.ReadFloat();
-        Pitch = r.ReadFloat();
-        Flags = (MovePlayerFlags)r.Read();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundSetPlayerPosAndRotPacket {
+        Position = r.ReadVec3(),
+        Yaw = r.ReadFloat(),
+        Pitch = r.ReadFloat(),
+        Flags = (MovePlayerFlags)r.Read()
+    };
 }

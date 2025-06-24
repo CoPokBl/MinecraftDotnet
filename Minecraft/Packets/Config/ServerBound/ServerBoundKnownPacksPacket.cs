@@ -2,14 +2,8 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Config.ServerBound;
 
-public class ServerBoundKnownPacksPacket(KnownDataPack[] packs) : MinecraftPacket {
-    public KnownDataPack[] Packs = packs;
-
-    public ServerBoundKnownPacksPacket() : this([]) { }
-    
-    public override int GetPacketId() {
-        return 0x07;
-    }
+public class ServerBoundKnownPacksPacket : ServerBoundPacket {
+    public required KnownDataPack[] Packs;
 
     protected override byte[] GetData() {
         DataWriter w = new();
@@ -20,10 +14,8 @@ public class ServerBoundKnownPacksPacket(KnownDataPack[] packs) : MinecraftPacke
         return w.ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundKnownPacksPacket {
         Packs = r.ReadPrefixedArray(reader => 
-            new KnownDataPack(reader.ReadString(), reader.ReadString(), reader.ReadString()));
-        return this;
-    }
+            new KnownDataPack(reader.ReadString(), reader.ReadString(), reader.ReadString()))
+    };
 }

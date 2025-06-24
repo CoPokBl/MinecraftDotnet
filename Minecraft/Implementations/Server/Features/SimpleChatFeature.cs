@@ -53,7 +53,10 @@ public class SimpleChatFeature : IServerFeature {
 
             // alright, let's send it
             foreach (PlayerConnection recipient in recipients) {
-                recipient.SendPacket(new ClientBoundSystemChatMessagePacket(e.FinalMessage, false));
+                recipient.SendPacket(new ClientBoundSystemChatMessagePacket {
+                    Content = e.FinalMessage,
+                    ActionBar = false
+                });
             }
         });
     }

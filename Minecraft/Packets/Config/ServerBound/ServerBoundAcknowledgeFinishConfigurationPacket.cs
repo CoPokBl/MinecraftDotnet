@@ -1,16 +1,10 @@
 namespace Minecraft.Packets.Config.ServerBound;
 
-public class ServerBoundAcknowledgeFinishConfigurationPacket : MinecraftPacket {
-    
-    public override int GetPacketId() {
-        return 0x03;
-    }
+public class ServerBoundAcknowledgeFinishConfigurationPacket : ServerBoundPacket {
 
     protected override byte[] GetData() {
         return [];
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = _ => new ServerBoundAcknowledgeFinishConfigurationPacket();
 }

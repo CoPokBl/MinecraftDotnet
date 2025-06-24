@@ -1,16 +1,10 @@
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundChunkBatchStartPacket : MinecraftPacket {
-    
-    public override int GetPacketId() {
-        return 0x0C;
-    }
+public class ClientBoundChunkBatchStartPacket : ClientBoundPacket {
 
     protected override byte[] GetData() {
         return [];
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = _ => new ClientBoundChunkBatchStartPacket();
 }

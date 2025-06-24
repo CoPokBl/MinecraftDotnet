@@ -1,14 +1,8 @@
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundEntityEventPacket(int entityId, ClientBoundEntityEventPacket.EntityEventType status) : MinecraftPacket {
-    public int EntityId = entityId;
-    public EntityEventType Status = status;
-
-    public ClientBoundEntityEventPacket() : this(0, EntityEventType.AllayMitosis) { }
-    
-    public override int GetPacketId() {
-        return 0x1E;
-    }
+public class ClientBoundEntityEventPacket : ClientBoundPacket {
+    public required int EntityId;
+    public required EntityEventType Status;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -17,12 +11,10 @@ public class ClientBoundEntityEventPacket(int entityId, ClientBoundEntityEventPa
             .ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        EntityId = r.ReadInteger();
-        Status = (EntityEventType)r.ReadByte();
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundEntityEventPacket {
+        EntityId = r.ReadInteger(),
+        Status = (EntityEventType)r.ReadByte()
+    };
     
     /// <summary>
     /// Enum of all entity event types.

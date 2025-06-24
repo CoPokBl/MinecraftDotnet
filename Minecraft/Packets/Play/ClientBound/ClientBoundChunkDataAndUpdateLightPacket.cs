@@ -2,17 +2,11 @@ using Minecraft.Schemas.Chunks;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundChunkDataAndUpdateLightPacket(int chunkX, int chunkZ, ChunkData data, LightData light) : MinecraftPacket {
-    public int ChunkX = chunkX;
-    public int ChunkZ = chunkZ;
-    public ChunkData Data = data;
-    public LightData Light = light;
-
-    public ClientBoundChunkDataAndUpdateLightPacket() : this(0, 0, new ChunkData(), new LightData()) { }
-    
-    public override int GetPacketId() {
-        return 0x27;
-    }
+public class ClientBoundChunkDataAndUpdateLightPacket : ClientBoundPacket {
+    public required int ChunkX;
+    public required int ChunkZ;
+    public required ChunkData Data;
+    public required LightData Light;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -22,12 +16,10 @@ public class ClientBoundChunkDataAndUpdateLightPacket(int chunkX, int chunkZ, Ch
             .Write(Light).ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        ChunkX = r.ReadInteger();
-        ChunkZ = r.ReadInteger();
-        Data = new ChunkData().Read(r); 
-        Light = new LightData();  // TODO .Read()
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundChunkDataAndUpdateLightPacket {
+        ChunkX = r.ReadInteger(),
+        ChunkZ = r.ReadInteger(),
+        Data = new ChunkData().Read(r),
+        Light = LightData.FullBright  // TODO .Read()
+    };
 }

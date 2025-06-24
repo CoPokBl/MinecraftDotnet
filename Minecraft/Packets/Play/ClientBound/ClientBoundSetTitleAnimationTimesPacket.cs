@@ -1,16 +1,10 @@
 namespace Minecraft.Packets.Play.ClientBound;
 
 // all fields are in ticks
-public class ClientBoundSetTitleAnimationTimesPacket(int fadeIn, int stay, int fadeOut) : MinecraftPacket {
-    public int FadeIn = fadeIn;
-    public int Stay = stay;
-    public int FadeOut = fadeOut;
-    
-    public ClientBoundSetTitleAnimationTimesPacket() : this(0, 0, 0) { }
-
-    public override int GetPacketId() {
-        return 0x6C;
-    }
+public class ClientBoundSetTitleAnimationTimesPacket : ClientBoundPacket {
+    public required int FadeIn;
+    public required int Stay;
+    public required int FadeOut;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -19,12 +13,10 @@ public class ClientBoundSetTitleAnimationTimesPacket(int fadeIn, int stay, int f
             .WriteInteger(FadeOut)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        FadeIn = r.ReadInteger();
-        Stay = r.ReadInteger();
-        FadeOut = r.ReadInteger();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetTitleAnimationTimesPacket {
+        FadeIn = r.ReadInteger(),
+        Stay = r.ReadInteger(),
+        FadeOut = r.ReadInteger()
+    };
 }

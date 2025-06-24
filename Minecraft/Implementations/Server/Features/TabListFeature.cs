@@ -91,7 +91,9 @@ public class TabListFeature : IServerFeature {
 
         List<MinecraftPacket> packets = [];
         if (toRemove.Length > 0) {
-            packets.Add(new ClientBoundPlayerInfoRemovePacket(toRemove));
+            packets.Add(new ClientBoundPlayerInfoRemovePacket {
+                Uuids = toRemove
+            });
         }
         
         ClientBoundPlayerInfoUpdatePacket.PlayerData data = new(
@@ -126,8 +128,13 @@ public class TabListFeature : IServerFeature {
                 });
         }
         
-        packets.Add(new ClientBoundPlayerInfoUpdatePacket(data));
-        packets.Add(new ClientBoundSetTabListHeaderFooterPacket(_headerProvider.Invoke(con), _footerProvider.Invoke(con)));
+        packets.Add(new ClientBoundPlayerInfoUpdatePacket {
+            Data = data
+        });
+        packets.Add(new ClientBoundSetTabListHeaderFooterPacket {
+            Header = _headerProvider.Invoke(con),
+            Footer = _footerProvider.Invoke(con)
+        });
 
         _lastEntries = entries.Select(e => e.Uuid).ToArray();
         return packets.ToArray();

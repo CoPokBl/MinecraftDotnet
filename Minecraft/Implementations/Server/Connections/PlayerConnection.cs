@@ -8,6 +8,7 @@ using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Packets.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Server.Connections;
@@ -21,12 +22,12 @@ public abstract class PlayerConnection : ITaggable {
     public readonly Dictionary<string, object?> Data = new();
     public EventNode<IServerEvent> Events = new();  // its parent should be the server's
 
-    protected static readonly MinecraftPacket[] DontLog = [
-        new ServerBoundClientTickEndPacket(),
-        new ServerBoundKeepAlivePacketPlay(),
-        new ServerBoundSetPlayerPositionPacket(),
-        new ServerBoundSetPlayerRotationPacket(),
-        new ServerBoundSetPlayerPosAndRotPacket()
+    protected static readonly Type[] DontLog = [
+        typeof(ServerBoundClientTickEndPacket),
+        typeof(ServerBoundKeepAlivePacketPlay),
+        typeof(ServerBoundSetPlayerPositionPacket),
+        typeof(ServerBoundSetPlayerRotationPacket),
+        typeof(ServerBoundSetPlayerPosAndRotPacket)
     ];
 
     protected void Log(string s) {
@@ -34,6 +35,10 @@ public abstract class PlayerConnection : ITaggable {
     }
 
     public void HandlePacket(MinecraftPacket packet) {
+        if (DontLog.All(p => p != packet.GetType())) {
+            Log($"Got full packet: {PacketRegistry.GetPacketId(packet.GetType())}, {packet.GetType().FullName}");
+        }
+        
         // Handle connection state changes. Do this before handling because client will have already updated.
         switch (packet) {
             // handshake
@@ -92,7 +97,9 @@ public abstract class PlayerConnection : ITaggable {
             Disconnect();
             return;
         }
-        await SendPacket(new ClientBoundDisconnectPacketPlay(msg));
+        await SendPacket(new ClientBoundDisconnectPacketPlay {
+            Reason = msg
+        });
         Disconnect();
     }
 
@@ -101,7 +108,9 @@ public abstract class PlayerConnection : ITaggable {
             throw new Exception("Connection must be in login state to enable compression.");
         }
 
-        await SendPacket(new ClientBoundSetCompressionPacket(minSize));
+        await SendPacket(new ClientBoundSetCompressionPacket {
+            Threshold = minSize
+        });
         CompressionThreshold = minSize;
     }
 

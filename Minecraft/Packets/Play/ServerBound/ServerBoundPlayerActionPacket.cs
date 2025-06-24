@@ -2,13 +2,11 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundPlayerActionPacket(ServerBoundPlayerActionPacket.Status status, BlockPosition location, BlockFace face, int sequence) : MinecraftPacket {
-    public Status ActionStatus = status;
-    public BlockPosition Location = location;
-    public BlockFace Face = face;
-    public int Sequence = sequence;
-    
-    public ServerBoundPlayerActionPacket() : this(Status.DropItem, new BlockPosition(0, 0, 0), BlockFace.NegX, 0) { }
+public class ServerBoundPlayerActionPacket : ServerBoundPacket {
+    public required Status ActionStatus;
+    public required BlockPosition Location;
+    public required BlockFace Face;
+    public required int Sequence;
 
     public enum Status {
         StartedDigging,
@@ -20,10 +18,6 @@ public class ServerBoundPlayerActionPacket(ServerBoundPlayerActionPacket.Status 
         SwapItem
     }
 
-    public override int GetPacketId() {
-        return 0x27;
-    }
-
     protected override byte[] GetData() {
         return new DataWriter()
             .WriteVarInt((int)ActionStatus)
@@ -32,13 +26,11 @@ public class ServerBoundPlayerActionPacket(ServerBoundPlayerActionPacket.Status 
             .WriteVarInt(Sequence)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        ActionStatus = (Status)r.ReadVarInt();
-        Location = r.ReadPosition();
-        Face = (BlockFace)r.ReadByte();
-        Sequence = r.ReadVarInt();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPlayerActionPacket {
+        ActionStatus = (Status)r.ReadVarInt(),
+        Location = r.ReadPosition(),
+        Face = (BlockFace)r.ReadByte(),
+        Sequence = r.ReadVarInt()
+    };
 }

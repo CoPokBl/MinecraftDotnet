@@ -19,28 +19,27 @@ internal class LoginProcedureFeature : IServerFeature {
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.5") ];
     
     // Defaults for the packet, more will be configurable later
-    private readonly Func<PlayerConnection, ClientBoundLoginPacket> _loginPacketProvider = _ => new ClientBoundLoginPacket(
-        1,
-        true,
-        ["minecraft:overworld"],
-        5,
-        32,
-        8,
-        false,
-        true,
-        false,
-        0,
-        "minecraft:overworld",
-        0,
-        GameMode.Creative,  // configurable via event
-        GameMode.Undefined,
-        false,
-        false,
-        null,
-        4,
-        64,
-        false
-    );
+    private readonly Func<PlayerConnection, ClientBoundLoginPacket> _loginPacketProvider = _ => new ClientBoundLoginPacket {
+        EntityId = 1,
+        IsHardcore = true,
+        Dimensions = ["minecraft:overworld"],
+        MaxPlayers = 5,
+        ViewDistance = 32,
+        SimulationDistance = 8,
+        ReducedDebugInfo = false,
+        EnableRespawnScreen = true,
+        DoLimitedCrafting = false,
+        DimensionType = 0,
+        DimensionName = "minecraft:overworld",
+        HashedSeed = 0L,
+        GameMode = GameMode.Creative,
+        PreviousGameMode = GameMode.Undefined,
+        IsDebug = false,
+        IsFlat = false,
+        PortalCooldown = 4,
+        SeaLevel = 64,
+        EnforcesSecureChat = false
+    };
 
     public void Register(MinecraftServer genericServer) {
         if (genericServer is not ManagedMinecraftServer server) {
@@ -53,12 +52,17 @@ internal class LoginProcedureFeature : IServerFeature {
                     // LOGIN
                     case ServerBoundLoginStartPacket ls: {
                         await e.Connection.SetCompression(1);
-                        await e.Connection.SendPackets(new ClientBoundLoginSuccessPacket(ls.Uuid, ls.Name));
+                        await e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
+                            Uuid = ls.Uuid,
+                            Username = ls.Name
+                        });
                         break;
                     }
                 
                     case ServerBoundLoginAcknowledgedPacket: {
-                        await e.Connection.SendPacket(new ClientBoundKnownPacksPacket(_knownPacks));
+                        await e.Connection.SendPacket(new ClientBoundKnownPacksPacket {
+                            Packs = _knownPacks
+                        });
                         break;
                     }
                 
@@ -69,44 +73,63 @@ internal class LoginProcedureFeature : IServerFeature {
                         // the client joins.
                     
                         _ = e.Connection.SendPackets(
-                            new ClientBoundRegistryDataPacket("minecraft:dimension_type",
-                                new Dictionary<string, ITag?> {
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:dimension_type",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:overworld", null }
-                                }),
-                            new ClientBoundRegistryDataPacket("minecraft:cat_variant",
-                                new Dictionary<string, ITag?> {
+                                }
+                            },
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:cat_variant",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:tabby", null }
-                                }),
-                            new ClientBoundRegistryDataPacket("minecraft:chicken_variant",
-                                new Dictionary<string, ITag?> {
+                                }
+                            },
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:chicken_variant",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:warm", null }
-                                }),
-                            new ClientBoundRegistryDataPacket("minecraft:cow_variant",
-                                new Dictionary<string, ITag?> {
+                                }
+                            },
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:cow_variant",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:warm", null }
-                                }),
-                            new ClientBoundRegistryDataPacket("minecraft:frog_variant",
-                                new Dictionary<string, ITag?> {
+                                }
+                            },
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:frog_variant",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:warm", null }
-                                }),
-                            new ClientBoundRegistryDataPacket("minecraft:painting_variant",
-                                new Dictionary<string, ITag?> {
+                                }
+                            },
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:painting_variant",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:alban", null }
-                                }),
-                            new ClientBoundRegistryDataPacket("minecraft:pig_variant",
-                                new Dictionary<string, ITag?> {
+                                }
+                            },
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:pig_variant",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:warm", null }
-                                }),
-                            new ClientBoundRegistryDataPacket("minecraft:wolf_sound_variant",
-                                new Dictionary<string, ITag?> {
+                                }
+                            },
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:wolf_sound_variant",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:big", null }
-                                }),
-                            new ClientBoundRegistryDataPacket("minecraft:wolf_variant",
-                                new Dictionary<string, ITag?> {
+                                }
+                            },
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:wolf_variant",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:ashen", null }
-                                }),
-                            new ClientBoundRegistryDataPacket("minecraft:damage_type",
-                                new Dictionary<string, ITag?> {
+                                }
+                            },
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:damage_type",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:arrow", null },
                                     { "minecraft:bad_respawn_point", null },
                                     { "minecraft:cactus", null },
@@ -155,11 +178,14 @@ internal class LoginProcedureFeature : IServerFeature {
                                     { "minecraft:wither", null },
                                     { "minecraft:wither_skull", null },
                                     { "minecraft:ender_pearl", null }
-                                }),
-                            new ClientBoundRegistryDataPacket("minecraft:worldgen/biome",
-                                new Dictionary<string, ITag?> {
+                                }
+                            },
+                            new ClientBoundRegistryDataPacket {
+                                RegistryId = "minecraft:worldgen/biome",
+                                Entries = new Dictionary<string, ITag?> {
                                     { "minecraft:plains", null }
-                                }),
+                                }
+                            },
                             new ClientBoundFinishConfigurationPacket()
                         );
                         break;

@@ -1,10 +1,8 @@
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundEntityAnimationPacket(int entityId, ClientBoundEntityAnimationPacket.AnimationType animation) : MinecraftPacket {
-    public int EntityId = entityId;
-    public AnimationType Animation = animation;
-
-    public ClientBoundEntityAnimationPacket() : this(0, AnimationType.SwingMainArm) { }
+public class ClientBoundEntityAnimationPacket : ClientBoundPacket {
+    public required int EntityId;
+    public required AnimationType Animation;
 
     public enum AnimationType {
         SwingMainArm = 0,
@@ -14,10 +12,6 @@ public class ClientBoundEntityAnimationPacket(int entityId, ClientBoundEntityAni
         MagicCriticalEffect = 5
     }
 
-    public override int GetPacketId() {
-        return 0x02;
-    }
-
     protected override byte[] GetData() {
         return new DataWriter()
             .WriteVarInt(EntityId)
@@ -25,10 +19,8 @@ public class ClientBoundEntityAnimationPacket(int entityId, ClientBoundEntityAni
             .ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        EntityId = r.ReadVarInt();
-        Animation = (AnimationType)r.Read();
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundEntityAnimationPacket {
+        EntityId = r.ReadVarInt(),
+        Animation = (AnimationType)r.Read()
+    };
 }

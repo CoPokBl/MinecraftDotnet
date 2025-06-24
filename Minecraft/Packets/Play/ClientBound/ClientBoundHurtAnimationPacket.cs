@@ -2,15 +2,9 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundHurtAnimationPacket(int entityId, Angle yaw) : MinecraftPacket {
-    public int EntityId = entityId;
-    public Angle Yaw = yaw;
-    
-    public ClientBoundHurtAnimationPacket() : this(0, Angle.Zero) { }
-
-    public override int GetPacketId() {
-        return 0x24;
-    }
+public class ClientBoundHurtAnimationPacket : ClientBoundPacket {
+    public required int EntityId;
+    public required Angle Yaw;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -18,11 +12,9 @@ public class ClientBoundHurtAnimationPacket(int entityId, Angle yaw) : Minecraft
             .WriteFloat((float)Yaw.Degrees)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        EntityId = r.ReadVarInt();
-        Yaw = Angle.FromDegrees(r.ReadFloat());
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundHurtAnimationPacket {
+        EntityId = r.ReadVarInt(),
+        Yaw = Angle.FromDegrees(r.ReadFloat())
+    };
 }

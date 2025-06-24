@@ -56,7 +56,10 @@ public class World {
         
         _ = Entities.InformNewPlayer(connection);
         SetLoadedChunks(connection, []);  // reset, just in case they were in a different world
-        connection.SendPacket(new ClientBoundGameEventPacket(GameEvent.StartWaitingForLevelChunks, 0)).ContinueWith(_2 => {
+        connection.SendPacket(new ClientBoundGameEventPacket {
+            Event = GameEvent.StartWaitingForLevelChunks,
+            Value = 0f
+        }).ContinueWith(_2 => {
             Queue<MinecraftPacket> waitingPackets = new();
             connection.SetTag(WaitingPacketsTag, waitingPackets);
 
@@ -117,7 +120,10 @@ public class World {
         foreach (ChunkPosition loadedChunk in loaded) {
             if (loadedChunk.IsWithinRadiusOf(chunkPos, UnloadDistance)) continue;
             
-            neededPackets.Add(new ClientBoundUnloadChunkPacket(loadedChunk));  // not within radius, unload it
+            neededPackets.Add(new ClientBoundUnloadChunkPacket {
+                X = loadedChunk.X,
+                Z = loadedChunk.Z
+            });  // not within radius, unload it
             unloaded.Add(loadedChunk);
             // Console.WriteLine($"Unloading {loadedChunk.X}, {loadedChunk.Z}");
         }
@@ -153,7 +159,10 @@ public class World {
         
         SetLoadedChunks(connection, loaded);
         
-        neededPackets.Add(new ClientBoundSetCenterChunkPacket(chunkPos));
+        neededPackets.Add(new ClientBoundSetCenterChunkPacket {
+            X = chunkPos.X,
+            Z = chunkPos.Z
+        });
         IEnumerable<MinecraftPacket> orderedPackets = neededPackets.OrderBy(p => {
             if (p is ClientBoundSetCenterChunkPacket) return 0;  // always do this first, otherwise we could get issues
             if (p is not ClientBoundChunkDataAndUpdateLightPacket chunkP) return 100;  // do unload packets last (for faster load, client unloads anyway)
@@ -188,13 +197,23 @@ public class World {
     }
 
     public ClientBoundChunkDataAndUpdateLightPacket GetChunkPacket(ChunkPosition pos) {
-        ClientBoundChunkDataAndUpdateLightPacket packet = new(pos.X, pos.Z, _provider.GetChunk(pos), LightData.FullBright);
+        ClientBoundChunkDataAndUpdateLightPacket packet = new() {
+            ChunkX = pos.X,
+            ChunkZ = pos.Z,
+            Data = _provider.GetChunk(pos),
+            Light = LightData.FullBright
+        };
         return packet;
     }
     
     public void AddChunkPackets(ChunkPosition[] poses, int count, List<MinecraftPacket> list) {
         foreach (ChunkData data in _provider.GetChunks(count, poses)) {
-            list.Add(new ClientBoundChunkDataAndUpdateLightPacket(data.ChunkX, data.ChunkZ, data, LightData.FullBright));
+            list.Add(new ClientBoundChunkDataAndUpdateLightPacket{
+                ChunkX = data.ChunkX,
+                ChunkZ = data.ChunkZ,
+                Data = data,
+                Light = LightData.FullBright
+            });
         }
     }
 }

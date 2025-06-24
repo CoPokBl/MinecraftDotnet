@@ -2,15 +2,9 @@ using Minecraft.NBT.Text;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundCombatDeathPacket(int playerId, TextComponent message) : MinecraftPacket {
-    public int PlayerId = playerId;
-    public TextComponent Message = message;
-    
-    public ClientBoundCombatDeathPacket() : this(0, TextComponent.Empty()) { }
-
-    public override int GetPacketId() {
-        return 0x3D;
-    }
+public class ClientBoundCombatDeathPacket : ClientBoundPacket {
+    public required int PlayerId;
+    public required TextComponent Message;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -19,10 +13,8 @@ public class ClientBoundCombatDeathPacket(int playerId, TextComponent message) :
             .ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        PlayerId = r.ReadVarInt();
-        Message = r.ReadText();
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundCombatDeathPacket {
+        PlayerId = r.ReadVarInt(),
+        Message = r.ReadText()
+    };
 }

@@ -2,15 +2,9 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundSetPlayerPositionPacket(Vec3 position, MovePlayerFlags flags) : MinecraftPacket {
-    public MovePlayerFlags Flags = flags;
-    public Vec3 Position = position;
-    
-    public ServerBoundSetPlayerPositionPacket() : this(Vec3.Zero, MovePlayerFlags.OnGround) { }
-
-    public override int GetPacketId() {
-        return 0x1C;
-    }
+public class ServerBoundSetPlayerPositionPacket : ServerBoundPacket {
+    public required MovePlayerFlags Flags;
+    public required Vec3 Position;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -18,11 +12,9 @@ public class ServerBoundSetPlayerPositionPacket(Vec3 position, MovePlayerFlags f
             .WriteByte((int)Flags)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Position = r.ReadVec3();
-        Flags = (MovePlayerFlags)r.ReadByte();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundSetPlayerPositionPacket {
+        Position = r.ReadVec3(),
+        Flags = (MovePlayerFlags)r.ReadByte()
+    };
 }

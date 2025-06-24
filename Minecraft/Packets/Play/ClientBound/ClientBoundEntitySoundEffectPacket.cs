@@ -2,25 +2,56 @@ using Minecraft.Schemas.Sound;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundEntitySoundEffectPacket(int id, SoundCategory category, int entityId, float volume, float pitch, long seed) : MinecraftPacket {
-    public int Id = id;
+public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
+    /// <summary>
+    /// The numerical sound ID. This value is ignored if <see cref="Event"/> is not null.
+    /// This should be the actually sound ID, it is encoded (has 1 added to it) automatically
+    /// to handle the transmission format.
+    /// </summary>
+    public int Id;
     public SoundEvent? Event;
-    public SoundCategory Category = category;
-    public int EntityId = entityId;
-    public float Volume = volume;
-    public float Pitch = pitch;
-    public long Seed = seed;
-    
-    public ClientBoundEntitySoundEffectPacket() : this(0, SoundCategory.Master, 0, 0, 0, 0) { }
+    public required SoundCategory Category;
+    public required int EntityId;
+    public required float Volume;
+    public required float Pitch;
+    public required long Seed;
 
-    public ClientBoundEntitySoundEffectPacket(SoundEvent e, SoundCategory category, int entityId, float volume, float pitch,
-        long seed) :
+    /// <summary>
+    /// Initialise a new instance of the packet with a <see cref="SoundEvent"/>.
+    /// <p/>
+    /// To use a numerical ID instead of a <see cref="SoundEvent"/> see
+    /// <see cref="ClientBoundEntitySoundEffectPacket(int, SoundCategory, int, float, float, long)"/>.
+    /// </summary>
+    /// <param name="soundEvent">The sound event.</param>
+    /// <param name="category">The category.</param>
+    /// <param name="entityId">The network ID of the entity that plays the sound.</param>
+    /// <param name="volume">The volume, from 0.0 to 1.0.</param>
+    /// <param name="pitch">The pitch.</param>
+    /// <param name="seed">Seed to use for random effects by the Notchian client.</param>
+    public ClientBoundEntitySoundEffectPacket(SoundEvent soundEvent, SoundCategory category, int entityId, float volume, float pitch, long seed) :
         this(0, category, entityId, volume, pitch, seed) {
-        Event = e;
+        Event = soundEvent;
     }
 
-    public override int GetPacketId() {
-        return 0x6D;
+    /// <summary>
+    /// Initialise a new instance of the packet with a numerical sound ID.
+    /// <p/>
+    /// To use a <see cref="SoundEvent"/> instead of a numerical ID see
+    /// <see cref="ClientBoundEntitySoundEffectPacket(SoundEvent, SoundCategory, int, float, float, long)"/>.
+    /// </summary>
+    /// <param name="id">The sound ID.</param>
+    /// <param name="category">The category.</param>
+    /// <param name="entityId">The network ID of the entity that plays the sound.</param>
+    /// <param name="volume">The volume, from 0.0 to 1.0.</param>
+    /// <param name="pitch">The pitch.</param>
+    /// <param name="seed">Seed to use for random effects by the Notchian client.</param>
+    public ClientBoundEntitySoundEffectPacket(int id, SoundCategory category, int entityId, float volume, float pitch, long seed) : this() {
+        Id = id;
+        EntityId = entityId;
+        Category = category;
+        Volume = volume;
+        Pitch = pitch;
+        Seed = seed;
     }
 
     protected override byte[] GetData() {
@@ -41,21 +72,22 @@ public class ClientBoundEntitySoundEffectPacket(int id, SoundCategory category, 
             .ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader reader = new(data);
-        Id = reader.ReadVarInt();
-        if (Id == 0) {  // it's a sound event
-            Event = new SoundEvent(
-                reader.ReadString(), 
-                reader.ReadPrefixedOptional(re => re.ReadFloat()));
+    public static readonly PacketDataDeserialiser Deserialiser = r => {
+        int id = r.ReadVarInt();
+        SoundEvent? ev = null;
+        if (id == 0) {
+            ev = SoundEvent.Deserialise(r);
         }
-        else Id--;
-        
-        Category = (SoundCategory)reader.ReadVarInt();
-        EntityId = reader.ReadVarInt();
-        Volume = reader.ReadFloat();
-        Pitch = reader.ReadFloat();
-        Seed = reader.ReadLong();
-        return this;
-    }
+        else id--;
+
+        return new ClientBoundEntitySoundEffectPacket {
+            Id = id,
+            Event = ev,
+            Category = (SoundCategory)r.ReadVarInt(),
+            EntityId = r.ReadVarInt(),
+            Volume = r.ReadFloat(),
+            Pitch = r.ReadFloat(),
+            Seed = r.ReadLong()
+        };
+    };
 }

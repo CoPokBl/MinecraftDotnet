@@ -1,4 +1,5 @@
 using Minecraft.Packets;
+using Minecraft.Packets.Registry;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Packets.Status.ServerBound;
 using Minecraft.Schemas;
@@ -11,7 +12,11 @@ public class ServerPinger(string host, int port = 25565) {
         Console.WriteLine("a");
         ServerConnection con = await MinecraftClientUtils.ConnectToServer(host, port);
         Console.WriteLine("b");
-        await con.SendPacket(new ServerBoundHandshakePacket(host, ServerBoundHandshakePacket.Intention.Status, (ushort)port));
+        await con.SendPacket(new ServerBoundHandshakePacket {
+            Hostname = host,Intent = ServerBoundHandshakePacket.Intention.Status,
+            Port = (ushort)port,
+            ProtocolVersion = 770  // 1.21.5
+        });
         Console.WriteLine("c");
         con.State = PlayerConnectionState.Status;
         await con.SendPacket(new ServerBoundStatusRequestPacket());
@@ -20,7 +25,7 @@ public class ServerPinger(string host, int port = 25565) {
         Console.WriteLine("e");
 
         if (pingResp is not ClientBoundStatusResponsePacket status) {
-            throw new Exception($"Invalid server response, got: {pingResp.GetPacketId()} aka {pingResp.GetType().FullName}");
+            throw new Exception($"Invalid server response, got: {PacketRegistry.GetPacketId(pingResp.GetType())} aka {pingResp.GetType().FullName}");
         }
 
         return status;

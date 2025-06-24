@@ -2,15 +2,9 @@ using Minecraft.Schemas.Entities.Meta;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundSetEntityMetadataPacket(int entityId, EntityMeta meta) : MinecraftPacket {
-    public int EntityId = entityId;
-    public EntityMeta Meta = meta;
-
-    public ClientBoundSetEntityMetadataPacket() : this(0, null!) { }
-    
-    public override int GetPacketId() {
-        return 0x5C;
-    }
+public class ClientBoundSetEntityMetadataPacket : ClientBoundPacket {
+    public required int EntityId;
+    public required EntityMeta Meta;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -19,8 +13,8 @@ public class ClientBoundSetEntityMetadataPacket(int entityId, EntityMeta meta) :
             .Write(0xFF)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        throw new NotImplementedException();
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => {
+        throw new NotImplementedException("Deserialisation of EntityMeta is not implemented yet.");
+    };
 }

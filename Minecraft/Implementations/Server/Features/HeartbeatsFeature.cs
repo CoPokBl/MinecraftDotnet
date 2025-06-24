@@ -7,7 +7,7 @@ namespace Minecraft.Implementations.Server.Features;
 
 public class HeartbeatsFeature(int heartbeatDelay) : IServerFeature {
     private MinecraftServer _server = null!;
-    private CancellationTokenSource _cts = new();
+    private readonly CancellationTokenSource _cts = new();
     
     public void Register(MinecraftServer server) {
         _server = server;
@@ -28,7 +28,9 @@ public class HeartbeatsFeature(int heartbeatDelay) : IServerFeature {
             Stopwatch stopwatch = Stopwatch.StartNew();
             
             foreach (PlayerConnection connection in _server.Connections.Where(connection => connection.State == PlayerConnectionState.Play)) {
-                await connection.SendPacket(new ClientBoundKeepAlivePacketPlay(Random.Shared.Next()));
+                await connection.SendPacket(new ClientBoundKeepAlivePacketPlay {
+                    Id = Random.Shared.Next()
+                });
             }
 
             if (stopwatch.ElapsedMilliseconds < heartbeatDelay) {

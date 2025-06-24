@@ -1,16 +1,10 @@
 namespace Minecraft.Packets.Status.ServerBound;
 
-public class ServerBoundStatusRequestPacket : MinecraftPacket {
-
-    public override int GetPacketId() {
-        return 0x00;
-    }
+public class ServerBoundStatusRequestPacket : ServerBoundPacket {
 
     protected override byte[] GetData() {
         return [];
     }
-
-    protected override ServerBoundStatusRequestPacket ParseData(byte[] data) {
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = _ => new ServerBoundStatusRequestPacket();
 }

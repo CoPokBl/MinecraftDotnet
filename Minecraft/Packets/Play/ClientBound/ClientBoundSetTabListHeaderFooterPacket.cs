@@ -2,15 +2,9 @@ using Minecraft.NBT.Text;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundSetTabListHeaderFooterPacket(TextComponent header, TextComponent footer) : MinecraftPacket {
-    public TextComponent Header = header;
-    public TextComponent Footer = footer;
-
-    public ClientBoundSetTabListHeaderFooterPacket() : this(TextComponent.Empty(), TextComponent.Empty()) { }
-    
-    public override int GetPacketId() {
-        return 0x73;
-    }
+public class ClientBoundSetTabListHeaderFooterPacket : ClientBoundPacket {
+    public required TextComponent Header;
+    public required TextComponent Footer;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -18,11 +12,9 @@ public class ClientBoundSetTabListHeaderFooterPacket(TextComponent header, TextC
             .WriteNbt(Footer)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Header = r.ReadText();
-        Footer = r.ReadText();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetTabListHeaderFooterPacket {
+        Header = r.ReadText(),
+        Footer = r.ReadText()
+    };
 }

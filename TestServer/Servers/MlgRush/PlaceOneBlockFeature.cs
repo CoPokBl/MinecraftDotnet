@@ -53,19 +53,33 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
             if (insideEntity) {
                 // don't place, make it air again
                 e.Connection.SendPackets(
-                    new ClientBoundBlockUpdatePacket(target, 0),
-                    new ClientBoundAcknowledgeBlockChangePacket(ui.Sequence));
+                    new ClientBoundBlockUpdatePacket {
+                        Location = target,
+                        BlockId = 0
+                    },
+                    new ClientBoundAcknowledgeBlockChangePacket {
+                        SequenceId = ui.Sequence
+                    });
                 return;
             }
             
             // PLACE IT
             int breakingEntity = Random.Shared.Next();
-            MinecraftPacket packet = new ClientBoundBlockUpdatePacket(target, block.Invoke(e.Connection));
+            MinecraftPacket packet = new ClientBoundBlockUpdatePacket {
+                Location = target,
+                BlockId = block.Invoke(e.Connection)
+            };
             foreach (PlayerConnection connection in world.Players.Select(p => p.Connection)) {
-                connection.SendPackets(packet, new ClientBoundSetBlockDestroyStage(breakingEntity, target, 0));
+                connection.SendPackets(packet, new ClientBoundSetBlockDestroyStage {
+                    EntityId = breakingEntity,
+                    Block = target,
+                    Stage = 0
+                });
             }
             
-            e.Connection.SendPacket(new ClientBoundAcknowledgeBlockChangePacket(ui.Sequence));
+            e.Connection.SendPacket(new ClientBoundAcknowledgeBlockChangePacket {
+                SequenceId = ui.Sequence
+            });
 
             if (disappearTime == -1) {
                 return;
@@ -79,7 +93,11 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
                 if (st != 9) {
                     // send break animation
                     foreach (PlayerConnection con in world.Players.Select(p => p.Connection)) {
-                        con.SendPacket(new ClientBoundSetBlockDestroyStage(breakingEntity, target, (byte)st));
+                        con.SendPacket(new ClientBoundSetBlockDestroyStage {
+                            EntityId = breakingEntity,
+                            Block = target,
+                            Stage = (byte)st
+                        });
                     }
 
                     ((Atomic<int>)state).Value++;
@@ -87,7 +105,14 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
                 }
                 
                 foreach (PlayerConnection con in world.Players.Select(p => p.Connection)) {
-                    con.SendPackets(new ClientBoundBlockUpdatePacket(target, 0), new ClientBoundSetBlockDestroyStage(breakingEntity, target, 16));
+                    con.SendPackets(new ClientBoundBlockUpdatePacket {
+                        Location = target,
+                        BlockId = 0
+                    }, new ClientBoundSetBlockDestroyStage {
+                        EntityId = breakingEntity,
+                        Block = target,
+                        Stage = 16
+                    });
                 }
 
                 t.Change(-1, -1);

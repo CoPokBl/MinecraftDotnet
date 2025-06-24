@@ -2,16 +2,10 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundSetBlockDestroyStage(int entityId, BlockPosition block, byte stage) : MinecraftPacket {
-    public int EntityId = entityId;
-    public BlockPosition Block = block;
-    public byte Stage = stage;
-    
-    public ClientBoundSetBlockDestroyStage() : this(0, BlockPosition.Zero, 0) { }
-    
-    public override int GetPacketId() {
-        return 0x05;
-    }
+public class ClientBoundSetBlockDestroyStage : ClientBoundPacket {
+    public required int EntityId;
+    public required BlockPosition Block;
+    public required byte Stage;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -20,12 +14,10 @@ public class ClientBoundSetBlockDestroyStage(int entityId, BlockPosition block, 
             .WriteUnsignedByte(Stage)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        EntityId = r.ReadVarInt();
-        Block = r.ReadPosition();
-        Stage = r.Read();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetBlockDestroyStage {
+        EntityId = r.ReadVarInt(),
+        Block = r.ReadPosition(),
+        Stage = r.Read()
+    };
 }

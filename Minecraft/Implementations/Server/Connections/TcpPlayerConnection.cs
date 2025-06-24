@@ -84,10 +84,6 @@ public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) :
                         Log(e.ToString());
                         continue;
                     }
-
-                    if (!DontLog.Any(p => p.GetType().FullName!.Equals(packet.GetType().FullName))) {
-                        Log($"Got full packet: {packet.GetPacketId()}, {packet.GetType().FullName}");
-                    }
                     
                     HandlePacket(packet);
                 }

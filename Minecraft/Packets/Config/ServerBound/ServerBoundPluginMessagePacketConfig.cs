@@ -1,14 +1,8 @@
 namespace Minecraft.Packets.Config.ServerBound;
 
-public class ServerBoundPluginMessagePacketConfig(string channel, byte[] data) : MinecraftPacket {
-    public byte[] Data = data;
-    public string Channel = channel;
-
-    public ServerBoundPluginMessagePacketConfig() : this("", []) { }
-    
-    public override int GetPacketId() {
-        return 0x02;
-    }
+public class ServerBoundPluginMessagePacketConfig : ServerBoundPacket {
+    public required byte[] Data;
+    public required string Channel;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -17,10 +11,8 @@ public class ServerBoundPluginMessagePacketConfig(string channel, byte[] data) :
             .ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Channel = r.ReadString();
-        Data = r.ReadRemaining();
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPluginMessagePacketConfig {
+        Channel = r.ReadString(),
+        Data = r.ReadRemaining()
+    };
 }

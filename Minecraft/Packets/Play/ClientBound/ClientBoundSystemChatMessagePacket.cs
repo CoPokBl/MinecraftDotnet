@@ -2,15 +2,9 @@ using Minecraft.NBT.Text;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundSystemChatMessagePacket(TextComponent content, bool actionBar) : MinecraftPacket {
-    public TextComponent Content = content;
-    public bool ActionBar = actionBar;
-
-    public ClientBoundSystemChatMessagePacket() : this(TextComponent.Empty(), true) { }
-    
-    public override int GetPacketId() {
-        return 0x72;
-    }
+public class ClientBoundSystemChatMessagePacket : ClientBoundPacket {
+    public required TextComponent Content;
+    public required bool ActionBar;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -18,11 +12,9 @@ public class ClientBoundSystemChatMessagePacket(TextComponent content, bool acti
             .WriteBoolean(ActionBar)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Content = r.ReadText();
-        ActionBar = r.ReadBoolean();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSystemChatMessagePacket {
+        Content = r.ReadText(),
+        ActionBar = r.ReadBoolean()
+    };
 }

@@ -1,14 +1,8 @@
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundPickItemFromEntity(int entityId, bool includeData) : MinecraftPacket {
-    public int EntityId = entityId;
-    public bool IncludeData = includeData;
-    
-    public ServerBoundPickItemFromEntity() : this(0, false) { }
-
-    public override int GetPacketId() {
-        return 0x23;
-    }
+public class ServerBoundPickItemFromEntity : ServerBoundPacket {
+    public required int EntityId;
+    public required bool IncludeData;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -16,11 +10,9 @@ public class ServerBoundPickItemFromEntity(int entityId, bool includeData) : Min
             .WriteBoolean(IncludeData)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        EntityId = r.ReadVarInt();
-        IncludeData = r.ReadBoolean();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPickItemFromEntity {
+        EntityId = r.ReadVarInt(),
+        IncludeData = r.ReadBoolean()
+    };
 }

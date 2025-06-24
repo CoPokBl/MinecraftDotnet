@@ -55,7 +55,10 @@ public class PlayerEntity : Entity {
                         Hand.OffHand => ClientBoundEntityAnimationPacket.AnimationType.SwingOffhand,
                         _ => throw new ArgumentOutOfRangeException()
                     };
-                    SendToViewers(new ClientBoundEntityAnimationPacket(NetId, animation));
+                    SendToViewers(new ClientBoundEntityAnimationPacket {
+                        EntityId = NetId,
+                        Animation = animation
+                    });
                     break;
                 }
             }
@@ -79,21 +82,26 @@ public class PlayerEntity : Entity {
     }
 
     public void SetVelocity(Vec3 velocity) {
-        Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket(
-            Random.Shared.Next(),
-            Vec3.Zero,
-            velocity,
-            0f,
-            0f,
-            TeleportFlags.RelativePosition | TeleportFlags.RelativeRotation));
+        Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket {
+            TeleportId = Random.Shared.Next(),
+            Position = Vec3.Zero,
+            Velocity = velocity,
+            Pitch = Angle.Zero,
+            Yaw = Angle.Zero,
+            Flags = TeleportFlags.RelativePosition | TeleportFlags.RelativeRotation
+        });
     }
 
     public override void Teleport(Vec3 pos, Angle? yaw = null, Angle? pitch = null) {
         WaitingTeleport = Random.Shared.Next();
-        Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket(
-            WaitingTeleport, 
-            new PlayerPosition(pos, Vec3.Zero, yaw ?? Angle.Zero, pitch ?? Angle.Zero),
-            TeleportFlags.None));
+        Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket {
+            TeleportId = WaitingTeleport,
+            Position = pos,
+            Velocity = Vec3.Zero,
+            Yaw = yaw ?? Angle.Zero,
+            Pitch = pitch ?? Angle.Zero,
+            Flags = TeleportFlags.None
+        });
         // base.Teleport(pos, yaw, pitch);   Don't tell everyone else
     }
 
@@ -104,13 +112,14 @@ public class PlayerEntity : Entity {
 
     public override MinecraftPacket[] GenerateSpawnEntityPackets() {
         MinecraftPacket[] arr = [
-            new ClientBoundPlayerInfoUpdatePacket(
-                new ClientBoundPlayerInfoUpdatePacket.PlayerData(ClientBoundPlayerInfoUpdatePacket.PlayerActions
+            new ClientBoundPlayerInfoUpdatePacket {
+                Data = new ClientBoundPlayerInfoUpdatePacket.PlayerData(ClientBoundPlayerInfoUpdatePacket.PlayerActions
                         .AddPlayer)
                     .WithPlayer(Uuid, new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer {
                         Name = Name,
                         Properties = []
-                    }))
+                    })
+            }
         ];
         return arr.Combine(base.GenerateSpawnEntityPackets()).ToArray();
     }

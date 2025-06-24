@@ -2,15 +2,9 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundGameEventPacket(GameEvent gameEvent, float value) : MinecraftPacket {
-    public GameEvent Event = gameEvent;
-    public float Value = value;
-
-    public ClientBoundGameEventPacket() : this(GameEvent.NoRespawnBlock, 0) { }
-
-    public override int GetPacketId() {
-        return 0x22;
-    }
+public class ClientBoundGameEventPacket : ClientBoundPacket {
+    public required GameEvent Event;
+    public required float Value;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -18,11 +12,9 @@ public class ClientBoundGameEventPacket(GameEvent gameEvent, float value) : Mine
             .WriteFloat(Value)
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
-        Event = (GameEvent)r.Read();
-        Value = r.ReadFloat();
-        return this;
-    }
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundGameEventPacket {
+        Event = (GameEvent)r.Read(),
+        Value = r.ReadFloat()
+    };
 }

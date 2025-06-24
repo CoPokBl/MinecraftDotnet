@@ -2,10 +2,8 @@ using Minecraft.NBT.Text;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket.PlayerData data) : MinecraftPacket {
-    public PlayerData Data = data;
-
-    public ClientBoundPlayerInfoUpdatePacket() : this(new PlayerData()) { }
+public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
+    public required PlayerData Data;
     
     [Flags]
     public enum PlayerActions {
@@ -231,10 +229,6 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
         }
     }
 
-    public override int GetPacketId() {
-        return 0x3F;
-    }
-
     protected override byte[] GetData() {
         return new DataWriter()
             .WriteUnsignedByte((byte)Data.Actions.CombineFlags())
@@ -243,16 +237,15 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
                 .WriteArray(val.Item2.OrderBy(e => e.Action), (action, dataWriter) => dataWriter.Write(action.Serialise())))
             .ToArray();
     }
-
-    protected override MinecraftPacket ParseData(byte[] data) {
-        DataReader r = new(data);
+    
+    public static readonly PacketDataDeserialiser Deserialiser = r => {
         PlayerActions actions = (PlayerActions)r.Read();
         PlayerActions[] setFlags = Enum.GetValues(typeof(PlayerActions))
             .Cast<PlayerActions>()
             .Where(flag => actions.HasFlag(flag))
             .ToArray();
 
-        (Guid, PlayerData.IPlayerAction[])[] dat = r.ReadPrefixedArray((reader => {
+        (Guid, PlayerData.IPlayerAction[])[] dat = r.ReadPrefixedArray(reader => {
             return (reader.ReadUuid(), reader.ReadArray<PlayerData.IPlayerAction>(setFlags.Length, (r2, i) => {
                 return setFlags[i] switch {
                     PlayerActions.AddPlayer => PlayerData.AddPlayer.Deserialise(r2),
@@ -266,11 +259,12 @@ public class ClientBoundPlayerInfoUpdatePacket(ClientBoundPlayerInfoUpdatePacket
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }));
-        }));
-
-        Data = new PlayerData(setFlags) {
-            Data = dat.ToList()
+        });
+        
+        return new ClientBoundPlayerInfoUpdatePacket {
+            Data = new PlayerData(setFlags) {
+                Data = dat.ToList()
+            }
         };
-        return this;
-    }
+    };
 }

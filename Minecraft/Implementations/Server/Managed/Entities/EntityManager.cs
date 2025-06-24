@@ -13,7 +13,7 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     
     public readonly List<Entity> Entities = [];
     private int _currentId = 9;
-    public int NewNetId => Random.Shared.Next();//_currentId++;
+    public static int NewNetId => Random.Shared.Next();//_currentId++;
 
     public async Task InformNewPlayer(PlayerConnection connection) {
         foreach (Entity entity in Entities) {
@@ -88,22 +88,55 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             (float)newPos.Y - (float)entity.Position.Y, 
             (float)newPos.Z - (float)entity.Position.Z);
         
-        MinecraftPacket packet = yaw == null || pitch == null
-            ? new ClientBoundUpdateEntityPositionPacket(entity.NetId, deltaPos, false)
-            : new ClientBoundUpdateEntityPosAndRotPacket(entity.NetId, deltaPos, yaw.Value, pitch.Value, true);
+        MinecraftPacket[] packets = yaw == null || pitch == null
+            ? [new ClientBoundUpdateEntityPositionPacket {
+                EntityId = entity.NetId,
+                Delta = deltaPos,
+                OnGround = false
+            }]
+            : [
+                new ClientBoundUpdateEntityPosAndRotPacket {
+                    EntityId = entity.NetId,
+                    Delta = deltaPos,
+                    Yaw = yaw.Value,
+                    Pitch = pitch.Value,
+                    OnGround = true
+                },
+                HeadRotPacket(entity.NetId, yaw.Value)
+            ];
         
-        SendPacketsFor(entity, packet);
+        SendPacketsFor(entity, packets);
     }
 
     public void TeleportEntity(Entity entity, Vec3 newPos, Angle yaw, Angle pitch) {
         MinecraftPacket packet =
-            new ClientBoundTeleportEntityPacket(entity.NetId, newPos, Vec3.Zero, (float)yaw.Degrees, (float)pitch.Degrees, true);
+            new ClientBoundTeleportEntityPacket {
+                EntityId = entity.NetId,
+                Position = newPos,
+                Velocity = Vec3.Zero,
+                Pitch = pitch,
+                Yaw = yaw,
+                OnGround = true
+            };
         
-        SendPacketsFor(entity, packet);
+        SendPacketsFor(entity, packet, HeadRotPacket(entity.NetId, yaw));
     }
     
     public void RotateEntity(Entity entity, Angle yaw, Angle pitch) {
-        MinecraftPacket packet = new ClientBoundUpdateEntityRotationPacket(entity.NetId, yaw, pitch, true);
-        SendPacketsFor(entity, packet);
+        // for some reason pitch and yaw seem reversed.
+        MinecraftPacket packet = new ClientBoundUpdateEntityRotationPacket {
+            EntityId = entity.NetId,
+            Pitch = yaw,
+            Yaw = pitch,
+            OnGround = true
+        };
+        SendPacketsFor(entity, packet, HeadRotPacket(entity.NetId, pitch));
+    }
+
+    private static ClientBoundSetHeadRotationPacket HeadRotPacket(int id, Angle yaw) {
+        return new ClientBoundSetHeadRotationPacket {
+            EntityId = id,
+            Yaw = yaw
+        };
     }
 }

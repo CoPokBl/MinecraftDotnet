@@ -1,13 +1,7 @@
 namespace Minecraft.Packets.Login.ClientBound;
 
-public class ClientBoundSetCompressionPacket(int threshold) : MinecraftPacket {
-    public int Threshold = threshold;
-    
-    public ClientBoundSetCompressionPacket() : this(1) { }
-
-    public override int GetPacketId() {
-        return 0x03;
-    }
+public class ClientBoundSetCompressionPacket : ClientBoundPacket {
+    public required int Threshold;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -15,8 +9,7 @@ public class ClientBoundSetCompressionPacket(int threshold) : MinecraftPacket {
             .ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        Threshold = new DataReader(data).ReadVarInt();
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetCompressionPacket {
+        Threshold = r.ReadVarInt()
+    };
 }

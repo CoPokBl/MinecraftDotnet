@@ -1,10 +1,18 @@
-using Minecraft.Packets.Config.ServerBound;
-
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundPluginMessagePacketPlay : ServerBoundPluginMessagePacketConfig {
-    
-    public override int GetPacketId() {
-        return 0x14;
+public class ServerBoundPluginMessagePacketPlay : ServerBoundPacket {
+    public required byte[] Data;
+    public required string Channel;
+
+    protected override byte[] GetData() {
+        return new DataWriter()
+            .WriteString(Channel)
+            .Write(Data)
+            .ToArray();
     }
+
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPluginMessagePacketPlay {
+        Channel = r.ReadString(),
+        Data = r.ReadRemaining()
+    };
 }

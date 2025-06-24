@@ -41,7 +41,17 @@ public class Entity(int type) : IViewable, ITaggable {
     }
 
     public virtual MinecraftPacket[] GenerateSpawnEntityPackets() {
-        return [new ClientBoundSpawnEntityPacket(NetId, Uuid, Type, Position, Pitch, Yaw, HeadYaw, 0, SVec3.Zero)];
+        return [new ClientBoundSpawnEntityPacket {
+            EntityType = Type,
+            Uuid = Uuid,
+            Id = NetId,
+            Position = Position,
+            Pitch = Pitch,
+            Yaw = Yaw,
+            HeadYaw = HeadYaw,
+            Data = 0,
+            Velocity = SVec3.Zero
+        }];
     }
 
     /// <summary>
@@ -98,7 +108,10 @@ public class Entity(int type) : IViewable, ITaggable {
     /// Play the hurt animation. (Flash red)
     /// </summary>
     public void Hurt() {
-        SendToViewers(new ClientBoundHurtAnimationPacket(NetId, Angle.Zero));
+        SendToViewers(new ClientBoundHurtAnimationPacket {
+            EntityId = NetId,
+            Yaw = Angle.Zero
+        });
     }
     
     /// <summary>

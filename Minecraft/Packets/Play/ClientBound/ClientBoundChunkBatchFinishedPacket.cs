@@ -1,13 +1,7 @@
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundChunkBatchFinishedPacket(int batchSize) : MinecraftPacket {
-    public int BatchSize = batchSize;
-
-    public ClientBoundChunkBatchFinishedPacket() : this(0) { }
-    
-    public override int GetPacketId() {
-        return 0x0B;
-    }
+public class ClientBoundChunkBatchFinishedPacket : ClientBoundPacket {
+    public required int BatchSize;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -15,8 +9,7 @@ public class ClientBoundChunkBatchFinishedPacket(int batchSize) : MinecraftPacke
             .ToArray();
     }
 
-    protected override MinecraftPacket ParseData(byte[] data) {
-        BatchSize = new DataReader(data).ReadVarInt();
-        return this;
-    }
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundChunkBatchFinishedPacket {
+        BatchSize = r.ReadVarInt()
+    };
 }
