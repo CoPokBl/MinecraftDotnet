@@ -18,14 +18,14 @@ public class ServerPinger(string host, int port = 25565) {
             ProtocolVersion = 770  // 1.21.5
         });
         Console.WriteLine("c");
-        con.State = PlayerConnectionState.Status;
+        con.State = ConnectionState.Status;
         await con.SendPacket(new ServerBoundStatusRequestPacket());
         Console.WriteLine("d");
         MinecraftPacket pingResp = await con.WaitForPacket();
         Console.WriteLine("e");
 
         if (pingResp is not ClientBoundStatusResponsePacket status) {
-            throw new Exception($"Invalid server response, got: {PacketRegistry.GetPacketId(pingResp.GetType())} aka {pingResp.GetType().FullName}");
+            throw new Exception($"Invalid server response, got: {PacketRegistry.GetPacketId(pingResp.GetType(), ConnectionState.Status)} aka {pingResp.GetType().FullName}");
         }
 
         return status;

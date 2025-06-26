@@ -27,7 +27,7 @@ public class TcpServerConnection(TcpClient client, bool packetQueuing = false) :
         }
 
         try {
-            await Stream.WriteAsync(packet.Serialise(Compression), _cts.Token);
+            await Stream.WriteAsync(packet.Serialise(State, Compression), _cts.Token);
         }
         catch (Exception e) {
             Console.WriteLine(e);
@@ -44,7 +44,7 @@ public class TcpServerConnection(TcpClient client, bool packetQueuing = false) :
             
             // Send it
             try {
-                await Stream.WriteAsync(packet.Serialise(Compression), _cts.Token);
+                await Stream.WriteAsync(packet.Serialise(State, Compression), _cts.Token);
             }
             catch (Exception e) {
                 Console.WriteLine(e);
@@ -104,7 +104,7 @@ public class TcpServerConnection(TcpClient client, bool packetQueuing = false) :
                     }
 
                     if (!DontLog.Any(p => p.GetType().FullName!.Equals(packet.GetType().FullName))) {
-                        Log($"Got full packet: {PacketRegistry.GetPacketId(packet.GetType())}, {packet.GetType().FullName}");
+                        Log($"Got full packet: {PacketRegistry.GetPacketId(packet.GetType(), State)}, {packet.GetType().FullName}");
                     }
                     
                     HandlePacket(packet);

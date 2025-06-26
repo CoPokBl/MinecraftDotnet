@@ -34,6 +34,8 @@ public interface ITag {
     
     public static JToken ToJson(ITag tag) {
         switch (tag) {
+            case EmptyTag:
+                return JValue.CreateNull();
             case StringTag:
                 return tag.GetString();
             case BooleanTag:
@@ -93,6 +95,10 @@ public interface ITag {
         }
         
         // primitive tag
+        if (json.Type == JTokenType.Null) {
+            return new EmptyTag();
+        }
+        
         if (json.Type == JTokenType.Boolean) {
             return new BooleanTag(name, json.ToObject<bool>());
         }

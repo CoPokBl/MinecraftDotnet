@@ -2,7 +2,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
-public class ClientBoundSetBlockDestroyStage : ClientBoundPacket {
+public class ClientBoundSetBlockDestroyStagePacket : ClientBoundPacket {
     public required int EntityId;
     public required BlockPosition Block;
     public required byte Stage;
@@ -15,7 +15,7 @@ public class ClientBoundSetBlockDestroyStage : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetBlockDestroyStage {
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetBlockDestroyStagePacket {
         EntityId = r.ReadVarInt(),
         Block = r.ReadPosition(),
         Stage = r.Read()

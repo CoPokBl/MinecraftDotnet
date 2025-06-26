@@ -1,8 +1,8 @@
 using Minecraft.Schemas;
 
-namespace Minecraft.Packets.Play.ServerBound;
+namespace Minecraft.Packets.Config.ServerBound;
 
-public class ServerBoundClientInformationPacketPlay : ServerBoundPacket {
+public class ServerBoundClientInformationPacket : ServerBoundPacket {
     public required ParticleStatus ParticleStatus;
     public required bool AllowServerListing;
     public required bool EnableTextFiltering;
@@ -27,7 +27,7 @@ public class ServerBoundClientInformationPacketPlay : ServerBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundClientInformationPacketPlay {
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundClientInformationPacket {
         Locale = r.ReadString(),
         ViewDistance = (byte)r.ReadByte(),
         TextChatMode = (ChatMode)r.ReadVarInt(),

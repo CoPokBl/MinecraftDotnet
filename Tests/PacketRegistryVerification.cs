@@ -3,7 +3,13 @@ using Minecraft.Packets.Registry;
 
 namespace Tests;
 
-public class ChunkRegistryVerification {
+public class PacketRegistryVerification {
+
+    private void Verify(Type type, Type expectedBase) {
+        Console.WriteLine("Verifying packet: " + type.FullName);
+        Assert.That(type.IsAssignableTo(expectedBase), $"Packet {type.FullName} does not inherit from {expectedBase.FullName}");
+        Assert.That(type.FullName!, Does.EndWith("Packet"), "Packet " + type.FullName + " does not end with 'Packet'");
+    }
 
     [Test]
     public void ClientVsServerBoundVerify() {
@@ -24,15 +30,13 @@ public class ChunkRegistryVerification {
 
         foreach (Dictionary<int, (Type, PacketDataDeserialiser)> serverBoundRegistry in serverBoundRegistries) {
             foreach (KeyValuePair<int, (Type, PacketDataDeserialiser)> kvp in serverBoundRegistry) {
-                Console.WriteLine("Verifying server bound packet: " + kvp.Value.Item1.FullName);
-                Assert.That(kvp.Value.Item1.IsAssignableTo(typeof(ServerBoundPacket)));
+                Verify(kvp.Value.Item1, typeof(ServerBoundPacket));
             }
         }
         
         foreach (Dictionary<int, (Type, PacketDataDeserialiser)> clientBoundRegistry in clientBoundRegistries) {
             foreach (KeyValuePair<int, (Type, PacketDataDeserialiser)> kvp in clientBoundRegistry) {
-                Console.WriteLine("Verifying client bound packet: " + kvp.Value.Item1.FullName);
-                Assert.That(kvp.Value.Item1.IsAssignableTo(typeof(ClientBoundPacket)));
+                Verify(kvp.Value.Item1, typeof(ClientBoundPacket));
             }
         }
     }

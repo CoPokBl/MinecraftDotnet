@@ -1,8 +1,8 @@
-namespace Minecraft.Packets.Config.ServerBound;
+namespace Minecraft.Packets.Config.ClientBound;
 
-public class ServerBoundPluginMessagePacketConfig : ServerBoundPacket {
-    public required byte[] Data;
+public class ClientBoundPluginMessagePacket : ClientBoundPacket {
     public required string Channel;
+    public required byte[] Data;
 
     protected override byte[] GetData() {
         return new DataWriter()
@@ -11,7 +11,7 @@ public class ServerBoundPluginMessagePacketConfig : ServerBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPluginMessagePacketConfig {
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundPluginMessagePacket {
         Channel = r.ReadString(),
         Data = r.ReadRemaining()
     };

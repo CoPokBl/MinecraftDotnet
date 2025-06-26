@@ -1,6 +1,6 @@
 namespace Minecraft.Schemas;
 
-public enum PlayerConnectionState {
+public enum ConnectionState {
     None,  // before handshake
     Status,
     Login,

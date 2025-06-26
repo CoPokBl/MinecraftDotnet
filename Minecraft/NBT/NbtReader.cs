@@ -20,6 +20,7 @@ public class NbtReader(DataReader input) {
             NbtTagPrefix.Float => new FloatTag(null, ReadFloat()),
             NbtTagPrefix.Double => new DoubleTag(null, ReadDouble()),
             NbtTagPrefix.Compound => ReadCompoundTag(),
+            NbtTagPrefix.End => new EmptyTag(),
             NbtTagPrefix.List => ReadList(),
             _ => throw new InvalidDataException($"Unknown type {type}")
         };
@@ -40,6 +41,8 @@ public class NbtReader(DataReader input) {
         ITag[] tags = new ITag[length];
 
         switch (type) {
+            case NbtTagPrefix.End:  // an empty list
+                return new ListTag(null, []);
             case NbtTagPrefix.String:
                 for (int i = 0; i < length; i++) tags[i] = new StringTag(null, ReadString());
                 return new ListTag<StringTag>(null, tags.Cast<StringTag>().ToArray());

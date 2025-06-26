@@ -11,8 +11,10 @@ using Minecraft.Implementations.Server.Managed.Events;
 using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Implementations.Server.Worlds.Features;
 using Minecraft.Implementations.Server.Worlds.TerrainProviders;
+using Minecraft.NBT;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
+using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
@@ -61,6 +63,13 @@ public static class MlgRush {
                 e.GameMode = GameMode.Survival;
                 e.Hardcore = true;
                 e.World = lobbyWorld;
+
+                MinecraftPacket links = new ClientBoundServerLinksPacket {
+                    Links = [
+                        ClientBoundServerLinksPacket.ServerLink.Override(ClientBoundServerLinksPacket.BuiltinLabel.Feedback, "https://serble.net")
+                    ]
+                };
+                connection.SendPacket(links);
             });
             connection.Events.OnFirst<PlayerLoginEvent>(e => {
                 e.Player.Teleport(new Vec3(0, 100, 0));
@@ -123,6 +132,11 @@ public static class MlgRush {
             void BroadcastMsg(TextComponent msg) {
                 c1.SendSystemMessage(msg);
                 c2.SendSystemMessage(msg);
+            }
+
+            void BroadcastTitle(TextComponent msg, TextComponent subtitle) {
+                c1.SendTitle(msg, subtitle);
+                c2.SendTitle(msg, subtitle);
             }
 
             void BroadcastPacket(MinecraftPacket packet) {
@@ -226,6 +240,15 @@ public static class MlgRush {
                     p2HasBed = false;
                     BroadcastMsg($"{p2.Name} has lost their bed!");
                 }
+
+                (p1Bed ? c1 : c2).SendTitle(
+                    TextComponent.Text("You have lost your bed").WithColor(TextColor.Red),
+                    TextComponent.Text("You will no longer respawn").WithColor(TextColor.White));
+                
+                (p1Bed ? c2 : c1).SendTitle(
+                    TextComponent.Text($"{(p1Bed ? p1 : p2).Name}").WithBold()
+                        .With(TextComponent.Text(" has lost their bed!").WithBold(false).WithColor(p1Bed ? TextColor.Aqua : TextColor.Red)),
+                    TextComponent.Empty());
                 
                 BroadcastPacket(new ClientBoundSoundEffectPacket {
                     Id = 496,  // sound id for dragon growl

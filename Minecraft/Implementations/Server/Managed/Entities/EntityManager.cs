@@ -38,7 +38,7 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
 
     public void SendPacketsFor(Entity entity, params MinecraftPacket[] packets) {
         foreach (PlayerConnection con in entity.GetViewers()) {
-            if (con.State != PlayerConnectionState.Play) {
+            if (con.State != ConnectionState.Play) {
                 continue;
             }
 

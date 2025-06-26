@@ -12,7 +12,7 @@ public class PlayerInfoFeature : IServerFeature {
     public void Register(MinecraftServer server) {
         server.Events.AddListener<PacketHandleEvent>(e => {
             switch (e.Packet) {
-                case ServerBoundPluginMessagePacketConfig pm: {
+                case ServerBoundPluginMessagePacket pm: {
                     switch (pm.Channel) {
                         case "minecraft:brand":
                             SetInfo(e.Connection, GetInfo(e.Connection) with {
@@ -30,7 +30,7 @@ public class PlayerInfoFeature : IServerFeature {
                     break;
                 }
 
-                case ServerBoundClientInformationPacketConfig ci: {
+                case ServerBoundClientInformationPacket ci: {
                     SetInfo(e.Connection, GetInfo(e.Connection) with {
                         Locale = ci.Locale,
                         AllowsServerListing = ci.AllowServerListing,

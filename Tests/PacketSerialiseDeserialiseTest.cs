@@ -23,7 +23,7 @@ public class PacketSerialiseDeserialiseTest {
             PreventsChatReports = true
         };
         
-        SerialiseAndDeserialise(statusResponse, true, PlayerConnectionState.Status);
+        SerialiseAndDeserialise(statusResponse, true, ConnectionState.Status);
 
         ClientBoundLoginPacket login = new() {
             DimensionName = "hell",
@@ -46,7 +46,7 @@ public class PacketSerialiseDeserialiseTest {
             ViewDistance = 6,
             MaxPlayers = 1
         };
-        SerialiseAndDeserialise(login, true, PlayerConnectionState.Play);
+        SerialiseAndDeserialise(login, true, ConnectionState.Play);
 
         ServerBoundChatMessagePacket cm = new() {
             Acknowledged = [0, 0, 0],
@@ -57,7 +57,7 @@ public class PacketSerialiseDeserialiseTest {
             Signature = new byte[256],
             Timestamp = 5L
         };
-        SerialiseAndDeserialise(cm, false, PlayerConnectionState.Play);
+        SerialiseAndDeserialise(cm, false, ConnectionState.Play);
 
         MinecraftPacket upi = new ClientBoundPlayerInfoUpdatePacket {
             Data = new ClientBoundPlayerInfoUpdatePacket.PlayerData(
@@ -80,7 +80,7 @@ public class PacketSerialiseDeserialiseTest {
                     PublicKeySignature = [0,0,01,0,05,9]
                 })
         };
-        SerialiseAndDeserialise(upi, true, PlayerConnectionState.Play);
+        SerialiseAndDeserialise(upi, true, ConnectionState.Play);
 
         ChunkData cd = new();
         cd.SetBlock(10, 100, 10, 10);
@@ -92,15 +92,15 @@ public class PacketSerialiseDeserialiseTest {
             Data = cd,
             Light = LightData.FullBright
         };
-        ClientBoundChunkDataAndUpdateLightPacket chunkDe = SerialiseAndDeserialise(chunk, true, PlayerConnectionState.Play);
+        ClientBoundChunkDataAndUpdateLightPacket chunkDe = SerialiseAndDeserialise(chunk, true, ConnectionState.Play);
         Assert.That(chunkDe.Data.GetBlock(10, 100, 10), Is.EqualTo(10));
         Assert.That(chunkDe.Data.GetBlock(1, 2, 3), Is.EqualTo(11));
         Assert.That(chunkDe.Data.GetBlock(7, 53, 2), Is.EqualTo(5));
         Assert.That(chunkDe.Data.GetBlock(2, 7, 3), Is.EqualTo(0));
     }
 
-    private static T SerialiseAndDeserialise<T>(T packet, bool clientBound, PlayerConnectionState state) where T : MinecraftPacket {
-        MinecraftPacket de = MinecraftPacket.Deserialise(packet.Serialise(), clientBound, state);
+    private static T SerialiseAndDeserialise<T>(T packet, bool clientBound, ConnectionState state) where T : MinecraftPacket {
+        MinecraftPacket de = MinecraftPacket.Deserialise(packet.Serialise(state), clientBound, state);
         Console.WriteLine(de.GetType().FullName);
         Console.WriteLine(JsonConvert.SerializeObject(de));
         if (de is T t) return t;
@@ -122,7 +122,7 @@ public class PacketSerialiseDeserialiseTest {
         
         Stopwatch sw = Stopwatch.StartNew();
         for (int i = 0; i < 20_000; i++) {
-            statusResponse.Serialise(true);
+            statusResponse.Serialise(ConnectionState.Status, true);
         }
         Console.WriteLine($"Serialise: {sw.ElapsedMilliseconds}ms");
     }
@@ -139,11 +139,11 @@ public class PacketSerialiseDeserialiseTest {
             PreventsChatReports = true
         };
         
-        byte[] dat = statusResponse.Serialise(true);
+        byte[] dat = statusResponse.Serialise(ConnectionState.Status, true);
         
         Stopwatch sw = Stopwatch.StartNew();
         for (int i = 0; i < 20_000; i++) {
-            MinecraftPacket.Deserialise(dat, true, PlayerConnectionState.Status, true);
+            MinecraftPacket.Deserialise(dat, true, ConnectionState.Status, true);
         }
         Console.WriteLine($"Serialise: {sw.ElapsedMilliseconds}ms");
     }

@@ -20,7 +20,7 @@ public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) :
             return null!;
         }
         
-        return Stream.WriteAsync(packet.Serialise(Compression), _cts.Token).AsTask();
+        return Stream.WriteAsync(packet.Serialise(State, Compression), _cts.Token).AsTask();
     }
 
     private async Task PacketSending() {
@@ -31,7 +31,7 @@ public class TcpPlayerConnection(TcpClient client, bool packetQueuing = false) :
             }
             
             // Send it
-            await Stream.WriteAsync(packet.Serialise(Compression), _cts.Token);
+            await Stream.WriteAsync(packet.Serialise(State, Compression), _cts.Token);
         }
     }
     

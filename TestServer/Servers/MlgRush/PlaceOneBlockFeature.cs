@@ -68,7 +68,7 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
                 BlockId = block.Invoke(e.Connection)
             };
             foreach (PlayerConnection connection in world.Players.Select(p => p.Connection)) {
-                connection.SendPackets(packet, new ClientBoundSetBlockDestroyStage {
+                connection.SendPackets(packet, new ClientBoundSetBlockDestroyStagePacket {
                     EntityId = breakingEntity,
                     Block = target,
                     Stage = 0
@@ -91,7 +91,7 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
                 if (st != 9) {
                     // send break animation
                     foreach (PlayerConnection con in world.Players.Select(p => p.Connection)) {
-                        con.SendPacket(new ClientBoundSetBlockDestroyStage {
+                        con.SendPacket(new ClientBoundSetBlockDestroyStagePacket {
                             EntityId = breakingEntity,
                             Block = target,
                             Stage = (byte)st
@@ -106,7 +106,7 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
                     con.SendPackets(new ClientBoundBlockUpdatePacket {
                         Location = target,
                         BlockId = 0
-                    }, new ClientBoundSetBlockDestroyStage {
+                    }, new ClientBoundSetBlockDestroyStagePacket {
                         EntityId = breakingEntity,
                         Block = target,
                         Stage = 16

@@ -19,9 +19,9 @@ public abstract class MinecraftPacket {
         }
     }
 
-    public byte[] Serialise(bool compress = false) {
+    public byte[] Serialise(ConnectionState state, bool compress = false) {
         byte[] data = GetData();
-        int packetId = PacketRegistry.GetPacketId(GetType());
+        int packetId = PacketRegistry.GetPacketId(GetType(), state);
 
         DataWriter typeD = new();
         typeD.WriteVarInt(packetId);
@@ -47,24 +47,8 @@ public abstract class MinecraftPacket {
         w.Write(data);  // the data
         return w.ToArray();
     }
-
-    private static byte[] DecompressZlib(byte[] inputData) {
-        using MemoryStream input = new(inputData);
-        using ZLibStream zlibStream = new(input, CompressionMode.Decompress);
-        using MemoryStream output = new();
-        zlibStream.CopyTo(output);
-        return output.ToArray();
-    }
-
-    private static byte[] CompressZLib(byte[] inputData, CompressionLevel compressionLevel = CompressionLevel.Optimal) {
-        using MemoryStream output = new();
-        using (ZLibStream zlibStream = new(output, compressionLevel, leaveOpen: true)) {
-            zlibStream.Write(inputData, 0, inputData.Length);
-        }
-        return output.ToArray();
-    }
     
-    public static MinecraftPacket Deserialise(byte[] packet, bool clientBound, PlayerConnectionState state, bool compressed = false) {
+    public static MinecraftPacket Deserialise(byte[] packet, bool clientBound, ConnectionState state, bool compressed = false) {
         DataReader r = new(packet);
         _ = r.ReadVarInt();  // Unneeded packet size
 
@@ -89,27 +73,7 @@ public abstract class MinecraftPacket {
         
         // everything left in "r" should be the actual packet data.
 
-        Dictionary<int, (Type, PacketDataDeserialiser)> registry;
-        if (clientBound) {
-            registry = state switch {
-                PlayerConnectionState.None => throw new Exception("State cannot none for client bound packets."),
-                PlayerConnectionState.Status => PacketRegistry.ClientBoundStatus,
-                PlayerConnectionState.Login => PacketRegistry.ClientBoundLogin,
-                PlayerConnectionState.Configuration => PacketRegistry.ClientBoundConfig,
-                PlayerConnectionState.Play => PacketRegistry.ClientBoundPlay,
-                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
-            };
-        }
-        else {  // server bound
-            registry = state switch {
-                PlayerConnectionState.None => PacketRegistry.ServerBoundStateless,
-                PlayerConnectionState.Status => PacketRegistry.ServerBoundStatus,
-                PlayerConnectionState.Login => PacketRegistry.ServerBoundLogin,
-                PlayerConnectionState.Configuration => PacketRegistry.ServerBoundConfig,
-                PlayerConnectionState.Play => PacketRegistry.ServerBoundPlay,
-                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
-            };
-        }
+        Dictionary<int, (Type, PacketDataDeserialiser)> registry = PacketRegistry.GetRegistry(clientBound, state);
 
         if (!registry.TryGetValue(packetType, out (Type, PacketDataDeserialiser) registryVal)) {
             // For now let's assume that we won't receive invalid packets so any unknown one is a TODO.
@@ -117,5 +81,21 @@ public abstract class MinecraftPacket {
         }
         PacketDataDeserialiser deserialiser = registryVal.Item2;
         return deserialiser(r);
+    }
+    
+    private static byte[] DecompressZlib(byte[] inputData) {
+        using MemoryStream input = new(inputData);
+        using ZLibStream zlibStream = new(input, CompressionMode.Decompress);
+        using MemoryStream output = new();
+        zlibStream.CopyTo(output);
+        return output.ToArray();
+    }
+
+    private static byte[] CompressZLib(byte[] inputData, CompressionLevel compressionLevel = CompressionLevel.Optimal) {
+        using MemoryStream output = new();
+        using (ZLibStream zlibStream = new(output, compressionLevel, leaveOpen: true)) {
+            zlibStream.Write(inputData, 0, inputData.Length);
+        }
+        return output.ToArray();
     }
 }

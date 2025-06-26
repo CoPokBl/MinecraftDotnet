@@ -7,7 +7,7 @@ using Minecraft.Schemas;
 namespace Minecraft.Implementations.Client;
 
 public abstract class ServerConnection {
-    public PlayerConnectionState State = PlayerConnectionState.None;
+    public ConnectionState State = ConnectionState.None;
     public bool Compression => CompressionThreshold >= 0;
     public int CompressionThreshold = -1;
     public event Action? Disconnected;
@@ -47,7 +47,7 @@ public abstract class ServerConnection {
     }
 
     public async Task SetCompression(int minSize) {
-        if (State != PlayerConnectionState.Login) {
+        if (State != ConnectionState.Login) {
             throw new Exception("Connection must be in login state to enable compression.");
         }
 

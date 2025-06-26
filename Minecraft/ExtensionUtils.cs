@@ -79,6 +79,21 @@ public static class ExtensionUtils {
         });
     }
 
+    public static void SendTitle(this PlayerConnection con, TextComponent text, TextComponent subtitle, int fadeIn = 10, int stay = 40, int fadeOut = 10) {
+        con.SendPackets(
+            new ClientBoundSetTitleTextPacket {
+                Text = text
+            },
+            new ClientBoundSetSubtitleTextPacket {
+                Text = subtitle
+            },
+            new ClientBoundSetTitleAnimationTimesPacket {
+                FadeIn = fadeIn,
+                FadeOut = fadeOut,
+                Stay = stay
+            });
+    }
+
     public static long UnixMillis(this DateTime time) {
         return (long)(time - DateTime.UnixEpoch).TotalMilliseconds;
     }

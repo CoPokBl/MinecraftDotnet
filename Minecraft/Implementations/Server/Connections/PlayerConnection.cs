@@ -14,7 +14,7 @@ using Minecraft.Schemas;
 namespace Minecraft.Implementations.Server.Connections;
 
 public abstract class PlayerConnection : ITaggable {
-    public PlayerConnectionState State = PlayerConnectionState.None;
+    public ConnectionState State = ConnectionState.None;
     public bool Compression => CompressionThreshold >= 0;
     public int CompressionThreshold = -1;
     public ServerBoundHandshakePacket? Handshake;
@@ -24,7 +24,7 @@ public abstract class PlayerConnection : ITaggable {
 
     protected static readonly Type[] DontLog = [
         typeof(ServerBoundClientTickEndPacket),
-        typeof(ServerBoundKeepAlivePacketPlay),
+        typeof(ServerBoundKeepAlivePacket),
         typeof(ServerBoundSetPlayerPositionPacket),
         typeof(ServerBoundSetPlayerRotationPacket),
         typeof(ServerBoundSetPlayerPosAndRotPacket)
@@ -36,7 +36,7 @@ public abstract class PlayerConnection : ITaggable {
 
     public void HandlePacket(MinecraftPacket packet) {
         if (DontLog.All(p => p != packet.GetType())) {
-            Log($"Got full packet: {PacketRegistry.GetPacketId(packet.GetType())}, {packet.GetType().FullName}");
+            Log($"Got full packet: {PacketRegistry.GetPacketId(packet.GetType(), State)}, {packet.GetType().FullName}");
         }
         
         // Handle connection state changes. Do this before handling because client will have already updated.
@@ -47,8 +47,8 @@ public abstract class PlayerConnection : ITaggable {
                 Log($"Got handshake from {hs.ProtocolVersion} client, intent: {hs.Intent}");
 
                 State = hs.Intent switch {
-                    ServerBoundHandshakePacket.Intention.Status => PlayerConnectionState.Status,
-                    ServerBoundHandshakePacket.Intention.Login => PlayerConnectionState.Login,
+                    ServerBoundHandshakePacket.Intention.Status => ConnectionState.Status,
+                    ServerBoundHandshakePacket.Intention.Login => ConnectionState.Login,
                     ServerBoundHandshakePacket.Intention.Transfer => throw new NotImplementedException(
                         "Transfer is not yet supported"),
                     _ => throw new ArgumentOutOfRangeException()
@@ -57,7 +57,7 @@ public abstract class PlayerConnection : ITaggable {
 
             // LOGIN
             case ServerBoundLoginAcknowledgedPacket: {
-                State = PlayerConnectionState.Configuration; // we are done login now
+                State = ConnectionState.Configuration; // we are done login now
                 break;
             }
                         
@@ -65,7 +65,7 @@ public abstract class PlayerConnection : ITaggable {
             case ServerBoundAcknowledgeFinishConfigurationPacket: {
                 // okay so they're ready to continue
                 Log("Client acknowledged finish configuration, switching to play state");
-                State = PlayerConnectionState.Play;
+                State = ConnectionState.Play;
                 break;
             }
         }
@@ -92,19 +92,15 @@ public abstract class PlayerConnection : ITaggable {
         Disconnected?.Invoke();
     }
 
-    public async Task Kick(TextComponent msg) {
-        if (State != PlayerConnectionState.Play) {
-            Disconnect();
-            return;
-        }
-        await SendPacket(new ClientBoundDisconnectPacketPlay {
+    public async Task Kick(TextComponent msg) {  // works in all connection states because amazing code design
+        await SendPacket(new ClientBoundDisconnectPacket {
             Reason = msg
         });
         Disconnect();
     }
 
     public async Task SetCompression(int minSize) {
-        if (State != PlayerConnectionState.Login) {
+        if (State != ConnectionState.Login) {
             throw new Exception("Connection must be in login state to enable compression.");
         }
 

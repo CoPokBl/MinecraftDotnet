@@ -2,7 +2,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundPickItemFromBlock : ServerBoundPacket {
+public class ServerBoundPickItemFromBlockPacket : ServerBoundPacket {
     public required BlockPosition Location;
     public required bool IncludeData;
 
@@ -13,7 +13,7 @@ public class ServerBoundPickItemFromBlock : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPickItemFromBlock {
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPickItemFromBlockPacket {
         Location = r.ReadPosition(),
         IncludeData = r.ReadBoolean()
     };

@@ -1,6 +1,6 @@
 namespace Minecraft.Packets.Play.ServerBound;
 
-public class ServerBoundPickItemFromEntity : ServerBoundPacket {
+public class ServerBoundPickItemFromEntityPacket : ServerBoundPacket {
     public required int EntityId;
     public required bool IncludeData;
 
@@ -11,7 +11,7 @@ public class ServerBoundPickItemFromEntity : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPickItemFromEntity {
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPickItemFromEntityPacket {
         EntityId = r.ReadVarInt(),
         IncludeData = r.ReadBoolean()
     };
