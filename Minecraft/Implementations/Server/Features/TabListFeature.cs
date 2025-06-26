@@ -1,8 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
-using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
-using Minecraft.Implementations.Server.Events;
+using Minecraft.Implementations.Server.Managed.Events;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
@@ -50,16 +49,16 @@ public class TabListFeature : IServerFeature {
         return new Guid(hash);
     }
 
-    public void Register(EventNode<IServerEvent> events) {
-        
-    }
-
     public void Register(MinecraftServer server) {
         _server = server;
         
         // just in case
         server.Events.AddListener<PlayerLoginFeature.PlayerLoginEvent>(e => {
             RegisterPlayer(e.Connection);
+            Update();
+        });
+        server.Events.AddListener<PlayerLoginEvent>(e => {
+            RegisterPlayer(e.Player.Connection);
             Update();
         });
 

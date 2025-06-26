@@ -1,10 +1,7 @@
 using System.Diagnostics;
 using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Implementations.Server.Worlds.TerrainProviders;
-using Minecraft.Packets;
-using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
-using Minecraft.Schemas.Chunks;
 
 namespace Tests;
 

@@ -1,6 +1,7 @@
 using Minecraft.NBT;
 using Minecraft.NBT.Tags;
 using Minecraft.NBT.Text;
+using Newtonsoft.Json;
 
 namespace Tests;
 
@@ -89,5 +90,18 @@ public class NbtTest {
     private static void TestTagNoErrors(ITag tag, Action<ITag>? checker = null) {
         ITag thing = NbtReader.ReadNbt(tag.Serialise());
         checker?.Invoke(thing);
+    }
+
+    [Test]
+    public void TestJson() {
+        ITag tag = new StringTag(null, "Hello World");
+        Console.WriteLine(JsonConvert.SerializeObject(tag.ToJson()));
+
+        string val = TextComponent.Text("Hello")
+            .WithColor(TextColor.Red)
+            .With(TextComponent.Text(" World").WithBold()).ToJsonString();
+        Console.WriteLine(val);
+        
+        TextComponent text = TextComponent.FromTag(ITag.FromJson(val));
     }
 }

@@ -1,8 +1,6 @@
-using System.Diagnostics.Metrics;
-using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
-using Minecraft.Implementations.Server.Features;
+using Minecraft.Implementations.Server.Managed;
 using Minecraft.Implementations.Server.Managed.Entities.Types;
 using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Packets;
@@ -12,7 +10,7 @@ using Minecraft.Schemas;
 
 namespace TestServer.Servers.MlgRush;
 
-public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappearTime = -1) {
+public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappearTime = -1) : IWorldFeature {
     private const double PlayerWidth = 0.6;
     private const double PlayerHeight = 1.8;
 
@@ -120,5 +118,13 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
             }, s, TimeSpan.FromSeconds(disappearTime/9f), TimeSpan.FromSeconds(disappearTime/9f));
             _timers.Add(t);
         });
+    }
+
+    public void Unregister() {
+        
+    }
+
+    public Type[] GetDependencies() {
+        return [];
     }
 }

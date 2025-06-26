@@ -24,13 +24,6 @@ public static class MlgRush {
     private const int Port = 25565;
 
     public static async Task Start() {
-        Console.WriteLine("Creating world...");
-        // World world = new(new TestingProvider(), 32, 2, 10);
-        // World world = new(new SpawnCachedTerrainProvider(new MlgRushMapProvider(), 4), 4, 2, 10);
-        Console.WriteLine("World created!");
-
-        Dictionary<PlayerConnection, int> playerIds = new();
-
         ManagedMinecraftServer mServer = new(
             new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
                 VersionName = "dotnet",
@@ -43,7 +36,11 @@ public static class MlgRush {
             }),
             new PingRespondFeature(),
             new SimpleChatFeature(),
-            new OpenToLanAdFeature("MLG Rush over LAN", Port));
+            new OpenToLanAdFeature("MLG Rush over LAN", Port),
+            new TabListFeature(
+                updatePeriod:1000, 
+                headerProvider:c => TextComponent.Text("MLG Rush").WithColor(TextColor.Hex("#EE7026")).WithBold(), 
+                footerProvider:c => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic()));
 
         CancellationTokenSource cts = new();
 
@@ -77,21 +74,10 @@ public static class MlgRush {
         _ = listener.Listen(Port);
 
         const bool lifeAfterBed = true;
-        
+
+        ITerrainProvider terrain = new MlgRushMapProvider();
         while (run) {
-            // ManagedMinecraftServer server = null!;
-            // server = new ManagedMinecraftServer(
-            //     new PlayerInfoFeature(),
-            //     new SimpleChatFeature(),
-            //     new TabListFeature(
-            //         updatePeriod:1000, 
-            //         headerProvider:() => TextComponent.Text("MLG Rush").WithColor(TextColor.Hex("#EE7026")).WithBold(true), 
-            //         footerProvider:() => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic(true)),
-            //     new BlockBreakingFeature(false),
-            //     new SimpleCombatFeature(500)
-            // );
-            
-            World world = new(new EventNode<IServerEvent>(), new MlgRushMapProvider(), 4, 2, 10);
+            World world = new(new EventNode<IServerEvent>(), terrain, 4, 2, 10);
             new SimpleCombatFeature(500).Register(world);
             new BlockBreakingFeature(false).Register(world);
             

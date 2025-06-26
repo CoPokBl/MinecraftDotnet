@@ -1,7 +1,7 @@
 ﻿using Minecraft.Implementations.Client.Tools;
+using Minecraft.NBT;
 using Minecraft.Packets.Status.ClientBound;
-using Newtonsoft.Json;
 
-ClientBoundStatusResponsePacket status = await ServerPinger.QueryServer("localhost");
-Console.WriteLine($"Description: {status.Description}");
-Console.WriteLine(JsonConvert.SerializeObject(status));
+ClientBoundStatusResponsePacket status = await ServerPinger.QueryServer("mc.emortal.dev");
+Console.WriteLine($"Description: {status.Description!.ToJsonString()}");
+// Console.WriteLine(JsonConvert.SerializeObject(status));

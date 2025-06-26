@@ -1,5 +1,4 @@
-﻿using TestServer.Servers.Everything;
-using TestServer.Servers.MlgRush;
+﻿using TestServer.Servers.MlgRush;
 
 if (args.Length == 0) {
     Console.WriteLine("Please specify a gamemode.");

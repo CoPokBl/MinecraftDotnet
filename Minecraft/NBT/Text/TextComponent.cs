@@ -3,9 +3,8 @@ using Minecraft.NBT.Tags;
 namespace Minecraft.NBT.Text;
 
 // https://minecraft.wiki/w/Text_component_format
-public class TextComponent : ITag {
+public class TextComponent : CompoundTagSerialisable {
     public readonly List<TextComponent> Children = [];
-    public string? ComponentName;  // name for this NBT tag when it gets serialised (so it can be nested)
     public TextContent Content = TextContent.Text("");
     public TextColor? Color;
     public string? Insertion;
@@ -114,19 +113,7 @@ public class TextComponent : ITag {
         return this;
     }
 
-    /// <summary>
-    /// Internal method that is used to format the NBT to be used in packets.
-    /// <p/>
-    /// It is not recommended to change this unless you know what you're doing.
-    /// </summary>
-    /// <param name="name">The name to give this tag.</param>
-    /// <returns>This TextComponent with its name changed.</returns>
-    public TextComponent WithComponentName(string? name) {
-        ComponentName = name;
-        return this;
-    }
-
-    public CompoundTag SerialiseToTag() {
+    public override CompoundTag SerialiseToTag() {
         List<ITag?> tags = [
             new StringTag("type", Content.Type)
         ];
@@ -194,6 +181,10 @@ public class TextComponent : ITag {
     }
 
     public static TextComponent FromTag(ITag tag) {
+        if (tag is StringTag str) {  // direct string
+            return Text(str.Value);
+        }
+        
         if (tag is not CompoundTag compound) {
             throw new ArgumentException("Tag is not compound", nameof(tag));
         }
@@ -257,31 +248,31 @@ public class TextComponent : ITag {
         // okay, now we have done all the content we need to get all
         // optional fields.
         if (fields.TryGetValue("font", out ITag? fontTag)) {
-            textComponent.WithFont(((StringTag)fontTag).Value);
+            textComponent.WithFont(fontTag.GetString());
         }
 
         if (fields.TryGetValue("color", out ITag? colorTag)) {
-            textComponent.WithColor(TextColor.Parse(((StringTag)colorTag).Value));
+            textComponent.WithColor(TextColor.Parse(colorTag.GetString()));
         }
 
         if (fields.TryGetValue("bold", out ITag? bold)) {
-            textComponent.WithBold(((ByteTag)bold).BoolValue);
+            textComponent.WithBold(bold.GetBoolean());
         }
         
         if (fields.TryGetValue("italic", out ITag? italic)) {
-            textComponent.WithItalic(((ByteTag)italic).BoolValue);
+            textComponent.WithItalic(italic.GetBoolean());
         }
         
         if (fields.TryGetValue("underlined", out ITag? underlined)) {
-            textComponent.WithUnderlined(((ByteTag)underlined).BoolValue);
+            textComponent.WithUnderlined(underlined.GetBoolean());
         }
         
         if (fields.TryGetValue("strikethrough", out ITag? strikethrough)) {
-            textComponent.WithStrikethrough(((ByteTag)strikethrough).BoolValue);
+            textComponent.WithStrikethrough(strikethrough.GetBoolean());
         }
         
         if (fields.TryGetValue("obfuscated", out ITag? obfuscated)) {
-            textComponent.WithObfuscated(((ByteTag)obfuscated).BoolValue);
+            textComponent.WithObfuscated(obfuscated.GetBoolean());
         }
         
         if (fields.TryGetValue("shadow_color", out ITag? shadowColorTag)) {
@@ -289,8 +280,11 @@ public class TextComponent : ITag {
             if (shadowColorTag is IntegerTag intShadowTag) {
                 textComponent.WithShadowColor(TextColor.FromDecimal(intShadowTag.Value));
             }
-            else if (shadowColorTag is ListTag<FloatTag> listShadowTag) {
-                textComponent.WithShadowColor(TextColor.Rgb(listShadowTag.Tags[0].Value, listShadowTag.Tags[1].Value, listShadowTag.Tags[2].Value));
+            else if (shadowColorTag is ListTag listShadowTag) {
+                textComponent.WithShadowColor(TextColor.Rgb(
+                    listShadowTag.Tags[0].GetFloat(), 
+                    listShadowTag.Tags[1].GetFloat(), 
+                    listShadowTag.Tags[2].GetFloat()));
             }
             else throw new Exception("Invalid field type for shadow color");
         }
@@ -365,26 +359,14 @@ public class TextComponent : ITag {
         
         // extras (aka children)
         if (fields.TryGetValue("extra", out ITag? extrasTag)) {
-            ListTag<CompoundTag> extrasList = (ListTag<CompoundTag>)extrasTag;
+            ListTag extrasList = (ListTag)extrasTag;
             textComponent.Children.Clear();
-            foreach (CompoundTag extra in extrasList.Tags) {
-                textComponent.Children.Add(FromTag(extra));
+            foreach (ITag extraTag in extrasList.Tags) {
+                textComponent.Children.Add(FromTag(extraTag));
             }
         }
         
         // yay, finally we're done, return the fully constructed object.
         return textComponent;
-    }
-
-    public byte GetPrefix() {
-        return NbtTagPrefix.Compound;
-    }
-    
-    public string? GetName() {
-        return ComponentName;
-    }
-
-    public byte[] Serialise(bool noType = false) {
-        return SerialiseToTag().Serialise(noType);
     }
 }
