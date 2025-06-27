@@ -5,6 +5,9 @@ using Minecraft.Implementations.Server.Managed.Entities.Types;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities;
+using Minecraft.Schemas.Entities.Meta;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Implementations.Server.Managed.Entities;
 
@@ -106,6 +109,15 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             ];
         
         SendPacketsFor(entity, packets);
+    }
+
+    public void SetEntityCrouching(Entity entity, bool crouching) {
+        SendPacketsFor(entity, new ClientBoundSetEntityMetadataPacket {
+            EntityId = entity.NetId,
+            Meta = new PlayerMeta {
+                Pose = crouching ? EntityPose.Sneaking : EntityPose.Standing
+            }
+        });
     }
 
     public void TeleportEntity(Entity entity, Vec3 newPos, Angle yaw, Angle pitch) {

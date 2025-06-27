@@ -1,5 +1,6 @@
 using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Packets.Play.ClientBound;
 

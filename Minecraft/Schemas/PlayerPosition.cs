@@ -1,3 +1,5 @@
+using Minecraft.Schemas.Vec;
+
 namespace Minecraft.Schemas;
 
 public record PlayerPosition(Vec3 Position, Vec3 Velocity, Angle Yaw, Angle Pitch) {

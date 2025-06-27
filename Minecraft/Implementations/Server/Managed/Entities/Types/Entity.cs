@@ -8,6 +8,7 @@ using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Implementations.Server.Managed.Entities.Types;
 
@@ -21,6 +22,20 @@ public class Entity(int type) : IViewable, ITaggable {
     public Func<PlayerConnection, bool> ViewableRule { get; set; } = _ => true;
     public EventNode<IServerEvent> Events = new();
     public readonly Dictionary<string, object?> Data = new();
+
+    private bool _crouching = false;
+    public bool Crouching {
+        get => _crouching;
+
+        set {
+            if (_crouching == value) {
+                return;
+            }
+            
+            Manager?.SetEntityCrouching(this, value);
+            _crouching = value;
+        }
+    }
     
     // these should be set by an entity tracker
     // not doing so is unsupported and will cause issues.

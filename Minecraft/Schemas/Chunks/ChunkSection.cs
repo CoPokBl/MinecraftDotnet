@@ -10,6 +10,8 @@ namespace Minecraft.Schemas.Chunks;
 /// https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Data_structure
 /// </summary>
 public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
+    public const int Size = 16;  // size of a chunk section in blocks (16x16x16)
+    
     /// <summary>
     /// The blocks in this section.
     /// 3D array of 16x16x16 blocks, each block is a uint representing the block state.
@@ -19,14 +21,24 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     public uint[][][] Blocks { get; private set; } = NewBlockSet();
 
     private static uint[][][] NewBlockSet() {
-        uint[][][] blocks = new uint[16][][];
-        for (int x = 0; x < 16; x++) {
-            blocks[x] = new uint[16][];
-            for (int y = 0; y < 16; y++) {
-                blocks[x][y] = new uint[16];
+        uint[][][] blocks = new uint[Size][][];
+        for (int x = 0; x < Size; x++) {
+            blocks[x] = new uint[Size][];
+            for (int y = 0; y < Size; y++) {
+                blocks[x][y] = new uint[Size];
             }
         }
         return blocks;
+    }
+    
+    public void Fill(uint state) {
+        for (int x = 0; x < Size; x++) {
+            for (int y = 0; y < Size; y++) {
+                for (int z = 0; z < Size; z++) {
+                    Blocks[x][y][z] = state;
+                }
+            }
+        }
     }
 
     public void SetBlock(int x, int y, int z, uint state) {
@@ -46,7 +58,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     }
     
     public void Write(DataWriter w) {
-        Palette palette = Palette.CreateOptimisedPalette(Blocks, 16, 8, 4);
+        Palette palette = Palette.CreateOptimisedPalette(Blocks, Size, 8, 4);
 
         // BLOCK COUNT
         w.WriteShort((short)palette.BlockCount());  // Number of non-air blocks in chunk section
@@ -61,7 +73,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
 
     public ChunkSection Read(DataReader r) {
         short blockCount = r.ReadShort();  // we don't need this
-        Palette blocksPalette = Palette.Deserialise(16, 8, 4, 8, r);
+        Palette blocksPalette = Palette.Deserialise(Size, 8, 4, 8, r);
         Palette biomesPalette = Palette.Deserialise(4, 3, 1, 3, r);  // not yet implemented
 
         Blocks = blocksPalette.GetData();

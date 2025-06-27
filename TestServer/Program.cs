@@ -1,4 +1,5 @@
-﻿using TestServer.Servers.MlgRush;
+﻿using TestServer.Servers.AnvilTesting;
+using TestServer.Servers.MlgRush;
 
 if (args.Length == 0) {
     Console.WriteLine("Please specify a gamemode.");
@@ -12,6 +13,10 @@ switch (args[0]) {
     
     case "testing":
         // await Everything.Start();
+        break;
+    
+    case "anvil":
+        await AnvilTesting.Start();
         break;
     
     default:

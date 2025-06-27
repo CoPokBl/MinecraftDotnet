@@ -43,7 +43,7 @@ public class World {
     
     // Some fun constants
     private int UnloadDistance => _viewDistance + UnloadDistanceMod;
-    private const bool Benchmark = false;
+    private const bool Benchmark = true;
     private const int UnloadDistanceMod = 1;  // Used to reduce the number of packets needed when travelling back and forth
 
     public void AddFeature(IWorldFeature feature) {
@@ -163,6 +163,7 @@ public class World {
             X = chunkPos.X,
             Z = chunkPos.Z
         });
+        // Console.WriteLine("Center changed to " + chunkPos);
         IEnumerable<MinecraftPacket> orderedPackets = neededPackets.OrderBy(p => {
             if (p is ClientBoundSetCenterChunkPacket) return 0;  // always do this first, otherwise we could get issues
             if (p is not ClientBoundChunkDataAndUpdateLightPacket chunkP) return 100;  // do unload packets last (for faster load, client unloads anyway)

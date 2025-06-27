@@ -1,6 +1,7 @@
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Managed.Entities.Types;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Implementations.Server.Managed.Entities.Events;
 

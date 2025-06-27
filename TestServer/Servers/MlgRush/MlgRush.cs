@@ -19,6 +19,7 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
+using Minecraft.Schemas.Vec;
 
 namespace TestServer.Servers.MlgRush;
 

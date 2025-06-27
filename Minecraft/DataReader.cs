@@ -4,6 +4,7 @@ using System.Text;
 using Minecraft.NBT;
 using Minecraft.NBT.Text;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft;
 

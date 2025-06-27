@@ -29,7 +29,7 @@ public abstract class MinecraftPacket {
 
         if (compress) {
             byte[] dataToCompress = new DataWriter().WriteVarInt(packetId).Write(data).ToArray();
-            byte[] compressedData = CompressZLib(dataToCompress);
+            byte[] compressedData = CompressionHelper.CompressZLib(dataToCompress);
 
             int dataLengthLength = new DataWriter().WriteVarInt(dataToCompress.Length).ToArray().Length;
 
@@ -62,7 +62,7 @@ public abstract class MinecraftPacket {
             }
             else {  // compressed packet
                 byte[] compressedData = r.ReadRemaining();
-                DataReader reader = new(DecompressZlib(compressedData));
+                DataReader reader = new(CompressionHelper.DecompressZlib(compressedData));
                 packetType = reader.ReadVarInt();
                 r = reader;  // so that the packet uses the uncompressed data
             }
@@ -81,21 +81,5 @@ public abstract class MinecraftPacket {
         }
         PacketDataDeserialiser deserialiser = registryVal.Item2;
         return deserialiser(r);
-    }
-    
-    private static byte[] DecompressZlib(byte[] inputData) {
-        using MemoryStream input = new(inputData);
-        using ZLibStream zlibStream = new(input, CompressionMode.Decompress);
-        using MemoryStream output = new();
-        zlibStream.CopyTo(output);
-        return output.ToArray();
-    }
-
-    private static byte[] CompressZLib(byte[] inputData, CompressionLevel compressionLevel = CompressionLevel.Optimal) {
-        using MemoryStream output = new();
-        using (ZLibStream zlibStream = new(output, compressionLevel, leaveOpen: true)) {
-            zlibStream.Write(inputData, 0, inputData.Length);
-        }
-        return output.ToArray();
     }
 }

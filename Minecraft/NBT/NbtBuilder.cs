@@ -75,4 +75,16 @@ public class NbtBuilder {
         BinaryPrimitives.WriteInt32BigEndian(span, value);
         return Write(span);
     }
+    
+    public NbtBuilder WriteLong(long value) {
+        Span<byte> span = new(new byte[sizeof(long)]);
+        BinaryPrimitives.WriteInt64BigEndian(span, value);
+        return Write(span);
+    }
+    
+    public NbtBuilder WriteShort(short value) {
+        Span<byte> span = new(new byte[sizeof(short)]);
+        BinaryPrimitives.WriteInt16BigEndian(span, value);
+        return Write(span);
+    }
 }

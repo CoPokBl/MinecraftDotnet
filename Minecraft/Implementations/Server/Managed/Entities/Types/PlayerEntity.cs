@@ -5,6 +5,7 @@ using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Implementations.Server.Managed.Entities.Types;
 
@@ -46,6 +47,16 @@ public class PlayerEntity : Entity {
                     if (ct.TeleportId == WaitingTeleport) {
                         WaitingTeleport = -1;
                     }
+                    break;
+                }
+
+                // Crouching and uncrouching
+                case ServerBoundPlayerCommandPacket pc: {
+                    Crouching = pc.PlayAction switch {
+                        PlayerAction.PressSneak => true,
+                        PlayerAction.ReleaseSneak => false,
+                        _ => Crouching
+                    };
                     break;
                 }
 

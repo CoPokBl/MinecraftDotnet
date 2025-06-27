@@ -18,6 +18,12 @@ public class ChunkData : IWritable, IDataReadable<ChunkData> {
 
         return vals;
     }
+    
+    public void Fill(uint state) {
+        for (int i = 0; i < ChunkSections; i++) {
+            Sections[i].Fill(state);
+        }
+    }
 
     public void SetBlock(int x, int y, int z, uint state) {
         int chunkSection = y / 16;  // sections from the bottom

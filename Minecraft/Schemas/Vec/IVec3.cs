@@ -1,22 +1,22 @@
-namespace Minecraft.Schemas;
+namespace Minecraft.Schemas.Vec;
 
-public record Vec3(double X, double Y, double Z) {
-    public static readonly Vec3 Zero = new(0.0, 0.0, 0.0);
+public record IVec3(double X, double Y, double Z) {
+    public static readonly IVec3 Zero = new(0, 0, 0);
     
-    public Vec3 Normalize() {
+    public IVec3 Normalize() {
         double len = ComputeLength();
         if (len == 0) {
             return Zero;
         }
-        return new Vec3(X/len, Y/len, Z/len);
+        return new IVec3(X/len, Y/len, Z/len);
     }
 
     public double ComputeLength() {
         return Math.Sqrt(X*X + Y*Y + Z*Z);
     }
 
-    public Vec3 Multiply(double scalar) {
-        return new Vec3(X * scalar, Y * scalar, Z * scalar);
+    public IVec3 Multiply(double scalar) {
+        return new IVec3(X * scalar, Y * scalar, Z * scalar);
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ public record Vec3(double X, double Y, double Z) {
     /// </summary>
     /// <param name="other">The other Vec3.</param>
     /// <returns>The distance between the two Vec3s.</returns>
-    public double DistanceTo2D(Vec3 other) {
+    public double DistanceTo2D(IVec3 other) {
         return Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Z - other.Z, 2));
     }
 }

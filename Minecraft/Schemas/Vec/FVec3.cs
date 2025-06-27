@@ -1,4 +1,4 @@
-namespace Minecraft.Schemas;
+namespace Minecraft.Schemas.Vec;
 
 public record FVec3(float X, float Y, float Z) {
     public static readonly FVec3 Zero = new(0.0f, 0.0f, 0.0f);

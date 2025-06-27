@@ -24,4 +24,8 @@ public readonly struct ChunkPosition(int x, int z) : IEquatable<ChunkPosition> {
     public override bool Equals(object? obj) {
         return obj is ChunkPosition other && Equals(other);
     }
+
+    public override string ToString() {
+        return $"ChunkPosition(X: {X}, Z: {Z})";
+    }
 }
