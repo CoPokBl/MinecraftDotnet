@@ -20,5 +20,15 @@ public class EventNodeTest {
         node.CallEvent(1);
         
         Assert.That(set, Is.False);
+        
+        set = false;
+        node.OnFirstWhere<int>(i => i==2, _ => {
+            set = true;
+        });
+        Assert.That(set, Is.False);
+        node.CallEvent(1);
+        Assert.That(set, Is.False);
+        node.CallEvent(2);
+        Assert.That(set, Is.True);
     }
 }

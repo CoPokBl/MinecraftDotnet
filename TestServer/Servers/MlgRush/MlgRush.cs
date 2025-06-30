@@ -11,20 +11,20 @@ using Minecraft.Implementations.Server.Managed.Events;
 using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Implementations.Server.Worlds.Features;
 using Minecraft.Implementations.Server.Worlds.TerrainProviders;
-using Minecraft.NBT;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 
 namespace TestServer.Servers.MlgRush;
 
 public static class MlgRush {
-    private const int Port = 25565;
+    private const int Port = 25566;
 
     public static async Task Start() {
         ManagedMinecraftServer mServer = new(
@@ -59,6 +59,7 @@ public static class MlgRush {
 
         Queue<PlayerEntity> connectionQueue = new();
         TcpMinecraftListener listener = new(connection => {
+            Console.WriteLine("Got new connection");
             mServer.AddConnection(connection);
             connection.Events.OnFirst<PlayerPreLoginEvent>(e => {
                 e.GameMode = GameMode.Survival;

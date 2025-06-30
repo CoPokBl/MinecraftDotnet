@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Packets.Config.ClientBound;
-using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Server.Features;

@@ -6,6 +6,10 @@ public static partial class PacketRegistry {
     public static readonly Dictionary<ConnectionState, Dictionary<Type, int>> PacketTypes = new();
 
     public static int GetPacketId(Type type, ConnectionState state) {
+        if (type == typeof(UnknownPacket)) {
+            return -1;
+        }
+        
         return PacketTypes[state][type];
     }
 

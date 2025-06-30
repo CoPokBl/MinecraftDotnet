@@ -2,7 +2,7 @@ using System.Net.Sockets;
 
 namespace Minecraft.Implementations.Client;
 
-public class MinecraftClientUtils {
+public static class MinecraftClientUtils {
 
     public static async Task<ServerConnection> ConnectToServer(string host, int port = 25565, bool packetQueuing = false) {
         TcpClient client = new();

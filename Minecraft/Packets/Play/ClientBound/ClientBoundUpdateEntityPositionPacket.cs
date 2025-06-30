@@ -1,4 +1,3 @@
-using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Packets.Play.ClientBound;

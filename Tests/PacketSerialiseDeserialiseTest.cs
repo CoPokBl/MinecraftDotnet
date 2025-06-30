@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Minecraft.Packets;
+using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Packets.Status.ClientBound;
@@ -47,6 +48,29 @@ public class PacketSerialiseDeserialiseTest {
             MaxPlayers = 1
         };
         SerialiseAndDeserialise(login, true, ConnectionState.Play);
+        
+        ClientBoundLoginPacket login2 = new() {
+            DimensionName = "minecraft:overworld",
+            Dimensions = [],
+            DimensionType = 3,
+            DoLimitedCrafting = false,
+            EnableRespawnScreen = true,
+            EnforcesSecureChat = true,
+            EntityId = 2,
+            GameMode = GameMode.Adventure,
+            HashedSeed = 0,
+            IsDebug = false,
+            IsFlat = true,
+            IsHardcore = false,
+            SeaLevel = 63,
+            PortalCooldown = 0,
+            PreviousGameMode = GameMode.Undefined,
+            ReducedDebugInfo = false,
+            SimulationDistance = 8,
+            ViewDistance = 8,
+            MaxPlayers = 0
+        };
+        SerialiseAndDeserialise(login2, true, ConnectionState.Play);
 
         ServerBoundChatMessagePacket cm = new() {
             Acknowledged = [0, 0, 0],
@@ -82,6 +106,11 @@ public class PacketSerialiseDeserialiseTest {
         };
         SerialiseAndDeserialise(upi, true, ConnectionState.Play);
 
+        SerialiseAndDeserialise(new ServerBoundLoginStartPacket {
+            Uuid = Guid.NewGuid(),
+            Name = "TestPlayer"
+        }, false, ConnectionState.Login);
+
         ChunkData cd = new();
         cd.SetBlock(10, 100, 10, 10);
         cd.SetBlock(1, 2, 3, 11);
@@ -97,6 +126,18 @@ public class PacketSerialiseDeserialiseTest {
         Assert.That(chunkDe.Data.GetBlock(1, 2, 3), Is.EqualTo(11));
         Assert.That(chunkDe.Data.GetBlock(7, 53, 2), Is.EqualTo(5));
         Assert.That(chunkDe.Data.GetBlock(2, 7, 3), Is.EqualTo(0));
+
+        ClientBoundPlayerInfoUpdatePacket badPacket = new() {
+            Data = null!
+        };
+        Assert.Throws<NotImplementedException>(() => SerialiseAndDeserialise(badPacket, false, ConnectionState.Configuration));
+
+        UnknownPacket up = new() {
+            Id = 123,
+            Data = [1, 2, 3, 4, 5]
+        };
+        UnknownPacket upDe = SerialiseAndDeserialise(up, true, ConnectionState.Play);
+        Assert.That(upDe.Id, Is.EqualTo(123));
     }
 
     private static T SerialiseAndDeserialise<T>(T packet, bool clientBound, ConnectionState state) where T : MinecraftPacket {

@@ -186,7 +186,7 @@ public class TextComponent : CompoundTagSerialisable {
         }
         
         if (tag is not CompoundTag compound) {
-            throw new ArgumentException("Tag is not compound", nameof(tag));
+            throw new ArgumentException($"Tag is not compound, it is {tag.GetType().Name}, {tag.ToJsonString()}", nameof(tag));
         }
 
         TextComponent textComponent = Empty();

@@ -1,6 +1,6 @@
 using Minecraft.NBT.Text;
 
-namespace Minecraft.Packets.Login.ClientBound;
+namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundDisconnectPacket : ClientBoundPacket {
     public required TextComponent Reason;

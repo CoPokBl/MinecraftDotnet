@@ -1,5 +1,6 @@
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Login.ClientBound;
+using Minecraft.Packets.Play.ClientBound;
 
 namespace Minecraft.Packets.Registry;
 

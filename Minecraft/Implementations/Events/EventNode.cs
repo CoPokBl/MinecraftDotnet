@@ -71,6 +71,19 @@ public class EventNode<T> {
         Callback += actualListener;
     }
     
+    public void OnFirstWhere<TL>(Func<TL, bool> condition, Action<TL> callback) where TL : T {
+        Action<T> actualListener = null!;
+        actualListener = obj => {
+            if (obj is not TL tl || !condition(tl)) {
+                return;
+            }
+
+            callback(tl);
+            Callback -= actualListener;
+        };
+        Callback += actualListener;
+    }
+    
     public void CallEvent(T e) {
         try {
             // Stopwatch sw = Stopwatch.StartNew();
@@ -96,6 +109,24 @@ public class EventNode<T> {
         catch (Exception ex) {
             return ex;
         }
+    }
+
+    public void WaitFor<TE>(CancellationToken cancellationToken = default) where TE : T {
+        WaitFor<TE>(_ => true, cancellationToken);
+    }
+    
+    public void WaitFor<TE>(Func<TE, bool> condition, CancellationToken cancellationToken = default) where TE : T {
+        GetWaiterFor(condition).Wait(cancellationToken);
+    }
+    
+    public ManualResetEventSlim GetWaiterFor<TE>(Func<TE, bool> condition) where TE : T {
+        ManualResetEventSlim mre = new(false);
+        OnFirst<TE>(v => {
+            if (condition(v)) {
+                mre.Set();
+            }
+        });
+        return mre;
     }
 
     /// <summary>

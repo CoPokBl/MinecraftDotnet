@@ -78,6 +78,20 @@ public class DataWriter : IWritable {
         }
     }
     
+    public DataWriter WriteVarLong(long value) {
+        while (true) {
+            if ((value & ~(long) ProtocolConstants.SegmentBits) == 0) {
+                Write((byte)value);
+                return this;
+            }
+
+            Write((byte)((value & ProtocolConstants.SegmentBits) | ProtocolConstants.ContinueBit));
+
+            // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
+            value >>>= 7;
+        }
+    }
+    
     public DataWriter WriteVec3(Vec3 value) {
         return WriteDouble(value.X)
             .WriteDouble(value.Y)

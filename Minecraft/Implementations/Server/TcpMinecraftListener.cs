@@ -12,7 +12,8 @@ public class TcpMinecraftListener(Action<PlayerConnection> connectionConsumer, C
 
         while (!cancel.IsCancellationRequested) {
             TcpClient client = await listener.AcceptTcpClientAsync(cancel);
-            PlayerConnection connection = new TcpPlayerConnection(client);
+            client.NoDelay = true;
+            PlayerConnection connection = new TcpPlayerConnection(client, false);
             ConnectionConsumer(connection);
             _ = connection.HandlePackets();
         }

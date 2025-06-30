@@ -1,4 +1,4 @@
-using System.IO.Compression;
+using System.Security.Cryptography;
 using Minecraft.Packets.Registry;
 using Minecraft.Schemas;
 
@@ -19,9 +19,26 @@ public abstract class MinecraftPacket {
         }
     }
 
+    protected static void Assert(bool cond, string msg = "Assertion failed") {
+        if (!cond) {
+            throw new ArgumentException(msg);
+        }
+    }
+
     public byte[] Serialise(ConnectionState state, bool compress = false) {
+        int packetId;
+        try {
+            if (this is UnknownPacket up) {
+                packetId = up.Id;
+            }
+            else {
+                packetId = PacketRegistry.GetPacketId(GetType(), state);
+            }
+        }
+        catch (KeyNotFoundException) {
+            throw new NotImplementedException($"Packet {GetType().Name} is not registered for state {state}");
+        }
         byte[] data = GetData();
-        int packetId = PacketRegistry.GetPacketId(GetType(), state);
 
         DataWriter typeD = new();
         typeD.WriteVarInt(packetId);
@@ -48,7 +65,7 @@ public abstract class MinecraftPacket {
         return w.ToArray();
     }
     
-    public static MinecraftPacket Deserialise(byte[] packet, bool clientBound, ConnectionState state, bool compressed = false) {
+    public static MinecraftPacket Deserialise(byte[] packet, bool clientBound, ConnectionState state, bool compressed = false, bool allowUnknown = true) {
         DataReader r = new(packet);
         _ = r.ReadVarInt();  // Unneeded packet size
 
@@ -77,6 +94,13 @@ public abstract class MinecraftPacket {
 
         if (!registry.TryGetValue(packetType, out (Type, PacketDataDeserialiser) registryVal)) {
             // For now let's assume that we won't receive invalid packets so any unknown one is a TODO.
+            if (allowUnknown) {
+                Console.WriteLine($"Invalid packet type: 0x{packetType:X} (Bound to: {(clientBound ? "client" : "server")}, State: {state})");
+                return new UnknownPacket {
+                    Id = packetType,
+                    Data = r.ReadRemaining()
+                };
+            }
             throw new NotImplementedException($"Invalid packet type: 0x{packetType:X} (Bound to: {(clientBound ? "client" : "server")}, State: {state})");
         }
         PacketDataDeserialiser deserialiser = registryVal.Item2;

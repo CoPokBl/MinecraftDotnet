@@ -41,10 +41,9 @@ public class DataReader(byte[] data) {
     public int ReadVarInt() {
         int value = 0;
         int position = 0;
-        byte currentByte;
 
         while (true) {
-            currentByte = Read(1)[0];
+            byte currentByte = Read(1)[0];
             value |= (currentByte & ProtocolConstants.SegmentBits) << position;
 
             if ((currentByte & ProtocolConstants.ContinueBit) == 0) break;
@@ -52,6 +51,24 @@ public class DataReader(byte[] data) {
             position += 7;
 
             if (position >= 32) throw new Exception("VarInt is too big");
+        }
+
+        return value;
+    }
+    
+    public long ReadVarLong() {
+        long value = 0;
+        int position = 0;
+
+        while (true) {
+            byte currentByte = Read();
+            value |= (long) (currentByte & ProtocolConstants.SegmentBits) << position;
+
+            if ((currentByte & ProtocolConstants.ContinueBit) == 0) break;
+
+            position += 7;
+
+            if (position >= 64) throw new Exception("VarLong is too big");
         }
 
         return value;
@@ -161,14 +178,14 @@ public class DataReader(byte[] data) {
     }
     
     // From an N-bit integer represented as a BitArray in big-endian order.
-    public static long FromNBitInteger(int bits, BitArray data) {
-        if (data.Count != bits) {
-            throw new ArgumentOutOfRangeException(nameof(data), $"Data must be {nameof(bits)} long.");
+    public static long FromNBitInteger(int bits, BitArray bitArr) {
+        if (bitArr.Count != bits) {
+            throw new ArgumentOutOfRangeException(nameof(bitArr), $"Data must be {nameof(bits)} long.");
         }
         
         long value = 0;
         for (int i = 0; i < bits; i++) {
-            if (data[bits - i - 1]) {
+            if (bitArr[bits - i - 1]) {
                 value |= 1L << i;
             }
         }
@@ -249,6 +266,6 @@ public class DataReader(byte[] data) {
     }
     
     public byte[] ReadRemaining() {
-        return data[Pos..];
+        return _data[Pos..];
     }
 }

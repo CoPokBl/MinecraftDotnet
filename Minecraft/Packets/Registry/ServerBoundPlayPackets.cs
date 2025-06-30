@@ -11,9 +11,11 @@ public static partial class PacketRegistry {
         ServerBoundPlay =  new Dictionary<int, (Type, PacketDataDeserialiser)> {
             { 0x00, (typeof(ServerBoundConfirmTeleportPacket), ServerBoundConfirmTeleportPacket.Deserialiser) },
             { 0x07, (typeof(ServerBoundChatMessagePacket), ServerBoundChatMessagePacket.Deserialiser) },
+            { 0x09, (typeof(ServerBoundChunkBatchReceivedPacket), ServerBoundChunkBatchReceivedPacket.Deserialiser) },
             { 0x0A, (typeof(ServerBoundClientStatusPacket), ServerBoundClientStatusPacket.Deserialiser) },
             { 0x0B, (typeof(ServerBoundClientTickEndPacket), ServerBoundClientTickEndPacket.Deserialiser) },
             { 0x0C, (typeof(ServerBoundClientInformationPacket), ServerBoundClientInformationPacket.Deserialiser) },
+            { 0x0E, (typeof(ServerBoundAcknowledgeConfigurationPacket), ServerBoundAcknowledgeConfigurationPacket.Deserialiser) },
             { 0x14, (typeof(ServerBoundCookieResponsePacket), ServerBoundCookieResponsePacket.Deserialiser) },
             { 0x15, (typeof(ServerBoundPluginMessagePacket), ServerBoundPluginMessagePacket.Deserialiser) },
             { 0x18, (typeof(ServerBoundInteractPacket), ServerBoundInteractPacket.Deserialiser) },

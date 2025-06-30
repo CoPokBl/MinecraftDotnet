@@ -2,13 +2,15 @@ using System.Collections.Concurrent;
 using System.Net.Sockets;
 using Minecraft.Packets;
 using Minecraft.Packets.Registry;
+using Org.BouncyCastle.Crypto.IO;
 
 namespace Minecraft.Implementations.Client;
 
 public class TcpServerConnection(TcpClient client, bool packetQueuing = false) : ServerConnection {
     private readonly CancellationTokenSource _cts = new();
     private readonly ConcurrentQueue<MinecraftPacket> _packetQueue = new();
-    private NetworkStream Stream {
+    private readonly object _sendLock = new();
+    private NetworkStream NetStream {
         get {
             try {
                 return client.GetStream();
@@ -19,19 +21,22 @@ public class TcpServerConnection(TcpClient client, bool packetQueuing = false) :
             return null!;
         }
     }
+    
+    private CipherStream? _cipherStream;
+    private Stream Stream => Encryption ? _cipherStream.ThrowIfNull() : NetStream;
+    
+    protected override void InitialiseEncryption() {
+        _cipherStream = new CipherStream(NetStream, Decryptor, Encryptor);
+    }
 
-    protected override async Task SendPacketInternal(MinecraftPacket packet) {
+    protected override Task SendPacketInternal(MinecraftPacket packet) {
         if (packetQueuing) {
             _packetQueue.Enqueue(packet);
-            return;
+            return Task.CompletedTask;
         }
 
-        try {
-            await Stream.WriteAsync(packet.Serialise(State, Compression), _cts.Token);
-        }
-        catch (Exception e) {
-            Console.WriteLine(e);
-            await _cts.CancelAsync();
+        lock (_sendLock) {
+            return Stream.WriteAsync(packet.Serialise(State, Compression), _cts.Token).AsTask();
         }
     }
 
@@ -60,55 +65,44 @@ public class TcpServerConnection(TcpClient client, bool packetQueuing = false) :
         byte[] buffer = new byte[short.MaxValue];
         try {
             while (!_cts.IsCancellationRequested && client.Connected) {
-                int bytesRead = await Stream.ReadAsync(buffer, _cts.Token);
-                if (bytesRead == 0) {
-                    // connection dropped
-                    Log("Zero bytes, connection dropped");
-                    throw new Exception("Received no data, broken connection?");
+                // Read a packet
+                int packetSize = await Stream.ReadVarInt();
+                if (packetSize > buffer.Length) {
+                    Log($"Packet size {packetSize} exceeds buffer size {buffer.Length}, disconnecting");
+                    throw new Exception("Packet size exceeds buffer size");
+                }
+                int offset = 0;
+                while (offset < packetSize) {
+                    int bytesRead = await Stream.ReadAsync(buffer.AsMemory(offset, packetSize - offset), _cts.Token);
+                    if (bytesRead == 0) {
+                        // connection dropped
+                        Log("Zero bytes, connection dropped");
+                        throw new Exception("Received no data, broken connection?");
+                    }
+                    offset += bytesRead;
+                }
+                
+                // buffer now contains the full packet
+                // prepend the packet size varint, TODO: remove this requirement
+                DataWriter data = new();
+                data.WriteVarInt(packetSize);
+                data.Write(buffer[..packetSize]);
+                
+                MinecraftPacket packet;
+                try {
+                    bool compressed = CompressionThreshold != -1;
+                    packet = MinecraftPacket.Deserialise(data.ToArray(), true, State, compressed);
+                }
+                catch (NotImplementedException e) {
+                    Log(e.ToString());
+                    continue;
                 }
 
-                DataReader reader = new(buffer[..bytesRead]);
-                while (reader.HasRemaining) {
-                    int startPos = reader.Pos;
-                    int packetLength = reader.ReadVarInt();
-                    int lenOfPacketLen = reader.Pos - startPos;
-
-                    int neededBytes = packetLength - (bytesRead - lenOfPacketLen);
-                    if (neededBytes > 0) {
-                        Log($"partial packet, needed: {neededBytes}");
-                        int bufferPos = bytesRead;
-                        while (neededBytes > 0) {
-                            int newBytes = await Stream.ReadAsync(buffer.AsMemory(bufferPos, buffer.Length - bufferPos), _cts.Token);
-                            if (newBytes == 0) {
-                                Log("No DATA, dropping connection");
-                                throw new Exception("Received no data, broken connection?");
-                            }
-
-                            bytesRead += newBytes;
-                            neededBytes -= newBytes;
-                            bufferPos += newBytes;
-                        }
-
-                        reader.UpdateData(buffer[..bytesRead]);
-                    }
-
-                    reader.Pos = startPos;
-                    MinecraftPacket packet;
-                    try {
-                        bool compressed = lenOfPacketLen + packetLength > CompressionThreshold && CompressionThreshold >= 0;
-                        packet = MinecraftPacket.Deserialise(reader.Read(lenOfPacketLen + packetLength), true, State, compressed);
-                    }
-                    catch (NotImplementedException e) {
-                        Log(e.ToString());
-                        continue;
-                    }
-
-                    if (!DontLog.Any(p => p.GetType().FullName!.Equals(packet.GetType().FullName))) {
-                        Log($"Got full packet: {PacketRegistry.GetPacketId(packet.GetType(), State)}, {packet.GetType().FullName}");
-                    }
+                if (!DontLog.Any(p => p.GetType().FullName!.Equals(packet.GetType().FullName))) {
+                    Log($"Got full packet: {PacketRegistry.GetPacketId(packet.GetType(), State)}, {packet.GetType().FullName}");
+                }
                     
-                    HandlePacket(packet);
-                }
+                HandlePacket(packet);
             }
             
             // Cancellation requested

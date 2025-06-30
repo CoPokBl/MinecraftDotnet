@@ -7,6 +7,8 @@ public class ClientBoundEncryptionRequestPacket : ClientBoundPacket {
     public required bool ShouldAuthenticate;
 
     protected override byte[] GetData() {
+        Assert(ServerId.Length <= 20, "ServerId must be 20 characters or less.");
+        
         return new DataWriter()
             .WriteString(ServerId)
             .WritePrefixedArray(PublicKey, (b, wr) => wr.Write(b))

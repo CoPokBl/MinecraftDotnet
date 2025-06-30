@@ -3,6 +3,7 @@ using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Managed.Entities.Types;
 using Minecraft.Implementations.Server.Managed.Events;
+using Minecraft.Implementations.Tags;
 using Minecraft.NBT;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Config.ServerBound;
@@ -14,6 +15,9 @@ using Minecraft.Schemas;
 namespace Minecraft.Implementations.Server.Managed;
 
 internal class LoginProcedureFeature : IServerFeature {
+    private const bool CompressionEnabled = true;
+    
+    private static readonly Tag<(Guid, string)> LoginInfoTag = new("minecraftdotnet:loginprocfeat:logininfo");
     
     // We'll just say we know vanilla for now
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.5") ];
@@ -51,10 +55,25 @@ internal class LoginProcedureFeature : IServerFeature {
                 switch (e.Packet) {
                     // LOGIN
                     case ServerBoundLoginStartPacket ls: {
-                        await e.Connection.SetCompression(1);
+                        e.Connection.SetTag(LoginInfoTag, (ls.Uuid, ls.Name));
+                        if (CompressionEnabled) {
+                            await e.Connection.SetCompression(10);
+                        }
+                        else {
+                            await e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
+                                Uuid = ls.Uuid,
+                                Username = ls.Name
+                            });
+                        }
+                        await e.Connection.EnableEncryption();
+                        break;
+                    }
+
+                    case ServerBoundEncryptionResponsePacket: {
+                        (Guid, string) ls = e.Connection.GetTag(LoginInfoTag);
                         await e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
-                            Uuid = ls.Uuid,
-                            Username = ls.Name
+                            Uuid = ls.Item1,
+                            Username = ls.Item2
                         });
                         break;
                     }

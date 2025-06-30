@@ -1,4 +1,3 @@
-using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 

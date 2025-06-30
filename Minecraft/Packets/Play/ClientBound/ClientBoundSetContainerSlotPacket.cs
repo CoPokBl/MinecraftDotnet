@@ -1,4 +1,5 @@
 using Minecraft.Schemas;
+using Minecraft.Schemas.Items;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
@@ -21,6 +22,6 @@ public class ClientBoundSetContainerSlotPacket : ClientBoundPacket {
         WindowId = r.ReadVarInt(),
         StateId = r.ReadVarInt(),
         SlotId = r.ReadShort(),
-        Data = new Slot().Read(r)
+        Data = Slot.Read(r)
     };
 }
