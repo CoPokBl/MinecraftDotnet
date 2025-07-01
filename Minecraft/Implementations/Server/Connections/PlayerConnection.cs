@@ -161,6 +161,7 @@ public abstract class PlayerConnection : MinecraftConnection {
             }
 
             EncryptionEnabled = true;
+            SharedSecret = sharedSecret;
             Log("Encryption enabled, shared secret established.");
             
             // Create the encryptor and decryptor using the shared secret

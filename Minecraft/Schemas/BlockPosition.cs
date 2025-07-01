@@ -1,3 +1,5 @@
+using Minecraft.Schemas.Vec;
+
 namespace Minecraft.Schemas;
 
 public readonly struct BlockPosition(int x, int y, int z) : IEquatable<BlockPosition> {
@@ -44,4 +46,6 @@ public readonly struct BlockPosition(int x, int y, int z) : IEquatable<BlockPosi
             _ => throw new ArgumentOutOfRangeException(nameof(face), face, null)
         };
     }
+
+    public static implicit operator Vec3(BlockPosition pos) => new(pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5);
 }

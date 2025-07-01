@@ -141,7 +141,7 @@ public class PacketSerialiseDeserialiseTest {
     }
 
     private static T SerialiseAndDeserialise<T>(T packet, bool clientBound, ConnectionState state) where T : MinecraftPacket {
-        MinecraftPacket de = MinecraftPacket.Deserialise(packet.Serialise(state), clientBound, state);
+        MinecraftPacket de = MinecraftPacket.Deserialise(packet.Serialise(state, 10), clientBound, state, true);
         Console.WriteLine(de.GetType().FullName);
         Console.WriteLine(JsonConvert.SerializeObject(de));
         if (de is T t) return t;
@@ -163,7 +163,7 @@ public class PacketSerialiseDeserialiseTest {
         
         Stopwatch sw = Stopwatch.StartNew();
         for (int i = 0; i < 20_000; i++) {
-            statusResponse.Serialise(ConnectionState.Status, true);
+            statusResponse.Serialise(ConnectionState.Status);
         }
         Console.WriteLine($"Serialise: {sw.ElapsedMilliseconds}ms");
     }
@@ -180,7 +180,7 @@ public class PacketSerialiseDeserialiseTest {
             PreventsChatReports = true
         };
         
-        byte[] dat = statusResponse.Serialise(ConnectionState.Status, true);
+        byte[] dat = statusResponse.Serialise(ConnectionState.Status);
         
         Stopwatch sw = Stopwatch.StartNew();
         for (int i = 0; i < 20_000; i++) {

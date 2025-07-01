@@ -1,10 +1,26 @@
 ﻿using Minecraft;
+using Minecraft.Implementations.Client;
+using Minecraft.Implementations.Client.Tools;
 using Minecraft.Implementations.Tags;
+using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
+using Newtonsoft.Json;
 using Proxy;
+
+MicrosoftAuthenticator.MinecraftProfile profile;
+if (File.Exists("profile.json")) {
+    profile = JsonConvert.DeserializeObject<MicrosoftAuthenticator.MinecraftProfile>(File.ReadAllText("profile.json"))!;
+    Console.WriteLine($"Got profile from file, using it to authenticate: {profile.Username}");
+}
+else {
+    profile =
+        await new MicrosoftAuthenticator().Authenticate(url => Console.WriteLine($"Pls auth: {url}"));
+    File.WriteAllText("profile.json", JsonConvert.SerializeObject(profile, Formatting.Indented));
+}
+Console.WriteLine("Successfully authenticated as " + profile.Username);
 
 ProxyServer server = new();
 
@@ -12,7 +28,29 @@ Tag<List<int>> fakeTeleportsTag = new("minecraftdotnet:proxy:faketeleports");
 Tag<bool> antiKbTag = new("minecraftdotnet:proxy:antikb");
 Tag<bool> instaMineTag = new("minecraftdotnet:proxy:instamine");
 
+
 // some fun stuff
+server.Events.AddListener<ServerPacketEvent>(void (e) => {
+    try {
+        switch (e.Packet) {
+            case ClientBoundEncryptionRequestPacket er: {
+                Console.WriteLine("GOT ENCRYPTION REQUEST FROM SERVER, should authenticate? " + er.ShouldAuthenticate);
+                e.Connection.Server!.SharedSecret.ThrowIfNull();
+                if (!er.ShouldAuthenticate) {
+                    break;
+                }
+                MinecraftClientUtils.AuthenticateToJoin(profile.AccessToken, profile.Uuid, er.ServerId,
+                    e.Connection.Server!.SharedSecret!, er.PublicKey).Wait();
+                Console.WriteLine("Successfully authenticated to join the server!");
+                break;
+            }
+        }
+    }
+    catch (Exception ex) {
+        Console.WriteLine(ex);
+    }
+});
+
 server.Events.AddListener<PlayerPacketEvent>(e => {
     if (e.Packet is not ServerBoundChatMessagePacket chat) {
         switch (e.Packet) {
@@ -59,10 +97,22 @@ server.Events.AddListener<PlayerPacketEvent>(e => {
             // reply with pong
             e.Connection.Player.SendSystemMessage("Pong!");
             break;
+        
+        case "swingm":
+            e.Connection.Server!.SendPacket(new ServerBoundSwingArmPacket {
+                UsedHand = Hand.MainHand
+            });
+            break;
+        
+        case "swingo":
+            e.Connection.Server!.SendPacket(new ServerBoundSwingArmPacket {
+                UsedHand = Hand.OffHand
+            });
+            break;
 
         case "join": {
             string host = args[0];
-            int port = int.Parse(args[1]);
+            int port = args.Length > 1 ? int.Parse(args[1]) : 25565;
             e.Connection.JoinServer(host, port);
             break;
         }
@@ -79,7 +129,8 @@ server.Events.AddListener<PlayerPacketEvent>(e => {
             e.Connection.Player.SendPacket(new ClientBoundUpdateAttributesPacket {
                 EntityId = e.Connection.EntityId,
                 Attributes = [
-                    new ClientBoundUpdateAttributesPacket.AttributeValue(9, reach)
+                    new ClientBoundUpdateAttributesPacket.AttributeValue(9, reach),
+                    new ClientBoundUpdateAttributesPacket.AttributeValue(6, reach)
                 ]
             });
             e.Connection.Player.SendSystemMessage($"Reach set to {reach} blocks. (EID: {e.Connection.EntityId})");

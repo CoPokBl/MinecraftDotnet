@@ -2,7 +2,7 @@ using Minecraft.Packets.Login.ServerBound;
 
 namespace Minecraft.Packets.Registry;
 
-// This packet registry is up to date with the Notchian protocol v1.21.6
+// This packet registry is up to date with the Notchian protocol v1.21.5
 public static partial class PacketRegistry {
     public static Dictionary<int, (Type, PacketDataDeserialiser)> ServerBoundLogin { get; private set; } = null!;
 

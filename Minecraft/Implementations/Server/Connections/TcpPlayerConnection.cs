@@ -17,13 +17,17 @@ public class TcpPlayerConnection(TcpClient client) : PlayerConnection, IDisposab
     }
 
     protected override Task SendPacketInternal(MinecraftPacket packet) {
+        if (_cts.IsCancellationRequested) {
+            return Task.CompletedTask;
+        }
+        
         if (!client.Connected) {
             Disconnect();
             return Task.CompletedTask;
         }
 
         lock (_sendLock) {
-            return Stream.WriteAsync(packet.Serialise(State, CompressionEnabled), _cts.Token).AsTask();
+            return Stream.WriteAsync(packet.Serialise(State, CompressionThreshold), _cts.Token).AsTask();
         }
     }
     
@@ -46,7 +50,7 @@ public class TcpPlayerConnection(TcpClient client) : PlayerConnection, IDisposab
             }
             
             // Cancellation requested
-            InvokeDisconnected();
+            Disconnect();
         } catch (Exception e) {
             Log("Packet listener encountered exception:");
             Log(e.ToString());
@@ -56,14 +60,22 @@ public class TcpPlayerConnection(TcpClient client) : PlayerConnection, IDisposab
     }
 
     public override void Disconnect() {
+        if (_cts.IsCancellationRequested) {
+            return;  // already disconnected
+        }
+        
         // disconnect the player
         _cts.Cancel();
+        try {
+            client.Close();
+        }
+        catch (Exception) {
+            // who cares
+        }
+        InvokeDisconnected();
         Dispose();
     }
 
     public void Dispose() {
-        _cts.Dispose();
-        _cipherStream?.Dispose();
-        client.Dispose();
     }
 }

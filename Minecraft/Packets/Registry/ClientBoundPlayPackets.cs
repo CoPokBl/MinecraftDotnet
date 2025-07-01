@@ -30,6 +30,7 @@ public static partial class PacketRegistry {
             { 0x25, (typeof(ClientBoundInitialiseWorldBorderPacket), ClientBoundInitialiseWorldBorderPacket.Deserialiser) },
             { 0x26, (typeof(ClientBoundKeepAlivePacket), ClientBoundKeepAlivePacket.Deserialiser) },
             { 0x27, (typeof(ClientBoundChunkDataAndUpdateLightPacket), ClientBoundChunkDataAndUpdateLightPacket.Deserialiser) },
+            { 0x29, (typeof(ClientBoundParticlePacket), ClientBoundParticlePacket.Deserialiser) },
             { 0x2E, (typeof(ClientBoundUpdateEntityPositionPacket), ClientBoundUpdateEntityPositionPacket.Deserialiser) },
             { 0x2F, (typeof(ClientBoundUpdateEntityPosAndRotPacket), ClientBoundUpdateEntityPosAndRotPacket.Deserialiser) },
             { 0x2B, (typeof(ClientBoundLoginPacket), ClientBoundLoginPacket.Deserialiser) },

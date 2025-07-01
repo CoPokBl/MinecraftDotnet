@@ -27,8 +27,12 @@ public class TcpServerConnection(TcpClient client) : ServerConnection {
     }
 
     protected override Task SendPacketInternal(MinecraftPacket packet) {
+        if (_cts.IsCancellationRequested) {
+            return Task.CompletedTask;
+        }
+        
         lock (_sendLock) {
-            return Stream.WriteAsync(packet.Serialise(State, CompressionEnabled), _cts.Token).AsTask();
+            return Stream.WriteAsync(packet.Serialise(State, CompressionThreshold), _cts.Token).AsTask();
         }
     }
     
@@ -51,7 +55,7 @@ public class TcpServerConnection(TcpClient client) : ServerConnection {
             }
             
             // Cancellation requested
-            InvokeDisconnected();
+            Disconnect();
         } catch (Exception e) {
             Log("Packet listener encountered exception:");
             Log(e.ToString());
@@ -61,8 +65,18 @@ public class TcpServerConnection(TcpClient client) : ServerConnection {
     }
 
     public override void Disconnect() {
+        if (_cts.IsCancellationRequested) {
+            return;
+        }
+        
         // disconnect from the server
         _cts.Cancel();
-        client.Dispose();
+        try {
+            client.Close();
+        }
+        catch (Exception) {
+            // who cares
+        }
+        InvokeDisconnected();
     }
 }

@@ -16,8 +16,9 @@ public class MicrosoftAuthenticator {
     private const string XBoxLiveAuthUrl = "https://user.auth.xboxlive.com/user/authenticate";
     private const string XstsAuthUrl = "https://xsts.auth.xboxlive.com/xsts/authorize";
     private const string MinecraftAuthUrl = "https://api.minecraftservices.com/authentication/login_with_xbox";
+    private const string MinecraftProfileUrl = "https://api.minecraftservices.com/minecraft/profile";
     
-    public async Task<string> Authenticate(Action<string> consumeAuthUrl) {
+    public async Task<MinecraftProfile> Authenticate(Action<string> consumeAuthUrl) {
         HttpClient client = new();
         HttpResponseMessage response = await client.GetAsync(DeviceCodeUrl);
         if (!response.IsSuccessStatusCode) {
@@ -70,7 +71,7 @@ public class MicrosoftAuthenticator {
             Console.WriteLine();
             
             // no error
-            accessToken = json["access_token"]!.ToObject<string>()!;
+            accessToken = poll["access_token"]!.ToObject<string>()!;
             break;
         }
         
@@ -147,6 +148,22 @@ public class MicrosoftAuthenticator {
             minecraftAccessToken = minecraft["access_token"]!.ToObject<string>()!;
         }
 
-        return minecraftAccessToken;
+        {
+            HttpRequestMessage request = new(HttpMethod.Get, MinecraftProfileUrl);
+            request.Headers.Add("Authorization", $"Bearer {minecraftAccessToken}");
+            HttpResponseMessage profileResponse = await client.SendAsync(request);
+            if (!profileResponse.IsSuccessStatusCode) {
+                throw new Exception($"Failed to get Minecraft profile: {profileResponse.StatusCode} - {await profileResponse.Content.ReadAsStringAsync()}");
+            }
+            
+            string profileResponseBody = await profileResponse.Content.ReadAsStringAsync();
+            JObject profile = JObject.Parse(profileResponseBody);
+            string username = profile["name"]!.ToObject<string>()!;
+            string uuid = profile["id"]!.ToObject<string>()!;
+            
+            return new MinecraftProfile(minecraftAccessToken, username, uuid);
+        }
     }
+
+    public record MinecraftProfile(string AccessToken, string Username, string Uuid);
 }

@@ -1,10 +1,15 @@
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundClearTitlesPacket : ClientBoundPacket {
+    public required bool Reset;
     
     protected override byte[] GetData() {
-        return [];
+        return new DataWriter()
+            .WriteBoolean(Reset)
+            .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = _ => new ClientBoundClearTitlesPacket();
+    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundClearTitlesPacket {
+        Reset = r.ReadBoolean()
+    };
 }

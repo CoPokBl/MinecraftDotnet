@@ -24,6 +24,7 @@ public class ProxiedConnection : ITaggable {
     public ServerConnection? Server;  // the server that this player is connected to
     public readonly Dictionary<string, object?> Data = new();
     public int EntityId = -1;
+    private readonly Dictionary<string, byte[]> _cookies = [];
     
     private ServerBoundLoginStartPacket? _loginStartPacket;  // the login start packet sent by the player
     private Action? _cancelServerPacketListener;
@@ -59,7 +60,7 @@ public class ProxiedConnection : ITaggable {
                     // LOGIN
                     case ServerBoundLoginStartPacket ls: {
                         _loginStartPacket = ls;
-                        await e.Connection.SetCompression(10);
+                        await e.Connection.SetCompression(64);
                         await e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
                             Uuid = ls.Uuid,
                             Username = ls.Name
@@ -100,8 +101,13 @@ public class ProxiedConnection : ITaggable {
         _cancelServerPacketListener?.Invoke();
     }
 
-    public async Task JoinServer(string ip, int port = 25565) {
+    public async Task JoinServer(string ip, int port = 25565, bool transfer = false) {
         LeaveServer();
+        
+        PreServerJoinEvent preJoinEvent = new() {
+            Connection = this
+        };
+        Proxy.Events.CallEvent(preJoinEvent);
 
         if (Player.State != ConnectionState.Configuration) {
             Console.WriteLine("Reconfiguring player connection to join server...");
@@ -110,7 +116,7 @@ public class ProxiedConnection : ITaggable {
             Player.Events.OnFirstWhere<PacketHandleEvent>(e => 
                 e.Packet is ServerBoundAcknowledgeConfigurationPacket, e => {
                 Console.WriteLine("Player acknowledged configuration, continuing...");
-                _ = PerformServerConnection(ip, port);
+                _ = PerformServerConnection(ip, port, transfer);
             });
             
             // We need to be in configuration state to join a server
@@ -123,11 +129,11 @@ public class ProxiedConnection : ITaggable {
         await PerformServerConnection(ip, port);
     }
 
-    private async Task PerformServerConnection(string ip, int port) {
+    private async Task PerformServerConnection(string ip, int port, bool transfer = false) {
         Server = await MinecraftClientUtils.ConnectToServer(ip, port);
         await Server.SendPacket(new ServerBoundHandshakePacket {
             Hostname = ip,
-            Intent = ServerBoundHandshakePacket.Intention.Login,
+            Intent = transfer ? ServerBoundHandshakePacket.Intention.Transfer : ServerBoundHandshakePacket.Intention.Login,
             Port = (ushort)port,
             ProtocolVersion = Player.Handshake!.ProtocolVersion
         });
@@ -149,7 +155,19 @@ public class ProxiedConnection : ITaggable {
     private void HandleServerLoginPacket(MinecraftPacket packet, Action finished) {
         switch (packet) {
             case ClientBoundEncryptionRequestPacket er: {
-                throw new Exception("Encryption is not supported in the proxy.");
+                MinecraftPacket resp = Server!.EnableEncryption(er, false).Result;
+                Server!.EncryptionEnabled = false;
+                ServerPacketEvent e = new() {
+                    Connection = this,
+                    Packet = packet,
+                    Cancelled = false
+                };
+                Proxy.Events.CallEvent(e);
+
+                Server!.SendPacket(resp).Wait();
+                Console.WriteLine("Send encryption response");
+                Server!.EncryptionEnabled = true;
+                break;
             }
 
             case ClientBoundSetCompressionPacket sc: {
@@ -161,7 +179,27 @@ public class ProxiedConnection : ITaggable {
                 Server!.SendPacket(new ServerBoundLoginAcknowledgedPacket());
                 Server.State = ConnectionState.Configuration;
 
+                Console.WriteLine("Player logged in successfully, switching to configuration state and starting to forward packets");
                 finished();
+                break;
+            }
+
+            case ClientBoundLoginDisconnectPacket dc: {
+                JoinServer(ProxiedServer, ProxiedPort);
+                Task.Delay(2000).ContinueWith(_ => {
+                    Player.SendSystemMessage(dc.Reason);
+                });
+                break;
+            }
+
+            case ClientBoundCookieRequestPacket cr: {
+                _cookies.TryGetValue(cr.Key, out byte[]? value);
+                MinecraftPacket resp = new ServerBoundCookieResponsePacket {
+                    Key = cr.Key,
+                    Data = value
+                };
+                Console.WriteLine("Responding to cookie request: " + cr.Key + $", had value: {Encoding.UTF8.GetString(value!)}");
+                Server!.SendPacket(resp);
                 break;
             }
         }
@@ -215,11 +253,21 @@ public class ProxiedConnection : ITaggable {
             EntityId = lp.EntityId;
         }
 
+        if (packet is ClientBoundStoreCookiePacket sk) {
+            _cookies.Add(sk.Key, sk.Payload);
+        }
+
         if (packet is ClientBoundTransferPacket tp) {
             Console.WriteLine("TRANSFERING PLAYER TO SERVER: " + tp.Host + ":" + tp.Port);
             
             // Override and switch to the new server
-            JoinServer(tp.Host, tp.Port);
+            JoinServer(tp.Host, tp.Port, true);
+            return;
+        }
+
+        if (packet is ClientBoundDisconnectPacket dc) {
+            Player.SendSystemMessage(TextComponent.Text("You have been disconnected from your server: ").With(dc.Reason));
+            Player.SendSystemMessage("You can rejoin by using .join <host> <port>");
             return;
         }
 
@@ -261,7 +309,7 @@ public class ProxiedConnection : ITaggable {
             Console.WriteLine("NOT Sending packet to player: " + packet.GetType().Name);
             return;
         }
-        // Console.WriteLine("Sending packet to player: " + packet.GetType().Name);
+        Console.WriteLine("Sending packet to player: " + packet.GetType().Name);
         Player.SendPacket(packet);
     }
     

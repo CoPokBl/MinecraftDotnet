@@ -46,6 +46,7 @@ public abstract class MinecraftConnection : ITaggable {
     public bool EncryptionEnabled = false;
     public BufferedBlockCipher? Decryptor;
     public BufferedBlockCipher? Encryptor;
+    public byte[]? SharedSecret;
     
     /// <summary>
     /// Whether to allow unknown packets to be received without throwing an exception.
@@ -103,7 +104,7 @@ public abstract class MinecraftConnection : ITaggable {
     
 #region util_methods
     protected void Log(string s) {
-        Console.WriteLine($"[{State}] {s}");
+        Console.WriteLine($"[{this.GetType().FullName}] [{State}] {s}");
     }
     
     public T GetTag<T>(Tag<T> tag) {

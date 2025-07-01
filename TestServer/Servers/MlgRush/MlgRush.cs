@@ -18,6 +18,7 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
+using Minecraft.Schemas.Particles;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 
@@ -25,6 +26,8 @@ namespace TestServer.Servers.MlgRush;
 
 public static class MlgRush {
     private const int Port = 25565;
+    private const bool LifeAfterBed = true;
+    private const bool CanBreakOwnBed = true;
 
     public static async Task Start() {
         ManagedMinecraftServer mServer = new(
@@ -53,11 +56,12 @@ public static class MlgRush {
             run = false;
         };
         
-        ManualResetEvent gotPlayer = new(false);
+        ManualResetEvent gotPlayers = new(false);
+        object queuePlayersLock = new();
+        List<PlayerEntity> connectionQueue = [];
 
         World lobbyWorld = new(mServer.Events, new TestingProvider());
-
-        Queue<PlayerEntity> connectionQueue = new();
+        
         TcpMinecraftListener listener = new(connection => {
             Console.WriteLine("Got new connection");
             mServer.AddConnection(connection);
@@ -76,15 +80,24 @@ public static class MlgRush {
             connection.Events.OnFirst<PlayerLoginEvent>(e => {
                 e.Player.Teleport(new Vec3(0, 100, 0));
                 Console.WriteLine("Teleported joining player in lobby");
-                connectionQueue.Enqueue(e.Player);
-                gotPlayer.Set();
+
+                lock (queuePlayersLock) {
+                    connectionQueue.Add(e.Player);
+                    if (connectionQueue.Count >= 2) {
+                        gotPlayers.Set();
+                    }
+                }
+
+                e.Player.Connection.Disconnected += () => {
+                    lock (queuePlayersLock) {
+                        connectionQueue.Remove(e.Player);
+                    }
+                };
             });
         }, cts.Token);
         
         Console.WriteLine("Server ready, listening...");
         _ = listener.Listen(Port);
-
-        const bool lifeAfterBed = true;
 
         ITerrainProvider terrain = new MlgRushMapProvider();
         while (run) {
@@ -95,20 +108,17 @@ public static class MlgRush {
             PlayerEntity p1 = null!;
             PlayerEntity p2 = null!;
             
+            // Remove them from the queue
             // Get two players in
-            for (int i = 0; i < 2; i++) {
-                while (true) {
-                    gotPlayer.WaitOne();
-                    gotPlayer.Reset();
-                    if (!connectionQueue.TryDequeue(out PlayerEntity? player)) continue;
-                    if (i == 0) {
-                        p1 = player;
-                    }
-                    else {
-                        p2 = player;
-                    }
-                    break;
-                }
+            gotPlayers.WaitOne();
+            lock (queuePlayersLock) {
+                gotPlayers.Reset();
+
+                p1 = connectionQueue[0];
+                p2 = connectionQueue[1];
+                
+                connectionQueue.RemoveAt(0);
+                connectionQueue.RemoveAt(0);
             }
             
             PlayerConnection c1 = p1.Connection;
@@ -146,6 +156,34 @@ public static class MlgRush {
                 c2.SendPacket(packet);
             }
 
+            void BroadcastParticle(IParticle particle, int count, Vec3 pos) {
+                MinecraftPacket packet = new ClientBoundParticlePacket {
+                    AlwaysVisible = true,
+                    LongDistance = true,
+                    MaxSpeed = 1f,
+                    Offset = FVec3.Zero,
+                    Position = pos,
+                    ParticleCount = count,
+                    Particle = particle
+                };
+                c1.SendPacket(packet);
+                c2.SendPacket(packet);
+            }
+
+            void BroadcastSound(int id) {
+                foreach (PlayerEntity player in world.Players) {
+                    player.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
+                        Category = SoundCategory.Master,
+                        EntityId = player.NetId,
+                        Event = null,
+                        Id = id,
+                        Pitch = 1f,
+                        Volume = 1f,
+                        Seed = 0L
+                    });
+                }
+            }
+
             bool p1HasBed = true;
             bool p2HasBed = true;
 
@@ -173,7 +211,7 @@ public static class MlgRush {
             world.Events.AddListener<EntityMoveEvent>(e => {
                 if (!(e.NewPos.Y < dieLevel)) return;
 
-                if (lifeAfterBed) {  // check for final kill
+                if (LifeAfterBed) {  // check for final kill
                     if ((e.Entity == p1 && !p1HasBed) || (e.Entity == p2 && !p2HasBed)) {
                         Win(e.Entity == p2);
                     }
@@ -204,6 +242,10 @@ public static class MlgRush {
                 });
 
                 TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed by {killer.Name}";
+                Entity lightning = new(74);
+                world.Spawn(lightning);
+                lightning.Teleport(e.Entity.Position);
+                BroadcastSound(820);  // lightning
                 BroadcastMsg(msg);
             });
             
@@ -215,7 +257,7 @@ public static class MlgRush {
 
                 bool p1Bed = e.Position.Equals(MlgRushMapProvider.P1BedPosClient);
 
-                if (p1Bed && e.Connection == c1 || !p1Bed && e.Connection == c2) {  // they broke their own bed
+                if (!CanBreakOwnBed && (p1Bed && e.Connection == c1 || !p1Bed && e.Connection == c2)) {  // they broke their own bed
                     e.Connection.SendSystemMessage(TextComponent.Text("You can't break your own bed idiot")
                         .WithColor(TextColor.Red)
                         .WithBold());
@@ -227,8 +269,13 @@ public static class MlgRush {
                     return;
                 }
                 
+                // play some fun
+                BroadcastParticle(IParticle.DefaultOfType("minecraft:explosion"), 10, e.Position);
+                BroadcastParticle(IParticle.DefaultOfType("minecraft:firework"), 50, e.Position);
+                BroadcastParticle(IParticle.DefaultOfType("minecraft:lava"), 100, e.Position);
+                
                 // a bed broke and it was the player person
-                if (!lifeAfterBed) {
+                if (!LifeAfterBed) {
                     Win(!p1Bed);
                     return;
                 }
@@ -252,14 +299,8 @@ public static class MlgRush {
                         .With(TextComponent.Text(" has lost their bed!").WithBold(false).WithColor(p1Bed ? TextColor.Aqua : TextColor.Red)),
                     TextComponent.Empty());
                 
-                BroadcastPacket(new ClientBoundSoundEffectPacket {
-                    Id = 496,  // sound id for dragon growl
-                    Category = SoundCategory.Master,
-                    Pos = (p1Bed ? p2 : p1).Position,
-                    Volume = 1f,
-                    Pitch = 1f,
-                    Seed = 0L
-                });
+                BroadcastSound(496);  // dragon growl
+                BroadcastSound(544);  // fire extinguish
             });
             
         }

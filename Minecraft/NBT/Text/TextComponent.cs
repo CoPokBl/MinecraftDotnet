@@ -194,6 +194,13 @@ public class TextComponent : CompoundTagSerialisable {
         // alright, let's work out what content it has
         Dictionary<string, ITag> fields = compound.ChildrenMap;
 
+        if (fields.Count == 1 && fields[""] is StringTag strTag) {
+            // special case, if the tag has only one field with an empty name, it's a string
+            // I couldn't find any documentation on this, but it seems to be used by EmortalMC at least.
+            // so by extension, Minestom and Adventure, so we support it.
+            return Text(strTag.Value);
+        }
+
         fields.TryGetValue("type", out ITag? contentTypeTag);
         string? contentType = ((StringTag?)contentTypeTag)?.Value;
         if (contentType == null) {
@@ -203,7 +210,7 @@ public class TextComponent : CompoundTagSerialisable {
             else if (fields.ContainsKey("selector"))  contentType = "selector";
             else if (fields.ContainsKey("keybind"))  contentType = "keybind";
             else if (fields.ContainsKey("nbt")) throw new NotImplementedException("NBT content type not implemented");
-            else throw new Exception("Unknown content type");
+            else throw new Exception("Unknown content type, no type field found and no known content fields present");
         }
         
         if (contentType == "text") {

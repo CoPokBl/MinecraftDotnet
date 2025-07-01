@@ -15,17 +15,17 @@ public class MlgRushMapProvider : ThreadedPerBlockTerrainProvider {
     // Map params
     public const int PlatformLength = 22;
     public const double P1SpawnX = -1.5;
-    public const double P2SpawnX = PlatformLength + 1.5;
+    public const double P2SpawnX = PlatformLength + 0.5;
     public static readonly BlockPosition P1BedPos = new(-4, 60, 0);
-    public static readonly BlockPosition P2BedPos = new(PlatformLength+4, 60, 0);
+    public static readonly BlockPosition P2BedPos = new(PlatformLength+3, 60, 0);
     
     public static readonly BlockPosition P1BedPosClient = new(-4, -3, 0);
-    public static readonly BlockPosition P2BedPosClient = new(PlatformLength+4, -3, 0);
+    public static readonly BlockPosition P2BedPosClient = new(PlatformLength+3, -3, 0);
     
     private static readonly Dictionary<BlockPosition, uint> Map = new() {
         // "beds"
         { new BlockPosition(-4, 61, 0), WhiteWool },
-        { new BlockPosition(PlatformLength+4, 61, 0), WhiteWool },
+        { new BlockPosition(PlatformLength+3, 61, 0), WhiteWool },
         
         // bed plate
         { P1BedPos, PlatformBlock },

@@ -1,6 +1,5 @@
 # TODO
 
-- Neaten connection code (make a MinecraftConnection class)
-- Implement proper client side encryption flow
-- Implement authentication flow
-- Fix invalid header encryption kick error
+- Add registry powered ID lookup for items and blocks and finish for particles.
+- Entity metadata.
+

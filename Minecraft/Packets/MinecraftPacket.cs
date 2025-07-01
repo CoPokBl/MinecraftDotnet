@@ -24,7 +24,7 @@ public abstract class MinecraftPacket {
         }
     }
 
-    public byte[] Serialise(ConnectionState state, bool compress = false) {
+    public byte[] Serialise(ConnectionState state, int compressionThreshold = -1) {
         int packetId;
         try {
             if (this is UnknownPacket up) {
@@ -43,7 +43,8 @@ public abstract class MinecraftPacket {
         typeD.WriteVarInt(packetId);
         byte[] typeBytes = typeD.ToArray();
 
-        if (compress) {
+        bool compressionEnabled = compressionThreshold >= 0;
+        if (compressionEnabled && typeBytes.Length + data.Length >= compressionThreshold) {
             byte[] dataToCompress = new DataWriter().WriteVarInt(packetId).Write(data).ToArray();
             byte[] compressedData = CompressionHelper.CompressZLib(dataToCompress);
 
@@ -55,10 +56,17 @@ public abstract class MinecraftPacket {
                 .Write(compressedData)
                 .ToArray();
         }
-        
+
+        int additionalPacketSize = compressionEnabled ? 1 : 0;  // 1 byte for the data length if compression is enabled
+
         // Don't compress the packet
         DataWriter w = new();
-        w.WriteVarInt(data.Length + typeBytes.Length);  // packet size
+        w.WriteVarInt(data.Length + typeBytes.Length + additionalPacketSize);  // packet size
+        
+        if (compressionEnabled) {
+            w.WriteVarInt(0);  // compression format means we need to specify 0 meaning no compression
+        }
+        
         w.WriteVarInt(packetId);  // packet type
         w.Write(data);  // the data
         return w.ToArray();

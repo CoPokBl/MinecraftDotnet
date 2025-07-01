@@ -15,7 +15,7 @@ using Minecraft.Schemas;
 namespace Minecraft.Implementations.Server.Managed;
 
 internal class LoginProcedureFeature : IServerFeature {
-    private const bool CompressionEnabled = true;
+    private const bool EncryptionEnabled = false;
     
     private static readonly Tag<(Guid, string)> LoginInfoTag = new("minecraftdotnet:loginprocfeat:logininfo");
     
@@ -56,8 +56,9 @@ internal class LoginProcedureFeature : IServerFeature {
                     // LOGIN
                     case ServerBoundLoginStartPacket ls: {
                         e.Connection.SetTag(LoginInfoTag, (ls.Uuid, ls.Name));
-                        if (CompressionEnabled) {
-                            await e.Connection.SetCompression(10);
+                        await e.Connection.SetCompression(10);
+                        if (EncryptionEnabled) {
+                            await e.Connection.EnableEncryption();
                         }
                         else {
                             await e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
@@ -65,7 +66,6 @@ internal class LoginProcedureFeature : IServerFeature {
                                 Username = ls.Name
                             });
                         }
-                        await e.Connection.EnableEncryption();
                         break;
                     }
 

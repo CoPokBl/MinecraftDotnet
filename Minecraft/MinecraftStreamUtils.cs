@@ -16,7 +16,7 @@ public static class MinecraftStreamUtils {
             byte[] oneByte = new byte[1];
             int bytesRead = await stream.ReadAsync(oneByte.AsMemory(0, 1));
             if (bytesRead != 1) {
-                throw new Exception("Failed to read a byte from the stream.");
+                throw new Exception("Failed to read a byte from the stream. (Got " + bytesRead + " bytes)");
             }
 
             if (stream is CryptoStream) {
