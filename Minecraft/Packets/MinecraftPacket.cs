@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using Minecraft.Packets.Registry;
 using Minecraft.Schemas;
 

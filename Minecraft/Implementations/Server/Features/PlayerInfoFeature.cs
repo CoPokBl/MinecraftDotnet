@@ -1,5 +1,6 @@
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
+using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Config.ServerBound;
 using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Schemas;
@@ -7,7 +8,7 @@ using Minecraft.Schemas;
 namespace Minecraft.Implementations.Server.Features;
 
 public class PlayerInfoFeature : IServerFeature {
-    private const string DataId = "minecraftdotnet:playerinfofeature:info";
+    private static readonly Tag<PlayerInfo> PlayerInfoTag = new("minecraftdotnet:playerinfofeature:info");
     
     public void Register(MinecraftServer server) {
         server.Events.AddListener<PacketHandleEvent>(e => {
@@ -56,14 +57,11 @@ public class PlayerInfoFeature : IServerFeature {
     }
 
     public static PlayerInfo GetInfo(PlayerConnection connection) {
-        if (!connection.Data.TryGetValue(DataId, out object? value)) {
-            return new PlayerInfo();
-        }
-        return (PlayerInfo)(value ?? new PlayerInfo());
+        return connection.GetTagOrDefault(PlayerInfoTag, new PlayerInfo());
     }
 
     private void SetInfo(PlayerConnection connection, PlayerInfo info) {
-        connection.Data[DataId] = info;
+        connection.SetTag(PlayerInfoTag, info);
     }
 
     public record PlayerInfo(

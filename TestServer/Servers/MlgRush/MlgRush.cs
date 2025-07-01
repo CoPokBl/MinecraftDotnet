@@ -24,7 +24,7 @@ using Minecraft.Schemas.Vec;
 namespace TestServer.Servers.MlgRush;
 
 public static class MlgRush {
-    private const int Port = 25566;
+    private const int Port = 25565;
 
     public static async Task Start() {
         ManagedMinecraftServer mServer = new(

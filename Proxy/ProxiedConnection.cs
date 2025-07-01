@@ -4,7 +4,6 @@ using Minecraft.Implementations.Client;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Tags;
-using Minecraft.NBT;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ClientBound;
@@ -37,6 +36,8 @@ public class ProxiedConnection : ITaggable {
     public ProxiedConnection(ProxyServer proxy, PlayerConnection player) {
         Proxy = proxy;
         Player = player;
+
+        player.AllowUnknownPackets = true;
 
         // Log the player in
         Action cancelLoginListener = null!;
@@ -123,7 +124,7 @@ public class ProxiedConnection : ITaggable {
     }
 
     private async Task PerformServerConnection(string ip, int port) {
-        Server = await MinecraftClientUtils.ConnectToServer(ip, port, false);
+        Server = await MinecraftClientUtils.ConnectToServer(ip, port);
         await Server.SendPacket(new ServerBoundHandshakePacket {
             Hostname = ip,
             Intent = ServerBoundHandshakePacket.Intention.Login,

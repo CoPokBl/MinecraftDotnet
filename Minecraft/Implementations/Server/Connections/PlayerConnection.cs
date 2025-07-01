@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using Minecraft.Implementations.Events;
+using Minecraft.Implementations.Exceptions;
 using Minecraft.Implementations.Server.Events;
-using Minecraft.Implementations.Tags;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ServerBound;
@@ -11,23 +11,15 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Packets.Registry;
 using Minecraft.Schemas;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.Crypto.Modes;
-using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Minecraft.Implementations.Server.Connections;
 
-public abstract class PlayerConnection : ITaggable {
-    public ConnectionState State = ConnectionState.None;
-    public bool Compression => CompressionThreshold >= 0;
-    public int CompressionThreshold = -1;
-    public bool Encryption = false;
-    public BufferedBlockCipher? Decryptor;
-    public BufferedBlockCipher? Encryptor;
+public abstract class PlayerConnection : MinecraftConnection {
+    /// <summary>
+    /// The handshake received from the client.
+    /// This will only be set if <see cref="MinecraftConnection.State"/> is not <see cref="ConnectionState.None"/>.
+    /// </summary>
     public ServerBoundHandshakePacket? Handshake;
-    public event Action? Disconnected;
-    public readonly Dictionary<string, object?> Data = new();
     public EventNode<IServerEvent> Events = new();  // its parent should be the server's
 
     protected static readonly Type[] DontLog = [
@@ -37,10 +29,6 @@ public abstract class PlayerConnection : ITaggable {
         typeof(ServerBoundSetPlayerRotationPacket),
         typeof(ServerBoundSetPlayerPosAndRotPacket)
     ];
-
-    protected void Log(string s) {
-        Console.WriteLine($"[{State}] {s}");
-    }
 
     public void HandlePacket(MinecraftPacket packet) {
         if (DontLog.All(p => p != packet.GetType())) {
@@ -96,20 +84,40 @@ public abstract class PlayerConnection : ITaggable {
         Events.CallEventCatchErrors(handleEvent);
     }
 
-    protected void InvokeDisconnected() {
-        Disconnected?.Invoke();
-    }
-
-    public async Task Kick(TextComponent msg) {  // works in all connection states because amazing code design
-        await SendPacket(new ClientBoundDisconnectPacket {
-            Reason = msg
-        });
+    /// <summary>
+    /// Sends a kick packet to the client with the specified <see cref="msg"/> and immediately terminates the connection.
+    /// </summary>
+    /// <param name="msg">The message to send to the client.</param>
+    /// <remarks>This packet works in all regular connection states (login/config/play), so it can be used at any time to disconnect the client.</remarks>
+    public async Task Kick(TextComponent msg) {
+        if (State is ConnectionState.None or ConnectionState.Status) {
+            throw new Exception("Cannot kick a player that is not in either play, login, or config states.");
+        }
+        
+        MinecraftPacket packet;
+        if (State == ConnectionState.Login) {  // For some reason the disconnect packet is different in login state
+            packet = new ClientBoundLoginDisconnectPacket {
+                Reason = msg
+            };
+        }
+        else {
+            packet = new ClientBoundDisconnectPacket {
+                Reason = msg
+            };
+        }
+        await SendPacket(packet);
         Disconnect();
     }
 
+    /// <summary>
+    /// Informs the client that compression should be enabled for packets larger than <paramref name="minSize"/> bytes
+    /// and sets the <see cref="MinecraftConnection.CompressionThreshold"/> to that value.
+    /// </summary>
+    /// <param name="minSize"></param>
+    /// <exception cref="ConnectionStateException">When <see cref="MinecraftConnection.State"/> is not <see cref="ConnectionState.Login"/>.</exception>
     public async Task SetCompression(int minSize) {
         if (State != ConnectionState.Login) {
-            throw new Exception("Connection must be in login state to enable compression.");
+            throw new ConnectionStateException(ConnectionState.Login, State, "Connection must be in login state to enable compression.");
         }
 
         await SendPacket(new ClientBoundSetCompressionPacket {
@@ -118,7 +126,16 @@ public abstract class PlayerConnection : ITaggable {
         CompressionThreshold = minSize;
     }
 
-    public async Task EnableEncryption() {
+    /// <summary>
+    /// Generates the necessary keys and performs the encryption handshake with the client.
+    /// </summary>
+    /// <param name="requestAuthentication">Whether to set <see cref="ClientBoundEncryptionRequestPacket.ShouldAuthenticate"/> to true.</param>
+    /// <exception cref="ConnectionStateException">When <see cref="MinecraftConnection.State"/> is not <see cref="ConnectionState.Login"/>.</exception>
+    public async Task EnableEncryption(bool requestAuthentication = false) {
+        if (State != ConnectionState.Login) {
+            throw new ConnectionStateException(ConnectionState.Login, State, "Connection must be in login state to enable encryption.");
+        }
+        
         RSA rsa = RSA.Create(1024);
         
         // get public key encoded in ASN.1 DER format
@@ -126,7 +143,7 @@ public abstract class PlayerConnection : ITaggable {
         byte[] verifyToken = RandomNumberGenerator.GetBytes(4);
         await SendPacket(new ClientBoundEncryptionRequestPacket {
             ServerId = "dotnet",
-            ShouldAuthenticate = false,
+            ShouldAuthenticate = requestAuthentication,
             PublicKey = publicKey,
             VerifyToken = verifyToken
         });
@@ -143,7 +160,7 @@ public abstract class PlayerConnection : ITaggable {
                 throw new Exception("Verify token does not match, encryption failed.");
             }
 
-            Encryption = true;
+            EncryptionEnabled = true;
             Log("Encryption enabled, shared secret established.");
             
             // Create the encryptor and decryptor using the shared secret
@@ -155,30 +172,8 @@ public abstract class PlayerConnection : ITaggable {
             InitialiseEncryption();
         });
     }
-    
-    private BufferedBlockCipher CreateSymAes(byte[] sharedSecret, bool encrypt) {
-        // Create a CFB8 cipher with AES
-        BufferedBlockCipher cipher = new (new CfbBlockCipher(new AesEngine(), 8));
-        cipher.Init(encrypt, new ParametersWithIV(new KeyParameter(sharedSecret), sharedSecret));
-        return cipher;
-    }
 
-    public async Task SendPackets(bool sequentially, params MinecraftPacket[] packets) {
-        foreach (MinecraftPacket packet in packets) {
-            if (sequentially) {
-                await SendPacket(packet);
-            }
-            else {
-                _ = SendPacket(packet);
-            }
-        }
-    }
-        
-    public Task SendPackets(params MinecraftPacket[] packets) {
-        return SendPackets(true, packets);
-    }
-
-    public Task SendPacket(MinecraftPacket packet) {
+    public override Task SendPacket(MinecraftPacket packet) {
         PacketSendingEvent e = new() {
             Connection = this,
             Packet = packet
@@ -192,21 +187,4 @@ public abstract class PlayerConnection : ITaggable {
         // Send it
         return SendPacketInternal(packet);
     }
-    
-    public T GetTag<T>(Tag<T> tag) {
-        return (T)Data[tag.Id]!;
-    }
-
-    public bool HasTag<T>(Tag<T> tag) {
-        return Data.ContainsKey(tag.Id);
-    }
-
-    public void SetTag<T>(Tag<T> tag, T value) {
-        Data[tag.Id] = value;
-    }
-
-    protected abstract Task SendPacketInternal(MinecraftPacket packet);
-    protected abstract void InitialiseEncryption();
-    public abstract Task HandlePackets();
-    public abstract void Disconnect();
 }
