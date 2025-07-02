@@ -11,7 +11,7 @@ public class ServerBoundLoginStartPacket : ServerBoundPacket {
         return w.ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundLoginStartPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundLoginStartPacket {
         Name = r.ReadString(),
         Uuid = r.ReadUuid()
     };

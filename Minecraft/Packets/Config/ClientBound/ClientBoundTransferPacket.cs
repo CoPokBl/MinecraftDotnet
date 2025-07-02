@@ -11,7 +11,7 @@ public class ClientBoundTransferPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundTransferPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundTransferPacket {
         Host = r.ReadString(),
         Port = r.ReadVarInt()
     };

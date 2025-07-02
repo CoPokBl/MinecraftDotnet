@@ -22,7 +22,7 @@ public class ClientBoundTeleportEntityPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundTeleportEntityPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundTeleportEntityPacket {
         EntityId = r.ReadVarInt(),
         Position = r.ReadVec3(),
         Velocity = r.ReadVec3(),

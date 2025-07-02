@@ -17,7 +17,7 @@ public class ClientBoundUpdateEntityRotationPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundUpdateEntityRotationPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateEntityRotationPacket {
         EntityId = r.ReadVarInt(),
         Yaw = r.ReadAngle(),
         Pitch = r.ReadAngle(),

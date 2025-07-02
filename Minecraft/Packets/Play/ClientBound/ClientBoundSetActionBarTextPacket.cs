@@ -11,7 +11,7 @@ public class ClientBoundSetActionBarTextPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetActionBarTextPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetActionBarTextPacket {
         Text = r.ReadText()
     };
 }

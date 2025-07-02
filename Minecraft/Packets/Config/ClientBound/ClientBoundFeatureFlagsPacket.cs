@@ -9,7 +9,7 @@ public class ClientBoundFeatureFlagsPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundFeatureFlagsPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundFeatureFlagsPacket {
         Flags = r.ReadPrefixedArray(re => re.ReadString())
     };
 }

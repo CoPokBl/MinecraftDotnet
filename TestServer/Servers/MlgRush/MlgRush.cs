@@ -1,4 +1,6 @@
 using Minecraft;
+using Minecraft.Data.Generated;
+using Minecraft.Data.Particles;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
@@ -18,7 +20,6 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
-using Minecraft.Schemas.Particles;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 
@@ -66,7 +67,7 @@ public static class MlgRush {
             Console.WriteLine("Got new connection");
             mServer.AddConnection(connection);
             connection.Events.OnFirst<PlayerPreLoginEvent>(e => {
-                e.GameMode = GameMode.Survival;
+                e.GameMode = GameMode.Adventure;
                 e.Hardcore = true;
                 e.World = lobbyWorld;
 
@@ -126,7 +127,7 @@ public static class MlgRush {
             
             // c1 and c2 need to be declared.
             new PlaceOneBlockFeature(con => {
-                return con == c1 ? 2104 : 2107;  // c1: blue, c2: red
+                return con == c1 ? Block.BlueWool : Block.RedWool;
             }, 5).Register(world);
             
             // TODO: Tab list
@@ -196,6 +197,11 @@ public static class MlgRush {
             
             p1.Teleport(p1Spawn);
             p2.Teleport(p2Spawn);
+            
+            BroadcastPacket(new ClientBoundGameEventPacket {
+                Event = GameEvent.ChangeGameMode,
+                Value = 0
+            });
             
             // Give them both blocks
             ClientBoundSetContainerSlotPacket giveItemPacket = new() {
@@ -267,7 +273,7 @@ public static class MlgRush {
                         .WithBold());
                     e.Connection.SendPacket(new ClientBoundBlockUpdatePacket {
                         Location = e.Position,
-                        BlockId = (int)MlgRushMapProvider.WhiteWool
+                        Block = Block.WhiteWool
                     });
                     e.Cancelled = true;
                     return;
@@ -277,6 +283,10 @@ public static class MlgRush {
                 BroadcastParticle(Particle.Explosion, 10, e.Position);
                 BroadcastParticle(Particle.Firework, 50, e.Position);
                 BroadcastParticle(Particle.Lava, 100, e.Position);
+
+                var thing = Particle.Block with {
+                    BlockState = 1
+                };
                 
                 // a bed broke and it was the player person
                 if (!LifeAfterBed) {

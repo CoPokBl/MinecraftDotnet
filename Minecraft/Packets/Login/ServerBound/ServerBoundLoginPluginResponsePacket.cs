@@ -11,7 +11,7 @@ public class ServerBoundLoginPluginResponsePacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundLoginPluginResponsePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundLoginPluginResponsePacket {
         MessageId = r.ReadVarInt(),
         Data = r.ReadPrefixedOptional(re => re.ReadRemaining())
     };

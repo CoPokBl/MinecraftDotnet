@@ -9,7 +9,7 @@ public class ClientBoundChunkBatchFinishedPacket : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundChunkBatchFinishedPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundChunkBatchFinishedPacket {
         BatchSize = r.ReadVarInt()
     };
 }

@@ -9,7 +9,7 @@ public class ClientBoundAcknowledgeBlockChangePacket : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundAcknowledgeBlockChangePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundAcknowledgeBlockChangePacket {
         SequenceId = r.ReadVarInt()
     };
 }

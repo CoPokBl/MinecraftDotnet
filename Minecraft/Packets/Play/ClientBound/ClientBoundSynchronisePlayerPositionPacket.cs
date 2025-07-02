@@ -22,7 +22,7 @@ public class ClientBoundSynchronisePlayerPositionPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSynchronisePlayerPositionPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSynchronisePlayerPositionPacket {
         TeleportId = r.ReadVarInt(),
         Position = r.ReadVec3(),
         Velocity = r.ReadVec3(),

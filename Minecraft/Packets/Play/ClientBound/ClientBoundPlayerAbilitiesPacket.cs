@@ -21,7 +21,7 @@ public class ClientBoundPlayerAbilitiesPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundPlayerAbilitiesPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundPlayerAbilitiesPacket {
         Flags = (Abilities)r.ReadByte(),
         FlyingSpeed = r.ReadFloat(),
         FovModifier = r.ReadFloat()

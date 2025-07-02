@@ -42,7 +42,7 @@ public class ClientBoundRespawnPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundRespawnPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundRespawnPacket {
         DimensionType = r.ReadVarInt(),
         DimensionName = r.ReadString(),
         HashedSeed = r.ReadLong(),

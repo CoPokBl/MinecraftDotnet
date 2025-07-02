@@ -14,7 +14,7 @@ public class ClientBoundSetTitleAnimationTimesPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetTitleAnimationTimesPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetTitleAnimationTimesPacket {
         FadeIn = r.ReadInteger(),
         Stay = r.ReadInteger(),
         FadeOut = r.ReadInteger()

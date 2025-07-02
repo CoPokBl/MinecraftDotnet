@@ -12,7 +12,7 @@ public class ServerBoundCustomClickActionPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundCustomClickActionPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundCustomClickActionPacket {
         Id = r.ReadString(),
         Payload = r.ReadNbt()
     };

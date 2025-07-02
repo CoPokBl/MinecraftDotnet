@@ -13,7 +13,7 @@ public class ClientBoundSetDefaultSpawnPositionPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetDefaultSpawnPositionPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetDefaultSpawnPositionPacket {
         Location = r.ReadPosition(),
         Angle = r.ReadFloat()
     };

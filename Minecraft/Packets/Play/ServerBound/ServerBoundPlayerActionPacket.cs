@@ -27,7 +27,7 @@ public class ServerBoundPlayerActionPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPlayerActionPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPlayerActionPacket {
         ActionStatus = (Status)r.ReadVarInt(),
         Location = r.ReadPosition(),
         Face = (BlockFace)r.ReadByte(),

@@ -13,7 +13,7 @@ public class ClientBoundSetExperiencePacket : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetExperiencePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetExperiencePacket {
         ExperienceProgress = r.ReadFloat(),
         Level = r.ReadVarInt(),
         TotalExperience = r.ReadVarInt()

@@ -11,7 +11,7 @@ public class ClientBoundDisconnectPacket : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundDisconnectPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundDisconnectPacket {
         Reason = r.ReadText()
     };
 }

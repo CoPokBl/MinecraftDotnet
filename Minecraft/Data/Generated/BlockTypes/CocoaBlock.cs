@@ -1,0 +1,59 @@
+using Minecraft.Schemas;
+using Minecraft.Schemas.BlockEnums;
+using Minecraft.Data.Blocks;
+
+namespace Minecraft.Data.Generated.BlockTypes;
+
+// Generated using the CodeGen project. Do not edit manually.
+//
+// Last updated: 2025-07-03
+public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBlock {
+
+    public uint StateId {
+        get {
+            return Age switch {
+                0 => Facing switch {
+                    Direction.North => 8203,
+                    Direction.South => 8204,
+                    Direction.West => 8205,
+                    Direction.East => 8206,
+                    _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
+                },
+                1 => Facing switch {
+                    Direction.North => 8207,
+                    Direction.South => 8208,
+                    Direction.West => 8209,
+                    Direction.East => 8210,
+                    _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
+                },
+                2 => Facing switch {
+                    Direction.North => 8211,
+                    Direction.South => 8212,
+                    Direction.West => 8213,
+                    Direction.East => 8214,
+                    _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
+            };
+        }
+    }
+    
+    public IBlock GetState(uint state) {
+        return state switch {
+            8203 => new CocoaBlock(Identifier, 0, Direction.North),
+            8204 => new CocoaBlock(Identifier, 0, Direction.South),
+            8205 => new CocoaBlock(Identifier, 0, Direction.West),
+            8206 => new CocoaBlock(Identifier, 0, Direction.East),
+            8207 => new CocoaBlock(Identifier, 1, Direction.North),
+            8208 => new CocoaBlock(Identifier, 1, Direction.South),
+            8209 => new CocoaBlock(Identifier, 1, Direction.West),
+            8210 => new CocoaBlock(Identifier, 1, Direction.East),
+            8211 => new CocoaBlock(Identifier, 2, Direction.North),
+            8212 => new CocoaBlock(Identifier, 2, Direction.South),
+            8213 => new CocoaBlock(Identifier, 2, Direction.West),
+            8214 => new CocoaBlock(Identifier, 2, Direction.East),
+            _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+}

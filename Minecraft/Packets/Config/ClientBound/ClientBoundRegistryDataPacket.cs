@@ -17,7 +17,7 @@ public class ClientBoundRegistryDataPacket() : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
         return new ClientBoundRegistryDataPacket {
             RegistryId = r.ReadString(),
             Entries = new Dictionary<string, ITag?>(

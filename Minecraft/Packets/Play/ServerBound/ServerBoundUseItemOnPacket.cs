@@ -24,7 +24,7 @@ public class ServerBoundUseItemOnPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundUseItemOnPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundUseItemOnPacket {
         ActiveHand = (Hand)r.ReadVarInt(),
         Position = r.ReadPosition(),
         Face = (BlockFace)r.ReadVarInt(),

@@ -16,7 +16,7 @@ public class ClientBoundSetCameraPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetCameraPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetCameraPacket {
         EntityId = r.ReadVarInt()
     };
 }

@@ -27,7 +27,7 @@ public class ServerBoundClientInformationPacket : ServerBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundClientInformationPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundClientInformationPacket {
         Locale = r.ReadString(),
         ViewDistance = (byte)r.ReadByte(),
         TextChatMode = (ChatMode)r.ReadVarInt(),

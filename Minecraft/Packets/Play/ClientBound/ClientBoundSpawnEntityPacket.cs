@@ -28,7 +28,7 @@ public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSpawnEntityPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSpawnEntityPacket {
         Id = r.ReadVarInt(),
         Uuid = r.ReadUuid(),
         EntityType = r.ReadVarInt(),

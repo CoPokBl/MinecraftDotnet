@@ -17,7 +17,7 @@ public class ClientBoundSetContainerSlotPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetContainerSlotPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetContainerSlotPacket {
         WindowId = r.ReadVarInt(),
         StateId = r.ReadVarInt(),
         SlotId = r.ReadShort(),

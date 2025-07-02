@@ -11,7 +11,7 @@ public class ServerBoundEncryptionResponsePacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundEncryptionResponsePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundEncryptionResponsePacket {
         SharedSecret = r.ReadPrefixedArray(re => re.Read()),
         VerifyToken = r.ReadPrefixedArray(re => re.Read())
     };

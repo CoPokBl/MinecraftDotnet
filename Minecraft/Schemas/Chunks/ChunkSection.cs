@@ -1,5 +1,8 @@
 // This is the bane of my existence.
 
+using Minecraft.Data.Blocks;
+using Minecraft.Data.Generated;
+using Minecraft.Registry;
 using Minecraft.Schemas.Chunks.Palettes;
 
 namespace Minecraft.Schemas.Chunks;
@@ -51,6 +54,10 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
 
     public uint GetBlock(int x, int y, int z) {
         return Blocks[x][y][z];
+    }
+
+    public IBlock LookupBlock(int x, int y, int z, MinecraftRegistry? registry = null) {
+        return (registry ?? VanillaRegistry.Data).Blocks[GetBlock(x, y, z)];
     }
     
     public uint GetBlock(BlockPosition pos) {

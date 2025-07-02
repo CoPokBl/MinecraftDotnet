@@ -11,7 +11,7 @@ public class ServerBoundPluginMessagePacket : ServerBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPluginMessagePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPluginMessagePacket {
         Channel = r.ReadString(),
         Data = r.ReadRemaining()
     };

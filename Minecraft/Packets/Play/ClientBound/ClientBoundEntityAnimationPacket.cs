@@ -19,7 +19,7 @@ public class ClientBoundEntityAnimationPacket : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundEntityAnimationPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundEntityAnimationPacket {
         EntityId = r.ReadVarInt(),
         Animation = (AnimationType)r.Read()
     };

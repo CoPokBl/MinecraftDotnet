@@ -13,7 +13,7 @@ public class ClientBoundHurtAnimationPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundHurtAnimationPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundHurtAnimationPacket {
         EntityId = r.ReadVarInt(),
         Yaw = Angle.FromDegrees(r.ReadFloat())
     };

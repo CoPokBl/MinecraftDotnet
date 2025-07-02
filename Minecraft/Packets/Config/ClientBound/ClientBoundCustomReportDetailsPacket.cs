@@ -21,7 +21,7 @@ public class ClientBoundCustomReportDetailsPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundCustomReportDetailsPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundCustomReportDetailsPacket {
         Details = r.ReadPrefixedArray(Detail.Read)
     };
 }

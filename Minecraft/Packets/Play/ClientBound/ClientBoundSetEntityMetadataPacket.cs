@@ -14,7 +14,7 @@ public class ClientBoundSetEntityMetadataPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
         throw new NotImplementedException("Deserialisation of EntityMeta is not implemented yet.");
     };
 }

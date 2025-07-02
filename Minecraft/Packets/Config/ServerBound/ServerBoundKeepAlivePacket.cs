@@ -9,7 +9,7 @@ public class ServerBoundKeepAlivePacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundKeepAlivePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundKeepAlivePacket {
         Id = r.ReadLong()
     };
 }

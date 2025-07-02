@@ -37,7 +37,7 @@ public class ClientBoundUpdateTagsPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = reader => new ClientBoundUpdateTagsPacket {
-        Tags = reader.ReadPrefixedArray(TagSet.Read)
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateTagsPacket {
+        Tags = r.ReadPrefixedArray(TagSet.Read)
     };
 }

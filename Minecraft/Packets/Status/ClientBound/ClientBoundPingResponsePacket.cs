@@ -9,7 +9,7 @@ public class ClientBoundPingResponsePacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundPingResponsePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundPingResponsePacket {
         Payload = r.ReadLong()
     };
 }

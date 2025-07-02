@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <None Remove="Schemas\Registry\registries.json" />
-      <EmbeddedResource Include="Schemas\Registry\registries.json" />
     </ItemGroup>
 
 </Project>

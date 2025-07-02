@@ -25,7 +25,7 @@ public class ClientBoundAddResourcePackPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundAddResourcePackPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundAddResourcePackPacket {
         Uuid = r.ReadUuid(),
         Url = r.ReadString(),
         Hash = r.ReadString(),

@@ -6,5 +6,5 @@ public class ClientBoundStartConfigurationPacket : ClientBoundPacket {
         return [];
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = _ => new ClientBoundStartConfigurationPacket();
+    public static readonly PacketDataDeserialiser Deserialiser = (_, _) => new ClientBoundStartConfigurationPacket();
 }

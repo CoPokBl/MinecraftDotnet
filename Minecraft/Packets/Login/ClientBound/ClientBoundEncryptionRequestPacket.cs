@@ -17,7 +17,7 @@ public class ClientBoundEncryptionRequestPacket : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundEncryptionRequestPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundEncryptionRequestPacket {
         ServerId = r.ReadString(),
         PublicKey = r.ReadPrefixedArray(re => re.Read()),
         VerifyToken = r.ReadPrefixedArray(re => re.Read()),

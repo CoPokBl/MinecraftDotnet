@@ -9,7 +9,7 @@ public class ServerBoundPingRequestPacket : ServerBoundPacket {
         return new DataWriter().WriteLong(Payload).ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPingRequestPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPingRequestPacket {
         Payload = r.ReadLong()
     };
 

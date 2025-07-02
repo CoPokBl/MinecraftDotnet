@@ -20,7 +20,7 @@ public class ServerBoundPlayerInputPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPlayerInputPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPlayerInputPacket {
         Flags = (Input)r.Read()
     };
 }

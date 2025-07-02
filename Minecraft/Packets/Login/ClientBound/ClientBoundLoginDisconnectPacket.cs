@@ -12,7 +12,7 @@ public class ClientBoundLoginDisconnectPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundLoginDisconnectPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginDisconnectPacket {
         Reason = TextComponent.FromTag(ITag.FromJson(r.ReadString()))
     };
 }

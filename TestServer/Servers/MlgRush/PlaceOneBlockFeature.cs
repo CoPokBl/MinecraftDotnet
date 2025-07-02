@@ -1,3 +1,5 @@
+using Minecraft.Data.Blocks;
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Managed;
@@ -11,7 +13,7 @@ using Minecraft.Schemas.Vec;
 
 namespace TestServer.Servers.MlgRush;
 
-public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappearTime = -1) : IWorldFeature {
+public class PlaceOneBlockFeature(Func<PlayerConnection, IBlock> block, int disappearTime = -1) : IWorldFeature {
     private const double PlayerWidth = 0.6;
     private const double PlayerHeight = 1.8;
 
@@ -54,7 +56,7 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
                 e.Connection.SendPackets(
                     new ClientBoundBlockUpdatePacket {
                         Location = target,
-                        BlockId = 0
+                        Block = Block.Air
                     },
                     new ClientBoundAcknowledgeBlockChangePacket {
                         SequenceId = ui.Sequence
@@ -66,7 +68,7 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
             int breakingEntity = Random.Shared.Next();
             MinecraftPacket packet = new ClientBoundBlockUpdatePacket {
                 Location = target,
-                BlockId = block.Invoke(e.Connection)
+                Block = block.Invoke(e.Connection)
             };
             foreach (PlayerConnection connection in world.Players.Select(p => p.Connection)) {
                 connection.SendPackets(packet, new ClientBoundSetBlockDestroyStagePacket {
@@ -106,7 +108,7 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, int> block, int disappe
                 foreach (PlayerConnection con in world.Players.Select(p => p.Connection)) {
                     con.SendPackets(new ClientBoundBlockUpdatePacket {
                         Location = target,
-                        BlockId = 0
+                        Block = Block.Air
                     }, new ClientBoundSetBlockDestroyStagePacket {
                         EntityId = breakingEntity,
                         Block = target,

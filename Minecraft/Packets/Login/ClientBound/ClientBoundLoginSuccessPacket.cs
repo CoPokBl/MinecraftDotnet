@@ -12,7 +12,7 @@ public class ClientBoundLoginSuccessPacket : ClientBoundPacket {
         return w.ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundLoginSuccessPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginSuccessPacket {
         Uuid = r.ReadUuid(),
         Username = r.ReadString()
     };

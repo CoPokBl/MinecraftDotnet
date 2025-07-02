@@ -1,0 +1,94 @@
+using Minecraft.Schemas;
+using Minecraft.Schemas.BlockEnums;
+using Minecraft.Data.Blocks;
+
+namespace Minecraft.Data.Generated.BlockTypes;
+
+// Generated using the CodeGen project. Do not edit manually.
+//
+// Last updated: 2025-07-03
+public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeartBlock.CreakingHeartState CreakingHeartStateValue, bool Natural) : IBlock {
+
+    public uint StateId {
+        get {
+            return Axis switch {
+                Axis.X => CreakingHeartStateValue switch {
+                    CreakingHeartState.Uprooted => Natural switch {
+                        true => 2920,
+                        false => 2921,
+                    },
+                    CreakingHeartState.Dormant => Natural switch {
+                        true => 2922,
+                        false => 2923,
+                    },
+                    CreakingHeartState.Awake => Natural switch {
+                        true => 2924,
+                        false => 2925,
+                    },
+                    _ => throw new ArgumentOutOfRangeException(nameof(CreakingHeartStateValue), CreakingHeartStateValue, "Unknown value for property creaking_heart_state.")
+                },
+                Axis.Y => CreakingHeartStateValue switch {
+                    CreakingHeartState.Uprooted => Natural switch {
+                        true => 2926,
+                        false => 2927,
+                    },
+                    CreakingHeartState.Dormant => Natural switch {
+                        true => 2928,
+                        false => 2929,
+                    },
+                    CreakingHeartState.Awake => Natural switch {
+                        true => 2930,
+                        false => 2931,
+                    },
+                    _ => throw new ArgumentOutOfRangeException(nameof(CreakingHeartStateValue), CreakingHeartStateValue, "Unknown value for property creaking_heart_state.")
+                },
+                Axis.Z => CreakingHeartStateValue switch {
+                    CreakingHeartState.Uprooted => Natural switch {
+                        true => 2932,
+                        false => 2933,
+                    },
+                    CreakingHeartState.Dormant => Natural switch {
+                        true => 2934,
+                        false => 2935,
+                    },
+                    CreakingHeartState.Awake => Natural switch {
+                        true => 2936,
+                        false => 2937,
+                    },
+                    _ => throw new ArgumentOutOfRangeException(nameof(CreakingHeartStateValue), CreakingHeartStateValue, "Unknown value for property creaking_heart_state.")
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
+            };
+        }
+    }
+    
+    public IBlock GetState(uint state) {
+        return state switch {
+            2920 => new CreakingHeartBlock(Identifier, Axis.X, CreakingHeartState.Uprooted, true),
+            2921 => new CreakingHeartBlock(Identifier, Axis.X, CreakingHeartState.Uprooted, false),
+            2922 => new CreakingHeartBlock(Identifier, Axis.X, CreakingHeartState.Dormant, true),
+            2923 => new CreakingHeartBlock(Identifier, Axis.X, CreakingHeartState.Dormant, false),
+            2924 => new CreakingHeartBlock(Identifier, Axis.X, CreakingHeartState.Awake, true),
+            2925 => new CreakingHeartBlock(Identifier, Axis.X, CreakingHeartState.Awake, false),
+            2926 => new CreakingHeartBlock(Identifier, Axis.Y, CreakingHeartState.Uprooted, true),
+            2927 => new CreakingHeartBlock(Identifier, Axis.Y, CreakingHeartState.Uprooted, false),
+            2928 => new CreakingHeartBlock(Identifier, Axis.Y, CreakingHeartState.Dormant, true),
+            2929 => new CreakingHeartBlock(Identifier, Axis.Y, CreakingHeartState.Dormant, false),
+            2930 => new CreakingHeartBlock(Identifier, Axis.Y, CreakingHeartState.Awake, true),
+            2931 => new CreakingHeartBlock(Identifier, Axis.Y, CreakingHeartState.Awake, false),
+            2932 => new CreakingHeartBlock(Identifier, Axis.Z, CreakingHeartState.Uprooted, true),
+            2933 => new CreakingHeartBlock(Identifier, Axis.Z, CreakingHeartState.Uprooted, false),
+            2934 => new CreakingHeartBlock(Identifier, Axis.Z, CreakingHeartState.Dormant, true),
+            2935 => new CreakingHeartBlock(Identifier, Axis.Z, CreakingHeartState.Dormant, false),
+            2936 => new CreakingHeartBlock(Identifier, Axis.Z, CreakingHeartState.Awake, true),
+            2937 => new CreakingHeartBlock(Identifier, Axis.Z, CreakingHeartState.Awake, false),
+            _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public enum CreakingHeartState {
+        Uprooted,
+        Dormant,
+        Awake,
+    }
+}

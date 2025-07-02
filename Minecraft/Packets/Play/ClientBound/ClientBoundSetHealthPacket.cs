@@ -13,7 +13,7 @@ public class ClientBoundSetHealthPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetHealthPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetHealthPacket {
         Health = r.ReadFloat(),
         Food = r.ReadVarInt(),
         Saturation = r.ReadFloat()

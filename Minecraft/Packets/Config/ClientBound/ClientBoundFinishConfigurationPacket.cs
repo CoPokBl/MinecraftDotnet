@@ -6,5 +6,5 @@ public class ClientBoundFinishConfigurationPacket : ClientBoundPacket {
         return [];
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = _ => new ClientBoundFinishConfigurationPacket();
+    public static readonly PacketDataDeserialiser Deserialiser = (_, _) => new ClientBoundFinishConfigurationPacket();
 }

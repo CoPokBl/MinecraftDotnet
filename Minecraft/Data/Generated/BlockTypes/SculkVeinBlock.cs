@@ -1,0 +1,533 @@
+using Minecraft.Schemas;
+using Minecraft.Schemas.BlockEnums;
+using Minecraft.Data.Blocks;
+
+namespace Minecraft.Data.Generated.BlockTypes;
+
+// Generated using the CodeGen project. Do not edit manually.
+//
+// Last updated: 2025-07-03
+public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool Waterlogged, bool West) : IBlock {
+
+    public uint StateId {
+        get {
+            return Down switch {
+                true => East switch {
+                    true => North switch {
+                        true => South switch {
+                            true => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23828,
+                                        false => 23829,
+                                    },
+                                    false => West switch {
+                                        true => 23830,
+                                        false => 23831,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23832,
+                                        false => 23833,
+                                    },
+                                    false => West switch {
+                                        true => 23834,
+                                        false => 23835,
+                                    },
+                                },
+                            },
+                            false => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23836,
+                                        false => 23837,
+                                    },
+                                    false => West switch {
+                                        true => 23838,
+                                        false => 23839,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23840,
+                                        false => 23841,
+                                    },
+                                    false => West switch {
+                                        true => 23842,
+                                        false => 23843,
+                                    },
+                                },
+                            },
+                        },
+                        false => South switch {
+                            true => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23844,
+                                        false => 23845,
+                                    },
+                                    false => West switch {
+                                        true => 23846,
+                                        false => 23847,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23848,
+                                        false => 23849,
+                                    },
+                                    false => West switch {
+                                        true => 23850,
+                                        false => 23851,
+                                    },
+                                },
+                            },
+                            false => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23852,
+                                        false => 23853,
+                                    },
+                                    false => West switch {
+                                        true => 23854,
+                                        false => 23855,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23856,
+                                        false => 23857,
+                                    },
+                                    false => West switch {
+                                        true => 23858,
+                                        false => 23859,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    false => North switch {
+                        true => South switch {
+                            true => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23860,
+                                        false => 23861,
+                                    },
+                                    false => West switch {
+                                        true => 23862,
+                                        false => 23863,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23864,
+                                        false => 23865,
+                                    },
+                                    false => West switch {
+                                        true => 23866,
+                                        false => 23867,
+                                    },
+                                },
+                            },
+                            false => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23868,
+                                        false => 23869,
+                                    },
+                                    false => West switch {
+                                        true => 23870,
+                                        false => 23871,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23872,
+                                        false => 23873,
+                                    },
+                                    false => West switch {
+                                        true => 23874,
+                                        false => 23875,
+                                    },
+                                },
+                            },
+                        },
+                        false => South switch {
+                            true => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23876,
+                                        false => 23877,
+                                    },
+                                    false => West switch {
+                                        true => 23878,
+                                        false => 23879,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23880,
+                                        false => 23881,
+                                    },
+                                    false => West switch {
+                                        true => 23882,
+                                        false => 23883,
+                                    },
+                                },
+                            },
+                            false => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23884,
+                                        false => 23885,
+                                    },
+                                    false => West switch {
+                                        true => 23886,
+                                        false => 23887,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23888,
+                                        false => 23889,
+                                    },
+                                    false => West switch {
+                                        true => 23890,
+                                        false => 23891,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                false => East switch {
+                    true => North switch {
+                        true => South switch {
+                            true => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23892,
+                                        false => 23893,
+                                    },
+                                    false => West switch {
+                                        true => 23894,
+                                        false => 23895,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23896,
+                                        false => 23897,
+                                    },
+                                    false => West switch {
+                                        true => 23898,
+                                        false => 23899,
+                                    },
+                                },
+                            },
+                            false => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23900,
+                                        false => 23901,
+                                    },
+                                    false => West switch {
+                                        true => 23902,
+                                        false => 23903,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23904,
+                                        false => 23905,
+                                    },
+                                    false => West switch {
+                                        true => 23906,
+                                        false => 23907,
+                                    },
+                                },
+                            },
+                        },
+                        false => South switch {
+                            true => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23908,
+                                        false => 23909,
+                                    },
+                                    false => West switch {
+                                        true => 23910,
+                                        false => 23911,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23912,
+                                        false => 23913,
+                                    },
+                                    false => West switch {
+                                        true => 23914,
+                                        false => 23915,
+                                    },
+                                },
+                            },
+                            false => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23916,
+                                        false => 23917,
+                                    },
+                                    false => West switch {
+                                        true => 23918,
+                                        false => 23919,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23920,
+                                        false => 23921,
+                                    },
+                                    false => West switch {
+                                        true => 23922,
+                                        false => 23923,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    false => North switch {
+                        true => South switch {
+                            true => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23924,
+                                        false => 23925,
+                                    },
+                                    false => West switch {
+                                        true => 23926,
+                                        false => 23927,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23928,
+                                        false => 23929,
+                                    },
+                                    false => West switch {
+                                        true => 23930,
+                                        false => 23931,
+                                    },
+                                },
+                            },
+                            false => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23932,
+                                        false => 23933,
+                                    },
+                                    false => West switch {
+                                        true => 23934,
+                                        false => 23935,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23936,
+                                        false => 23937,
+                                    },
+                                    false => West switch {
+                                        true => 23938,
+                                        false => 23939,
+                                    },
+                                },
+                            },
+                        },
+                        false => South switch {
+                            true => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23940,
+                                        false => 23941,
+                                    },
+                                    false => West switch {
+                                        true => 23942,
+                                        false => 23943,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23944,
+                                        false => 23945,
+                                    },
+                                    false => West switch {
+                                        true => 23946,
+                                        false => 23947,
+                                    },
+                                },
+                            },
+                            false => Up switch {
+                                true => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23948,
+                                        false => 23949,
+                                    },
+                                    false => West switch {
+                                        true => 23950,
+                                        false => 23951,
+                                    },
+                                },
+                                false => Waterlogged switch {
+                                    true => West switch {
+                                        true => 23952,
+                                        false => 23953,
+                                    },
+                                    false => West switch {
+                                        true => 23954,
+                                        false => 23955,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+        }
+    }
+    
+    public IBlock GetState(uint state) {
+        return state switch {
+            23828 => new SculkVeinBlock(Identifier, true, true, true, true, true, true, true),
+            23829 => new SculkVeinBlock(Identifier, true, true, true, true, true, true, false),
+            23830 => new SculkVeinBlock(Identifier, true, true, true, true, true, false, true),
+            23831 => new SculkVeinBlock(Identifier, true, true, true, true, true, false, false),
+            23832 => new SculkVeinBlock(Identifier, true, true, true, true, false, true, true),
+            23833 => new SculkVeinBlock(Identifier, true, true, true, true, false, true, false),
+            23834 => new SculkVeinBlock(Identifier, true, true, true, true, false, false, true),
+            23835 => new SculkVeinBlock(Identifier, true, true, true, true, false, false, false),
+            23836 => new SculkVeinBlock(Identifier, true, true, true, false, true, true, true),
+            23837 => new SculkVeinBlock(Identifier, true, true, true, false, true, true, false),
+            23838 => new SculkVeinBlock(Identifier, true, true, true, false, true, false, true),
+            23839 => new SculkVeinBlock(Identifier, true, true, true, false, true, false, false),
+            23840 => new SculkVeinBlock(Identifier, true, true, true, false, false, true, true),
+            23841 => new SculkVeinBlock(Identifier, true, true, true, false, false, true, false),
+            23842 => new SculkVeinBlock(Identifier, true, true, true, false, false, false, true),
+            23843 => new SculkVeinBlock(Identifier, true, true, true, false, false, false, false),
+            23844 => new SculkVeinBlock(Identifier, true, true, false, true, true, true, true),
+            23845 => new SculkVeinBlock(Identifier, true, true, false, true, true, true, false),
+            23846 => new SculkVeinBlock(Identifier, true, true, false, true, true, false, true),
+            23847 => new SculkVeinBlock(Identifier, true, true, false, true, true, false, false),
+            23848 => new SculkVeinBlock(Identifier, true, true, false, true, false, true, true),
+            23849 => new SculkVeinBlock(Identifier, true, true, false, true, false, true, false),
+            23850 => new SculkVeinBlock(Identifier, true, true, false, true, false, false, true),
+            23851 => new SculkVeinBlock(Identifier, true, true, false, true, false, false, false),
+            23852 => new SculkVeinBlock(Identifier, true, true, false, false, true, true, true),
+            23853 => new SculkVeinBlock(Identifier, true, true, false, false, true, true, false),
+            23854 => new SculkVeinBlock(Identifier, true, true, false, false, true, false, true),
+            23855 => new SculkVeinBlock(Identifier, true, true, false, false, true, false, false),
+            23856 => new SculkVeinBlock(Identifier, true, true, false, false, false, true, true),
+            23857 => new SculkVeinBlock(Identifier, true, true, false, false, false, true, false),
+            23858 => new SculkVeinBlock(Identifier, true, true, false, false, false, false, true),
+            23859 => new SculkVeinBlock(Identifier, true, true, false, false, false, false, false),
+            23860 => new SculkVeinBlock(Identifier, true, false, true, true, true, true, true),
+            23861 => new SculkVeinBlock(Identifier, true, false, true, true, true, true, false),
+            23862 => new SculkVeinBlock(Identifier, true, false, true, true, true, false, true),
+            23863 => new SculkVeinBlock(Identifier, true, false, true, true, true, false, false),
+            23864 => new SculkVeinBlock(Identifier, true, false, true, true, false, true, true),
+            23865 => new SculkVeinBlock(Identifier, true, false, true, true, false, true, false),
+            23866 => new SculkVeinBlock(Identifier, true, false, true, true, false, false, true),
+            23867 => new SculkVeinBlock(Identifier, true, false, true, true, false, false, false),
+            23868 => new SculkVeinBlock(Identifier, true, false, true, false, true, true, true),
+            23869 => new SculkVeinBlock(Identifier, true, false, true, false, true, true, false),
+            23870 => new SculkVeinBlock(Identifier, true, false, true, false, true, false, true),
+            23871 => new SculkVeinBlock(Identifier, true, false, true, false, true, false, false),
+            23872 => new SculkVeinBlock(Identifier, true, false, true, false, false, true, true),
+            23873 => new SculkVeinBlock(Identifier, true, false, true, false, false, true, false),
+            23874 => new SculkVeinBlock(Identifier, true, false, true, false, false, false, true),
+            23875 => new SculkVeinBlock(Identifier, true, false, true, false, false, false, false),
+            23876 => new SculkVeinBlock(Identifier, true, false, false, true, true, true, true),
+            23877 => new SculkVeinBlock(Identifier, true, false, false, true, true, true, false),
+            23878 => new SculkVeinBlock(Identifier, true, false, false, true, true, false, true),
+            23879 => new SculkVeinBlock(Identifier, true, false, false, true, true, false, false),
+            23880 => new SculkVeinBlock(Identifier, true, false, false, true, false, true, true),
+            23881 => new SculkVeinBlock(Identifier, true, false, false, true, false, true, false),
+            23882 => new SculkVeinBlock(Identifier, true, false, false, true, false, false, true),
+            23883 => new SculkVeinBlock(Identifier, true, false, false, true, false, false, false),
+            23884 => new SculkVeinBlock(Identifier, true, false, false, false, true, true, true),
+            23885 => new SculkVeinBlock(Identifier, true, false, false, false, true, true, false),
+            23886 => new SculkVeinBlock(Identifier, true, false, false, false, true, false, true),
+            23887 => new SculkVeinBlock(Identifier, true, false, false, false, true, false, false),
+            23888 => new SculkVeinBlock(Identifier, true, false, false, false, false, true, true),
+            23889 => new SculkVeinBlock(Identifier, true, false, false, false, false, true, false),
+            23890 => new SculkVeinBlock(Identifier, true, false, false, false, false, false, true),
+            23891 => new SculkVeinBlock(Identifier, true, false, false, false, false, false, false),
+            23892 => new SculkVeinBlock(Identifier, false, true, true, true, true, true, true),
+            23893 => new SculkVeinBlock(Identifier, false, true, true, true, true, true, false),
+            23894 => new SculkVeinBlock(Identifier, false, true, true, true, true, false, true),
+            23895 => new SculkVeinBlock(Identifier, false, true, true, true, true, false, false),
+            23896 => new SculkVeinBlock(Identifier, false, true, true, true, false, true, true),
+            23897 => new SculkVeinBlock(Identifier, false, true, true, true, false, true, false),
+            23898 => new SculkVeinBlock(Identifier, false, true, true, true, false, false, true),
+            23899 => new SculkVeinBlock(Identifier, false, true, true, true, false, false, false),
+            23900 => new SculkVeinBlock(Identifier, false, true, true, false, true, true, true),
+            23901 => new SculkVeinBlock(Identifier, false, true, true, false, true, true, false),
+            23902 => new SculkVeinBlock(Identifier, false, true, true, false, true, false, true),
+            23903 => new SculkVeinBlock(Identifier, false, true, true, false, true, false, false),
+            23904 => new SculkVeinBlock(Identifier, false, true, true, false, false, true, true),
+            23905 => new SculkVeinBlock(Identifier, false, true, true, false, false, true, false),
+            23906 => new SculkVeinBlock(Identifier, false, true, true, false, false, false, true),
+            23907 => new SculkVeinBlock(Identifier, false, true, true, false, false, false, false),
+            23908 => new SculkVeinBlock(Identifier, false, true, false, true, true, true, true),
+            23909 => new SculkVeinBlock(Identifier, false, true, false, true, true, true, false),
+            23910 => new SculkVeinBlock(Identifier, false, true, false, true, true, false, true),
+            23911 => new SculkVeinBlock(Identifier, false, true, false, true, true, false, false),
+            23912 => new SculkVeinBlock(Identifier, false, true, false, true, false, true, true),
+            23913 => new SculkVeinBlock(Identifier, false, true, false, true, false, true, false),
+            23914 => new SculkVeinBlock(Identifier, false, true, false, true, false, false, true),
+            23915 => new SculkVeinBlock(Identifier, false, true, false, true, false, false, false),
+            23916 => new SculkVeinBlock(Identifier, false, true, false, false, true, true, true),
+            23917 => new SculkVeinBlock(Identifier, false, true, false, false, true, true, false),
+            23918 => new SculkVeinBlock(Identifier, false, true, false, false, true, false, true),
+            23919 => new SculkVeinBlock(Identifier, false, true, false, false, true, false, false),
+            23920 => new SculkVeinBlock(Identifier, false, true, false, false, false, true, true),
+            23921 => new SculkVeinBlock(Identifier, false, true, false, false, false, true, false),
+            23922 => new SculkVeinBlock(Identifier, false, true, false, false, false, false, true),
+            23923 => new SculkVeinBlock(Identifier, false, true, false, false, false, false, false),
+            23924 => new SculkVeinBlock(Identifier, false, false, true, true, true, true, true),
+            23925 => new SculkVeinBlock(Identifier, false, false, true, true, true, true, false),
+            23926 => new SculkVeinBlock(Identifier, false, false, true, true, true, false, true),
+            23927 => new SculkVeinBlock(Identifier, false, false, true, true, true, false, false),
+            23928 => new SculkVeinBlock(Identifier, false, false, true, true, false, true, true),
+            23929 => new SculkVeinBlock(Identifier, false, false, true, true, false, true, false),
+            23930 => new SculkVeinBlock(Identifier, false, false, true, true, false, false, true),
+            23931 => new SculkVeinBlock(Identifier, false, false, true, true, false, false, false),
+            23932 => new SculkVeinBlock(Identifier, false, false, true, false, true, true, true),
+            23933 => new SculkVeinBlock(Identifier, false, false, true, false, true, true, false),
+            23934 => new SculkVeinBlock(Identifier, false, false, true, false, true, false, true),
+            23935 => new SculkVeinBlock(Identifier, false, false, true, false, true, false, false),
+            23936 => new SculkVeinBlock(Identifier, false, false, true, false, false, true, true),
+            23937 => new SculkVeinBlock(Identifier, false, false, true, false, false, true, false),
+            23938 => new SculkVeinBlock(Identifier, false, false, true, false, false, false, true),
+            23939 => new SculkVeinBlock(Identifier, false, false, true, false, false, false, false),
+            23940 => new SculkVeinBlock(Identifier, false, false, false, true, true, true, true),
+            23941 => new SculkVeinBlock(Identifier, false, false, false, true, true, true, false),
+            23942 => new SculkVeinBlock(Identifier, false, false, false, true, true, false, true),
+            23943 => new SculkVeinBlock(Identifier, false, false, false, true, true, false, false),
+            23944 => new SculkVeinBlock(Identifier, false, false, false, true, false, true, true),
+            23945 => new SculkVeinBlock(Identifier, false, false, false, true, false, true, false),
+            23946 => new SculkVeinBlock(Identifier, false, false, false, true, false, false, true),
+            23947 => new SculkVeinBlock(Identifier, false, false, false, true, false, false, false),
+            23948 => new SculkVeinBlock(Identifier, false, false, false, false, true, true, true),
+            23949 => new SculkVeinBlock(Identifier, false, false, false, false, true, true, false),
+            23950 => new SculkVeinBlock(Identifier, false, false, false, false, true, false, true),
+            23951 => new SculkVeinBlock(Identifier, false, false, false, false, true, false, false),
+            23952 => new SculkVeinBlock(Identifier, false, false, false, false, false, true, true),
+            23953 => new SculkVeinBlock(Identifier, false, false, false, false, false, true, false),
+            23954 => new SculkVeinBlock(Identifier, false, false, false, false, false, false, true),
+            23955 => new SculkVeinBlock(Identifier, false, false, false, false, false, false, false),
+            _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+}

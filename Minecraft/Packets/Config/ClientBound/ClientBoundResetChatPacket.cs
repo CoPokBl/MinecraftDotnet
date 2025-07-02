@@ -6,5 +6,5 @@ public class ClientBoundResetChatPacket : ClientBoundPacket {
         return [];
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = _ => new ClientBoundResetChatPacket();
+    public static readonly PacketDataDeserialiser Deserialiser = (_, _) => new ClientBoundResetChatPacket();
 }

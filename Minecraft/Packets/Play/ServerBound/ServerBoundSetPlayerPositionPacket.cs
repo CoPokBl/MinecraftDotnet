@@ -14,7 +14,7 @@ public class ServerBoundSetPlayerPositionPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundSetPlayerPositionPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSetPlayerPositionPacket {
         Position = r.ReadVec3(),
         Flags = (MovePlayerFlags)r.ReadByte()
     };

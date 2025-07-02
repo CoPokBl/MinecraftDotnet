@@ -24,7 +24,7 @@ public class ServerBoundChatMessagePacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundChatMessagePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundChatMessagePacket {
         Message = r.ReadString(),
         Timestamp = r.ReadLong(),
         Salt = r.ReadLong(),

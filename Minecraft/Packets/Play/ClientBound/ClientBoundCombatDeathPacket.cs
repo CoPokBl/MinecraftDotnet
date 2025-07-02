@@ -13,7 +13,7 @@ public class ClientBoundCombatDeathPacket : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundCombatDeathPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundCombatDeathPacket {
         PlayerId = r.ReadVarInt(),
         Message = r.ReadText()
     };

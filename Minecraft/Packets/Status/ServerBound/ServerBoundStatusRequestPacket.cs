@@ -6,5 +6,5 @@ public class ServerBoundStatusRequestPacket : ServerBoundPacket {
         return [];
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = _ => new ServerBoundStatusRequestPacket();
+    public static readonly PacketDataDeserialiser Deserialiser = (_, _) => new ServerBoundStatusRequestPacket();
 }

@@ -15,7 +15,7 @@ public class ClientBoundSetBlockDestroyStagePacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetBlockDestroyStagePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetBlockDestroyStagePacket {
         EntityId = r.ReadVarInt(),
         Block = r.ReadPosition(),
         Stage = r.Read()

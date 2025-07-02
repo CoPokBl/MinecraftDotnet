@@ -18,7 +18,7 @@ public class ServerBoundSetMovementFlagsPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundSetMovementFlagsPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSetMovementFlagsPacket {
         SetFlags = (Flags)r.Read()
     };
 }

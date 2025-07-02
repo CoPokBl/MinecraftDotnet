@@ -15,7 +15,7 @@ public class ServerBoundPlayerCommandPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPlayerCommandPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPlayerCommandPacket {
         EntityId = r.ReadVarInt(),
         PlayAction = (PlayerAction)r.ReadVarInt(),
         JumpBoost = r.ReadVarInt()

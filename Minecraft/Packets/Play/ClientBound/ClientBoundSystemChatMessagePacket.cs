@@ -13,7 +13,7 @@ public class ClientBoundSystemChatMessagePacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSystemChatMessagePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSystemChatMessagePacket {
         Content = r.ReadText(),
         ActionBar = r.ReadBoolean()
     };

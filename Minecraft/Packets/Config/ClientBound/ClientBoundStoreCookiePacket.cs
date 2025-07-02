@@ -11,7 +11,7 @@ public class ClientBoundStoreCookiePacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundStoreCookiePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundStoreCookiePacket {
         Key = r.ReadString(),
         Payload = r.ReadPrefixedArray(re => re.Read())
     };

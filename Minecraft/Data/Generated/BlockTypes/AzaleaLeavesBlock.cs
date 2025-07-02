@@ -1,0 +1,124 @@
+using Minecraft.Schemas;
+using Minecraft.Schemas.BlockEnums;
+using Minecraft.Data.Blocks;
+
+namespace Minecraft.Data.Generated.BlockTypes;
+
+// Generated using the CodeGen project. Do not edit manually.
+//
+// Last updated: 2025-07-03
+public record AzaleaLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock {
+
+    public uint StateId {
+        get {
+            return Distance switch {
+                1 => Persistent switch {
+                    true => Waterlogged switch {
+                        true => 504,
+                        false => 505,
+                    },
+                    false => Waterlogged switch {
+                        true => 506,
+                        false => 507,
+                    },
+                },
+                2 => Persistent switch {
+                    true => Waterlogged switch {
+                        true => 508,
+                        false => 509,
+                    },
+                    false => Waterlogged switch {
+                        true => 510,
+                        false => 511,
+                    },
+                },
+                3 => Persistent switch {
+                    true => Waterlogged switch {
+                        true => 512,
+                        false => 513,
+                    },
+                    false => Waterlogged switch {
+                        true => 514,
+                        false => 515,
+                    },
+                },
+                4 => Persistent switch {
+                    true => Waterlogged switch {
+                        true => 516,
+                        false => 517,
+                    },
+                    false => Waterlogged switch {
+                        true => 518,
+                        false => 519,
+                    },
+                },
+                5 => Persistent switch {
+                    true => Waterlogged switch {
+                        true => 520,
+                        false => 521,
+                    },
+                    false => Waterlogged switch {
+                        true => 522,
+                        false => 523,
+                    },
+                },
+                6 => Persistent switch {
+                    true => Waterlogged switch {
+                        true => 524,
+                        false => 525,
+                    },
+                    false => Waterlogged switch {
+                        true => 526,
+                        false => 527,
+                    },
+                },
+                7 => Persistent switch {
+                    true => Waterlogged switch {
+                        true => 528,
+                        false => 529,
+                    },
+                    false => Waterlogged switch {
+                        true => 530,
+                        false => 531,
+                    },
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
+            };
+        }
+    }
+    
+    public IBlock GetState(uint state) {
+        return state switch {
+            504 => new AzaleaLeavesBlock(Identifier, 1, true, true),
+            505 => new AzaleaLeavesBlock(Identifier, 1, true, false),
+            506 => new AzaleaLeavesBlock(Identifier, 1, false, true),
+            507 => new AzaleaLeavesBlock(Identifier, 1, false, false),
+            508 => new AzaleaLeavesBlock(Identifier, 2, true, true),
+            509 => new AzaleaLeavesBlock(Identifier, 2, true, false),
+            510 => new AzaleaLeavesBlock(Identifier, 2, false, true),
+            511 => new AzaleaLeavesBlock(Identifier, 2, false, false),
+            512 => new AzaleaLeavesBlock(Identifier, 3, true, true),
+            513 => new AzaleaLeavesBlock(Identifier, 3, true, false),
+            514 => new AzaleaLeavesBlock(Identifier, 3, false, true),
+            515 => new AzaleaLeavesBlock(Identifier, 3, false, false),
+            516 => new AzaleaLeavesBlock(Identifier, 4, true, true),
+            517 => new AzaleaLeavesBlock(Identifier, 4, true, false),
+            518 => new AzaleaLeavesBlock(Identifier, 4, false, true),
+            519 => new AzaleaLeavesBlock(Identifier, 4, false, false),
+            520 => new AzaleaLeavesBlock(Identifier, 5, true, true),
+            521 => new AzaleaLeavesBlock(Identifier, 5, true, false),
+            522 => new AzaleaLeavesBlock(Identifier, 5, false, true),
+            523 => new AzaleaLeavesBlock(Identifier, 5, false, false),
+            524 => new AzaleaLeavesBlock(Identifier, 6, true, true),
+            525 => new AzaleaLeavesBlock(Identifier, 6, true, false),
+            526 => new AzaleaLeavesBlock(Identifier, 6, false, true),
+            527 => new AzaleaLeavesBlock(Identifier, 6, false, false),
+            528 => new AzaleaLeavesBlock(Identifier, 7, true, true),
+            529 => new AzaleaLeavesBlock(Identifier, 7, true, false),
+            530 => new AzaleaLeavesBlock(Identifier, 7, false, true),
+            531 => new AzaleaLeavesBlock(Identifier, 7, false, false),
+            _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+}

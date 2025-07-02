@@ -17,7 +17,7 @@ public class ServerBoundUseItemPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundUseItemPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundUseItemPacket {
         UsedHand = (Hand)r.ReadVarInt(),
         Sequence = r.ReadVarInt(),
         Yaw = Angle.FromDegrees(r.ReadFloat()),

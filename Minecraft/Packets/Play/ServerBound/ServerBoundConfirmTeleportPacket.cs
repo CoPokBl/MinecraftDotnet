@@ -7,7 +7,7 @@ public class ServerBoundConfirmTeleportPacket : ServerBoundPacket {
         return new DataWriter().WriteVarInt(TeleportId).ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundConfirmTeleportPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundConfirmTeleportPacket {
         TeleportId = r.ReadVarInt()
     };
 }

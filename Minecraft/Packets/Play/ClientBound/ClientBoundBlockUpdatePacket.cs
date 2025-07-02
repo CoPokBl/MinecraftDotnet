@@ -1,20 +1,21 @@
+using Minecraft.Data.Blocks;
 using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundBlockUpdatePacket : ClientBoundPacket {
     public required BlockPosition Location;
-    public required int BlockId;
+    public required IBlock Block;
 
     protected override byte[] GetData() {
         return new DataWriter()
             .WritePosition(Location)
-            .WriteVarInt(BlockId)
+            .WriteVarInt((int)Block.StateId)
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundBlockUpdatePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundBlockUpdatePacket {
         Location = r.ReadPosition(),
-        BlockId = r.ReadVarInt()
+        Block = reg.Blocks[(uint)r.ReadVarInt()]
     };
 }

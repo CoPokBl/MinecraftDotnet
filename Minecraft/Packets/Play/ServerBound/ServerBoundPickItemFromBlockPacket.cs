@@ -13,7 +13,7 @@ public class ServerBoundPickItemFromBlockPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPickItemFromBlockPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPickItemFromBlockPacket {
         Location = r.ReadPosition(),
         IncludeData = r.ReadBoolean()
     };

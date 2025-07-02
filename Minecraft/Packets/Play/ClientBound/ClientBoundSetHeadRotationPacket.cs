@@ -13,7 +13,7 @@ public class ClientBoundSetHeadRotationPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetHeadRotationPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetHeadRotationPacket {
         EntityId = r.ReadVarInt(),
         Yaw = r.ReadAngle()
     };

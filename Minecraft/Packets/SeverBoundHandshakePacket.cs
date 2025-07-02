@@ -28,7 +28,7 @@ public class ServerBoundHandshakePacket() : ServerBoundPacket {
         return w.ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundHandshakePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundHandshakePacket {
         ProtocolVersion = r.ReadVarInt(),
         Hostname = r.ReadString(),
         Port = r.ReadUShort(),

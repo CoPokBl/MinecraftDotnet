@@ -1,0 +1,32 @@
+using Minecraft.Schemas;
+using Minecraft.Schemas.BlockEnums;
+using Minecraft.Data.Blocks;
+
+namespace Minecraft.Data.Generated.BlockTypes;
+
+// Generated using the CodeGen project. Do not edit manually.
+//
+// Last updated: 2025-07-03
+public record StrippedCrimsonHyphaeBlock(Identifier Identifier, Axis Axis) : IBlock {
+
+    public uint StateId {
+        get {
+            return Axis switch {
+                Axis.X => 19628,
+                Axis.Y => 19629,
+                Axis.Z => 19630,
+                _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
+            };
+        }
+    }
+    
+    public IBlock GetState(uint state) {
+        return state switch {
+            19628 => new StrippedCrimsonHyphaeBlock(Identifier, Axis.X),
+            19629 => new StrippedCrimsonHyphaeBlock(Identifier, Axis.Y),
+            19630 => new StrippedCrimsonHyphaeBlock(Identifier, Axis.Z),
+            _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+}

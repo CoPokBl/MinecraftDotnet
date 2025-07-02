@@ -11,7 +11,7 @@ public class ClientBoundPluginMessagePacket : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundPluginMessagePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundPluginMessagePacket {
         Channel = r.ReadString(),
         Data = r.ReadRemaining()
     };

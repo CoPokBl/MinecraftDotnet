@@ -9,7 +9,7 @@ public class ClientBoundCookieRequestPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundCookieRequestPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundCookieRequestPacket {
         Key = r.ReadString()
     };
 }

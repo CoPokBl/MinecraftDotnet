@@ -6,5 +6,5 @@ public class ClientBoundChunkBatchStartPacket : ClientBoundPacket {
         return [];
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = _ => new ClientBoundChunkBatchStartPacket();
+    public static readonly PacketDataDeserialiser Deserialiser = (_, _) => new ClientBoundChunkBatchStartPacket();
 }

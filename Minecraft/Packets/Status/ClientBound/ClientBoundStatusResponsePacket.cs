@@ -62,7 +62,7 @@ public class ClientBoundStatusResponsePacket : ClientBoundPacket {
         return w.ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
         string json = r.ReadString();
         JObject obj = JsonConvert.DeserializeObject<JObject>(json)!;
         

@@ -14,7 +14,7 @@ public class ServerBoundKnownPacksPacket : ServerBoundPacket {
         return w.ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundKnownPacksPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundKnownPacksPacket {
         Packs = r.ReadPrefixedArray(reader => 
             new KnownDataPack(reader.ReadString(), reader.ReadString(), reader.ReadString()))
     };

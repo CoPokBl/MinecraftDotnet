@@ -9,7 +9,7 @@ public class ServerBoundPongPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPongPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPongPacket {
         Id = r.ReadInteger()
     };
 }

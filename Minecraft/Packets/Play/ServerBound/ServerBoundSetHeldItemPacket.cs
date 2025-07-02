@@ -9,7 +9,7 @@ public class ServerBoundSetHeldItemPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundSetHeldItemPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSetHeldItemPacket {
         Slot = (short)r.ReadUShort()
     };
 }

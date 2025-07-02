@@ -9,7 +9,7 @@ public class ClientBoundClearTitlesPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundClearTitlesPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundClearTitlesPacket {
         Reset = r.ReadBoolean()
     };
 }

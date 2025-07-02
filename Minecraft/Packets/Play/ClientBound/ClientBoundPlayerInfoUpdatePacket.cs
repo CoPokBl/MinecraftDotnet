@@ -238,7 +238,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
         PlayerActions actions = (PlayerActions)r.Read();
         PlayerActions[] setFlags = Enum.GetValues(typeof(PlayerActions))
             .Cast<PlayerActions>()

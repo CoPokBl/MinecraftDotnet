@@ -18,7 +18,7 @@ public class ClientBoundChangeDifficultyPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundChangeDifficultyPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundChangeDifficultyPacket {
         Difficulty = (DifficultySetting)r.Read(),
         Locked = r.ReadBoolean()
     };

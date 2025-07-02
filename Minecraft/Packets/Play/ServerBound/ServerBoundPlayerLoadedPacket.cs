@@ -6,5 +6,5 @@ public class ServerBoundPlayerLoadedPacket : ServerBoundPacket {
         return [];
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = _ => new ServerBoundPlayerLoadedPacket();
+    public static readonly PacketDataDeserialiser Deserialiser = (_, _) => new ServerBoundPlayerLoadedPacket();
 }

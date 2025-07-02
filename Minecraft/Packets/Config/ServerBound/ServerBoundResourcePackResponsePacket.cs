@@ -22,7 +22,7 @@ public class ServerBoundResourcePackResponsePacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundResourcePackResponsePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundResourcePackResponsePacket {
         PackId = r.ReadUuid(),
         Result = (PackResponse)r.ReadVarInt()
     };

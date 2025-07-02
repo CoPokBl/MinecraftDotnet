@@ -11,7 +11,7 @@ public class ServerBoundPickItemFromEntityPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundPickItemFromEntityPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPickItemFromEntityPacket {
         EntityId = r.ReadVarInt(),
         IncludeData = r.ReadBoolean()
     };

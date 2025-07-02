@@ -13,7 +13,7 @@ public class ClientBoundGameEventPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundGameEventPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundGameEventPacket {
         Event = (GameEvent)r.Read(),
         Value = r.ReadFloat()
     };

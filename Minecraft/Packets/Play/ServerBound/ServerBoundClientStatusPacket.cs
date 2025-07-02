@@ -14,7 +14,7 @@ public class ServerBoundClientStatusPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundClientStatusPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundClientStatusPacket {
         Action = (StatusAction)r.ReadVarInt()
     };
 }

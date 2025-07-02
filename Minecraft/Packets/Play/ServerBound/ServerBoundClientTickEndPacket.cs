@@ -6,5 +6,5 @@ public class ServerBoundClientTickEndPacket : ServerBoundPacket {
         return [];
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = _ => new ServerBoundClientTickEndPacket();
+    public static readonly PacketDataDeserialiser Deserialiser = (_, _) => new ServerBoundClientTickEndPacket();
 }

@@ -9,7 +9,7 @@ public class ClientBoundSetCompressionPacket : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetCompressionPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetCompressionPacket {
         Threshold = r.ReadVarInt()
     };
 }

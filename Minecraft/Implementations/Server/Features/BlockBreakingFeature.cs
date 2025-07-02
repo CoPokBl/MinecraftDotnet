@@ -1,3 +1,4 @@
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -42,7 +43,7 @@ public class BlockBreakingFeature(bool instaMine = true) : IWorldFeature {
             }
             
             MinecraftPacket changePacket = new ClientBoundBlockUpdatePacket {
-                BlockId = 0,
+                Block = Block.Air,
                 Location = packet.Location
             };
             foreach (PlayerEntity p in world.Players) {

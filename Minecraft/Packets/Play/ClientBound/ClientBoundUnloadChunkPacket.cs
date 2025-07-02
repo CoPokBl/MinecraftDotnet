@@ -18,7 +18,7 @@ public class ClientBoundUnloadChunkPacket() : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundUnloadChunkPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUnloadChunkPacket {
         Z = r.ReadInteger(),
         X = r.ReadInteger()
     };

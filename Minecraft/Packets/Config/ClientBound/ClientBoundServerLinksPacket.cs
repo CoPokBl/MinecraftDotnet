@@ -74,7 +74,7 @@ public class ClientBoundServerLinksPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundServerLinksPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundServerLinksPacket {
         Links = r.ReadPrefixedArray(ServerLink.Read)
     };
 }

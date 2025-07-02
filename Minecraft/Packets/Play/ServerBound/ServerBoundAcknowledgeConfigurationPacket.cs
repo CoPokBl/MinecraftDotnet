@@ -6,5 +6,5 @@ public class ServerBoundAcknowledgeConfigurationPacket : ServerBoundPacket {
         return [];
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = _ => new ServerBoundAcknowledgeConfigurationPacket();
+    public static readonly PacketDataDeserialiser Deserialiser = (_, _) => new ServerBoundAcknowledgeConfigurationPacket();
 }

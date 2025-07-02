@@ -13,7 +13,7 @@ public class ClientBoundLoginPluginRequestPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundLoginPluginRequestPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginPluginRequestPacket {
         MessageId = r.ReadVarInt(),
         Channel = r.ReadString(),
         Data = r.ReadRemaining()

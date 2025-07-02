@@ -72,7 +72,7 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
         int id = r.ReadVarInt();
         SoundEvent? ev = null;
         if (id == 0) {

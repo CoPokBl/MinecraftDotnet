@@ -1,0 +1,44 @@
+using Minecraft.Schemas;
+using Minecraft.Schemas.BlockEnums;
+using Minecraft.Data.Blocks;
+
+namespace Minecraft.Data.Generated.BlockTypes;
+
+// Generated using the CodeGen project. Do not edit manually.
+//
+// Last updated: 2025-07-03
+public record SmoothRedSandstoneSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
+
+    public uint StateId {
+        get {
+            return Type switch {
+                SlabType.Top => Waterlogged switch {
+                    true => 15111,
+                    false => 15112,
+                },
+                SlabType.Bottom => Waterlogged switch {
+                    true => 15113,
+                    false => 15114,
+                },
+                SlabType.Double => Waterlogged switch {
+                    true => 15115,
+                    false => 15116,
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
+            };
+        }
+    }
+    
+    public IBlock GetState(uint state) {
+        return state switch {
+            15111 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Top, true),
+            15112 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Top, false),
+            15113 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Bottom, true),
+            15114 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Bottom, false),
+            15115 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Double, true),
+            15116 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Double, false),
+            _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+}

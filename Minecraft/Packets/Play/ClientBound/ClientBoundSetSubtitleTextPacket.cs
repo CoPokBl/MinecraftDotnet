@@ -11,7 +11,7 @@ public class ClientBoundSetSubtitleTextPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetSubtitleTextPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetSubtitleTextPacket {
         Text = r.ReadText()
     };
 }

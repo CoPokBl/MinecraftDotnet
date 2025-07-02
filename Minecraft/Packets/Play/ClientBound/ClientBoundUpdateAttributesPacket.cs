@@ -49,8 +49,8 @@ public class ClientBoundUpdateAttributesPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = reader => new ClientBoundUpdateAttributesPacket {
-        EntityId = reader.ReadVarInt(),
-        Attributes = reader.ReadPrefixedArray(AttributeValue.Read)
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateAttributesPacket {
+        EntityId = r.ReadVarInt(),
+        Attributes = r.ReadPrefixedArray(AttributeValue.Read)
     };
 }

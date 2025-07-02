@@ -6,5 +6,5 @@ public class ClientBoundClearDialogPacket : ClientBoundPacket {
         return [];
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = _ => new ClientBoundClearDialogPacket();
+    public static readonly PacketDataDeserialiser Deserialiser = (_, _) => new ClientBoundClearDialogPacket();
 }

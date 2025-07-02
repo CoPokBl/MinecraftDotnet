@@ -67,7 +67,7 @@ public class ServerBoundInteractPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
         int entityId = r.ReadVarInt();
         InteractType type = (InteractType)r.ReadVarInt();
         FVec3? target = null;

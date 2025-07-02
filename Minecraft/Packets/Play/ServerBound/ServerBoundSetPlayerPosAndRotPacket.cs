@@ -18,7 +18,7 @@ public class ServerBoundSetPlayerPosAndRotPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundSetPlayerPosAndRotPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSetPlayerPosAndRotPacket {
         Position = r.ReadVec3(),
         Yaw = r.ReadFloat(),
         Pitch = r.ReadFloat(),

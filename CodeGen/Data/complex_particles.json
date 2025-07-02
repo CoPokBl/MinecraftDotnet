@@ -1,0 +1,15 @@
+{
+  "minecraft:block": "BlockParticle",
+  "minecraft:block_crumble": "BlockCrumbleParticle",
+  "minecraft:block_marker": "BlockMarkerParticle",
+  "minecraft:dust": "DustParticle",
+  "minecraft:dust_color_transition": "DustColorTransitionParticle",
+  "minecraft:dust_pillar": "DustPillarParticle",
+  "minecraft:entity_effect": "EntityEffectParticle",
+  "minecraft:falling_dust": "FallingDustParticle",
+  "minecraft:item": "ItemParticle",
+  "minecraft:sculk_charge": "SculkChargeParticle",
+  "minecraft:shriek": "ShriekParticle",
+  "minecraft:trail": "TrailParticle",
+  "minecraft:vibration": "VibrationParticle"
+}

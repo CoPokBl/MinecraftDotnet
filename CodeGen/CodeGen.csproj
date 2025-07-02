@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Data\registries.json" />
+      <EmbeddedResource Include="Data\registries.json">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="Data\complex_particles.json" />
+      <EmbeddedResource Include="Data\complex_particles.json" />
+      <None Remove="Data\blocks.json" />
+      <EmbeddedResource Include="Data\blocks.json" />
+    </ItemGroup>
+
+</Project>

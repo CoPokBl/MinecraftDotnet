@@ -20,7 +20,7 @@ public class ClientBoundUpdateEntityPositionPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundUpdateEntityPositionPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateEntityPositionPacket {
         EntityId = r.ReadVarInt(),
         Delta = new FVec3(
             (float)r.ReadShort() / 4096, 

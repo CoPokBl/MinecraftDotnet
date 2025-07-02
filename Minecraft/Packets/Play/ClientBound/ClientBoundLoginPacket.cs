@@ -52,7 +52,7 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundLoginPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginPacket {
         EntityId = r.ReadInteger(),
         IsHardcore = r.ReadBoolean(),
         Dimensions = r.ReadPrefixedArray(reader => reader.ReadString()),

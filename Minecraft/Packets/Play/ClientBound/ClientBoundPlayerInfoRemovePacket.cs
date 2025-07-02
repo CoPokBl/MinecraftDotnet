@@ -9,7 +9,7 @@ public class ClientBoundPlayerInfoRemovePacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundPlayerInfoRemovePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundPlayerInfoRemovePacket {
         Uuids = r.ReadPrefixedArray(reader => reader.ReadUuid())
     };
 }

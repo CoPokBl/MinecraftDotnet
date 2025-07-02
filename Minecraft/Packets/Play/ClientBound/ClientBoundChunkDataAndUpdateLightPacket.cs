@@ -16,7 +16,7 @@ public class ClientBoundChunkDataAndUpdateLightPacket : ClientBoundPacket {
             .Write(Light).ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundChunkDataAndUpdateLightPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundChunkDataAndUpdateLightPacket {
         ChunkX = r.ReadInteger(),
         ChunkZ = r.ReadInteger(),
         Data = new ChunkData().Read(r),

@@ -13,7 +13,7 @@ public class ClientBoundSetTabListHeaderFooterPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundSetTabListHeaderFooterPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetTabListHeaderFooterPacket {
         Header = r.ReadText(),
         Footer = r.ReadText()
     };

@@ -13,7 +13,7 @@ public class ServerBoundCookieResponsePacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundCookieResponsePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundCookieResponsePacket {
         Key = r.ReadString(),
         Data = r.ReadPrefixedOptional(re => re.ReadPrefixedArray(re2 => re2.Read()))
     };

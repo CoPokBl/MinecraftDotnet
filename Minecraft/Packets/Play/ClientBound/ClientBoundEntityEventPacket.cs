@@ -11,7 +11,7 @@ public class ClientBoundEntityEventPacket : ClientBoundPacket {
             .ToArray();
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundEntityEventPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundEntityEventPacket {
         EntityId = r.ReadInteger(),
         Status = (EntityEventType)r.ReadByte()
     };

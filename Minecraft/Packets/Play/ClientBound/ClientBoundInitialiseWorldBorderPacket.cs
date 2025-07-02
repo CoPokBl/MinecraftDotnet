@@ -23,7 +23,7 @@ public class ClientBoundInitialiseWorldBorderPacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundInitialiseWorldBorderPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundInitialiseWorldBorderPacket {
         X = r.ReadDouble(),
         Z = r.ReadDouble(),
         OldDiameter = r.ReadDouble(),

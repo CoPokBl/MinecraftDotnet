@@ -6,5 +6,5 @@ public class ClientBoundBundleDelimiterPacket : ClientBoundPacket {
         return [];
     }
 
-    public static PacketDataDeserialiser Deserialiser => _ => new ClientBoundBundleDelimiterPacket();
+    public static PacketDataDeserialiser Deserialiser => (_, _) => new ClientBoundBundleDelimiterPacket();
 }

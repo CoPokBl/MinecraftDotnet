@@ -9,7 +9,7 @@ public class ServerBoundChunkBatchReceivedPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundChunkBatchReceivedPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundChunkBatchReceivedPacket {
         ChunksPerTick = r.ReadFloat()
     };
 }

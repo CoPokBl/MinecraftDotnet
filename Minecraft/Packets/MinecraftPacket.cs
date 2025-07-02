@@ -1,4 +1,6 @@
+using Minecraft.Data.Generated;
 using Minecraft.Packets.Registry;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Packets;
@@ -72,7 +74,7 @@ public abstract class MinecraftPacket {
         return w.ToArray();
     }
     
-    public static MinecraftPacket Deserialise(byte[] packet, bool clientBound, ConnectionState state, bool compressed = false, bool allowUnknown = true) {
+    public static MinecraftPacket Deserialise(byte[] packet, bool clientBound, ConnectionState state, bool compressed = false, bool allowUnknown = true, MinecraftRegistry? mcReg = null) {
         DataReader r = new(packet);
         _ = r.ReadVarInt();  // Unneeded packet size
 
@@ -111,6 +113,6 @@ public abstract class MinecraftPacket {
             throw new NotImplementedException($"Invalid packet type: 0x{packetType:X} (Bound to: {(clientBound ? "client" : "server")}, State: {state})");
         }
         PacketDataDeserialiser deserialiser = registryVal.Item2;
-        return deserialiser(r);
+        return deserialiser(r, mcReg ?? VanillaRegistry.Data);
     }
 }

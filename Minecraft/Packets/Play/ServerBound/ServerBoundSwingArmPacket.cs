@@ -11,7 +11,7 @@ public class ServerBoundSwingArmPacket : ServerBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ServerBoundSwingArmPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSwingArmPacket {
         UsedHand = (Hand)r.ReadVarInt()
     };
 }

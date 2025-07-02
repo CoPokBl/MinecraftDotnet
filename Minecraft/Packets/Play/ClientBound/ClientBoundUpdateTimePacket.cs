@@ -13,7 +13,7 @@ public class ClientBoundUpdateTimePacket : ClientBoundPacket {
             .ToArray();
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = r => new ClientBoundUpdateTimePacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateTimePacket {
         WorldAge = r.ReadLong(),
         TimeOfDay = r.ReadLong(),
         ClientAdvanceTime = r.ReadBoolean()
