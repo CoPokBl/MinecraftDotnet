@@ -48,4 +48,12 @@ public readonly struct BlockPosition(int x, int y, int z) : IEquatable<BlockPosi
     }
 
     public static implicit operator Vec3(BlockPosition pos) => new(pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5);
+
+    public static bool operator ==(BlockPosition left, BlockPosition right) {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(BlockPosition left, BlockPosition right) {
+        return !(left == right);
+    }
 }

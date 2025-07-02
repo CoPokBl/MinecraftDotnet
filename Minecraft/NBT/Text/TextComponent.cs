@@ -79,7 +79,7 @@ public class TextComponent : CompoundTagSerialisable {
     }
     
     public TextComponent WithItalic(bool italic = true) {
-        this.Italic = italic;
+        Italic = italic;
         return this;
     }
     
@@ -120,7 +120,7 @@ public class TextComponent : CompoundTagSerialisable {
         tags.AddRange(Content.Fields);  // add all the content fields
 
         if (Color != null) {
-            tags.Add(new StringTag("color", Color.ToHex()));
+            tags.Add(new StringTag("color", Color.Value.ToHex()));
         }
 
         if (Bold.HasValue) {
@@ -148,7 +148,7 @@ public class TextComponent : CompoundTagSerialisable {
         }
 
         if (ShadowColor != null) {
-            tags.Add(new IntegerTag("shadow_color", ShadowColor.ToDecimal()));
+            tags.Add(new IntegerTag("shadow_color", ShadowColor.Value.ToDecimal()));
         }
 
         if (Font != null) {

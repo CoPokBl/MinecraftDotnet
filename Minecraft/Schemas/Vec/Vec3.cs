@@ -1,8 +1,13 @@
 namespace Minecraft.Schemas.Vec;
 
-public record Vec3(double X, double Y, double Z) {
-    public static readonly Vec3 Zero = new(0.0, 0.0, 0.0);
+public readonly struct Vec3(double x, double y, double z) {
+    public double X { get; init; } = x;
+    public double Y { get; init; } = y;
+    public double Z { get; init; } = z;
     
+    // This is the default anyway.
+    public static readonly Vec3 Zero = new(0.0, 0.0, 0.0);
+
     public Vec3 Normalize() {
         double len = ComputeLength();
         if (len == 0) {
@@ -27,5 +32,11 @@ public record Vec3(double X, double Y, double Z) {
     /// <returns>The distance between the two Vec3s.</returns>
     public double DistanceTo2D(Vec3 other) {
         return Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Z - other.Z, 2));
+    }
+
+    public void Deconstruct(out double x, out double y, out double z) {
+        x = X;
+        y = Y;
+        z = Z;
     }
 }

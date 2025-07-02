@@ -3,6 +3,8 @@ namespace Minecraft.Schemas.Items;
 public class Slot(int count, int itemId = 0) : IWritable {
     public int Count = count;
     public int ItemId = itemId;
+    
+    public static readonly Slot Air = new(0);
 
     public void Write(DataWriter writer) {
         if (Count == 0) {

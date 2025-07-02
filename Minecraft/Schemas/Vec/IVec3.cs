@@ -1,22 +1,19 @@
 namespace Minecraft.Schemas.Vec;
 
-public record IVec3(double X, double Y, double Z) {
-    public static readonly IVec3 Zero = new(0, 0, 0);
+public readonly struct IVec3(int x, int y, int z) {
+    public int X { get; init; } = x;
+    public int Y { get; init; } = y;
+    public int Z { get; init; } = z;
     
-    public IVec3 Normalize() {
-        double len = ComputeLength();
-        if (len == 0) {
-            return Zero;
-        }
-        return new IVec3(X/len, Y/len, Z/len);
-    }
+    // This is the default anyway.
+    public static readonly IVec3 Zero = new(0, 0, 0);
 
     public double ComputeLength() {
         return Math.Sqrt(X*X + Y*Y + Z*Z);
     }
 
     public IVec3 Multiply(double scalar) {
-        return new IVec3(X * scalar, Y * scalar, Z * scalar);
+        return new IVec3((int)(X * scalar), (int)(Y * scalar), (int)(Z * scalar));
     }
 
     /// <summary>
@@ -27,5 +24,11 @@ public record IVec3(double X, double Y, double Z) {
     /// <returns>The distance between the two Vec3s.</returns>
     public double DistanceTo2D(IVec3 other) {
         return Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Z - other.Z, 2));
+    }
+
+    public void Deconstruct(out int x, out int y, out int z) {
+        x = X;
+        y = Y;
+        z = Z;
     }
 }

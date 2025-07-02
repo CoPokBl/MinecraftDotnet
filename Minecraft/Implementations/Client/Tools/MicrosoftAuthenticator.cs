@@ -4,7 +4,6 @@ using Newtonsoft.Json.Linq;
 
 namespace Minecraft.Implementations.Client.Tools;
 
-// TODO, WIP
 public class MicrosoftAuthenticator {
     // ID's and tokens
     private const string ClientId = "c36a9fb6-4f2a-41ff-90bd-ae7cc92031eb";  // prism launcher's client ID :)
@@ -12,7 +11,7 @@ public class MicrosoftAuthenticator {
     // URLs
     private const string DeviceCodeUrl = $"https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode?client_id={ClientId}&scope=XboxLive.SignIn%20XboxLive.offline_access";
     private const string CodeAuthUrl = "https://login.live.com/oauth20_remoteconnect.srf?otc=";  // ends in the otc (usercode) that the user has to enter
-    private const string TokenPollUrl = $"https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
+    private const string TokenPollUrl = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
     private const string XBoxLiveAuthUrl = "https://user.auth.xboxlive.com/user/authenticate";
     private const string XstsAuthUrl = "https://xsts.auth.xboxlive.com/xsts/authorize";
     private const string MinecraftAuthUrl = "https://api.minecraftservices.com/authentication/login_with_xbox";

@@ -257,6 +257,10 @@ public static class MlgRush {
 
                 bool p1Bed = e.Position.Equals(MlgRushMapProvider.P1BedPosClient);
 
+                if ((p1Bed && !p1HasBed) || (!p1Bed && !p2HasBed)) {
+                    return;  // someone placed a block where the bed was, we can ignore it
+                }
+
                 if (!CanBreakOwnBed && (p1Bed && e.Connection == c1 || !p1Bed && e.Connection == c2)) {  // they broke their own bed
                     e.Connection.SendSystemMessage(TextComponent.Text("You can't break your own bed idiot")
                         .WithColor(TextColor.Red)
@@ -270,9 +274,9 @@ public static class MlgRush {
                 }
                 
                 // play some fun
-                BroadcastParticle(IParticle.DefaultOfType("minecraft:explosion"), 10, e.Position);
-                BroadcastParticle(IParticle.DefaultOfType("minecraft:firework"), 50, e.Position);
-                BroadcastParticle(IParticle.DefaultOfType("minecraft:lava"), 100, e.Position);
+                BroadcastParticle(Particle.Explosion, 10, e.Position);
+                BroadcastParticle(Particle.Firework, 50, e.Position);
+                BroadcastParticle(Particle.Lava, 100, e.Position);
                 
                 // a bed broke and it was the player person
                 if (!LifeAfterBed) {

@@ -1,7 +1,7 @@
 namespace Minecraft.NBT.Text;
 
 // TODO: Add from legacy colour codes function (eg. &r&lHello &cWorld!)
-public class TextColor {
+public readonly struct TextColor : IEquatable<TextColor> {
     public int R { get; }
     public int G { get; }
     public int B { get; }
@@ -117,5 +117,13 @@ public class TextColor {
 
     public override int GetHashCode() {
         return ToDecimal();
+    }
+
+    public static bool operator ==(TextColor left, TextColor right) {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(TextColor left, TextColor right) {
+        return !(left == right);
     }
 }
