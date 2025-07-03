@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundSwingArmPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:swing";
+    
     public required Hand UsedHand;
 
     protected override byte[] GetData() {

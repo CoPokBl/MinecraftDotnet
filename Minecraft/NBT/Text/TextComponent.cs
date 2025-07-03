@@ -1,9 +1,14 @@
+using System.Text;
 using Minecraft.NBT.Tags;
 
 namespace Minecraft.NBT.Text;
 
 // https://minecraft.wiki/w/Text_component_format
 public class TextComponent : CompoundTagSerialisable {
+    public const char LegacyColorCodePrefix = '§';  // Prefix char to specify a colour in legacy text formats
+    public const char LegacyColorCodeNotationPrefix = '&';  // Prefix char to specify a colour in legacy text formats (alternative notation)
+    public const string ValidColorCodes = "0123456789abcdefklmnor";
+    
     public readonly List<TextComponent> Children = [];
     public TextContent Content = TextContent.Text("");
     public TextColor? Color;
@@ -103,6 +108,43 @@ public class TextComponent : CompoundTagSerialisable {
         return this;
     }
     
+    public TextComponent WithDecoration(TextDecoration decoration, bool enabled = true) {
+        switch (decoration) {
+            case TextDecoration.Bold: WithBold(enabled); break;
+            case TextDecoration.Italic: WithItalic(enabled); break;
+            case TextDecoration.Underlined: WithUnderlined(enabled); break;
+            case TextDecoration.Strikethrough: WithStrikethrough(enabled); break;
+            case TextDecoration.Obfuscated: WithObfuscated(enabled); break;
+            default: throw new ArgumentOutOfRangeException(nameof(decoration), decoration, null);
+        }
+        return this;
+    }
+
+    public TextComponent WithDecorations(params TextDecoration[] decorations) {
+        foreach (TextDecoration decoration in decorations) {
+            WithDecoration(decoration);
+        }
+        return this;
+    }
+    
+    public TextComponent ClearDecorations() {
+        Bold = null;
+        Italic = null;
+        Underlined = null;
+        Strikethrough = null;
+        Obfuscated = null;
+        return this;
+    }
+    
+    public TextComponent SetAllDecorations(bool val) {
+        Bold = val;
+        Italic = val;
+        Underlined = val;
+        Strikethrough = val;
+        Obfuscated = val;
+        return this;
+    }
+    
     public TextComponent WithFontEffects(bool? bold = null, bool? underlined = null, bool? italic = null, bool? strikethrough = null, bool? obfuscated = null, TextColor? shadowColor = null) {
         if (bold.HasValue) Bold = bold;
         if (underlined.HasValue) Underlined = underlined;
@@ -114,7 +156,7 @@ public class TextComponent : CompoundTagSerialisable {
     }
 
     public override CompoundTag SerialiseToTag() {
-        List<ITag?> tags = [
+        List<INbtTag?> tags = [
             new StringTag("type", Content.Type)
         ];
         tags.AddRange(Content.Fields);  // add all the content fields
@@ -156,7 +198,7 @@ public class TextComponent : CompoundTagSerialisable {
         }
 
         if (ClickEvent != null) {
-            List<ITag?> fields = [
+            List<INbtTag?> fields = [
                 new StringTag("action", ClickEvent.Action)
             ];
             fields.AddRange(ClickEvent.Fields);
@@ -164,7 +206,7 @@ public class TextComponent : CompoundTagSerialisable {
         }
 
         if (HoverEvent != null) {
-            List<ITag?> fields = [
+            List<INbtTag?> fields = [
                 new StringTag("action", HoverEvent.Action)
             ];
             fields.AddRange(HoverEvent.Fields);
@@ -180,7 +222,7 @@ public class TextComponent : CompoundTagSerialisable {
         return new CompoundTag(ComponentName, tags.ToArray());
     }
 
-    public static TextComponent FromTag(ITag tag) {
+    public static TextComponent FromTag(INbtTag tag) {
         if (tag is StringTag str) {  // direct string
             return Text(str.Value);
         }
@@ -192,7 +234,7 @@ public class TextComponent : CompoundTagSerialisable {
         TextComponent textComponent = Empty();
         
         // alright, let's work out what content it has
-        Dictionary<string, ITag> fields = compound.ChildrenMap;
+        Dictionary<string, INbtTag> fields = compound.ChildrenMap;
 
         if (fields.Count == 1 && fields[""] is StringTag strTag) {
             // special case, if the tag has only one field with an empty name, it's a string
@@ -201,7 +243,7 @@ public class TextComponent : CompoundTagSerialisable {
             return Text(strTag.Value);
         }
 
-        fields.TryGetValue("type", out ITag? contentTypeTag);
+        fields.TryGetValue("type", out INbtTag? contentTypeTag);
         string? contentType = ((StringTag?)contentTypeTag)?.Value;
         if (contentType == null) {
                  if (fields.ContainsKey("text")) contentType = "text";
@@ -220,16 +262,16 @@ public class TextComponent : CompoundTagSerialisable {
             string key = ((StringTag)fields["translate"]).Value;
             string? fallback = null;
             TextComponent[]? with = null;
-            if (fields.TryGetValue("fallback", out ITag? fallbackTag)) {
+            if (fields.TryGetValue("fallback", out INbtTag? fallbackTag)) {
                 fallback = ((StringTag)fallbackTag).Value;
             }
-            if (fields.TryGetValue("with", out ITag? withTag)) {
+            if (fields.TryGetValue("with", out INbtTag? withTag)) {
                 with = ((ListTag)withTag).Tags.Select(FromTag).ToArray();
             }
             textComponent.Content = TextContent.Translatable(key, fallback, with);
         }
         else if (contentType == "score") {
-            Dictionary<string, ITag> scoreFields = ((CompoundTag)fields["score"]).ChildrenMap;
+            Dictionary<string, INbtTag> scoreFields = ((CompoundTag)fields["score"]).ChildrenMap;
             textComponent.Content = TextContent.ScoreboardValue(
                 ((StringTag)scoreFields["name"]).Value, 
                 ((StringTag)scoreFields["objective"]).Value);
@@ -237,7 +279,7 @@ public class TextComponent : CompoundTagSerialisable {
         else if (contentType == "selector") {
             string selector = ((StringTag)fields["selector"]).Value;
             TextComponent? separator = null;
-            if (fields.TryGetValue("separator", out ITag? separatorTag)) {
+            if (fields.TryGetValue("separator", out INbtTag? separatorTag)) {
                 separator = FromTag(separatorTag);
             }
             textComponent.Content = TextContent.EntityNames(selector, separator);
@@ -254,35 +296,35 @@ public class TextComponent : CompoundTagSerialisable {
         
         // okay, now we have done all the content we need to get all
         // optional fields.
-        if (fields.TryGetValue("font", out ITag? fontTag)) {
+        if (fields.TryGetValue("font", out INbtTag? fontTag)) {
             textComponent.WithFont(fontTag.GetString());
         }
 
-        if (fields.TryGetValue("color", out ITag? colorTag)) {
+        if (fields.TryGetValue("color", out INbtTag? colorTag)) {
             textComponent.WithColor(TextColor.Parse(colorTag.GetString()));
         }
 
-        if (fields.TryGetValue("bold", out ITag? bold)) {
+        if (fields.TryGetValue("bold", out INbtTag? bold)) {
             textComponent.WithBold(bold.GetBoolean());
         }
         
-        if (fields.TryGetValue("italic", out ITag? italic)) {
+        if (fields.TryGetValue("italic", out INbtTag? italic)) {
             textComponent.WithItalic(italic.GetBoolean());
         }
         
-        if (fields.TryGetValue("underlined", out ITag? underlined)) {
+        if (fields.TryGetValue("underlined", out INbtTag? underlined)) {
             textComponent.WithUnderlined(underlined.GetBoolean());
         }
         
-        if (fields.TryGetValue("strikethrough", out ITag? strikethrough)) {
+        if (fields.TryGetValue("strikethrough", out INbtTag? strikethrough)) {
             textComponent.WithStrikethrough(strikethrough.GetBoolean());
         }
         
-        if (fields.TryGetValue("obfuscated", out ITag? obfuscated)) {
+        if (fields.TryGetValue("obfuscated", out INbtTag? obfuscated)) {
             textComponent.WithObfuscated(obfuscated.GetBoolean());
         }
         
-        if (fields.TryGetValue("shadow_color", out ITag? shadowColorTag)) {
+        if (fields.TryGetValue("shadow_color", out INbtTag? shadowColorTag)) {
             // can be list or int
             if (shadowColorTag is IntegerTag intShadowTag) {
                 textComponent.WithShadowColor(TextColor.FromDecimal(intShadowTag.Value));
@@ -297,11 +339,11 @@ public class TextComponent : CompoundTagSerialisable {
         }
         
         // now some interactivity things
-        if (fields.TryGetValue("insertion", out ITag? insertionTag)) {
+        if (fields.TryGetValue("insertion", out INbtTag? insertionTag)) {
             textComponent.WithInsertion(insertionTag.GetString());
         }
 
-        if (fields.TryGetValue("click_event", out ITag? clickEventTag)) {
+        if (fields.TryGetValue("click_event", out INbtTag? clickEventTag)) {
             CompoundTag ct = (CompoundTag)clickEventTag;
             string action = ct["action"]!.GetString();
 
@@ -338,7 +380,7 @@ public class TextComponent : CompoundTagSerialisable {
             }
         }
         
-        if (fields.TryGetValue("hover_event", out ITag? hoverEventTag)) {
+        if (fields.TryGetValue("hover_event", out INbtTag? hoverEventTag)) {
             CompoundTag ct = (CompoundTag)hoverEventTag;
             string action = ct["action"]!.GetString();
 
@@ -349,11 +391,11 @@ public class TextComponent : CompoundTagSerialisable {
                 
                 case "show_item":
                     int count = 1;
-                    if (ct.ChildrenMap.TryGetValue("count", out ITag? countTag)) {
+                    if (ct.ChildrenMap.TryGetValue("count", out INbtTag? countTag)) {
                         count = countTag.GetInteger();
                     }
 
-                    ct.ChildrenMap.TryGetValue("components", out ITag? componentsTag);
+                    ct.ChildrenMap.TryGetValue("components", out INbtTag? componentsTag);
                     textComponent.WithHoverEvent(HoverEvent.ShowItem(ct["id"]!.GetString(), count, (CompoundTag?)componentsTag));
                     break;
                 
@@ -365,15 +407,128 @@ public class TextComponent : CompoundTagSerialisable {
         }
         
         // extras (aka children)
-        if (fields.TryGetValue("extra", out ITag? extrasTag)) {
+        if (fields.TryGetValue("extra", out INbtTag? extrasTag)) {
             ListTag extrasList = (ListTag)extrasTag;
             textComponent.Children.Clear();
-            foreach (ITag extraTag in extrasList.Tags) {
+            foreach (INbtTag extraTag in extrasList.Tags) {
                 textComponent.Children.Add(FromTag(extraTag));
             }
         }
         
         // yay, finally we're done, return the fully constructed object.
         return textComponent;
+    }
+
+    public static TextComponent FromLegacyString(string message) {
+        TextComponent component = Empty();
+        StringBuilder currentSection = new();
+        
+        TextColor colour = TextColor.White;
+        TextDecoration? decoration = null;
+
+        for (int i = 0; i < message.Length; i++) {
+            if (message[i] != LegacyColorCodeNotationPrefix || i == message.Length-1 || !ValidColorCodes.Contains(message[i + 1])) {
+                currentSection.Append(message[i]);
+                continue;
+            }
+            
+            // Apply previous section
+            if (currentSection.Length != 0) {
+                ApplyCurrentSection();
+                currentSection.Clear();
+            }
+
+            i++;  // skip the color code character
+            
+            char modifier = message[i];
+            decoration = null;
+            switch (modifier) {
+                case '0':
+                    colour = TextColor.Black;
+                    break;
+                case '1':
+                    colour = TextColor.DarkBlue;
+                    break;
+                case '2':
+                    colour = TextColor.DarkGreen;
+                    break;
+                case '3':
+                    colour = TextColor.DarkAqua;
+                    break;
+                case '4':
+                    colour = TextColor.DarkRed;
+                    break;
+                case '5':
+                    colour = TextColor.DarkPurple;
+                    break;
+                case '6':
+                    colour = TextColor.Gold;
+                    break;
+                case '7':
+                    colour = TextColor.Gray;
+                    break;
+                case '8':
+                    colour = TextColor.DarkGray;
+                    break;
+                case '9':
+                    colour = TextColor.Blue;
+                    break;
+                case 'a':
+                    colour = TextColor.Green;
+                    break;
+                case 'b':
+                    colour = TextColor.Aqua;
+                    break;
+                case 'c':
+                    colour = TextColor.Red;
+                    break;
+                case 'd':
+                    colour = TextColor.LightPurple;
+                    break;
+                case 'e':
+                    colour = TextColor.Yellow;
+                    break;
+                case 'f':
+                    colour = TextColor.White;
+                    break;
+                case 'k':
+                    decoration = TextDecoration.Obfuscated;
+                    break;
+                case 'l':
+                    decoration = TextDecoration.Bold;
+                    break;
+                case 'm':
+                    decoration = TextDecoration.Strikethrough;
+                    break;
+                case 'n':
+                    decoration = TextDecoration.Underlined;
+                    break;
+                case 'o':
+                    decoration = TextDecoration.Italic;
+                    break;
+                case 'r':
+                    decoration = null;
+                    colour = TextColor.White;
+                    break;
+            }
+        }
+
+        if (currentSection.Length != 0) {
+            ApplyCurrentSection();
+        }
+        
+        return component;
+
+        // Helper method to apply the current section to the component
+        void ApplyCurrentSection() {
+            TextComponent newSec = Text(currentSection.ToString()).WithColor(colour);
+            if (decoration != null) {
+                newSec.WithDecoration(decoration.Value);
+            }
+            else {
+                newSec.SetAllDecorations(false);
+            }
+            component.With(newSec);
+        }
     }
 }

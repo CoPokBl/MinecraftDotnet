@@ -1,8 +1,8 @@
 namespace Minecraft.NBT.Tags;
 
-public class ByteTag(string? name, byte value) : ITag {
+public class ByteTag(string? name, sbyte value) : INbtTag {
     public string? Name { get; } = name;
-    public byte Value { get; } = value;
+    public sbyte Value { get; } = value;
 
     public bool BoolValue => Value != 0x00;
 
@@ -15,6 +15,6 @@ public class ByteTag(string? name, byte value) : ITag {
     }
 
     public byte[] Serialise(bool noType = false) {
-        return new NbtBuilder().WriteType(GetPrefix(), noType).WriteName(Name).Write(Value).ToArray();
+        return new NbtBuilder().WriteType(GetPrefix(), noType).WriteName(Name).WriteByte(Value).ToArray();
     }
 }

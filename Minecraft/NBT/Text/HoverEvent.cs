@@ -2,7 +2,7 @@ using Minecraft.NBT.Tags;
 
 namespace Minecraft.NBT.Text;
 
-public record HoverEvent(string Action, params ITag?[] Fields) {
+public record HoverEvent(string Action, params INbtTag?[] Fields) {
 
     public static HoverEvent ShowText(TextComponent text) {
         return new HoverEvent("show_text", text.WithComponentName("value"));

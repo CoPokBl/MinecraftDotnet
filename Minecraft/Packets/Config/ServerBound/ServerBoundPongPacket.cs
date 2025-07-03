@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Config.ServerBound;
 
 public class ServerBoundPongPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:pong";
+    
     public required int Id;
 
     protected override byte[] GetData() {

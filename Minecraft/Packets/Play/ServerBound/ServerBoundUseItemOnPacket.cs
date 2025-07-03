@@ -4,6 +4,8 @@ using Minecraft.Schemas.Vec;
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundUseItemOnPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:use_item_on";
+    
     public required Hand ActiveHand;
     public required BlockPosition Position;
     public required BlockFace Face;

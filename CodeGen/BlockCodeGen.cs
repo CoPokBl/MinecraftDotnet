@@ -1,3 +1,4 @@
+using System.Text;
 using Newtonsoft.Json.Linq;
 
 namespace CodeGen;
@@ -141,8 +142,8 @@ public static class Block {
         
         JObject blocksJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("blocks.json"));
 
-        string registryData = "";
-        string blocksFileEntries = "";
+        StringBuilder registryData = new();
+        StringBuilder blocksFileEntries = new();
         
         foreach ((string id, JToken? value) in blocksJson) {
             JObject blockData = value!.ToObject<JObject>()!;
@@ -153,9 +154,9 @@ public static class Block {
             if (states.Count == 1) {  // simple! yay! fewer classes
                 JObject state = states[0].ToObject<JObject>()!;
                 int stateId = state["id"]!.ToObject<int>();
-                
-                registryData += $"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {stateId});\n";
-                blocksFileEntries += $"{CodeGenUtils.GetIndentation(1)}public static readonly SimpleBlock {staticVarName} = new(\"{id}\", {stateId});\n";
+
+                registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {stateId});\n");
+                blocksFileEntries.Append($"{CodeGenUtils.GetIndentation(1)}public static readonly SimpleBlock {staticVarName} = new(\"{id}\", {stateId});\n");
                 continue;  // they don't need a record class, just a simple block
             }
             
@@ -174,8 +175,9 @@ public static class Block {
 
                 bool defaultIsWaterlogged = (stateOneIsWaterlogged ? state1 : state2).ContainsKey("default");
                 
-                registryData += $"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {waterloggedState}, {airLoggedState});\n";
-                blocksFileEntries += $"{CodeGenUtils.GetIndentation(1)}public static readonly WaterloggableBlock {staticVarName} = new(\"{id}\", {airLoggedState}, {waterloggedState}, {defaultIsWaterlogged.ToString().ToLower()});\n";
+                registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {waterloggedState}, {airLoggedState});\n");
+                blocksFileEntries.Append(
+                    $"{CodeGenUtils.GetIndentation(1)}public static readonly WaterloggableBlock {staticVarName} = new(\"{id}\", {airLoggedState}, {waterloggedState}, {defaultIsWaterlogged.ToString().ToLower()});\n");
                 continue;  // they don't need a record class, just a simple block
             }
             
@@ -414,8 +416,9 @@ public static class Block {
             }
 
             string defaultBlockDefinition = $"new(\"{id}\", {string.Join(", ", regParams)})";
-            registryData += $"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {string.Join(", ", stateIds)});\n";
-            blocksFileEntries += $"{CodeGenUtils.GetIndentation(1)}public static readonly {pascalName} {staticVarName} = {defaultBlockDefinition};\n";
+            registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {string.Join(", ", stateIds)});\n");
+            blocksFileEntries.Append(
+                $"{CodeGenUtils.GetIndentation(1)}public static readonly {pascalName} {staticVarName} = {defaultBlockDefinition};\n");
             
             string path = Path.Combine(Directory.GetCurrentDirectory(), "BlockTypes", pascalName + ".cs");
             File.WriteAllText(path, file);
@@ -423,8 +426,8 @@ public static class Block {
         
         File.WriteAllText("Block.cs", BlocksFileTemplate
             .Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))
-            .Replace("{entries}", blocksFileEntries));
+            .Replace("{entries}", blocksFileEntries.ToString()));
 
-        return registryData;
+        return registryData.ToString();
     }
 }

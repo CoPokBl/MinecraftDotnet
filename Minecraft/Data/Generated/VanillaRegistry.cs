@@ -1,7 +1,18 @@
+using Minecraft.Schemas;
 using Minecraft.Data.Blocks;
 using Minecraft.Registry;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Generated.BlockTypes;
+
+using Minecraft.Packets.Config.ClientBound;
+using Minecraft.Packets.Config.ServerBound;
+using Minecraft.Packets.Login.ClientBound;
+using Minecraft.Packets.Login.ServerBound;
+using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Packets.Status.ClientBound;
+using Minecraft.Packets.Status.ServerBound;
+using Minecraft.Packets.Handshake;
 
 namespace Minecraft.Data.Generated;
 
@@ -1231,6 +1242,147 @@ public static class VanillaRegistry {
         Data.Blocks.Add(Block.YellowWool, "minecraft:yellow_wool", 2097);
         Data.Blocks.Add(Block.ZombieHead, "minecraft:zombie_head", 9716, 9717, 9718, 9719, 9720, 9721, 9722, 9723, 9724, 9725, 9726, 9727, 9728, 9729, 9730, 9731, 9732, 9733, 9734, 9735, 9736, 9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747);
         Data.Blocks.Add(Block.ZombieWallHead, "minecraft:zombie_wall_head", 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755);
+
+
+
+
+
+
+
+
+
+
+        Data.Packets.Add(ConnectionState.None, false, 0x00, typeof(ServerBoundHandshakePacket), ServerBoundHandshakePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, false, 0x00, typeof(ServerBoundClientInformationPacket), ServerBoundClientInformationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, false, 0x01, typeof(ServerBoundCookieResponsePacket), ServerBoundCookieResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, false, 0x02, typeof(ServerBoundPluginMessagePacket), ServerBoundPluginMessagePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, false, 0x03, typeof(ServerBoundAcknowledgeFinishConfigurationPacket), ServerBoundAcknowledgeFinishConfigurationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, false, 0x04, typeof(ServerBoundKeepAlivePacket), ServerBoundKeepAlivePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, false, 0x05, typeof(ServerBoundPongPacket), ServerBoundPongPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, false, 0x06, typeof(ServerBoundResourcePackResponsePacket), ServerBoundResourcePackResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, false, 0x07, typeof(ServerBoundKnownPacksPacket), ServerBoundKnownPacksPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, false, 0x04, typeof(ServerBoundCookieResponsePacket), ServerBoundCookieResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, false, 0x02, typeof(ServerBoundLoginPluginResponsePacket), ServerBoundLoginPluginResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, false, 0x00, typeof(ServerBoundLoginStartPacket), ServerBoundLoginStartPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, false, 0x01, typeof(ServerBoundEncryptionResponsePacket), ServerBoundEncryptionResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, false, 0x03, typeof(ServerBoundLoginAcknowledgedPacket), ServerBoundLoginAcknowledgedPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x00, typeof(ServerBoundConfirmTeleportPacket), ServerBoundConfirmTeleportPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x07, typeof(ServerBoundChatMessagePacket), ServerBoundChatMessagePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x09, typeof(ServerBoundChunkBatchReceivedPacket), ServerBoundChunkBatchReceivedPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x0A, typeof(ServerBoundClientStatusPacket), ServerBoundClientStatusPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x0C, typeof(ServerBoundClientInformationPacket), ServerBoundClientInformationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x0B, typeof(ServerBoundClientTickEndPacket), ServerBoundClientTickEndPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x0E, typeof(ServerBoundAcknowledgeConfigurationPacket), ServerBoundAcknowledgeConfigurationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x13, typeof(ServerBoundCookieResponsePacket), ServerBoundCookieResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x14, typeof(ServerBoundPluginMessagePacket), ServerBoundPluginMessagePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x18, typeof(ServerBoundInteractPacket), ServerBoundInteractPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x1A, typeof(ServerBoundKeepAlivePacket), ServerBoundKeepAlivePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x1C, typeof(ServerBoundSetPlayerPositionPacket), ServerBoundSetPlayerPositionPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x1D, typeof(ServerBoundSetPlayerPosAndRotPacket), ServerBoundSetPlayerPosAndRotPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x1E, typeof(ServerBoundSetPlayerRotationPacket), ServerBoundSetPlayerRotationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x1F, typeof(ServerBoundSetMovementFlagsPacket), ServerBoundSetMovementFlagsPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x22, typeof(ServerBoundPickItemFromBlockPacket), ServerBoundPickItemFromBlockPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x23, typeof(ServerBoundPickItemFromEntityPacket), ServerBoundPickItemFromEntityPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x24, typeof(ServerBoundPingRequestPacket), ServerBoundPingRequestPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x27, typeof(ServerBoundPlayerActionPacket), ServerBoundPlayerActionPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x28, typeof(ServerBoundPlayerCommandPacket), ServerBoundPlayerCommandPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x29, typeof(ServerBoundPlayerInputPacket), ServerBoundPlayerInputPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x2A, typeof(ServerBoundPlayerLoadedPacket), ServerBoundPlayerLoadedPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x2B, typeof(ServerBoundPongPacket), ServerBoundPongPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x2F, typeof(ServerBoundResourcePackResponsePacket), ServerBoundResourcePackResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x33, typeof(ServerBoundSetHeldItemPacket), ServerBoundSetHeldItemPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x3B, typeof(ServerBoundSwingArmPacket), ServerBoundSwingArmPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x3F, typeof(ServerBoundUseItemPacket), ServerBoundUseItemPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x3E, typeof(ServerBoundUseItemOnPacket), ServerBoundUseItemOnPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Status, false, 0x01, typeof(ServerBoundPingRequestPacket), ServerBoundPingRequestPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Status, false, 0x00, typeof(ServerBoundStatusRequestPacket), ServerBoundStatusRequestPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x00, typeof(ClientBoundCookieRequestPacket), ClientBoundCookieRequestPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x01, typeof(ClientBoundPluginMessagePacket), ClientBoundPluginMessagePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x0F, typeof(ClientBoundCustomReportDetailsPacket), ClientBoundCustomReportDetailsPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x02, typeof(ClientBoundDisconnectPacket), ClientBoundDisconnectPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x03, typeof(ClientBoundFinishConfigurationPacket), ClientBoundFinishConfigurationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x04, typeof(ClientBoundKeepAlivePacket), ClientBoundKeepAlivePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x05, typeof(ClientBoundPingPacket), ClientBoundPingPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x07, typeof(ClientBoundRegistryDataPacket), ClientBoundRegistryDataPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x06, typeof(ClientBoundResetChatPacket), ClientBoundResetChatPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x08, typeof(ClientBoundRemoveResourcePackPacket), ClientBoundRemoveResourcePackPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x09, typeof(ClientBoundAddResourcePackPacket), ClientBoundAddResourcePackPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x0E, typeof(ClientBoundKnownPacksPacket), ClientBoundKnownPacksPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x10, typeof(ClientBoundServerLinksPacket), ClientBoundServerLinksPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x0A, typeof(ClientBoundStoreCookiePacket), ClientBoundStoreCookiePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x0B, typeof(ClientBoundTransferPacket), ClientBoundTransferPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x0C, typeof(ClientBoundFeatureFlagsPacket), ClientBoundFeatureFlagsPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Configuration, true, 0x0D, typeof(ClientBoundUpdateTagsPacket), ClientBoundUpdateTagsPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, true, 0x05, typeof(ClientBoundCookieRequestPacket), ClientBoundCookieRequestPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, true, 0x04, typeof(ClientBoundLoginPluginRequestPacket), ClientBoundLoginPluginRequestPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, true, 0x01, typeof(ClientBoundEncryptionRequestPacket), ClientBoundEncryptionRequestPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, true, 0x03, typeof(ClientBoundSetCompressionPacket), ClientBoundSetCompressionPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, true, 0x00, typeof(ClientBoundLoginDisconnectPacket), ClientBoundLoginDisconnectPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Login, true, 0x02, typeof(ClientBoundLoginSuccessPacket), ClientBoundLoginSuccessPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x01, typeof(ClientBoundSpawnEntityPacket), ClientBoundSpawnEntityPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x02, typeof(ClientBoundEntityAnimationPacket), ClientBoundEntityAnimationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x04, typeof(ClientBoundAcknowledgeBlockChangePacket), ClientBoundAcknowledgeBlockChangePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x05, typeof(ClientBoundSetBlockDestroyStagePacket), ClientBoundSetBlockDestroyStagePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x08, typeof(ClientBoundBlockUpdatePacket), ClientBoundBlockUpdatePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x00, typeof(ClientBoundBundleDelimiterPacket), ClientBoundBundleDelimiterPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x0A, typeof(ClientBoundChangeDifficultyPacket), ClientBoundChangeDifficultyPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x0B, typeof(ClientBoundChunkBatchFinishedPacket), ClientBoundChunkBatchFinishedPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x0C, typeof(ClientBoundChunkBatchStartPacket), ClientBoundChunkBatchStartPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x0E, typeof(ClientBoundClearTitlesPacket), ClientBoundClearTitlesPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x12, typeof(ClientBoundSetContainerContentPacket), ClientBoundSetContainerContentPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x14, typeof(ClientBoundSetContainerSlotPacket), ClientBoundSetContainerSlotPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x15, typeof(ClientBoundCookieRequestPacket), ClientBoundCookieRequestPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x18, typeof(ClientBoundPluginMessagePacket), ClientBoundPluginMessagePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x81, typeof(ClientBoundCustomReportDetailsPacket), ClientBoundCustomReportDetailsPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x1C, typeof(ClientBoundDisconnectPacket), ClientBoundDisconnectPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x1E, typeof(ClientBoundEntityEventPacket), ClientBoundEntityEventPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x1F, typeof(ClientBoundTeleportEntityPacket), ClientBoundTeleportEntityPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x21, typeof(ClientBoundUnloadChunkPacket), ClientBoundUnloadChunkPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x22, typeof(ClientBoundGameEventPacket), ClientBoundGameEventPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x24, typeof(ClientBoundHurtAnimationPacket), ClientBoundHurtAnimationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x25, typeof(ClientBoundInitialiseWorldBorderPacket), ClientBoundInitialiseWorldBorderPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x26, typeof(ClientBoundKeepAlivePacket), ClientBoundKeepAlivePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x27, typeof(ClientBoundChunkDataAndUpdateLightPacket), ClientBoundChunkDataAndUpdateLightPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x29, typeof(ClientBoundParticlePacket), ClientBoundParticlePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x2B, typeof(ClientBoundLoginPacket), ClientBoundLoginPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x2E, typeof(ClientBoundUpdateEntityPositionPacket), ClientBoundUpdateEntityPositionPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x2F, typeof(ClientBoundUpdateEntityPosAndRotPacket), ClientBoundUpdateEntityPosAndRotPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x31, typeof(ClientBoundUpdateEntityRotationPacket), ClientBoundUpdateEntityRotationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x36, typeof(ClientBoundPingPacket), ClientBoundPingPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x39, typeof(ClientBoundPlayerAbilitiesPacket), ClientBoundPlayerAbilitiesPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x3D, typeof(ClientBoundCombatDeathPacket), ClientBoundCombatDeathPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x3E, typeof(ClientBoundPlayerInfoRemovePacket), ClientBoundPlayerInfoRemovePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x3F, typeof(ClientBoundPlayerInfoUpdatePacket), ClientBoundPlayerInfoUpdatePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x41, typeof(ClientBoundSynchronisePlayerPositionPacket), ClientBoundSynchronisePlayerPositionPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x37, typeof(ClientBoundPingResponsePacket), ClientBoundPingResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x49, typeof(ClientBoundRemoveResourcePackPacket), ClientBoundRemoveResourcePackPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x4A, typeof(ClientBoundAddResourcePackPacket), ClientBoundAddResourcePackPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x4B, typeof(ClientBoundRespawnPacket), ClientBoundRespawnPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x4C, typeof(ClientBoundSetHeadRotationPacket), ClientBoundSetHeadRotationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x82, typeof(ClientBoundServerLinksPacket), ClientBoundServerLinksPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x50, typeof(ClientBoundSetActionBarTextPacket), ClientBoundSetActionBarTextPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x56, typeof(ClientBoundSetCameraPacket), ClientBoundSetCameraPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x57, typeof(ClientBoundSetCenterChunkPacket), ClientBoundSetCenterChunkPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x5A, typeof(ClientBoundSetDefaultSpawnPositionPacket), ClientBoundSetDefaultSpawnPositionPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x5C, typeof(ClientBoundSetEntityMetadataPacket), ClientBoundSetEntityMetadataPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x60, typeof(ClientBoundSetExperiencePacket), ClientBoundSetExperiencePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x61, typeof(ClientBoundSetHealthPacket), ClientBoundSetHealthPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x62, typeof(ClientBoundSetHeldItemPacket), ClientBoundSetHeldItemPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x69, typeof(ClientBoundSetSubtitleTextPacket), ClientBoundSetSubtitleTextPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x6A, typeof(ClientBoundUpdateTimePacket), ClientBoundUpdateTimePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x6B, typeof(ClientBoundSetTitleTextPacket), ClientBoundSetTitleTextPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x6C, typeof(ClientBoundSetTitleAnimationTimesPacket), ClientBoundSetTitleAnimationTimesPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x6E, typeof(ClientBoundSoundEffectPacket), ClientBoundSoundEffectPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x6D, typeof(ClientBoundEntitySoundEffectPacket), ClientBoundEntitySoundEffectPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x6F, typeof(ClientBoundStartConfigurationPacket), ClientBoundStartConfigurationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x71, typeof(ClientBoundStoreCookiePacket), ClientBoundStoreCookiePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x72, typeof(ClientBoundSystemChatMessagePacket), ClientBoundSystemChatMessagePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x73, typeof(ClientBoundSetTabListHeaderFooterPacket), ClientBoundSetTabListHeaderFooterPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x7A, typeof(ClientBoundTransferPacket), ClientBoundTransferPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x7C, typeof(ClientBoundUpdateAttributesPacket), ClientBoundUpdateAttributesPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x7F, typeof(ClientBoundUpdateTagsPacket), ClientBoundUpdateTagsPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Status, true, 0x01, typeof(ClientBoundPingResponsePacket), ClientBoundPingResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Status, true, 0x00, typeof(ClientBoundStatusResponsePacket), ClientBoundStatusResponsePacket.Deserialiser);
 
     }
 }

@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Config.ClientBound;
 
 public class ClientBoundKnownPacksPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:select_known_packs";
+    
     public required KnownDataPack[] Packs;
 
     protected override byte[] GetData() {

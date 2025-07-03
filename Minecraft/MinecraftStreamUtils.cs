@@ -72,6 +72,7 @@ public static class MinecraftStreamUtils {
             connection is ServerConnection, 
             connection.State, 
             connection.CompressionEnabled, 
-            connection.AllowUnknownPackets);
+            connection.AllowUnknownPackets,
+            connection.Registry);
     }
 }

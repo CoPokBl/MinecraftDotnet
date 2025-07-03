@@ -1,7 +1,11 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 // all fields are in ticks
 public class ClientBoundSetTitleAnimationTimesPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:set_titles_animation";
+    
     public required int FadeIn;
     public required int Stay;
     public required int FadeOut;

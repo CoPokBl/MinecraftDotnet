@@ -1,6 +1,5 @@
 namespace Minecraft.NBT.Text;
 
-// TODO: Add from legacy colour codes function (eg. &r&lHello &cWorld!)
 public readonly struct TextColor : IEquatable<TextColor> {
     public int R { get; }
     public int G { get; }
@@ -22,8 +21,6 @@ public readonly struct TextColor : IEquatable<TextColor> {
     public static readonly TextColor LightPurple = Hex("#FF55FF");
     public static readonly TextColor Yellow = Hex("#FFFF55");
     public static readonly TextColor White = Hex("#FFFFFF");
-    
-    public const char LegacyColorCodePrefix = '§';  // Prefix char to specify a color in legacy text formats
 
     private TextColor(int r, int g, int b) {
         R = r;

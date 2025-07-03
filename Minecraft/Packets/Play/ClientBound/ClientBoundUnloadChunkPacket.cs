@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundUnloadChunkPacket() : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:forget_level_chunk";
+    
     public required int X;
     public required int Z;
 

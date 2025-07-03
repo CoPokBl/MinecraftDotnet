@@ -8,6 +8,7 @@ using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Config.ServerBound;
+using Minecraft.Packets.Handshake;
 using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;

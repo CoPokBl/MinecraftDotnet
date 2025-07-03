@@ -1,11 +1,12 @@
 using Minecraft.Data.Generated;
-using Minecraft.Packets.Registry;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Packets;
 
 public abstract class MinecraftPacket {
+    public abstract Identifier Identifier { get; }
+    
     protected abstract byte[] GetData();
 
     protected static void AssertLength<T>(T[] arr, int length) {
@@ -26,14 +27,14 @@ public abstract class MinecraftPacket {
         }
     }
 
-    public byte[] Serialise(ConnectionState state, int compressionThreshold = -1) {
+    public byte[] Serialise(ConnectionState state, int compressionThreshold = -1, MinecraftRegistry? registry = null) {
         int packetId;
         try {
             if (this is UnknownPacket up) {
                 packetId = up.Id;
             }
             else {
-                packetId = PacketRegistry.GetPacketId(GetType(), state);
+                packetId = (registry ?? VanillaRegistry.Data).Packets[state, GetType()];
             }
         }
         catch (KeyNotFoundException) {
@@ -74,7 +75,7 @@ public abstract class MinecraftPacket {
         return w.ToArray();
     }
     
-    public static MinecraftPacket Deserialise(byte[] packet, bool clientBound, ConnectionState state, bool compressed = false, bool allowUnknown = true, MinecraftRegistry? mcReg = null) {
+    public static MinecraftPacket Deserialise(byte[] packet, bool clientBound, ConnectionState state, bool compressed = false, bool allowUnknown = true, MinecraftRegistry? registry = null) {
         DataReader r = new(packet);
         _ = r.ReadVarInt();  // Unneeded packet size
 
@@ -97,11 +98,12 @@ public abstract class MinecraftPacket {
             packetType = r.ReadVarInt();
         }
         
+        registry ??= VanillaRegistry.Data;
+        
         // everything left in "r" should be the actual packet data.
-
-        Dictionary<int, (Type, PacketDataDeserialiser)> registry = PacketRegistry.GetRegistry(clientBound, state);
-
-        if (!registry.TryGetValue(packetType, out (Type, PacketDataDeserialiser) registryVal)) {
+        PacketDataDeserialiser? deserialiser = registry.Packets.GetDeserialiserOrDefault(state, clientBound, packetType);
+        
+        if (deserialiser == null) {
             // For now let's assume that we won't receive invalid packets so any unknown one is a TODO.
             if (allowUnknown) {
                 Console.WriteLine($"Invalid packet type: 0x{packetType:X} (Bound to: {(clientBound ? "client" : "server")}, State: {state})");
@@ -112,7 +114,6 @@ public abstract class MinecraftPacket {
             }
             throw new NotImplementedException($"Invalid packet type: 0x{packetType:X} (Bound to: {(clientBound ? "client" : "server")}, State: {state})");
         }
-        PacketDataDeserialiser deserialiser = registryVal.Item2;
-        return deserialiser(r, mcReg ?? VanillaRegistry.Data);
+        return deserialiser(r, registry);
     }
 }

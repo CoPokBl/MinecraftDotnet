@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Config.ClientBound;
 
 public class ClientBoundPingPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:ping";
+    
     public required int Id;
 
     protected override byte[] GetData() {

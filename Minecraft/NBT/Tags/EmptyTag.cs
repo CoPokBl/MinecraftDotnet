@@ -1,6 +1,6 @@
 namespace Minecraft.NBT.Tags;
 
-public class EmptyTag : ITag {
+public class EmptyTag : INbtTag {
     
     public byte GetPrefix() {
         return NbtTagPrefix.End;

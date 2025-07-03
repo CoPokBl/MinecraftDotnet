@@ -4,6 +4,8 @@ using Minecraft.Schemas.Vec;
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundInteractPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:interact";
+    
     public required int EntityId;
     public required InteractType Type;
     public FVec3? Target;

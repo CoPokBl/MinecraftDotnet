@@ -7,6 +7,8 @@ using Newtonsoft.Json.Linq;
 namespace Minecraft.Packets.Status.ClientBound;
 
 public class ClientBoundStatusResponsePacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:status_response";
+    
     public bool? PreventsChatReports;
     public bool? EnforcesSecureChat;
     public string? FavIcon;
@@ -87,7 +89,7 @@ public class ClientBoundStatusResponsePacket : ClientBoundPacket {
         }
         
         if (obj.TryGetValue("description", out JToken? value)) {
-            packet.Description = TextComponent.FromTag(ITag.FromJson(null, value));
+            packet.Description = TextComponent.FromTag(INbtTag.FromJson(null, value));
         }
 
         if (obj.TryGetValue("favicon", out JToken? favicon)) {

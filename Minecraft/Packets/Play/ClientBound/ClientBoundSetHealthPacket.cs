@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSetHealthPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:set_health";
+    
     public required float Health;
     public required int Food;
     public required float Saturation;

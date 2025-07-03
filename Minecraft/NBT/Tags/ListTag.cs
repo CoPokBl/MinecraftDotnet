@@ -1,18 +1,18 @@
 namespace Minecraft.NBT.Tags;
 
-public class ListTag<T> : ListTag where T : ITag {
+public class ListTag<T> : ListTag where T : INbtTag {
     public new T[] Tags => base.Tags.Cast<T>().ToArray();
     
-    public ListTag(string? name, T[] tags) : base(name, tags.Cast<ITag>().ToArray()) {
-        if (typeof(T) == typeof(ITag)) {
+    public ListTag(string? name, T[] tags) : base(name, tags.Cast<INbtTag>().ToArray()) {
+        if (typeof(T) == typeof(INbtTag)) {
             throw new ArgumentException("List must only be of one type.", nameof(T));
         }
     }
 }
 
-public class ListTag(string? name, ITag[] tags) : ITag {
+public class ListTag(string? name, INbtTag[] tags) : INbtTag {
     public string? Name { get; set; } = name;
-    public ITag[] Tags { get; } = tags;
+    public INbtTag[] Tags { get; } = tags;
 
     public ListTag WithName(string name) {
         Name = name;
@@ -31,7 +31,7 @@ public class ListTag(string? name, ITag[] tags) : ITag {
         byte type = Tags.Length == 0 ? NbtTagPrefix.End : Tags[0].GetPrefix();
 
         NbtBuilder builder = new NbtBuilder().WriteType(NbtTagPrefix.List, noType).WriteName(Name).Write(type).WriteInteger(Tags.Length);
-        foreach (ITag tag in Tags) {
+        foreach (INbtTag tag in Tags) {
             builder.Write(tag.Serialise(true));
         }
         return builder.ToArray();

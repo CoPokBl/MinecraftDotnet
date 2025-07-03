@@ -1,11 +1,15 @@
+using System.Diagnostics.CodeAnalysis;
 using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSetCenterChunkPacket() : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:set_chunk_cache_center";
+    
     public required int X;
     public required int Z;
 
+    [SetsRequiredMembers]
     public ClientBoundSetCenterChunkPacket(ChunkPosition pos) : this() {
         X = pos.X;
         Z = pos.Z;

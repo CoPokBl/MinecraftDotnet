@@ -1,6 +1,9 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundPlayerLoadedPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:player_loaded";
 
     protected override byte[] GetData() {
         return [];

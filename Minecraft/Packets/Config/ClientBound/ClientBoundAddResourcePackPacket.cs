@@ -1,8 +1,11 @@
 using Minecraft.NBT.Text;
+using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Config.ClientBound;
 
 public class ClientBoundAddResourcePackPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:resource_pack_push";
+    
     public required Guid Uuid;
     public required string Url;
     

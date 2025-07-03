@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Config.ClientBound;
 
 public class ClientBoundRemoveResourcePackPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:resource_pack_pop";
+
     public Guid? Uuid;
 
     protected override byte[] GetData() {

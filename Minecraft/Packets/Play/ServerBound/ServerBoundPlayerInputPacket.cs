@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundPlayerInputPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:player_input";
+    
     public required Input Flags;
 
     [Flags]

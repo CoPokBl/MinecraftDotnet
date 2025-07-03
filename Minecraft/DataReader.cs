@@ -237,7 +237,7 @@ public class DataReader(byte[] data) {
         };
     }
 
-    public ITag ReadNbt() {
+    public INbtTag ReadNbt() {
         return new NbtReader(this).ToTag();
     }
 

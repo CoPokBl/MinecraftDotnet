@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundHurtAnimationPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:hurt_animation";
+    
     public required int EntityId;
     public required Angle Yaw;
 

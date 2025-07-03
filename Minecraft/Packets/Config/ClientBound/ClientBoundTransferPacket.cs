@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Config.ClientBound;
 
 public class ClientBoundTransferPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:transfer";
+    
     public required string Host;
     public required int Port;
     

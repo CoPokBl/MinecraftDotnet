@@ -4,14 +4,14 @@ using Minecraft.Schemas;
 namespace Minecraft.Registry;
 
 public class ParticleRegistry {
-    private readonly Dictionary<Identifier, IParticle> ByName = new();
-    private readonly Dictionary<int, IParticle> ById = new();
+    private readonly Dictionary<Identifier, IParticle> _byName = new();
+    private readonly Dictionary<int, IParticle> _byId = new();
 
-    public IParticle this[Identifier name] => ByName[name];
-    public IParticle this[int id] => ById[id];
+    public IParticle this[Identifier name] => _byName[name];
+    public IParticle this[int id] => _byId[id];
 
     public void Add(Identifier identifier, int netId, IParticle particle) {
-        ByName.Add(identifier, particle);
-        ById.Add(netId, particle);
+        _byName.Add(identifier, particle);
+        _byId.Add(netId, particle);
     }
 }

@@ -1,8 +1,11 @@
 using Minecraft.NBT.Text;
+using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:player_info_update";
+    
     public required PlayerData Data;
     
     [Flags]

@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundLoginPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:login";
+    
     public required bool EnforcesSecureChat;
     public required int SeaLevel;
     public required int PortalCooldown;

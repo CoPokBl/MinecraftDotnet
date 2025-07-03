@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundUpdateEntityRotationPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:move_entity_rot";
+    
     public required int EntityId;
     public required Angle Yaw;
     public required Angle Pitch;

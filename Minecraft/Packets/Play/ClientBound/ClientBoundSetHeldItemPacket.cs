@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSetHeldItemPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:set_held_slot";
+    
     public required int Slot;
     
     protected override byte[] GetData() {

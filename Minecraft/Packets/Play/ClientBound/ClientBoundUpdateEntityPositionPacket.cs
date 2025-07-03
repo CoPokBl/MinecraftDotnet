@@ -1,8 +1,11 @@
+using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundUpdateEntityPositionPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:move_entity_pos";
+    
     public required int EntityId;
     public required FVec3 Delta;
     public required bool OnGround;

@@ -1,5 +1,8 @@
 namespace Minecraft.NBT;
 
+/// <summary>
+/// Class containing all NBT tag type prefixes.
+/// </summary>
 public static class NbtTagPrefix {
     public const byte End = 0;
     public const byte Byte = 1;

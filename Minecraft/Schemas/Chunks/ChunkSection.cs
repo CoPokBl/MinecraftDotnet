@@ -21,47 +21,44 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     /// <p/>
     /// Coordinate order is: X, Y, Z.
     /// </summary>
-    public uint[][][] Blocks { get; private set; } = NewBlockSet();
+    public uint[,,] Blocks { get; private set; } = NewBlockSet();
 
-    private static uint[][][] NewBlockSet() {
-        uint[][][] blocks = new uint[Size][][];
-        for (int x = 0; x < Size; x++) {
-            blocks[x] = new uint[Size][];
-            for (int y = 0; y < Size; y++) {
-                blocks[x][y] = new uint[Size];
-            }
-        }
-        return blocks;
+    private static uint[,,] NewBlockSet() {
+        return new uint[Size, Size, Size];
     }
     
     public void Fill(uint state) {
         for (int x = 0; x < Size; x++) {
             for (int y = 0; y < Size; y++) {
                 for (int z = 0; z < Size; z++) {
-                    Blocks[x][y][z] = state;
+                    Blocks[x, y, z] = state;
                 }
             }
         }
     }
 
     public void SetBlock(int x, int y, int z, uint state) {
-        Blocks[x][y][z] = state;
+        Blocks[x, y, z] = state;
     }
 
     public void SetBlock(BlockPosition pos, uint state) {
-        Blocks[pos.X][pos.Y][pos.Z] = state;
+        Blocks[pos.X, pos.Y, pos.Z] = state;
     }
 
     public uint GetBlock(int x, int y, int z) {
-        return Blocks[x][y][z];
+        return Blocks[x, y, z];
     }
-
+    
+    public uint GetBlock(BlockPosition pos) {
+        return Blocks[pos.X, pos.Y, pos.Z];
+    }
+    
     public IBlock LookupBlock(int x, int y, int z, MinecraftRegistry? registry = null) {
         return (registry ?? VanillaRegistry.Data).Blocks[GetBlock(x, y, z)];
     }
     
-    public uint GetBlock(BlockPosition pos) {
-        return Blocks[pos.X][pos.Y][pos.Z];
+    public IBlock LookupBlock(BlockPosition pos, MinecraftRegistry? registry = null) {
+        return (registry ?? VanillaRegistry.Data).Blocks[GetBlock(pos)];
     }
     
     public void Write(DataWriter w) {

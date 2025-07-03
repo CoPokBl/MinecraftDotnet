@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Login.ClientBound;
 
 public class ClientBoundCookieRequestPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:cookie_request";
+    
     public required string Key;
 
     protected override byte[] GetData() {

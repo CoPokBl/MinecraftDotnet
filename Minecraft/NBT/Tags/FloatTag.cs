@@ -1,6 +1,6 @@
 namespace Minecraft.NBT.Tags;
 
-public class FloatTag(string? name, float value) : ITag {
+public class FloatTag(string? name, float value) : INbtTag {
     public string? Name { get; } = name;
     public float Value { get; } = value;
 

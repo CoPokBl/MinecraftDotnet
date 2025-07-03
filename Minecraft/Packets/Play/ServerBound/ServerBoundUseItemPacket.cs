@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundUseItemPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:use_item";
+    
     public required Hand UsedHand;
     public required int Sequence;
     public required Angle Yaw;

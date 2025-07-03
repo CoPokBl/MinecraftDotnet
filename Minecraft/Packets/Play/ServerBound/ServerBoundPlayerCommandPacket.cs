@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundPlayerCommandPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:player_command";
+    
     public required int EntityId;
     public required PlayerAction PlayAction;
     public required int JumpBoost;

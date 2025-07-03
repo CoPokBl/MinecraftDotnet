@@ -1,8 +1,11 @@
+using Minecraft.Schemas;
 using Minecraft.Schemas.Entities.Meta;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSetEntityMetadataPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:set_entity_data";
+    
     public required int EntityId;
     public required EntityMeta Meta;
 

@@ -4,6 +4,8 @@ using Minecraft.Schemas.Vec;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSynchronisePlayerPositionPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:player_position";
+    
     public required Angle Pitch;
     public required Angle Yaw;
     public required Vec3 Velocity;

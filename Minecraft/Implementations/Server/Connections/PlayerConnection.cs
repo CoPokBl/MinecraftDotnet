@@ -5,11 +5,11 @@ using Minecraft.Implementations.Server.Events;
 using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ServerBound;
+using Minecraft.Packets.Handshake;
 using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
-using Minecraft.Packets.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Server.Connections;
@@ -32,7 +32,7 @@ public abstract class PlayerConnection : MinecraftConnection {
 
     public void HandlePacket(MinecraftPacket packet) {
         if (DontLog.All(p => p != packet.GetType())) {
-            Log($"Got full packet: {PacketRegistry.GetPacketId(packet.GetType(), State)}, {packet.GetType().FullName}");
+            Log($"Got full packet: {Registry.Packets.GetPacketId(State, packet)}, {packet.GetType().FullName}");
         }
         
         // Handle connection state changes. Do this before handling because client will have already updated.

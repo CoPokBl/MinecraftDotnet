@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Login.ServerBound;
 
 public class ServerBoundLoginStartPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:hello";
+    
     public required Guid Uuid;
     public required string Name;
 

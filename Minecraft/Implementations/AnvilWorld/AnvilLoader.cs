@@ -19,7 +19,7 @@ public class AnvilLoader : ITerrainProvider {
         }
 
         byte[] data = File.ReadAllBytes(levelDatPath);
-        ITag levelDataGen = NbtReader.ReadNbt(data, true);
+        INbtTag levelDataGen = NbtReader.ReadNbt(data, true);
         
         if (levelDataGen is not CompoundTag levelDataRoot) {
             throw new Exception("Invalid world: level.dat does not contain a valid CompoundTag.");
@@ -72,7 +72,7 @@ public class AnvilLoader : ITerrainProvider {
             return null;
         }
         
-        ITag? chunkTag = region.ReadChunkData(chunkX, chunkZ);
+        INbtTag? chunkTag = region.ReadChunkData(chunkX, chunkZ);
         
         if (chunkTag is not CompoundTag chunk) {
             // Console.WriteLine($"Chunk ({chunkX}, {chunkZ}) not found in region {regionName}.");
@@ -85,12 +85,12 @@ public class AnvilLoader : ITerrainProvider {
         
         // Load actual chunk data
         ChunkData data = new();
-        ITag? sectionsTag = chunk["sections"];
+        INbtTag? sectionsTag = chunk["sections"];
         if (sectionsTag is not ListTag sectionsList) {
             Console.WriteLine(chunk.ToJsonString());
             throw new Exception($"Invalid chunk data: 'sections' tag not found or is not a ListTag. Null: {sectionsTag == null}");
         }
-        foreach (ITag sectionTag in sectionsList.Tags) {
+        foreach (INbtTag sectionTag in sectionsList.Tags) {
             CompoundTag sectionData = sectionTag.GetCompound();
             int sectionY = sectionData["Y"].GetInteger();
             // Console.WriteLine($"Section Y: {sectionY}");

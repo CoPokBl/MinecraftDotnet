@@ -1,3 +1,5 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 /// <summary>
@@ -6,8 +8,9 @@ namespace Minecraft.Packets.Play.ClientBound;
 /// <p/>
 /// This is used in spectator mode when a player clicks an entity.
 /// </summary>
-/// <param name="entityId"></param>
 public class ClientBoundSetCameraPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:set_camera";
+    
     public required int EntityId;
 
     protected override byte[] GetData() {

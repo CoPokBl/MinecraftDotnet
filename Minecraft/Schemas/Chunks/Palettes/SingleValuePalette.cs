@@ -14,14 +14,12 @@ public class SingleValuePalette(int d, int maxbpe, int minbpe, uint val) : Palet
         return Value == 0 ? 0 : d * d * d;
     }
 
-    public override uint[][][] GetData() {
-        uint[][][] data = new uint[d][][];
-        for (int i = 0; i < d; i++) {
-            data[i] = new uint[d][];
-            for (int j = 0; j < d; j++) {
-                data[i][j] = new uint[d];
-                for (int k = 0; k < d; k++) {
-                    data[i][j][k] = Value;
+    public override uint[,,] GetData() {
+        uint[,,] data = new uint[d, d, d];
+        for (int y = 0; y < d; y++) {
+            for (int z = 0; z < d; z++) {
+                for (int x = 0; x < d; x++) {
+                    data[x, y, z] = Value;
                 }
             }
         }

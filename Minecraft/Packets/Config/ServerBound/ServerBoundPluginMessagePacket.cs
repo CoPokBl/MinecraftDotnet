@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Config.ServerBound;
 
 public class ServerBoundPluginMessagePacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:custom_payload";
+    
     public required byte[] Data;
     public required string Channel;
 

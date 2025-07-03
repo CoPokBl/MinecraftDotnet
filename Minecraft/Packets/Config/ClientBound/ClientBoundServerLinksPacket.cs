@@ -1,9 +1,18 @@
+using System.Diagnostics.CodeAnalysis;
 using Minecraft.NBT.Text;
+using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Config.ClientBound;
 
-public class ClientBoundServerLinksPacket : ClientBoundPacket {
+public class ClientBoundServerLinksPacket() : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:server_links";
+    
     public required ServerLink[] Links;
+
+    [SetsRequiredMembers]
+    public ClientBoundServerLinksPacket(params ServerLink[] links) : this() {
+        Links = links;
+    }
     
     public abstract class ServerLink : IWritable {
         

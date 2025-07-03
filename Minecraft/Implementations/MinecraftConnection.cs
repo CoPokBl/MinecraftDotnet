@@ -1,5 +1,7 @@
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
@@ -53,12 +55,17 @@ public abstract class MinecraftConnection : ITaggable {
     /// </summary>
     /// <seealso cref="UnknownPacket"/>
     public bool AllowUnknownPackets = false;
+
+    /// <summary>
+    /// The registry used for this connection.
+    /// </summary>
+    public MinecraftRegistry Registry = VanillaRegistry.Data;
     
     /// <summary>
     /// Event that is invoked when the connection is disconnected.
     /// </summary>
     public event Action? Disconnected;
-    private readonly Dictionary<string, object?> Data = new();  // tag data
+    private readonly Dictionary<string, object?> _data = new();  // tag data
     
     /// <summary>
     /// Invokes the <see cref="Disconnected"/> event.
@@ -108,15 +115,15 @@ public abstract class MinecraftConnection : ITaggable {
     }
     
     public T GetTag<T>(Tag<T> tag) {
-        return (T)Data[tag.Id]!;
+        return (T)_data[tag.Id]!;
     }
 
     public bool HasTag<T>(Tag<T> tag) {
-        return Data.ContainsKey(tag.Id);
+        return _data.ContainsKey(tag.Id);
     }
 
     public void SetTag<T>(Tag<T> tag, T value) {
-        Data[tag.Id] = value;
+        _data[tag.Id] = value;
     }
     
 #endregion

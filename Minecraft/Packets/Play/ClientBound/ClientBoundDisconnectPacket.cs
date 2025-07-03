@@ -1,8 +1,11 @@
 using Minecraft.NBT.Text;
+using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundDisconnectPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:disconnect";
+    
     public required TextComponent Reason;
     
     protected override byte[] GetData() {

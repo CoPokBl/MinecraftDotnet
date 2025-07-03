@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundSetHeldItemPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:set_carried_item";
+    
     public required short Slot;
 
     protected override byte[] GetData() {

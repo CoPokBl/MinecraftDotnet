@@ -1,9 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:sound";
+    
     /// <summary>
     /// The numerical sound ID. This value is ignored if <see cref="Event"/> is not null.
     /// This should be the actually sound ID, it is encoded (has 1 added to it) automatically
@@ -29,6 +33,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
     /// <param name="volume">The volume, from 0.0 to 1.0.</param>
     /// <param name="pitch">The pitch.</param>
     /// <param name="seed">Seed to use for random effects by the Notchian client.</param>
+    [SetsRequiredMembers]
     public ClientBoundSoundEffectPacket(SoundEvent soundEvent, SoundCategory category, Vec3 pos, float volume, float pitch, long seed) :
         this(0, category, pos, volume, pitch, seed) {
         Event = soundEvent;
@@ -46,6 +51,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
     /// <param name="volume">The volume, from 0.0 to 1.0.</param>
     /// <param name="pitch">The pitch.</param>
     /// <param name="seed">Seed to use for random effects by the Notchian client.</param>
+    [SetsRequiredMembers]
     public ClientBoundSoundEffectPacket(int id, SoundCategory category, Vec3 pos, float volume, float pitch, long seed) : this() {
         Id = id;
         Category = category;

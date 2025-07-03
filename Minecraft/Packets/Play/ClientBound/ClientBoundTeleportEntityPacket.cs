@@ -4,6 +4,8 @@ using Minecraft.Schemas.Vec;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundTeleportEntityPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:entity_position_sync";
+    
     public required int EntityId;
     public required Vec3 Position;
     public required Vec3 Velocity;

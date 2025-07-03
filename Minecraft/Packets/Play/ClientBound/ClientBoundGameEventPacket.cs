@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundGameEventPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:game_event";
+    
     public required GameEvent Event;
     public required float Value;
 

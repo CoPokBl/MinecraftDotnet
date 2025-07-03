@@ -335,7 +335,7 @@ public class DataWriter : IWritable {
         return this;
     }
 
-    public DataWriter WriteNbt(ITag nbt) {
+    public DataWriter WriteNbt(INbtTag nbt) {
         byte[] dat = nbt.Serialise();
         return Write(dat);
     }

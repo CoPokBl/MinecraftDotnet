@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Login.ServerBound;
 
 public class ServerBoundCookieResponsePacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:cookie_response";
+    
     public required string Key;
     public required byte[]? Data;
 

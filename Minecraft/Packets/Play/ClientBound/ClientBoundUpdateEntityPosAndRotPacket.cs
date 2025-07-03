@@ -4,6 +4,8 @@ using Minecraft.Schemas.Vec;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundUpdateEntityPosAndRotPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:move_entity_pos_rot";
+    
     public required int EntityId;
     public required FVec3 Delta;
     public required Angle Yaw;

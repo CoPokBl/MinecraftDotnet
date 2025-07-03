@@ -1,5 +1,6 @@
+using Minecraft.Data.Generated;
 using Minecraft.Packets;
-using Minecraft.Packets.Registry;
+using Minecraft.Packets.Handshake;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Packets.Status.ServerBound;
 using Minecraft.Schemas;
@@ -25,7 +26,7 @@ public class ServerPinger(string host, int port = 25565) {
         Console.WriteLine("e");
 
         if (pingResp is not ClientBoundStatusResponsePacket status) {
-            throw new Exception($"Invalid server response, got: {PacketRegistry.GetPacketId(pingResp.GetType(), ConnectionState.Status)} aka {pingResp.GetType().FullName}");
+            throw new Exception($"Invalid server response, got: {VanillaRegistry.Data.Packets.GetPacketId(ConnectionState.Status, pingResp)} aka {pingResp.GetType().FullName}");
         }
 
         return status;

@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Login.ServerBound;
 
 public class ServerBoundEncryptionResponsePacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:key";
+    
     public required byte[] SharedSecret;
     public required byte[] VerifyToken;
 

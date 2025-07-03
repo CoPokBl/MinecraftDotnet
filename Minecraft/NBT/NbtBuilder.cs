@@ -51,7 +51,7 @@ public class NbtBuilder {
         return this;
     }
 
-    public NbtBuilder Write(ITag tag) {
+    public NbtBuilder Write(INbtTag tag) {
         return Write(tag.Serialise());
     }
 
@@ -86,5 +86,10 @@ public class NbtBuilder {
         Span<byte> span = new(new byte[sizeof(short)]);
         BinaryPrimitives.WriteInt16BigEndian(span, value);
         return Write(span);
+    }
+    
+    public NbtBuilder WriteByte(sbyte value) {
+        _data.Add((byte)(value < 0 ? 256 + value : value));
+        return this;
     }
 }

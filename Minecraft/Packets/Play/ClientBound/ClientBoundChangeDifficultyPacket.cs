@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundChangeDifficultyPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:change_difficulty";
+    
     public required DifficultySetting Difficulty;
     public required bool Locked;
     

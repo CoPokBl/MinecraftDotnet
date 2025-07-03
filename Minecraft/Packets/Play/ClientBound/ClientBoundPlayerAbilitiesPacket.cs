@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundPlayerAbilitiesPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:player_abilities";
+    
     public required Abilities Flags;
     public required float FlyingSpeed;  // 0.05 by default
     public required float FovModifier;  // 0.1 by default

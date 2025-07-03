@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundUpdateAttributesPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:update_attributes";
+    
     public required int EntityId;
     public required AttributeValue[] Attributes;
 

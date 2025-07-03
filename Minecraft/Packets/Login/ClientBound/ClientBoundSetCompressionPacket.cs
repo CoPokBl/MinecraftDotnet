@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Login.ClientBound;
 
 public class ClientBoundSetCompressionPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:login_compression";
+    
     public required int Threshold;
 
     protected override byte[] GetData() {

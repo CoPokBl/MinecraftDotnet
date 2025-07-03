@@ -94,61 +94,61 @@ internal class LoginProcedureFeature : IServerFeature {
                         _ = e.Connection.SendPackets(
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:dimension_type",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:overworld", null }
                                 }
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:cat_variant",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:tabby", null }
                                 }
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:chicken_variant",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:warm", null }
                                 }
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:cow_variant",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:warm", null }
                                 }
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:frog_variant",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:warm", null }
                                 }
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:painting_variant",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:alban", null }
                                 }
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:pig_variant",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:warm", null }
                                 }
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:wolf_sound_variant",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:big", null }
                                 }
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:wolf_variant",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:ashen", null }
                                 }
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:damage_type",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:arrow", null },
                                     { "minecraft:bad_respawn_point", null },
                                     { "minecraft:cactus", null },
@@ -201,7 +201,7 @@ internal class LoginProcedureFeature : IServerFeature {
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:worldgen/biome",
-                                Entries = new Dictionary<string, ITag?> {
+                                Entries = new Dictionary<string, INbtTag?> {
                                     { "minecraft:plains", null }
                                 }
                             },

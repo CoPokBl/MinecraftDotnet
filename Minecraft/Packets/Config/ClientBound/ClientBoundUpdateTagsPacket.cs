@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Config.ClientBound;
 
 public class ClientBoundUpdateTagsPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:update_tags";
+    
     public required TagSet[] Tags;
 
     public record TagSet(string Registry, Tag[] Tags) : IWritable {

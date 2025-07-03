@@ -2,7 +2,7 @@ using Minecraft.NBT.Tags;
 
 namespace Minecraft.NBT;
 
-public abstract class CompoundTagSerialisable : ITag {
+public abstract class CompoundTagSerialisable : INbtTag {
     public string? ComponentName;  // name for this NBT tag when it gets serialised (so it can be nested)
     
     public byte GetPrefix() {

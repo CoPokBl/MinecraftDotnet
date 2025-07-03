@@ -1,3 +1,4 @@
+using System.Text;
 using Newtonsoft.Json.Linq;
 
 namespace CodeGen;
@@ -24,8 +25,8 @@ public static class Particle {
         JObject complexParticles = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("complex_particles.json"));
         Dictionary<string, string> complexParticleTypes = complexParticles.ToObject<Dictionary<string, string>>()!;
 
-        string file = Header.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"));
-        string registryEntries = "";
+        StringBuilder file = new(Header.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
+        StringBuilder registryEntries = new();
 
         JObject entries = registriesJson["minecraft:particle_type"]!["entries"]!.ToObject<JObject>()!;
 
@@ -36,19 +37,19 @@ public static class Particle {
             
             // Add to cs file
             if (!complexParticleTypes.TryGetValue(kvp.Key, out string? typeName)) {
-                file += $"   public static SimpleParticle {pascalName} => new(\"{key}\", {protocolId});\n";
+                file.Append($"{CodeGenUtils.GetIndentation(1)}public static SimpleParticle {pascalName} => new(\"{key}\", {protocolId});\n");
             }
             else {
-                file += $"   public static {typeName} {pascalName} => new(\"{key}\", {protocolId});\n";
+                file.Append($"   public static {typeName} {pascalName} => new(\"{key}\", {protocolId});\n");
             }
             
             // Add to ParticleRegistry
-            registryEntries += $"        Data.Particles.Add(\"{key}\", {protocolId}, Particle.{pascalName});\n";
+            registryEntries.Append($"{CodeGenUtils.GetIndentation(2)}Data.Particles.Add(\"{key}\", {protocolId}, Particle.{pascalName});\n");
         }
         
-        file += Footer;
-        File.WriteAllText("Particle.cs", file);
+        file.Append(Footer);
+        File.WriteAllText("Particle.cs", file.ToString());
 
-        return registryEntries;
+        return registryEntries.ToString();
     }
 }

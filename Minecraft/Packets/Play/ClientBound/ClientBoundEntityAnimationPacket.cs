@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundEntityAnimationPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:animate";
+    
     public required int EntityId;
     public required AnimationType Animation;
 

@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundInitialiseWorldBorderPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:initialize_border";
+    
     public required double X;
     public required double Z;
     public required double OldDiameter;

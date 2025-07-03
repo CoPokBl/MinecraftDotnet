@@ -18,7 +18,7 @@ public class SimpleChatFeature : IServerFeature {
         
         _messageProvider = messageProvider ?? ((msg, connection) => {  // default msg provider
             string username = _server.Feature<PlayerInfoFeature>() == null ? "Player" : PlayerInfoFeature.GetInfo(connection).Username ?? "Player";
-            return TextComponent.Text($"<{username}> {msg}");
+            return TextComponent.Text($"<{username}> ").With(TextComponent.FromLegacyString(msg));
         });
         
         _shouldReceivePredicate = shouldReceivePredicate ?? ((_, _) => true);

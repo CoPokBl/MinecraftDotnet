@@ -4,7 +4,7 @@ public class IndirectPalette : Palette {
     public readonly long[] Blocks;  // array that maps block -> palette index (y then z then x)
     public readonly uint[] PaletteValues;  // the unique values in the palette
 
-    public IndirectPalette(uint[][][] blocks, int d, int maxbpe, int minbpe) : base(d, maxbpe, minbpe) {
+    public IndirectPalette(uint[,,] blocks, int d, int maxbpe, int minbpe) : base(d, maxbpe, minbpe) {
         List<uint> palette = [];  // list of unique values
 
         Blocks = new long[(int)Math.Pow(d, 3)];
@@ -13,7 +13,7 @@ public class IndirectPalette : Palette {
         for (int y = 0; y < d; y++) {
             for (int z = 0; z < d; z++) {
                 for (int x = 0; x < d; x++) {
-                    uint v = blocks[x][y][z];
+                    uint v = blocks[x, y, z];
                     int paletteIndex;
                     if (!palette.Contains(v)) {
                         paletteIndex = palette.Count;
@@ -57,15 +57,13 @@ public class IndirectPalette : Palette {
         throw new Exception("This cannot happen");
     }
 
-    public override uint[][][] GetData() {
-        uint[][][] data = new uint[Dimension][][];
+    public override uint[,,] GetData() {
+        uint[,,] data = new uint[Dimension, Dimension, Dimension];
         int i = 0;
         for (int y = 0; y < Dimension; y++) {
             for (int z = 0; z < Dimension; z++) {
                 for (int x = 0; x < Dimension; x++) {
-                    if (data[x] == null!) data[x] = new uint[Dimension][];
-                    if (data[x][y] == null!) data[x][y] =  new uint[Dimension];
-                    data[x][y][z] = PaletteValues[Blocks[i++]];
+                    data[x, y, z] = PaletteValues[Blocks[i++]];
                 }
             }
         }

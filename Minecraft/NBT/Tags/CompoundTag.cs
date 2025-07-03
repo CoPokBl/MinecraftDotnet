@@ -5,18 +5,18 @@ namespace Minecraft.NBT.Tags;
 /// </summary>
 /// <param name="name">It's name if used as a child of another compound tag, otherwise it should be null.</param>
 /// <param name="children">Child properties, should all have names, null values are ignored.</param>
-public class CompoundTag(string? name, params ITag?[] children) : ITag {
+public class CompoundTag(string? name, params INbtTag?[] children) : INbtTag {
     /// <summary>Child properties, should all have names, null values are ignored.</summary>
-    public ITag?[] Children { get; } = children;
+    public INbtTag?[] Children { get; } = children;
     public string? Name = name;
 
-    public Dictionary<string, ITag> ChildrenMap {
+    public Dictionary<string, INbtTag> ChildrenMap {
         get {
-            return Children.OfType<ITag>().ToDictionary(c => c.GetName()!);
+            return Children.OfType<INbtTag>().ToDictionary(c => c.GetName()!);
         }
     }
     
-    public ITag? this[string name] => ChildrenMap.GetValueOrDefault(name);
+    public INbtTag? this[string name] => ChildrenMap.GetValueOrDefault(name);
 
     public string? GetName() {
         return Name;
@@ -33,7 +33,7 @@ public class CompoundTag(string? name, params ITag?[] children) : ITag {
 
     public byte[] Serialise(bool noType = false) {
         NbtBuilder builder = new NbtBuilder().WriteType(GetPrefix(), noType).WriteName(Name);  // no write start
-        foreach (ITag? child in Children) {
+        foreach (INbtTag? child in Children) {
             if (child == null) continue;
             builder.Write(child.Serialise());
         }

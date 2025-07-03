@@ -4,6 +4,8 @@ using Minecraft.Schemas.Vec;
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundSetPlayerPosAndRotPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:move_player_pos_rot";
+    
     public required MovePlayerFlags Flags;
     public required float Pitch;
     public required float Yaw;

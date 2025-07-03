@@ -1,8 +1,11 @@
+using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundChunkDataAndUpdateLightPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:level_chunk_with_light";
+    
     public required int ChunkX;
     public required int ChunkZ;
     public required ChunkData Data;

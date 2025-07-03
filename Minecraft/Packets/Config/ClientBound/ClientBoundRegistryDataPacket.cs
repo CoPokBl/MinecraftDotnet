@@ -1,11 +1,14 @@
 using Minecraft.NBT;
+using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Config.ClientBound;
 
-public class ClientBoundRegistryDataPacket() : ClientBoundPacket {
-    public required string RegistryId;
-    public required Dictionary<string, ITag?> Entries;
+public class ClientBoundRegistryDataPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:registry_data";
 
+    public required string RegistryId;
+    public required Dictionary<string, INbtTag?> Entries;
+    
     protected override byte[] GetData() {
         return new DataWriter()
             .WriteString(RegistryId)
@@ -20,8 +23,8 @@ public class ClientBoundRegistryDataPacket() : ClientBoundPacket {
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
         return new ClientBoundRegistryDataPacket {
             RegistryId = r.ReadString(),
-            Entries = new Dictionary<string, ITag?>(
-                r.ReadPrefixedArray(reader => new KeyValuePair<string, ITag?>(
+            Entries = new Dictionary<string, INbtTag?>(
+                r.ReadPrefixedArray(reader => new KeyValuePair<string, INbtTag?>(
                     reader.ReadString(),
                     reader.ReadPrefixedOptional(re => re.ReadNbt()))))
         };

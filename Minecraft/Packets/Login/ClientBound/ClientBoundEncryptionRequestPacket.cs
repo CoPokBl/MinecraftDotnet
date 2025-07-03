@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Login.ClientBound;
 
 public class ClientBoundEncryptionRequestPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:hello";
+    
     public required string ServerId;
     public required byte[] PublicKey;
     public required byte[] VerifyToken;

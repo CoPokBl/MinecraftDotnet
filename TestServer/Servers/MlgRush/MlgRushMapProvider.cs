@@ -1,16 +1,14 @@
+using Minecraft.Data.Blocks;
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Worlds.TerrainProviders;
 using Minecraft.Schemas;
 
 namespace TestServer.Servers.MlgRush;
 
 public class MlgRushMapProvider : ThreadedPerBlockTerrainProvider {
-    private const uint RedSandstone = 11968;
-    public const uint WhiteWool = 2093;
-    private const uint Air = 0;
-    private const uint BlueBed = 1909;
     
     // Blocks
-    private const uint PlatformBlock = RedSandstone;
+    private static readonly IBlock PlatformBlock = Block.RedSandstone;
 
     // Map params
     public const int PlatformLength = 22;
@@ -22,10 +20,10 @@ public class MlgRushMapProvider : ThreadedPerBlockTerrainProvider {
     public static readonly BlockPosition P1BedPosClient = new(-4, -3, 0);
     public static readonly BlockPosition P2BedPosClient = new(PlatformLength+3, -3, 0);
     
-    private static readonly Dictionary<BlockPosition, uint> Map = new() {
+    private static readonly Dictionary<BlockPosition, IBlock> Map = new() {
         // "beds"
-        { new BlockPosition(-4, 61, 0), WhiteWool },
-        { new BlockPosition(PlatformLength+3, 61, 0), WhiteWool },
+        { new BlockPosition(-4, 61, 0), Block.WhiteWool },
+        { new BlockPosition(PlatformLength+3, 61, 0), Block.WhiteWool },
         
         // bed plate
         { P1BedPos, PlatformBlock },
@@ -49,6 +47,6 @@ public class MlgRushMapProvider : ThreadedPerBlockTerrainProvider {
     }
     
     public override uint GetBlock(int x, int y, int z) {
-        return Map.GetValueOrDefault(new BlockPosition(x, y, z), Air);
+        return Map.GetValueOrDefault(new BlockPosition(x, y, z), Block.Air).StateId;
     }
 }

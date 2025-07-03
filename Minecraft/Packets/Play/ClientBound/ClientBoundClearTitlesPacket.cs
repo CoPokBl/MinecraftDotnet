@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundClearTitlesPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:clear_titles";
+    
     public required bool Reset;
     
     protected override byte[] GetData() {

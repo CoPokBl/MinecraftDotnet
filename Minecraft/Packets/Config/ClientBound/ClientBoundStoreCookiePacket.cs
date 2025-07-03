@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Config.ClientBound;
 
 public class ClientBoundStoreCookiePacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:store_cookie";
+    
     public required string Key;
     public required byte[] Payload;
 

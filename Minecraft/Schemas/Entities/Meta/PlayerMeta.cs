@@ -7,8 +7,8 @@ public class PlayerMeta : LivingEntityMeta {
     public int? Score = null;
     public SkinParts? SkinFlags = null;
     public DominantHand? MainHand = null;
-    public ITag? LeftShoulderEntity = null;
-    public ITag? RightShoulderEntity = null;
+    public INbtTag? LeftShoulderEntity = null;
+    public INbtTag? RightShoulderEntity = null;
 
     public new DataWriter Serialise(DataWriter writer) {
         return base.Serialise(writer)

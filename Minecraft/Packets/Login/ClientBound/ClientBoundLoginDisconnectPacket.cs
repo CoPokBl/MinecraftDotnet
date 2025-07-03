@@ -1,9 +1,12 @@
 using Minecraft.NBT;
 using Minecraft.NBT.Text;
+using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Login.ClientBound;
 
 public class ClientBoundLoginDisconnectPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:login_disconnect";
+    
     public required TextComponent Reason;  // in JSON for some stupid reason, not in NBT
 
     protected override byte[] GetData() {
@@ -13,6 +16,6 @@ public class ClientBoundLoginDisconnectPacket : ClientBoundPacket {
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginDisconnectPacket {
-        Reason = TextComponent.FromTag(ITag.FromJson(r.ReadString()))
+        Reason = TextComponent.FromTag(INbtTag.FromJson(r.ReadString()))
     };
 }

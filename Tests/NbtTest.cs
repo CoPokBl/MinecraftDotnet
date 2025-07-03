@@ -87,14 +87,14 @@ public class NbtTest {
             });
     }
 
-    private static void TestTagNoErrors(ITag tag, Action<ITag>? checker = null) {
-        ITag thing = NbtReader.ReadNbt(tag.Serialise());
+    private static void TestTagNoErrors(INbtTag tag, Action<INbtTag>? checker = null) {
+        INbtTag thing = NbtReader.ReadNbt(tag.Serialise());
         checker?.Invoke(thing);
     }
 
     [Test]
     public void TestJson() {
-        ITag tag = new StringTag(null, "Hello World");
+        INbtTag tag = new StringTag(null, "Hello World");
         Console.WriteLine(JsonConvert.SerializeObject(tag.ToJson()));
 
         string val = TextComponent.Text("Hello")
@@ -102,6 +102,6 @@ public class NbtTest {
             .With(TextComponent.Text(" World").WithBold()).ToJsonString();
         Console.WriteLine(val);
         
-        TextComponent text = TextComponent.FromTag(ITag.FromJson(val));
+        TextComponent text = TextComponent.FromTag(INbtTag.FromJson(val));
     }
 }

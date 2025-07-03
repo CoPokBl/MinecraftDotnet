@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSetExperiencePacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:set_experience";
+    
     public required float ExperienceProgress; // 0.0 to 1.0
     public required int Level;
     public required int TotalExperience;

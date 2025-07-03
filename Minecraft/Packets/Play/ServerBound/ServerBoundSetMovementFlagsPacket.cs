@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundSetMovementFlagsPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:move_player_status_only";
+    
     public required Flags SetFlags;
     
     [Flags]

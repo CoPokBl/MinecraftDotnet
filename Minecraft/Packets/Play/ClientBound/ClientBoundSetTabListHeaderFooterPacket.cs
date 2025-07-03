@@ -1,8 +1,11 @@
 using Minecraft.NBT.Text;
+using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSetTabListHeaderFooterPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:tab_list";
+    
     public required TextComponent Header;
     public required TextComponent Footer;
 

@@ -42,7 +42,7 @@ public class AnvilRegionFile : IDisposable {
         }
     }
 
-    public ITag? ReadChunkData(int chunkX, int chunkZ) {
+    public INbtTag? ReadChunkData(int chunkX, int chunkZ) {
         if (!HasChunkData(chunkX, chunkZ)) return null;
 
         int location = _locations[GetChunkIndex(chunkX, chunkZ)];

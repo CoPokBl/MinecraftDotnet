@@ -5,7 +5,6 @@ using Minecraft.Implementations.Exceptions;
 using Minecraft.Packets;
 using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Login.ServerBound;
-using Minecraft.Packets.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Client;
@@ -18,7 +17,7 @@ public abstract class ServerConnection : MinecraftConnection {
 
     public void HandlePacket(MinecraftPacket packet) {
         if (!DontLog.Any(p => p.GetType().FullName!.Equals(packet.GetType().FullName))) {
-            Log($"Got full packet: {PacketRegistry.GetPacketId(packet.GetType(), State)}, {packet.GetType().FullName}");
+            Log($"Got full packet: {Registry.Packets.GetPacketId(State, packet)}, {packet.GetType().FullName}");
         }
         
         PacketReceiveEvent receiveEvent = new() {

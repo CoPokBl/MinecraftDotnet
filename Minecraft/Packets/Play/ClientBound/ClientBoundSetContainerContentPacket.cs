@@ -1,8 +1,11 @@
+using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSetContainerContentPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:container_set_content";
+    
     public required int WindowId;
     public required int StateId;
     public required Slot[] SlotData;

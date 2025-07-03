@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using CodeGen;
 using Newtonsoft.Json.Linq;
 
@@ -11,10 +12,21 @@ const string registriesFileName = "registries.json";
 
 const string vanillaRegistryFile = 
 """
+using Minecraft.Schemas;
 using Minecraft.Data.Blocks;
 using Minecraft.Registry;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Generated.BlockTypes;
+
+using Minecraft.Packets.Config.ClientBound;
+using Minecraft.Packets.Config.ServerBound;
+using Minecraft.Packets.Login.ClientBound;
+using Minecraft.Packets.Login.ServerBound;
+using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Packets.Status.ClientBound;
+using Minecraft.Packets.Status.ServerBound;
+using Minecraft.Packets.Handshake;
 
 namespace Minecraft.Data.Generated;
 
@@ -42,21 +54,22 @@ while (!Directory.Exists(Path.Combine(codeDir, "CodeGen"))) {
 codeDir = Path.Combine(codeDir, "Minecraft", "Data", "Generated");
 Directory.SetCurrentDirectory(codeDir);
 
-string registryEntries = "";
+StringBuilder registryEntries = new();
 
 void RunStep(string name, Func<JObject, string> func) {
     Console.WriteLine($"{name}...");
     Stopwatch sw = Stopwatch.StartNew();
-    registryEntries += func(registriesJson) + "\n";
+    registryEntries.Append(func(registriesJson)).Append('\n');
     Console.WriteLine($"{name} took {sw.Elapsed}");
 }
 
 RunStep("Particles", ParticleCodeGen.CreateParticleEntries);
 RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
+RunStep("Packets", PacketCodeGen.CreateParticleEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))
-    .Replace("{data}", registryEntries);
+    .Replace("{data}", registryEntries.ToString());
 
 File.WriteAllText("VanillaRegistry.cs", vanillaRegistryCode);
 Console.WriteLine("Done! Generated VanillaRegistry.cs in " + codeDir);

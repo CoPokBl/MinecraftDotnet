@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundSetPlayerRotationPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:move_player_rot";
+    
     public required float Pitch;
     public required float Yaw;
     public required MovePlayerFlags Flags;

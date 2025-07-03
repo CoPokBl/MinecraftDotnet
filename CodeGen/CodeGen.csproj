@@ -20,6 +20,8 @@
       <EmbeddedResource Include="Data\complex_particles.json" />
       <None Remove="Data\blocks.json" />
       <EmbeddedResource Include="Data\blocks.json" />
+      <None Remove="Data\packets.json" />
+      <EmbeddedResource Include="Data\packets.json" />
     </ItemGroup>
 
 </Project>

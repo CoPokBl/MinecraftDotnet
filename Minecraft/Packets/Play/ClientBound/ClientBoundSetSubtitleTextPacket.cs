@@ -1,8 +1,11 @@
 using Minecraft.NBT.Text;
+using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSetSubtitleTextPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:set_subtitle_text";
+    
     public required TextComponent Text;
 
     protected override byte[] GetData() {

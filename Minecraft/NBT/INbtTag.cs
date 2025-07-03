@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Minecraft.NBT;
 
-public interface ITag {
+public interface INbtTag {
     /// <summary>
     /// Get the NBT prefix of this tag.
     /// </summary>
@@ -28,11 +28,11 @@ public interface ITag {
     /// <returns>A byte array containing the serialised version of this tag with no padding.</returns>
     byte[] Serialise(bool noType = false);
 
-    public static string ToJsonString(ITag tag) {
+    public static string ToJsonString(INbtTag tag) {
         return JsonConvert.SerializeObject(ToJson(tag));
     }
     
-    public static JToken ToJson(ITag tag) {
+    public static JToken ToJson(INbtTag tag) {
         switch (tag) {
             case EmptyTag:
                 return JValue.CreateNull();
@@ -54,7 +54,7 @@ public interface ITag {
                 return tag.GetShort();
             case CompoundTag compound: {
                 JObject obj = new();
-                foreach (KeyValuePair<string, ITag> kvp in compound.ChildrenMap) {
+                foreach (KeyValuePair<string, INbtTag> kvp in compound.ChildrenMap) {
                     obj[kvp.Key] = ToJson(kvp.Value);
                 }
 
@@ -62,28 +62,25 @@ public interface ITag {
             }
             case ListTag list: {
                 JArray arr = [];
-                foreach (ITag item in list.Tags) {
+                foreach (INbtTag item in list.Tags) {
                     arr.Add(item.ToJson());
                 }
 
                 return arr;
             }
-            case IntegersTag ilt:
+            case ArrayTag<int> ilt:
                 JArray intArr = [];
                 foreach (int item in ilt.Values) {
                     intArr.Add(item);
                 }
                 return intArr;
-            case BytesTag bt:
+            case ArrayTag<sbyte> bt:
                 JArray byteArr = [];
-                foreach (int item in bt.Values) {
-                    if (item is < -128 or > 127) {
-                        throw new ArgumentOutOfRangeException(nameof(item), "Byte value must be between -128 and 127.");
-                    }
+                foreach (sbyte item in bt.Values) {
                     byteArr.Add(item);
                 }
                 return byteArr;
-            case LongsTag lt:
+            case ArrayTag<long> lt:
                 JArray longArr = [];
                 foreach (long item in lt.Values) {
                     longArr.Add(item);
@@ -96,14 +93,14 @@ public interface ITag {
         }
     }
 
-    public static ITag FromJson(string json) {
+    public static INbtTag FromJson(string json) {
         return FromJson(null, JsonConvert.DeserializeObject<JToken>(json)!);
     }
     
-    public static ITag FromJson(string? name, JToken json) {
+    public static INbtTag FromJson(string? name, JToken json) {
         if (json is JObject obj) {
             // compound tag
-            List<ITag> tags = [];
+            List<INbtTag> tags = [];
             foreach (KeyValuePair<string, JToken?> kvp in obj) {
                 tags.Add(FromJson(kvp.Key, kvp.Value!));
             }
@@ -112,7 +109,7 @@ public interface ITag {
         
         if (json is JArray arr) {
             // list tag
-            List<ITag> tags = [];
+            List<INbtTag> tags = [];
             foreach (JToken item in arr) {
                 tags.Add(FromJson(null, item));
             }
@@ -146,35 +143,35 @@ public interface ITag {
 
 public static class TagExtensions {
 
-    public static string GetString(this ITag? tag) {
+    public static string GetString(this INbtTag? tag) {
         return ((StringTag)tag!).Value;
     }
     
-    public static byte GetByte(this ITag? tag) {
+    public static sbyte GetByte(this INbtTag? tag) {
         if (tag is IntegerTag i) {
-            if (i.Value is > 255 or < 0) {
-                throw new ArgumentOutOfRangeException("Integer value out of range for byte: " + i.Value);
+            if (i.Value is > 128 or < -128) {
+                throw new ArgumentOutOfRangeException("Integer value out of range for sbyte: " + i.Value);
             }
-            return (byte)i.Value;  // convert int to byte
+            return (sbyte)i.Value;  // convert int to byte
         }
         return ((ByteTag)tag!).Value;
     }
     
-    public static double GetDouble(this ITag? tag) {
+    public static double GetDouble(this INbtTag? tag) {
         if (tag is FloatTag fl) {
             return fl.Value;
         }
         return ((DoubleTag)tag!).Value;
     }
     
-    public static float GetFloat(this ITag? tag) {
+    public static float GetFloat(this INbtTag? tag) {
         if (tag is DoubleTag d) {
             return (float)d.Value;  // convert double to float
         }
         return ((FloatTag)tag!).Value;
     }
     
-    public static int GetInteger(this ITag? tag) {
+    public static int GetInteger(this INbtTag? tag) {
         if (tag is ByteTag b) {
             return b.Value;  // byte can be used as int
         }
@@ -187,7 +184,7 @@ public static class TagExtensions {
         return ((IntegerTag)tag!).Value;
     }
     
-    public static long GetLong(this ITag? tag) {
+    public static long GetLong(this INbtTag? tag) {
         if (tag is ByteTag b) {
             return b.Value;  // byte can be used as long
         }
@@ -197,7 +194,7 @@ public static class TagExtensions {
         return ((LongTag)tag!).Value;
     }
     
-    public static short GetShort(this ITag? tag) {
+    public static short GetShort(this INbtTag? tag) {
         if (tag is ByteTag b) {
             return b.Value;  // byte can be used as short
         }
@@ -210,7 +207,7 @@ public static class TagExtensions {
         return ((ShortTag)tag!).Value;
     }
     
-    public static bool GetBoolean(this ITag? tag) {
+    public static bool GetBoolean(this INbtTag? tag) {
         if (tag is ByteTag b) {
             return b.BoolValue;
         }
@@ -227,7 +224,7 @@ public static class TagExtensions {
         return ((BooleanTag)tag).Value;
     }
 
-    public static int[] GetIntegers(this ITag? tag) {
+    public static int[] GetIntegers(this INbtTag? tag) {
         if (tag is ListTag list) {
             if (list.Tags.Length == 0) {
                 return [];
@@ -240,26 +237,26 @@ public static class TagExtensions {
             return integers;
         }
 
-        return ((IntegersTag)tag!).Values;
+        return ((ArrayTag<int>)tag!).Values;
     }
     
-    public static int[] GetBytes(this ITag? tag) {  // signed byte array
+    public static sbyte[] GetBytes(this INbtTag? tag) {  // signed byte array
         if (tag is ListTag list) {
             if (list.Tags.Length == 0) {
                 return [];
             }
             
-            int[] bytes = new int[list.Tags.Length];
+            sbyte[] bytes = new sbyte[list.Tags.Length];
             for (int i = 0; i < list.Tags.Length; i++) {
                 bytes[i] = list.Tags[i].GetByte();
             }
             return bytes;
         }
 
-        return ((BytesTag)tag!).Values;
+        return ((ArrayTag<sbyte>)tag!).Values;
     }
     
-    public static long[] GetLongs(this ITag? tag) {
+    public static long[] GetLongs(this INbtTag? tag) {
         if (tag is ListTag list) {
             if (list.Tags.Length == 0) {
                 return [];
@@ -272,10 +269,10 @@ public static class TagExtensions {
             return longs;
         }
 
-        return ((LongsTag)tag!).Values;
+        return ((ArrayTag<long>)tag!).Values;
     }
     
-    public static CompoundTag GetCompound(this ITag? tag) {
+    public static CompoundTag GetCompound(this INbtTag? tag) {
         if (tag is CompoundTag compound) {
             return compound;
         }
@@ -287,18 +284,18 @@ public static class TagExtensions {
         throw new InvalidCastException("Tag is not a CompoundTag. It's type is: " + tag?.GetType().Name);
     }
 
-    public static ListTag GetList(this ITag? tag) {
+    public static ListTag GetList(this INbtTag? tag) {
         if (tag is not ListTag list) {
             throw new InvalidCastException("Tag is not a ListTag. It's type is: " + tag?.GetType().Name);
         }
         return list;
     }
     
-    public static JToken ToJson(this ITag tag) {
-        return ITag.ToJson(tag);
+    public static JToken ToJson(this INbtTag tag) {
+        return INbtTag.ToJson(tag);
     }
     
-    public static string ToJsonString(this ITag tag) {
-        return ITag.ToJsonString(tag);
+    public static string ToJsonString(this INbtTag tag) {
+        return INbtTag.ToJsonString(tag);
     }
 }

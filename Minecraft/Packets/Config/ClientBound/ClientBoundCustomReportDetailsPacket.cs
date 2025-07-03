@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Config.ClientBound;
 
 public class ClientBoundCustomReportDetailsPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:custom_report_details";
+    
     public required Detail[] Details;
 
     public record Detail(string Title, string Description) : IWritable {

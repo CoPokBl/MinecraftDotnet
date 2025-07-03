@@ -4,6 +4,8 @@ using Minecraft.Schemas.Vec;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:add_entity";
+    
     public required int Id;
     public required Guid Uuid;
     public required int EntityType;

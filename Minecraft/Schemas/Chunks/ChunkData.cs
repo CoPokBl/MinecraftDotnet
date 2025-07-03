@@ -1,3 +1,6 @@
+using Minecraft.Data.Blocks;
+using Minecraft.Registry;
+
 namespace Minecraft.Schemas.Chunks;
 
 public class ChunkData : IWritable, IDataReadable<ChunkData> {
@@ -24,17 +27,31 @@ public class ChunkData : IWritable, IDataReadable<ChunkData> {
             Sections[i].Fill(state);
         }
     }
+    
+    public void Fill(IBlock block) {
+        Fill(block.StateId);
+    }
 
     public void SetBlock(int x, int y, int z, uint state) {
         int chunkSection = y / 16;  // sections from the bottom
         int chunkY = y % 16;
         Sections[chunkSection].SetBlock(x, chunkY, z, state);
     }
+    
+    public void SetBlock(int x, int y, int z, IBlock block) {
+        SetBlock(x, y, z, block.StateId);
+    }
 
     public uint GetBlock(int x, int y, int z) {
         int chunkSection = y / 16;  // sections from the bottom
         int chunkY = y % 16;
         return Sections[chunkSection].GetBlock(x, chunkY, z);
+    }
+    
+    public IBlock LookupBlock(int x, int y, int z, MinecraftRegistry? registry = null) {
+        int chunkSection = y / 16;  // sections from the bottom
+        int chunkY = y % 16;
+        return Sections[chunkSection].LookupBlock(x, chunkY, z, registry);
     }
     
     public void Write(DataWriter w) {

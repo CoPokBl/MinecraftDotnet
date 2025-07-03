@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundPickItemFromBlockPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:pick_item_from_block";
+    
     public required BlockPosition Location;
     public required bool IncludeData;
 

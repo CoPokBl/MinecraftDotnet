@@ -4,6 +4,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundBlockUpdatePacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:block_update";
+    
     public required BlockPosition Location;
     public required IBlock Block;
 

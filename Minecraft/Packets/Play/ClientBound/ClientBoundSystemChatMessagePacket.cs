@@ -1,8 +1,11 @@
 using Minecraft.NBT.Text;
+using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSystemChatMessagePacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:system_chat";
+    
     public required TextComponent Content;
     public required bool ActionBar;
 

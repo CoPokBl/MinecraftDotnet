@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundRespawnPacket : ClientBoundPacket {
+    public override Identifier Identifier => "minecraft:respawn";
+    
     public required int DimensionType;
     public required string DimensionName;
     public required long HashedSeed;

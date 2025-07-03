@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundChatMessagePacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:chat";
+    
     public required string Message;
     public required long Timestamp;
     public required long Salt;

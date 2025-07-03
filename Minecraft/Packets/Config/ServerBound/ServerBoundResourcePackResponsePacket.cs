@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Config.ServerBound;
 
 public class ServerBoundResourcePackResponsePacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:resource_pack";
+    
     public required Guid PackId;
     public required PackResponse Result;
     

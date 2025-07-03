@@ -11,13 +11,15 @@ public abstract class Palette(int dimension, int maxBitsPerEntry, int minBitsPer
 
     public abstract byte[] Serialise();
     public abstract int BlockCount();
-    public abstract uint[][][] GetData();
+    public abstract uint[,,] GetData();
 
-    public static Palette CreateOptimisedPalette(uint[][][] blocks, int d, int maxbpe, int minbpe) {
+    public static Palette CreateOptimisedPalette(uint[,,] blocks, int d, int maxbpe, int minbpe) {
         // check if all values are the same
-        uint firstValue = blocks[0][0][0];
-        if (blocks.Any(x => x.Any(y => y.Any(val => val != firstValue)))) {
-            return new IndirectPalette(blocks, d, maxbpe, minbpe);
+        uint firstValue = blocks[0, 0, 0];
+        foreach (uint val in blocks) {
+            if (val != firstValue) {
+                return new IndirectPalette(blocks, d, maxbpe, minbpe);
+            }
         }
 
         return new SingleValuePalette(d, maxbpe, minbpe, firstValue);

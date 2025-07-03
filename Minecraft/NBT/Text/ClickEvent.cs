@@ -2,7 +2,7 @@ using Minecraft.NBT.Tags;
 
 namespace Minecraft.NBT.Text;
 
-public record ClickEvent(string Action, params ITag?[] Fields) {
+public record ClickEvent(string Action, params INbtTag?[] Fields) {
     
     public static ClickEvent OpenUrl(string url) {
         return new ClickEvent("open_url", new StringTag("url", url));

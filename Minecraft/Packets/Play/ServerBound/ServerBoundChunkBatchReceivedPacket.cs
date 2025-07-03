@@ -1,6 +1,10 @@
+using Minecraft.Schemas;
+
 namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundChunkBatchReceivedPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:chunk_batch_received";
+    
     public required float ChunksPerTick;
 
     protected override byte[] GetData() {

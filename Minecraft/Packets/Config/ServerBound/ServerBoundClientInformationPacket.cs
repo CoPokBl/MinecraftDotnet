@@ -3,6 +3,8 @@ using Minecraft.Schemas;
 namespace Minecraft.Packets.Config.ServerBound;
 
 public class ServerBoundClientInformationPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:client_information";
+    
     public required ParticleStatus ParticleStatus;
     public required bool AllowServerListing;
     public required bool EnableTextFiltering;
