@@ -1,4 +1,4 @@
-namespace Minecraft.NBT.Tags;
+namespace NBT.Tags;
 
 public class DoubleTag(string? name, double value) : INbtTag {
     public string? Name { get; } = name;

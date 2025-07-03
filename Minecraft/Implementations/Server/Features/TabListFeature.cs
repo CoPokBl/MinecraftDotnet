@@ -2,9 +2,9 @@ using System.Security.Cryptography;
 using System.Text;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Managed.Events;
-using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Text;
 
 namespace Minecraft.Implementations.Server.Features;
 

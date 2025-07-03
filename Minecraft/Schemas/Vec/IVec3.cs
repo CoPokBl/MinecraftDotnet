@@ -31,4 +31,8 @@ public readonly struct IVec3(int x, int y, int z) {
         y = Y;
         z = Z;
     }
+
+    public override string ToString() {
+        return $"{X}, {Y}, {Z}";
+    }
 }

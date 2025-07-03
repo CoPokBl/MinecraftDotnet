@@ -4,13 +4,13 @@ using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Managed.Entities.Types;
 using Minecraft.Implementations.Server.Managed.Events;
 using Minecraft.Implementations.Tags;
-using Minecraft.NBT;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Config.ServerBound;
 using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
+using NBT;
 
 namespace Minecraft.Implementations.Server.Managed;
 

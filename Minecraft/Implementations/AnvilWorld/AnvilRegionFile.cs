@@ -1,5 +1,5 @@
 using System.Buffers.Binary;
-using Minecraft.NBT;
+using NBT;
 
 namespace Minecraft.Implementations.AnvilWorld;
 

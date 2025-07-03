@@ -1,4 +1,4 @@
-namespace Minecraft.NBT.Tags;
+namespace NBT.Tags;
 
 public class ListTag<T> : ListTag where T : INbtTag {
     public new T[] Tags => base.Tags.Cast<T>().ToArray();

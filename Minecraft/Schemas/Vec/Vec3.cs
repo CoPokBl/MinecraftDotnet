@@ -39,4 +39,8 @@ public readonly struct Vec3(double x, double y, double z) {
         y = Y;
         z = Z;
     }
+    
+    public override string ToString() {
+        return $"{X}, {Y}, {Z}";
+    }
 }

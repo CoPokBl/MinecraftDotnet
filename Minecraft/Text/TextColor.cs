@@ -1,4 +1,4 @@
-namespace Minecraft.NBT.Text;
+namespace Minecraft.Text;
 
 public readonly struct TextColor : IEquatable<TextColor> {
     public int R { get; }

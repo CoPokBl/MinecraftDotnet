@@ -39,4 +39,8 @@ public readonly struct FVec3(float x, float y, float z) {
         y = Y;
         z = Z;
     }
+    
+    public override string ToString() {
+        return $"{X}, {Y}, {Z}";
+    }
 }

@@ -1,6 +1,7 @@
-using Minecraft.NBT;
-using Minecraft.NBT.Tags;
-using Minecraft.NBT.Text;
+using Minecraft;
+using NBT;
+using NBT.Tags;
+using Minecraft.Text;
 using Newtonsoft.Json;
 
 namespace Tests;
@@ -85,6 +86,26 @@ public class NbtTest {
                 Assert.That(text.Color, Is.EqualTo(TextColor.Red));
                 Assert.That(text.Children, Has.Count.EqualTo(1));
             });
+        
+        CompoundTag someTag = new(null, 
+            new StringTag("name", "Test"), 
+            new IntegerTag("age", 30), 
+            new ListTag<IntegerTag>("SomeList", [new IntegerTag(null, 1), new IntegerTag(null, 2)]
+            ),
+            new ArrayTag<sbyte>("AnArrayOfBytes", 0, 1, 2)
+        );
+        byte[] serialised = someTag.Serialise();
+        byte[] enc = CompressionHelper.CompressZLib(serialised);
+        
+        INbtTag deserialised = NbtReader.ReadNbt(enc, false, NbtCompressionType.ZLib);
+        Assert.That(deserialised, Is.AssignableTo(typeof(CompoundTag)));
+        CompoundTag deserialisedComp = (CompoundTag)deserialised;
+        Assert.That(deserialisedComp.Children, Has.Length.EqualTo(4));
+        Assert.Multiple(() => {
+            Assert.That(deserialisedComp.Children[0], Is.AssignableTo(typeof(StringTag)));
+            Assert.That(((StringTag)deserialisedComp.Children[0]!).Value, Is.EqualTo("Test"));
+            Assert.That(((StringTag)deserialisedComp.Children[0]!).Name, Is.EqualTo("name"));
+        });
     }
 
     private static void TestTagNoErrors(INbtTag tag, Action<INbtTag>? checker = null) {

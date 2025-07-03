@@ -1,6 +1,6 @@
-using Minecraft.NBT;
-using Minecraft.NBT.Text;
+using NBT;
 using Minecraft.Schemas;
+using Minecraft.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

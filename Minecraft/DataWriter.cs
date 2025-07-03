@@ -1,14 +1,24 @@
 using System.Buffers.Binary;
 using System.Collections;
 using System.Text;
-using Minecraft.NBT;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities.Meta;
 using Minecraft.Schemas.Vec;
+using NBT;
 
 namespace Minecraft;
 
-public class DataWriter : IWritable {
+public class DataWriter : Stream, IWritable {
+    public override bool CanRead => false;
+    public override bool CanSeek => false;
+    public override bool CanWrite => true;
+    public override long Length => _data.Count;
+
+    public override long Position {
+        get => _data.Count;
+        set => throw new NotSupportedException();
+    }
+
     private readonly List<byte> _data = [];
 
     public byte[] ToArray() => _data.ToArray();
@@ -357,5 +367,35 @@ public class DataWriter : IWritable {
             writerAction.Invoke(value, this);
         }
         return this;
+    }
+    
+    public override void Flush() {
+        // No-op for DataReader, as it does not write data
+    }
+
+    public override int Read(byte[] buffer, int offset, int count) {
+        throw new NotSupportedException("DataWriter does not support reading data.");
+    }
+
+    public override long Seek(long offset, SeekOrigin origin) {
+        throw new NotSupportedException("DataWriter does not support seeking.");
+    }
+
+    public override void SetLength(long value) {
+        throw new NotSupportedException("DataWriter does not support setting length.");
+    }
+
+    public override void Write(byte[] buffer, int offset, int count) {
+        if (buffer == null) {
+            throw new ArgumentNullException(nameof(buffer), "Buffer cannot be null.");
+        }
+        
+        if (offset < 0 || count < 0 || offset + count > buffer.Length) {
+            throw new ArgumentOutOfRangeException(nameof(count), "Offset and count must be within the bounds of the buffer.");
+        }
+
+        for (int i = offset; i < offset + count; i++) {
+            Write(buffer[i]);
+        }
     }
 }

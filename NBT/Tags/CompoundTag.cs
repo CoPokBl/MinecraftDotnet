@@ -1,4 +1,4 @@
-namespace Minecraft.NBT.Tags;
+namespace NBT.Tags;
 
 /// <summary>
 /// A compound NBT tag.
@@ -35,6 +35,9 @@ public class CompoundTag(string? name, params INbtTag?[] children) : INbtTag {
         NbtBuilder builder = new NbtBuilder().WriteType(GetPrefix(), noType).WriteName(Name);  // no write start
         foreach (INbtTag? child in Children) {
             if (child == null) continue;
+            if (child.GetName() == null) {
+                throw new ArgumentException("Child tags of a compound tag must have names", nameof(child));
+            }
             builder.Write(child.Serialise());
         }
         return builder.Write(NbtTagPrefix.End).ToArray();

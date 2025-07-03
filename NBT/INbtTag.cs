@@ -1,8 +1,8 @@
-using Minecraft.NBT.Tags;
+using NBT.Tags;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Minecraft.NBT;
+namespace NBT;
 
 public interface INbtTag {
     /// <summary>

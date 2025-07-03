@@ -1,4 +1,4 @@
-namespace Minecraft.NBT.Tags;
+namespace NBT.Tags;
 
 /// <summary>
 /// Represents an array of values of a specific type in NBT format.

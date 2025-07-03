@@ -1,4 +1,4 @@
-namespace Minecraft.NBT.Tags;
+namespace NBT.Tags;
 
 public class ByteTag(string? name, sbyte value) : INbtTag {
     public string? Name { get; } = name;

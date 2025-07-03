@@ -1,13 +1,14 @@
 using System.Buffers.Binary;
+using System.IO.Compression;
 using System.Text;
-using Minecraft.NBT.Tags;
+using NBT.Tags;
 
-namespace Minecraft.NBT;
+namespace NBT;
 
-public class NbtReader(DataReader input, NbtCompressionType compression = NbtCompressionType.None) {
-    private DataReader _input = input;
+public class NbtReader(Stream input, NbtCompressionType compression = NbtCompressionType.None) {
+    private Stream _input = input;
 
-    public NbtReader(byte[] data, NbtCompressionType compression = NbtCompressionType.None) : this(new DataReader(data), compression) { }
+    public NbtReader(byte[] data, NbtCompressionType compression = NbtCompressionType.None) : this(new MemoryStream(data), compression) { }
 
     /// <summary>
     /// Parses the current object's data into a tag.
@@ -26,7 +27,8 @@ public class NbtReader(DataReader input, NbtCompressionType compression = NbtCom
                 throw new NotImplementedException();
             
             case NbtCompressionType.ZLib:
-                _input = new DataReader(CompressionHelper.DecompressZlib(_input.ReadRemaining()));
+                // decompress the input stream with CompressionHelper.DecompressZlib
+                _input = DecompressZlib(_input);
                 break;
             
             case NbtCompressionType.None:
@@ -37,15 +39,23 @@ public class NbtReader(DataReader input, NbtCompressionType compression = NbtCom
         }
         
         if (impliedRoot) {
-            DataWriter w = new DataWriter()
-                .Write(NbtTagPrefix.Compound)
-                .Write(_input.ReadRemaining())
-                .Write(NbtTagPrefix.End);
-            _input = new DataReader(w.ToArray());
+            MemoryStream ms = new();
+            // Write the root compound tag prefix
+            ms.WriteByte(NbtTagPrefix.Compound);
+            _input.CopyTo(ms);
+            ms.WriteByte(NbtTagPrefix.End);
+            ms.Position = 0;  // reset the position to the start
+            _input = ms;
+
+            // DataWriter w = new DataWriter()
+            //     .Write(NbtTagPrefix.Compound)
+            //     .Write(_input.ReadRemaining())
+            //     .Write(NbtTagPrefix.End);
+            // _input = new DataReader(w.ToArray());
         }
         
         // Start by reading the tag type
-        byte type = _input.Read();
+        byte type = Read();
 
         // At the root level no tag will have a name
         return type switch {
@@ -69,14 +79,18 @@ public class NbtReader(DataReader input, NbtCompressionType compression = NbtCom
     public static INbtTag ReadNbt(byte[] data, bool impliedRoot = false, NbtCompressionType compression = NbtCompressionType.None) {
         return new NbtReader(data, compression).ToTag(impliedRoot);
     }
-
-    public static INbtTag ReadNbt(DataReader reader, NbtCompressionType compression = NbtCompressionType.None) {
-        return new NbtReader(reader, compression).ToTag();
+    
+    public static Stream DecompressZlib(Stream input) {
+        ZLibStream zlibStream = new(input, CompressionMode.Decompress);
+        // MemoryStream output = new();
+        // zlibStream.CopyTo(output);
+        return zlibStream;
     }
+
 
     // returns it strongly typed for convenience, except when it contains nested lists
     public ListTag ReadList() {
-        byte type = _input.Read();
+        byte type = Read();
         int length = ReadInteger();
         INbtTag[] tags = new INbtTag[length];
 
@@ -132,9 +146,26 @@ public class NbtReader(DataReader input, NbtCompressionType compression = NbtCom
         }
         return new ArrayTag<T>(null, vals);
     }
+
+    private byte Read() {
+        int b = _input.ReadByte();
+        if (b == -1) {
+            throw new EndOfStreamException("Reached end of stream while reading NBT data.");
+        }
+        return (byte)b;
+    }
+    
+    private byte[] Read(int count) {
+        byte[] buffer = new byte[count];
+        int bytesRead = _input.Read(buffer, 0, count);
+        if (bytesRead < count) {
+            throw new EndOfStreamException($"Expected to read {count} bytes, but only read {bytesRead} bytes.");
+        }
+        return buffer;
+    }
     
     public sbyte ReadByte() {
-        byte b = _input.Read();
+        byte b = Read();
         if (b >= 128) {
             // Convert to two's complement for negative values
             return (sbyte)(b - 256); // 256 - 128 = 128, so -128 becomes 128
@@ -147,7 +178,7 @@ public class NbtReader(DataReader input, NbtCompressionType compression = NbtCom
         
         // each child is written, but with a name this time.
         while (true) {
-            byte type = _input.Read();
+            byte type = Read();
             if (type == NbtTagPrefix.End) {
                 return new CompoundTag(null, children.ToArray());
             }
@@ -199,30 +230,30 @@ public class NbtReader(DataReader input, NbtCompressionType compression = NbtCom
 
     public string ReadString() {
         // read the length
-        byte[] lenBytes = _input.Read(sizeof(ushort));
+        byte[] lenBytes = Read(sizeof(ushort));
         ushort len = BinaryPrimitives.ReadUInt16BigEndian(lenBytes);
 
-        byte[] textBytes = _input.Read(len);
+        byte[] textBytes = Read(len);
         return Encoding.UTF8.GetString(textBytes);
     }
 
     public int ReadInteger() {
-        return BinaryPrimitives.ReadInt32BigEndian(_input.Read(sizeof(int)));
+        return BinaryPrimitives.ReadInt32BigEndian(Read(sizeof(int)));
     }
     
     public long ReadLong() {
-        return BinaryPrimitives.ReadInt64BigEndian(_input.Read(sizeof(long)));
+        return BinaryPrimitives.ReadInt64BigEndian(Read(sizeof(long)));
     }
     
     public short ReadShort() {
-        return BinaryPrimitives.ReadInt16BigEndian(_input.Read(sizeof(short)));
+        return BinaryPrimitives.ReadInt16BigEndian(Read(sizeof(short)));
     }
     
     public float ReadFloat() {
-        return BinaryPrimitives.ReadSingleBigEndian(_input.Read(sizeof(float)));
+        return BinaryPrimitives.ReadSingleBigEndian(Read(sizeof(float)));
     }
     
     public double ReadDouble() {
-        return BinaryPrimitives.ReadDoubleBigEndian(_input.Read(sizeof(double)));
+        return BinaryPrimitives.ReadDoubleBigEndian(Read(sizeof(double)));
     }
 }

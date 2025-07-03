@@ -1,18 +1,21 @@
 using Minecraft.Implementations.Server.Worlds;
-using Minecraft.NBT;
-using Minecraft.NBT.Tags;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
+using NBT;
+using NBT.Tags;
 
 namespace Minecraft.Implementations.AnvilWorld;
 
 public class AnvilLoader : ITerrainProvider {
+    private readonly MinecraftRegistry _registry;
     private readonly Dictionary<string, AnvilRegionFile> _regions = [];
     
     public AnvilWorldInfo WorldInfo { get; private init; }
     
-    public AnvilLoader(string path) {
+    public AnvilLoader(string path, MinecraftRegistry registry) {
+        _registry = registry;
         string levelDatPath = Path.Join(path, "level");
         if (!File.Exists(levelDatPath)) {
             throw new Exception("Invalid world: level not found in the specified path.");
@@ -98,7 +101,7 @@ public class AnvilLoader : ITerrainProvider {
             
             // TODO: Throw out invalid sections, see Minestom implementation (above and below valid area)
             if (sectionY < -4 || sectionY > 11) {
-                // Console.WriteLine($"Invalid section Y: {sectionY}, skipping.");
+                Console.WriteLine($"Invalid section Y: {sectionY}, skipping.");
                 continue;
             }
             
@@ -111,7 +114,7 @@ public class AnvilLoader : ITerrainProvider {
             if (palette.Length == 1) {
                 // Single block state, no need to process further
                 section.Fill(palette[0] == "minecraft:air" ? (uint)0 : 11); // 0 for air, 1 for solid block
-                // Console.WriteLine("Single block state found: " + palette[0]);
+                Console.WriteLine("Single block state found: " + palette[0]);
             }
             else {
                 long[] packedStates = blockStates["data"].GetLongs();
@@ -125,7 +128,8 @@ public class AnvilLoader : ITerrainProvider {
                             int paletteIndex = blockStateIndices[blockIndex];
                             string block = palette[paletteIndex];
 
-                            data.SetBlock(x, y + yOffset, z, block == "minecraft:air" ? (uint)0 : 11);
+                            // TODO: Use correct block state, not just the default one
+                            data.SetBlock(x, y + yOffset + 64, z, _registry.Blocks[block]);
                             // if (y + yOffset < 5) {
                             //     Console.WriteLine($"Block: {x},{y + yOffset},{z} = {block} (Index: {paletteIndex})");
                             // }

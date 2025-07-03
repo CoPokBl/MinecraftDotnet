@@ -1,12 +1,12 @@
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
-using Minecraft.NBT;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Config.ServerBound;
 using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
+using NBT;
 
 namespace Minecraft.Implementations.Server.Features;
 

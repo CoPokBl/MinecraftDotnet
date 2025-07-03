@@ -1,6 +1,6 @@
-using Minecraft.NBT;
-using Minecraft.NBT.Text;
 using Minecraft.Schemas;
+using Minecraft.Text;
+using NBT;
 
 namespace Minecraft.Packets.Login.ClientBound;
 

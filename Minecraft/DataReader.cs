@@ -1,14 +1,24 @@
 using System.Buffers.Binary;
 using System.Collections;
 using System.Text;
-using Minecraft.NBT;
-using Minecraft.NBT.Text;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
+using Minecraft.Text;
+using NBT;
 
 namespace Minecraft;
 
-public class DataReader(byte[] data) {
+public class DataReader(byte[] data) : Stream {
+    public override bool CanRead => true;
+    public override bool CanSeek => true;
+    public override bool CanWrite => false;
+    public override long Length => _data.Length;
+
+    public override long Position {
+        get => Pos;
+        set => Pos = (int)value;
+    }
+    
     internal int Pos;
     private byte[] _data = data;
     public bool HasRemaining => Pos < _data.Length;
@@ -267,5 +277,60 @@ public class DataReader(byte[] data) {
     
     public byte[] ReadRemaining() {
         return _data[Pos..];
+    }
+    
+    public override void Flush() {
+        // No-op for DataReader, as it does not write data
+    }
+
+    public override int Read(byte[] buffer, int offset, int count) {
+        if (Pos + count > _data.Length) {
+            count = _data.Length - Pos;  // Adjust count to not exceed the data length
+        }
+
+        Array.Copy(_data, Pos, buffer, offset, count);
+        Pos += count;
+        return count;  // Return the number of bytes read
+    }
+
+    public override long Seek(long offset, SeekOrigin origin) {
+        switch (origin) {
+            case SeekOrigin.Begin:
+                Pos = (int)offset;
+                break;
+            case SeekOrigin.Current:
+                Pos += (int)offset;
+                break;
+            case SeekOrigin.End:
+                Pos = _data.Length + (int)offset;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(origin), origin, null);
+        }
+
+        if (Pos < 0 || Pos > _data.Length) {
+            throw new ArgumentOutOfRangeException(nameof(offset), "Seek position is out of bounds.");
+        }
+
+        return Pos;
+    }
+
+    public override void SetLength(long value) {
+        if (value < 0 || value > _data.Length) {
+            throw new ArgumentOutOfRangeException(nameof(value), "Length must be within the bounds of the data.");
+        }
+        
+        // Adjust the internal data array if necessary
+        if (value < _data.Length) {
+            Array.Resize(ref _data, (int)value);
+        } else if (value > _data.Length) {
+            byte[] newData = new byte[value];
+            Array.Copy(_data, newData, _data.Length);
+            _data = newData;
+        }
+    }
+
+    public override void Write(byte[] buffer, int offset, int count) {
+        throw new NotSupportedException("DataReader does not support writing data.");
     }
 }

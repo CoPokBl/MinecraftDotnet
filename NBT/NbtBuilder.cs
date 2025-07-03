@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using System.Text;
 
-namespace Minecraft.NBT;
+namespace NBT;
 
 public class NbtBuilder {
     private readonly List<byte> _data = [];

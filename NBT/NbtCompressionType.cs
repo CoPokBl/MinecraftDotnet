@@ -1,4 +1,4 @@
-namespace Minecraft.NBT;
+namespace NBT;
 
 public enum NbtCompressionType {
     GZip,

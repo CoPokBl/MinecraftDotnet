@@ -13,15 +13,17 @@ using Minecraft.Implementations.Server.Managed.Events;
 using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Implementations.Server.Worlds.Features;
 using Minecraft.Implementations.Server.Worlds.TerrainProviders;
-using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
+using Minecraft.Text;
+using Newtonsoft.Json;
 
 namespace TestServer.Servers.MlgRush;
 
@@ -94,6 +96,11 @@ public static class MlgRush {
                         connectionQueue.Remove(e.Player);
                     }
                 };
+            });
+            connection.Events.AddListener<PacketHandleEvent>(e => {
+                if (e.Packet is ServerBoundUseItemOnPacket uio) {
+                    Console.WriteLine(JsonConvert.SerializeObject(uio, Formatting.Indented));
+                }
             });
         }, cts.Token);
         

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Nbt</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>MinecraftDotnet.NBT</PackageId>
+        <Version>0.0.1</Version>
+        <Title>NBT</Title>
+        <Authors>CoPokBl</Authors>
+        <Description>An NBT library with full support for Minecraft structured NBT.</Description>
+        <PackageProjectUrl>https://github.com/CoPokBl/MinecraftDotnet</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/CoPokBl/MinecraftDotnet.git</RepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+</Project>

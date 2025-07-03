@@ -1,8 +1,8 @@
 using System.Collections;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Tags;
-using Minecraft.NBT.Text;
 using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Text;
 
 namespace Minecraft;
 

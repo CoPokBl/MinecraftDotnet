@@ -1,6 +1,6 @@
-using Minecraft.NBT.Text;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
+using Minecraft.Text;
 
 namespace Minecraft.Data.Particles.Types;
 

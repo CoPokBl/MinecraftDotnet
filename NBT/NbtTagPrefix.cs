@@ -1,4 +1,4 @@
-namespace Minecraft.NBT;
+namespace NBT;
 
 /// <summary>
 /// Class containing all NBT tag type prefixes.

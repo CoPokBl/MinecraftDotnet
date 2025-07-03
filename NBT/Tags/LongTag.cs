@@ -1,4 +1,4 @@
-namespace Minecraft.NBT.Tags;
+namespace NBT.Tags;
 
 public class LongTag(string? name, long value) : INbtTag {
     public string? Name { get; } = name;

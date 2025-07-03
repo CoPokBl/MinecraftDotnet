@@ -1,4 +1,4 @@
-using Minecraft.NBT.Text;
+using Minecraft.Text;
 
 namespace Minecraft.Schemas.Entities.Meta;
 

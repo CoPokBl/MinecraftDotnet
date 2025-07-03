@@ -1,4 +1,4 @@
-namespace Minecraft.NBT.Text;
+namespace Minecraft.Text;
 
 public enum TextDecoration {
     Obfuscated,

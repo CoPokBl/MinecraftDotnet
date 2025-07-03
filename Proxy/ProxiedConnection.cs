@@ -4,7 +4,6 @@ using Minecraft.Implementations.Client;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Tags;
-using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Config.ServerBound;
@@ -16,6 +15,7 @@ using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Packets.Status.ServerBound;
 using Minecraft.Schemas;
+using Minecraft.Text;
 
 namespace Proxy;
 

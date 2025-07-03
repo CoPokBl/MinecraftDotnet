@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using Minecraft.NBT.Text;
 using Minecraft.Schemas;
+using Minecraft.Text;
 
 namespace Minecraft.Packets.Config.ClientBound;
 

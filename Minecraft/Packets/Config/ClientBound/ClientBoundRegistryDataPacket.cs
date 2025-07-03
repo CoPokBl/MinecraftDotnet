@@ -1,5 +1,5 @@
-using Minecraft.NBT;
 using Minecraft.Schemas;
+using NBT;
 
 namespace Minecraft.Packets.Config.ClientBound;
 

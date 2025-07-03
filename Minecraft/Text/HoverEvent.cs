@@ -1,6 +1,7 @@
-using Minecraft.NBT.Tags;
+using NBT;
+using NBT.Tags;
 
-namespace Minecraft.NBT.Text;
+namespace Minecraft.Text;
 
 public record HoverEvent(string Action, params INbtTag?[] Fields) {
 

@@ -1,7 +1,8 @@
 using System.Text;
-using Minecraft.NBT.Tags;
+using NBT;
+using NBT.Tags;
 
-namespace Minecraft.NBT.Text;
+namespace Minecraft.Text;
 
 // https://minecraft.wiki/w/Text_component_format
 public class TextComponent : CompoundTagSerialisable {

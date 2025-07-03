@@ -1,4 +1,4 @@
-namespace Minecraft.NBT.Tags;
+namespace NBT.Tags;
 
 public class ShortTag(string? name, short value) : INbtTag {
     public string? Name { get; } = name;

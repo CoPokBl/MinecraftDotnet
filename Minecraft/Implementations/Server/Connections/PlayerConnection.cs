@@ -2,7 +2,6 @@ using System.Security.Cryptography;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Exceptions;
 using Minecraft.Implementations.Server.Events;
-using Minecraft.NBT.Text;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ServerBound;
 using Minecraft.Packets.Handshake;
@@ -11,6 +10,7 @@ using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
+using Minecraft.Text;
 
 namespace Minecraft.Implementations.Server.Connections;
 
