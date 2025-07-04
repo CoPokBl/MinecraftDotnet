@@ -1,9 +1,9 @@
 using System.Security.Cryptography;
 using System.Text;
 using Minecraft.Implementations.Server.Connections;
-using Minecraft.Implementations.Server.Managed.Events;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Schemas;
 using Minecraft.Text;
 
 namespace Minecraft.Implementations.Server.Features;
@@ -55,10 +55,6 @@ public class TabListFeature : IServerFeature {
         // just in case
         server.Events.AddListener<PlayerLoginFeature.PlayerLoginEvent>(e => {
             RegisterPlayer(e.Connection);
-            Update();
-        });
-        server.Events.AddListener<PlayerLoginEvent>(e => {
-            RegisterPlayer(e.Player.Connection);
             Update();
         });
 
@@ -155,5 +151,5 @@ public class TabListFeature : IServerFeature {
         return [];
     }
 
-    public record TabListEntry(Guid Uuid, TextComponent Text, int Latency = 1, byte GameMode = 0);
+    public record TabListEntry(Guid Uuid, TextComponent Text, int Latency = 1, GameMode GameMode = 0);
 }

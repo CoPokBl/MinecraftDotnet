@@ -130,18 +130,18 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
 
         public class UpdateGameMode : IPlayerAction {
-            public required int GameMode;
+            public required GameMode GameMode;
             public PlayerActions Action => PlayerActions.UpdateGameMode;
             
             public byte[] Serialise() {
                 return new DataWriter()
-                    .WriteVarInt(GameMode)
+                    .WriteVarInt((int)GameMode)
                     .ToArray();
             }
 
             public static UpdateGameMode Deserialise(DataReader r) {
                 return new UpdateGameMode {
-                    GameMode = r.ReadVarInt()
+                    GameMode = (GameMode)r.ReadVarInt()
                 };
             }
         }

@@ -1,6 +1,6 @@
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
-using Minecraft.Implementations.Server.Worlds.TerrainProviders;
+using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Schemas;
 
 namespace TestServer.Servers.MlgRush;

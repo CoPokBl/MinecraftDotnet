@@ -1,10 +1,10 @@
+using ManagedServer;
+using ManagedServer.Entities.Types;
+using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
-using Minecraft.Implementations.Server.Managed;
-using Minecraft.Implementations.Server.Managed.Entities.Types;
-using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
@@ -21,7 +21,7 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, IBlock> block, int disa
     private List<Timer> _timers = [];
     
     public void Register(World world) {
-        world.PlayerPacketEvents.AddListener<PacketHandleEvent>(e => {
+        world.Events.AddListener<PacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundUseItemOnPacket ui) {
                 return;
             }

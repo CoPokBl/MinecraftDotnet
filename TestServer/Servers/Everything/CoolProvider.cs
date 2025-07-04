@@ -1,4 +1,4 @@
-using Minecraft.Implementations.Server.Worlds.TerrainProviders;
+using Minecraft.Implementations.Server.Terrain.Providers;
 
 namespace TestServer.Servers.Everything;
 

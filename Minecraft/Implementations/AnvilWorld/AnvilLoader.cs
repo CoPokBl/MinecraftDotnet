@@ -1,5 +1,5 @@
 using Minecraft.Data.Blocks;
-using Minecraft.Implementations.Server.Worlds;
+using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;

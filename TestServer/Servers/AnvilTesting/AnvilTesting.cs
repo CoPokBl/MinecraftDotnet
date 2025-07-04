@@ -1,20 +1,20 @@
 using System.Diagnostics;
+using ManagedServer;
+using ManagedServer.Entities.Events;
+using ManagedServer.Entities.Types;
+using ManagedServer.Events;
+using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Features;
-using Minecraft.Implementations.Server.Managed;
-using Minecraft.Implementations.Server.Managed.Entities.Events;
-using Minecraft.Implementations.Server.Managed.Entities.Types;
-using Minecraft.Implementations.Server.Managed.Events;
-using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 
 namespace TestServer.Servers.AnvilTesting;
 
-public class AnvilTesting {
+public static class AnvilTesting {
 
     public static async Task Start() {
         ManagedMinecraftServer server = new(
@@ -28,7 +28,7 @@ public class AnvilTesting {
                 PreventsChatReports = true
         }));
 
-        World world = new(server.Events, new AnvilLoader("testanvil", VanillaRegistry.Data), 8, 64, 1000/20);
+        World world = server.CreateWorld(new AnvilLoader("testanvil", VanillaRegistry.Data));
 
         Stopwatch sw = Stopwatch.StartNew();
         for (int i = 0; i < 1; i++) {

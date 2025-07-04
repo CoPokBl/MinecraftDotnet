@@ -1355,6 +1355,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, true, 0x3F, typeof(ClientBoundPlayerInfoUpdatePacket), ClientBoundPlayerInfoUpdatePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x41, typeof(ClientBoundSynchronisePlayerPositionPacket), ClientBoundSynchronisePlayerPositionPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x37, typeof(ClientBoundPingResponsePacket), ClientBoundPingResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x46, typeof(ClientBoundRemoveEntitiesPacket), ClientBoundRemoveEntitiesPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x49, typeof(ClientBoundRemoveResourcePackPacket), ClientBoundRemoveResourcePackPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x4A, typeof(ClientBoundAddResourcePackPacket), ClientBoundAddResourcePackPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x4B, typeof(ClientBoundRespawnPacket), ClientBoundRespawnPacket.Deserialiser);

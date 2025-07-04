@@ -10,6 +10,8 @@ public class BlockRegistry {
     public IBlock this[Identifier name] => _defaultByName[name];
     public IBlock this[uint state] => _defaultByState[state].WithState(state);
 
+    public long Count => _defaultByState.Count;
+    
     public void Add(IBlock defaultBlock, Identifier identifier, params uint[] states) {
         foreach (uint state in states) {
             _defaultByState.Add(state, defaultBlock);

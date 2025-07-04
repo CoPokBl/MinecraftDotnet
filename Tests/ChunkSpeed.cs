@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using Minecraft.Implementations.Server.Worlds;
-using Minecraft.Implementations.Server.Worlds.TerrainProviders;
+using Minecraft.Implementations.Server.Terrain;
+using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Schemas;
 
 namespace Tests;

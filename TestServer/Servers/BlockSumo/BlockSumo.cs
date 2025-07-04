@@ -21,10 +21,11 @@ using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
+using TestServer.Servers.MlgRush;
 
-namespace TestServer.Servers.MlgRush;
+namespace TestServer.Servers.BlockSumo;
 
-public static class MlgRush {
+public static class BlockSumo {
     private const int Port = 25565;
     private const bool LifeAfterBed = true;
     private const bool CanBreakOwnBed = true;
@@ -104,14 +105,14 @@ public static class MlgRush {
         Console.WriteLine("Server ready, listening...");
         _ = listener.Listen(Port);
 
-        ITerrainProvider terrain = new MlgRushMapProvider();
+        ITerrainProvider terrain = new BlockSumoMapProvider(8);
         while (run) {
             World world = mServer.CreateWorld(terrain);
             new SimpleCombatFeature(500).Register(world);
             new BlockBreakingFeature(false).Register(world);
             
-            PlayerEntity p1 = null!;
-            PlayerEntity p2 = null!;
+            PlayerEntity p1;
+            PlayerEntity p2;
             
             // Remove them from the queue
             // Get two players in
@@ -192,15 +193,14 @@ public static class MlgRush {
             bool p1HasBed = true;
             bool p2HasBed = true;
 
-            PlayerPosition p1Spawn = new(new Vec3(MlgRushMapProvider.P1SpawnX, 0, 0.5), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
-            PlayerPosition p2Spawn = new(new Vec3(MlgRushMapProvider.P2SpawnX, 0, 0.5), Vec3.Zero, Angle.FromDegrees(90), Angle.Zero);
+            PlayerPosition spawn = new(new Vec3(0, 0, 0), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
             
             // Start the game
             p1.SetWorld(world);
             p2.SetWorld(world);
             
-            p1.Teleport(p1Spawn);
-            p2.Teleport(p2Spawn);
+            p1.Teleport(spawn);
+            p2.Teleport(spawn);
             
             BroadcastPacket(new ClientBoundGameEventPacket {
                 Event = GameEvent.ChangeGameMode,
@@ -221,42 +221,44 @@ public static class MlgRush {
             world.Events.AddListener<EntityMoveEvent>(e => {
                 if (!(e.NewPos.Y < dieLevel)) return;
 
-                if (LifeAfterBed) {  // check for final kill
-                    if ((e.Entity == p1 && !p1HasBed) || (e.Entity == p2 && !p2HasBed)) {
-                        Win(e.Entity == p2);
-                    }
-                }
+                Win(e.Entity == p2);
                 
-                // Move them away for the other player to prevent tp blocking breaking
-                e.Entity.SendToViewers(new ClientBoundTeleportEntityPacket {
-                    EntityId = e.Entity.NetId,
-                    Position = new Vec3(0, -100, 0),
-                    Velocity = Vec3.Zero,
-                    Yaw = Angle.Zero,
-                    Pitch = Angle.Zero,
-                    OnGround = false
-                });
-                
-                e.Entity.Teleport(e.Entity == p1 ? p1Spawn : p2Spawn);
-                ((PlayerEntity)e.Entity).Connection.SendPacket(giveItemPacket);
-                
-                // play nice sound
-                PlayerEntity killer = e.Entity == p1 ? p2 : p1;
-                killer.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
-                    Category = SoundCategory.Players,
-                    EntityId = e.Entity.NetId,
-                    Id = 525,  // sound id for xp level up
-                    Volume = 1f,
-                    Pitch = 1f,
-                    Seed = 0L
-                });
-
-                TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed by {killer.Name}";
-                Entity lightning = new(74);
-                world.Spawn(lightning);
-                lightning.Teleport(e.Entity.Position);
-                BroadcastSound(820);  // lightning
-                BroadcastMsg(msg);
+                // if (LifeAfterBed) {  // check for final kill
+                //     if ((e.Entity == p1 && !p1HasBed) || (e.Entity == p2 && !p2HasBed)) {
+                //         
+                //     }
+                // }
+                //
+                // // Move them away for the other player to prevent tp blocking breaking
+                // e.Entity.SendToViewers(new ClientBoundTeleportEntityPacket {
+                //     EntityId = e.Entity.NetId,
+                //     Position = new Vec3(0, -100, 0),
+                //     Velocity = Vec3.Zero,
+                //     Yaw = Angle.Zero,
+                //     Pitch = Angle.Zero,
+                //     OnGround = false
+                // });
+                //
+                // e.Entity.Teleport(e.Entity == p1 ? p1Spawn : p2Spawn);
+                // ((PlayerEntity)e.Entity).Connection.SendPacket(giveItemPacket);
+                //
+                // // play nice sound
+                // PlayerEntity killer = e.Entity == p1 ? p2 : p1;
+                // killer.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
+                //     Category = SoundCategory.Players,
+                //     EntityId = e.Entity.NetId,
+                //     Id = 525,  // sound id for xp level up
+                //     Volume = 1f,
+                //     Pitch = 1f,
+                //     Seed = 0L
+                // });
+                //
+                // TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed by {killer.Name}";
+                // Entity lightning = new(74);
+                // world.Spawn(lightning);
+                // lightning.Teleport(e.Entity.Position);
+                // BroadcastSound(820);  // lightning
+                // BroadcastMsg(msg);
             });
             
             // Win condition
