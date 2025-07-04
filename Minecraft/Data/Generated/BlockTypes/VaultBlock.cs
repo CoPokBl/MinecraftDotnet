@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, VaultBlock.VaultState VaultStateValue) : IBlock {
 
     public uint StateId {
@@ -81,7 +82,7 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             27710 => new VaultBlock(Identifier, Direction.North, true, VaultState.Inactive),
             27711 => new VaultBlock(Identifier, Direction.North, true, VaultState.Active),
@@ -119,10 +120,28 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Ominous = properties["ominous"].GetString() == "true",
+            VaultStateValue = VaultStateFromString(properties["vault_state"].GetString()),
+        };
+    }
+    
     public enum VaultState {
         Inactive,
         Active,
         Unlocking,
         Ejecting,
+    }
+
+    public static VaultState VaultStateFromString(string value) {
+        return value switch {
+            "inactive" => VaultState.Inactive,
+            "active" => VaultState.Active,
+            "unlocking" => VaultState.Unlocking,
+            "ejecting" => VaultState.Ejecting,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for VaultState.")
+        };
     }
 }

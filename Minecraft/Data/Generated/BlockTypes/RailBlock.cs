@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -57,7 +58,7 @@ public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool 
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             4758 => new RailBlock(Identifier, Shape.NorthSouth, true),
             4759 => new RailBlock(Identifier, Shape.NorthSouth, false),
@@ -83,6 +84,13 @@ public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool 
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            ShapeValue = ShapeFromString(properties["shape"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
+        };
+    }
+    
     public enum Shape {
         NorthSouth,
         EastWest,
@@ -94,5 +102,21 @@ public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool 
         SouthWest,
         NorthWest,
         NorthEast,
+    }
+
+    public static Shape ShapeFromString(string value) {
+        return value switch {
+            "north_south" => Shape.NorthSouth,
+            "east_west" => Shape.EastWest,
+            "ascending_east" => Shape.AscendingEast,
+            "ascending_west" => Shape.AscendingWest,
+            "ascending_north" => Shape.AscendingNorth,
+            "ascending_south" => Shape.AscendingSouth,
+            "south_east" => Shape.SouthEast,
+            "south_west" => Shape.SouthWest,
+            "north_west" => Shape.NorthWest,
+            "north_east" => Shape.NorthEast,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Shape.")
+        };
     }
 }

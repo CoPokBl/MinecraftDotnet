@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record VineBlock(Identifier Identifier, bool East, bool North, bool South, bool Up, bool West) : IBlock {
 
     public uint StateId {
@@ -108,7 +109,7 @@ public record VineBlock(Identifier Identifier, bool East, bool North, bool South
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             7080 => new VineBlock(Identifier, true, true, true, true, true),
             7081 => new VineBlock(Identifier, true, true, true, true, false),
@@ -143,6 +144,16 @@ public record VineBlock(Identifier Identifier, bool East, bool North, bool South
             7110 => new VineBlock(Identifier, false, false, false, false, true),
             7111 => new VineBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            East = properties["east"].GetString() == "true",
+            North = properties["north"].GetString() == "true",
+            South = properties["south"].GetString() == "true",
+            Up = properties["up"].GetString() == "true",
+            West = properties["west"].GetString() == "true",
         };
     }
     

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripleafBlock.Tilt TiltValue, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -93,7 +94,7 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             25904 => new BigDripleafBlock(Identifier, Direction.North, Tilt.None, true),
             25905 => new BigDripleafBlock(Identifier, Direction.North, Tilt.None, false),
@@ -131,10 +132,28 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            TiltValue = TiltFromString(properties["tilt"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
+        };
+    }
+    
     public enum Tilt {
         None,
         Unstable,
         Partial,
         Full,
+    }
+
+    public static Tilt TiltFromString(string value) {
+        return value switch {
+            "none" => Tilt.None,
+            "unstable" => Tilt.Unstable,
+            "partial" => Tilt.Partial,
+            "full" => Tilt.Full,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Tilt.")
+        };
     }
 }

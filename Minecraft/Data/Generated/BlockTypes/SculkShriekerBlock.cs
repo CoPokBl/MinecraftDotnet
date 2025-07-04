@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shrieking, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -36,7 +37,7 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             23958 => new SculkShriekerBlock(Identifier, true, true, true),
             23959 => new SculkShriekerBlock(Identifier, true, true, false),
@@ -47,6 +48,14 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
             23964 => new SculkShriekerBlock(Identifier, false, false, true),
             23965 => new SculkShriekerBlock(Identifier, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            CanSummon = properties["can_summon"].GetString() == "true",
+            Shrieking = properties["shrieking"].GetString() == "true",
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

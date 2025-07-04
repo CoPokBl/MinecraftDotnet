@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net.Sockets;
 using Minecraft.Packets;
 using Org.BouncyCastle.Crypto.IO;
@@ -26,9 +27,14 @@ public class TcpPlayerConnection(TcpClient client) : PlayerConnection, IDisposab
             return Task.CompletedTask;
         }
 
+        // Stopwatch sw = Stopwatch.StartNew();
+        byte[] buff = packet.Serialise(State, CompressionThreshold);
+        // Console.WriteLine("Serialised packet in " + sw.ElapsedMilliseconds + "ms, size: " + buff.Length);
         lock (_sendLock) {
-            return Stream.WriteAsync(packet.Serialise(State, CompressionThreshold), _cts.Token).AsTask();
+            // packet.WriteTo(Stream, State, CompressionThreshold);
+            return Stream.WriteAsync(buff, _cts.Token).AsTask();
         }
+        // return Task.CompletedTask;
     }
     
     public override async Task HandlePackets() {

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mode ModeValue) : IBlock {
 
     public uint StateId {
@@ -21,7 +22,7 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             20379 => new StructureBlockBlock(Identifier, Mode.Save),
             20380 => new StructureBlockBlock(Identifier, Mode.Load),
@@ -31,10 +32,26 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            ModeValue = ModeFromString(properties["mode"].GetString()),
+        };
+    }
+    
     public enum Mode {
         Save,
         Load,
         Corner,
         Data,
+    }
+
+    public static Mode ModeFromString(string value) {
+        return value switch {
+            "save" => Mode.Save,
+            "load" => Mode.Load,
+            "corner" => Mode.Corner,
+            "data" => Mode.Data,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Mode.")
+        };
     }
 }

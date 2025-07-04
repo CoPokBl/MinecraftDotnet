@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
 
     public uint StateId {
@@ -213,7 +214,7 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             20235 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
             20236 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
@@ -280,6 +281,16 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
             20297 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
             20298 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Half = BlockHalfExtensions.FromString(properties["half"].GetString()),
+            Hinge = LeftRightExtensions.FromString(properties["hinge"].GetString()),
+            Open = properties["open"].GetString() == "true",
+            Powered = properties["powered"].GetString() == "true",
         };
     }
     

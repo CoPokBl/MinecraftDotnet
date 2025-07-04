@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record ChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -29,7 +30,7 @@ public record ChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : I
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             7016 => new ChainBlock(Identifier, Axis.X, true),
             7017 => new ChainBlock(Identifier, Axis.X, false),
@@ -38,6 +39,13 @@ public record ChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : I
             7020 => new ChainBlock(Identifier, Axis.Z, true),
             7021 => new ChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Axis = AxisExtensions.FromString(properties["axis"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

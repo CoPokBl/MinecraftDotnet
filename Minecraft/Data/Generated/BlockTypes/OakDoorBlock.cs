@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record OakDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
 
     public uint StateId {
@@ -213,7 +214,7 @@ public record OakDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Ha
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             4686 => new OakDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
             4687 => new OakDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
@@ -280,6 +281,16 @@ public record OakDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Ha
             4748 => new OakDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
             4749 => new OakDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Half = BlockHalfExtensions.FromString(properties["half"].GetString()),
+            Hinge = LeftRightExtensions.FromString(properties["hinge"].GetString()),
+            Open = properties["open"].GetString() == "true",
+            Powered = properties["powered"].GetString() == "true",
         };
     }
     

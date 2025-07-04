@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record ComparatorBlock(Identifier Identifier, Direction Facing, ComparatorBlock.Mode ModeValue, bool Powered) : IBlock {
 
     public uint StateId {
@@ -61,7 +62,7 @@ public record ComparatorBlock(Identifier Identifier, Direction Facing, Comparato
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             9984 => new ComparatorBlock(Identifier, Direction.North, Mode.Compare, true),
             9985 => new ComparatorBlock(Identifier, Direction.North, Mode.Compare, false),
@@ -83,8 +84,24 @@ public record ComparatorBlock(Identifier Identifier, Direction Facing, Comparato
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            ModeValue = ModeFromString(properties["mode"].GetString()),
+            Powered = properties["powered"].GetString() == "true",
+        };
+    }
+    
     public enum Mode {
         Compare,
         Subtract,
+    }
+
+    public static Mode ModeFromString(string value) {
+        return value switch {
+            "compare" => Mode.Compare,
+            "subtract" => Mode.Subtract,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Mode.")
+        };
     }
 }

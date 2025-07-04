@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record LightningRodBlock(Identifier Identifier, Cardinal Facing, bool Powered, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -77,7 +78,7 @@ public record LightningRodBlock(Identifier Identifier, Cardinal Facing, bool Pow
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             25752 => new LightningRodBlock(Identifier, Cardinal.North, true, true),
             25753 => new LightningRodBlock(Identifier, Cardinal.North, true, false),
@@ -104,6 +105,14 @@ public record LightningRodBlock(Identifier Identifier, Cardinal Facing, bool Pow
             25774 => new LightningRodBlock(Identifier, Cardinal.Down, false, true),
             25775 => new LightningRodBlock(Identifier, Cardinal.Down, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
+            Powered = properties["powered"].GetString() == "true",
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

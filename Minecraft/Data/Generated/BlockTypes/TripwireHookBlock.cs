@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction Facing, bool Powered) : IBlock {
 
     public uint StateId {
@@ -54,7 +55,7 @@ public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction 
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             8305 => new TripwireHookBlock(Identifier, true, Direction.North, true),
             8306 => new TripwireHookBlock(Identifier, true, Direction.North, false),
@@ -73,6 +74,14 @@ public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction 
             8319 => new TripwireHookBlock(Identifier, false, Direction.East, true),
             8320 => new TripwireHookBlock(Identifier, false, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Attached = properties["attached"].GetString() == "true",
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Powered = properties["powered"].GetString() == "true",
         };
     }
     

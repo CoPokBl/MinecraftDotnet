@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record RedBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock {
 
     public uint StateId {
@@ -65,7 +66,7 @@ public record RedBedBlock(Identifier Identifier, Direction Facing, bool Occupied
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             1955 => new RedBedBlock(Identifier, Direction.North, true, BedPart.Head),
             1956 => new RedBedBlock(Identifier, Direction.North, true, BedPart.Foot),
@@ -84,6 +85,14 @@ public record RedBedBlock(Identifier Identifier, Direction Facing, bool Occupied
             1969 => new RedBedBlock(Identifier, Direction.East, false, BedPart.Head),
             1970 => new RedBedBlock(Identifier, Direction.East, false, BedPart.Foot),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Occupied = properties["occupied"].GetString() == "true",
+            Part = BedPartExtensions.FromString(properties["part"].GetString()),
         };
     }
     

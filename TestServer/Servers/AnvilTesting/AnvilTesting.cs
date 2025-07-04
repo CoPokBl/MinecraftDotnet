@@ -28,7 +28,7 @@ public class AnvilTesting {
                 PreventsChatReports = true
         }));
 
-        World world = new(server.Events, new AnvilLoader("testanvil", VanillaRegistry.Data), 8);
+        World world = new(server.Events, new AnvilLoader("testanvil", VanillaRegistry.Data), 8, 64, 1000/20);
 
         Stopwatch sw = Stopwatch.StartNew();
         for (int i = 0; i < 1; i++) {

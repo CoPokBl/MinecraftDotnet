@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Orientation, bool Triggered) : IBlock {
 
     public uint StateId {
@@ -118,7 +119,7 @@ public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Ori
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             27650 => new CrafterBlock(Identifier, true, Orientation.DownEast, true),
             27651 => new CrafterBlock(Identifier, true, Orientation.DownEast, false),
@@ -169,6 +170,14 @@ public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Ori
             27696 => new CrafterBlock(Identifier, false, Orientation.SouthUp, true),
             27697 => new CrafterBlock(Identifier, false, Orientation.SouthUp, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Crafting = properties["crafting"].GetString() == "true",
+            Orientation = OrientationExtensions.FromString(properties["orientation"].GetString()),
+            Triggered = properties["triggered"].GetString() == "true",
         };
     }
     

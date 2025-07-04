@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -70,7 +71,7 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             2011 => new DetectorRailBlock(Identifier, true, RailDirection.NorthSouth, true),
             2012 => new DetectorRailBlock(Identifier, true, RailDirection.NorthSouth, false),
@@ -97,6 +98,14 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
             2033 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingSouth, true),
             2034 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingSouth, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Powered = properties["powered"].GetString() == "true",
+            Shape = RailDirectionExtensions.FromString(properties["shape"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record CrimsonTrapdoorBlock(Identifier Identifier, Direction Facing, CrimsonTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -205,7 +206,7 @@ public record CrimsonTrapdoorBlock(Identifier Identifier, Direction Facing, Crim
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             19771 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, true),
             19772 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, false),
@@ -275,8 +276,26 @@ public record CrimsonTrapdoorBlock(Identifier Identifier, Direction Facing, Crim
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            HalfValue = HalfFromString(properties["half"].GetString()),
+            Open = properties["open"].GetString() == "true",
+            Powered = properties["powered"].GetString() == "true",
+            Waterlogged = properties["waterlogged"].GetString() == "true",
+        };
+    }
+    
     public enum Half {
         Top,
         Bottom,
+    }
+
+    public static Half HalfFromString(string value) {
+        return value switch {
+            "top" => Half.Top,
+            "bottom" => Half.Bottom,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Half.")
+        };
     }
 }

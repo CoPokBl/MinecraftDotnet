@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection East, RedstoneWireConnection North, int Power, RedstoneWireConnection South, RedstoneWireConnection West) : IBlock {
 
     public uint StateId {
@@ -3077,7 +3078,7 @@ public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection Ea
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             3042 => new RedstoneWireBlock(Identifier, RedstoneWireConnection.Up, RedstoneWireConnection.Up, 0, RedstoneWireConnection.Up, RedstoneWireConnection.Up),
             3043 => new RedstoneWireBlock(Identifier, RedstoneWireConnection.Up, RedstoneWireConnection.Up, 0, RedstoneWireConnection.Up, RedstoneWireConnection.Side),
@@ -4376,6 +4377,16 @@ public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection Ea
             4336 => new RedstoneWireBlock(Identifier, RedstoneWireConnection.None, RedstoneWireConnection.None, 15, RedstoneWireConnection.None, RedstoneWireConnection.Side),
             4337 => new RedstoneWireBlock(Identifier, RedstoneWireConnection.None, RedstoneWireConnection.None, 15, RedstoneWireConnection.None, RedstoneWireConnection.None),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            East = RedstoneWireConnectionExtensions.FromString(properties["east"].GetString()),
+            North = RedstoneWireConnectionExtensions.FromString(properties["north"].GetString()),
+            Power = int.Parse(properties["power"].GetString()),
+            South = RedstoneWireConnectionExtensions.FromString(properties["south"].GetString()),
+            West = RedstoneWireConnectionExtensions.FromString(properties["west"].GetString()),
         };
     }
     

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record OrangeBannerBlock(Identifier Identifier, int Rotation) : IBlock {
 
     public uint StateId {
@@ -33,7 +34,7 @@ public record OrangeBannerBlock(Identifier Identifier, int Rotation) : IBlock {
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             11664 => new OrangeBannerBlock(Identifier, 0),
             11665 => new OrangeBannerBlock(Identifier, 1),
@@ -52,6 +53,12 @@ public record OrangeBannerBlock(Identifier Identifier, int Rotation) : IBlock {
             11678 => new OrangeBannerBlock(Identifier, 14),
             11679 => new OrangeBannerBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Rotation = int.Parse(properties["rotation"].GetString()),
         };
     }
     

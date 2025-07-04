@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Lit, bool SignalFire, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -105,7 +106,7 @@ public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Li
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             19566 => new SoulCampfireBlock(Identifier, Direction.North, true, true, true),
             19567 => new SoulCampfireBlock(Identifier, Direction.North, true, true, false),
@@ -140,6 +141,15 @@ public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Li
             19596 => new SoulCampfireBlock(Identifier, Direction.East, false, false, true),
             19597 => new SoulCampfireBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Lit = properties["lit"].GetString() == "true",
+            SignalFire = properties["signal_fire"].GetString() == "true",
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

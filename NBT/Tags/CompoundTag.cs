@@ -10,9 +10,10 @@ public class CompoundTag(string? name, params INbtTag?[] children) : INbtTag {
     public INbtTag?[] Children { get; } = children;
     public string? Name = name;
 
+    private Dictionary<string, INbtTag>? _childrenMap;
     public Dictionary<string, INbtTag> ChildrenMap {
         get {
-            return Children.OfType<INbtTag>().ToDictionary(c => c.GetName()!);
+            return _childrenMap ??= Children.OfType<INbtTag>().ToDictionary(c => c.GetName()!);
         }
     }
     

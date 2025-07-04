@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
 
     public uint StateId {
@@ -25,7 +26,7 @@ public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             4350 => new FarmlandBlock(Identifier, 0),
             4351 => new FarmlandBlock(Identifier, 1),
@@ -36,6 +37,12 @@ public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
             4356 => new FarmlandBlock(Identifier, 6),
             4357 => new FarmlandBlock(Identifier, 7),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Moisture = int.Parse(properties["moisture"].GetString()),
         };
     }
     

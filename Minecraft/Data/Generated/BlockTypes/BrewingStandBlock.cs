@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool HasBottle1, bool HasBottle2) : IBlock {
 
     public uint StateId {
@@ -36,7 +37,7 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             8174 => new BrewingStandBlock(Identifier, true, true, true),
             8175 => new BrewingStandBlock(Identifier, true, true, false),
@@ -47,6 +48,14 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
             8180 => new BrewingStandBlock(Identifier, false, false, true),
             8181 => new BrewingStandBlock(Identifier, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            HasBottle0 = properties["has_bottle_0"].GetString() == "true",
+            HasBottle1 = properties["has_bottle_1"].GetString() == "true",
+            HasBottle2 = properties["has_bottle_2"].GetString() == "true",
         };
     }
     

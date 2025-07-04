@@ -151,21 +151,24 @@ public class PacketSerialiseDeserialiseTest {
 
     [Test]
     public void TestSerialiseSpeed() {
-        ClientBoundStatusResponsePacket statusResponse = new() {
-            VersionName = "Potato",
-            VersionProtocol = 69,
-            MaxPlayers = 5,
-            OnlinePlayers = 1,
-            SamplePlayers = [new SamplePlayer("CopokBl", "a")],
-            Description = "Welcome to my server!",
-            PreventsChatReports = true
+        const int tests = 1_000;
+        ChunkData cd = new();
+        cd.FillRandom();
+        ClientBoundChunkDataAndUpdateLightPacket packet = new() {
+            ChunkX = 0,
+            ChunkZ = 0,
+            Data = cd,
+            Light = LightData.FullBright
         };
         
+        int[] times = new int[tests];
         Stopwatch sw = Stopwatch.StartNew();
-        for (int i = 0; i < 20_000; i++) {
-            statusResponse.Serialise(ConnectionState.Status);
+        for (int i = 0; i < tests; i++) {
+            sw.Restart();
+            packet.Serialise(ConnectionState.Play, 10);
+            times[i] = (int)sw.ElapsedMilliseconds;
         }
-        Console.WriteLine($"Serialise: {sw.ElapsedMilliseconds}ms");
+        Console.WriteLine($"Serialise speed: average: {times.Average()}ms");
     }
     
     [Test]

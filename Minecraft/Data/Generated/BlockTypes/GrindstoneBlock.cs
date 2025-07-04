@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direction Facing) : IBlock {
 
     public uint StateId {
@@ -38,7 +39,7 @@ public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direc
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             19461 => new GrindstoneBlock(Identifier, AttachDirection.Floor, Direction.North),
             19462 => new GrindstoneBlock(Identifier, AttachDirection.Floor, Direction.South),
@@ -53,6 +54,13 @@ public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direc
             19471 => new GrindstoneBlock(Identifier, AttachDirection.Ceiling, Direction.West),
             19472 => new GrindstoneBlock(Identifier, AttachDirection.Ceiling, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Face = AttachDirectionExtensions.FromString(properties["face"].GetString()),
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
         };
     }
     

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool West) : IBlock {
 
     public uint StateId {
@@ -204,7 +205,7 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             13363 => new ChorusPlantBlock(Identifier, true, true, true, true, true, true),
             13364 => new ChorusPlantBlock(Identifier, true, true, true, true, true, false),
@@ -271,6 +272,17 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
             13425 => new ChorusPlantBlock(Identifier, false, false, false, false, false, true),
             13426 => new ChorusPlantBlock(Identifier, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Down = properties["down"].GetString() == "true",
+            East = properties["east"].GetString() == "true",
+            North = properties["north"].GetString() == "true",
+            South = properties["south"].GetString() == "true",
+            Up = properties["up"].GetString() == "true",
+            West = properties["west"].GetString() == "true",
         };
     }
     

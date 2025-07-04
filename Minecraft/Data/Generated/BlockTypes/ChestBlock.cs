@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record ChestBlock(Identifier Identifier, ChestBlock.Type TypeValue, Direction Facing, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -74,7 +75,7 @@ public record ChestBlock(Identifier Identifier, ChestBlock.Type TypeValue, Direc
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             3018 => new ChestBlock(Identifier, Type.Single, Direction.North, true),
             3019 => new ChestBlock(Identifier, Type.Single, Direction.North, false),
@@ -104,9 +105,26 @@ public record ChestBlock(Identifier Identifier, ChestBlock.Type TypeValue, Direc
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            TypeValue = TypeFromString(properties["type"].GetString()),
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
+        };
+    }
+    
     public enum Type {
         Single,
         Left,
         Right,
+    }
+
+    public static Type TypeFromString(string value) {
+        return value switch {
+            "single" => Type.Single,
+            "left" => Type.Left,
+            "right" => Type.Right,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Type.")
+        };
     }
 }

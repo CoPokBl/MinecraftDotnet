@@ -31,6 +31,12 @@ public class ChunkData : IWritable, IDataReadable<ChunkData> {
     public void Fill(IBlock block) {
         Fill(block.StateId);
     }
+    
+    public void FillRandom() {
+        for (int i = 0; i < ChunkSections; i++) {
+            Sections[i].FillRandom();
+        }
+    }
 
     public void SetBlock(int x, int y, int z, uint state) {
         int chunkSection = y / 16;  // sections from the bottom
@@ -76,8 +82,8 @@ public class ChunkData : IWritable, IDataReadable<ChunkData> {
             chunks.Write(chunkSection);
         }
         
-        byte[] chunkData = chunks.ToArray();
-        w.WriteVarInt(chunkData.Length);  // length of chunk data
+        List<byte> chunkData = chunks.GetRaw()!;
+        w.WriteVarInt(chunkData.Count);  // length of chunk data
         w.Write(chunkData);  // write the chunk data
         
         // prefixed array of block entities, ignore for now

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
 
     public uint StateId {
@@ -33,7 +34,7 @@ public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             9908 => new PiglinWallHeadBlock(Identifier, Direction.North, true),
             9909 => new PiglinWallHeadBlock(Identifier, Direction.North, false),
@@ -44,6 +45,13 @@ public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool 
             9914 => new PiglinWallHeadBlock(Identifier, Direction.East, true),
             9915 => new PiglinWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Powered = properties["powered"].GetString() == "true",
         };
     }
     

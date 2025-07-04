@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record AnvilBlock(Identifier Identifier, Direction Facing) : IBlock {
 
     public uint StateId {
@@ -21,13 +22,19 @@ public record AnvilBlock(Identifier Identifier, Direction Facing) : IBlock {
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             9916 => new AnvilBlock(Identifier, Direction.North),
             9917 => new AnvilBlock(Identifier, Direction.South),
             9918 => new AnvilBlock(Identifier, Direction.West),
             9919 => new AnvilBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
         };
     }
     

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockHalf Half, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -61,7 +62,7 @@ public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockH
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             25944 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Upper, true),
             25945 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Upper, false),
@@ -80,6 +81,14 @@ public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockH
             25958 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Lower, true),
             25959 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Lower, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Half = BlockHalfExtensions.FromString(properties["half"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

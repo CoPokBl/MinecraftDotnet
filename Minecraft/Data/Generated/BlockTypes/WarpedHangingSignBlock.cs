@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record WarpedHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -150,7 +151,7 @@ public record WarpedHangingSignBlock(Identifier Identifier, bool Attached, int R
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             5514 => new WarpedHangingSignBlock(Identifier, true, 0, true),
             5515 => new WarpedHangingSignBlock(Identifier, true, 0, false),
@@ -217,6 +218,14 @@ public record WarpedHangingSignBlock(Identifier Identifier, bool Attached, int R
             5576 => new WarpedHangingSignBlock(Identifier, false, 15, true),
             5577 => new WarpedHangingSignBlock(Identifier, false, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Attached = properties["attached"].GetString() == "true",
+            Rotation = int.Parse(properties["rotation"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

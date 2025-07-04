@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record RedShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock {
 
     public uint StateId {
@@ -23,7 +24,7 @@ public record RedShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBloc
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             13675 => new RedShulkerBoxBlock(Identifier, Cardinal.North),
             13676 => new RedShulkerBoxBlock(Identifier, Cardinal.East),
@@ -32,6 +33,12 @@ public record RedShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBloc
             13679 => new RedShulkerBoxBlock(Identifier, Cardinal.Up),
             13680 => new RedShulkerBoxBlock(Identifier, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
         };
     }
     

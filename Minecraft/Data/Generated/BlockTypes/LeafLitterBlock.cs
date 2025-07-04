@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record LeafLitterBlock(Identifier Identifier, Direction Facing, int SegmentAmount) : IBlock {
 
     public uint StateId {
@@ -45,7 +46,7 @@ public record LeafLitterBlock(Identifier Identifier, Direction Facing, int Segme
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             25887 => new LeafLitterBlock(Identifier, Direction.North, 1),
             25888 => new LeafLitterBlock(Identifier, Direction.North, 2),
@@ -64,6 +65,13 @@ public record LeafLitterBlock(Identifier Identifier, Direction Facing, int Segme
             25901 => new LeafLitterBlock(Identifier, Direction.East, 3),
             25902 => new LeafLitterBlock(Identifier, Direction.East, 4),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            SegmentAmount = int.Parse(properties["segment_amount"].GetString()),
         };
     }
     

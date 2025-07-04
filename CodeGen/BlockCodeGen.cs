@@ -46,6 +46,8 @@ public record ExistingEnumProperty : IProperty {
 public static class BlockCodeGen {
     private const string TemplateFile = 
 """
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -53,8 +55,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: {date}
+// See Block.cs for last updated date.
 public record {name}(Identifier Identifier, {args}) : IBlock {
 
     public uint StateId {
@@ -63,8 +64,12 @@ public record {name}(Identifier Identifier, {args}) : IBlock {
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         {from_state_logic}
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        {load_state_logic}
     }
     
 {enums}}
@@ -295,21 +300,33 @@ public static class Block {
             // okay we have the arguments, now we need to build actual arguments code
             string argsCode = string.Join(", ", props.Select(p => GetCSharpType(pascalName, p) + " " + GetPascalPropName(p)));
             
-            // now we need to build the enums code
+            // =====================================================
+            //                        ENUMs
+            // =====================================================
             string enumsCode = "";
             foreach (IProperty prop in props) {
-                if (prop.Type == PropertyType.Enum) {
-                    string enumName = CodeGenUtils.NamespacedIdToPascalName(prop.Name);
-                    string[] enumValues = ((EnumProperty)prop).AllowedValues;
-                    enumsCode += $"    public enum {enumName} {{\n";
-                    foreach (string enumValue in enumValues) {
-                        enumsCode += $"        {CodeGenUtils.NamespacedIdToPascalName(enumValue)},\n";
-                    }
-                    enumsCode += "    }\n";
+                if (prop.Type != PropertyType.Enum) continue;
+                string enumName = CodeGenUtils.NamespacedIdToPascalName(prop.Name);
+                string[] enumValues = ((EnumProperty)prop).AllowedValues;
+                enumsCode += $"    public enum {enumName} {{\n";
+                foreach (string enumValue in enumValues) {
+                    enumsCode += $"{CodeGenUtils.GetIndentation(2)}{CodeGenUtils.NamespacedIdToPascalName(enumValue)},\n";
                 }
+                enumsCode += "    }\n";
+                
+                // We need an extension method to convert from string to enum
+                enumsCode += $"\n{CodeGenUtils.GetIndentation(1)}public static {enumName} {enumName}FromString(string value) {{\n" +
+                             $"{CodeGenUtils.GetIndentation(2)}return value switch {{\n";
+                enumsCode = enumValues.Aggregate(enumsCode, (current, enumValue) => 
+                    current + $"{CodeGenUtils.GetIndentation(3)}\"{enumValue}\" => {enumName}.{CodeGenUtils.NamespacedIdToPascalName(enumValue)},\n");
+                enumsCode += $"{CodeGenUtils.GetIndentation(3)}_ => throw new ArgumentOutOfRangeException(nameof(value), value, \"Unknown value for {enumName}.\")\n" +
+                             $"{CodeGenUtils.GetIndentation(2)}}};\n" +
+                             $"{CodeGenUtils.GetIndentation(1)}}}\n";
             }
             
-            // alright, now we need to build the logic for the StateId property
+            // =====================================================
+            //                    State Id Logic
+            // =====================================================
             string toStateLogic = "return ";
 
             void GenSwitchStatement(int index, string[] path) {
@@ -354,7 +371,9 @@ public static class Block {
             GenSwitchStatement(0, new string[props.Count]);
             toStateLogic += ";";
             
-            // now we need to build the logic for the GetState method
+            // =====================================================
+            //               Get State Logic
+            // =====================================================
             JObject? defaultState = null;
             int[] stateIds = new int[states.Count];
             string fromStateLogic = "return state switch {\n";
@@ -396,11 +415,36 @@ public static class Block {
 
             fromStateLogic += "            _ => throw new ArgumentOutOfRangeException(nameof(state), state, \"Unknown state id.\")\n        };";
             
+            // =====================================================
+            //               Load State Logic
+            // =====================================================
+            StringBuilder loadStateLogic = new("return this with {\n");
+            foreach (IProperty prop in props) {
+                string pascalPropName = GetPascalPropName(prop);
+                switch (prop) {
+                    case EnumProperty:
+                        loadStateLogic.Append($"{CodeGenUtils.GetIndentation(3)}{pascalPropName} = {CodeGenUtils.NamespacedIdToPascalName(prop.Name)}FromString(properties[\"{prop.Name}\"].GetString()),\n");
+                        break;
+                    case BooleanProperty:
+                        loadStateLogic.Append($"{CodeGenUtils.GetIndentation(3)}{pascalPropName} = properties[\"{prop.Name}\"].GetString() == \"true\",\n");
+                        break;
+                    case IntegerProperty:
+                        loadStateLogic.Append($"{CodeGenUtils.GetIndentation(3)}{pascalPropName} = int.Parse(properties[\"{prop.Name}\"].GetString()),\n");
+                        break;
+                    case ExistingEnumProperty ee: {
+                        loadStateLogic.Append($"{CodeGenUtils.GetIndentation(3)}{pascalPropName} = {ee.ExistingEnum}Extensions.FromString(properties[\"{ee.Name}\"].GetString()),\n");
+                        break;
+                    }
+                }
+            }
+            loadStateLogic.Append($"{CodeGenUtils.GetIndentation(2)}}};");
+            
             string file = TemplateFile.Replace("{name}", pascalName)
                 .Replace("{args}", argsCode)
                 .Replace("{to_state_logic}", toStateLogic)
                 .Replace("{from_state_logic}", fromStateLogic)
                 .Replace("{enums}", enumsCode)
+                .Replace("{load_state_logic}", loadStateLogic.ToString())
                 .Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"));
             
             // let's get the default and add it to the registry

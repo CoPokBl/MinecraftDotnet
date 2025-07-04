@@ -8,7 +8,7 @@ public class BlockRegistry {
     private readonly Dictionary<Identifier, IBlock> _defaultByName = new();
     
     public IBlock this[Identifier name] => _defaultByName[name];
-    public IBlock this[uint state] => _defaultByState[state].GetState(state);
+    public IBlock this[uint state] => _defaultByState[state].WithState(state);
 
     public void Add(IBlock defaultBlock, Identifier identifier, params uint[] states) {
         foreach (uint state in states) {

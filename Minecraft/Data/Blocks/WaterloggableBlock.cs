@@ -1,11 +1,13 @@
 using Minecraft.Schemas;
+using NBT;
+using NBT.Tags;
 
 namespace Minecraft.Data.Blocks;
 
 public record WaterloggableBlock(Identifier Identifier, uint StateIdAirLogged, uint StateIdWaterlogged, bool Waterlogged) : IBlock {
     public uint StateId => Waterlogged ? StateIdWaterlogged : StateIdAirLogged;
 
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         if (state == StateIdWaterlogged) {
             return this with {
                 Waterlogged = true
@@ -17,5 +19,11 @@ public record WaterloggableBlock(Identifier Identifier, uint StateIdAirLogged, u
             };
         }
         throw new ArgumentOutOfRangeException(nameof(state), state, "Invalid state ID.");
+    }
+
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Waterlogged = properties["waterlogged"].GetString() == "true"
+        };
     }
 }

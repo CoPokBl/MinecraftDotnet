@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record OakButtonBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock {
 
     public uint StateId {
@@ -74,7 +75,7 @@ public record OakButtonBlock(Identifier Identifier, AttachDirection Face, Direct
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             9396 => new OakButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
             9397 => new OakButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
@@ -101,6 +102,14 @@ public record OakButtonBlock(Identifier Identifier, AttachDirection Face, Direct
             9418 => new OakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
             9419 => new OakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Face = AttachDirectionExtensions.FromString(properties["face"].GetString()),
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Powered = properties["powered"].GetString() == "true",
         };
     }
     

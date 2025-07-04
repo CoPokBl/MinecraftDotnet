@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide East, WallSide North, WallSide South, WallSide West) : IBlock {
 
     public uint StateId {
@@ -418,7 +419,7 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             27745 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.None, WallSide.None),
             27746 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.None, WallSide.Low),
@@ -583,6 +584,16 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
             27905 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.Low),
             27906 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.Tall),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Bottom = properties["bottom"].GetString() == "true",
+            East = WallSideExtensions.FromString(properties["east"].GetString()),
+            North = WallSideExtensions.FromString(properties["north"].GetString()),
+            South = WallSideExtensions.FromString(properties["south"].GetString()),
+            West = WallSideExtensions.FromString(properties["west"].GetString()),
         };
     }
     

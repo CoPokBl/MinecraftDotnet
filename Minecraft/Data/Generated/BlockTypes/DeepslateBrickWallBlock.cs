@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record DeepslateBrickWallBlock(Identifier Identifier, WallSide East, WallSide North, WallSide South, bool Up, bool Waterlogged, WallSide West) : IBlock {
 
     public uint StateId {
@@ -863,7 +864,7 @@ public record DeepslateBrickWallBlock(Identifier Identifier, WallSide East, Wall
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             27287 => new DeepslateBrickWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.None),
             27288 => new DeepslateBrickWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.Low),
@@ -1190,6 +1191,17 @@ public record DeepslateBrickWallBlock(Identifier Identifier, WallSide East, Wall
             27609 => new DeepslateBrickWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
             27610 => new DeepslateBrickWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            East = WallSideExtensions.FromString(properties["east"].GetString()),
+            North = WallSideExtensions.FromString(properties["north"].GetString()),
+            South = WallSideExtensions.FromString(properties["south"].GetString()),
+            Up = properties["up"].GetString() == "true",
+            Waterlogged = properties["waterlogged"].GetString() == "true",
+            West = WallSideExtensions.FromString(properties["west"].GetString()),
         };
     }
     

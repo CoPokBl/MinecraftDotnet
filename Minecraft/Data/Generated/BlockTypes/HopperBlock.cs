@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facing FacingValue) : IBlock {
 
     public uint StateId {
@@ -32,7 +33,7 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             10034 => new HopperBlock(Identifier, true, Facing.Down),
             10035 => new HopperBlock(Identifier, true, Facing.North),
@@ -48,11 +49,29 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Enabled = properties["enabled"].GetString() == "true",
+            FacingValue = FacingFromString(properties["facing"].GetString()),
+        };
+    }
+    
     public enum Facing {
         Down,
         North,
         South,
         West,
         East,
+    }
+
+    public static Facing FacingFromString(string value) {
+        return value switch {
+            "down" => Facing.Down,
+            "north" => Facing.North,
+            "south" => Facing.South,
+            "west" => Facing.West,
+            "east" => Facing.East,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Facing.")
+        };
     }
 }

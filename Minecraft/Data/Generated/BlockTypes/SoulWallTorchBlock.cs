@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record SoulWallTorchBlock(Identifier Identifier, Direction Facing) : IBlock {
 
     public uint StateId {
@@ -21,13 +22,19 @@ public record SoulWallTorchBlock(Identifier Identifier, Direction Facing) : IBlo
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             6038 => new SoulWallTorchBlock(Identifier, Direction.North),
             6039 => new SoulWallTorchBlock(Identifier, Direction.South),
             6040 => new SoulWallTorchBlock(Identifier, Direction.West),
             6041 => new SoulWallTorchBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
         };
     }
     

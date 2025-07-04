@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentValue, Direction Facing, bool Powered) : IBlock {
 
     public uint StateId {
@@ -93,7 +94,7 @@ public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentVa
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             19494 => new BellBlock(Identifier, Attachment.Floor, Direction.North, true),
             19495 => new BellBlock(Identifier, Attachment.Floor, Direction.North, false),
@@ -131,10 +132,28 @@ public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentVa
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            AttachmentValue = AttachmentFromString(properties["attachment"].GetString()),
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Powered = properties["powered"].GetString() == "true",
+        };
+    }
+    
     public enum Attachment {
         Floor,
         Ceiling,
         SingleWall,
         DoubleWall,
+    }
+
+    public static Attachment AttachmentFromString(string value) {
+        return value switch {
+            "floor" => Attachment.Floor,
+            "ceiling" => Attachment.Ceiling,
+            "single_wall" => Attachment.SingleWall,
+            "double_wall" => Attachment.DoubleWall,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Attachment.")
+        };
     }
 }

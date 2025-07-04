@@ -1,4 +1,5 @@
 using Minecraft.Schemas;
+using NBT.Tags;
 
 namespace Minecraft.Data.Blocks;
 
@@ -6,7 +7,8 @@ public interface IBlock {
     public uint StateId { get; }
     public Identifier Identifier { get; }
 
-    public IBlock GetState(uint state);
+    public IBlock WithState(uint state);
+    public IBlock WithState(CompoundTag properties);
 
     public bool Equals(IBlock? other) {
         return other?.StateId == StateId;

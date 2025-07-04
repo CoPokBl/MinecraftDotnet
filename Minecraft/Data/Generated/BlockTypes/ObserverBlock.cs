@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered) : IBlock {
 
     public uint StateId {
@@ -41,7 +42,7 @@ public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             13573 => new ObserverBlock(Identifier, Cardinal.North, true),
             13574 => new ObserverBlock(Identifier, Cardinal.North, false),
@@ -56,6 +57,13 @@ public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered
             13583 => new ObserverBlock(Identifier, Cardinal.Down, true),
             13584 => new ObserverBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
+            Powered = properties["powered"].GetString() == "true",
         };
     }
     

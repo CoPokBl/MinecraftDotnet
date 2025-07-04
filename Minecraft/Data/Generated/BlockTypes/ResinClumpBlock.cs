@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record ResinClumpBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool Waterlogged, bool West) : IBlock {
 
     public uint StateId {
@@ -396,7 +397,7 @@ public record ResinClumpBlock(Identifier Identifier, bool Down, bool East, bool 
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             7240 => new ResinClumpBlock(Identifier, true, true, true, true, true, true, true),
             7241 => new ResinClumpBlock(Identifier, true, true, true, true, true, true, false),
@@ -527,6 +528,18 @@ public record ResinClumpBlock(Identifier Identifier, bool Down, bool East, bool 
             7366 => new ResinClumpBlock(Identifier, false, false, false, false, false, false, true),
             7367 => new ResinClumpBlock(Identifier, false, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Down = properties["down"].GetString() == "true",
+            East = properties["east"].GetString() == "true",
+            North = properties["north"].GetString() == "true",
+            South = properties["south"].GetString() == "true",
+            Up = properties["up"].GetString() == "true",
+            Waterlogged = properties["waterlogged"].GetString() == "true",
+            West = properties["west"].GetString() == "true",
         };
     }
     

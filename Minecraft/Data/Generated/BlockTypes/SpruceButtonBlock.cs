@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record SpruceButtonBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock {
 
     public uint StateId {
@@ -74,7 +75,7 @@ public record SpruceButtonBlock(Identifier Identifier, AttachDirection Face, Dir
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             9420 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
             9421 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
@@ -101,6 +102,14 @@ public record SpruceButtonBlock(Identifier Identifier, AttachDirection Face, Dir
             9442 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
             9443 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Face = AttachDirectionExtensions.FromString(properties["face"].GetString()),
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Powered = properties["powered"].GetString() == "true",
         };
     }
     

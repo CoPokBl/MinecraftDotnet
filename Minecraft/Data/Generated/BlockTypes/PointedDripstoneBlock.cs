@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock.Thickness ThicknessValue, PointedDripstoneBlock.VerticalDirection VerticalDirectionValue, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -72,7 +73,7 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             25776 => new PointedDripstoneBlock(Identifier, Thickness.TipMerge, VerticalDirection.Up, true),
             25777 => new PointedDripstoneBlock(Identifier, Thickness.TipMerge, VerticalDirection.Up, false),
@@ -98,6 +99,14 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            ThicknessValue = ThicknessFromString(properties["thickness"].GetString()),
+            VerticalDirectionValue = VerticalDirectionFromString(properties["vertical_direction"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
+        };
+    }
+    
     public enum Thickness {
         TipMerge,
         Tip,
@@ -105,8 +114,27 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
         Middle,
         Base,
     }
+
+    public static Thickness ThicknessFromString(string value) {
+        return value switch {
+            "tip_merge" => Thickness.TipMerge,
+            "tip" => Thickness.Tip,
+            "frustum" => Thickness.Frustum,
+            "middle" => Thickness.Middle,
+            "base" => Thickness.Base,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Thickness.")
+        };
+    }
     public enum VerticalDirection {
         Up,
         Down,
+    }
+
+    public static VerticalDirection VerticalDirectionFromString(string value) {
+        return value switch {
+            "up" => VerticalDirection.Up,
+            "down" => VerticalDirection.Down,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for VerticalDirection.")
+        };
     }
 }

@@ -36,6 +36,20 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
             }
         }
     }
+    
+    public void Fill(IBlock block) {
+        Fill(block.StateId);
+    }
+
+    public void FillRandom() {
+        for (int x = 0; x < Size; x++) {
+            for (int y = 0; y < Size; y++) {
+                for (int z = 0; z < Size; z++) {
+                    Blocks[x, y, z] = (uint)Random.Shared.Next(20_000);
+                }
+            }
+        }
+    }
 
     public void SetBlock(int x, int y, int z, uint state) {
         Blocks[x, y, z] = state;

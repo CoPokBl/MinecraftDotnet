@@ -5,7 +5,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2025-07-03
+// Last updated: 2025-07-04
 public static class Particle {
     public static SimpleParticle AngryVillager => new("minecraft:angry_villager", 0);
     public static SimpleParticle Ash => new("minecraft:ash", 81);

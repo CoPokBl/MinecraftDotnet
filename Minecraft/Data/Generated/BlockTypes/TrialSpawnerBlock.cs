@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawnerBlock.TrialSpawnerState TrialSpawnerStateValue) : IBlock {
 
     public uint StateId {
@@ -34,7 +35,7 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             27698 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Inactive),
             27699 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.WaitingForPlayers),
@@ -52,6 +53,13 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Ominous = properties["ominous"].GetString() == "true",
+            TrialSpawnerStateValue = TrialSpawnerStateFromString(properties["trial_spawner_state"].GetString()),
+        };
+    }
+    
     public enum TrialSpawnerState {
         Inactive,
         WaitingForPlayers,
@@ -59,5 +67,17 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
         WaitingForRewardEjection,
         EjectingReward,
         Cooldown,
+    }
+
+    public static TrialSpawnerState TrialSpawnerStateFromString(string value) {
+        return value switch {
+            "inactive" => TrialSpawnerState.Inactive,
+            "waiting_for_players" => TrialSpawnerState.WaitingForPlayers,
+            "active" => TrialSpawnerState.Active,
+            "waiting_for_reward_ejection" => TrialSpawnerState.WaitingForRewardEjection,
+            "ejecting_reward" => TrialSpawnerState.EjectingReward,
+            "cooldown" => TrialSpawnerState.Cooldown,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for TrialSpawnerState.")
+        };
     }
 }

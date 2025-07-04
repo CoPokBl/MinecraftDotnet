@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBlock {
 
     public uint StateId {
@@ -41,7 +42,7 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             13811 => new TurtleEggBlock(Identifier, 1, 0),
             13812 => new TurtleEggBlock(Identifier, 1, 1),
@@ -56,6 +57,13 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
             13821 => new TurtleEggBlock(Identifier, 4, 1),
             13822 => new TurtleEggBlock(Identifier, 4, 2),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Eggs = int.Parse(properties["eggs"].GetString()),
+            Hatch = int.Parse(properties["hatch"].GetString()),
         };
     }
     

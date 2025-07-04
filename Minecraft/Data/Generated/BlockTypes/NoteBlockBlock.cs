@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument InstrumentValue, int Note, bool Powered) : IBlock {
 
     public uint StateId {
@@ -2386,7 +2387,7 @@ public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument In
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             581 => new NoteBlockBlock(Identifier, Instrument.Harp, 0, true),
             582 => new NoteBlockBlock(Identifier, Instrument.Harp, 0, false),
@@ -3542,6 +3543,14 @@ public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument In
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            InstrumentValue = InstrumentFromString(properties["instrument"].GetString()),
+            Note = int.Parse(properties["note"].GetString()),
+            Powered = properties["powered"].GetString() == "true",
+        };
+    }
+    
     public enum Instrument {
         Harp,
         Basedrum,
@@ -3566,5 +3575,34 @@ public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument In
         WitherSkeleton,
         Piglin,
         CustomHead,
+    }
+
+    public static Instrument InstrumentFromString(string value) {
+        return value switch {
+            "harp" => Instrument.Harp,
+            "basedrum" => Instrument.Basedrum,
+            "snare" => Instrument.Snare,
+            "hat" => Instrument.Hat,
+            "bass" => Instrument.Bass,
+            "flute" => Instrument.Flute,
+            "bell" => Instrument.Bell,
+            "guitar" => Instrument.Guitar,
+            "chime" => Instrument.Chime,
+            "xylophone" => Instrument.Xylophone,
+            "iron_xylophone" => Instrument.IronXylophone,
+            "cow_bell" => Instrument.CowBell,
+            "didgeridoo" => Instrument.Didgeridoo,
+            "bit" => Instrument.Bit,
+            "banjo" => Instrument.Banjo,
+            "pling" => Instrument.Pling,
+            "zombie" => Instrument.Zombie,
+            "skeleton" => Instrument.Skeleton,
+            "creeper" => Instrument.Creeper,
+            "dragon" => Instrument.Dragon,
+            "wither_skeleton" => Instrument.WitherSkeleton,
+            "piglin" => Instrument.Piglin,
+            "custom_head" => Instrument.CustomHead,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Instrument.")
+        };
     }
 }

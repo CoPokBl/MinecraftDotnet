@@ -17,9 +17,9 @@ namespace Minecraft.Implementations.Server.Worlds;
 public class World {
     // State stuff
     public readonly List<PlayerEntity> Players = [];
-    public EventNode<IServerEvent> Events;
+    public readonly EventNode<IServerEvent> Events;
     public readonly EventNode<IServerEvent> PlayerPacketEvents = new();
-    public EntityManager Entities;
+    public readonly EntityManager Entities;
     
     // Params
     private readonly ITerrainProvider _provider;
@@ -66,8 +66,10 @@ public class World {
             bool disconnected = false;
             connection.Disconnected += () => disconnected = true;
             Task.Run(async () => {
+                Stopwatch sw = Stopwatch.StartNew();
                 while (!disconnected) {
-                    await Task.Delay(_tickDelayMs);
+                    await Task.Delay(Math.Max(_tickDelayMs - (int)sw.ElapsedMilliseconds, 0));
+                    sw.Restart();
                     if (waitingPackets.Count == 0) {
                         continue;
                     }
@@ -81,7 +83,8 @@ public class World {
                     }
 
                     // Console.WriteLine($"Sending {packets.Count} packets for terrain");
-                    _ = connection.SendPackets(false, packets.ToArray());
+                    await connection.SendPackets(false, packets.ToArray());
+                    Console.WriteLine("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
                 }
             });
             Action cancelAction = null!;

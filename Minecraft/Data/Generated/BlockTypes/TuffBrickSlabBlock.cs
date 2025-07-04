@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record TuffBrickSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -29,7 +30,7 @@ public record TuffBrickSlabBlock(Identifier Identifier, SlabType Type, bool Wate
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             22933 => new TuffBrickSlabBlock(Identifier, SlabType.Top, true),
             22934 => new TuffBrickSlabBlock(Identifier, SlabType.Top, false),
@@ -38,6 +39,13 @@ public record TuffBrickSlabBlock(Identifier Identifier, SlabType Type, bool Wate
             22937 => new TuffBrickSlabBlock(Identifier, SlabType.Double, true),
             22938 => new TuffBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Type = SlabTypeExtensions.FromString(properties["type"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

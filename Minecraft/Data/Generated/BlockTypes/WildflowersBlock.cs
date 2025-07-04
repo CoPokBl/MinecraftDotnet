@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record WildflowersBlock(Identifier Identifier, Direction Facing, int FlowerAmount) : IBlock {
 
     public uint StateId {
@@ -45,7 +46,7 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             25871 => new WildflowersBlock(Identifier, Direction.North, 1),
             25872 => new WildflowersBlock(Identifier, Direction.North, 2),
@@ -64,6 +65,13 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
             25885 => new WildflowersBlock(Identifier, Direction.East, 3),
             25886 => new WildflowersBlock(Identifier, Direction.East, 4),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            FlowerAmount = int.Parse(properties["flower_amount"].GetString()),
         };
     }
     

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record ChainCommandBlockBlock(Identifier Identifier, bool Conditional, Cardinal Facing) : IBlock {
 
     public uint StateId {
@@ -34,7 +35,7 @@ public record ChainCommandBlockBlock(Identifier Identifier, bool Conditional, Ca
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             13550 => new ChainCommandBlockBlock(Identifier, true, Cardinal.North),
             13551 => new ChainCommandBlockBlock(Identifier, true, Cardinal.East),
@@ -49,6 +50,13 @@ public record ChainCommandBlockBlock(Identifier Identifier, bool Conditional, Ca
             13560 => new ChainCommandBlockBlock(Identifier, false, Cardinal.Up),
             13561 => new ChainCommandBlockBlock(Identifier, false, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Conditional = properties["conditional"].GetString() == "true",
+            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
         };
     }
     

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeValue, Cardinal Facing, bool Short) : IBlock {
 
     public uint StateId {
@@ -71,7 +72,7 @@ public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeVa
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             2069 => new PistonHeadBlock(Identifier, Type.Normal, Cardinal.North, true),
             2070 => new PistonHeadBlock(Identifier, Type.Sticky, Cardinal.North, true),
@@ -101,8 +102,24 @@ public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeVa
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            TypeValue = TypeFromString(properties["type"].GetString()),
+            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
+            Short = properties["short"].GetString() == "true",
+        };
+    }
+    
     public enum Type {
         Normal,
         Sticky,
+    }
+
+    public static Type TypeFromString(string value) {
+        return value switch {
+            "normal" => Type.Normal,
+            "sticky" => Type.Sticky,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Type.")
+        };
     }
 }

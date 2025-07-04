@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record LargeAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -41,7 +42,7 @@ public record LargeAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             22073 => new LargeAmethystBudBlock(Identifier, Cardinal.North, true),
             22074 => new LargeAmethystBudBlock(Identifier, Cardinal.North, false),
@@ -56,6 +57,13 @@ public record LargeAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool
             22083 => new LargeAmethystBudBlock(Identifier, Cardinal.Down, true),
             22084 => new LargeAmethystBudBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

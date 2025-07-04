@@ -1,3 +1,4 @@
+using Minecraft.Data.Blocks;
 using Minecraft.Implementations.Server.Worlds;
 using Minecraft.Registry;
 using Minecraft.Schemas;
@@ -101,7 +102,7 @@ public class AnvilLoader : ITerrainProvider {
             
             // TODO: Throw out invalid sections, see Minestom implementation (above and below valid area)
             if (sectionY < -4 || sectionY > 11) {
-                Console.WriteLine($"Invalid section Y: {sectionY}, skipping.");
+                // Console.WriteLine($"Invalid section Y: {sectionY}, skipping.");
                 continue;
             }
             
@@ -110,11 +111,11 @@ public class AnvilLoader : ITerrainProvider {
             CompoundTag blockStates = sectionData["block_states"].GetCompound();
             ListTag blockPalette = blockStates["palette"].GetList();  // list of compound tags
                     
-            string[] palette = LoadPalette(blockPalette);
+            IBlock[] palette = LoadPalette(blockPalette);
             if (palette.Length == 1) {
                 // Single block state, no need to process further
-                section.Fill(palette[0] == "minecraft:air" ? (uint)0 : 11); // 0 for air, 1 for solid block
-                Console.WriteLine("Single block state found: " + palette[0]);
+                section.Fill(palette[0]); // 0 for air, 1 for solid block
+                // Console.WriteLine("Single block state found: " + palette[0]);
             }
             else {
                 long[] packedStates = blockStates["data"].GetLongs();
@@ -126,10 +127,8 @@ public class AnvilLoader : ITerrainProvider {
                         for (int x = 0; x < ChunkSection.Size; x++) {
                             int blockIndex = y * ChunkSection.Size * ChunkSection.Size + z * ChunkSection.Size + x;
                             int paletteIndex = blockStateIndices[blockIndex];
-                            string block = palette[paletteIndex];
-
-                            // TODO: Use correct block state, not just the default one
-                            data.SetBlock(x, y + yOffset + 64, z, _registry.Blocks[block]);
+                            IBlock block = palette[paletteIndex];
+                            data.SetBlock(x, y + yOffset + 64, z, block);
                             // if (y + yOffset < 5) {
                             //     Console.WriteLine($"Block: {x},{y + yOffset},{z} = {block} (Index: {paletteIndex})");
                             // }
@@ -155,11 +154,16 @@ public class AnvilLoader : ITerrainProvider {
         }
     }
 
-    private static string[] LoadPalette(ListTag paletteTag) {
-        string[] palette = new string[paletteTag.Tags.Length];
+    private IBlock[] LoadPalette(ListTag paletteTag) {
+        IBlock[] palette = new IBlock[paletteTag.Tags.Length];
         for (int i = 0; i < paletteTag.Tags.Length; i++) {
             if (paletteTag.Tags[i] is CompoundTag compound) {
-                palette[i] = compound["Name"].GetString();
+                string name = compound["Name"].GetString();
+                IBlock block = _registry.Blocks[name];
+                if (compound.ChildrenMap.TryGetValue("Properties", out INbtTag? propsTag)) {
+                    block = block.WithState(propsTag.GetCompound());
+                }
+                palette[i] = block;
             } else {
                 throw new InvalidCastException("Expected a CompoundTag in the block palette.");
             }

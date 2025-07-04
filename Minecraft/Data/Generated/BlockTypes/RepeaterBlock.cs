@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, bool Locked, bool Powered) : IBlock {
 
     public uint StateId {
@@ -189,7 +190,7 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             6060 => new RepeaterBlock(Identifier, 1, Direction.North, true, true),
             6061 => new RepeaterBlock(Identifier, 1, Direction.North, true, false),
@@ -256,6 +257,15 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
             6122 => new RepeaterBlock(Identifier, 4, Direction.East, false, true),
             6123 => new RepeaterBlock(Identifier, 4, Direction.East, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Delay = int.Parse(properties["delay"].GetString()),
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Locked = properties["locked"].GetString() == "true",
+            Powered = properties["powered"].GetString() == "true",
         };
     }
     

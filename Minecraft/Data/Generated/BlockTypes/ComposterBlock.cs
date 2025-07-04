@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
 
     public uint StateId {
@@ -26,7 +27,7 @@ public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             20400 => new ComposterBlock(Identifier, 0),
             20401 => new ComposterBlock(Identifier, 1),
@@ -38,6 +39,12 @@ public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
             20407 => new ComposterBlock(Identifier, 7),
             20408 => new ComposterBlock(Identifier, 8),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Level = int.Parse(properties["level"].GetString()),
         };
     }
     

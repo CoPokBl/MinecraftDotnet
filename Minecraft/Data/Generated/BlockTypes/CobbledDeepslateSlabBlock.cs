@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record CobbledDeepslateSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -29,7 +30,7 @@ public record CobbledDeepslateSlabBlock(Identifier Identifier, SlabType Type, bo
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             26048 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Top, true),
             26049 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Top, false),
@@ -38,6 +39,13 @@ public record CobbledDeepslateSlabBlock(Identifier Identifier, SlabType Type, bo
             26052 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Double, true),
             26053 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Type = SlabTypeExtensions.FromString(properties["type"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

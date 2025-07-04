@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record LightWeightedPressurePlateBlock(Identifier Identifier, int Power) : IBlock {
 
     public uint StateId {
@@ -33,7 +34,7 @@ public record LightWeightedPressurePlateBlock(Identifier Identifier, int Power) 
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             9952 => new LightWeightedPressurePlateBlock(Identifier, 0),
             9953 => new LightWeightedPressurePlateBlock(Identifier, 1),
@@ -52,6 +53,12 @@ public record LightWeightedPressurePlateBlock(Identifier Identifier, int Power) 
             9966 => new LightWeightedPressurePlateBlock(Identifier, 14),
             9967 => new LightWeightedPressurePlateBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Power = int.Parse(properties["power"].GetString()),
         };
     }
     

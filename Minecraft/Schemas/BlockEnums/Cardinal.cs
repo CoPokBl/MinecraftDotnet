@@ -8,3 +8,17 @@ public enum Cardinal {
     Up,
     Down
 }
+
+public static class CardinalExtensions {
+    public static Cardinal FromString(string value) {
+        return value switch {
+            "north" => Cardinal.North,
+            "east" => Cardinal.East,
+            "south" => Cardinal.South,
+            "west" => Cardinal.West,
+            "up" => Cardinal.Up,
+            "down" => Cardinal.Down,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Cardinal.")
+        };
+    }
+}

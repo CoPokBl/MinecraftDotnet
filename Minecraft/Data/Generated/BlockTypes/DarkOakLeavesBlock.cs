@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record DarkOakLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -87,7 +88,7 @@ public record DarkOakLeavesBlock(Identifier Identifier, int Distance, bool Persi
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             420 => new DarkOakLeavesBlock(Identifier, 1, true, true),
             421 => new DarkOakLeavesBlock(Identifier, 1, true, false),
@@ -118,6 +119,14 @@ public record DarkOakLeavesBlock(Identifier Identifier, int Distance, bool Persi
             446 => new DarkOakLeavesBlock(Identifier, 7, false, true),
             447 => new DarkOakLeavesBlock(Identifier, 7, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Distance = int.Parse(properties["distance"].GetString()),
+            Persistent = properties["persistent"].GetString() == "true",
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

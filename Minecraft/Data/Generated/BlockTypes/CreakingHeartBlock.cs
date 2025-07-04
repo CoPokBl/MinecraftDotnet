@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeartBlock.CreakingHeartState CreakingHeartStateValue, bool Natural) : IBlock {
 
     public uint StateId {
@@ -62,7 +63,7 @@ public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeart
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             2920 => new CreakingHeartBlock(Identifier, Axis.X, CreakingHeartState.Uprooted, true),
             2921 => new CreakingHeartBlock(Identifier, Axis.X, CreakingHeartState.Uprooted, false),
@@ -86,9 +87,26 @@ public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeart
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Axis = AxisExtensions.FromString(properties["axis"].GetString()),
+            CreakingHeartStateValue = CreakingHeartStateFromString(properties["creaking_heart_state"].GetString()),
+            Natural = properties["natural"].GetString() == "true",
+        };
+    }
+    
     public enum CreakingHeartState {
         Uprooted,
         Dormant,
         Awake,
+    }
+
+    public static CreakingHeartState CreakingHeartStateFromString(string value) {
+        return value switch {
+            "uprooted" => CreakingHeartState.Uprooted,
+            "dormant" => CreakingHeartState.Dormant,
+            "awake" => CreakingHeartState.Awake,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for CreakingHeartState.")
+        };
     }
 }

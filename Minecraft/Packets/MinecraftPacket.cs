@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using Minecraft.Data.Generated;
 using Minecraft.Registry;
 using Minecraft.Schemas;
@@ -25,6 +26,53 @@ public abstract class MinecraftPacket {
         if (!cond) {
             throw new ArgumentException(msg);
         }
+    }
+
+    public void WriteTo(Stream stream, ConnectionState state, int compressionThreshold = -1, MinecraftRegistry? registry = null) {
+        int packetId;
+        try {
+            if (this is UnknownPacket up) {
+                packetId = up.Id;
+            }
+            else {
+                packetId = (registry ?? VanillaRegistry.Data).Packets[state, GetType()];
+            }
+        }
+        catch (KeyNotFoundException) {
+            throw new NotImplementedException($"Packet {GetType().Name} is not registered for state {state}");
+        }
+        byte[] data = GetData();
+
+        DataWriter typeD = new();
+        typeD.WriteVarInt(packetId);
+        byte[] typeBytes = typeD.ToArray();
+
+        bool compressionEnabled = compressionThreshold >= 0;
+        if (compressionEnabled && typeBytes.Length + data.Length >= compressionThreshold) {
+            byte[] dataToCompress = new DataWriter().WriteVarInt(packetId).Write(data).ToArray();
+            byte[] compressedData = CompressionHelper.CompressZLib(dataToCompress);
+
+            int dataLengthLength = new DataWriter().WriteVarInt(dataToCompress.Length).ToArray().Length;
+
+            new DataWriter(stream)
+                .WriteVarInt(dataLengthLength + compressedData.Length)
+                .WriteVarInt(dataToCompress.Length)
+                .Write(compressedData);
+            return;
+        }
+
+        int additionalPacketSize = compressionEnabled ? 1 : 0;  // 1 byte for the data length if compression is enabled
+
+        // Don't compress the packet
+        DataWriter w = new(stream);
+        w.WriteVarInt(data.Length + typeBytes.Length + additionalPacketSize);  // packet size
+        
+        if (compressionEnabled) {
+            w.WriteVarInt(0);  // compression format means we need to specify 0 meaning no compression
+        }
+        
+        w.WriteVarInt(packetId);  // packet type
+        w.Write(data);  // the data
     }
 
     public byte[] Serialise(ConnectionState state, int compressionThreshold = -1, MinecraftRegistry? registry = null) {

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record LightBlueCandleBlock(Identifier Identifier, int Candles, bool Lit, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -57,7 +58,7 @@ public record LightBlueCandleBlock(Identifier Identifier, int Candles, bool Lit,
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             21817 => new LightBlueCandleBlock(Identifier, 1, true, true),
             21818 => new LightBlueCandleBlock(Identifier, 1, true, false),
@@ -76,6 +77,14 @@ public record LightBlueCandleBlock(Identifier Identifier, int Candles, bool Lit,
             21831 => new LightBlueCandleBlock(Identifier, 4, false, true),
             21832 => new LightBlueCandleBlock(Identifier, 4, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Candles = int.Parse(properties["candles"].GetString()),
+            Lit = properties["lit"].GetString() == "true",
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

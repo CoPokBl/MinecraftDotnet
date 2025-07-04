@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis AxisValue) : IBlock {
 
     public uint StateId {
@@ -19,7 +20,7 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             6043 => new NetherPortalBlock(Identifier, Axis.X),
             6044 => new NetherPortalBlock(Identifier, Axis.Z),
@@ -27,8 +28,22 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            AxisValue = AxisFromString(properties["axis"].GetString()),
+        };
+    }
+    
     public enum Axis {
         X,
         Z,
+    }
+
+    public static Axis AxisFromString(string value) {
+        return value switch {
+            "x" => Axis.X,
+            "z" => Axis.Z,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Axis.")
+        };
     }
 }

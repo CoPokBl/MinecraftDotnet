@@ -111,7 +111,7 @@ public abstract class MinecraftConnection : ITaggable {
     
 #region util_methods
     protected void Log(string s) {
-        Console.WriteLine($"[{GetType().FullName}] [{State}] {s}");
+        // Console.WriteLine($"[{GetType().FullName}] [{State}] {s}");
     }
     
     public T GetTag<T>(Tag<T> tag) {

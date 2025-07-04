@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
 
     public uint StateId {
@@ -108,7 +109,7 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             19707 => new CrimsonFenceBlock(Identifier, true, true, true, true, true),
             19708 => new CrimsonFenceBlock(Identifier, true, true, true, true, false),
@@ -143,6 +144,16 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
             19737 => new CrimsonFenceBlock(Identifier, false, false, false, false, true),
             19738 => new CrimsonFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            East = properties["east"].GetString() == "true",
+            North = properties["north"].GetString() == "true",
+            South = properties["south"].GetString() == "true",
+            Waterlogged = properties["waterlogged"].GetString() == "true",
+            West = properties["west"].GetString() == "true",
         };
     }
     

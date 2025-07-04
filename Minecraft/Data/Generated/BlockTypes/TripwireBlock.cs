@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed, bool East, bool North, bool Powered, bool South, bool West) : IBlock {
 
     public uint StateId {
@@ -396,7 +397,7 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             8321 => new TripwireBlock(Identifier, true, true, true, true, true, true, true),
             8322 => new TripwireBlock(Identifier, true, true, true, true, true, true, false),
@@ -527,6 +528,18 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
             8447 => new TripwireBlock(Identifier, false, false, false, false, false, false, true),
             8448 => new TripwireBlock(Identifier, false, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Attached = properties["attached"].GetString() == "true",
+            Disarmed = properties["disarmed"].GetString() == "true",
+            East = properties["east"].GetString() == "true",
+            North = properties["north"].GetString() == "true",
+            Powered = properties["powered"].GetString() == "true",
+            South = properties["south"].GetString() == "true",
+            West = properties["west"].GetString() == "true",
         };
     }
     

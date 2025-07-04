@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves LeavesValue, int Stage) : IBlock {
 
     public uint StateId {
@@ -53,7 +54,7 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             13968 => new BambooBlock(Identifier, 0, Leaves.None, 0),
             13969 => new BambooBlock(Identifier, 0, Leaves.None, 1),
@@ -71,9 +72,26 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
         };
     }
     
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Age = int.Parse(properties["age"].GetString()),
+            LeavesValue = LeavesFromString(properties["leaves"].GetString()),
+            Stage = int.Parse(properties["stage"].GetString()),
+        };
+    }
+    
     public enum Leaves {
         None,
         Small,
         Large,
+    }
+
+    public static Leaves LeavesFromString(string value) {
+        return value switch {
+            "none" => Leaves.None,
+            "small" => Leaves.Small,
+            "large" => Leaves.Large,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Leaves.")
+        };
     }
 }

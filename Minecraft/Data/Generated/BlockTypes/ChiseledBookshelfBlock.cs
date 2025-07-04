@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bool Slot0Occupied, bool Slot1Occupied, bool Slot2Occupied, bool Slot3Occupied, bool Slot4Occupied, bool Slot5Occupied) : IBlock {
 
     public uint StateId {
@@ -777,7 +778,7 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             2143 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, true, true, true),
             2144 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, true, true, false),
@@ -1036,6 +1037,18 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
             2397 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, false, false, true),
             2398 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Slot0Occupied = properties["slot_0_occupied"].GetString() == "true",
+            Slot1Occupied = properties["slot_1_occupied"].GetString() == "true",
+            Slot2Occupied = properties["slot_2_occupied"].GetString() == "true",
+            Slot3Occupied = properties["slot_3_occupied"].GetString() == "true",
+            Slot4Occupied = properties["slot_4_occupied"].GetString() == "true",
+            Slot5Occupied = properties["slot_5_occupied"].GetString() == "true",
         };
     }
     

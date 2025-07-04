@@ -12,30 +12,87 @@ public class DataWriter : Stream, IWritable {
     public override bool CanRead => false;
     public override bool CanSeek => false;
     public override bool CanWrite => true;
-    public override long Length => _data.Count;
+    public override long Length => _data?.Count ?? _stream!.Length;
 
     public override long Position {
-        get => _data.Count;
+        get => _data?.Count ?? _stream!.Position;
         set => throw new NotSupportedException();
     }
 
-    private readonly List<byte> _data = [];
+    private readonly List<byte>? _data;
+    private readonly Stream? _stream;
 
-    public byte[] ToArray() => _data.ToArray();
+    public byte[] ToArray() => _data?.ToArray()!;
+    
+    public List<byte>? GetRaw() => _data;
+
+
+    public DataWriter() {
+        _data = [];
+    }
+    
+    public DataWriter(Stream stream) {
+        _stream = stream;
+    }
     
     public DataWriter Write(byte[] value) {
-        _data.AddRange(value);
+        if (_data == null) {
+            _stream!.Write(value);
+        }
+        else {
+            _data.AddRange(value);
+        }
+        return this;
+    }
+    
+    public DataWriter Write(IEnumerable<byte> value) {
+        if (_data == null) {
+            foreach (byte b in value) {
+                _stream!.WriteByte(b);
+            }
+        }
+        else {
+            _data.AddRange(value);
+        }
+        return this;
+    }
+    
+    public DataWriter Write(Stream stream) {
+        if (_data == null) {
+            stream.CopyTo(_stream!);
+        }
+        else {
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0) {
+                _data.AddRange(buffer.AsSpan(0, bytesRead).ToArray());
+            }
+        }
         return this;
     }
 
     public DataWriter Write(byte value) {
-        _data.Add(value);
+        if (_data == null) {
+            _stream!.WriteByte(value);
+        }
+        else {
+            _data.Add(value);
+        }
         return this;
     }
 
+    /// <summary>
+    /// Write this DataWriter's data to the given DataWriter.
+    /// </summary>
+    /// <param name="w"></param>
     public void Write(DataWriter w) {
-        foreach (byte b in _data) {
-            w.Write(b);
+        if (_data == null) {
+            w.Write(_stream!);
+        }
+        else {
+            foreach (byte b in _data) {
+                w.Write(b);
+            }
         }
     }
 

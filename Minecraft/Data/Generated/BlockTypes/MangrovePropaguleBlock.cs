@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hanging, int Stage, bool Waterlogged) : IBlock {
 
     public uint StateId {
@@ -137,7 +138,7 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             45 => new MangrovePropaguleBlock(Identifier, 0, true, 0, true),
             46 => new MangrovePropaguleBlock(Identifier, 0, true, 0, false),
@@ -180,6 +181,15 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
             83 => new MangrovePropaguleBlock(Identifier, 4, false, 1, true),
             84 => new MangrovePropaguleBlock(Identifier, 4, false, 1, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Age = int.Parse(properties["age"].GetString()),
+            Hanging = properties["hanging"].GetString() == "true",
+            Stage = int.Parse(properties["stage"].GetString()),
+            Waterlogged = properties["waterlogged"].GetString() == "true",
         };
     }
     

@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBlock {
 
     public uint StateId {
@@ -121,7 +122,7 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             25797 => new CaveVinesBlock(Identifier, 0, true),
             25798 => new CaveVinesBlock(Identifier, 0, false),
@@ -176,6 +177,13 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
             25847 => new CaveVinesBlock(Identifier, 25, true),
             25848 => new CaveVinesBlock(Identifier, 25, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Age = int.Parse(properties["age"].GetString()),
+            Berries = properties["berries"].GetString() == "true",
         };
     }
     

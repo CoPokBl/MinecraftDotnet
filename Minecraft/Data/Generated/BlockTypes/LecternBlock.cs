@@ -1,3 +1,5 @@
+using NBT;
+using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.BlockEnums;
 using Minecraft.Data.Blocks;
@@ -5,8 +7,7 @@ using Minecraft.Data.Blocks;
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-03
+// See Block.cs for last updated date.
 public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook, bool Powered) : IBlock {
 
     public uint StateId {
@@ -57,7 +58,7 @@ public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook
         }
     }
     
-    public IBlock GetState(uint state) {
+    public IBlock WithState(uint state) {
         return state switch {
             19473 => new LecternBlock(Identifier, Direction.North, true, true),
             19474 => new LecternBlock(Identifier, Direction.North, true, false),
@@ -76,6 +77,14 @@ public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook
             19487 => new LecternBlock(Identifier, Direction.East, false, true),
             19488 => new LecternBlock(Identifier, Direction.East, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
+        };
+    }
+    
+    public IBlock WithState(CompoundTag properties) {
+        return this with {
+            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            HasBook = properties["has_book"].GetString() == "true",
+            Powered = properties["powered"].GetString() == "true",
         };
     }
     
