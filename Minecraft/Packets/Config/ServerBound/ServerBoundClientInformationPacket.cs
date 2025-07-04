@@ -15,8 +15,8 @@ public class ServerBoundClientInformationPacket : ServerBoundPacket {
     public required byte ViewDistance;
     public required string Locale;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteString(Locale)
             .WriteByte(ViewDistance)
             .WriteVarInt((int)TextChatMode)
@@ -25,8 +25,7 @@ public class ServerBoundClientInformationPacket : ServerBoundPacket {
             .WriteVarInt((int)MainHand)
             .WriteBoolean(EnableTextFiltering)
             .WriteBoolean(AllowServerListing)
-            .WriteVarInt((int)ParticleStatus)
-            .ToArray();
+            .WriteVarInt((int)ParticleStatus);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundClientInformationPacket {

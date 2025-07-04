@@ -97,11 +97,11 @@ public static class MlgRush {
                     }
                 };
             });
-            connection.Events.AddListener<PacketHandleEvent>(e => {
-                if (e.Packet is ServerBoundUseItemOnPacket uio) {
-                    Console.WriteLine(JsonConvert.SerializeObject(uio, Formatting.Indented));
-                }
-            });
+            // connection.Events.AddListener<PacketHandleEvent>(e => {
+            //     if (e.Packet is ServerBoundUseItemOnPacket uio) {
+            //         Console.WriteLine(JsonConvert.SerializeObject(uio, Formatting.Indented));
+            //     }
+            // });
         }, cts.Token);
         
         Console.WriteLine("Server ready, listening...");

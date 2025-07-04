@@ -7,10 +7,9 @@ public class ClientBoundSetHeldItemPacket : ClientBoundPacket {
     
     public required int Slot;
     
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteVarInt(Slot)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteVarInt(Slot);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetHeldItemPacket {

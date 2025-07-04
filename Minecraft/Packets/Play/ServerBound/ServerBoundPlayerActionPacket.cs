@@ -20,13 +20,12 @@ public class ServerBoundPlayerActionPacket : ServerBoundPacket {
         SwapItem
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt((int)ActionStatus)
             .WritePosition(Location)
             .WriteByte((int)Face)
-            .WriteVarInt(Sequence)
-            .ToArray();
+            .WriteVarInt(Sequence);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPlayerActionPacket {

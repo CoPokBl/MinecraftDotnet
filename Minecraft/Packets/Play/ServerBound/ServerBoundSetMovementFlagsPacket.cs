@@ -16,10 +16,9 @@ public class ServerBoundSetMovementFlagsPacket : ServerBoundPacket {
         All = OnGround | AgainstWall
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteUnsignedByte((byte)SetFlags)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteUnsignedByte((byte)SetFlags);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSetMovementFlagsPacket {

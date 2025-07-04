@@ -14,8 +14,8 @@ public class ClientBoundInitialiseWorldBorderPacket : ClientBoundPacket {
     public required int WarningBlocks;
     public required int WarningTime;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteDouble(X)
             .WriteDouble(Z)
             .WriteDouble(OldDiameter)
@@ -23,8 +23,7 @@ public class ClientBoundInitialiseWorldBorderPacket : ClientBoundPacket {
             .WriteVarLong(Speed)
             .WriteVarInt(PortalTeleportBoundary)
             .WriteVarInt(WarningBlocks)
-            .WriteVarInt(WarningTime)
-            .ToArray();
+            .WriteVarInt(WarningTime);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundInitialiseWorldBorderPacket {

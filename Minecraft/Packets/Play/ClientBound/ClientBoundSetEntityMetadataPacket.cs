@@ -9,12 +9,11 @@ public class ClientBoundSetEntityMetadataPacket : ClientBoundPacket {
     public required int EntityId;
     public required EntityMeta Meta;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(EntityId)
             .Write(Meta.Serialise)
-            .Write(0xFF)
-            .ToArray();
+            .Write(0xFF);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {

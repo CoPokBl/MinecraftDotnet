@@ -7,10 +7,9 @@ public class ClientBoundChunkBatchFinishedPacket : ClientBoundPacket {
     
     public required int BatchSize;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteVarInt(BatchSize)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteVarInt(BatchSize);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundChunkBatchFinishedPacket {

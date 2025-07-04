@@ -16,8 +16,8 @@ public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
     public required int Data;
     public required SVec3 Velocity;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(Id)
             .WriteUuid(Uuid)
             .WriteVarInt(EntityType)
@@ -26,8 +26,7 @@ public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
             .WriteAngle(Yaw)
             .WriteAngle(HeadYaw)
             .WriteVarInt(Data)
-            .WriteVec3(Velocity)
-            .ToArray();
+            .WriteVec3(Velocity);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSpawnEntityPacket {

@@ -8,11 +8,10 @@ public class ServerBoundPluginMessagePacket : ServerBoundPacket {
     public required byte[] Data;
     public required string Channel;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteString(Channel)
-            .Write(Data)
-            .ToArray();
+            .Write(Data);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPluginMessagePacket {

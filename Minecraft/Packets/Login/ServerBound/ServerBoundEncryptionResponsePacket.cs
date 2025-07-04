@@ -8,11 +8,10 @@ public class ServerBoundEncryptionResponsePacket : ServerBoundPacket {
     public required byte[] SharedSecret;
     public required byte[] VerifyToken;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WritePrefixedArray(SharedSecret, (b, wr) => wr.Write(b))
-            .WritePrefixedArray(VerifyToken, (b, wr) => wr.Write(b))
-            .ToArray();
+            .WritePrefixedArray(VerifyToken, (b, wr) => wr.Write(b));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundEncryptionResponsePacket {

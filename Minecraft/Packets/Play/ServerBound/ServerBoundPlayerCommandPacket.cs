@@ -9,12 +9,11 @@ public class ServerBoundPlayerCommandPacket : ServerBoundPacket {
     public required PlayerAction PlayAction;
     public required int JumpBoost;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(EntityId)
             .WriteVarInt((int)PlayAction)
-            .WriteVarInt(JumpBoost)
-            .ToArray();
+            .WriteVarInt(JumpBoost);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPlayerCommandPacket {

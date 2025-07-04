@@ -9,11 +9,10 @@ public class ClientBoundSystemChatMessagePacket : ClientBoundPacket {
     public required TextComponent Content;
     public required bool ActionBar;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteNbt(Content)
-            .WriteBoolean(ActionBar)
-            .ToArray();
+            .WriteBoolean(ActionBar);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSystemChatMessagePacket {

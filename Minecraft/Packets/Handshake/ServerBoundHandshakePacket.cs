@@ -23,13 +23,12 @@ public class ServerBoundHandshakePacket() : ServerBoundPacket {
         Intent = intent;
     }
 
-    protected override byte[] GetData() {
-        DataWriter w = new();
+    protected override DataWriter WriteData(DataWriter w) {
         w.WriteVarInt(ProtocolVersion);  // client version (-1 means we refuse to say, some servers may drop such a packet)
         w.WriteString(Hostname);
         w.WriteUShort(Port);
         w.WriteVarInt((int)Intent);  // next we want status
-        return w.ToArray();
+        return w;
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundHandshakePacket {

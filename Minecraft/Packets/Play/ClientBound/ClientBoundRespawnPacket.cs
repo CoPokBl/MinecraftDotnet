@@ -26,8 +26,8 @@ public class ClientBoundRespawnPacket : ClientBoundPacket {
         None = 0x00
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(DimensionType)
             .WriteString(DimensionName)
             .WriteLong(HashedSeed)
@@ -40,8 +40,7 @@ public class ClientBoundRespawnPacket : ClientBoundPacket {
                 .WritePosition(location.Position))
             .WriteVarInt(PortalCooldown)
             .WriteVarInt(SeaLevel)
-            .WriteUnsignedByte((byte)DataKept)
-            .ToArray();
+            .WriteUnsignedByte((byte)DataKept);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundRespawnPacket {

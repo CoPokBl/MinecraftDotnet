@@ -11,13 +11,12 @@ public class ClientBoundSetContainerContentPacket : ClientBoundPacket {
     public required Slot[] SlotData;
     public required Slot CursorItem;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(WindowId)
             .WriteVarInt(StateId)
             .WritePrefixedArray(SlotData, (slot, writer) => writer.Write(slot))
-            .Write(CursorItem)
-            .ToArray();
+            .Write(CursorItem);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetContainerContentPacket {

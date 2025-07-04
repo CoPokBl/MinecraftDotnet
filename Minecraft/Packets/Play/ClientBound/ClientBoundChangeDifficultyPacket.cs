@@ -15,11 +15,10 @@ public class ClientBoundChangeDifficultyPacket : ClientBoundPacket {
         Hard = 3
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .Write((byte)Difficulty)
-            .WriteBoolean(Locked)
-            .ToArray();
+            .WriteBoolean(Locked);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundChangeDifficultyPacket {

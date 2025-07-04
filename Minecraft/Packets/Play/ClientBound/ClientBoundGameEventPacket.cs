@@ -8,11 +8,10 @@ public class ClientBoundGameEventPacket : ClientBoundPacket {
     public required GameEvent Event;
     public required float Value;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteUnsignedByte((byte)Event)
-            .WriteFloat(Value)
-            .ToArray();
+            .WriteFloat(Value);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundGameEventPacket {

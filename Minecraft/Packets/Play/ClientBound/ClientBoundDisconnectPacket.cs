@@ -8,10 +8,9 @@ public class ClientBoundDisconnectPacket : ClientBoundPacket {
     
     public required TextComponent Reason;
     
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteNbt(Reason)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteNbt(Reason);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundDisconnectPacket {

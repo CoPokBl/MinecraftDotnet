@@ -7,10 +7,9 @@ public class ClientBoundFeatureFlagsPacket : ClientBoundPacket {
     
     public required string[] Flags;
     
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WritePrefixedArray(Flags, (s, wr) => wr.WriteString(s))
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WritePrefixedArray(Flags, (s, wr) => wr.WriteString(s));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundFeatureFlagsPacket {

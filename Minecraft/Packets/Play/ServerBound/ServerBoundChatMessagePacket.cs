@@ -13,19 +13,18 @@ public class ServerBoundChatMessagePacket : ServerBoundPacket {
     public required byte[] Acknowledged;
     public required byte Checksum;
 
-    protected override byte[] GetData() {
+    protected override DataWriter WriteData(DataWriter w) {
         if (Signature != null) AssertLength(Signature, 256);
         AssertLength(Acknowledged, 3);
         
-        return new DataWriter()
+        return w
             .WriteString(Message)
             .WriteLong(Timestamp)
             .WriteLong(Salt)
             .WritePrefixedOptional(Signature, (v, w) => w.Write(v)) // must be 256
             .WriteVarInt(MessageCount)
             .Write(Acknowledged)  // BitSet of length 20, ceil(20/8)=3 bytes
-            .WriteByte(Checksum)
-            .ToArray();
+            .WriteByte(Checksum);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundChatMessagePacket {

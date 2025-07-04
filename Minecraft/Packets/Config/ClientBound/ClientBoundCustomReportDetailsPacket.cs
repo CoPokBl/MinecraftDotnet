@@ -19,10 +19,9 @@ public class ClientBoundCustomReportDetailsPacket : ClientBoundPacket {
         }
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WritePrefixedArray(Details, (detail, w) => w.Write(detail))
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WritePrefixedArray(Details, (detail, w) => w.Write(detail));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundCustomReportDetailsPacket {

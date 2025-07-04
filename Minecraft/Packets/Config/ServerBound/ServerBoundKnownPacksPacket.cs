@@ -7,13 +7,11 @@ public class ServerBoundKnownPacksPacket : ServerBoundPacket {
     
     public required KnownDataPack[] Packs;
 
-    protected override byte[] GetData() {
-        DataWriter w = new();
-        w.WritePrefixedArray(Packs, (pack, writer) => writer
+    protected override DataWriter WriteData(DataWriter w) {
+        return w.WritePrefixedArray(Packs, (pack, writer) => writer
             .WriteString(pack.Namespace)
             .WriteString(pack.Id)
             .WriteString(pack.Version));
-        return w.ToArray();
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundKnownPacksPacket {

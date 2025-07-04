@@ -9,12 +9,11 @@ public class ClientBoundSetBlockDestroyStagePacket : ClientBoundPacket {
     public required BlockPosition Block;
     public required byte Stage;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(EntityId)
             .WritePosition(Block)
-            .WriteUnsignedByte(Stage)
-            .ToArray();
+            .WriteUnsignedByte(Stage);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetBlockDestroyStagePacket {

@@ -7,10 +7,9 @@ public class ServerBoundChunkBatchReceivedPacket : ServerBoundPacket {
     
     public required float ChunksPerTick;
 
-    protected override byte[] GetData() {
+    protected override DataWriter WriteData(DataWriter w) {
         return new DataWriter()
-            .WriteFloat(ChunksPerTick)
-            .ToArray();
+            .WriteFloat(ChunksPerTick);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundChunkBatchReceivedPacket {

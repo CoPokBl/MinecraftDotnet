@@ -11,13 +11,12 @@ public class ServerBoundSetPlayerPosAndRotPacket : ServerBoundPacket {
     public required float Yaw;
     public required Vec3 Position;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVec3(Position)
             .WriteFloat(Yaw)
             .WriteFloat(Pitch)
-            .WriteByte((int)Flags)
-            .ToArray();
+            .WriteByte((int)Flags);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSetPlayerPosAndRotPacket {

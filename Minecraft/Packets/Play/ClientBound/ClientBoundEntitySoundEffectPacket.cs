@@ -60,9 +60,7 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
         Seed = seed;
     }
 
-    protected override byte[] GetData() {
-        DataWriter w = new();
-
+    protected override DataWriter WriteData(DataWriter w) {
         if (Event != null) {
             w.WriteVarInt(0)
                 .WriteString(Event.Identifier)
@@ -74,8 +72,7 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
             .WriteVarInt(EntityId)
             .WriteFloat(Volume)
             .WriteFloat(Pitch)
-            .WriteLong(Seed)
-            .ToArray();
+            .WriteLong(Seed);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {

@@ -7,10 +7,9 @@ public class ClientBoundPingPacket : ClientBoundPacket {
     
     public required int Id;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteInteger(Id)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteInteger(Id);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundPingPacket {

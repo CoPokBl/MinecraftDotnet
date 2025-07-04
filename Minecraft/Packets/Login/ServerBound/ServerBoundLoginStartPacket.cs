@@ -8,11 +8,10 @@ public class ServerBoundLoginStartPacket : ServerBoundPacket {
     public required Guid Uuid;
     public required string Name;
 
-    protected override byte[] GetData() {
-        DataWriter w = new();
+    protected override DataWriter WriteData(DataWriter w) {
         w.WriteString(Name);
         w.WriteUuid(Uuid);
-        return w.ToArray();
+        return w;
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundLoginStartPacket {

@@ -14,16 +14,15 @@ public class ServerBoundUseItemOnPacket : ServerBoundPacket {
     public required bool WorldBorderHit;
     public required int Sequence;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt((int)ActiveHand)
             .WritePosition(Position)
             .WriteVarInt((int)Face)
             .WriteVec3(CursorPosition)
             .WriteBoolean(InsideBlock)
             .WriteBoolean(WorldBorderHit)
-            .WriteVarInt(Sequence)
-            .ToArray();
+            .WriteVarInt(Sequence);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundUseItemOnPacket {

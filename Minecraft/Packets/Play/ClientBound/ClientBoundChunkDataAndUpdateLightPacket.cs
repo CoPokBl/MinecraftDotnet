@@ -11,12 +11,12 @@ public class ClientBoundChunkDataAndUpdateLightPacket : ClientBoundPacket {
     public required ChunkData Data;
     public required LightData Light;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteInteger(ChunkX)
             .WriteInteger(ChunkZ)
             .Write(Data)
-            .Write(Light).ToArray();
+            .Write(Light);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundChunkDataAndUpdateLightPacket {

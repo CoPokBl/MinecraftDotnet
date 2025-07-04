@@ -8,13 +8,12 @@ public class ServerBoundCookieResponsePacket : ServerBoundPacket {
     public required string Key;
     public required byte[]? Data;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteString(Key)
             .WritePrefixedOptional(Data, (bs, wr) => 
                 wr.WritePrefixedArray(bs, (b, writer) => 
-                    writer.Write(b)))
-            .ToArray();
+                    writer.Write(b)));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundCookieResponsePacket {

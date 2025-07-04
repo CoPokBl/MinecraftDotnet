@@ -12,10 +12,10 @@ public static class CompressionHelper {
         return output.ToArray();
     }
 
-    public static byte[] CompressZLib(byte[] inputData, CompressionLevel compressionLevel = CompressionLevel.Optimal) {
+    public static byte[] CompressZLib(ReadOnlySpan<byte> inputData, CompressionLevel compressionLevel = CompressionLevel.Optimal) {
         using MemoryStream output = new();
         using (ZLibStream zlibStream = new(output, compressionLevel, leaveOpen: true)) {
-            zlibStream.Write(inputData, 0, inputData.Length);
+            zlibStream.Write(inputData);
         }
         return output.ToArray();
     }

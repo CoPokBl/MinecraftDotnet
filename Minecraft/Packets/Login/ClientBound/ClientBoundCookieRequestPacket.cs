@@ -7,10 +7,9 @@ public class ClientBoundCookieRequestPacket : ClientBoundPacket {
     
     public required string Key;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteString(Key)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteString(Key);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundCookieRequestPacket {

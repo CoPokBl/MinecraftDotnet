@@ -8,11 +8,10 @@ public class ServerBoundPickItemFromEntityPacket : ServerBoundPacket {
     public required int EntityId;
     public required bool IncludeData;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(EntityId)
-            .WriteBoolean(IncludeData)
-            .ToArray();
+            .WriteBoolean(IncludeData);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPickItemFromEntityPacket {

@@ -9,12 +9,11 @@ public class ClientBoundLoginPluginRequestPacket : ClientBoundPacket {
     public required string Channel;
     public required byte[] Data;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(MessageId)
             .WriteString(Channel)
-            .Write(Data)  // Length is implied from the packet length
-            .ToArray();
+            .Write(Data); // Length is implied from the packet length
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginPluginRequestPacket {

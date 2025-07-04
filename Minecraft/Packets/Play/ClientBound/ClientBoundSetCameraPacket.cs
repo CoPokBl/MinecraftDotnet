@@ -13,10 +13,9 @@ public class ClientBoundSetCameraPacket : ClientBoundPacket {
     
     public required int EntityId;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteVarInt(EntityId)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteVarInt(EntityId);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetCameraPacket {

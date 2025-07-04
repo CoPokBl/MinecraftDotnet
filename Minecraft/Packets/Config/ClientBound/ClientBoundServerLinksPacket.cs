@@ -77,10 +77,9 @@ public class ClientBoundServerLinksPacket() : ClientBoundPacket {
         Announcements = 9
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WritePrefixedArray(Links, (link, wr) => link.Write(wr))
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WritePrefixedArray(Links, (link, wr) => link.Write(wr));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundServerLinksPacket {

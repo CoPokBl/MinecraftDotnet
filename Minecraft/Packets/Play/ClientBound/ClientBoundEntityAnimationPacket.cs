@@ -16,11 +16,10 @@ public class ClientBoundEntityAnimationPacket : ClientBoundPacket {
         MagicCriticalEffect = 5
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(EntityId)
-            .WriteUnsignedByte((byte)Animation)
-            .ToArray();
+            .WriteUnsignedByte((byte)Animation);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundEntityAnimationPacket {

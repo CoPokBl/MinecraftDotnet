@@ -7,10 +7,9 @@ public class ClientBoundKeepAlivePacket : ClientBoundPacket {
     
     public required long Id;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteLong(Id)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteLong(Id);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundKeepAlivePacket {

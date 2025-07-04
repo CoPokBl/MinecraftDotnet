@@ -12,10 +12,9 @@ public class ServerBoundClientStatusPacket : ServerBoundPacket {
         RequestStats = 1
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteVarInt((int)Action)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteVarInt((int)Action);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundClientStatusPacket {

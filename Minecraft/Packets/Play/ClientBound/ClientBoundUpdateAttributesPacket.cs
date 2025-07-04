@@ -46,11 +46,10 @@ public class ClientBoundUpdateAttributesPacket : ClientBoundPacket {
         Multiply = 2
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(EntityId)
-            .WritePrefixedArray(Attributes, (attribute, writer) => attribute.Write(writer))
-            .ToArray();
+            .WritePrefixedArray(Attributes, (attribute, writer) => attribute.Write(writer));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateAttributesPacket {

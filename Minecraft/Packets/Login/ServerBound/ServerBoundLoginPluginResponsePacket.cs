@@ -8,11 +8,10 @@ public class ServerBoundLoginPluginResponsePacket : ServerBoundPacket {
     public required int MessageId;
     public required byte[]? Data;  // only sent if the request was 'understood', null otherwise
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(MessageId)
-            .WritePrefixedOptional(Data, (bs, wr) => wr.Write(bs))
-            .ToArray();
+            .WritePrefixedOptional(Data, (bs, wr) => wr.Write(bs));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundLoginPluginResponsePacket {

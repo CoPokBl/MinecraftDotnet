@@ -8,11 +8,10 @@ public class ClientBoundTransferPacket : ClientBoundPacket {
     public required string Host;
     public required int Port;
     
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteString(Host)
-            .WriteVarInt(Port)
-            .ToArray();
+            .WriteVarInt(Port);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundTransferPacket {

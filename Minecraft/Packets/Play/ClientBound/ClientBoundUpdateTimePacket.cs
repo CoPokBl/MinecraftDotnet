@@ -9,12 +9,11 @@ public class ClientBoundUpdateTimePacket : ClientBoundPacket {
     public required long TimeOfDay;
     public required bool ClientAdvanceTime;  // whether the client should advance time automatically
     
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteLong(WorldAge)
             .WriteLong(TimeOfDay)
-            .WriteBoolean(ClientAdvanceTime)
-            .ToArray();
+            .WriteBoolean(ClientAdvanceTime);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateTimePacket {

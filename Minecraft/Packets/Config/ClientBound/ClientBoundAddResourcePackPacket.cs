@@ -18,14 +18,13 @@ public class ClientBoundAddResourcePackPacket : ClientBoundPacket {
     public required bool Forced;
     public TextComponent? Prompt;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteUuid(Uuid)
             .WriteString(Url)
             .WriteString(Hash)
             .WriteBoolean(Forced)
-            .WritePrefixedOptional(Prompt, (text, wr) => wr.WriteNbt(text))
-            .ToArray();
+            .WritePrefixedOptional(Prompt, (text, wr) => wr.WriteNbt(text)) ;
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundAddResourcePackPacket {

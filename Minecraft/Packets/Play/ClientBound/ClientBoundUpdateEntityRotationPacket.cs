@@ -10,13 +10,12 @@ public class ClientBoundUpdateEntityRotationPacket : ClientBoundPacket {
     public required Angle Pitch;
     public required bool OnGround;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(EntityId)
             .WriteAngle(Yaw)
             .WriteAngle(Pitch)
-            .WriteBoolean(OnGround)
-            .ToArray();
+            .WriteBoolean(OnGround);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateEntityRotationPacket {

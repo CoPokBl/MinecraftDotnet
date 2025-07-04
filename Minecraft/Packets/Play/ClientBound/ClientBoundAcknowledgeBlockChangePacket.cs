@@ -7,10 +7,9 @@ public class ClientBoundAcknowledgeBlockChangePacket : ClientBoundPacket {
     
     public required int SequenceId;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteVarInt(SequenceId)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteVarInt(SequenceId);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundAcknowledgeBlockChangePacket {

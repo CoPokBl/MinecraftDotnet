@@ -8,11 +8,10 @@ public class ClientBoundHurtAnimationPacket : ClientBoundPacket {
     public required int EntityId;
     public required Angle Yaw;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(EntityId)
-            .WriteFloat((float)Yaw.Degrees)
-            .ToArray();
+            .WriteFloat((float)Yaw.Degrees);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundHurtAnimationPacket {

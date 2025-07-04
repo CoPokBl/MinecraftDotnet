@@ -8,11 +8,10 @@ public class ClientBoundEntityEventPacket : ClientBoundPacket {
     public required int EntityId;
     public required EntityEventType Status;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteInteger(EntityId)
-            .WriteByte((int)Status)
-            .ToArray();
+            .WriteByte((int)Status);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundEntityEventPacket {

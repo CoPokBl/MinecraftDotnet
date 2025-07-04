@@ -9,12 +9,11 @@ public class ServerBoundSetPlayerRotationPacket : ServerBoundPacket {
     public required float Yaw;
     public required MovePlayerFlags Flags;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteFloat(Pitch)
             .WriteFloat(Yaw)
-            .WriteByte((byte)Flags)
-            .ToArray();
+            .WriteByte((byte)Flags);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSetPlayerRotationPacket {

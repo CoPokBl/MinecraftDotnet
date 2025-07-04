@@ -7,10 +7,9 @@ public class ClientBoundRemoveResourcePackPacket : ClientBoundPacket {
 
     public Guid? Uuid;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WritePrefixedOptional(Uuid, (uid, wr) => wr.WriteUuid(uid))
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WritePrefixedOptional(Uuid, (uid, wr) => wr.WriteUuid(uid));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundRemoveResourcePackPacket {

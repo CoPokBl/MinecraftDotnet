@@ -15,11 +15,10 @@ public class ClientBoundSetCenterChunkPacket() : ClientBoundPacket {
         Z = pos.Z;
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(X)
-            .WriteVarInt(Z)
-            .ToArray();
+            .WriteVarInt(Z);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetCenterChunkPacket {

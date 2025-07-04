@@ -10,17 +10,16 @@ public class ClientBoundUpdateEntityPositionPacket : ClientBoundPacket {
     public required FVec3 Delta;
     public required bool OnGround;
 
-    protected override byte[] GetData() {
+    protected override DataWriter WriteData(DataWriter w) {
         SVec3 deltaPos = new(
             (short)(Delta.X*4096), 
             (short)(Delta.Y*4096), 
             (short)(Delta.Z*4096));
         
-        return new DataWriter()
+        return w
             .WriteVarInt(EntityId)
             .WriteVec3(deltaPos)
-            .WriteBoolean(OnGround)
-            .ToArray();
+            .WriteBoolean(OnGround);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateEntityPositionPacket {

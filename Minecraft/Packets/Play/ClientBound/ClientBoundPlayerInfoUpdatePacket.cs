@@ -232,13 +232,12 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteUnsignedByte((byte)Data.Actions.CombineFlags())
             .WritePrefixedArray(Data.Data.ToArray(), (val, writer) => writer
                 .WriteUuid(val.Item1)
-                .WriteArray(val.Item2.OrderBy(e => e.Action), (action, dataWriter) => dataWriter.Write(action.Serialise())))
-            .ToArray();
+                .WriteArray(val.Item2.OrderBy(e => e.Action), (action, dataWriter) => dataWriter.Write(action.Serialise())));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {

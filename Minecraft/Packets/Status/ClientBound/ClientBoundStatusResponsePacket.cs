@@ -57,11 +57,8 @@ public class ClientBoundStatusResponsePacket : ClientBoundPacket {
         return JsonConvert.SerializeObject(data);
     }
 
-    protected override byte[] GetData() {
-        string json = ToJson();
-        DataWriter w = new();
-        w.WriteString(json);
-        return w.ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w.WriteString(ToJson());
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {

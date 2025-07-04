@@ -1,4 +1,4 @@
-using System.IO.Compression;
+using System.Runtime.InteropServices;
 using Minecraft.Data.Generated;
 using Minecraft.Registry;
 using Minecraft.Schemas;
@@ -8,7 +8,7 @@ namespace Minecraft.Packets;
 public abstract class MinecraftPacket {
     public abstract Identifier Identifier { get; }
     
-    protected abstract byte[] GetData();
+    protected abstract DataWriter WriteData(DataWriter w);
 
     protected static void AssertLength<T>(T[] arr, int length) {
         if (arr.Length != length) {
@@ -28,53 +28,6 @@ public abstract class MinecraftPacket {
         }
     }
 
-    public void WriteTo(Stream stream, ConnectionState state, int compressionThreshold = -1, MinecraftRegistry? registry = null) {
-        int packetId;
-        try {
-            if (this is UnknownPacket up) {
-                packetId = up.Id;
-            }
-            else {
-                packetId = (registry ?? VanillaRegistry.Data).Packets[state, GetType()];
-            }
-        }
-        catch (KeyNotFoundException) {
-            throw new NotImplementedException($"Packet {GetType().Name} is not registered for state {state}");
-        }
-        byte[] data = GetData();
-
-        DataWriter typeD = new();
-        typeD.WriteVarInt(packetId);
-        byte[] typeBytes = typeD.ToArray();
-
-        bool compressionEnabled = compressionThreshold >= 0;
-        if (compressionEnabled && typeBytes.Length + data.Length >= compressionThreshold) {
-            byte[] dataToCompress = new DataWriter().WriteVarInt(packetId).Write(data).ToArray();
-            byte[] compressedData = CompressionHelper.CompressZLib(dataToCompress);
-
-            int dataLengthLength = new DataWriter().WriteVarInt(dataToCompress.Length).ToArray().Length;
-
-            new DataWriter(stream)
-                .WriteVarInt(dataLengthLength + compressedData.Length)
-                .WriteVarInt(dataToCompress.Length)
-                .Write(compressedData);
-            return;
-        }
-
-        int additionalPacketSize = compressionEnabled ? 1 : 0;  // 1 byte for the data length if compression is enabled
-
-        // Don't compress the packet
-        DataWriter w = new(stream);
-        w.WriteVarInt(data.Length + typeBytes.Length + additionalPacketSize);  // packet size
-        
-        if (compressionEnabled) {
-            w.WriteVarInt(0);  // compression format means we need to specify 0 meaning no compression
-        }
-        
-        w.WriteVarInt(packetId);  // packet type
-        w.Write(data);  // the data
-    }
-
     public byte[] Serialise(ConnectionState state, int compressionThreshold = -1, MinecraftRegistry? registry = null) {
         int packetId;
         try {
@@ -88,7 +41,8 @@ public abstract class MinecraftPacket {
         catch (KeyNotFoundException) {
             throw new NotImplementedException($"Packet {GetType().Name} is not registered for state {state}");
         }
-        byte[] data = GetData();
+        
+        DataWriter data = new DataWriter().Write(WriteData);
 
         DataWriter typeD = new();
         typeD.WriteVarInt(packetId);
@@ -96,7 +50,7 @@ public abstract class MinecraftPacket {
 
         bool compressionEnabled = compressionThreshold >= 0;
         if (compressionEnabled && typeBytes.Length + data.Length >= compressionThreshold) {
-            byte[] dataToCompress = new DataWriter().WriteVarInt(packetId).Write(data).ToArray();
+            Span<byte> dataToCompress = CollectionsMarshal.AsSpan(new DataWriter().WriteVarInt(packetId).Write((IWritable)data).GetRaw());
             byte[] compressedData = CompressionHelper.CompressZLib(dataToCompress);
 
             int dataLengthLength = new DataWriter().WriteVarInt(dataToCompress.Length).ToArray().Length;
@@ -112,14 +66,14 @@ public abstract class MinecraftPacket {
 
         // Don't compress the packet
         DataWriter w = new();
-        w.WriteVarInt(data.Length + typeBytes.Length + additionalPacketSize);  // packet size
+        w.WriteVarInt((int)data.Length + typeBytes.Length + additionalPacketSize);  // packet size
         
         if (compressionEnabled) {
             w.WriteVarInt(0);  // compression format means we need to specify 0 meaning no compression
         }
         
         w.WriteVarInt(packetId);  // packet type
-        w.Write(data);  // the data
+        w.Write((IWritable)data);  // the data
         return w.ToArray();
     }
     

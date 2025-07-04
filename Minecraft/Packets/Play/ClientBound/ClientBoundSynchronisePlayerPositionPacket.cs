@@ -13,15 +13,14 @@ public class ClientBoundSynchronisePlayerPositionPacket : ClientBoundPacket {
     public required int TeleportId;
     public required TeleportFlags Flags;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(TeleportId)
             .WriteVec3(Position)
             .WriteVec3(Velocity)
             .WriteFloat(Yaw.DegreesF)
             .WriteFloat(Pitch.DegreesF)
-            .WriteInteger((int)Flags)
-            .ToArray();
+            .WriteInteger((int)Flags);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSynchronisePlayerPositionPacket {

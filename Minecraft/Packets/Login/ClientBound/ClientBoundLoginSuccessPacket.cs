@@ -8,12 +8,11 @@ public class ClientBoundLoginSuccessPacket : ClientBoundPacket {
     public required string Username;
     public required Guid Uuid;
 
-    protected override byte[] GetData() {
-        DataWriter w = new();
+    protected override DataWriter WriteData(DataWriter w) {
         w.WriteUuid(Uuid);
         w.WriteString(Username);
         w.WritePrefixedArray(Array.Empty<int>(), (_, _) => { });
-        return w.ToArray();
+        return w;
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginSuccessPacket {

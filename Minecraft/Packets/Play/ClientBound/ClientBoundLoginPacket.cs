@@ -26,8 +26,8 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
     public required bool IsHardcore;
     public required int EntityId;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteInteger(EntityId)
             .WriteBoolean(IsHardcore)
             .WritePrefixedArray(Dimensions, (s, writer) => writer.WriteString(s))
@@ -50,8 +50,7 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
                 .WritePosition(location.Position))
             .WriteVarInt(PortalCooldown)
             .WriteVarInt(SeaLevel)
-            .WriteBoolean(EnforcesSecureChat)
-            .ToArray();
+            .WriteBoolean(EnforcesSecureChat);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginPacket {

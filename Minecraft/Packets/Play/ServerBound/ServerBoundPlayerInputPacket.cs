@@ -18,10 +18,9 @@ public class ServerBoundPlayerInputPacket : ServerBoundPacket {
         Sprint = 0x40
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteUnsignedByte((byte)Flags)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteUnsignedByte((byte)Flags);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPlayerInputPacket {

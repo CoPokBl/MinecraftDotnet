@@ -17,12 +17,11 @@ public class ClientBoundPlayerAbilitiesPacket : ClientBoundPacket {
         CreativeMode = 0x08
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteByte((int)Flags)
             .WriteFloat(FlyingSpeed)
-            .WriteFloat(FovModifier)
-            .ToArray();
+            .WriteFloat(FovModifier);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundPlayerAbilitiesPacket {

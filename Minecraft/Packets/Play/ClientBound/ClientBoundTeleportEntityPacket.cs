@@ -13,15 +13,14 @@ public class ClientBoundTeleportEntityPacket : ClientBoundPacket {
     public required Angle Pitch;
     public required bool OnGround;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(EntityId)
             .WriteVec3(Position)
             .WriteVec3(Velocity)
             .WriteFloat(Yaw.DegreesF)
             .WriteFloat(Pitch.DegreesF)
-            .WriteBoolean(OnGround)
-            .ToArray();
+            .WriteBoolean(OnGround);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundTeleportEntityPacket {

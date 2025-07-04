@@ -15,8 +15,8 @@ public class ClientBoundParticlePacket : ClientBoundPacket {
     public required int ParticleCount;
     public required IParticle Particle;
     
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteBoolean(LongDistance)
             .WriteBoolean(AlwaysVisible)
             .WriteVec3(Position)
@@ -24,8 +24,7 @@ public class ClientBoundParticlePacket : ClientBoundPacket {
             .WriteFloat(MaxSpeed)
             .WriteInteger(ParticleCount)
             .WriteVarInt(Particle.ProtocolId)
-            .Write(Particle.WriteData)
-            .ToArray();
+            .Write(Particle.WriteData);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundParticlePacket {

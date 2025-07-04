@@ -10,15 +10,14 @@ public class ClientBoundEncryptionRequestPacket : ClientBoundPacket {
     public required byte[] VerifyToken;
     public required bool ShouldAuthenticate;
 
-    protected override byte[] GetData() {
+    protected override DataWriter WriteData(DataWriter w) {
         Assert(ServerId.Length <= 20, "ServerId must be 20 characters or less.");
         
-        return new DataWriter()
+        return w
             .WriteString(ServerId)
             .WritePrefixedArray(PublicKey, (b, wr) => wr.Write(b))
             .WritePrefixedArray(VerifyToken, (b, wr) => wr.Write(b))
-            .WriteBoolean(ShouldAuthenticate)
-            .ToArray();
+            .WriteBoolean(ShouldAuthenticate);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundEncryptionRequestPacket {

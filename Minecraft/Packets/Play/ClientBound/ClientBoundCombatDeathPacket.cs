@@ -9,11 +9,10 @@ public class ClientBoundCombatDeathPacket : ClientBoundPacket {
     public required int PlayerId;
     public required TextComponent Message;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(PlayerId)
-            .WriteNbt(Message)
-            .ToArray();
+            .WriteNbt(Message);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundCombatDeathPacket {

@@ -10,8 +10,8 @@ public class UnknownPacket : MinecraftPacket {
     
     public required int Id;
     public required byte[] Data;
-    
-    protected override byte[] GetData() {
-        return Data;
+
+    protected override DataWriter WriteData(DataWriter w) {
+        return w.Write(Data);
     }
 }

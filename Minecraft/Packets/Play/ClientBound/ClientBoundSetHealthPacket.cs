@@ -9,12 +9,11 @@ public class ClientBoundSetHealthPacket : ClientBoundPacket {
     public required int Food;
     public required float Saturation;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteFloat(Health)
             .WriteVarInt(Food)
-            .WriteFloat(Saturation)
-            .ToArray();
+            .WriteFloat(Saturation);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetHealthPacket {

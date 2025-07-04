@@ -7,10 +7,9 @@ public class ClientBoundSetCompressionPacket : ClientBoundPacket {
     
     public required int Threshold;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteVarInt(Threshold)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteVarInt(Threshold);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetCompressionPacket {

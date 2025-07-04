@@ -7,8 +7,8 @@ public class ServerBoundConfirmTeleportPacket : ServerBoundPacket {
     
     public required int TeleportId;
 
-    protected override byte[] GetData() {
-        return new DataWriter().WriteVarInt(TeleportId).ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w.WriteVarInt(TeleportId);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundConfirmTeleportPacket {

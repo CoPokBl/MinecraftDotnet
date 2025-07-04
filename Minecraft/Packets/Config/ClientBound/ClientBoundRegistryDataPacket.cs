@@ -9,15 +9,14 @@ public class ClientBoundRegistryDataPacket : ClientBoundPacket {
     public required string RegistryId;
     public required Dictionary<string, INbtTag?> Entries;
     
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteString(RegistryId)
             .WritePrefixedArray(
                 Entries.ToArray(),
                 (entry, writer) => writer
                     .WriteString(entry.Key)
-                    .WritePrefixedOptional(entry.Value, (tag, dataWriter) => dataWriter.WriteNbt(tag)))
-            .ToArray();
+                    .WritePrefixedOptional(entry.Value, (tag, dataWriter) => dataWriter.WriteNbt(tag)));
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {

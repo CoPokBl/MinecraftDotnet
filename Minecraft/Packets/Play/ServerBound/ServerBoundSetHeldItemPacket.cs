@@ -7,10 +7,9 @@ public class ServerBoundSetHeldItemPacket : ServerBoundPacket {
     
     public required short Slot;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteUShort((ushort)Slot)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteUShort((ushort)Slot);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSetHeldItemPacket {

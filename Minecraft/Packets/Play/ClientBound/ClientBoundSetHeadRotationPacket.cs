@@ -8,11 +8,10 @@ public class ClientBoundSetHeadRotationPacket : ClientBoundPacket {
     public required int EntityId;
     public required Angle Yaw;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt(EntityId)
-            .WriteAngle(Yaw)
-            .ToArray();
+            .WriteAngle(Yaw);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetHeadRotationPacket {

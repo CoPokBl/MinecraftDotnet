@@ -84,7 +84,7 @@ public class World {
 
                     // Console.WriteLine($"Sending {packets.Count} packets for terrain");
                     await connection.SendPackets(false, packets.ToArray());
-                    Console.WriteLine("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
+                    // Console.WriteLine("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
                 }
             });
             Action cancelAction = null!;

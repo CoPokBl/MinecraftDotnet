@@ -48,9 +48,8 @@ public class ServerBoundInteractPacket : ServerBoundPacket {
         InteractAt = 2
     }
 
-    protected override byte[] GetData() {
-        DataWriter w = new DataWriter()
-            .WriteVarInt(EntityId)
+    protected override DataWriter WriteData(DataWriter w) {
+        w.WriteVarInt(EntityId)
             .WriteVarInt((int)Type);
 
         switch (Type) {
@@ -65,8 +64,7 @@ public class ServerBoundInteractPacket : ServerBoundPacket {
         }
         
         return w
-            .WriteBoolean(SneakPressed)
-            .ToArray();
+            .WriteBoolean(SneakPressed);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {

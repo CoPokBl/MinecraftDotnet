@@ -9,11 +9,10 @@ public class ClientBoundSetTabListHeaderFooterPacket : ClientBoundPacket {
     public required TextComponent Header;
     public required TextComponent Footer;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteNbt(Header)
-            .WriteNbt(Footer)
-            .ToArray();
+            .WriteNbt(Footer);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetTabListHeaderFooterPacket {

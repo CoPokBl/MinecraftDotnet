@@ -9,12 +9,11 @@ public class ClientBoundSetExperiencePacket : ClientBoundPacket {
     public required int Level;
     public required int TotalExperience;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteFloat(ExperienceProgress)
             .WriteVarInt(Level)
-            .WriteVarInt(TotalExperience)
-            .ToArray();
+            .WriteVarInt(TotalExperience);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetExperiencePacket {

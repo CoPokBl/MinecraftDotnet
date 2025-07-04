@@ -8,11 +8,10 @@ public class ClientBoundSetDefaultSpawnPositionPacket : ClientBoundPacket {
     public required BlockPosition Location;
     public required Angle Angle;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WritePosition(Location)
-            .WriteFloat(Angle.DegreesF)
-            .ToArray();
+            .WriteFloat(Angle.DegreesF);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetDefaultSpawnPositionPacket {

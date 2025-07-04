@@ -10,13 +10,12 @@ public class ServerBoundUseItemPacket : ServerBoundPacket {
     public required Angle Yaw;
     public required Angle Pitch;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteVarInt((int)UsedHand)
             .WriteVarInt(Sequence)
             .WriteFloat(Yaw.DegreesF)
-            .WriteFloat(Pitch.DegreesF)
-            .ToArray();
+            .WriteFloat(Pitch.DegreesF);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundUseItemPacket {

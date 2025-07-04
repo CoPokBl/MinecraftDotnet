@@ -9,10 +9,9 @@ public class ClientBoundLoginDisconnectPacket : ClientBoundPacket {
     
     public required TextComponent Reason;  // in JSON for some stupid reason, not in NBT
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteString(Reason.ToJsonString())
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteString(Reason.ToJsonString());
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginDisconnectPacket {

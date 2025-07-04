@@ -8,11 +8,10 @@ public class ServerBoundPickItemFromBlockPacket : ServerBoundPacket {
     public required BlockPosition Location;
     public required bool IncludeData;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WritePosition(Location)
-            .WriteBoolean(IncludeData)
-            .ToArray();
+            .WriteBoolean(IncludeData);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundPickItemFromBlockPacket {

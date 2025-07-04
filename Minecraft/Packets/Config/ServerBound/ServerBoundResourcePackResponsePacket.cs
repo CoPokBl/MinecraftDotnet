@@ -19,11 +19,10 @@ public class ServerBoundResourcePackResponsePacket : ServerBoundPacket {
         Discarded = 7
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteUuid(PackId)
-            .WriteVarInt((int)Result)
-            .ToArray();
+            .WriteVarInt((int)Result);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundResourcePackResponsePacket {

@@ -8,10 +8,9 @@ public class ClientBoundSetActionBarTextPacket : ClientBoundPacket {
     
     public required TextComponent Text;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteNbt(Text)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteNbt(Text);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetActionBarTextPacket {

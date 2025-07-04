@@ -8,11 +8,10 @@ public class ClientBoundStoreCookiePacket : ClientBoundPacket {
     public required string Key;
     public required byte[] Payload;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
             .WriteString(Key)
-            .WritePrefixedArray(Payload, (b, wr) => wr.Write(b))
-            .ToArray();
+            .WritePrefixedArray(Payload, (b, wr) => wr.Write(b));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundStoreCookiePacket {

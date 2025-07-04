@@ -35,10 +35,9 @@ public class ClientBoundUpdateTagsPacket : ClientBoundPacket {
         }
     }
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WritePrefixedArray(Tags, (tagSet, writer) => tagSet.Write(writer))
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WritePrefixedArray(Tags, (tagSet, writer) => tagSet.Write(writer));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateTagsPacket {

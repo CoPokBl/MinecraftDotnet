@@ -7,10 +7,9 @@ public class ServerBoundSwingArmPacket : ServerBoundPacket {
     
     public required Hand UsedHand;
 
-    protected override byte[] GetData() {
-        return new DataWriter()
-            .WriteVarInt((int)UsedHand)
-            .ToArray();
+    protected override DataWriter WriteData(DataWriter w) {
+        return w
+            .WriteVarInt((int)UsedHand);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSwingArmPacket {
