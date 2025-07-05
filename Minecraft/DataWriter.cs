@@ -236,7 +236,7 @@ public class DataWriter : Stream, IWritable {
     }
     
     // To an N-bit integer represented as a BitArray in big-endian order.
-    public static BitArray ToNBitInteger(int bits, long value) {
+    public static BitArray ToNBitInteger(int bits, ushort value) {
         if (bits is < 1 or > 64) {
             throw new ArgumentOutOfRangeException(nameof(bits), "Bits must be between 1 and 64.");
         }
@@ -271,9 +271,41 @@ public class DataWriter : Stream, IWritable {
        Note that since longs are sent in big endian order, the least significant bit of the first entry in a long
        will be on the last byte of the long on the wire.
      */
-    public DataWriter WritePacketDataArray(int bitsPerEntry, long[] entries) {
+    public DataWriter WritePacketDataArray(int bitsPerEntry, ushort[] entries) {
+        long[] packed = PackToLongArray(bitsPerEntry, entries);
+        WriteArray(packed, (l, w) => w.WriteLong(l));
+        return this;
+    }
+    
+    public static long[] PackToLongArray(int bitsPerEntry, ushort[] data) {
+        double intsPerLong = Math.Floor(64d / bitsPerEntry);
+        int intsPerLongCeil = (int)Math.Ceiling(intsPerLong);
+        
+        int longCount = (int)Math.Ceiling((double)data.Length / intsPerLongCeil);
+        long[] outp = new long[longCount];
+
+        long mask = (1L << bitsPerEntry) - 1L;
+        for (int i = 0; i < data.Length; i++) {
+            int longIndex = i / intsPerLongCeil;
+            int subIndex = i % intsPerLongCeil;
+
+            outp[longIndex] |= (data[i] & mask) << (bitsPerEntry * subIndex);
+        }
+
+        return outp;
+    }
+    
+    /// <summary>
+    /// Deprecated data array writer method that packs data into longs.
+    /// Use significantly faster <see cref="WritePacketDataArray"/> instead.
+    /// </summary>
+    /// <param name="bitsPerEntry"></param>
+    /// <param name="entries"></param>
+    /// <returns></returns>
+    [Obsolete("Use WritePacketDataArray instead.")]
+    public DataWriter WritePacketDataArraySlow(int bitsPerEntry, ushort[] entries) {
         Queue<BitArray> packedBits = new(entries.Length);
-        foreach (long t in entries) {
+        foreach (ushort t in entries) {
             packedBits.Enqueue(ToNBitInteger(bitsPerEntry, t));
         }
         

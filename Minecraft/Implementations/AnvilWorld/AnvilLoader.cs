@@ -94,6 +94,10 @@ public class AnvilLoader : ITerrainProvider {
             Console.WriteLine(chunk.ToJsonString());
             throw new Exception($"Invalid chunk data: 'sections' tag not found or is not a ListTag. Null: {sectionsTag == null}");
         }
+        
+        // Allocate once for block state indices
+        int[] blockStateIndices = new int[ChunkSection.Size * ChunkSection.Size * ChunkSection.Size];
+        
         foreach (INbtTag sectionTag in sectionsList.Tags) {
             CompoundTag sectionData = sectionTag.GetCompound();
             int sectionY = sectionData["Y"].GetInteger();
@@ -119,7 +123,6 @@ public class AnvilLoader : ITerrainProvider {
             }
             else {
                 long[] packedStates = blockStates["data"].GetLongs();
-                int[] blockStateIndices = new int[ChunkSection.Size * ChunkSection.Size * ChunkSection.Size];
                 UnpackPalette(blockStateIndices, packedStates, packedStates.Length * 64 / blockStateIndices.Length);
                 
                 for (int y = 0; y < ChunkSection.Size; y++) {

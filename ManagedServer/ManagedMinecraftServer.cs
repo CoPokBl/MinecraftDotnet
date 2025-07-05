@@ -16,7 +16,7 @@ public class ManagedMinecraftServer : MinecraftServer {
     
     // Configurable stuff
     public int ViewDistance = 8;
-    public int PacketsPerTick = 64;
+    public int PacketsPerTick = 3000;
     public int TickDelayMs = 50;
 
     public ManagedMinecraftServer(params IServerFeature[] feats) {

@@ -7,7 +7,9 @@ using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.AnvilWorld;
+using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
+using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
@@ -50,6 +52,19 @@ public static class AnvilTesting {
                 // If the player falls below Y=0, teleport them back to the spawn point
                 e.Entity.Teleport(new Vec3(0, 200, 0));
                 ((PlayerEntity)e.Entity).Connection.SendSystemMessage("You fell below the world! Teleporting back to spawn.");
+            }
+        });
+
+        world.Events.AddListener<PacketHandleEvent>(e => {
+            if (e.Packet is not ServerBoundChatMessagePacket chat) {
+                return;
+            }
+
+            switch (chat.Message) {
+                case "gc": {
+                    GC.Collect();
+                    break;
+                }
             }
         });
 

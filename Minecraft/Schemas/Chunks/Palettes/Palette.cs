@@ -9,9 +9,11 @@ public abstract class Palette(int dimension, int maxBitsPerEntry, int minBitsPer
     public int MaxBitsPerEntry = maxBitsPerEntry;
     public int MinBitsPerEntry = minBitsPerEntry;
 
+    public abstract bool HasData { get; }
     public abstract byte[] Serialise();
     public abstract int BlockCount();
     public abstract uint[,,] GetData();
+    public abstract uint GetBlock(int x, int y, int z);
 
     public static Palette CreateOptimisedPalette(uint[,,] blocks, int d, int maxbpe, int minbpe) {
         // check if all values are the same
@@ -34,7 +36,7 @@ public abstract class Palette(int dimension, int maxBitsPerEntry, int minBitsPer
 
         if (bitsPerEntry <= maxIndirectValue) {  // it's indirect
             uint[] palette = r.ReadPrefixedArray(re => (uint)re.ReadVarInt());
-            long[] blocks = r.ReadPacketDataArray(bitsPerEntry, d*d*d);
+            ushort[] blocks = r.ReadPacketDataArray(bitsPerEntry, d*d*d);
             return new IndirectPalette(palette, blocks, d, maxIndirectValue, minbpe);
         }
 

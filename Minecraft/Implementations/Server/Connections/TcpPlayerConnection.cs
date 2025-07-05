@@ -27,7 +27,7 @@ public class TcpPlayerConnection(TcpClient client) : PlayerConnection, IDisposab
             return Task.CompletedTask;
         }
 
-        // Stopwatch sw = Stopwatch.StartNew();
+        Stopwatch sw = Stopwatch.StartNew();
         byte[] buff = packet.Serialise(State, CompressionThreshold);
         // Console.WriteLine("Serialised packet in " + sw.ElapsedMilliseconds + "ms, size: " + buff.Length);
         lock (_sendLock) {

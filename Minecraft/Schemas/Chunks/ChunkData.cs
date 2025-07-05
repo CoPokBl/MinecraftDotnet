@@ -38,6 +38,12 @@ public class ChunkData : IWritable, IDataReadable<ChunkData> {
         }
     }
 
+    public void PackData() {
+        for (int i = 0; i < ChunkSections; i++) {
+            Sections[i].PackData();
+        }
+    }
+
     public void SetBlock(int x, int y, int z, uint state) {
         int chunkSection = y / 16;  // sections from the bottom
         int chunkY = y % 16;

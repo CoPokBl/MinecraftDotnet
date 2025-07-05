@@ -13,7 +13,16 @@ public class CompoundTag(string? name, params INbtTag?[] children) : INbtTag {
     private Dictionary<string, INbtTag>? _childrenMap;
     public Dictionary<string, INbtTag> ChildrenMap {
         get {
-            return _childrenMap ??= Children.OfType<INbtTag>().ToDictionary(c => c.GetName()!);
+            if (_childrenMap != null) {
+                return _childrenMap;
+            }
+            
+            _childrenMap = new Dictionary<string, INbtTag>();
+            foreach (INbtTag? child in Children) {
+                if (child != null) _childrenMap.Add(child.GetName()!, child);
+            }
+
+            return _childrenMap;
         }
     }
     

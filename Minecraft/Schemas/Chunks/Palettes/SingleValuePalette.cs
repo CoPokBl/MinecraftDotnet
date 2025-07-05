@@ -3,11 +3,17 @@ namespace Minecraft.Schemas.Chunks.Palettes;
 public class SingleValuePalette(int d, int maxbpe, int minbpe, uint val) : Palette(d, maxbpe, minbpe) {
     public readonly uint Value = val;
 
+    public override bool HasData => true;  // always has data since it represents a single value
+
     public override byte[] Serialise() {
         return new DataWriter()
             .WriteUnsignedByte(0x00)
             .WriteVarInt((int)Value)
             .ToArray();
+    }
+    
+    public override uint GetBlock(int x, int y, int z) {
+        return Value;
     }
 
     public override int BlockCount() {

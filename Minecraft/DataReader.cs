@@ -188,26 +188,26 @@ public class DataReader(byte[] data) : Stream {
     }
     
     // From an N-bit integer represented as a BitArray in big-endian order.
-    public static long FromNBitInteger(int bits, BitArray bitArr) {
+    public static ushort FromNBitInteger(int bits, BitArray bitArr) {
         if (bitArr.Count != bits) {
             throw new ArgumentOutOfRangeException(nameof(bitArr), $"Data must be {nameof(bits)} long.");
         }
         
-        long value = 0;
+        ushort value = 0;
         for (int i = 0; i < bits; i++) {
             if (bitArr[bits - i - 1]) {
-                value |= 1L << i;
+                value |= (ushort)(1 << i);
             }
         }
         
         return value;
     }
     
-    public long[] ReadPacketDataArray(int bitsPerEntry, int entryCount) {
+    public ushort[] ReadPacketDataArray(int bitsPerEntry, int entryCount) {
         int entriesPerLong = 64 / bitsPerEntry;  // How many entries fit into one long
         int longCount = (int)Math.Ceiling((double)entryCount / entriesPerLong);
     
-        long[] entries = new long[entryCount];
+        ushort[] entries = new ushort[entryCount];
         int currentEntry = 0;
 
         for (int i = 0; i < longCount; i++) {
@@ -216,7 +216,7 @@ public class DataReader(byte[] data) : Stream {
             BitArray bits = new(bytes);
 
             for (int j = 0; j < entriesPerLong; j++) {
-                long entry = FromNBitInteger(bitsPerEntry, bits.Range(j*bitsPerEntry, bitsPerEntry).Reverse());
+                ushort entry = FromNBitInteger(bitsPerEntry, bits.Range(j*bitsPerEntry, bitsPerEntry).Reverse());
                 entries[currentEntry++] = entry;
                 if (currentEntry == entryCount) {
                     break;  // it's the last long

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using ManagedServer.Entities;
 using ManagedServer.Entities.Events;
@@ -20,6 +21,8 @@ public class World {
     public readonly EventNode<IServerEvent> Events;
     public readonly EntityManager Entities;
     public required ManagedMinecraftServer? Server;
+
+    private readonly ConcurrentDictionary<ChunkPosition, ChunkData> _chunks = new();
     
     // Params
     private readonly ITerrainProvider _provider;
@@ -90,7 +93,7 @@ public class World {
 
                     // Console.WriteLine($"Sending {packets.Count} packets for terrain");
                     await connection.SendPackets(false, packets.ToArray());
-                    // Console.WriteLine("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
+                    Console.WriteLine("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
                 }
             });
             Action cancelAction = null!;
@@ -168,7 +171,11 @@ public class World {
         
         SetLoadedChunks(connection, loaded);
         
-        neededPackets.Add(new ClientBoundSetCenterChunkPacket {
+        // neededPackets.Add(new ClientBoundSetCenterChunkPacket {
+        //     X = chunkPos.X,
+        //     Z = chunkPos.Z
+        // });
+        connection.SendPacket(new ClientBoundSetCenterChunkPacket {
             X = chunkPos.X,
             Z = chunkPos.Z
         });
@@ -206,6 +213,38 @@ public class World {
         connection.SetTag(LoadedChunksTag, chunks);
     }
 
+    private ChunkData[] GetChunks(ChunkPosition[] poses, int count) {
+        ChunkData[] chunks = new ChunkData[count];
+        ChunkPosition[] needed = new ChunkPosition[count];
+        int notFound = 0;
+        int cChunksPos = 0;
+        for (int i = 0; i < count; i++) {
+            ChunkData? data = RetrieveChunk(poses[i]);
+            if (data == null) {
+                needed[notFound++] = poses[i];
+                continue;
+            }
+            chunks[cChunksPos++] = data;
+        }
+        if (notFound == 0) {
+            return chunks;
+        }
+        
+        // We need to load some chunks
+        foreach (ChunkData newChunk in _provider.GetChunks(notFound, needed)) {
+            newChunk.PackData();
+            chunks[cChunksPos++] = newChunk;
+            _chunks.TryAdd(new ChunkPosition(newChunk.ChunkX, newChunk.ChunkZ), newChunk);
+        }
+
+        return chunks;
+    }
+    
+    private ChunkData? RetrieveChunk(ChunkPosition pos) {
+        _chunks.TryGetValue(pos, out ChunkData? data);
+        return data;
+    }
+
     public ClientBoundChunkDataAndUpdateLightPacket GetChunkPacket(ChunkPosition pos) {
         ClientBoundChunkDataAndUpdateLightPacket packet = new() {
             ChunkX = pos.X,
@@ -217,7 +256,7 @@ public class World {
     }
     
     public void AddChunkPackets(ChunkPosition[] poses, int count, List<MinecraftPacket> list) {
-        foreach (ChunkData data in _provider.GetChunks(count, poses)) {
+        foreach (ChunkData data in GetChunks(poses, count)) {
             list.Add(new ClientBoundChunkDataAndUpdateLightPacket{
                 ChunkX = data.ChunkX,
                 ChunkZ = data.ChunkZ,

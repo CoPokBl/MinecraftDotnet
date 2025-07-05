@@ -36,12 +36,63 @@ public class DataTypesTest {
         Assert.That(DataReader.FromNBitInteger(5, DataWriter.ToNBitInteger(5, 25)), Is.EqualTo(25));
         Assert.That(DataReader.FromNBitInteger(5, DataWriter.ToNBitInteger(5, 3)), Is.EqualTo(3));
     }
+    
+    void UnpackPalette(int[] outp, long[] data, int bitsPerEntry) {
+        double intsPerLong = Math.Floor(64d / bitsPerEntry);
+        int intsPerLongCeil = (int)Math.Ceiling(intsPerLong);
+
+        long mask = (1L << bitsPerEntry) - 1L;
+        for (int i = 0; i < outp.Length; i++) {
+            int longIndex = i / intsPerLongCeil;
+            int subIndex = i % intsPerLongCeil;
+
+            outp[i] = (int) ((data[longIndex] >>> (bitsPerEntry * subIndex)) & mask);
+        }
+    }
+    
+    void PackPalette(long[] outp, int[] data, int bitsPerEntry) {
+        double intsPerLong = Math.Floor(64d / bitsPerEntry);
+        int intsPerLongCeil = (int)Math.Ceiling(intsPerLong);
+
+        long mask = (1L << bitsPerEntry) - 1L;
+        for (int i = 0; i < data.Length; i++) {
+            int longIndex = i / intsPerLongCeil;
+            int subIndex = i % intsPerLongCeil;
+
+            outp[longIndex] |= ((long)data[i] & mask) << (bitsPerEntry * subIndex);
+        }
+    }
+    
+    public static long[] PackToLongArray(int[] data, int bitsPerEntry) {
+        double intsPerLong = Math.Floor(64d / bitsPerEntry);
+        int intsPerLongCeil = (int)Math.Ceiling(intsPerLong);
+        
+        int longCount = (int)Math.Ceiling((double)data.Length / intsPerLongCeil);
+        long[] outp = new long[longCount];
+
+        long mask = (1L << bitsPerEntry) - 1L;
+        for (int i = 0; i < data.Length; i++) {
+            int longIndex = i / intsPerLongCeil;
+            int subIndex = i % intsPerLongCeil;
+
+            outp[longIndex] |= ((long)data[i] & mask) << (bitsPerEntry * subIndex);
+        }
+
+        return outp;
+    }
 
     [Test]
     public void TestPacketDataArray() {
-        long[] someData = [31, 23, 04, 16, 31, 23, 04, 16, 31, 23, 04, 16, 31, 23, 04, 16, 28, 29, 30, 1, 2, 3, 4, 5, 7];
+        ushort[] someData = [31, 23, 04, 16, 31, 23, 04, 16, 31, 23, 04, 16, 31, 23, 04, 16, 28, 29, 30, 1, 2, 3, 4, 5, 7];
         byte[] packedData = new DataWriter().WritePacketDataArray(5, someData).ToArray();
-        long[] unpackedData = new DataReader(packedData).ReadPacketDataArray(5, someData.Length);
+        ushort[] unpackedData = new DataReader(packedData).ReadPacketDataArray(5, someData.Length);
+        
+        long[] packed = PackToLongArray(someData.Select(us => (int)us).ToArray(), 5);
+        
+        byte[] packedData2 = new DataWriter().WriteArray(packed, (l, writer) => writer.WriteLong(l)).ToArray();
+        
+        Assert.That(packedData.SequenceEqual(packedData2), Is.True);
+        
         Assert.That(unpackedData, Has.Length.EqualTo(someData.Length));
         
         for (int i = 0; i < someData.Length; i++) {

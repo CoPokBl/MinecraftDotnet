@@ -1,29 +1,28 @@
 namespace Minecraft.Schemas.Chunks.Palettes;
 
 public class IndirectPalette : Palette {
-    public readonly long[] Blocks;  // array that maps block -> palette index (y then z then x)
+    public readonly ushort[] Blocks;  // array that maps block -> palette index (y then z then x)
     public readonly uint[] PaletteValues;  // the unique values in the palette
+
+    public override bool HasData => Blocks.Length > 0 && PaletteValues.Length > 0;
 
     public IndirectPalette(uint[,,] blocks, int d, int maxbpe, int minbpe) : base(d, maxbpe, minbpe) {
         List<uint> palette = [];  // list of unique values
 
-        Blocks = new long[(int)Math.Pow(d, 3)];
+        Blocks = new ushort[(int)Math.Pow(d, 3)];
         
         int i = 0;
         for (int y = 0; y < d; y++) {
             for (int z = 0; z < d; z++) {
                 for (int x = 0; x < d; x++) {
                     uint v = blocks[x, y, z];
-                    int paletteIndex;
-                    if (!palette.Contains(v)) {
-                        paletteIndex = palette.Count;
+                    int paletteIndex = palette.IndexOf(v);
+                    if (paletteIndex == -1) {
+                        paletteIndex = (ushort)palette.Count;
                         palette.Add(v);
                     }
-                    else {
-                        paletteIndex = palette.IndexOf(v);
-                    }
 
-                    Blocks[i++] = paletteIndex;
+                    Blocks[i++] = (ushort)paletteIndex;
                 }
             }
         }
@@ -31,9 +30,13 @@ public class IndirectPalette : Palette {
         PaletteValues = palette.ToArray();
     }
 
-    public IndirectPalette(uint[] palette, long[] blocks, int d, int maxbpe, int minbpe) : base(d, maxbpe, minbpe) {
+    public IndirectPalette(uint[] palette, ushort[] blocks, int d, int maxbpe, int minbpe) : base(d, maxbpe, minbpe) {
         Blocks = blocks;
         PaletteValues = palette;
+    }
+    
+    public override uint GetBlock(int x, int y, int z) {
+        return PaletteValues[Blocks[x + y * Dimension + z * Dimension * Dimension]];
     }
 
     public override byte[] Serialise() {
