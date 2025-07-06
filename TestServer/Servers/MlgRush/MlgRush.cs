@@ -212,7 +212,7 @@ public static class MlgRush {
                 WindowId = 0,
                 StateId = 0,
                 SlotId = 36,
-                Data = new Slot(64, 175)
+                Data = new ItemStack(64, Item.BambooBlock)
             };
             c1.SendPacket(giveItemPacket);
             c2.SendPacket(giveItemPacket);

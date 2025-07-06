@@ -34,7 +34,7 @@ public static class AnvilTesting {
 
         Stopwatch sw = Stopwatch.StartNew();
         for (int i = 0; i < 1; i++) {
-            world.GetChunkPacket(new ChunkPosition(0, 0));
+            world.GetChunkPacket(new IVec2(0, 0));
         }
         Console.WriteLine($"Chunk packet took {sw.ElapsedMilliseconds}ms");
         

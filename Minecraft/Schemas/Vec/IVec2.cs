@@ -1,18 +1,18 @@
-namespace Minecraft.Schemas;
+namespace Minecraft.Schemas.Vec;
 
-public readonly struct ChunkPosition(int x, int z) : IEquatable<ChunkPosition> {
+public readonly struct IVec2(int x, int z) : IEquatable<IVec2> {
     public readonly int X = x;
     public readonly int Z = z;
 
-    public bool IsWithinRadiusOf(ChunkPosition other, int radius) {
+    public bool IsWithinRadiusOf(IVec2 other, int radius) {
         return Math.Abs(X - other.X) <= radius && Math.Abs(Z - other.Z) <= radius;
     }
 
-    public double DistanceTo(ChunkPosition other) {
+    public double DistanceTo(IVec2 other) {
         return Math.Sqrt(Math.Pow(Math.Abs(X - other.X), 2) + Math.Pow(Math.Abs(Z - other.Z), 2));
     }
 
-    public bool Equals(ChunkPosition other) {
+    public bool Equals(IVec2 other) {
         return X == other.X && Z == other.Z;
     }
 
@@ -22,10 +22,10 @@ public readonly struct ChunkPosition(int x, int z) : IEquatable<ChunkPosition> {
     }
 
     public override bool Equals(object? obj) {
-        return obj is ChunkPosition other && Equals(other);
+        return obj is IVec2 other && Equals(other);
     }
 
     public override string ToString() {
-        return $"ChunkPosition(X: {X}, Z: {Z})";
+        return $"{X}, {Z}";
     }
 }

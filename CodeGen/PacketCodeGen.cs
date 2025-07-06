@@ -6,7 +6,7 @@ namespace CodeGen;
 public static class PacketCodeGen {
     private const string IdentSearch = "Identifier Identifier => \"";
 
-    public static string CreateParticleEntries(JObject registriesJson) {
+    public static string CreatePacketEntries(JObject registriesJson) {
         StringBuilder entries = new();
         JObject packetsJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("packets.json"));
         
@@ -102,24 +102,11 @@ public static class PacketCodeGen {
                 string fileContent = File.ReadAllText(file);
                 string className = Path.GetFileNameWithoutExtension(file);
 
-                if (!fileContent.Contains(IdentSearch)) {
+                string? identifier = CodeGenUtils.GetIdentifier(fileContent);
+                if (identifier == null) {
                     Console.WriteLine("Skipping file without Identifier: " + file);
                     continue;
                 }
-                
-                int indexOfIdentifier = fileContent.IndexOf(IdentSearch, StringComparison.Ordinal);
-                StringBuilder identifierBuilder = new();
-
-                int i = indexOfIdentifier + IdentSearch.Length;
-                while (true) {
-                    if (fileContent[i] == '"') {
-                        break;
-                    }
-                    identifierBuilder.Append(fileContent[i]);
-                    i++;
-                }
-                
-                string identifier = identifierBuilder.ToString();
 
                 if (!packetClasses.TryGetValue(clientBound, out Dictionary<string, string>? vals)) {
                     vals = new Dictionary<string, string>();

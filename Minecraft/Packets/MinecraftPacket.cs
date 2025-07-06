@@ -7,8 +7,14 @@ namespace Minecraft.Packets;
 
 public abstract class MinecraftPacket {
     public abstract Identifier Identifier { get; }
-    
-    protected abstract DataWriter WriteData(DataWriter w);
+
+    protected virtual DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
+        return w;
+    }
+
+    protected virtual DataWriter WriteData(DataWriter w) {
+        return w;
+    }
 
     protected static void AssertLength<T>(T[] arr, int length) {
         if (arr.Length != length) {
@@ -29,20 +35,24 @@ public abstract class MinecraftPacket {
     }
 
     public byte[] Serialise(ConnectionState state, int compressionThreshold = -1, MinecraftRegistry? registry = null) {
+        registry ??= VanillaRegistry.Data;
+        
         int packetId;
         try {
             if (this is UnknownPacket up) {
                 packetId = up.Id;
             }
             else {
-                packetId = (registry ?? VanillaRegistry.Data).Packets[state, GetType()];
+                packetId = registry.Packets[state, GetType()];
             }
         }
         catch (KeyNotFoundException) {
             throw new NotImplementedException($"Packet {GetType().Name} is not registered for state {state}");
         }
         
-        DataWriter data = new DataWriter().Write(WriteData);
+        DataWriter data = new();
+        WriteData(data, registry);
+        WriteData(data);
 
         DataWriter typeD = new();
         typeD.WriteVarInt(packetId);

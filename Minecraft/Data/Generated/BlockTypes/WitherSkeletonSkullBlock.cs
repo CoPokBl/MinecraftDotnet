@@ -1,7 +1,7 @@
 using NBT;
 using NBT.Tags;
 using Minecraft.Schemas;
-using Minecraft.Schemas.BlockEnums;
+using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
 
 namespace Minecraft.Data.Generated.BlockTypes;

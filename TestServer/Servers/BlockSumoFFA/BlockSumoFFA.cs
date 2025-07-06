@@ -59,7 +59,15 @@ public static class BlockSumoFfa {
             WindowId = 0,
             StateId = 0,
             SlotId = 36,
-            Data = new Slot(64, 175)
+            Data = new ItemStack(64, Item.BambooBlock).With(DataComponent.CustomName with {
+                Value = TextComponent.Text("Michael's Bamboo").WithColor(TextColor.Green).WithBold()
+            }).With(DataComponent.Damage with {
+                Value = 10
+            }).With(DataComponent.Rarity with {
+                Value = ItemRarity.Epic
+            }).With(DataComponent.MaxDamage with {
+                Value = 100
+            })
         };
         PlayerPosition spawn = new(new Vec3(0, 0, 0), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
         ITerrainProvider terrain = new BlockSumoMapProvider(12);

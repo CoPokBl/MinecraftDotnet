@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
@@ -10,7 +11,7 @@ public class ClientBoundSetCenterChunkPacket() : ClientBoundPacket {
     public required int Z;
 
     [SetsRequiredMembers]
-    public ClientBoundSetCenterChunkPacket(ChunkPosition pos) : this() {
+    public ClientBoundSetCenterChunkPacket(IVec2 pos) : this() {
         X = pos.X;
         Z = pos.Z;
     }

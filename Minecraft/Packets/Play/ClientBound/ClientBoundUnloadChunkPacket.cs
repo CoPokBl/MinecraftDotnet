@@ -1,4 +1,5 @@
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
@@ -8,7 +9,7 @@ public class ClientBoundUnloadChunkPacket() : ClientBoundPacket {
     public required int X;
     public required int Z;
 
-    public ClientBoundUnloadChunkPacket(ChunkPosition pos) : this() {
+    public ClientBoundUnloadChunkPacket(IVec2 pos) : this() {
         X = pos.X;
         Z = pos.Z;
     }

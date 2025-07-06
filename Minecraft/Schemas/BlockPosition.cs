@@ -28,7 +28,7 @@ public readonly struct BlockPosition(int x, int y, int z) : IEquatable<BlockPosi
     }
 
     public override bool Equals(object? obj) {
-        return obj is ChunkPosition other && Equals(other);
+        return obj is IVec2 other && Equals(other);
     }
 
     public override string ToString() {

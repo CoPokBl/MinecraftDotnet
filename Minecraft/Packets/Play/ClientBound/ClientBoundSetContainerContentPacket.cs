@@ -1,3 +1,4 @@
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 
@@ -8,21 +9,23 @@ public class ClientBoundSetContainerContentPacket : ClientBoundPacket {
     
     public required int WindowId;
     public required int StateId;
-    public required Slot[] SlotData;
-    public required Slot CursorItem;
+    public required ItemStack[] SlotData;
+    public required ItemStack CursorItem;
 
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w
             .WriteVarInt(WindowId)
             .WriteVarInt(StateId)
-            .WritePrefixedArray(SlotData, (slot, writer) => writer.Write(slot))
-            .Write(CursorItem);
+            .WritePrefixedArray(SlotData, (slot, writer) => {
+                slot.Write(writer, registry);
+            })
+            .Write(wr => CursorItem.Write(wr, registry));
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetContainerContentPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundSetContainerContentPacket {
         WindowId = r.ReadVarInt(),
         StateId = r.ReadVarInt(),
-        SlotData = r.ReadPrefixedArray(Slot.Read),
-        CursorItem = Slot.Read(r)
+        SlotData = r.ReadPrefixedArray(re => ItemStack.Read(re, reg)),
+        CursorItem = ItemStack.Read(r, reg)
     };
 }

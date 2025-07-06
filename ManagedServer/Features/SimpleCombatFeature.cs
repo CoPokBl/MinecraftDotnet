@@ -65,7 +65,8 @@ public class SimpleCombatFeature(int attackCooldown = -1) : IWorldFeature {
             
             if (entity is PlayerEntity p) {
                 // p.SetVelocity(attacker.Direction.Multiply(0.5) with { Y = 0.5 });  // Original
-                p.SetVelocity(attacker.Direction.Multiply(0.60) with { Y = 0.5 });  // Original 2.0
+                p.SetVelocity(attacker.Direction.Multiply(0.60) with { Y = 0.5 });  // Original 2.0 GOOD
+                p.SetVelocity(attacker.Direction.Multiply(0.90) with { Y = 0.4 });  // Original 2.0 GOOD
                 // p.SetVelocity(attacker.Direction.Multiply(0.8) with { Y = 0.35 });  // adam tweak
                 // p.SetVelocity(attacker.Direction.Multiply(1) with { Y = 1 });  // dumb
                 p.Connection.SendPacket(soundPacket);

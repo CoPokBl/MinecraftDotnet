@@ -1,6 +1,6 @@
 namespace Minecraft.Schemas;
 
-public readonly struct Identifier(string ns, string key) : IEquatable<Identifier> {
+public readonly struct Identifier(string ns, string key) : IEquatable<Identifier>, IWritable {
     public readonly string Namespace = ns;
     public readonly string Key = key;
 
@@ -19,6 +19,10 @@ public readonly struct Identifier(string ns, string key) : IEquatable<Identifier
     
     public override string ToString() {
         return $"{Namespace}:{Key}";
+    }
+
+    public void Write(DataWriter writer) {
+        writer.WriteString(ToString());
     }
 
     public bool Equals(Identifier other) {

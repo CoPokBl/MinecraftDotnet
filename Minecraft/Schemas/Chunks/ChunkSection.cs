@@ -159,13 +159,11 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     }
     
     public void Write(DataWriter w) {
-        Palette palette = Palette.CreateOptimisedPalette(Blocks, Size, MaxBpe, MinBpe);
-
         // BLOCK COUNT
-        w.WriteShort((short)palette.BlockCount());  // Number of non-air blocks in chunk section
+        w.WriteShort((short)Palette.BlockCount());  // Number of non-air blocks in chunk section
         
         // BLOCK STATES
-        w.Write(palette.Serialise());
+        w.Write(Palette.Serialise());
         
         // BIOMES
         w.WriteUnsignedByte(0x00);  // Bits per entry: Single valued (only one block type for the whole sec)

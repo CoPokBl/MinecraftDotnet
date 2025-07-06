@@ -1,5 +1,6 @@
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Implementations.Server.Terrain.Providers;
 
@@ -16,7 +17,7 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
     /// </summary>
     /// <param name="pos">The chunk coords.</param>
     /// <returns>The generated chunk data.</returns>
-    public ChunkData GetChunk(ChunkPosition pos) {
+    public ChunkData GetChunk(IVec2 pos) {
         ChunkData data = new() {
             ChunkX = pos.X,
             ChunkZ = pos.Z
@@ -50,7 +51,7 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
         return data;
     }
     
-    public ChunkData SingleThreadedGetChunk(ChunkPosition pos) {
+    public ChunkData SingleThreadedGetChunk(IVec2 pos) {
         ChunkData data = new() {
             ChunkX = pos.X,
             ChunkZ = pos.Z
@@ -69,7 +70,7 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
         return data;
     }
     
-    public IEnumerable<ChunkData> GetChunks(int count, params ChunkPosition[] poses) {
+    public IEnumerable<ChunkData> GetChunks(int count, params IVec2[] poses) {
         ChunkData[] chunks = new ChunkData[count];
         Thread[] threads = new Thread[threadCount];
         

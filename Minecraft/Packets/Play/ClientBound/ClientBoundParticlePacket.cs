@@ -1,4 +1,5 @@
 using Minecraft.Data.Particles;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 
@@ -15,7 +16,7 @@ public class ClientBoundParticlePacket : ClientBoundPacket {
     public required int ParticleCount;
     public required IParticle Particle;
     
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w
             .WriteBoolean(LongDistance)
             .WriteBoolean(AlwaysVisible)
@@ -24,7 +25,7 @@ public class ClientBoundParticlePacket : ClientBoundPacket {
             .WriteFloat(MaxSpeed)
             .WriteInteger(ParticleCount)
             .WriteVarInt(Particle.ProtocolId)
-            .Write(Particle.WriteData);
+            .Write(wr => Particle.WriteData(wr, registry));
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundParticlePacket {
@@ -34,6 +35,6 @@ public class ClientBoundParticlePacket : ClientBoundPacket {
         Offset = r.ReadFVec3(),
         MaxSpeed = r.ReadFloat(),
         ParticleCount = r.ReadInteger(),
-        Particle = reg.Particles[r.ReadVarInt()].ReadData(r)
+        Particle = reg.Particles[r.ReadVarInt()].ReadData(r, reg)
     };
 }

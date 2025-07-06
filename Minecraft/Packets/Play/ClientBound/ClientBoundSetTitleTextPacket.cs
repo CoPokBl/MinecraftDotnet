@@ -9,8 +9,7 @@ public class ClientBoundSetTitleTextPacket : ClientBoundPacket {
     public required TextComponent Text;
 
     protected override DataWriter WriteData(DataWriter w) {
-        return new DataWriter()
-            .WriteNbt(Text);
+        return w.WriteNbt(Text);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSetTitleTextPacket {

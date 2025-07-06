@@ -1,3 +1,4 @@
+using Minecraft.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Data.Particles;
@@ -12,6 +13,6 @@ public interface IParticle {
     /// </summary>
     /// <param name="writer">The object to write to.</param>
     /// <returns>The writer object.</returns>
-    public DataWriter WriteData(DataWriter writer);
-    public IParticle ReadData(DataReader reader);
+    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry);
+    public IParticle ReadData(DataReader reader, MinecraftRegistry registry);
 }

@@ -1,14 +1,15 @@
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Implementations.Server.Terrain.Providers;
 
 public class ThreadedChunksTerrainProvider(ITerrainProvider child, int threadCount = 16) : ITerrainProvider {
-    public ChunkData GetChunk(ChunkPosition chunk) {
+    public ChunkData GetChunk(IVec2 chunk) {
         return child.GetChunk(chunk);
     }
 
-    public IEnumerable<ChunkData> GetChunks(int count, params ChunkPosition[] poses) {
+    public IEnumerable<ChunkData> GetChunks(int count, params IVec2[] poses) {
         ChunkData[] chunks = new ChunkData[count];
         Thread[] threads = new Thread[threadCount];
         

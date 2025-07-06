@@ -191,7 +191,7 @@ public class AnvilLoader : ITerrainProvider {
         long Time,
         string LevelName);
 
-    public ChunkData GetChunk(ChunkPosition chunk) {
+    public ChunkData GetChunk(IVec2 chunk) {
         try {
             ChunkData data = GetChunkData(chunk.X, chunk.Z) ?? new ChunkData();
             data.ChunkX = chunk.X;
@@ -204,9 +204,9 @@ public class AnvilLoader : ITerrainProvider {
         }
     }
 
-    public IEnumerable<ChunkData> GetChunks(int count, params ChunkPosition[] chunks) {
+    public IEnumerable<ChunkData> GetChunks(int count, params IVec2[] chunks) {
         List<ChunkData> chunkDataList = [];
-        foreach (ChunkPosition chunk in chunks) {
+        foreach (IVec2 chunk in chunks) {
             ChunkData? data = GetChunkData(chunk.X, chunk.Z);
             if (data == null) continue;
             data.ChunkX = chunk.X;

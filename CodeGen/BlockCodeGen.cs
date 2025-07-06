@@ -49,7 +49,7 @@ public static class BlockCodeGen {
 using NBT;
 using NBT.Tags;
 using Minecraft.Schemas;
-using Minecraft.Schemas.BlockEnums;
+using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
 
 namespace Minecraft.Data.Generated.BlockTypes;
@@ -79,7 +79,7 @@ public record {name}(Identifier Identifier, {args}) : IBlock {
     private const string BlocksFileTemplate = 
 """
 using Minecraft.Data.Blocks;
-using Minecraft.Schemas.BlockEnums;
+using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Generated.BlockTypes;
 
 namespace Minecraft.Data.Generated;

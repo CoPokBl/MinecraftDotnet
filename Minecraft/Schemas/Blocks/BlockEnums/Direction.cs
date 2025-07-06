@@ -1,4 +1,4 @@
-namespace Minecraft.Schemas.BlockEnums;
+namespace Minecraft.Schemas.Blocks.BlockEnums;
 
 public enum Direction {
     North,

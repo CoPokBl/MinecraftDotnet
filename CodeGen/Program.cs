@@ -15,7 +15,8 @@ const string vanillaRegistryFile =
 using Minecraft.Schemas;
 using Minecraft.Data.Blocks;
 using Minecraft.Registry;
-using Minecraft.Schemas.BlockEnums;
+using Minecraft.Data.Components.Types;
+using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Generated.BlockTypes;
 
 using Minecraft.Packets.Config.ClientBound;
@@ -56,16 +57,11 @@ Directory.SetCurrentDirectory(codeDir);
 
 StringBuilder registryEntries = new();
 
-void RunStep(string name, Func<JObject, string> func) {
-    Console.WriteLine($"{name}...");
-    Stopwatch sw = Stopwatch.StartNew();
-    registryEntries.Append(func(registriesJson)).Append('\n');
-    Console.WriteLine($"{name} took {sw.Elapsed}");
-}
-
 RunStep("Particles", ParticleCodeGen.CreateParticleEntries);
 RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
-RunStep("Packets", PacketCodeGen.CreateParticleEntries);
+RunStep("Packets", PacketCodeGen.CreatePacketEntries);
+RunStep("Items", ItemCodeGen.CreateItemEntries);
+RunStep("Data Components", DataComponentCodeGen.CreateComponentEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))
@@ -73,3 +69,11 @@ string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.
 
 File.WriteAllText("VanillaRegistry.cs", vanillaRegistryCode);
 Console.WriteLine("Done! Generated VanillaRegistry.cs in " + codeDir);
+return;
+
+void RunStep(string name, Func<JObject, string> func) {
+    Console.WriteLine($"{name}...");
+    Stopwatch sw = Stopwatch.StartNew();
+    registryEntries.Append(func(registriesJson)).Append('\n');
+    Console.WriteLine($"{name} took {sw.Elapsed}");
+}

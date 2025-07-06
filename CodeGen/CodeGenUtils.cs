@@ -1,8 +1,10 @@
 using System.Reflection;
+using System.Text;
 
 namespace CodeGen;
 
 public static class CodeGenUtils {
+    private const string IdentSearch = "Identifier Identifier => \"";
 
     public static string NamespacedIdToPascalName(string namespacedId) {
         if (namespacedId.Contains(':')) {
@@ -26,5 +28,24 @@ public static class CodeGenUtils {
     
     public static string GetIndentation(int level) {
         return new string(' ', level * 4);
+    }
+
+    public static string? GetIdentifier(string fileContent) {
+        int indexOfIdentifier = fileContent.IndexOf(IdentSearch, StringComparison.Ordinal);
+        if (indexOfIdentifier == -1) {
+            return null; // Identifier not found
+        }
+        StringBuilder identifierBuilder = new();
+
+        int i = indexOfIdentifier + IdentSearch.Length;
+        while (true) {
+            if (fileContent[i] == '"') {
+                break;
+            }
+            identifierBuilder.Append(fileContent[i]);
+            i++;
+        }
+                
+        return identifierBuilder.ToString();
     }
 }

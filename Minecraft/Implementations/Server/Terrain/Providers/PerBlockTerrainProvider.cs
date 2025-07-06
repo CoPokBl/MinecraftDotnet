@@ -1,5 +1,6 @@
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Implementations.Server.Terrain.Providers;
 
@@ -7,7 +8,7 @@ public abstract class PerBlockTerrainProvider : ITerrainProvider {
 
     public abstract uint GetBlock(int x, int y, int z);
     
-    public ChunkData GetChunk(ChunkPosition pos) {
+    public ChunkData GetChunk(IVec2 pos) {
         ChunkData data = new();
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 384; y++) {
@@ -22,7 +23,7 @@ public abstract class PerBlockTerrainProvider : ITerrainProvider {
         return data;
     }
 
-    public IEnumerable<ChunkData> GetChunks(int count, params ChunkPosition[] poses) {
+    public IEnumerable<ChunkData> GetChunks(int count, params IVec2[] poses) {
         ChunkData[] chunks = new ChunkData[count];
         for (int i = 0; i < count; i++) {
             chunks[i] = GetChunk(poses[i]);

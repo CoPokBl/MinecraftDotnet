@@ -37,10 +37,10 @@ public static class Particle {
             
             // Add to cs file
             if (!complexParticleTypes.TryGetValue(kvp.Key, out string? typeName)) {
-                file.Append($"{CodeGenUtils.GetIndentation(1)}public static SimpleParticle {pascalName} => new(\"{key}\", {protocolId});\n");
+                file.Append($"{CodeGenUtils.GetIndentation(1)}public static readonly SimpleParticle {pascalName} = new(\"{key}\", {protocolId});\n");
             }
             else {
-                file.Append($"   public static {typeName} {pascalName} => new(\"{key}\", {protocolId});\n");
+                file.Append($"{CodeGenUtils.GetIndentation(1)}public static readonly {typeName} {pascalName} = new(\"{key}\", {protocolId});\n");
             }
             
             // Add to ParticleRegistry

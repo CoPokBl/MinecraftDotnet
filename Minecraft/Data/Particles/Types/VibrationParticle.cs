@@ -1,16 +1,17 @@
+using Minecraft.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Data.Particles.Types;
 
 public record VibrationParticle(Identifier Identifier, int ProtocolId, VibrationParticle.IPositionSource? PositionSource = null, int Ticks = 0) : IParticle {
     
-    public DataWriter WriteData(DataWriter writer) {
+    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
             .Write(PositionSource ?? new BlockPositionSource(BlockPosition.Zero))
             .WriteVarInt(Ticks);
     }
 
-    public IParticle ReadData(DataReader reader) {
+    public IParticle ReadData(DataReader reader, MinecraftRegistry _) {
         return this with {
             PositionSource = IPositionSource.Read(reader),
             Ticks = reader.ReadVarInt()
