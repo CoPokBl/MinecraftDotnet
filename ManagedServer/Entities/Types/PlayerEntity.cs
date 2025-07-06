@@ -1,3 +1,4 @@
+using ManagedServer.Events;
 using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Implementations.Server.Connections;
@@ -72,6 +73,19 @@ public class PlayerEntity : Entity {
                         PlayerAction.ReleaseSneak => false,
                         _ => Crouching
                     };
+                    break;
+                }
+
+                case ServerBoundInteractPacket ip: {
+                    PlayerEntityInteractEvent interactEvent = new PlayerEntityInteractEvent {
+                        Target = Manager!.GetEntityById(ip.EntityId)!,
+                        Player = this,
+                        Type = ip.Type,
+                        TargetLocation = ip.Target,
+                        UsedHand = ip.UsedHand,
+                        SneakPressed = ip.SneakPressed
+                    };
+                    Events.CallEvent(interactEvent);
                     break;
                 }
 

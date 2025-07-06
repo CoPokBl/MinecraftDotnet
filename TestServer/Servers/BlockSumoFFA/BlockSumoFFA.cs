@@ -37,15 +37,15 @@ public static class BlockSumoFfa {
                 OnlinePlayers = 1,
                 MaxPlayers = 1,
                 SamplePlayers = [new SamplePlayer("Potato", "4566e69f-c907-48ee-8d71-d7ba5aa00d20")],
-                Description = "MLG Rush",
+                Description = "Block Sumo FFA",
                 PreventsChatReports = true
             }),
             new PingRespondFeature(),
             new SimpleChatFeature(),
-            new OpenToLanAdFeature("MLG Rush over LAN", Port),
+            new OpenToLanAdFeature("Block Sumo FFA over LAN", Port),
             new TabListFeature(
                 updatePeriod:1000, 
-                headerProvider:_ => TextComponent.Text("MLG Rush").WithColor(TextColor.Hex("#EE7026")).WithBold(), 
+                headerProvider:_ => TextComponent.Text("Block Sumo FFA").WithColor(TextColor.Hex("#EE7026")).WithBold(), 
                 footerProvider:_ => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic()));
 
         CancellationTokenSource cts = new();
