@@ -8,7 +8,7 @@ using Minecraft.Registry;
 
 namespace ManagedServer;
 
-public class ManagedMinecraftServer : MinecraftServer {
+public class ManagedMinecraftServer : MinecraftServer, IViewable {
     public MinecraftRegistry Registry = VanillaRegistry.Data;
     
     public readonly List<World> Worlds = [];
@@ -50,5 +50,9 @@ public class ManagedMinecraftServer : MinecraftServer {
     public Task ListenTcp(int port, CancellationToken cancel) {
         TcpMinecraftListener listener = new(AddConnection, cancel);
         return listener.Listen(port);
+    }
+
+    public PlayerEntity[] GetViewers() {
+        return Players.ToArray();
     }
 }

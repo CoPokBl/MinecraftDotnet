@@ -15,39 +15,52 @@ public class PlayerEntity : Entity {
     public GameMode GameMode;
 
     public PlayerConnection Connection;
-    public Func<PlayerConnection, bool> PlayerViewableRule { get; set; } = _ => true;
-    public int WaitingTeleport = -1;
-    
+
+    private Func<PlayerConnection, bool> _playerViewableRule = _ => true;
+    public Func<PlayerConnection, bool> PlayerViewableRule {
+        get => _playerViewableRule;
+        set {
+            _playerViewableRule = value;
+            UpdateViewers();
+        }
+    }
+
+    private int _waitingTeleport = -1;
+
     // Listen to movement packets so we can do stuff
     public PlayerEntity(PlayerConnection connection, string name) : base(148) {
         Name = name;
         Connection = connection;
         ViewableRule = con => con != Connection && PlayerViewableRule(con);
         
+        connection.Events.Parents.Add(Events);
+
+        connection.Disconnected += Despawn;
+        
         connection.Events.AddListener<PacketHandleEvent>(e => {
             switch (e.Packet) {
                 case ServerBoundSetPlayerPositionPacket sp: {
-                    if (WaitingTeleport != -1) return;
+                    if (_waitingTeleport != -1) return;
                     Move(sp.Position);
                     break;
                 }
 
                 case ServerBoundSetPlayerPosAndRotPacket sp: {
-                    if (WaitingTeleport != -1) return;
+                    if (_waitingTeleport != -1) return;
                     Move(sp.Position, Angle.FromDegrees(sp.Yaw), Angle.FromDegrees(sp.Pitch));
                     break;
                 }
 
                 case ServerBoundSetPlayerRotationPacket sr: {
-                    if (WaitingTeleport != -1) return;
+                    if (_waitingTeleport != -1) return;
                     Move(Position, Angle.FromDegrees(sr.Yaw), Angle.FromDegrees(sr.Pitch));
                     break;
                 }
 
                 // don't move player when they haven't sent ack for teleports
                 case ServerBoundConfirmTeleportPacket ct: {
-                    if (ct.TeleportId == WaitingTeleport) {
-                        WaitingTeleport = -1;
+                    if (ct.TeleportId == _waitingTeleport) {
+                        _waitingTeleport = -1;
                     }
                     break;
                 }
@@ -117,9 +130,9 @@ public class PlayerEntity : Entity {
     }
 
     public override void Teleport(Vec3 pos, Angle? yaw = null, Angle? pitch = null) {
-        WaitingTeleport = Random.Shared.Next();
+        _waitingTeleport = Random.Shared.Next();
         Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket {
-            TeleportId = WaitingTeleport,
+            TeleportId = _waitingTeleport,
             Position = pos,
             Velocity = Vec3.Zero,
             Yaw = yaw ?? Angle.Zero,

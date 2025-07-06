@@ -20,7 +20,16 @@ public class Entity(int type) : IViewable, ITaggable {
     public Angle Pitch = Angle.Zero;
     public Angle Yaw = Angle.Zero;
     public Angle HeadYaw = Angle.Zero;
-    public Func<PlayerConnection, bool> ViewableRule { get; set; } = _ => true;
+
+    private Func<PlayerConnection, bool> _viewableRule = _ => true;
+    public Func<PlayerConnection, bool> ViewableRule {
+        get => _viewableRule;
+        set {
+            _viewableRule = value;
+            UpdateViewers();
+        }
+    }
+
     public EventNode<IServerEvent> Events = new();
     public readonly Dictionary<string, object?> Data = new();
 
@@ -120,11 +129,18 @@ public class Entity(int type) : IViewable, ITaggable {
         Events.Parents.Add(Manager.BaseEventNode);
     }
 
+    public void Despawn() {
+        Events.Parents.Remove(Manager!.BaseEventNode);
+        Manager.Despawn(this);
+        Manager = null;
+        World = null;
+    }
+
     /// <summary>
     /// Play the hurt animation. (Flash red)
     /// </summary>
     public void Hurt() {
-        SendToViewers(new ClientBoundHurtAnimationPacket {
+        SendToSelfAndViewers(new ClientBoundHurtAnimationPacket {
             EntityId = NetId,
             Yaw = Angle.Zero
         });
@@ -144,9 +160,17 @@ public class Entity(int type) : IViewable, ITaggable {
         }
         Manager?.SendPacketsFor(this, packets);
     }
+    
+    public void UpdateViewers() {
+        if (Manager == null) {
+            return;
+        }
+        
+        
+    }
 
-    public PlayerConnection[] GetViewers() {
-        return Manager?.GetViewersOf(this) ?? throw new Exception("Entity must be in a world.");
+    public PlayerEntity[] GetViewers() {
+        return Manager?.GetViewersOf(this) ?? [];
     }
     
     public T GetTag<T>(Tag<T> tag) {

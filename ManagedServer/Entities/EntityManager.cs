@@ -27,6 +27,12 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         }
     }
 
+    /// <summary>
+    /// Adds an entity to the manager and sends spawn packets to all viewers.
+    /// DO NOT CALL DIRECTLY. Use <see cref="Entity.SetWorld"/>.
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="id"></param>
     internal void Spawn(Entity entity, int? id = null) {
         entity.NetId = id ?? NewNetId;
         entity.Manager = this;
@@ -43,26 +49,27 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     }
 
     public void SendPacketsFor(Entity entity, params MinecraftPacket[] packets) {
-        foreach (PlayerConnection con in entity.GetViewers()) {
-            if (con.State != ConnectionState.Play) {
-                continue;
-            }
-
-            con.SendPackets(packets);
-        }
+        entity.SendPacketsToViewers(packets);
     }
 
     public Entity? GetEntityById(int id) {
         return Entities.Find(entity => entity.NetId == id);
     }
+    
+    public PlayerEntity? GetPlayerByConnection(PlayerConnection connection) {
+        return Entities
+            .Where(e => e is PlayerEntity pe && pe.Connection == connection)
+            .Cast<PlayerEntity>()
+            .FirstOrDefault();
+    }
 
     // this could use some optimising
-    public PlayerConnection[] GetViewersOf(Entity entity) {
+    public PlayerEntity[] GetViewersOf(Entity entity) {
         return Entities
             .Where(e => e is PlayerEntity pe && 
                         pe.Position.DistanceTo2D(entity.Position) < viewDistanceBlocks &&
                         entity.ViewableRule(pe.Connection))
-            .Select(e => ((PlayerEntity)e).Connection)
+            .Select(e => (PlayerEntity)e)
             .ToArray();
     }
 

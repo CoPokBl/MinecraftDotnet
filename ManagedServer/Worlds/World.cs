@@ -16,7 +16,7 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Worlds;
 
-public class World {
+public class World : IViewable {
     // State stuff
     public readonly List<PlayerEntity> Players = [];
     public readonly EventNode<IServerEvent> Events;
@@ -62,7 +62,6 @@ public class World {
     
     public void AddPlayer(PlayerEntity player) {
         PlayerConnection connection = player.Connection;
-        connection.Events.Parents.Add(Events);
         
         _ = Entities.InformNewPlayer(connection);
         SetLoadedChunks(connection, []);  // reset, just in case they were in a different world
@@ -265,5 +264,9 @@ public class World {
                 Light = LightData.FullBright
             });
         }
+    }
+
+    public PlayerEntity[] GetViewers() {
+        return Players.ToArray();
     }
 }

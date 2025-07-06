@@ -141,10 +141,10 @@ public static class BlockSumoFfa {
                 e.Player.Connection.SendPacket(giveItemPacket);
                 Console.WriteLine("Teleported joining player in lobby");
                 
-                e.Player.Connection.Disconnected += () => {
-                    Console.WriteLine($"Player {e.Player.Name} disconnected");
-                    world.Entities.Despawn(e.Player);
-                };
+                // e.Player.Connection.Disconnected += () => {
+                //     Console.WriteLine($"Player {e.Player.Name} disconnected");
+                //     world.Entities.Despawn(e.Player);
+                // };
             });
             connection.Events.AddListener<PacketSendingEvent>(e => {
                 if (e.Connection.State != ConnectionState.Play) {
