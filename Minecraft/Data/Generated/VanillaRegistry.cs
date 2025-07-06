@@ -2783,17 +2783,26 @@ public static class VanillaRegistry {
         Data.Items.Add(Item.ZombieVillagerSpawnEgg);
         Data.Items.Add(Item.ZombifiedPiglinSpawnEgg);
 
+        Data.DataComponents.Add(AttributeModifiersComponent.Default, 13);
+        Data.DataComponents.Add(CanBreakComponent.Default, 12);
         Data.DataComponents.Add(CanPlaceOnComponent.Default, 11);
+        Data.DataComponents.Add(CreativeSlotLockComponent.Default, 17);
         Data.DataComponents.Add(CustomDataComponent.Default, 0);
+        Data.DataComponents.Add(CustomModelDataComponent.Default, 14);
         Data.DataComponents.Add(CustomNameComponent.Default, 5);
         Data.DataComponents.Add(DamageComponent.Default, 3);
+        Data.DataComponents.Add(EnchantmentGlintOverrideComponent.Default, 18);
         Data.DataComponents.Add(EnchantmentsComponent.Default, 10);
+        Data.DataComponents.Add(FoodComponent.Default, 20);
+        Data.DataComponents.Add(IntangibleProjectileComponent.Default, 19);
         Data.DataComponents.Add(ItemModelComponent.Default, 7);
         Data.DataComponents.Add(ItemNameComponent.Default, 6);
         Data.DataComponents.Add(LoreComponent.Default, 8);
         Data.DataComponents.Add(MaxDamageComponent.Default, 2);
         Data.DataComponents.Add(MaxStackSizeComponent.Default, 1);
         Data.DataComponents.Add(RarityComponent.Default, 9);
+        Data.DataComponents.Add(RepairCostComponent.Default, 16);
+        Data.DataComponents.Add(TooltipDisplayComponent.Default, 15);
         Data.DataComponents.Add(UnbreakableComponent.Default, 4);
 
     }

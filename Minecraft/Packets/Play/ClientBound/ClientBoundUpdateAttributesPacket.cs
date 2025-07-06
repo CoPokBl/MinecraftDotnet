@@ -39,12 +39,6 @@ public class ClientBoundUpdateAttributesPacket : ClientBoundPacket {
             );
         }
     }
-    
-    public enum AttributeOperation {
-        Add = 0,
-        AddPercent = 1,
-        Multiply = 2
-    }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

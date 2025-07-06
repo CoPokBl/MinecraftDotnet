@@ -6,6 +6,7 @@ using ManagedServer.Features;
 using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Events;
@@ -67,6 +68,9 @@ public static class BlockSumoFfa {
                 Value = ItemRarity.Epic
             }).With(DataComponent.MaxDamage with {
                 Value = 100
+            }).With(DataComponent.CreativeSlotLock)
+            .With(DataComponent.TooltipDisplay with {
+                Value = new TooltipDisplayComponent.Info(true)
             })
         };
         PlayerPosition spawn = new(new Vec3(0, 0, 0), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
