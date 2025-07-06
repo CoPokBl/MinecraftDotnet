@@ -89,7 +89,7 @@ public abstract class PlayerConnection : MinecraftConnection {
     /// </summary>
     /// <param name="msg">The message to send to the client.</param>
     /// <remarks>This packet works in all regular connection states (login/config/play), so it can be used at any time to disconnect the client.</remarks>
-    public async Task Kick(TextComponent msg) {
+    public void Kick(TextComponent msg) {
         if (State is ConnectionState.None or ConnectionState.Status) {
             throw new Exception("Cannot kick a player that is not in either play, login, or config states.");
         }
@@ -105,7 +105,7 @@ public abstract class PlayerConnection : MinecraftConnection {
                 Reason = msg
             };
         }
-        await SendPacket(packet);
+        SendPacket(packet);
         Disconnect();
     }
 
@@ -120,7 +120,7 @@ public abstract class PlayerConnection : MinecraftConnection {
             throw new ConnectionStateException(ConnectionState.Login, State, "Connection must be in login state to enable compression.");
         }
 
-        await SendPacket(new ClientBoundSetCompressionPacket {
+        SendPacket(new ClientBoundSetCompressionPacket {
             Threshold = minSize
         });
         CompressionThreshold = minSize;
@@ -141,7 +141,7 @@ public abstract class PlayerConnection : MinecraftConnection {
         // get public key encoded in ASN.1 DER format
         byte[] publicKey = rsa.ExportSubjectPublicKeyInfo();
         byte[] verifyToken = RandomNumberGenerator.GetBytes(4);
-        await SendPacket(new ClientBoundEncryptionRequestPacket {
+        SendPacket(new ClientBoundEncryptionRequestPacket {
             ServerId = "dotnet",
             ShouldAuthenticate = requestAuthentication,
             PublicKey = publicKey,
@@ -174,7 +174,7 @@ public abstract class PlayerConnection : MinecraftConnection {
         });
     }
 
-    public override Task SendPacket(MinecraftPacket packet) {
+    public override void SendPacket(MinecraftPacket packet) {
         PacketSendingEvent e = new() {
             Connection = this,
             Packet = packet
@@ -182,10 +182,10 @@ public abstract class PlayerConnection : MinecraftConnection {
         Events.CallEvent(e);
 
         if (e.Cancelled) {
-            return Task.CompletedTask;
+            return;
         }
         
         // Send it
-        return SendPacketInternal(packet);
+        SendPacketInternal(packet);
     }
 }

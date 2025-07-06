@@ -48,7 +48,7 @@ public class ProxiedConnection : ITaggable {
                 switch (e.Packet) {
                     // STATUS
                     case ServerBoundStatusRequestPacket: {
-                        await Player.SendPacket(new ClientBoundStatusResponsePacket {
+                        Player.SendPacket(new ClientBoundStatusResponsePacket {
                             Description = TextComponent.Text("PROXY LESSGO"),
                             MaxPlayers = 20,
                             OnlinePlayers = 1,
@@ -62,7 +62,7 @@ public class ProxiedConnection : ITaggable {
                     case ServerBoundLoginStartPacket ls: {
                         _loginStartPacket = ls;
                         await e.Connection.SetCompression(64);
-                        await e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
+                        e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
                             Uuid = ls.Uuid,
                             Username = ls.Name
                         });
@@ -121,7 +121,7 @@ public class ProxiedConnection : ITaggable {
             });
             
             // We need to be in configuration state to join a server
-            await Player.SendPacket(new ClientBoundStartConfigurationPacket());
+            Player.SendPacket(new ClientBoundStartConfigurationPacket());
             
             Console.WriteLine("Waiting for player to acknowledge configuration...");
             return;
@@ -132,7 +132,7 @@ public class ProxiedConnection : ITaggable {
 
     private async Task PerformServerConnection(string ip, int port, bool transfer = false) {
         Server = await MinecraftClientUtils.ConnectToServer(ip, port);
-        await Server.SendPacket(new ServerBoundHandshakePacket {
+        Server.SendPacket(new ServerBoundHandshakePacket {
             Hostname = ip,
             Intent = transfer ? ServerBoundHandshakePacket.Intention.Transfer : ServerBoundHandshakePacket.Intention.Login,
             Port = (ushort)port,
@@ -140,7 +140,7 @@ public class ProxiedConnection : ITaggable {
         });
 
         Server.State = ConnectionState.Login;
-        await Server.SendPacket(_loginStartPacket.ThrowIfNull());
+        Server.SendPacket(_loginStartPacket.ThrowIfNull());
 
         Action cancelServerLoginListener = null!;
         Action finishedLogin = () => {
@@ -165,7 +165,7 @@ public class ProxiedConnection : ITaggable {
                 };
                 Proxy.Events.CallEvent(e);
 
-                Server!.SendPacket(resp).Wait();
+                Server!.SendPacket(resp);
                 Console.WriteLine("Send encryption response");
                 Server!.EncryptionEnabled = true;
                 break;

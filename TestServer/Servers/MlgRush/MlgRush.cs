@@ -252,9 +252,10 @@ public static class MlgRush {
                 });
 
                 TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed by {killer.Name}";
-                Entity lightning = new(74);
-                world.Spawn(lightning);
-                lightning.Teleport(e.Entity.Position);
+                // Entity lightning = new(74);
+                // world.Spawn(lightning);
+                // lightning.Teleport(e.Entity.Position);
+                world.StrikeLightning(e.NewPos);
                 BroadcastSound(820);  // lightning
                 BroadcastMsg(msg);
             });

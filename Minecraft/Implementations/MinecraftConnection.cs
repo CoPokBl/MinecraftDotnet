@@ -89,23 +89,23 @@ public abstract class MinecraftConnection : ITaggable {
     }
     
 #region packets
-    public async Task SendPackets(bool sequentially, params MinecraftPacket[] packets) {
+    public void SendPackets(bool sequentially, params MinecraftPacket[] packets) {
         foreach (MinecraftPacket packet in packets) {
             if (sequentially) {
-                await SendPacket(packet);
+                SendPacket(packet);
             }
             else {
-                _ = SendPacket(packet);
+                SendPacket(packet);
             }
         }
     }
     
-    public Task SendPackets(params MinecraftPacket[] packets) {
-        return SendPackets(true, packets);
+    public void SendPackets(params MinecraftPacket[] packets) {
+        SendPackets(true, packets);
     }
 
-    public virtual Task SendPacket(MinecraftPacket packet) {
-        return SendPacketInternal(packet);
+    public virtual void SendPacket(MinecraftPacket packet) {
+        SendPacketInternal(packet);
     }
 #endregion
     
@@ -130,8 +130,8 @@ public abstract class MinecraftConnection : ITaggable {
 
 #region implementation_methods
 
-    protected abstract Task SendPacketInternal(MinecraftPacket packet);
-        
+    protected abstract void SendPacketInternal(MinecraftPacket packet);
+    
     /// <summary>
     /// Tell the implementation to initialise the encryption streams.
     /// After encryption is enabled and the Encryptor and Decryptor are set,

@@ -1,4 +1,5 @@
 using ManagedServer.Entities.Types;
+using ManagedServer.Viewables;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -16,14 +17,14 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     
     public readonly List<Entity> Entities = [];
     private int _currentId = 9;
-    public static int NewNetId => Random.Shared.Next();//_currentId++;
+    public int NewNetId => Random.Shared.Next();//_currentId++;
 
     public async Task InformNewPlayer(PlayerConnection connection) {
         foreach (Entity entity in Entities) {
             if (!entity.ViewableRule(connection)) {
                 continue;
             }
-            await connection.SendPackets(entity.GenerateSpawnEntityPackets());
+            connection.SendPackets(entity.GenerateSpawnEntityPackets());
         }
     }
 

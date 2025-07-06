@@ -11,7 +11,7 @@ public class ServerListPingFeature(Func<PlayerConnection, ClientBoundStatusRespo
         server.Events.AddListener<PacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundStatusRequestPacket) return;
 
-            _ = e.Connection.SendPacket(pingResponseSupplier.Invoke(e.Connection)); // don't bother waiting
+            e.Connection.SendPacket(pingResponseSupplier.Invoke(e.Connection));
         });
     }
     

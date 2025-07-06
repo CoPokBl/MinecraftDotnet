@@ -62,7 +62,7 @@ internal class LoginProcedureFeature : IServerFeature {
                             await e.Connection.EnableEncryption();
                         }
                         else {
-                            await e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
+                            e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
                                 Uuid = ls.Uuid,
                                 Username = ls.Name
                             });
@@ -72,7 +72,7 @@ internal class LoginProcedureFeature : IServerFeature {
 
                     case ServerBoundEncryptionResponsePacket: {
                         (Guid, string) ls = e.Connection.GetTag(LoginInfoTag);
-                        await e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
+                        e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
                             Uuid = ls.Item1,
                             Username = ls.Item2
                         });
@@ -80,7 +80,7 @@ internal class LoginProcedureFeature : IServerFeature {
                     }
                 
                     case ServerBoundLoginAcknowledgedPacket: {
-                        await e.Connection.SendPacket(new ClientBoundKnownPacksPacket {
+                        e.Connection.SendPacket(new ClientBoundKnownPacksPacket {
                             Packs = _knownPacks
                         });
                         break;
@@ -92,7 +92,7 @@ internal class LoginProcedureFeature : IServerFeature {
                         // in reality we don't use any packs at all this is just so that
                         // the client joins.
                     
-                        _ = e.Connection.SendPackets(
+                        e.Connection.SendPackets(
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:dimension_type",
                                 Entries = new Dictionary<string, INbtTag?> {
@@ -228,7 +228,7 @@ internal class LoginProcedureFeature : IServerFeature {
                         packet.EntityId = pEntityId;
                     
                         // send the play login packet
-                        await e.Connection.SendPacket(packet);
+                        e.Connection.SendPacket(packet);
                     
                         // create a player object
                         PlayerEntity entity = new(e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {

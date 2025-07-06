@@ -6,4 +6,5 @@ public class MinecraftRegistry {
     public PacketRegistry Packets { get; init; } = new();
     public ItemRegistry Items { get; init; } = new();
     public DataComponentRegistry DataComponents { get; } = new();
+    public EntityTypeRegistry EntityTypes { get; init; } = new();
 }

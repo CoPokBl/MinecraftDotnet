@@ -1,3 +1,4 @@
+using Minecraft.Data.Entities;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 
@@ -8,7 +9,7 @@ public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
     
     public required int Id;
     public required Guid Uuid;
-    public required int EntityType;
+    public required IEntityType EntityType;
     public required Vec3 Position;
     public required Angle Pitch;
     public required Angle Yaw;
@@ -20,7 +21,7 @@ public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
         return w
             .WriteVarInt(Id)
             .WriteUuid(Uuid)
-            .WriteVarInt(EntityType)
+            .WriteVarInt(EntityType.ProtocolId)
             .WriteVec3(Position)
             .WriteAngle(Pitch)
             .WriteAngle(Yaw)
@@ -29,10 +30,10 @@ public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
             .WriteVec3(Velocity);
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSpawnEntityPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundSpawnEntityPacket {
         Id = r.ReadVarInt(),
         Uuid = r.ReadUuid(),
-        EntityType = r.ReadVarInt(),
+        EntityType = reg.EntityTypes[r.ReadVarInt()],
         Position = r.ReadVec3(),
         Pitch = r.ReadAngle(),
         Yaw = r.ReadAngle(),

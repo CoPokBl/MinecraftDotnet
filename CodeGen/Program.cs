@@ -62,6 +62,7 @@ RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
 RunStep("Packets", PacketCodeGen.CreatePacketEntries);
 RunStep("Items", ItemCodeGen.CreateItemEntries);
 RunStep("Data Components", DataComponentCodeGen.CreateComponentEntries);
+RunStep("Entity Types", EntityTypeCodeGen.CreateEntityTypeEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

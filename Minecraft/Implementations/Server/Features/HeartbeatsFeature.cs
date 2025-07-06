@@ -28,7 +28,7 @@ public class HeartbeatsFeature(int heartbeatDelay) : IServerFeature {
             Stopwatch stopwatch = Stopwatch.StartNew();
             
             foreach (PlayerConnection connection in _server.Connections.Where(connection => connection.State == ConnectionState.Play)) {
-                await connection.SendPacket(new ClientBoundKeepAlivePacket {
+                connection.SendPacket(new ClientBoundKeepAlivePacket {
                     Id = Random.Shared.Next()
                 });
             }

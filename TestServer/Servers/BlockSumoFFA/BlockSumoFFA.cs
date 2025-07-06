@@ -187,12 +187,12 @@ public static class BlockSumoFfa {
                 
             e.Entity.Teleport(spawn);
             if (e.Entity is PlayerEntity player) {
-                player.SetGameMode(GameMode.Spectator);
+                player.GameMode = GameMode.Spectator;
                 player.Connection.SendTitle(TextComponent.FromLegacyString("&c&lNoob"), TextComponent.Empty());
 
                 Timer t = null!;
                 t = new Timer(_ => {
-                    player.SetGameMode(GameMode.Survival);
+                    player.GameMode = GameMode.Survival;
                     player.Teleport(spawn);
                     timers.Remove(t);
                 }, null, TimeSpan.FromSeconds(2), Timeout.InfiniteTimeSpan);
@@ -201,9 +201,10 @@ public static class BlockSumoFfa {
             ((PlayerEntity)e.Entity).Connection.SendPacket(giveItemPacket);
                 
             TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed";
-            Entity lightning = new(74);
-            world.Spawn(lightning);
-            lightning.Teleport(e.Entity.Position);
+            // Entity lightning = new(74);
+            // world.Spawn(lightning);
+            // lightning.Teleport(e.Entity.Position);
+            world.StrikeLightning(e.NewPos);
             BroadcastSound(820);  // lightning
             BroadcastMsg(msg);
         });

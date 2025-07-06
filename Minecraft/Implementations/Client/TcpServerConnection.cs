@@ -26,13 +26,13 @@ public class TcpServerConnection(TcpClient client) : ServerConnection {
         _cipherStream = new CipherStream(NetStream, Decryptor, Encryptor);
     }
 
-    protected override Task SendPacketInternal(MinecraftPacket packet) {
+    protected override void SendPacketInternal(MinecraftPacket packet) {
         if (_cts.IsCancellationRequested) {
-            return Task.CompletedTask;
+            return;
         }
         
         lock (_sendLock) {
-            return Stream.WriteAsync(packet.Serialise(State, CompressionThreshold), _cts.Token).AsTask();
+            Stream.WriteAsync(packet.Serialise(State, CompressionThreshold), _cts.Token).AsTask();
         }
     }
     

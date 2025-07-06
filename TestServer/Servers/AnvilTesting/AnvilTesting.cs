@@ -9,6 +9,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
+using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
@@ -29,8 +30,11 @@ public static class AnvilTesting {
                 Description = "Anvil Testing Server",
                 PreventsChatReports = true
         }));
+        server.ViewDistance = 16;
 
-        World world = server.CreateWorld(new AnvilLoader("testanvil", VanillaRegistry.Data));
+        Console.WriteLine("Creating world...");
+        World world = server.CreateWorld(new SpawnCachedTerrainProvider(new AnvilLoader("testanvil", VanillaRegistry.Data)));
+        Console.WriteLine("World created.");
 
         Stopwatch sw = Stopwatch.StartNew();
         for (int i = 0; i < 1; i++) {

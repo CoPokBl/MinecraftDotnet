@@ -1,18 +1,22 @@
 using ManagedServer.Entities.Types;
+using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
+using Minecraft.Packets;
 using Minecraft.Registry;
 
 namespace ManagedServer;
 
-public class ManagedMinecraftServer : MinecraftServer, IViewable {
-    public MinecraftRegistry Registry = VanillaRegistry.Data;
+public class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience {
+    public MinecraftRegistry Registry = VanillaRegistry.Data;  // TODO: use this
     
     public readonly List<World> Worlds = [];
     public readonly List<PlayerEntity> Players = [];
+    
+    private readonly List<Timer> _timers = [];
     
     // Configurable stuff
     public int ViewDistance = 8;
@@ -46,6 +50,16 @@ public class ManagedMinecraftServer : MinecraftServer, IViewable {
         Worlds.Add(world);
         return world;
     }
+    
+    public void ScheduleTask(TimeSpan delay, Action action) {
+        Timer timer = null!;
+        timer = new Timer(_ => {
+            action();
+            // ReSharper disable once AccessToModifiedClosure
+            _timers.Remove(timer);
+        }, null, delay, Timeout.InfiniteTimeSpan);
+        _timers.Add(timer);
+    }
 
     public Task ListenTcp(int port, CancellationToken cancel) {
         TcpMinecraftListener listener = new(AddConnection, cancel);
@@ -54,5 +68,11 @@ public class ManagedMinecraftServer : MinecraftServer, IViewable {
 
     public PlayerEntity[] GetViewers() {
         return Players.ToArray();
+    }
+
+    public void SendPacket(MinecraftPacket packet) {
+        foreach (PlayerEntity player in Players) {
+            player.SendPacket(packet);
+        }
     }
 }

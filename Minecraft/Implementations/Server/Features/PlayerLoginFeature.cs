@@ -65,7 +65,7 @@ public class PlayerLoginFeature(
                     // in reality we don't use any packs at all this is just so that
                     // the client joins.
                     
-                    _ = e.Connection.SendPackets(
+                    e.Connection.SendPackets(
                         new ClientBoundRegistryDataPacket {
                             RegistryId = "minecraft:dimension_type",
                             Entries = new Dictionary<string, INbtTag?> {
@@ -204,22 +204,20 @@ public class PlayerLoginFeature(
                                 X = spawn.ChunkX,
                                 Z = spawn.ChunkZ
                             }
-                        ).ContinueWith(_ => {
-                            PlayerLoginEvent loginEvent = new() {
-                                Connection = e.Connection
-                            };
-                            e.Connection.Events.CallEventCatchErrors(loginEvent);
-                        });
+                        );
+                        PlayerLoginEvent loginEvent = new() {
+                            Connection = e.Connection
+                        };
+                        e.Connection.Events.CallEventCatchErrors(loginEvent);
                     }
                     else {
                         e.Connection.SendPackets(
                             _loginPacketProvider.Invoke(e.Connection)
-                        ).ContinueWith(_ => {
-                            PlayerLoginEvent loginEvent = new() {
-                                Connection = e.Connection
-                            };
-                            e.Connection.Events.CallEventCatchErrors(loginEvent);
-                        });
+                        );
+                        PlayerLoginEvent loginEvent = new() {
+                            Connection = e.Connection
+                        };
+                        e.Connection.Events.CallEventCatchErrors(loginEvent);
                     }
                     break;
                 }

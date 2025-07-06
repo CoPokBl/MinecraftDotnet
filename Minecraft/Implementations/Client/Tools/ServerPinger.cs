@@ -13,14 +13,14 @@ public class ServerPinger(string host, int port = 25565) {
         Console.WriteLine("a");
         ServerConnection con = await MinecraftClientUtils.ConnectToServer(host, port);
         Console.WriteLine("b");
-        await con.SendPacket(new ServerBoundHandshakePacket {
+        con.SendPacket(new ServerBoundHandshakePacket {
             Hostname = host,Intent = ServerBoundHandshakePacket.Intention.Status,
             Port = (ushort)port,
             ProtocolVersion = 770  // 1.21.5
         });
         Console.WriteLine("c");
         con.State = ConnectionState.Status;
-        await con.SendPacket(new ServerBoundStatusRequestPacket());
+        con.SendPacket(new ServerBoundStatusRequestPacket());
         Console.WriteLine("d");
         MinecraftPacket pingResp = await con.WaitForPacket();
         Console.WriteLine("e");

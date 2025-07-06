@@ -1,6 +1,8 @@
 using ManagedServer.Events;
+using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Packets;
@@ -11,11 +13,17 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Entities.Types;
 
-public class PlayerEntity : Entity {
-    public string Name;
-    public GameMode GameMode;
-
-    public PlayerConnection Connection;
+public class PlayerEntity : Entity, IAudience {
+    public readonly string Name;
+    public readonly PlayerConnection Connection;
+    
+    public GameMode GameMode {
+        get => _gameMode;
+        set {
+            _gameMode = value;
+            UpdateGameMode();
+        }
+    }
 
     private Func<PlayerConnection, bool> _playerViewableRule = _ => true;
     public Func<PlayerConnection, bool> PlayerViewableRule {
@@ -25,11 +33,38 @@ public class PlayerEntity : Entity {
             UpdateViewers();
         }
     }
+    
+    public int Level {
+        get => _level;
+        set {
+            _level = value;
+            SendPacket(new ClientBoundSetExperiencePacket {
+                ExperienceProgress = 0f,
+                Level = _level,
+                TotalExperience = 0
+            });
+        }
+    }
+    
+    public Entity? CameraEntity {
+        get => _cameraEntity;
+        set {
+            _cameraEntity = value;
+            SendPacket(new ClientBoundSetCameraPacket {
+                EntityId = value?.NetId ?? NetId
+            });
+        }
+    }
 
     private int _waitingTeleport = -1;
+    
+    // backend fields
+    private Entity? _cameraEntity = null;
+    private int _level;
+    private GameMode _gameMode;
 
     // Listen to movement packets so we can do stuff
-    public PlayerEntity(PlayerConnection connection, string name) : base(148) {
+    public PlayerEntity(PlayerConnection connection, string name) : base(EntityType.Player) {
         Name = name;
         Connection = connection;
         ViewableRule = con => con != Connection && PlayerViewableRule(con);
@@ -132,13 +167,12 @@ public class PlayerEntity : Entity {
         });
     }
     
-    public void SetGameMode(GameMode mode) {
-        GameMode = mode;
-        Connection.SendPacket(ClientBoundGameEventPacket.ChangeGameMode(mode));
-        SendToViewers(new ClientBoundPlayerInfoUpdatePacket {
+    public void UpdateGameMode() {
+        Connection.SendPacket(ClientBoundGameEventPacket.ChangeGameMode(GameMode));
+        SendToSelfAndViewers(new ClientBoundPlayerInfoUpdatePacket {
             Data = new ClientBoundPlayerInfoUpdatePacket.PlayerData(ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateGameMode)
                 .WithPlayer(Uuid, new ClientBoundPlayerInfoUpdatePacket.PlayerData.UpdateGameMode {
-                    GameMode = mode
+                    GameMode = GameMode
                 })
         });
     }
@@ -173,5 +207,9 @@ public class PlayerEntity : Entity {
             }
         ];
         return arr.Combine(base.GenerateSpawnEntityPackets()).ToArray();
+    }
+
+    public void SendPacket(MinecraftPacket packet) {
+        Connection.SendPacket(packet);
     }
 }

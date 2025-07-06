@@ -1,8 +1,9 @@
 using System.Diagnostics;
 using ManagedServer.Entities.Events;
+using ManagedServer.Viewables;
 using ManagedServer.Worlds;
+using Minecraft.Data.Entities;
 using Minecraft.Implementations.Events;
-using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Tags;
@@ -13,9 +14,9 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Entities.Types;
 
-public class Entity(int type) : IViewable, ITaggable {
+public class Entity(IEntityType type) : IViewable, ITaggable {
     public Guid Uuid = Guid.NewGuid();
-    public int Type = type;
+    public readonly IEntityType Type = type;
     public Vec3 Position = Vec3.Zero;
     public Angle Pitch = Angle.Zero;
     public Angle Yaw = Angle.Zero;
@@ -33,7 +34,7 @@ public class Entity(int type) : IViewable, ITaggable {
     public EventNode<IServerEvent> Events = new();
     public readonly Dictionary<string, object?> Data = new();
 
-    private bool _crouching = false;
+    private bool _crouching;
     public bool Crouching {
         get => _crouching;
 
@@ -155,9 +156,6 @@ public class Entity(int type) : IViewable, ITaggable {
     }
 
     public void SendToViewers(params MinecraftPacket[] packets) {
-        if (Manager == null) {
-            throw new Exception("Entity must be in a world.");
-        }
         Manager?.SendPacketsFor(this, packets);
     }
     

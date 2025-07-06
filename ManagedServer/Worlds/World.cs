@@ -3,6 +3,8 @@ using System.Diagnostics;
 using ManagedServer.Entities;
 using ManagedServer.Entities.Events;
 using ManagedServer.Entities.Types;
+using ManagedServer.Viewables;
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -16,7 +18,7 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Worlds;
 
-public class World : IViewable {
+public class World : IAudience {
     // State stuff
     public readonly List<PlayerEntity> Players = [];
     public readonly EventNode<IServerEvent> Events;
@@ -30,6 +32,20 @@ public class World : IViewable {
     private readonly int _viewDistance;
     private readonly int _packetsPerTick;
     private readonly int _tickDelayMs;
+    
+    // Props
+    private int _time;
+    public int Time {
+        get => _time;
+        set {
+            _time = value;
+            SendPacket(new ClientBoundUpdateTimePacket {
+                ClientAdvanceTime = false,
+                TimeOfDay = _time,
+                WorldAge = _time
+            });
+        }
+    }
 
     internal World(EventNode<IServerEvent> baseEventNode, ITerrainProvider provider, int viewDistance = 8, int packetsPerTick = 10, int tickDelayMs = 100) {
         _provider = provider;
@@ -48,12 +64,11 @@ public class World : IViewable {
     // Some fun constants
     private int UnloadDistance => _viewDistance + UnloadDistanceMod;
     private const bool Benchmark = true;
+    private const bool Debug = false;
     private const int UnloadDistanceMod = 1;  // Used to reduce the number of packets needed when travelling back and forth
 
-    public void EnsureServer() {
-        if (Server == null) {
-            throw new Exception("Add");
-        }
+    private void Log(string msg) {
+        if (Debug) Console.WriteLine("[WORLD] " + msg);
     }
     
     public void AddFeature(IWorldFeature feature) {
@@ -68,8 +83,8 @@ public class World : IViewable {
         connection.SendPacket(new ClientBoundGameEventPacket {
             Event = GameEvent.StartWaitingForLevelChunks,
             Value = 0f
-        }).ContinueWith(_ => {
-            Queue<MinecraftPacket> waitingPackets = new();
+        });
+        Queue<MinecraftPacket> waitingPackets = new();
             connection.SetTag(WaitingPacketsTag, waitingPackets);
 
             bool disconnected = false;
@@ -92,8 +107,8 @@ public class World : IViewable {
                     }
 
                     // Console.WriteLine($"Sending {packets.Count} packets for terrain");
-                    await connection.SendPackets(false, packets.ToArray());
-                    Console.WriteLine("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
+                    connection.SendPackets(false, packets.ToArray());
+                    Log("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
                 }
             });
             Action cancelAction = null!;
@@ -113,7 +128,6 @@ public class World : IViewable {
                 HandlePlayerMove(pe.Connection, chunkPos);
             });
             player.Connection.SetTag(CancelListenersActionTag, cancelAction);
-        });
         Players.Add(player);
     }
 
@@ -166,19 +180,19 @@ public class World : IViewable {
         if (neededPackets.Count == 0) return;  // don't bother if nothing changed
         
         if (Benchmark) {
-            Console.WriteLine($"Terrain packet generation took {sw.ElapsedMilliseconds}ms, unloading: {unloadingBench}ms");
+            Log($"Terrain packet generation took {sw.ElapsedMilliseconds}ms, unloading: {unloadingBench}ms");
         }
         
         SetLoadedChunks(connection, loaded);
         
-        // neededPackets.Add(new ClientBoundSetCenterChunkPacket {
-        //     X = chunkPos.X,
-        //     Z = chunkPos.Z
-        // });
-        connection.SendPacket(new ClientBoundSetCenterChunkPacket {
+        neededPackets.Add(new ClientBoundSetCenterChunkPacket {
             X = chunkPos.X,
             Z = chunkPos.Z
         });
+        // connection.SendPacket(new ClientBoundSetCenterChunkPacket {
+        //     X = chunkPos.X,
+        //     Z = chunkPos.Z
+        // });
         // Console.WriteLine("Center changed to " + chunkPos);
         IEnumerable<MinecraftPacket> orderedPackets = neededPackets.OrderBy(p => {
             if (p is ClientBoundSetCenterChunkPacket) return 0;  // always do this first, otherwise we could get issues
@@ -266,7 +280,23 @@ public class World : IViewable {
         }
     }
 
-    public PlayerEntity[] GetViewers() {
-        return Players.ToArray();
+    public void StrikeLightning(Vec3 pos) {
+        Entity lightning = new(EntityType.LightningBolt) {
+            Position = pos,
+            Yaw = Angle.Zero,
+            Pitch = Angle.Zero,
+            NetId = Entities.NewNetId
+        };
+        Spawn(lightning);
+        
+        Server!.ScheduleTask(TimeSpan.FromSeconds(2), () => {
+            lightning.Despawn();
+        });
+    }
+
+    public void SendPacket(MinecraftPacket packet) {
+        foreach (PlayerEntity player in Players) {
+            player.SendPacket(packet);
+        }
     }
 }

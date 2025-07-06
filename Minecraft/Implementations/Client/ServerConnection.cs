@@ -60,7 +60,7 @@ public abstract class ServerConnection : MinecraftConnection {
         };
 
         if (sendResponse) {
-            await SendPacket(packet);
+            SendPacket(packet);
         }
 
         EncryptionEnabled = true;
@@ -86,17 +86,17 @@ public abstract class ServerConnection : MinecraftConnection {
         CompressionThreshold = minSize;
     }
 
-    public override Task SendPacket(MinecraftPacket packet) {
+    public override void SendPacket(MinecraftPacket packet) {
         PacketSendingEvent e = new() {
             Packet = packet
         };
         Events.CallEvent(e);
 
         if (e.Cancelled) {
-            return Task.CompletedTask;
+            return;
         }
         
         // Send it
-        return SendPacketInternal(packet);
+        SendPacketInternal(packet);
     }
 }

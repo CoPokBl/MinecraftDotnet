@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net.Sockets;
 using Minecraft.Packets;
 using Org.BouncyCastle.Crypto.IO;
@@ -17,24 +16,25 @@ public class TcpPlayerConnection(TcpClient client) : PlayerConnection, IDisposab
         _cipherStream = new CipherStream(NetStream, Decryptor, Encryptor);
     }
 
-    protected override Task SendPacketInternal(MinecraftPacket packet) {
+    protected override void SendPacketInternal(MinecraftPacket packet) {
         if (_cts.IsCancellationRequested) {
-            return Task.CompletedTask;
+            return;
         }
         
         if (!client.Connected) {
             Disconnect();
-            return Task.CompletedTask;
+            return;
         }
 
-        Stopwatch sw = Stopwatch.StartNew();
+        // Stopwatch sw = Stopwatch.StartNew();
         byte[] buff = packet.Serialise(State, CompressionThreshold);
         // Console.WriteLine("Serialised packet in " + sw.ElapsedMilliseconds + "ms, size: " + buff.Length);
         lock (_sendLock) {
             // packet.WriteTo(Stream, State, CompressionThreshold);
-            return Stream.WriteAsync(buff, _cts.Token).AsTask();
+            // Stopwatch ssw = Stopwatch.StartNew();
+            Stream.Write(buff);
+            // Console.WriteLine("Wrote packet in " + ssw.ElapsedMilliseconds + "ms, size: " + buff.Length);
         }
-        // return Task.CompletedTask;
     }
     
     public override async Task HandlePackets() {
