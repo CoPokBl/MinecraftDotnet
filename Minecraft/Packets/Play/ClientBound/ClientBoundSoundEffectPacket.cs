@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Minecraft.Data.Sounds;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
@@ -7,13 +8,13 @@ namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:sound";
-    
+
     /// <summary>
     /// The numerical sound ID. This value is ignored if <see cref="Event"/> is not null.
     /// This should be the actually sound ID, it is encoded (has 1 added to it) automatically
     /// to handle the transmission format.
     /// </summary>
-    public int Id;
+    public ISoundType? Type;
     public SoundEvent? Event;
     public required SoundCategory Category;
     public required Vec3 Pos;
@@ -25,7 +26,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
     /// Initialise a new instance of the packet with a <see cref="SoundEvent"/>.
     /// <p/>
     /// To use a numerical ID instead of a <see cref="SoundEvent"/> see
-    /// <see cref="ClientBoundSoundEffectPacket(int, SoundCategory, Vec3, float, float, long)"/>.
+    /// <see cref="ClientBoundSoundEffectPacket(ISoundType, SoundCategory, Vec3, float, float, long)"/>.
     /// </summary>
     /// <param name="soundEvent">The sound event.</param>
     /// <param name="category">The category.</param>
@@ -34,26 +35,30 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
     /// <param name="pitch">The pitch.</param>
     /// <param name="seed">Seed to use for random effects by the Notchian client.</param>
     [SetsRequiredMembers]
-    public ClientBoundSoundEffectPacket(SoundEvent soundEvent, SoundCategory category, Vec3 pos, float volume, float pitch, long seed) :
-        this(0, category, pos, volume, pitch, seed) {
+    public ClientBoundSoundEffectPacket(SoundEvent soundEvent, SoundCategory category, Vec3 pos, float volume, float pitch, long seed) : this() {
         Event = soundEvent;
+        Category = category;
+        Pos = pos;
+        Volume = volume;
+        Pitch = pitch;
+        Seed = seed;
     }
 
     /// <summary>
-    /// Initialise a new instance of the packet with a numerical sound ID.
+    /// Initialise a new instance of the packet with a sound type.
     /// <p/>
     /// To use a <see cref="SoundEvent"/> instead of a numerical ID see
     /// <see cref="ClientBoundSoundEffectPacket(SoundEvent, SoundCategory, Vec3, float, float, long)"/>.
     /// </summary>
-    /// <param name="id">The sound ID.</param>
+    /// <param name="type">The type of the sound.</param>
     /// <param name="category">The category.</param>
     /// <param name="pos">The position to play the sound at.</param>
     /// <param name="volume">The volume, from 0.0 to 1.0.</param>
     /// <param name="pitch">The pitch.</param>
     /// <param name="seed">Seed to use for random effects by the Notchian client.</param>
     [SetsRequiredMembers]
-    public ClientBoundSoundEffectPacket(int id, SoundCategory category, Vec3 pos, float volume, float pitch, long seed) : this() {
-        Id = id;
+    public ClientBoundSoundEffectPacket(ISoundType type, SoundCategory category, Vec3 pos, float volume, float pitch, long seed) : this() {
+        Type = type;
         Category = category;
         Pos = pos;
         Volume = volume;
@@ -66,7 +71,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
             w.WriteVarInt(0)
                 .Write(Event);
         }
-        else w.WriteVarInt(Id + 1);
+        else w.WriteVarInt(Type.ThrowIfNull().ProtocolId + 1);
 
         int x = (int) Pos.X * (1 << 3);
         int y = (int) Pos.Y * (1 << 3);
@@ -81,16 +86,16 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
             .WriteLong(Seed);
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => {
         int id = r.ReadVarInt();
         SoundEvent? ev = null;
         if (id == 0) {
-            ev = SoundEvent.Deserialise(r);
+            ev = SoundEvent.Deserialise(r, reg);
         }
         else id--;
         
         return new ClientBoundSoundEffectPacket {
-            Id = id,
+            Type = reg.SoundTypes[id],
             Event = ev,
             Category = (SoundCategory)r.ReadVarInt(),
             Pos = new Vec3(

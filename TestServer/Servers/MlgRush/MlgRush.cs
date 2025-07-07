@@ -7,6 +7,7 @@ using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Particles;
+using Minecraft.Data.Sounds;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Features;
@@ -175,13 +176,13 @@ public static class MlgRush {
                 c2.SendPacket(packet);
             }
 
-            void BroadcastSound(int id) {
+            void BroadcastSound(ISoundType id) {
                 foreach (PlayerEntity player in world.Players) {
                     player.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
                         Category = SoundCategory.Master,
                         EntityId = player.NetId,
                         Event = null,
-                        Id = id,
+                        Type = id,
                         Pitch = 1f,
                         Volume = 1f,
                         Seed = 0L
@@ -245,7 +246,7 @@ public static class MlgRush {
                 killer.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
                     Category = SoundCategory.Players,
                     EntityId = e.Entity.NetId,
-                    Id = 525,  // sound id for xp level up
+                    Type = SoundType.PlayerLevelup,  // sound id for xp level up
                     Volume = 1f,
                     Pitch = 1f,
                     Seed = 0L
@@ -256,7 +257,7 @@ public static class MlgRush {
                 // world.Spawn(lightning);
                 // lightning.Teleport(e.Entity.Position);
                 world.StrikeLightning(e.NewPos);
-                BroadcastSound(820);  // lightning
+                BroadcastSound(SoundType.LightningBoltThunder);  // lightning
                 BroadcastMsg(msg);
             });
             
@@ -318,8 +319,8 @@ public static class MlgRush {
                         .With(TextComponent.Text(" has lost their bed!").WithBold(false).WithColor(p1Bed ? TextColor.Aqua : TextColor.Red)),
                     TextComponent.Empty());
                 
-                BroadcastSound(496);  // dragon growl
-                BroadcastSound(544);  // fire extinguish
+                BroadcastSound(SoundType.EnderDragonGrowl);
+                BroadcastSound(SoundType.FireExtinguish);
             });
             
         }

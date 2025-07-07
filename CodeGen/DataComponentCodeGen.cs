@@ -13,8 +13,6 @@ public static class DataComponentCodeGen {
         namespace Minecraft.Data.Generated;
 
         // Generated using the CodeGen project. Do not edit manually.
-        //
-        // Last updated: {date}
         public static class DataComponent {
 
         """;

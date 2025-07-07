@@ -7,4 +7,5 @@ public class MinecraftRegistry {
     public ItemRegistry Items { get; init; } = new();
     public DataComponentRegistry DataComponents { get; } = new();
     public EntityTypeRegistry EntityTypes { get; init; } = new();
+    public SoundTypeRegistry SoundTypes { get; init; } = new();
 }

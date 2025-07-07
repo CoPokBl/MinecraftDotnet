@@ -4,8 +4,6 @@ using Minecraft.Data.Particles.Types;
 namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-06
 public static class Particle {
     public static readonly SimpleParticle AngryVillager = new("minecraft:angry_villager", 0);
     public static readonly SimpleParticle Ash = new("minecraft:ash", 81);

@@ -1,6 +1,7 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Worlds;
 using Minecraft;
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
@@ -57,7 +58,7 @@ public class SimpleCombatFeature(int attackCooldown = -1) : IWorldFeature {
             MinecraftPacket soundPacket = new ClientBoundEntitySoundEffectPacket {
                 Category = SoundCategory.Players,
                 EntityId = entity.NetId,
-                Id = 1149, // sound id for "player.attack"
+                Type = SoundType.PlayerAttackNodamage, // sound id for "player.attack"
                 Volume = 1f,
                 Pitch = 1f,
                 Seed = 0L

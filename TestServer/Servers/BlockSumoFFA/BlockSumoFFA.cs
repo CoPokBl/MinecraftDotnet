@@ -8,6 +8,7 @@ using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
+using Minecraft.Data.Sounds;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
@@ -103,13 +104,13 @@ public static class BlockSumoFfa {
             return blocks[Random.Shared.Next(blocks.Length)];
         }, 5).Register(world);
         
-        void BroadcastSound(int id) {
+        void BroadcastSound(ISoundType id) {
             foreach (PlayerEntity player in world.Players) {
                 player.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
                     Category = SoundCategory.Master,
                     EntityId = player.NetId,
                     Event = null,
-                    Id = id,
+                    Type = id,
                     Pitch = 1f,
                     Volume = 1f,
                     Seed = 0L
@@ -205,7 +206,7 @@ public static class BlockSumoFfa {
             // world.Spawn(lightning);
             // lightning.Teleport(e.Entity.Position);
             world.StrikeLightning(e.NewPos);
-            BroadcastSound(820);  // lightning
+            BroadcastSound(SoundType.LightningBoltThunder);  // lightning
             BroadcastMsg(msg);
         });
         

@@ -7,6 +7,7 @@ using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Particles;
+using Minecraft.Data.Sounds;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Features;
@@ -176,13 +177,13 @@ public static class BlockSumo {
                 c2.SendPacket(packet);
             }
 
-            void BroadcastSound(int id) {
+            void BroadcastSound(ISoundType sound) {
                 foreach (PlayerEntity player in world.Players) {
                     player.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
                         Category = SoundCategory.Master,
                         EntityId = player.NetId,
                         Event = null,
-                        Id = id,
+                        Type = sound,
                         Pitch = 1f,
                         Volume = 1f,
                         Seed = 0L
@@ -319,8 +320,8 @@ public static class BlockSumo {
                         .With(TextComponent.Text(" has lost their bed!").WithBold(false).WithColor(p1Bed ? TextColor.Aqua : TextColor.Red)),
                     TextComponent.Empty());
                 
-                BroadcastSound(496);  // dragon growl
-                BroadcastSound(544);  // fire extinguish
+                BroadcastSound(SoundType.EnderDragonGrowl);
+                BroadcastSound(SoundType.FireExtinguish);
             });
             
         }

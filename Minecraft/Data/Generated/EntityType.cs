@@ -3,8 +3,6 @@ using Minecraft.Data.Entities;
 namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-06
 public static class EntityType {
     public static SimpleEntityType AcaciaBoat => new("minecraft:acacia_boat", 0);
     public static SimpleEntityType AcaciaChestBoat => new("minecraft:acacia_chest_boat", 1);

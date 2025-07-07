@@ -12,8 +12,6 @@ using Minecraft.Data.Particles.Types;
 namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: {date}
 public static class Particle {
 
 """;

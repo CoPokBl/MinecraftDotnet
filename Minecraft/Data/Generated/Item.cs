@@ -3,8 +3,6 @@ using Minecraft.Data.Items;
 namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-06
 public static class Item {
     public static SimpleItem AcaciaBoat => new("minecraft:acacia_boat", 818);
     public static SimpleItem AcaciaButton => new("minecraft:acacia_button", 718);

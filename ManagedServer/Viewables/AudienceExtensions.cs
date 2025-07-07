@@ -1,6 +1,8 @@
 using Minecraft.Data.Particles;
+using Minecraft.Data.Sounds;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
 
@@ -59,6 +61,17 @@ public static class AudienceExtensions {
             LongDistance = longDistance,
             AlwaysVisible = alwaysVisible,
             Offset = offset
+        });
+    }
+
+    public static void PlaySound(this IAudience audience, ISoundType type, Vec3 pos, SoundCategory category = SoundCategory.Master, float volume = 1f) {
+        audience.SendPacket(new ClientBoundSoundEffectPacket {
+            Category = category,
+            Type = type,
+            Pos = pos,
+            Volume = volume,
+            Seed = Random.Shared.NextInt64(),
+            Pitch = 1f
         });
     }
 }

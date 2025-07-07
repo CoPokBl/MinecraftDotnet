@@ -5,8 +5,6 @@ using Minecraft.Data.Generated.BlockTypes;
 namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-06
 public static class Block {
     public static readonly AcaciaButtonBlock AcaciaButton = new("minecraft:acacia_button", AttachDirection.Wall, Direction.North, false);
     public static readonly AcaciaDoorBlock AcaciaDoor = new("minecraft:acacia_door", Direction.North, BlockHalf.Lower, LeftRight.Left, false, false);

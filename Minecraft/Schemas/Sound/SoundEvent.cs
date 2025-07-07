@@ -1,16 +1,19 @@
+using Minecraft.Data.Sounds;
+using Minecraft.Registry;
+
 namespace Minecraft.Schemas.Sound;
 
-public record SoundEvent(string Identifier, float? FixedRange) : IWritable {
+public record SoundEvent(ISoundType Type, float? FixedRange) : IWritable {
     
     public void Write(DataWriter writer) {
         writer
-            .WriteString(Identifier)
+            .Write(Type.Identifier)
             .WritePrefixedOptional(FixedRange, (f, wr) => wr.WriteFloat(f));
     }
 
-    public static SoundEvent Deserialise(DataReader reader) {
+    public static SoundEvent Deserialise(DataReader reader, MinecraftRegistry registry) {
         return new SoundEvent(
-            reader.ReadString(),
+            registry.SoundTypes[reader.ReadString()],
             reader.ReadPrefixedOptional(re => re.ReadFloat()));
     }
 }

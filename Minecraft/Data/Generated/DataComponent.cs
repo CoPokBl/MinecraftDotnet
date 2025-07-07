@@ -4,8 +4,6 @@ using Minecraft.Data.Components;
 namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: 2025-07-06
 public static class DataComponent {
     public static readonly AttributeModifiersComponent AttributeModifiers = AttributeModifiersComponent.Default;
     public static readonly CanBreakComponent CanBreak = CanBreakComponent.Default;

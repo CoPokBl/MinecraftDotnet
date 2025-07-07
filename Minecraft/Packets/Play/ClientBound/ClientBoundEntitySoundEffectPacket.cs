@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Minecraft.Data.Sounds;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
 
@@ -12,7 +13,7 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
     /// This should be the actually sound ID, it is encoded (has 1 added to it) automatically
     /// to handle the transmission format.
     /// </summary>
-    public int Id;
+    public ISoundType? Type;
     public SoundEvent? Event;
     public required SoundCategory Category;
     public required int EntityId;
@@ -24,7 +25,7 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
     /// Initialise a new instance of the packet with a <see cref="SoundEvent"/>.
     /// <p/>
     /// To use a numerical ID instead of a <see cref="SoundEvent"/> see
-    /// <see cref="ClientBoundEntitySoundEffectPacket(int, SoundCategory, int, float, float, long)"/>.
+    /// <see cref="ClientBoundEntitySoundEffectPacket(ISoundType, SoundCategory, int, float, float, long)"/>.
     /// </summary>
     /// <param name="soundEvent">The sound event.</param>
     /// <param name="category">The category.</param>
@@ -33,9 +34,13 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
     /// <param name="pitch">The pitch.</param>
     /// <param name="seed">Seed to use for random effects by the Notchian client.</param>
     [SetsRequiredMembers]
-    public ClientBoundEntitySoundEffectPacket(SoundEvent soundEvent, SoundCategory category, int entityId, float volume, float pitch, long seed) :
-        this(0, category, entityId, volume, pitch, seed) {
+    public ClientBoundEntitySoundEffectPacket(SoundEvent soundEvent, SoundCategory category, int entityId, float volume, float pitch, long seed) : this() {
         Event = soundEvent;
+        EntityId = entityId;
+        Category = category;
+        Volume = volume;
+        Pitch = pitch;
+        Seed = seed;
     }
 
     /// <summary>
@@ -44,15 +49,15 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
     /// To use a <see cref="SoundEvent"/> instead of a numerical ID see
     /// <see cref="ClientBoundEntitySoundEffectPacket(SoundEvent, SoundCategory, int, float, float, long)"/>.
     /// </summary>
-    /// <param name="id">The sound ID.</param>
+    /// <param name="type">The sound type.</param>
     /// <param name="category">The category.</param>
     /// <param name="entityId">The network ID of the entity that plays the sound.</param>
     /// <param name="volume">The volume, from 0.0 to 1.0.</param>
     /// <param name="pitch">The pitch.</param>
     /// <param name="seed">Seed to use for random effects by the Notchian client.</param>
     [SetsRequiredMembers]
-    public ClientBoundEntitySoundEffectPacket(int id, SoundCategory category, int entityId, float volume, float pitch, long seed) : this() {
-        Id = id;
+    public ClientBoundEntitySoundEffectPacket(ISoundType type, SoundCategory category, int entityId, float volume, float pitch, long seed) : this() {
+        Type = type;
         EntityId = entityId;
         Category = category;
         Volume = volume;
@@ -63,10 +68,10 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
     protected override DataWriter WriteData(DataWriter w) {
         if (Event != null) {
             w.WriteVarInt(0)
-                .WriteString(Event.Identifier)
+                .WriteString(Event.Type.Identifier)
                 .WritePrefixedOptional(Event.FixedRange, (f, writer) => writer.WriteFloat(f));
         }
-        else w.WriteVarInt(Id + 1);
+        else w.WriteVarInt(Event!.Type.ProtocolId + 1);
 
         return w.WriteVarInt((int)Category)
             .WriteVarInt(EntityId)
@@ -75,16 +80,16 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
             .WriteLong(Seed);
     }
 
-    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => {
         int id = r.ReadVarInt();
         SoundEvent? ev = null;
         if (id == 0) {
-            ev = SoundEvent.Deserialise(r);
+            ev = SoundEvent.Deserialise(r, reg);
         }
         else id--;
 
         return new ClientBoundEntitySoundEffectPacket {
-            Id = id,
+            Type = reg.SoundTypes[id],
             Event = ev,
             Category = (SoundCategory)r.ReadVarInt(),
             EntityId = r.ReadVarInt(),

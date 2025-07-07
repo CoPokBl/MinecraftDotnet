@@ -11,8 +11,6 @@ using Minecraft.Data.Items;
 namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
-//
-// Last updated: {date}
 public static class Item {
 
 """;
