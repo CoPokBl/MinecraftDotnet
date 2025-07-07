@@ -1,8 +1,8 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using ManagedServer.Entities;
-using ManagedServer.Entities.Events;
 using ManagedServer.Entities.Types;
+using ManagedServer.Events;
 using ManagedServer.Viewables;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
@@ -25,6 +25,7 @@ public class World : IAudience {
     public readonly EventNode<IServerEvent> Events;
     public readonly EntityManager Entities;
     public required ManagedMinecraftServer? Server;
+    public bool Immutable { get; set; } = false;
 
     private readonly ConcurrentDictionary<IVec2, ChunkData> _chunks = new();
     
@@ -231,15 +232,28 @@ public class World : IAudience {
     }
 
     public void SetBlock(IVec3 pos, IBlock block) {
+        if (Immutable) {
+            throw new InvalidOperationException("World is immutable, cannot set block.");
+        }
         IVec2 chunk = GetChunkPos(pos);
         LoadChunk(chunk);
-        RetrieveChunk(chunk)!.SetBlock(ProtocolToGamePos(pos), block);
+        RetrieveChunk(chunk)!.SetBlock(ToChunkLocalPos(GameToProtocolPos(pos)), block);
+        
+        SendBlockUpdate(pos, this);
+    }
+    
+    private static IVec3 ToChunkLocalPos(IVec3 pos) {
+        return new IVec3((pos.X % 16 + 16) % 16, pos.Y, (pos.Z % 16 + 16) % 16);
+    }
+
+    private static int Abs(int a) {
+        return a < 0 ? -a : a;
     }
     
     public IBlock GetBlock(IVec3 pos) {
         IVec2 chunk = GetChunkPos(pos);
         LoadChunk(chunk);
-        return RetrieveChunk(chunk)!.LookupBlock(ProtocolToGamePos(pos), Server!.Registry);
+        return RetrieveChunk(chunk)!.LookupBlock(ToChunkLocalPos(GameToProtocolPos(pos)), Server!.Registry);
     }
     
     public IVec2 GetChunkPos(Vec3 pos) {
@@ -253,8 +267,12 @@ public class World : IAudience {
     /// </summary>
     /// <param name="pos">The position to convert</param>
     /// <returns>The new position.</returns>
-    private static IVec3 ProtocolToGamePos(IVec3 pos) {
+    public static IVec3 ProtocolToGamePos(IVec3 pos) {
         return new IVec3(pos.X, pos.Y - 64, pos.Z);
+    }
+    
+    private static IVec3 GameToProtocolPos(IVec3 pos) {
+        return new IVec3(pos.X, pos.Y + 64, pos.Z);
     }
 
     private ChunkData[] GetChunks(IVec2[] poses, int count) {
@@ -284,6 +302,13 @@ public class World : IAudience {
 
             return chunks;
         }
+    }
+
+    public void SendBlockUpdate(IVec3 pos, IAudience audience) {
+        audience.SendPacket(new ClientBoundBlockUpdatePacket {
+            Block = GetBlock(pos),
+            Location = pos
+        });
     }
     
     private ChunkData? RetrieveChunk(IVec2 pos) {
@@ -324,7 +349,7 @@ public class World : IAudience {
         }
     }
 
-    public void StrikeLightning(Vec3 pos) {
+    public void StrikeLightning(Vec3 pos, bool silent = false) {
         Entity lightning = new(EntityType.LightningBolt) {
             Position = pos,
             Yaw = Angle.Zero,
@@ -332,6 +357,10 @@ public class World : IAudience {
             NetId = Entities.NewNetId
         };
         Spawn(lightning);
+
+        if (!silent) {
+            this.PlaySound(SoundType.LightningBoltThunder, pos);
+        }
         
         Server!.ScheduleTask(TimeSpan.FromSeconds(2), () => {
             lightning.Despawn();

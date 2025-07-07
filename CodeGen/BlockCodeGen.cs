@@ -51,12 +51,15 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record {name}(Identifier Identifier, {args}) : IBlock {
+
+{reginfo}
 
     public uint StateId {
         get {
@@ -81,6 +84,8 @@ public record {name}(Identifier Identifier, {args}) : IBlock {
 using Minecraft.Data.Blocks;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Generated.BlockTypes;
+using Minecraft.Schemas;
+using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated;
 
@@ -144,6 +149,7 @@ public static class Block {
         }
         
         JObject blocksJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("blocks.json"));
+        JObject blocksDataJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("blocks_data.json"));
 
         StringBuilder registryData = new();
         StringBuilder blocksFileEntries = new();
@@ -152,6 +158,58 @@ public static class Block {
             JObject blockData = value!.ToObject<JObject>()!;
             string staticVarName = CodeGenUtils.NamespacedIdToPascalName(id);
             
+            // FETCH ADDITIONAL DATA
+            JObject dataEntry = blocksDataJson[id]!.ToObject<JObject>()!;
+            string translationKey = dataEntry["translationKey"]!.ToObject<string>()!;
+            double explosionResistance = dataEntry["explosionResistance"]!.ToObject<double>();
+            double friction = dataEntry["friction"]!.ToObject<double>();
+            bool canRespawnIn = dataEntry["canRespawnIn"]!.ToObject<bool>();
+            double hardness = dataEntry["hardness"]!.ToObject<double>();
+            string pushReactionString = dataEntry["pushReaction"]!.ToObject<string>()!;
+            int mapColorId = dataEntry["mapColorId"]!.ToObject<int>();
+            bool occludes = dataEntry["occludes"]!.ToObject<bool>();
+            bool requiresTool = dataEntry["requiresTool"]!.ToObject<bool>();
+            bool blocksMotion = dataEntry["blocksMotion"]!.ToObject<bool>();
+            bool flammable = dataEntry["flammable"]!.ToObject<bool>();
+            bool air = dataEntry["air"]?.ToObject<bool>() ?? false;
+            bool liquid = dataEntry["liquid"]?.ToObject<bool>() ?? false;
+            bool replaceable = dataEntry["replaceable"]?.ToObject<bool>() ?? false;
+            bool solid = dataEntry["solid"]!.ToObject<bool>();
+            bool solidBlocking = dataEntry["solidBlocking"]!.ToObject<bool>();
+            string soundType = dataEntry["soundType"]!.ToObject<string>()!;
+            string shapeString = dataEntry["shape"]!.ToObject<string>()!;
+            string collisionShapeString = dataEntry["collisionShape"]!.ToObject<string>()!;
+            string interactionShapeString = dataEntry["interactionShape"]!.ToObject<string>()!;
+            string occlusionShapeString = dataEntry["occlusionShape"]!.ToObject<string>()!;
+            string visualShapeString = dataEntry["visualShape"]!.ToObject<string>()!;
+            bool redstoneConductor = dataEntry["redstoneConductor"]?.ToObject<bool>() ?? false;
+            bool signalSource = dataEntry["signalSource"]?.ToObject<bool>() ?? false;
+            string? blockEntityId = dataEntry["blockEntity"]?["namespace"]!.ToObject<string>();
+            int lightEmission = dataEntry["lightEmission"]?.ToObject<int>() ?? 0;
+            double speedFactor = dataEntry["speedFactor"]?.ToObject<double>() ?? 1;
+            double jumpFactor = dataEntry["jumpFactor"]?.ToObject<double>() ?? 1;
+            string? item = dataEntry["correspondingItem"]?.ToObject<string>();
+
+            Func<string, string> shapeCsParser = shapeStr => $"ICollisionBox.ParseAabbArrayString(\"{shapeStr}\")";
+            Func<string, string> pushReactionCsParser = pushReaction => pushReaction switch {
+                "NORMAL" => "PushReaction.Normal",
+                "DESTROY" => "PushReaction.Destroy",
+                "BLOCK" => "PushReaction.Block",
+                "PUSH_ONLY" => "PushReaction.PushOnly",
+                _ => throw new ArgumentOutOfRangeException(nameof(pushReaction), pushReaction, null)
+            };
+            Func<string?, string> toCsStr = str => str == null ? "null" : $"\"{str}\"";
+
+            string propArgsStringRecord = $"{hardness}, {explosionResistance}, {friction}, {speedFactor}, " +
+                                          $"{jumpFactor}, {solid.ToString().ToLower()}, {liquid.ToString().ToLower()}, " +
+                                          $"{occludes.ToString().ToLower()}, {requiresTool.ToString().ToLower()}, " +
+                                          $"{lightEmission}, {replaceable.ToString().ToLower()}, {toCsStr(soundType)}, " +
+                                          $"{toCsStr(blockEntityId)}, {toCsStr(item)}, {shapeCsParser(collisionShapeString)}, {shapeCsParser(occlusionShapeString)}, " +
+                                          $"{shapeCsParser(shapeString)}, {shapeCsParser(interactionShapeString)}, {shapeCsParser(visualShapeString)}, " +
+                                          $"{redstoneConductor.ToString().ToLower()}, " +
+                                          $"{signalSource.ToString().ToLower()}, {flammable.ToString().ToLower()}, {pushReactionCsParser(pushReactionString)}, " +
+                                          $"{mapColorId}, {toCsStr(translationKey)}, {canRespawnIn.ToString().ToLower()}";
+            
             // do we need a record?
             JArray states = blockData["states"]!.ToObject<JArray>()!;
             if (states.Count == 1) {  // simple! yay! fewer classes
@@ -159,7 +217,8 @@ public static class Block {
                 int stateId = state["id"]!.ToObject<int>();
 
                 registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {stateId});\n");
-                blocksFileEntries.Append($"{CodeGenUtils.GetIndentation(1)}public static readonly SimpleBlock {staticVarName} = new(\"{id}\", {stateId});\n");
+                blocksFileEntries.Append($"{CodeGenUtils.GetIndentation(1)}public static readonly SimpleBlock {staticVarName} = " +
+                                         $"new(\"{id}\", {stateId}, {propArgsStringRecord});\n");
                 continue;  // they don't need a record class, just a simple block
             }
             
@@ -180,12 +239,44 @@ public static class Block {
                 
                 registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {waterloggedState}, {airLoggedState});\n");
                 blocksFileEntries.Append(
-                    $"{CodeGenUtils.GetIndentation(1)}public static readonly WaterloggableBlock {staticVarName} = new(\"{id}\", {airLoggedState}, {waterloggedState}, {defaultIsWaterlogged.ToString().ToLower()});\n");
+                    $"{CodeGenUtils.GetIndentation(1)}public static readonly WaterloggableBlock {staticVarName} = " +
+                    $"new(\"{id}\", {airLoggedState}, {waterloggedState}, {defaultIsWaterlogged.ToString().ToLower()}, {propArgsStringRecord});\n");
                 continue;  // they don't need a record class, just a simple block
             }
             
             // complex! we need a record class
             string pascalName = CodeGenUtils.NamespacedIdToPascalName(id) + "Block";
+            
+            // COMPILE ALL THE DATA INTO PROPS
+            StringBuilder staticData = new();
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double Hardness => {hardness};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double ExplosionResistance => {explosionResistance};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double Friction => {friction};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double SpeedFactor => {speedFactor};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double JumpFactor => {jumpFactor};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public bool Solid => {solid.ToString().ToLower()};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public bool Liquid => {liquid.ToString().ToLower()};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public bool Occludes => {occludes.ToString().ToLower()};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public bool RequiresTool => {requiresTool.ToString().ToLower()};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public int LightEmission => {lightEmission};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public bool Replaceable => {replaceable.ToString().ToLower()};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public string SoundType => \"{soundType}\";\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public Identifier? BlockEntity => " +
+                              $"{(blockEntityId is null ? "null" : $"\"{blockEntityId}\"")};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public Identifier? Item => " +
+                              $"{(item is null ? "null" : $"\"{item}\"")};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public ICollisionBox BlockShape => {shapeCsParser(shapeString)};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public ICollisionBox CollisionShape => {shapeCsParser(collisionShapeString)};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public ICollisionBox OcclusionShape => {shapeCsParser(occlusionShapeString)};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public ICollisionBox InteractionShape => {shapeCsParser(interactionShapeString)};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public ICollisionBox VisualShape => {shapeCsParser(visualShapeString)};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public bool RedstoneConductor => {redstoneConductor.ToString().ToLower()};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public bool SignalSource => {signalSource.ToString().ToLower()};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public bool Flammable => {flammable.ToString().ToLower()};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public PushReaction PushReaction => {pushReactionCsParser(pushReactionString)};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public int MapColorId => {mapColorId};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public string TranslationKey => \"{translationKey}\";\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public bool CanRespawnIn => {canRespawnIn.ToString().ToLower()};\n");
             
             // build a list of all the arguments correctly parsed
             
@@ -443,6 +534,7 @@ public static class Block {
                 .Replace("{from_state_logic}", fromStateLogic)
                 .Replace("{enums}", enumsCode)
                 .Replace("{load_state_logic}", loadStateLogic.ToString())
+                .Replace("{reginfo}", staticData.ToString())
                 .Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"));
             
             // let's get the default and add it to the registry

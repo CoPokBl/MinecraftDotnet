@@ -71,7 +71,7 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
                 .WriteString(Event.Type.Identifier)
                 .WritePrefixedOptional(Event.FixedRange, (f, writer) => writer.WriteFloat(f));
         }
-        else w.WriteVarInt(Event!.Type.ProtocolId + 1);
+        else w.WriteVarInt(Type!.ProtocolId + 1);
 
         return w.WriteVarInt((int)Category)
             .WriteVarInt(EntityId)

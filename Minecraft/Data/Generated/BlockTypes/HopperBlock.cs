@@ -3,12 +3,41 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facing FacingValue) : IBlock {
+
+    public double Hardness => 3;
+    public double ExplosionResistance => 4.8;
+    public double Friction => 0.6;
+    public double SpeedFactor => 1;
+    public double JumpFactor => 1;
+    public bool Solid => true;
+    public bool Liquid => false;
+    public bool Occludes => false;
+    public bool RequiresTool => true;
+    public int LightEmission => 0;
+    public bool Replaceable => false;
+    public string SoundType => "metal";
+    public Identifier? BlockEntity => "minecraft:hopper";
+    public Identifier? Item => "minecraft:hopper";
+    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 0.6875, 0.625], AABB[0.25, 0.25, 0.25] -> [0.375, 0.6875, 0.75], AABB[0.375, 0.25, 0.25] -> [0.75, 0.6875, 0.375], AABB[0.375, 0.25, 0.625] -> [0.75, 0.6875, 0.75], AABB[0.625, 0.25, 0.375] -> [0.75, 0.6875, 0.625], AABB[0.0, 0.625, 0.0] -> [0.25, 0.6875, 1.0], AABB[0.25, 0.625, 0.0] -> [1.0, 0.6875, 0.25], AABB[0.25, 0.625, 0.75] -> [1.0, 0.6875, 1.0], AABB[0.75, 0.625, 0.25] -> [1.0, 0.6875, 0.75], AABB[0.0, 0.6875, 0.0] -> [0.125, 1.0, 1.0], AABB[0.125, 0.6875, 0.0] -> [1.0, 1.0, 0.125], AABB[0.125, 0.6875, 0.875] -> [1.0, 1.0, 1.0], AABB[0.875, 0.6875, 0.125] -> [1.0, 1.0, 0.875]]");
+    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 0.6875, 0.625], AABB[0.25, 0.25, 0.25] -> [0.375, 0.6875, 0.75], AABB[0.375, 0.25, 0.25] -> [0.75, 0.6875, 0.375], AABB[0.375, 0.25, 0.625] -> [0.75, 0.6875, 0.75], AABB[0.625, 0.25, 0.375] -> [0.75, 0.6875, 0.625], AABB[0.0, 0.625, 0.0] -> [0.25, 0.6875, 1.0], AABB[0.25, 0.625, 0.0] -> [1.0, 0.6875, 0.25], AABB[0.25, 0.625, 0.75] -> [1.0, 0.6875, 1.0], AABB[0.75, 0.625, 0.25] -> [1.0, 0.6875, 0.75], AABB[0.0, 0.6875, 0.0] -> [0.125, 1.0, 1.0], AABB[0.125, 0.6875, 0.0] -> [1.0, 1.0, 0.125], AABB[0.125, 0.6875, 0.875] -> [1.0, 1.0, 1.0], AABB[0.875, 0.6875, 0.125] -> [1.0, 1.0, 0.875]]");
+    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
+    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.125, 0.6875, 0.125] -> [0.875, 1.0, 0.875]]");
+    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 0.6875, 0.625], AABB[0.25, 0.25, 0.25] -> [0.375, 0.6875, 0.75], AABB[0.375, 0.25, 0.25] -> [0.75, 0.6875, 0.375], AABB[0.375, 0.25, 0.625] -> [0.75, 0.6875, 0.75], AABB[0.625, 0.25, 0.375] -> [0.75, 0.6875, 0.625], AABB[0.0, 0.625, 0.0] -> [0.25, 0.6875, 1.0], AABB[0.25, 0.625, 0.0] -> [1.0, 0.6875, 0.25], AABB[0.25, 0.625, 0.75] -> [1.0, 0.6875, 1.0], AABB[0.75, 0.625, 0.25] -> [1.0, 0.6875, 0.75], AABB[0.0, 0.6875, 0.0] -> [0.125, 1.0, 1.0], AABB[0.125, 0.6875, 0.0] -> [1.0, 1.0, 0.125], AABB[0.125, 0.6875, 0.875] -> [1.0, 1.0, 1.0], AABB[0.875, 0.6875, 0.125] -> [1.0, 1.0, 0.875]]");
+    public bool RedstoneConductor => false;
+    public bool SignalSource => false;
+    public bool Flammable => false;
+    public PushReaction PushReaction => PushReaction.Normal;
+    public int MapColorId => 11;
+    public string TranslationKey => "block.minecraft.hopper";
+    public bool CanRespawnIn => false;
+
 
     public uint StateId {
         get {

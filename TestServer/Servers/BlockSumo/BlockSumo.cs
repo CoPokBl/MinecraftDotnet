@@ -1,5 +1,4 @@
 using ManagedServer;
-using ManagedServer.Entities.Events;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;

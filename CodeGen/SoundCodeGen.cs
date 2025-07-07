@@ -8,7 +8,6 @@ public static class SoundCodeGen {
         return CodeGenUtils.CreateSimpleRegistryEntries(
             registriesJson, 
             "minecraft:sound_event", 
-            "SoundType.cs", 
             "SimpleSoundType", 
             "SoundType",
             "SoundTypes",

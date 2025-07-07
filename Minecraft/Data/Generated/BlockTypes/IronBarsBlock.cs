@@ -3,12 +3,41 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record IronBarsBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
+
+    public double Hardness => 5;
+    public double ExplosionResistance => 6;
+    public double Friction => 0.6;
+    public double SpeedFactor => 1;
+    public double JumpFactor => 1;
+    public bool Solid => true;
+    public bool Liquid => false;
+    public bool Occludes => false;
+    public bool RequiresTool => true;
+    public int LightEmission => 0;
+    public bool Replaceable => false;
+    public string SoundType => "iron";
+    public Identifier? BlockEntity => null;
+    public Identifier? Item => "minecraft:iron_bars";
+    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 1.0, 0.5625]]");
+    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 1.0, 0.5625]]");
+    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
+    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
+    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
+    public bool RedstoneConductor => false;
+    public bool SignalSource => false;
+    public bool Flammable => false;
+    public PushReaction PushReaction => PushReaction.Normal;
+    public int MapColorId => 0;
+    public string TranslationKey => "block.minecraft.iron_bars";
+    public bool CanRespawnIn => false;
+
 
     public uint StateId {
         get {

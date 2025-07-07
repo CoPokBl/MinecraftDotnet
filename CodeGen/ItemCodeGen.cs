@@ -20,6 +20,8 @@ public static class Item {
     public static string CreateItemEntries(JObject registriesJson) {
         JObject itemsJson = registriesJson["minecraft:item"]!.ToObject<JObject>()!;
         JObject itemEntriesJson = itemsJson["entries"]!.ToObject<JObject>()!;
+
+        JObject itemData = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("item_data.json"));
         
         StringBuilder registryAdditions = new();
         StringBuilder file = new(Header);
@@ -29,8 +31,15 @@ public static class Item {
             int protocolId = itemEntry.Value!["protocol_id"]!.Value<int>();
             string pascalName = CodeGenUtils.NamespacedIdToPascalName(key);
             
+            JObject itemDataEntry = itemData[key]!.ToObject<JObject>()!;
+            Func<string?, string> toCsStr = str => str == null ? "null" : $"\"{str}\"";
+            
+            string? block = itemDataEntry["correspondingBlock"]?.Value<string>();
+            string translationKey = itemDataEntry["translationKey"]!.Value<string>()!;
+            
             // Add to cs file
-            file.Append($"{CodeGenUtils.GetIndentation(1)}public static SimpleItem {pascalName} => new(\"{key}\", {protocolId});\n");
+            file.Append($"{CodeGenUtils.GetIndentation(1)}public static SimpleItem {pascalName} => new(\"{key}\", {protocolId}, " +
+                        $"{toCsStr(block)}, {toCsStr(translationKey)});\n");
             registryAdditions.AppendLine($"{CodeGenUtils.GetIndentation(2)}Data.Items.Add(Item.{pascalName});");
         }
         

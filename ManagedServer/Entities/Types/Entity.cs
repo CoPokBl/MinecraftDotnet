@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using ManagedServer.Entities.Events;
+using ManagedServer.Events;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Entities;

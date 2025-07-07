@@ -3,12 +3,41 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BlackstoneWallBlock(Identifier Identifier, WallSide East, WallSide North, WallSide South, bool Up, bool Waterlogged, WallSide West) : IBlock {
+
+    public double Hardness => 1.5;
+    public double ExplosionResistance => 6;
+    public double Friction => 0.6;
+    public double SpeedFactor => 1;
+    public double JumpFactor => 1;
+    public bool Solid => true;
+    public bool Liquid => false;
+    public bool Occludes => true;
+    public bool RequiresTool => true;
+    public int LightEmission => 0;
+    public bool Replaceable => false;
+    public string SoundType => "stone";
+    public Identifier? BlockEntity => null;
+    public Identifier? Item => "minecraft:blackstone_wall";
+    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 1.0, 0.75]]");
+    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 1.5, 0.75]]");
+    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 1.0, 0.75]]");
+    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
+    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 1.5, 0.75]]");
+    public bool RedstoneConductor => false;
+    public bool SignalSource => false;
+    public bool Flammable => false;
+    public PushReaction PushReaction => PushReaction.Normal;
+    public int MapColorId => 29;
+    public string TranslationKey => "block.minecraft.blackstone_wall";
+    public bool CanRespawnIn => false;
+
 
     public uint StateId {
         get {

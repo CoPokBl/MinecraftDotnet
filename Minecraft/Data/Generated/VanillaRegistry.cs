@@ -1330,6 +1330,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, true, 0x0B, typeof(ClientBoundChunkBatchFinishedPacket), ClientBoundChunkBatchFinishedPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x0C, typeof(ClientBoundChunkBatchStartPacket), ClientBoundChunkBatchStartPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x0E, typeof(ClientBoundClearTitlesPacket), ClientBoundClearTitlesPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x11, typeof(ClientBoundCloseContainerPacket), ClientBoundCloseContainerPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x12, typeof(ClientBoundSetContainerContentPacket), ClientBoundSetContainerContentPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x14, typeof(ClientBoundSetContainerSlotPacket), ClientBoundSetContainerSlotPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x15, typeof(ClientBoundCookieRequestPacket), ClientBoundCookieRequestPacket.Deserialiser);
@@ -1349,6 +1350,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, true, 0x2E, typeof(ClientBoundUpdateEntityPositionPacket), ClientBoundUpdateEntityPositionPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x2F, typeof(ClientBoundUpdateEntityPosAndRotPacket), ClientBoundUpdateEntityPosAndRotPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x31, typeof(ClientBoundUpdateEntityRotationPacket), ClientBoundUpdateEntityRotationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x34, typeof(ClientBoundOpenScreenPacket), ClientBoundOpenScreenPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x36, typeof(ClientBoundPingPacket), ClientBoundPingPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x39, typeof(ClientBoundPlayerAbilitiesPacket), ClientBoundPlayerAbilitiesPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x3D, typeof(ClientBoundCombatDeathPacket), ClientBoundCombatDeathPacket.Deserialiser);
@@ -4657,6 +4659,32 @@ public static class VanillaRegistry {
         Data.SoundTypes.Add(SoundType.ToastOut);
         Data.SoundTypes.Add(SoundType.Rain);
         Data.SoundTypes.Add(SoundType.RainAbove);
+
+        Data.InventoryTypes.Add(InventoryType.Anvil);
+        Data.InventoryTypes.Add(InventoryType.Beacon);
+        Data.InventoryTypes.Add(InventoryType.BlastFurnace);
+        Data.InventoryTypes.Add(InventoryType.BrewingStand);
+        Data.InventoryTypes.Add(InventoryType.CartographyTable);
+        Data.InventoryTypes.Add(InventoryType.Crafter3x3);
+        Data.InventoryTypes.Add(InventoryType.Crafting);
+        Data.InventoryTypes.Add(InventoryType.Enchantment);
+        Data.InventoryTypes.Add(InventoryType.Furnace);
+        Data.InventoryTypes.Add(InventoryType.Generic3x3);
+        Data.InventoryTypes.Add(InventoryType.Generic9x1);
+        Data.InventoryTypes.Add(InventoryType.Generic9x2);
+        Data.InventoryTypes.Add(InventoryType.Generic9x3);
+        Data.InventoryTypes.Add(InventoryType.Generic9x4);
+        Data.InventoryTypes.Add(InventoryType.Generic9x5);
+        Data.InventoryTypes.Add(InventoryType.Generic9x6);
+        Data.InventoryTypes.Add(InventoryType.Grindstone);
+        Data.InventoryTypes.Add(InventoryType.Hopper);
+        Data.InventoryTypes.Add(InventoryType.Lectern);
+        Data.InventoryTypes.Add(InventoryType.Loom);
+        Data.InventoryTypes.Add(InventoryType.Merchant);
+        Data.InventoryTypes.Add(InventoryType.ShulkerBox);
+        Data.InventoryTypes.Add(InventoryType.Smithing);
+        Data.InventoryTypes.Add(InventoryType.Smoker);
+        Data.InventoryTypes.Add(InventoryType.Stonecutter);
 
     }
 }

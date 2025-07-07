@@ -2,7 +2,7 @@ using ManagedServer.Entities.Types;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Schemas.Vec;
 
-namespace ManagedServer.Entities.Events;
+namespace ManagedServer.Events;
 
 public class EntityMoveEvent : IServerEvent {
     public required Entity Entity;

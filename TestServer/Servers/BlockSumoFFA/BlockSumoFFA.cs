@@ -1,8 +1,8 @@
 using ManagedServer;
-using ManagedServer.Entities.Events;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
+using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Blocks;
@@ -31,14 +31,14 @@ public static class BlockSumoFfa {
     private const int Port = 25565;
 
     public static async Task Start() {
-        ManagedMinecraftServer mServer = new(
+        ManagedMinecraftServer server = new(
             new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
                 VersionName = "dotnet",
                 VersionProtocol = connection.Handshake!.ProtocolVersion,
                 OnlinePlayers = 1,
                 MaxPlayers = 1,
                 SamplePlayers = [new SamplePlayer("Potato", "4566e69f-c907-48ee-8d71-d7ba5aa00d20")],
-                Description = "Block Sumo FFA",
+                Description = TextComponent.FromLegacyString("&b&lBlock Sumo FFA"),
                 PreventsChatReports = true
             }),
             new PingRespondFeature(),
@@ -56,27 +56,17 @@ public static class BlockSumoFfa {
             Console.WriteLine("Stopping...");
             run = false;
         };
+
+        ItemStack blockItem = new ItemStack(64, Item.BambooBlock)
+            .With(new CustomNameComponent(Value: TextComponent.Text("Michael's Bamboo").WithColor(TextColor.Green).WithBold().WithItalic(false)))
+            .With(new DamageComponent(Value: 10))
+            .With(new RarityComponent(Value: ItemRarity.Epic))
+            .With(new MaxDamageComponent(Value: 100))
+            .With(new TooltipDisplayComponent(Value: new TooltipDisplayComponent.Info(true)));
         
-        ClientBoundSetContainerSlotPacket giveItemPacket = new() {
-            WindowId = 0,
-            StateId = 0,
-            SlotId = 36,
-            Data = new ItemStack(64, Item.BambooBlock).With(DataComponent.CustomName with {
-                Value = TextComponent.Text("Michael's Bamboo").WithColor(TextColor.Green).WithBold()
-            }).With(DataComponent.Damage with {
-                Value = 10
-            }).With(DataComponent.Rarity with {
-                Value = ItemRarity.Epic
-            }).With(DataComponent.MaxDamage with {
-                Value = 100
-            }).With(DataComponent.CreativeSlotLock)
-            .With(DataComponent.TooltipDisplay with {
-                Value = new TooltipDisplayComponent.Info(true)
-            })
-        };
         PlayerPosition spawn = new(new Vec3(0, 0, 0), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
         ITerrainProvider terrain = new BlockSumoMapProvider(12);
-        World world = mServer.CreateWorld(terrain);
+        World world = server.CreateWorld(terrain);
         new SimpleCombatFeature(500).Register(world);
         new BlockBreakingFeature(false).Register(world);
 
@@ -98,33 +88,39 @@ public static class BlockSumoFfa {
             Block.RedConcretePowder,
             Block.BlackConcretePowder
         ];
-        
-        new PlaceOneBlockFeature(c => {
-            c.SendPacket(giveItemPacket);
-            return blocks[Random.Shared.Next(blocks.Length)];
-        }, 5).Register(world);
-        
-        void BroadcastSound(ISoundType id) {
-            foreach (PlayerEntity player in world.Players) {
-                player.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
-                    Category = SoundCategory.Master,
-                    EntityId = player.NetId,
-                    Event = null,
-                    Type = id,
-                    Pitch = 1f,
-                    Volume = 1f,
-                    Seed = 0L
+
+        const float disappearTime = 5f;
+        world.Events.AddListener<PlayerPlaceBlockEvent>(e => {
+            e.Cancelled = false;
+            e.Block = blocks[Random.Shared.Next(blocks.Length)];
+            e.Player.HeldItem = blockItem;
+            
+            AtomicCounter count = new(-1);
+            int breakingEntity = Random.Shared.Next();
+            server.ScheduleRepeatingTask(TimeSpan.FromSeconds(disappearTime/9), () => {
+                count.Increment();
+                if (count.Value == 9) {
+                    e.World.SendPacket(new ClientBoundSetBlockDestroyStagePacket {
+                        EntityId = breakingEntity,
+                        Block = e.Position,
+                        Stage = 16
+                    });
+                    e.World.SetBlock(e.Position, Block.Air);
+                    return false;
+                }
+                
+                e.World.SendPacket(new ClientBoundSetBlockDestroyStagePacket {
+                    EntityId = breakingEntity,
+                    Block = e.Position,
+                    Stage = (byte)count.Value
                 });
-            }
-        }
-        
-        void BroadcastMsg(TextComponent msg) {
-            foreach (PlayerEntity player in world.Players) player.Connection.SendSystemMessage(msg);
-        }
+                return true;
+            });
+        });
         
         TcpMinecraftListener listener = new(connection => {
             Console.WriteLine("Got new connection");
-            mServer.AddConnection(connection);
+            server.AddConnection(connection);
             connection.Events.OnFirst<PlayerPreLoginEvent>(e => {
                 e.GameMode = GameMode.Survival;
                 e.Hardcore = true;
@@ -138,76 +134,37 @@ public static class BlockSumoFfa {
                 connection.SendPacket(links);
             });
             connection.Events.OnFirst<PlayerLoginEvent>(e => {
-                e.Player.Teleport(new Vec3(0, 100, 0));
-                e.Player.Connection.SendPacket(giveItemPacket);
-                Console.WriteLine("Teleported joining player in lobby");
-                
-                // e.Player.Connection.Disconnected += () => {
-                //     Console.WriteLine($"Player {e.Player.Name} disconnected");
-                //     world.Entities.Despawn(e.Player);
-                // };
-            });
-            connection.Events.AddListener<PacketSendingEvent>(e => {
-                if (e.Connection.State != ConnectionState.Play) {
-                    return;
-                }
-                if (PlayerInfoFeature.GetInfo(e.Connection).Username == "iVec4") {
-                    // if (Random.Shared.Next(5) == 0) {
-                    //     e.Cancelled = true;
-                    // }
-                    // Thread.Sleep(200);
-                }
-            });
-            connection.Events.AddListener<PacketReceiveEvent>(e => {
-                if (e.Connection.State != ConnectionState.Play) {
-                    return;
-                }
-                if (PlayerInfoFeature.GetInfo(e.Connection).Username == "iVec4") {
-                    // if (Random.Shared.Next(5) == 0) {
-                    //     e.Cancelled = true;
-                    // }
-                    // Thread.Sleep(200);
-                }
+                e.Player.Teleport(spawn);
+                e.Player.Inventory.SetHotbarItem(0, blockItem);
+                Console.WriteLine("Teleported joining player");
+                server.SendMessage(TextComponent.FromLegacyString("&7[&a+&7] " + e.Player.Name + " &7joined the game!"));
+                connection.Disconnected += () => {
+                    server.SendMessage(
+                        TextComponent.FromLegacyString("&7[&c-&7] " + e.Player.Name + " &7left the game :("));
+                };
             });
         }, cts.Token);
         
         const int dieLevel = -10;
-        List<Timer> timers = [];
         world.Events.AddListener<EntityMoveEvent>(e => {
             if (!(e.NewPos.Y < dieLevel)) return;
-                
-            // Move them away for the other player to prevent tp blocking breaking
-            e.Entity.SendToViewers(new ClientBoundTeleportEntityPacket {
-                EntityId = e.Entity.NetId,
-                Position = new Vec3(0, -100, 0),
-                Velocity = Vec3.Zero,
-                Yaw = Angle.Zero,
-                Pitch = Angle.Zero,
-                OnGround = false
-            });
-                
+            
+            // die
             e.Entity.Teleport(spawn);
             if (e.Entity is PlayerEntity player) {
                 player.GameMode = GameMode.Spectator;
                 player.Connection.SendTitle(TextComponent.FromLegacyString("&c&lNoob"), TextComponent.Empty());
 
-                Timer t = null!;
-                t = new Timer(_ => {
+                server.ScheduleTask(TimeSpan.FromSeconds(2), () => {
                     player.GameMode = GameMode.Survival;
                     player.Teleport(spawn);
-                    timers.Remove(t);
-                }, null, TimeSpan.FromSeconds(2), Timeout.InfiniteTimeSpan);
-                timers.Add(t);
+                });
             }
-            ((PlayerEntity)e.Entity).Connection.SendPacket(giveItemPacket);
-                
+            ((PlayerEntity)e.Entity).Inventory.SetHotbarItem(0, blockItem);
+            
             TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed";
-            // Entity lightning = new(74);
-            // world.Spawn(lightning);
-            // lightning.Teleport(e.Entity.Position);
             world.StrikeLightning(e.NewPos);
-            BroadcastSound(SoundType.LightningBoltThunder);  // lightning
-            BroadcastMsg(msg);
+            server.SendMessage(msg);
         });
         
         Console.WriteLine("Server ready, listening...");

@@ -1,10 +1,17 @@
 using Minecraft.Schemas;
+using Minecraft.Schemas.Shapes;
 using NBT;
 using NBT.Tags;
 
 namespace Minecraft.Data.Blocks;
 
-public record WaterloggableBlock(Identifier Identifier, uint StateIdAirLogged, uint StateIdWaterlogged, bool Waterlogged) : IBlock {
+public record WaterloggableBlock(Identifier Identifier, uint StateIdAirLogged, uint StateIdWaterlogged, bool Waterlogged, 
+    double Hardness, double ExplosionResistance, double Friction, double SpeedFactor, double JumpFactor, bool Solid, 
+    bool Liquid, bool Occludes, bool RequiresTool, int LightEmission, bool Replaceable, string SoundType, 
+    Identifier? BlockEntity, Identifier? Item, ICollisionBox CollisionShape, ICollisionBox OcclusionShape, 
+    ICollisionBox BlockShape, ICollisionBox InteractionShape, ICollisionBox VisualShape, bool RedstoneConductor, 
+    bool SignalSource,  bool Flammable, PushReaction PushReaction, int MapColorId, string TranslationKey, bool CanRespawnIn) : IBlock {
+    
     public uint StateId => Waterlogged ? StateIdWaterlogged : StateIdAirLogged;
 
     public IBlock WithState(uint state) {

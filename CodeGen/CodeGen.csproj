@@ -22,6 +22,10 @@
       <EmbeddedResource Include="Data\blocks.json" />
       <None Remove="Data\packets.json" />
       <EmbeddedResource Include="Data\packets.json" />
+      <None Remove="Data\blocks_data.json" />
+      <EmbeddedResource Include="Data\blocks_data.json" />
+      <None Remove="Data\item_data.json" />
+      <EmbeddedResource Include="Data\item_data.json" />
     </ItemGroup>
 
 </Project>

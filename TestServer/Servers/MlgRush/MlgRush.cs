@@ -1,5 +1,4 @@
 using ManagedServer;
-using ManagedServer.Entities.Events;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
@@ -253,11 +252,7 @@ public static class MlgRush {
                 });
 
                 TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed by {killer.Name}";
-                // Entity lightning = new(74);
-                // world.Spawn(lightning);
-                // lightning.Teleport(e.Entity.Position);
                 world.StrikeLightning(e.NewPos);
-                BroadcastSound(SoundType.LightningBoltThunder);  // lightning
                 BroadcastMsg(msg);
             });
             

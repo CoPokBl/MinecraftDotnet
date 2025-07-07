@@ -63,7 +63,7 @@ public static class CodeGenUtils {
     
     private const string Footer = "}\n";
     
-    public static string CreateSimpleRegistryEntries(JObject registriesJson, string registryName, string fileName, 
+    public static string CreateSimpleRegistryEntries(JObject registriesJson, string registryName, 
         string simpleClassName, string className, string regVar, string typeNamespace, Func<string, string>? variableNameGetter = null) {
         variableNameGetter ??= NamespacedIdToPascalName;
         
@@ -89,7 +89,7 @@ public static class CodeGenUtils {
         
         // Create the file content
         file.Append(Footer);
-        File.WriteAllText(fileName, file.ToString().Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
+        File.WriteAllText(className + ".cs", file.ToString().Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
 
         return registryAdditions.ToString();
     }

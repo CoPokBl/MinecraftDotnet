@@ -1,3 +1,4 @@
+using ManagedServer.Entities.Types;
 using Minecraft.Data.Particles;
 using Minecraft.Data.Sounds;
 using Minecraft.Packets;
@@ -72,6 +73,18 @@ public static class AudienceExtensions {
             Volume = volume,
             Seed = Random.Shared.NextInt64(),
             Pitch = 1f
+        });
+    }
+
+    public static void PlaySound(this IAudience audience, ISoundType type, Entity entity,
+        SoundCategory category = SoundCategory.Master, float volume = 1f) {
+        audience.SendPacket(new ClientBoundEntitySoundEffectPacket {
+            EntityId = entity.NetId,
+            Type = type,
+            Category = category,
+            Pitch = 1f,
+            Seed = Random.Shared.NextInt64(),
+            Volume = volume
         });
     }
 }

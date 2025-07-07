@@ -8,4 +8,5 @@ public class MinecraftRegistry {
     public DataComponentRegistry DataComponents { get; } = new();
     public EntityTypeRegistry EntityTypes { get; init; } = new();
     public SoundTypeRegistry SoundTypes { get; init; } = new();
+    public InventoryTypeRegistry InventoryTypes { get; init; } = new();
 }

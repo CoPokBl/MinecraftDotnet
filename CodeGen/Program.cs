@@ -64,6 +64,7 @@ RunStep("Items", ItemCodeGen.CreateItemEntries);
 RunStep("Data Components", DataComponentCodeGen.CreateComponentEntries);
 RunStep("Entity Types", EntityTypeCodeGen.CreateEntityTypeEntries);
 RunStep("Sounds", SoundCodeGen.CreateSoundEntries);
+RunStep("Inventory Types", InventoryTypeCodeGen.CreateInventoryTypeEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

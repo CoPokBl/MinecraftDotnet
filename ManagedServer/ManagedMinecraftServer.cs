@@ -67,6 +67,17 @@ public class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience {
         _timers.Add(timer);
     }
 
+    // return true to continue repeating, false to stop
+    public void ScheduleRepeatingTask(TimeSpan delay, Func<bool> action) {
+        Timer timer = null!;
+        timer = new Timer(_ => {
+            if (action()) return;
+            _timers.Remove(timer);
+            timer.Dispose();
+        }, null, delay, delay);
+        _timers.Add(timer);
+    }
+
     public Task ListenTcp(int port, CancellationToken cancel) {
         TcpMinecraftListener listener = new(AddConnection, cancel);
         return listener.Listen(port);

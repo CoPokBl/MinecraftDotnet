@@ -8,7 +8,6 @@ public static class EntityTypeCodeGen {
         return CodeGenUtils.CreateSimpleRegistryEntries(
             registriesJson, 
             "minecraft:entity_type", 
-            "EntityType.cs", 
             "SimpleEntityType", 
             "EntityType",
             "EntityTypes",
