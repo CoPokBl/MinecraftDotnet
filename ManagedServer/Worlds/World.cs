@@ -4,6 +4,7 @@ using ManagedServer.Entities;
 using ManagedServer.Entities.Events;
 using ManagedServer.Entities.Types;
 using ManagedServer.Viewables;
+using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
@@ -71,15 +72,17 @@ public class World : IAudience {
         if (Debug) Console.WriteLine("[WORLD] " + msg);
     }
     
-    public void AddFeature(IWorldFeature feature) {
-        feature.Register(this);
-    }
-    
     public void AddPlayer(PlayerEntity player) {
         PlayerConnection connection = player.Connection;
         
+        player.SendPacket(new ClientBoundUpdateTimePacket {
+            ClientAdvanceTime = false,
+            TimeOfDay = _time,
+            WorldAge = _time
+        });
+        
         _ = Entities.InformNewPlayer(connection);
-        SetLoadedChunks(connection, []);  // reset, just in case they were in a different world
+        SetPlayerLoadedChunks(connection, []);  // reset, just in case they were in a different world
         connection.SendPacket(new ClientBoundGameEventPacket {
             Event = GameEvent.StartWaitingForLevelChunks,
             Value = 0f
@@ -138,7 +141,7 @@ public class World : IAudience {
             sw = Stopwatch.StartNew();
         }
         
-        HashSet<IVec2> loaded = GetLoadedChunks(connection);
+        HashSet<IVec2> loaded = GetPlayerLoadedChunks(connection);
         // Console.WriteLine($"{loaded.Count} chunks are loaded");
 
         List<MinecraftPacket> neededPackets = [];
@@ -183,7 +186,7 @@ public class World : IAudience {
             Log($"Terrain packet generation took {sw.ElapsedMilliseconds}ms, unloading: {unloadingBench}ms");
         }
         
-        SetLoadedChunks(connection, loaded);
+        SetPlayerLoadedChunks(connection, loaded);
         
         neededPackets.Add(new ClientBoundSetCenterChunkPacket {
             X = chunkPos.X,
@@ -216,47 +219,88 @@ public class World : IAudience {
         Entities.Spawn(entity, id);
     }
 
-    private static HashSet<IVec2> GetLoadedChunks(PlayerConnection connection) {
+    private static HashSet<IVec2> GetPlayerLoadedChunks(PlayerConnection connection) {
         if (!connection.HasTag(LoadedChunksTag)) {
             throw new Exception("Loaded chunks don't exist");
         }
         return connection.GetTag(LoadedChunksTag);
     }
 
-    private static void SetLoadedChunks(PlayerConnection connection, HashSet<IVec2> chunks) {
+    private static void SetPlayerLoadedChunks(PlayerConnection connection, HashSet<IVec2> chunks) {
         connection.SetTag(LoadedChunksTag, chunks);
     }
 
+    public void SetBlock(IVec3 pos, IBlock block) {
+        IVec2 chunk = GetChunkPos(pos);
+        LoadChunk(chunk);
+        RetrieveChunk(chunk)!.SetBlock(ProtocolToGamePos(pos), block);
+    }
+    
+    public IBlock GetBlock(IVec3 pos) {
+        IVec2 chunk = GetChunkPos(pos);
+        LoadChunk(chunk);
+        return RetrieveChunk(chunk)!.LookupBlock(ProtocolToGamePos(pos), Server!.Registry);
+    }
+    
+    public IVec2 GetChunkPos(Vec3 pos) {
+        return new IVec2((int)Math.Floor(pos.X / 16), (int)Math.Floor(pos.Z / 16));
+    }
+
+    /// <summary>
+    /// Converts a protocol position to a game position.
+    /// <p/>
+    /// This is used because in the protocol Y=0 is Y=-64 in game.
+    /// </summary>
+    /// <param name="pos">The position to convert</param>
+    /// <returns>The new position.</returns>
+    private static IVec3 ProtocolToGamePos(IVec3 pos) {
+        return new IVec3(pos.X, pos.Y - 64, pos.Z);
+    }
+
     private ChunkData[] GetChunks(IVec2[] poses, int count) {
-        ChunkData[] chunks = new ChunkData[count];
-        IVec2[] needed = new IVec2[count];
-        int notFound = 0;
-        int cChunksPos = 0;
-        for (int i = 0; i < count; i++) {
-            ChunkData? data = RetrieveChunk(poses[i]);
-            if (data == null) {
-                needed[notFound++] = poses[i];
-                continue;
+        lock (_chunks) {
+            ChunkData[] chunks = new ChunkData[count];
+            IVec2[] needed = new IVec2[count];
+            int notFound = 0;
+            int cChunksPos = 0;
+            for (int i = 0; i < count; i++) {
+                ChunkData? data = RetrieveChunk(poses[i]);
+                if (data == null) {
+                    needed[notFound++] = poses[i];
+                    continue;
+                }
+                chunks[cChunksPos++] = data;
             }
-            chunks[cChunksPos++] = data;
-        }
-        if (notFound == 0) {
+            if (notFound == 0) {
+                return chunks;
+            }
+        
+            // We need to load some chunks
+            foreach (ChunkData newChunk in _provider.GetChunks(notFound, needed)) {
+                newChunk.PackData();
+                chunks[cChunksPos++] = newChunk;
+                _chunks.TryAdd(new IVec2(newChunk.ChunkX, newChunk.ChunkZ), newChunk);
+            }
+
             return chunks;
         }
-        
-        // We need to load some chunks
-        foreach (ChunkData newChunk in _provider.GetChunks(notFound, needed)) {
-            newChunk.PackData();
-            chunks[cChunksPos++] = newChunk;
-            _chunks.TryAdd(new IVec2(newChunk.ChunkX, newChunk.ChunkZ), newChunk);
-        }
-
-        return chunks;
     }
     
     private ChunkData? RetrieveChunk(IVec2 pos) {
         _chunks.TryGetValue(pos, out ChunkData? data);
         return data;
+    }
+    
+    public void LoadChunk(IVec2 pos) {
+        if (_chunks.ContainsKey(pos)) return;  // already loaded
+        
+        ChunkData data = _provider.GetChunk(pos);
+        if (data == null) {
+            throw new Exception($"Failed to load chunk at {pos}");
+        }
+        
+        data.PackData();
+        _chunks.TryAdd(pos, data);
     }
 
     public ClientBoundChunkDataAndUpdateLightPacket GetChunkPacket(IVec2 pos) {

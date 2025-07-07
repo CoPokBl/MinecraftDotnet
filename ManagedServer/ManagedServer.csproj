@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Minecraft\Minecraft.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Inventory\" />
+    </ItemGroup>
+
 </Project>

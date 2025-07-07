@@ -1,5 +1,6 @@
 using Minecraft.Registry;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Data.Particles.Types;
 
@@ -7,7 +8,7 @@ public record VibrationParticle(Identifier Identifier, int ProtocolId, Vibration
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
-            .Write(PositionSource ?? new BlockPositionSource(BlockPosition.Zero))
+            .Write(PositionSource ?? new BlockPositionSource(IVec3.Zero))
             .WriteVarInt(Ticks);
     }
 
@@ -31,7 +32,7 @@ public record VibrationParticle(Identifier Identifier, int ProtocolId, Vibration
         }
     }
 
-    public record BlockPositionSource(BlockPosition Position) : IPositionSource {
+    public record BlockPositionSource(IVec3 Position) : IPositionSource {
         public int Type => 0;
 
         public void Write(DataWriter writer) {

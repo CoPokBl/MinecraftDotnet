@@ -1,4 +1,5 @@
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
@@ -6,7 +7,7 @@ public class ClientBoundSetBlockDestroyStagePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:block_destruction";
     
     public required int EntityId;
-    public required BlockPosition Block;
+    public required IVec3 Block;
     public required byte Stage;
 
     protected override DataWriter WriteData(DataWriter w) {

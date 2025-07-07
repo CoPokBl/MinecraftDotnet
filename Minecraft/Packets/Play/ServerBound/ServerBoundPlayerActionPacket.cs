@@ -1,4 +1,5 @@
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Packets.Play.ServerBound;
 
@@ -6,7 +7,7 @@ public class ServerBoundPlayerActionPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:player_action";
     
     public required Status ActionStatus;
-    public required BlockPosition Location;
+    public required IVec3 Location;
     public required BlockFace Face;
     public required int Sequence;
 

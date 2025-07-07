@@ -42,7 +42,7 @@ public static class Particle {
             }
             
             // Add to ParticleRegistry
-            registryEntries.Append($"{CodeGenUtils.GetIndentation(2)}Data.Particles.Add(\"{key}\", {protocolId}, Particle.{pascalName});\n");
+            registryEntries.Append($"{CodeGenUtils.GetIndentation(2)}Data.Particles.Add(Particle.{pascalName});\n");
         }
         
         file.Append(Footer);

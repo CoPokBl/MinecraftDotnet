@@ -150,6 +150,4 @@ public class TabListFeature : IServerFeature {
     public Type[] GetDependencies() {
         return [];
     }
-
-    public record TabListEntry(Guid Uuid, TextComponent Text, int Latency = 1, GameMode GameMode = 0);
 }

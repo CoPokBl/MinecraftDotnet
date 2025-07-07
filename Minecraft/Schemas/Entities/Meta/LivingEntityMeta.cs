@@ -1,3 +1,5 @@
+using Minecraft.Schemas.Vec;
+
 namespace Minecraft.Schemas.Entities.Meta;
 
 public class LivingEntityMeta : EntityMeta {
@@ -7,7 +9,7 @@ public class LivingEntityMeta : EntityMeta {
     public bool? IsPotionAmbient = null;
     public int? ArrowsInEntity = null;
     public int? BeeStingersInEntity = null;
-    public Optional<BlockPosition>? SleepingBed = null;
+    public Optional<IVec3>? SleepingBed = null;
 
     public new DataWriter Serialise(DataWriter writer) {
         return base.Serialise(writer)

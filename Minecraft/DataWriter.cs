@@ -385,7 +385,7 @@ public class DataWriter : Stream, IWritable {
     // An integer/block position: x (-33554432 to 33554431), z (-33554432 to 33554431), y (-2048 to 2047)
     // x as a 26-bit integer, followed by z as a 26-bit integer, followed by y as a 12-bit integer (all signed, two's complement).
     // Should be 8 bytes in total and big-endian.
-    public DataWriter WritePosition(BlockPosition value) {
+    public DataWriter WritePosition(IVec3 value) {
         //  X: 26 bits, Z: 26 bits, Y: 12 bits (all two's complement)
         //  bits 63..38 => X
         //  bits 37..12 => Z

@@ -8,6 +8,7 @@ using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Features;
 
@@ -63,7 +64,7 @@ public class BlockBreakingFeature(bool instaMine = true) : IWorldFeature {
 
     public class BlockBreakEvent : IServerEvent, ICancelableEvent {
         public required PlayerConnection Connection { get; set; }
-        public required BlockPosition Position { get; set; }
+        public required IVec3 Position { get; set; }
         public bool Cancelled { get; set; }
     }
 }

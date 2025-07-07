@@ -1,14 +1,19 @@
 namespace Minecraft.Schemas.Vec;
 
-public readonly struct IVec3(int x, int y, int z) {
+public readonly struct IVec3(int x, int y, int z) : IEquatable<IVec3> {
     public int X { get; init; } = x;
     public int Y { get; init; } = y;
     public int Z { get; init; } = z;
     
     // This is the default anyway.
     public static readonly IVec3 Zero = new(0, 0, 0);
+
+    public static implicit operator Vec3(IVec3 vec) {
+        return new Vec3(vec.X, vec.Y, vec.Z);
+    }
     
-    // ReSharper disable InconsistentNaming
+#region combined_params
+// ReSharper disable InconsistentNaming
     public IVec3 XXX => new(X, X, X);
     public IVec3 XXY => new(X, X, Y);
     public IVec3 XXZ => new(X, X, Z);
@@ -45,7 +50,9 @@ public readonly struct IVec3(int x, int y, int z) {
     public IVec2 ZZ => new(Z, Z);
     public IVec2 XX => new(X, X);
     public IVec2 YY => new(Y, Y);
-    // ReSharper restore InconsistentNaming
+// ReSharper restore InconsistentNaming
+#endregion
+
 
     public double ComputeLength() {
         return Math.Sqrt(X*X + Y*Y + Z*Z);
@@ -74,16 +81,20 @@ public readonly struct IVec3(int x, int y, int z) {
         return Math.Sqrt(Math.Pow(distanceTopDown, 2) + Math.Pow(Math.Abs(Y - other.Y), 2));
     }
     
-    public BlockPosition GetBlockTowards(BlockFace face) {
+    public IVec3 GetBlockTowards(BlockFace face) {
         return face switch {
-            BlockFace.NegY => new BlockPosition(X, Y - 1, Z),
-            BlockFace.PosY => new BlockPosition(X, Y + 1, Z),
-            BlockFace.NegZ => new BlockPosition(X, Y, Z - 1),
-            BlockFace.PosZ => new BlockPosition(X, Y, Z + 1),
-            BlockFace.NegX => new BlockPosition(X - 1, Y, Z),
-            BlockFace.PosX => new BlockPosition(X + 1, Y, Z),
+            BlockFace.NegY => new IVec3(X, Y - 1, Z),
+            BlockFace.PosY => new IVec3(X, Y + 1, Z),
+            BlockFace.NegZ => new IVec3(X, Y, Z - 1),
+            BlockFace.PosZ => new IVec3(X, Y, Z + 1),
+            BlockFace.NegX => new IVec3(X - 1, Y, Z),
+            BlockFace.PosX => new IVec3(X + 1, Y, Z),
             _ => throw new ArgumentOutOfRangeException(nameof(face), face, null)
         };
+    }
+    
+    public Vec3 BlockPositionToVec3() {
+        return new Vec3(X + 0.5, Y + 0.5, Z + 0.5);
     }
 
     public void Deconstruct(out int x, out int y, out int z) {
@@ -94,5 +105,25 @@ public readonly struct IVec3(int x, int y, int z) {
 
     public override string ToString() {
         return $"{X}, {Y}, {Z}";
+    }
+
+    public bool Equals(IVec3 other) {
+        return X == other.X && Y == other.Y && Z == other.Z;
+    }
+
+    public override bool Equals(object? obj) {
+        return obj is IVec3 other && Equals(other);
+    }
+
+    public override int GetHashCode() {
+        return HashCode.Combine(X, Y, Z);
+    }
+
+    public static bool operator ==(IVec3 left, IVec3 right) {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(IVec3 left, IVec3 right) {
+        return !(left == right);
     }
 }

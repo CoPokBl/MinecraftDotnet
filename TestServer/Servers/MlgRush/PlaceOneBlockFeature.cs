@@ -26,7 +26,7 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, IBlock> block, int disa
                 return;
             }
 
-            BlockPosition target = ui.Position.GetBlockTowards(ui.Face);
+            IVec3 target = ui.Position.GetBlockTowards(ui.Face);
             
             // is player inside that block?
             bool insideEntity = false;

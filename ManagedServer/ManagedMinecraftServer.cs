@@ -7,6 +7,7 @@ using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
 using Minecraft.Registry;
+using Minecraft.Schemas;
 
 namespace ManagedServer;
 
@@ -16,12 +17,15 @@ public class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience {
     public readonly List<World> Worlds = [];
     public readonly List<PlayerEntity> Players = [];
     
+    // Used to stop the tasks from being garbage collected
+    // ReSharper disable once CollectionNeverQueried.Local
     private readonly List<Timer> _timers = [];
     
     // Configurable stuff
     public int ViewDistance = 8;
-    public int PacketsPerTick = 3000;
-    public int TickDelayMs = 50;
+    public int WorldPacketsPerTick = 3000;
+    public int WorldTickDelayMs = 50;
+    public Func<PlayerEntity, TabListEntry[]> TabListProvider;
 
     public ManagedMinecraftServer(params IServerFeature[] feats) {
         foreach (IServerFeature feat in feats) {
@@ -32,6 +36,8 @@ public class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience {
         RegisterFeatIfNotPresent(new PlayerInfoFeature());
         RegisterFeatIfNotPresent(new HeartbeatsFeature(3000));
         RegisterFeatIfNotPresent(new LoginProcedureFeature());
+
+        TabListProvider = _ => Players.Select(p => new TabListEntry(p.Uuid, p.Name, 1, p.GameMode)).ToArray();
     }
 
     protected void RegisterFeatIfNotPresent(IServerFeature feat) {
@@ -44,7 +50,7 @@ public class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience {
     }
 
     public World CreateWorld(ITerrainProvider provider) {
-        World world = new(Events, provider, ViewDistance, PacketsPerTick, TickDelayMs) {
+        World world = new(Events, provider, ViewDistance, WorldPacketsPerTick, WorldTickDelayMs) {
             Server = this
         };
         Worlds.Add(world);

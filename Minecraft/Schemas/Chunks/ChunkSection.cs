@@ -4,6 +4,7 @@ using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Registry;
 using Minecraft.Schemas.Chunks.Palettes;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Schemas.Chunks;
 
@@ -135,7 +136,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         Blocks[x, y, z] = state;
     }
 
-    public void SetBlock(BlockPosition pos, uint state) {
+    public void SetBlock(IVec3 pos, uint state) {
         SetBlock(pos.X, pos.Y, pos.Z, state);
     }
 
@@ -146,7 +147,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         return Blocks[x, y, z];
     }
     
-    public uint GetBlock(BlockPosition pos) {
+    public uint GetBlock(IVec3 pos) {
         return GetBlock(pos.X, pos.Y, pos.Z);
     }
     
@@ -154,7 +155,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         return (registry ?? VanillaRegistry.Data).Blocks[GetBlock(x, y, z)];
     }
     
-    public IBlock LookupBlock(BlockPosition pos, MinecraftRegistry? registry = null) {
+    public IBlock LookupBlock(IVec3 pos, MinecraftRegistry? registry = null) {
         return (registry ?? VanillaRegistry.Data).Blocks[GetBlock(pos)];
     }
     

@@ -164,7 +164,7 @@ public class DataReader(byte[] data) : Stream {
     // An integer/block position: x (-33554432 to 33554431), z (-33554432 to 33554431), y (-2048 to 2047)
     // x as a 26-bit integer, followed by z as a 26-bit integer, followed by y as a 12-bit integer (all signed, two's complement).
     // Should be 8 bytes in total and big-endian.
-    public BlockPosition ReadPosition() {
+    public IVec3 ReadPosition() {
         // Read 8 bytes
         byte[] buffer = Read(8);
 
@@ -184,7 +184,7 @@ public class DataReader(byte[] data) : Stream {
         int y = (int)(packed & 0xFFF);
         y = SignExtend(y, 12);
 
-        return new BlockPosition(x, y, z);
+        return new IVec3(x, y, z);
     }
     
     // From an N-bit integer represented as a BitArray in big-endian order.

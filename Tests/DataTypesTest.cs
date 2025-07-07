@@ -1,6 +1,7 @@
 using System.Collections;
 using Minecraft;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Tests;
 
@@ -8,8 +9,8 @@ public class DataTypesTest {
     
     [Test]
     public void TestBlockPosition() {
-        BlockPosition position = new(143, 532, 353);
-        BlockPosition redone = new DataReader(new DataWriter().WritePosition(position).ToArray()).ReadPosition();
+        IVec3 position = new(143, 532, 353);
+        IVec3 redone = new DataReader(new DataWriter().WritePosition(position).ToArray()).ReadPosition();
         Assert.Multiple(() => {
             Assert.That(redone.X, Is.EqualTo(position.X));
             Assert.That(redone.Y, Is.EqualTo(position.Y));

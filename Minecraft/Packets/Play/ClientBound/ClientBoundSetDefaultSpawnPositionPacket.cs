@@ -1,11 +1,12 @@
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Packets.Play.ClientBound;
 
 public class ClientBoundSetDefaultSpawnPositionPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:set_default_spawn_position";
     
-    public required BlockPosition Location;
+    public required IVec3 Location;
     public required Angle Angle;
 
     protected override DataWriter WriteData(DataWriter w) {
