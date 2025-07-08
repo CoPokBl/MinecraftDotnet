@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record StickyPistonBlock(Identifier Identifier, bool Extended, Cardinal Facing) : IBlock {
 
+    public Identifier Category => "minecraft:piston_base";
     public double Hardness => 1.5;
     public double ExplosionResistance => 1.5;
     public double Friction => 0.6;

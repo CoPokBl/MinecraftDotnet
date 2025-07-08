@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DeepslateRedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock {
 
+    public Identifier Category => "minecraft:redstone_ore";
     public double Hardness => 4.5;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

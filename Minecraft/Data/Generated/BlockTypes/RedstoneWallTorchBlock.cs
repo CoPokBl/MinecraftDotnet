@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RedstoneWallTorchBlock(Identifier Identifier, Direction Facing, bool Lit) : IBlock {
 
+    public Identifier Category => "minecraft:redstone_wall_torch";
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

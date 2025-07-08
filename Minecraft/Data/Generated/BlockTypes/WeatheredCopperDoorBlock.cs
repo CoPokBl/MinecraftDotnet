@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
 
+    public Identifier Category => "minecraft:weathering_copper_door";
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

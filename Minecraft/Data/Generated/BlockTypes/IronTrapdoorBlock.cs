@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record IronTrapdoorBlock(Identifier Identifier, Direction Facing, IronTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
 
+    public Identifier Category => "minecraft:trapdoor";
     public double Hardness => 5;
     public double ExplosionResistance => 5;
     public double Friction => 0.6;

@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OrangeBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock {
 
+    public Identifier Category => "minecraft:bed";
     public double Hardness => 0.2;
     public double ExplosionResistance => 0.2;
     public double Friction => 0.6;

@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBlock {
 
+    public Identifier Category => "minecraft:cocoa";
     public double Hardness => 0.2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

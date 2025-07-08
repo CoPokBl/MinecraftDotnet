@@ -19,10 +19,10 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Worlds;
 
-public class World : IAudience {
+public class World : IAudience, IFeatureScope {
     // State stuff
-    public readonly List<PlayerEntity> Players = [];
-    public readonly EventNode<IServerEvent> Events;
+    public List<PlayerEntity> Players { get; } = [];
+    public EventNode<IServerEvent> Events { get; }
     public readonly EntityManager Entities;
     public required ManagedMinecraftServer? Server;
     public bool Immutable { get; set; } = false;

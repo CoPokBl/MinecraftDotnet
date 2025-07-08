@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record IronDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
 
+    public Identifier Category => "minecraft:door";
     public double Hardness => 5;
     public double ExplosionResistance => 5;
     public double Friction => 0.6;

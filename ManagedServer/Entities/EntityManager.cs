@@ -126,7 +126,8 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         SendPacketsFor(entity, new ClientBoundSetEntityMetadataPacket {
             EntityId = entity.NetId,
             Meta = new PlayerMeta {
-                Pose = crouching ? EntityPose.Sneaking : EntityPose.Standing
+                Pose = crouching ? EntityPose.Sneaking : EntityPose.Standing,
+                Status = crouching ? EntityStatus.Sneaking : EntityStatus.None
             }
         });
     }

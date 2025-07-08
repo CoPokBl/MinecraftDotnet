@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, bool Locked, bool Powered) : IBlock {
 
+    public Identifier Category => "minecraft:repeater";
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

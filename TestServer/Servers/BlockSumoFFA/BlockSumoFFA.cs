@@ -68,7 +68,7 @@ public static class BlockSumoFfa {
         ITerrainProvider terrain = new BlockSumoMapProvider(12);
         World world = server.CreateWorld(terrain);
         new SimpleCombatFeature(500).Register(world);
-        new BlockBreakingFeature(false).Register(world);
+        // new BlockBreakingFeature(false).Register(world);
 
         IBlock[] blocks = [
             Block.WhiteConcretePowder,
@@ -94,7 +94,13 @@ public static class BlockSumoFfa {
             e.Cancelled = false;
             e.Block = blocks[Random.Shared.Next(blocks.Length)];
             e.Player.HeldItem = blockItem;
+
+            if (e.Position.Y > 1) {
+                e.Cancelled = true;
+                return;
+            }
             
+            return;
             AtomicCounter count = new(-1);
             int breakingEntity = Random.Shared.Next();
             server.ScheduleRepeatingTask(TimeSpan.FromSeconds(disappearTime/9), () => {
@@ -117,6 +123,15 @@ public static class BlockSumoFfa {
                 return true;
             });
         });
+
+        world.Events.AddListener<PlayerBreakBlockEvent>(e => {
+            e.Cancelled = false;
+        });
+
+        world.Events.AddListener<PlayerStartBreakingBlockEvent>(e => {
+            e.Cancelled = false;
+        });
+        
         
         TcpMinecraftListener listener = new(connection => {
             Console.WriteLine("Got new connection");

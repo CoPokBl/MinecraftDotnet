@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direction Facing) : IBlock {
 
+    public Identifier Category => "minecraft:grindstone";
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PowderSnowCauldronBlock(Identifier Identifier, int Level) : IBlock {
 
+    public Identifier Category => "minecraft:layered_cauldron";
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;

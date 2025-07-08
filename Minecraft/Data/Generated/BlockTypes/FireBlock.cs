@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record FireBlock(Identifier Identifier, int Age, bool East, bool North, bool South, bool Up, bool West) : IBlock {
 
+    public Identifier Category => "minecraft:fire";
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

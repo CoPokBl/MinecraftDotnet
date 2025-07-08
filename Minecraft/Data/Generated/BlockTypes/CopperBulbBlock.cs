@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : IBlock {
 
+    public Identifier Category => "minecraft:weathering_copper_bulb";
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

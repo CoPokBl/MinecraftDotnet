@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WaxedExposedCutCopperStairsBlock(Identifier Identifier, Direction Facing, WaxedExposedCutCopperStairsBlock.Half HalfValue, StairShape Shape, bool Waterlogged) : IBlock {
 
+    public Identifier Category => "minecraft:stair";
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

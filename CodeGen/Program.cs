@@ -70,28 +70,35 @@ else {
     Console.WriteLine("Found existing jar file for Minecraft " + mcVersion + ". Skipping download.");
 }
 
-// Run the process
-string cmd = $"-DbundlerMainClass=\"net.minecraft.data.Main\" -jar {mcVersion}.jar --all --output vanilladata --all";
-Process process = new() {
-    StartInfo = new ProcessStartInfo {
-        FileName = "java",
-        Arguments = cmd,
-        RedirectStandardOutput = false,
-        RedirectStandardError = false,
-        UseShellExecute = false,
-        CreateNoWindow = true
-    }
-};
-process.Start();
-Console.WriteLine($"Generating data for Minecraft {mcVersion}...");
-process.WaitForExit();
-if (process.ExitCode != 0) {
-    Console.WriteLine("Failed to generate data. Check the output above for errors.");
-    return 1;
-}
-Console.WriteLine("Done!");
+string vanillaDataDir = $"vanilladata{mcVersion}";
 
-CodeGenUtils.VanillaDataDir = Path.Combine(Directory.GetCurrentDirectory(), "vanilladata");
+if (!Directory.Exists(vanillaDataDir)) {
+    // Run the process
+    string cmd = $"-DbundlerMainClass=\"net.minecraft.data.Main\" -jar {mcVersion}.jar --all --output {vanillaDataDir} --all";
+    Process process = new() {
+        StartInfo = new ProcessStartInfo {
+            FileName = "java",
+            Arguments = cmd,
+            RedirectStandardOutput = false,
+            RedirectStandardError = false,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        }
+    };
+    process.Start();
+    Console.WriteLine($"Generating data for Minecraft {mcVersion}...");
+    process.WaitForExit();
+    if (process.ExitCode != 0) {
+        Console.WriteLine("Failed to generate data. Check the output above for errors.");
+        return 1;
+    }
+    Console.WriteLine("Done!");
+}
+else {
+    Console.WriteLine("Found existing vanilla data directory: " + vanillaDataDir + ". Skipping generation.");
+}
+
+CodeGenUtils.VanillaDataDir = Path.Combine(Directory.GetCurrentDirectory(), vanillaDataDir);
 
 Console.WriteLine("Loading registries.json...");
 JObject registriesJson = JObject.Parse(CodeGenUtils.ReadVanillaDataFile("reports", "registries.json"));
@@ -115,6 +122,7 @@ RunStep("Data Components", DataComponentCodeGen.CreateComponentEntries);
 RunStep("Entity Types", EntityTypeCodeGen.CreateEntityTypeEntries);
 RunStep("Sounds", SoundCodeGen.CreateSoundEntries);
 RunStep("Inventory Types", InventoryTypeCodeGen.CreateInventoryTypeEntries);
+RunStep("Tags", TagsCodeGen.CreateTagEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

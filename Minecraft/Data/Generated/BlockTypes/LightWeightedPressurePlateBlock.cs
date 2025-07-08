@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LightWeightedPressurePlateBlock(Identifier Identifier, int Power) : IBlock {
 
+    public Identifier Category => "minecraft:weighted_pressure_plate";
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

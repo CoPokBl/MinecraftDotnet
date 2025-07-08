@@ -17,6 +17,10 @@ public class ItemStack(int count, IItem? type = null, IDataComponent[]? componen
         return new ItemStack(Count, Type, Components.Append(component).ToArray(), RemoveComponents);
     }
     
+    public IDataComponent<T>? Get<T>(IDataComponent<T> type) {
+        return Components.Where(component => component.Identifier == type.Identifier).Cast<IDataComponent<T>>().FirstOrDefault();
+    }
+    
     public void Write(DataWriter writer, MinecraftRegistry registry) {
         if (Count == 0) {
             writer.WriteVarInt(0);

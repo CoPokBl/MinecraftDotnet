@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
 
+    public Identifier Category => "minecraft:ender_chest";
     public double Hardness => 22.5;
     public double ExplosionResistance => 600;
     public double Friction => 0.6;

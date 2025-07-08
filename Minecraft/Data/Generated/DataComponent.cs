@@ -24,6 +24,7 @@ public static class DataComponent {
     public static readonly MaxStackSizeComponent MaxStackSize = MaxStackSizeComponent.Default;
     public static readonly RarityComponent Rarity = RarityComponent.Default;
     public static readonly RepairCostComponent RepairCost = RepairCostComponent.Default;
+    public static readonly ToolComponent Tool = ToolComponent.Default;
     public static readonly TooltipDisplayComponent TooltipDisplay = TooltipDisplayComponent.Default;
     public static readonly UnbreakableComponent Unbreakable = UnbreakableComponent.Default;
 }

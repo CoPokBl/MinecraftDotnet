@@ -17,9 +17,4 @@ public class PlayerPlaceBlockEvent : ICancelableEvent, IServerEvent {
     /// Whether to do nothing and inform the client that the block placement was cancelled.
     /// </summary>
     public bool Cancelled { get; set; } = true;
-    
-    /// <summary>
-    /// Whether to ignore this event and not send any packets to the client.
-    /// </summary>
-    public bool Ignore { get; set; } = false;
 }

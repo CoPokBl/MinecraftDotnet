@@ -2804,6 +2804,7 @@ public static class VanillaRegistry {
         Data.DataComponents.Add(MaxStackSizeComponent.Default, 1);
         Data.DataComponents.Add(RarityComponent.Default, 9);
         Data.DataComponents.Add(RepairCostComponent.Default, 16);
+        Data.DataComponents.Add(ToolComponent.Default, 25);
         Data.DataComponents.Add(TooltipDisplayComponent.Default, 15);
         Data.DataComponents.Add(UnbreakableComponent.Default, 4);
 
@@ -4685,6 +4686,7 @@ public static class VanillaRegistry {
         Data.InventoryTypes.Add(InventoryType.Smithing);
         Data.InventoryTypes.Add(InventoryType.Smoker);
         Data.InventoryTypes.Add(InventoryType.Stonecutter);
+
 
     }
 }

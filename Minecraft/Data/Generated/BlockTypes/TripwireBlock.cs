@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed, bool East, bool North, bool Powered, bool South, bool West) : IBlock {
 
+    public Identifier Category => "minecraft:tripwire";
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

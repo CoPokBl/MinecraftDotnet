@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BrownBannerBlock(Identifier Identifier, int Rotation) : IBlock {
 
+    public Identifier Category => "minecraft:banner";
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

@@ -11,11 +11,11 @@ using Minecraft.Schemas;
 
 namespace ManagedServer;
 
-public class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience {
+public class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience, IFeatureScope {
     public MinecraftRegistry Registry = VanillaRegistry.Data;  // TODO: use this
     
     public readonly List<World> Worlds = [];
-    public readonly List<PlayerEntity> Players = [];
+    public List<PlayerEntity> Players { get; } = [];
     
     // Used to stop the tasks from being garbage collected
     // ReSharper disable once CollectionNeverQueried.Local

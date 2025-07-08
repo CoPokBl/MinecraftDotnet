@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CherryHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock {
 
+    public Identifier Category => "minecraft:ceiling_hanging_sign";
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

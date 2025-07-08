@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PlayerWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
 
+    public Identifier Category => "minecraft:player_wall_head";
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

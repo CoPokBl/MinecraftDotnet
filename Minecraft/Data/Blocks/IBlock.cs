@@ -7,6 +7,7 @@ namespace Minecraft.Data.Blocks;
 public interface IBlock {
     public Identifier Identifier { get; }
     
+    public Identifier Category { get; }
     public double Hardness { get; }
     public double ExplosionResistance { get; }
     public double Friction { get; }
@@ -47,5 +48,11 @@ public interface IBlock {
         if (b1 is null && b2 is null) return true;
         if (b1 is null || b2 is null) return false;
         return b1.Equals(b2);
+    }
+    
+    public static bool SimilarTo(IBlock? b1, IBlock? b2) {
+        if (b1 is null && b2 is null) return true;
+        if (b1 is null || b2 is null) return false;
+        return b1.Identifier == b2.Identifier;
     }
 }

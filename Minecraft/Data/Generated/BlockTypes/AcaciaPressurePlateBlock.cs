@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record AcaciaPressurePlateBlock(Identifier Identifier, bool Powered) : IBlock {
 
+    public Identifier Category => "minecraft:pressure_plate";
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

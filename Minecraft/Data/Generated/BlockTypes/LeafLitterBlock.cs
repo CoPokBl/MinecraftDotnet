@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LeafLitterBlock(Identifier Identifier, Direction Facing, int SegmentAmount) : IBlock {
 
+    public Identifier Category => "minecraft:leaf_litter";
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

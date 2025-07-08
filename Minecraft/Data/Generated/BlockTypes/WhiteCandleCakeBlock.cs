@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WhiteCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock {
 
+    public Identifier Category => "minecraft:candle_cake";
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock.Thickness ThicknessValue, PointedDripstoneBlock.VerticalDirection VerticalDirectionValue, bool Waterlogged) : IBlock {
 
+    public Identifier Category => "minecraft:pointed_dripstone";
     public double Hardness => 1.5;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

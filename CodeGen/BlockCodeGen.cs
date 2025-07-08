@@ -160,6 +160,7 @@ public static class Block {
             
             // FETCH ADDITIONAL DATA
             JObject dataEntry = blocksDataJson[id]!.ToObject<JObject>()!;
+            string category = blockData["definition"]!["type"]!.ToObject<string>()!;
             string translationKey = dataEntry["translationKey"]!.ToObject<string>()!;
             double explosionResistance = dataEntry["explosionResistance"]!.ToObject<double>();
             double friction = dataEntry["friction"]!.ToObject<double>();
@@ -200,7 +201,7 @@ public static class Block {
             };
             Func<string?, string> toCsStr = str => str == null ? "null" : $"\"{str}\"";
 
-            string propArgsStringRecord = $"{hardness}, {explosionResistance}, {friction}, {speedFactor}, " +
+            string propArgsStringRecord = $"{toCsStr(category)}, {hardness}, {explosionResistance}, {friction}, {speedFactor}, " +
                                           $"{jumpFactor}, {solid.ToString().ToLower()}, {liquid.ToString().ToLower()}, " +
                                           $"{occludes.ToString().ToLower()}, {requiresTool.ToString().ToLower()}, " +
                                           $"{lightEmission}, {replaceable.ToString().ToLower()}, {toCsStr(soundType)}, " +
@@ -249,6 +250,7 @@ public static class Block {
             
             // COMPILE ALL THE DATA INTO PROPS
             StringBuilder staticData = new();
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public Identifier Category => {toCsStr(category)};\n");
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double Hardness => {hardness};\n");
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double ExplosionResistance => {explosionResistance};\n");
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double Friction => {friction};\n");

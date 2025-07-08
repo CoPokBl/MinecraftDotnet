@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record EndStoneBrickWallBlock(Identifier Identifier, WallSide East, WallSide North, WallSide South, bool Up, bool Waterlogged, WallSide West) : IBlock {
 
+    public Identifier Category => "minecraft:wall";
     public double Hardness => 3;
     public double ExplosionResistance => 9;
     public double Friction => 0.6;

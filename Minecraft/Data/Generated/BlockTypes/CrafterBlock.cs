@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Orientation, bool Triggered) : IBlock {
 
+    public Identifier Category => "minecraft:crafter";
     public double Hardness => 1.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;

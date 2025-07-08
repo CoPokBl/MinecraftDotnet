@@ -24,6 +24,8 @@ public class PlayerEntity : Entity, IAudience {
     public readonly PlayerConnection Connection;
     public readonly PlayerInventory Inventory;
 
+    public override List<PlayerEntity> Players => [this];
+
     public Inventory.Inventory? OpenInventory {
         get => _openInventory;
         set {
@@ -93,6 +95,8 @@ public class PlayerEntity : Entity, IAudience {
         }
     }
 
+    public bool OnGround;
+
     public ManagedMinecraftServer Server => World!.Server!;
 
     private int _waitingTeleport = -1;
@@ -102,8 +106,10 @@ public class PlayerEntity : Entity, IAudience {
     private int _level;
     private GameMode _gameMode;
     private Inventory.Inventory? _openInventory;
-    private int _activeHotbarSlot = 0;
+    private int _activeHotbarSlot;
     private Func<PlayerConnection, bool> _playerViewableRule = _ => true;
+    private Timer? _blockBreakTimer;
+    private AtomicCounter _blockBreakTickCounter = new(0, 20);
 
     // Listen to movement packets so we can do stuff
     public PlayerEntity(PlayerConnection connection, string name) : base(EntityType.Player) {
@@ -113,25 +119,27 @@ public class PlayerEntity : Entity, IAudience {
         Inventory = new PlayerInventory(this);
         
         connection.Events.Parents.Add(Events);
-
         connection.Disconnected += Despawn;
         
         connection.Events.AddListener<PacketHandleEvent>(e => {
             switch (e.Packet) {
                 case ServerBoundSetPlayerPositionPacket sp: {
                     if (_waitingTeleport != -1) return;
+                    OnGround = sp.Flags.HasFlag(MovePlayerFlags.OnGround);
                     Move(sp.Position);
                     break;
                 }
 
                 case ServerBoundSetPlayerPosAndRotPacket sp: {
                     if (_waitingTeleport != -1) return;
+                    OnGround = sp.Flags.HasFlag(MovePlayerFlags.OnGround);
                     Move(sp.Position, Angle.FromDegrees(sp.Yaw), Angle.FromDegrees(sp.Pitch));
                     break;
                 }
 
                 case ServerBoundSetPlayerRotationPacket sr: {
                     if (_waitingTeleport != -1) return;
+                    OnGround = sr.Flags.HasFlag(MovePlayerFlags.OnGround);
                     Move(Position, Angle.FromDegrees(sr.Yaw), Angle.FromDegrees(sr.Pitch));
                     break;
                 }
@@ -177,6 +185,44 @@ public class PlayerEntity : Entity, IAudience {
                     break;
                 }
 
+                case ServerBoundPlayerActionPacket pa: {
+                    MinecraftPacket ackPacket = new ClientBoundAcknowledgeBlockChangePacket {
+                        SequenceId = pa.Sequence
+                    };
+                    
+                    switch (pa.ActionStatus) {
+                        case ServerBoundPlayerActionPacket.Status.StartedDigging:
+                            if (ProcessDigStart(pa.Location) == DigResult.Acknowledge) {
+                                SendPacket(ackPacket);
+                            }
+                            break;
+                        case ServerBoundPlayerActionPacket.Status.CancelledDigging:
+                            ProcessDigCancel(pa.Location);
+                            SendPacket(ackPacket);
+                            break;
+                        case ServerBoundPlayerActionPacket.Status.FinishedDigging:
+                            if (ProcessDigEnd(pa.Location) == DigResult.Acknowledge) {
+                                SendPacket(ackPacket);
+                            }
+                            break;
+                        case ServerBoundPlayerActionPacket.Status.DropItemStack:
+                            Inventory.SendUpdateTo(this);
+                            break;
+                        case ServerBoundPlayerActionPacket.Status.DropItem:
+                            Inventory.SendUpdateTo(this);
+                            break;
+                        case ServerBoundPlayerActionPacket.Status.UpdateHeldItem:
+                            Inventory.SendUpdateTo(this);
+                            break;
+                        case ServerBoundPlayerActionPacket.Status.SwapItem:
+                            SwapHeld();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    break;
+                }
+
                 case ServerBoundSwingArmPacket sa: {
                     ClientBoundEntityAnimationPacket.AnimationType animation = sa.UsedHand switch {
                         Hand.MainHand => ClientBoundEntityAnimationPacket.AnimationType.SwingMainArm,
@@ -193,8 +239,105 @@ public class PlayerEntity : Entity, IAudience {
         });
     }
 
+    public void SwapHeld() {
+        (HeldItem, Inventory.Offhand) = (Inventory.Offhand, HeldItem);
+        Inventory.SendUpdateTo(this);
+    }
+
+    private DigResult ProcessDigStart(IVec3 pos) {
+        IBlock block = World!.GetBlock(pos);
+        
+        PlayerStartBreakingBlockEvent startEvent = new() {
+            Player = this,
+            Position = pos,
+            Block = block,
+            World = World!
+        };
+        Events.CallEvent(startEvent);
+
+        if (startEvent.Cancelled) {
+            return DigResult.Acknowledge;
+        }
+        
+        ItemStack heldItem = HeldItem;
+        int breakTicks = BlockUtils.GetBreakSpeed(GameMode, block, heldItem, false, OnGround);
+
+        if (breakTicks == 0) {
+            // instamine
+            BreakBlock(pos);
+            return DigResult.Acknowledge;
+        }
+        
+        // mining over time
+        _blockBreakTimer?.Dispose();
+        float breakSeconds = breakTicks / 20.0f;
+        TimeSpan breakTickDuration = TimeSpan.FromSeconds(breakSeconds / 9f);  // 9 break ticks occur before it breaks
+        _blockBreakTimer = new Timer(_ => {
+            this.GetAudience().SendPacket(new ClientBoundSetBlockDestroyStagePacket {
+                Block = pos,
+                EntityId = NetId,
+                Stage = (byte)Math.Min(_blockBreakTickCounter.Next(), 9)
+            });
+        }, null, breakTickDuration, breakTickDuration);
+
+        return DigResult.Acknowledge;
+    }
+
+    private DigResult ProcessDigEnd(IVec3 pos) {
+        StopBlockBreakAnimation(pos);
+        
+        IBlock block = World!.GetBlock(pos);
+        
+        // Well they broke it
+        BreakBlock(pos);
+        return DigResult.Acknowledge;
+    }
+    
+    private void ProcessDigCancel(IVec3 pos) {
+        PlayerCancelBreakingBlockEvent cancelEvent = new() {
+            Player = this,
+            Position = pos,
+            Block = World!.GetBlock(pos),
+            World = World!
+        };
+        Events.CallEvent(cancelEvent);
+        
+        StopBlockBreakAnimation(pos);
+    }
+    
+    private void StopBlockBreakAnimation(IVec3 pos) {
+        _blockBreakTimer?.Dispose();
+        _blockBreakTimer = null;
+        _blockBreakTickCounter.Value = 0;
+        
+        this.GetAudience().SendPacket(new ClientBoundSetBlockDestroyStagePacket {
+            Block = pos,
+            EntityId = NetId,
+            Stage = 64  // invalid value means stop
+        });
+    }
+
+    public void BreakBlock(IVec3 pos) {
+        PlayerBreakBlockEvent breakEvent = new() {
+            Player = this,
+            Position = pos,
+            World = World!,
+            Block = World!.GetBlock(pos)
+        };
+        Events.CallEvent(breakEvent);
+        
+        if (breakEvent.Cancelled) {
+            // don't break, send block update to client
+            World!.SendBlockUpdate(pos, this);
+            return;
+        }
+        
+        World!.SetBlock(pos, Block.Air);
+    }
+
     private void CheckBlockPlace(ServerBoundUseItemOnPacket use) {
         IVec3 target = use.Position.GetBlockTowards(use.Face);
+        Inventory.SendSlotUpdate(ActiveHotbarSlot);
         
         // let's get the block
         ItemStack heldItem = HeldItem;
@@ -211,17 +354,13 @@ public class PlayerEntity : Entity, IAudience {
             Vec3 blockPos = new(target.X + 0.5, target.Y + 0.5, target.Z + 0.5);
             if (Math.Abs(pos.X - blockPos.X) < 0.5 + PlayerWidth/2 && 
                 Math.Abs(pos.Z - blockPos.Z) < 0.5 + PlayerWidth/2 && 
-                Math.Abs(pos.Y + PlayerHeight/2 - blockPos.Y) < 0.5 + PlayerHeight/2) {
+                Math.Abs(pos.Y + PlayerHeight/2 - blockPos.Y) + 0.001 < 0.5 + PlayerHeight/2) {
                 // they're in the block
                 insideEntity = true;
                 break;
             }
         }
-
-        if (target.Y > 1) {
-            insideEntity = true;
-        }
-
+        
         MinecraftPacket ackPacket = new ClientBoundAcknowledgeBlockChangePacket {
             SequenceId = use.Sequence
         };
@@ -240,10 +379,6 @@ public class PlayerEntity : Entity, IAudience {
             World = World!
         };
         Events.CallEvent(placeEvent);
-
-        if (placeEvent.Ignore) {
-            return;  // do nothing, not even acknowledge packet
-        }
 
         if (placeEvent.Cancelled) {
             World!.SendBlockUpdate(target, this);
@@ -327,5 +462,10 @@ public class PlayerEntity : Entity, IAudience {
 
     public void SendPacket(MinecraftPacket packet) {
         Connection.SendPacket(packet);
+    }
+    
+    private enum DigResult {
+        Ignore,
+        Acknowledge
     }
 }

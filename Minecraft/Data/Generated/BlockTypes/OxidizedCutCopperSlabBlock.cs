@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OxidizedCutCopperSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
 
+    public Identifier Category => "minecraft:weathering_copper_slab";
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

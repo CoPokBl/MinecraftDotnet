@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BeehiveBlock(Identifier Identifier, Direction Facing, int HoneyLevel) : IBlock {
 
+    public Identifier Category => "minecraft:beehive";
     public double Hardness => 0.6;
     public double ExplosionResistance => 0.6;
     public double Friction => 0.6;

@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record FurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : IBlock {
 
+    public Identifier Category => "minecraft:furnace";
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;

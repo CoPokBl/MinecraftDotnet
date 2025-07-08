@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance, bool Waterlogged) : IBlock {
 
+    public Identifier Category => "minecraft:scaffolding";
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

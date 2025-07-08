@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RedstoneLampBlock(Identifier Identifier, bool Lit) : IBlock {
 
+    public Identifier Category => "minecraft:redstone_lamp";
     public double Hardness => 0.3;
     public double ExplosionResistance => 0.3;
     public double Friction => 0.6;

@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PolishedDeepslateStairsBlock(Identifier Identifier, Direction Facing, PolishedDeepslateStairsBlock.Half HalfValue, StairShape Shape, bool Waterlogged) : IBlock {
 
+    public Identifier Category => "minecraft:stair";
     public double Hardness => 3.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

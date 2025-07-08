@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : IBlock {
 
+    public Identifier Category => "minecraft:barrel";
     public double Hardness => 2.5;
     public double ExplosionResistance => 2.5;
     public double Friction => 0.6;

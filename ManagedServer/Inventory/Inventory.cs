@@ -1,6 +1,8 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Viewables;
 using Minecraft.Data.Inventories;
+using Minecraft.Implementations.Events;
+using Minecraft.Implementations.Server.Events;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
@@ -20,6 +22,8 @@ public abstract class Inventory : IViewable {
 
     public virtual int WindowId { get; } = IdCounter.Next();
     
+    public EventNode<IServerEvent> Events { get; }
+    
     /// <summary>
     /// Items in the inventory.
     /// <p/>
@@ -38,6 +42,8 @@ public abstract class Inventory : IViewable {
         for (int i = 0; i < size; i++) {
             Items[i] = ItemStack.Air;
         }
+
+        Events = new EventNode<IServerEvent>();
     }
 
     public ItemStack this[int index] {
@@ -47,17 +53,27 @@ public abstract class Inventory : IViewable {
                 throw new IndexOutOfRangeException($"Index {index} is out of range for inventory of size {Size}.");
             }
             Items[index] = value;
-            UpdateSlot(index);
+            SendSlotUpdate(index);
         }
     }
 
-    private void UpdateSlot(int slot) {
+    public void SendSlotUpdate(int slot) {
         LastStateId = Random.Shared.Next();
         this.GetAudience().SendPacket(new ClientBoundSetContainerSlotPacket {
             WindowId = WindowId,
             StateId = LastStateId,
             SlotId = (short)slot,
             Data = Items[slot]
+        });
+    }
+
+    public void SendUpdateTo(IAudience audience) {
+        LastStateId = Random.Shared.Next();
+        audience.SendPacket(new ClientBoundSetContainerContentPacket {
+            CursorItem = ItemStack.Air,
+            SlotData = Items,
+            StateId = LastStateId,
+            WindowId = WindowId
         });
     }
 

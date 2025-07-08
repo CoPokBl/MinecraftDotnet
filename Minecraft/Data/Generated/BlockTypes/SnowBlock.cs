@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SnowBlock(Identifier Identifier, int Layers) : IBlock {
 
+    public Identifier Category => "minecraft:snow_layer";
     public double Hardness => 0.1;
     public double ExplosionResistance => 0.1;
     public double Friction => 0.6;

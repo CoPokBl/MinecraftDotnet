@@ -11,6 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facing FacingValue) : IBlock {
 
+    public Identifier Category => "minecraft:hopper";
     public double Hardness => 3;
     public double ExplosionResistance => 4.8;
     public double Friction => 0.6;

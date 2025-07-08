@@ -4,7 +4,7 @@ using NBT.Tags;
 
 namespace Minecraft.Data.Blocks;
 
-public record SimpleBlock(Identifier Identifier, uint StateId, 
+public record SimpleBlock(Identifier Identifier, uint StateId, Identifier Category,
     double Hardness, double ExplosionResistance, double Friction, double SpeedFactor, double JumpFactor, bool Solid, 
     bool Liquid, bool Occludes, bool RequiresTool, int LightEmission, bool Replaceable, string SoundType, 
     Identifier? BlockEntity, Identifier? Item, ICollisionBox CollisionShape, ICollisionBox OcclusionShape, 

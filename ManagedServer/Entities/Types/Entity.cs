@@ -14,7 +14,7 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Entities.Types;
 
-public class Entity(IEntityType type) : IViewable, ITaggable {
+public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
     public Guid Uuid = Guid.NewGuid();
     public readonly IEntityType Type = type;
     public Vec3 Position = Vec3.Zero;
@@ -31,7 +31,8 @@ public class Entity(IEntityType type) : IViewable, ITaggable {
         }
     }
 
-    public EventNode<IServerEvent> Events = new();
+    public EventNode<IServerEvent> Events { get; } = new();
+    public virtual List<PlayerEntity> Players => [];
     public readonly Dictionary<string, object?> Data = new();
 
     private bool _crouching;
