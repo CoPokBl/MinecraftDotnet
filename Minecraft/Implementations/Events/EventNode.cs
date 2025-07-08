@@ -3,24 +3,41 @@ using System.Reflection;
 namespace Minecraft.Implementations.Events;
 
 public class EventNode<T> {
-    public List<EventNode<T>> Parents { get; }
+    public List<(EventNode<T>, Func<T, bool>)> Children { get; } = [];
     public event Action<T>? Callback;
-    
-    public EventNode(params EventNode<T>[] parents) {
-        Parents = new List<EventNode<T>>(parents);
 
-        Callback += e => {  // Trigger parent callbacks
-            List<EventNode<T>> ps = new(Parents);  // dupe to prevent concurrent mod
-            try {
-                foreach (EventNode<T> parent in ps) {
-                    parent.Callback?.Invoke(e);
-                }
-            }
-            catch (InvalidOperationException ex) {
-                Console.WriteLine(ex);
-                throw;
-            }
+    public EventNode<T>? Parent;
+
+    public EventNode<T> CreateChild<TS>(Func<TS, bool>? condition = null) where TS : T {
+        EventNode<T> child = new() {
+            Parent = this
         };
+        Children.Add((child, condition == null ? e => e is TS : e => e is TS ts && condition(ts)));
+        return child;
+    }
+    
+    public EventNode<T> CreateChild(Func<T, bool>? condition = null) {
+        EventNode<T> child = new() {
+            Parent = this
+        };
+        Children.Add((child, condition ?? (_ => true)));
+        return child;
+    }
+    
+    public void AddChild(EventNode<T> child, Func<T, bool>? condition = null) {
+        condition ??= _ => true;
+        child.Parent = this;
+        Children.Add((child, condition));
+    }
+    
+    public void AddChild<TS>(EventNode<T> child, Func<TS, bool>? condition = null) where TS : T {
+        Children.Add((child, condition == null ? e => e is TS : e => e is TS ts && condition(ts)));
+        child.Parent = this;
+    }
+    
+    public void RemoveChild(EventNode<T> child) {
+        Children.RemoveAll(c => c.Item1 == child);
+        child.Parent = null;
     }
     
     public Action AddListener<TL>(Action<TL> callback) where TL : T {
@@ -85,9 +102,25 @@ public class EventNode<T> {
     }
     
     public void CallEvent(T e) {
+        if (Parent != null) {
+            Parent.CallEvent(e);
+            return;
+        }
+        
+        ExecuteEventCallbacks(e);
+    }
+    
+    private void ExecuteEventCallbacks(T e) {
         try {
             // Stopwatch sw = Stopwatch.StartNew();
             Callback?.Invoke(e);
+            
+            (EventNode<T>, Func<T, bool>)[] children = Children.ToArray();  // avoid modifying while iterating
+            foreach ((EventNode<T> child, Func<T, bool> condition) in children) {
+                if (condition(e)) {
+                    child.ExecuteEventCallbacks(e);
+                }
+            }
             // if (sw.ElapsedMilliseconds > 0) Console.WriteLine($"Event ({e.GetType().FullName}) took {sw.ElapsedMilliseconds}ms");
         }
         catch (StackOverflowException) {

@@ -11,12 +11,17 @@ using Minecraft.Schemas;
 
 namespace ManagedServer;
 
-public class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience, IFeatureScope {
+public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience, IFeatureScope {
     public MinecraftRegistry Registry = VanillaRegistry.Data;  // TODO: use this
     
     public readonly List<World> Worlds = [];
     public List<PlayerEntity> Players { get; } = [];
     
+    public void RegisterFeature(ScopedFeature feature) {
+        feature.Scope = this;
+        feature.Register();
+    }
+
     // Used to stop the tasks from being garbage collected
     // ReSharper disable once CollectionNeverQueried.Local
     private readonly List<Timer> _timers = [];

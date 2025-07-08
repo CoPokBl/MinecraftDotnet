@@ -1,8 +1,8 @@
 using ManagedServer.Entities.Types;
-using ManagedServer.Worlds;
+using ManagedServer.Events;
+using ManagedServer.Viewables;
 using Minecraft;
 using Minecraft.Data.Generated;
-using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
@@ -11,11 +11,11 @@ using Minecraft.Schemas.Sound;
 
 namespace ManagedServer.Features;
 
-public class SimpleCombatFeature(int attackCooldown = -1) : IWorldFeature {
+public class SimpleCombatFeature(int attackCooldown = -1) : ScopedFeature {
     private readonly Tag<long> _lastHitTag = new("minecraftdotnet:simplecombat:lasthit");
     
-    public void Register(World world) {
-        world.Events.AddListener<PacketHandleEvent>(e => {
+    public override void Register() {
+        Scope.Events.AddListener<PlayerPacketEvent>(e => {
             if (e.Packet is not ServerBoundInteractPacket packet) {
                 return;
             }
@@ -27,13 +27,11 @@ public class SimpleCombatFeature(int attackCooldown = -1) : IWorldFeature {
             Entity? entity;
             PlayerEntity attacker;
             try {
-                entity = world.Entities.GetEntityById(packet.EntityId);
-                attacker = (PlayerEntity)world.Entities.Entities.Single(en => 
-                    en is PlayerEntity pl && 
-                    pl.Connection == e.Connection);
+                entity = e.World.Entities.GetEntityById(packet.EntityId);
+                attacker = e.Player;
             
                 if (entity == null) {
-                    e.Connection.SendSystemMessage("You hit an entity that doesn't exist");
+                    e.Player.SendMessage("You hit an entity that doesn't exist");
                     return;
                 }
             }
@@ -73,19 +71,11 @@ public class SimpleCombatFeature(int attackCooldown = -1) : IWorldFeature {
                 p.Connection.SendPacket(soundPacket);
             }
             else {
-                e.Connection.SendSystemMessage("Entity is not player");
+                e.Player.SendMessage("Entity is not player");
             }
             
-            world.Entities.SendPacketsFor(entity, soundPacket);
+            e.World.Entities.SendPacketsFor(entity, soundPacket);
             entity.Hurt();
         });
-    }
-    
-    public void Unregister() {
-        
-    }
-
-    public Type[] GetDependencies() {
-        return [];
     }
 }

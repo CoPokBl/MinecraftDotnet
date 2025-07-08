@@ -8,9 +8,7 @@ using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
-using Minecraft.Data.Sounds;
 using Minecraft.Implementations.Server;
-using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
@@ -19,11 +17,9 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
-using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
 using TestServer.Servers.BlockSumo;
-using TestServer.Servers.MlgRush;
 
 namespace TestServer.Servers.BlockSumoFFA;
 
@@ -67,7 +63,7 @@ public static class BlockSumoFfa {
         PlayerPosition spawn = new(new Vec3(0, 0, 0), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
         ITerrainProvider terrain = new BlockSumoMapProvider(12);
         World world = server.CreateWorld(terrain);
-        new SimpleCombatFeature(500).Register(world);
+        world.RegisterFeature(new SimpleCombatFeature(500));
         // new BlockBreakingFeature(false).Register(world);
 
         IBlock[] blocks = [
@@ -100,7 +96,6 @@ public static class BlockSumoFfa {
                 return;
             }
             
-            return;
             AtomicCounter count = new(-1);
             int breakingEntity = Random.Shared.Next();
             server.ScheduleRepeatingTask(TimeSpan.FromSeconds(disappearTime/9), () => {
@@ -132,32 +127,33 @@ public static class BlockSumoFfa {
             e.Cancelled = false;
         });
         
+        server.Events.AddListener<PlayerPreLoginEvent>(e => {
+            e.GameMode = GameMode.Survival;
+            e.Hardcore = true;
+            e.World = world;
+
+            MinecraftPacket links = new ClientBoundServerLinksPacket {
+                Links = [
+                    ClientBoundServerLinksPacket.ServerLink.Override(ClientBoundServerLinksPacket.BuiltinLabel.Feedback, "https://serble.net")
+                ]
+            };
+            e.Connection.SendPacket(links);
+        });
+        server.Events.AddListener<PlayerLoginEvent>(e => {
+            e.Player.Teleport(spawn);
+            e.Player.Inventory.SetHotbarItem(0, blockItem);
+            Console.WriteLine("Teleported joining player");
+            server.SendMessage(TextComponent.FromLegacyString("&7[&a+&7] " + e.Player.Name + " &7joined the game!"));
+            e.Player.Connection.Disconnected += () => {
+                server.SendMessage(
+                    TextComponent.FromLegacyString("&7[&c-&7] " + e.Player.Name + " &7left the game :("));
+            };
+        });
+        
         
         TcpMinecraftListener listener = new(connection => {
             Console.WriteLine("Got new connection");
             server.AddConnection(connection);
-            connection.Events.OnFirst<PlayerPreLoginEvent>(e => {
-                e.GameMode = GameMode.Survival;
-                e.Hardcore = true;
-                e.World = world;
-
-                MinecraftPacket links = new ClientBoundServerLinksPacket {
-                    Links = [
-                        ClientBoundServerLinksPacket.ServerLink.Override(ClientBoundServerLinksPacket.BuiltinLabel.Feedback, "https://serble.net")
-                    ]
-                };
-                connection.SendPacket(links);
-            });
-            connection.Events.OnFirst<PlayerLoginEvent>(e => {
-                e.Player.Teleport(spawn);
-                e.Player.Inventory.SetHotbarItem(0, blockItem);
-                Console.WriteLine("Teleported joining player");
-                server.SendMessage(TextComponent.FromLegacyString("&7[&a+&7] " + e.Player.Name + " &7joined the game!"));
-                connection.Disconnected += () => {
-                    server.SendMessage(
-                        TextComponent.FromLegacyString("&7[&c-&7] " + e.Player.Name + " &7left the game :("));
-                };
-            });
         }, cts.Token);
         
         const int dieLevel = -10;

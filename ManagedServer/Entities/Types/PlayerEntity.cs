@@ -109,7 +109,7 @@ public class PlayerEntity : Entity, IAudience {
     private int _activeHotbarSlot;
     private Func<PlayerConnection, bool> _playerViewableRule = _ => true;
     private Timer? _blockBreakTimer;
-    private AtomicCounter _blockBreakTickCounter = new(0, 20);
+    private readonly AtomicCounter _blockBreakTickCounter = new(0, 20);
 
     // Listen to movement packets so we can do stuff
     public PlayerEntity(PlayerConnection connection, string name) : base(EntityType.Player) {
@@ -118,10 +118,33 @@ public class PlayerEntity : Entity, IAudience {
         ViewableRule = con => con != Connection && PlayerViewableRule(con);
         Inventory = new PlayerInventory(this);
         
-        connection.Events.Parents.Add(Events);
         connection.Disconnected += Despawn;
+
+        connection.Events.AddListener<PacketSendingEvent>(e => {
+            PlayerPacketOutEvent playerEvent = new() {
+                Player = this,
+                Packet = e.Packet,
+                World = World!
+            };
+            Events.CallEvent(playerEvent);
+            if (playerEvent.Cancelled) {
+                // don't send the packet
+                e.Cancelled = true;
+            }
+        });
         
         connection.Events.AddListener<PacketHandleEvent>(e => {
+            PlayerPacketEvent playerEvent = new() {
+                Player = this,
+                Packet = e.Packet,
+                World = World!
+            };
+            Events.CallEvent(playerEvent);
+            if (playerEvent.Cancelled) {
+                // don't process the packet
+                return;
+            }
+            
             switch (e.Packet) {
                 case ServerBoundSetPlayerPositionPacket sp: {
                     if (_waitingTeleport != -1) return;
@@ -169,7 +192,8 @@ public class PlayerEntity : Entity, IAudience {
                         Type = ip.Type,
                         TargetLocation = ip.Target,
                         UsedHand = ip.UsedHand,
-                        SneakPressed = ip.SneakPressed
+                        SneakPressed = ip.SneakPressed,
+                        World = World!
                     };
                     Events.CallEvent(interactEvent);
                     break;
@@ -220,19 +244,6 @@ public class PlayerEntity : Entity, IAudience {
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                    break;
-                }
-
-                case ServerBoundSwingArmPacket sa: {
-                    ClientBoundEntityAnimationPacket.AnimationType animation = sa.UsedHand switch {
-                        Hand.MainHand => ClientBoundEntityAnimationPacket.AnimationType.SwingMainArm,
-                        Hand.OffHand => ClientBoundEntityAnimationPacket.AnimationType.SwingOffhand,
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-                    SendToViewers(new ClientBoundEntityAnimationPacket {
-                        EntityId = NetId,
-                        Animation = animation
-                    });
                     break;
                 }
             }

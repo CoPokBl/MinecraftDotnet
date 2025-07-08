@@ -4,7 +4,7 @@ using Minecraft.Packets;
 
 namespace Minecraft.Implementations.Server.Events;
 
-public class PacketSendingEvent : IServerEvent, ICancelableEvent {
+public class PacketSendingEvent : IPacketEvent, ICancelableEvent {
     public bool Cancelled { get; set; } = false;
     public required PlayerConnection Connection { get; set; }
     public required MinecraftPacket Packet { get; set; }

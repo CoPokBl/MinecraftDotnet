@@ -7,7 +7,6 @@ using Minecraft.Implementations.Server.Events;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
-using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Features;

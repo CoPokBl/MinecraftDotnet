@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using ManagedServer.Events;
+using ManagedServer.Events.Types;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Entities;
@@ -52,7 +53,7 @@ public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
     // these should be set by an entity tracker
     // not doing so is unsupported and will cause issues.
     public int NetId;
-    public EntityManager? Manager = null;
+    public EntityManager? Manager;
     public World? World;
 
     /// <summary>
@@ -91,7 +92,8 @@ public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
     public void Move(Vec3 newPos, Angle? yaw = null, Angle? pitch = null, bool forceTeleport = false) {
         EntityMoveEvent e = new() {
             Entity = this,
-            NewPos = newPos
+            NewPos = newPos,
+            World = World!
         };
         Events.CallEvent(e);
 
@@ -109,6 +111,11 @@ public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
             Pitch = pitch.Value;
         }
     }
+    
+    public void RegisterFeature(ScopedFeature feature) {
+        feature.Scope = this;
+        feature.Register();
+    }
 
     public void Teleport(PlayerPosition pos) {
         Teleport(pos.Position, pos.Yaw, pos.Pitch);
@@ -119,20 +126,18 @@ public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
     }
 
     public virtual void SetWorld(World world) {
-        if (Manager != null) {
-            Events.Parents.Remove(Manager.BaseEventNode);
-        }
+        Manager?.BaseEventNode.RemoveChild(Events);
 
         World?.Entities.Despawn(this);
-        world.Entities.Spawn(this, NetId);  // this ensures that Manager will not be null
+        world.Entities.Spawn(this, NetId);  // this ensures that Manager will not be null (it sets it)
         World = world;
 
         Debug.Assert(Manager != null, nameof(Manager) + " != null");
-        Events.Parents.Add(Manager.BaseEventNode);
+        Manager!.BaseEventNode.AddChild<IEntityEvent>(Events, ee => ee.Entity == this);
     }
 
     public void Despawn() {
-        Events.Parents.Remove(Manager!.BaseEventNode);
+        Manager!.BaseEventNode.RemoveChild(Events);
         Manager.Despawn(this);
         Manager = null;
         World = null;

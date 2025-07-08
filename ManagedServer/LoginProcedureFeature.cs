@@ -214,7 +214,9 @@ internal class LoginProcedureFeature : IServerFeature {
                     case ServerBoundAcknowledgeFinishConfigurationPacket: {
                         // We are now done config and are in play
                         // the player has logged in (pending play login)
-                        PlayerPreLoginEvent preLoginEvent = new();  // should have reasonable defaults
+                        PlayerPreLoginEvent preLoginEvent = new() {
+                            Connection = e.Connection
+                        };  // should have reasonable defaults
                         e.Connection.Events.CallEvent(preLoginEvent);
 
                         if (preLoginEvent.World == null) {
@@ -234,11 +236,11 @@ internal class LoginProcedureFeature : IServerFeature {
                         PlayerEntity entity = new(e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
                             NetId = pEntityId
                         };
-                        e.Connection.Events.Parents.Remove(genericServer.Events);
                         entity.SetWorld(preLoginEvent.World);
                         server.Players.Add(entity);
                         PlayerLoginEvent loginEvent = new() {
-                            Player = entity
+                            Player = entity,
+                            World = preLoginEvent.World
                         };
                         e.Connection.Events.CallEventCatchErrors(loginEvent);
                         break;

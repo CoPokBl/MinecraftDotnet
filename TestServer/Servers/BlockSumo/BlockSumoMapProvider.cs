@@ -1,7 +1,6 @@
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Terrain.Providers;
-using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 
 namespace TestServer.Servers.BlockSumo;

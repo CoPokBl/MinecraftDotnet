@@ -107,7 +107,7 @@ public static class MlgRush {
         ITerrainProvider terrain = new MlgRushMapProvider();
         while (run) {
             World world = mServer.CreateWorld(terrain);
-            new SimpleCombatFeature(500).Register(world);
+            world.RegisterFeature(new SimpleCombatFeature(500));
             new BlockBreakingFeature(false).Register(world);
             
             PlayerEntity p1 = null!;

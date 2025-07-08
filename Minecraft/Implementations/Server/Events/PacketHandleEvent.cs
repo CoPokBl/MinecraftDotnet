@@ -10,7 +10,7 @@ namespace Minecraft.Implementations.Server.Events;
 /// This event is effectively readonly.
 /// </summary>
 /// <remarks>To modify an incoming packet use <see cref="PacketReceiveEvent"/>.</remarks>
-public class PacketHandleEvent : IServerEvent {
+public class PacketHandleEvent : IPacketEvent {
     public required PlayerConnection Connection { get; init; }
     public required MinecraftPacket Packet { get; init; }
 }

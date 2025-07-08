@@ -3,6 +3,7 @@ using System.Diagnostics;
 using ManagedServer.Entities;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
+using ManagedServer.Events.Types;
 using ManagedServer.Viewables;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
@@ -54,7 +55,7 @@ public class World : IAudience, IFeatureScope {
         _viewDistance = viewDistance;
         _packetsPerTick = packetsPerTick;
         _tickDelayMs = tickDelayMs;
-        Events = new EventNode<IServerEvent>(baseEventNode);
+        Events = baseEventNode.CreateChild<IWorldEvent>(e => e.World == this);
         Entities = new EntityManager(Events, viewDistance*16);
     }
 
@@ -73,6 +74,11 @@ public class World : IAudience, IFeatureScope {
         if (Debug) Console.WriteLine("[WORLD] " + msg);
     }
     
+    public void RegisterFeature(ScopedFeature feature) {
+        feature.Scope = this;
+        feature.Register();
+    }
+    
     public void AddPlayer(PlayerEntity player) {
         PlayerConnection connection = player.Connection;
         
@@ -89,49 +95,49 @@ public class World : IAudience, IFeatureScope {
             Value = 0f
         });
         Queue<MinecraftPacket> waitingPackets = new();
-            connection.SetTag(WaitingPacketsTag, waitingPackets);
+        connection.SetTag(WaitingPacketsTag, waitingPackets);
 
-            bool disconnected = false;
-            connection.Disconnected += () => disconnected = true;
-            Task.Run(async () => {
-                Stopwatch sw = Stopwatch.StartNew();
-                while (!disconnected) {
-                    await Task.Delay(Math.Max(_tickDelayMs - (int)sw.ElapsedMilliseconds, 0));
-                    sw.Restart();
-                    if (waitingPackets.Count == 0) {
-                        continue;
-                    }
+        bool disconnected = false;
+        connection.Disconnected += () => disconnected = true;
+        Task.Run(async () => {
+            Stopwatch sw = Stopwatch.StartNew();
+            while (!disconnected) {
+                await Task.Delay(Math.Max(_tickDelayMs - (int)sw.ElapsedMilliseconds, 0));
+                sw.Restart();
+                if (waitingPackets.Count == 0) {
+                    continue;
+                }
 
-                    List<MinecraftPacket> packets = [];
-                    for (int i = 0; i < _packetsPerTick; i++) {
-                        waitingPackets.TryDequeue(out MinecraftPacket? result);
-                        if (result == null) break;
-                        
-                        packets.Add(result);
-                    }
+                List<MinecraftPacket> packets = [];
+                for (int i = 0; i < _packetsPerTick; i++) {
+                    waitingPackets.TryDequeue(out MinecraftPacket? result);
+                    if (result == null) break;
+                    
+                    packets.Add(result);
+                }
 
-                    // Console.WriteLine($"Sending {packets.Count} packets for terrain");
-                    connection.SendPackets(false, packets.ToArray());
-                    Log("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
-                }
-            });
-            Action cancelAction = null!;
-            cancelAction = player.Events.AddListener<EntityMoveEvent>(e => {
-                if (e.Entity is not PlayerEntity pe) {
-                    throw new Exception("Entity is not PlayerEntity (called on PlayerEntity eventnode)");
-                }
-                
-                // are they no longer in this world?
-                if (!Players.Contains(pe)) {
-                    Console.WriteLine("Weird race condition, EXISTING LISTENER");
-                    cancelAction();
-                    return;
-                }
-                
-                IVec2 chunkPos = new((int)Math.Floor(e.NewPos.X / 16), (int)Math.Floor(e.NewPos.Z / 16));
-                HandlePlayerMove(pe.Connection, chunkPos);
-            });
-            player.Connection.SetTag(CancelListenersActionTag, cancelAction);
+                // Console.WriteLine($"Sending {packets.Count} packets for terrain");
+                connection.SendPackets(false, packets.ToArray());
+                Log("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
+            }
+        });
+        Action cancelAction = null!;
+        cancelAction = player.Events.AddListener<EntityMoveEvent>(e => {
+            if (e.Entity is not PlayerEntity pe) {
+                throw new Exception("Entity is not PlayerEntity (called on PlayerEntity eventnode)");
+            }
+            
+            // are they no longer in this world?
+            if (!Players.Contains(pe)) {
+                Console.WriteLine("Weird race condition, EXISTING LISTENER");
+                cancelAction();
+                return;
+            }
+            
+            IVec2 chunkPos = new((int)Math.Floor(e.NewPos.X / 16), (int)Math.Floor(e.NewPos.Z / 16));
+            HandlePlayerMove(pe.Connection, chunkPos);
+        });
+        player.Connection.SetTag(CancelListenersActionTag, cancelAction);
         Players.Add(player);
     }
 
@@ -212,7 +218,6 @@ public class World : IAudience, IFeatureScope {
 
     public void RemovePlayer(PlayerEntity player) {
         Players.Remove(player);
-        player.Connection.Events.Parents.Remove(Events);
         player.Connection.GetTag(CancelListenersActionTag).Invoke();  // stop listening
     }
 
@@ -244,10 +249,6 @@ public class World : IAudience, IFeatureScope {
     
     private static IVec3 ToChunkLocalPos(IVec3 pos) {
         return new IVec3((pos.X % 16 + 16) % 16, pos.Y, (pos.Z % 16 + 16) % 16);
-    }
-
-    private static int Abs(int a) {
-        return a < 0 ? -a : a;
     }
     
     public IBlock GetBlock(IVec3 pos) {
