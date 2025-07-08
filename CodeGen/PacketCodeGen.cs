@@ -8,7 +8,7 @@ public static class PacketCodeGen {
 
     public static string CreatePacketEntries(JObject registriesJson) {
         StringBuilder entries = new();
-        JObject packetsJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("packets.json"));
+        JObject packetsJson = JObject.Parse(CodeGenUtils.ReadVanillaDataFile("reports", "packets.json"));
         
         // <clientBound, state, identifier, protocolId>
         Dictionary<bool, Dictionary<string, Dictionary<string, int>>> packetIds = new();

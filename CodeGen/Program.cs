@@ -8,8 +8,6 @@ Console.WriteLine("Minecraft Dotnet Code Generator");
 Console.WriteLine("=================================================");
 Console.WriteLine();
 
-const string registriesFileName = "registries.json";
-
 const string vanillaRegistryFile = 
 """
 using Minecraft.Schemas;
@@ -43,8 +41,60 @@ public static class VanillaRegistry {
 
 """;
 
-Console.WriteLine("Loading registries...");
-JObject registriesJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile(registriesFileName));
+// Download the vanilla jar
+if (args.Length == 0) {
+    Console.WriteLine("Usage: ./CodeGen <mc_version>");
+    Console.WriteLine("Example: ./CodeGen 1.21.5");
+    return 1;
+}
+string mcVersion = args[0];
+
+if (!VanillaJarUrls.Urls.TryGetValue(mcVersion, out string? jarUrl)) {
+    Console.WriteLine($"Unknown Minecraft version: {mcVersion}");
+    Console.WriteLine("Available versions: " + string.Join(", ", VanillaJarUrls.Urls.Keys));
+    return 1;
+}
+
+if (!File.Exists(mcVersion + ".jar")) {
+    // download the jar file
+    Console.WriteLine($"Downloading Minecraft {mcVersion} jar from {jarUrl}...");
+    using HttpClient client = new();
+    HttpResponseMessage response = client.GetAsync(jarUrl).Result;
+    if (!response.IsSuccessStatusCode) {
+        Console.WriteLine($"Failed to download jar: {response.StatusCode}");
+        return 1;
+    }
+    File.WriteAllBytes(mcVersion + ".jar", response.Content.ReadAsByteArrayAsync().Result);
+}
+else {
+    Console.WriteLine("Found existing jar file for Minecraft " + mcVersion + ". Skipping download.");
+}
+
+// Run the process
+string cmd = $"-DbundlerMainClass=\"net.minecraft.data.Main\" -jar {mcVersion}.jar --all --output vanilladata --all";
+Process process = new() {
+    StartInfo = new ProcessStartInfo {
+        FileName = "java",
+        Arguments = cmd,
+        RedirectStandardOutput = false,
+        RedirectStandardError = false,
+        UseShellExecute = false,
+        CreateNoWindow = true
+    }
+};
+process.Start();
+Console.WriteLine($"Generating data for Minecraft {mcVersion}...");
+process.WaitForExit();
+if (process.ExitCode != 0) {
+    Console.WriteLine("Failed to generate data. Check the output above for errors.");
+    return 1;
+}
+Console.WriteLine("Done!");
+
+CodeGenUtils.VanillaDataDir = Path.Combine(Directory.GetCurrentDirectory(), "vanilladata");
+
+Console.WriteLine("Loading registries.json...");
+JObject registriesJson = JObject.Parse(CodeGenUtils.ReadVanillaDataFile("reports", "registries.json"));
 
 string codeDir = Directory.GetCurrentDirectory();
 
@@ -72,10 +122,10 @@ string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.
 
 File.WriteAllText("VanillaRegistry.cs", vanillaRegistryCode);
 Console.WriteLine("Done! Generated VanillaRegistry.cs in " + codeDir);
-return;
+return 0;
 
 void RunStep(string name, Func<JObject, string> func) {
-    Console.WriteLine($"{name}...");
+    Console.WriteLine($"Generating {name} code...");
     Stopwatch sw = Stopwatch.StartNew();
     registryEntries.Append(func(registriesJson)).Append('\n');
     Console.WriteLine($"{name} took {sw.Elapsed}");

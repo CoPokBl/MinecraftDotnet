@@ -7,6 +7,8 @@ namespace CodeGen;
 public static class CodeGenUtils {
     private const string IdentSearch = "Identifier Identifier => \"";
 
+    public static string VanillaDataDir = "";
+
     public static string NamespacedIdToPascalName(string namespacedId) {
         if (namespacedId.Contains(':')) {
             namespacedId = namespacedId.Split(':')[1];
@@ -25,6 +27,15 @@ public static class CodeGenUtils {
         using Stream stream = assembly.GetManifestResourceStream($"CodeGen.Data.{fileName}")!;
         using StreamReader reader = new(stream);
         return reader.ReadToEnd();
+    }
+    
+    public static string ReadVanillaDataFile(params string[] path) {
+        string fileName = Path.Combine(path);
+        string filePath = Path.Combine(VanillaDataDir, fileName);
+        if (!File.Exists(filePath)) {
+            throw new FileNotFoundException($"Vanilla data file '{fileName}' not found in directory '{VanillaDataDir}'.");
+        }
+        return File.ReadAllText(filePath);
     }
     
     public static string GetIndentation(int level) {

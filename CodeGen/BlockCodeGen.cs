@@ -148,7 +148,7 @@ public static class Block {
             File.Delete(file);
         }
         
-        JObject blocksJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("blocks.json"));
+        JObject blocksJson = JObject.Parse(CodeGenUtils.ReadVanillaDataFile("reports", "blocks.json"));
         JObject blocksDataJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("blocks_data.json"));
 
         StringBuilder registryData = new();
