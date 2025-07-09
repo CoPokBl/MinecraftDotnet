@@ -8,15 +8,14 @@ using Minecraft.Packets;
 namespace ManagedServer.Events;
 
 [BuiltinEvent]
-public class PlayerPacketOutEvent : ICancelableEvent, IPlayerEvent {
+public class PlayerPacketReceiveEvent : IPlayerEvent, ICancelableEvent {
+    public required World World { get; init; }
     public required PlayerEntity Player { get; init; }
     public required MinecraftPacket Packet { get; init; }
-    public required World World { get; init; }
+    public bool Cancelled { get; set; }
     
     public Entity Entity {
         get => Player;
         init { }
     }
-
-    public bool Cancelled { get; set; }
 }

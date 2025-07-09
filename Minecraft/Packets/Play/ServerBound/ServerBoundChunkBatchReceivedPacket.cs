@@ -8,7 +8,7 @@ public class ServerBoundChunkBatchReceivedPacket : ServerBoundPacket {
     public required float ChunksPerTick;
 
     protected override DataWriter WriteData(DataWriter w) {
-        return new DataWriter()
+        return w
             .WriteFloat(ChunksPerTick);
     }
     

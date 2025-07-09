@@ -32,7 +32,7 @@ public class PlayerInventory : Inventory {
     public const int HotbarSlot8 = 43;
     public const int HotbarSlot9 = 44;
     
-    public PlayerInventory(PlayerEntity owner) : base(InventorySize) {
+    public PlayerInventory(PlayerEntity owner) : base(InventorySize, 9) {
         Viewers.Add(owner);
         Title = owner.Name + "'s Inventory";
     }
@@ -74,6 +74,7 @@ public class PlayerInventory : Inventory {
             throw new ArgumentOutOfRangeException(nameof(slot), "Hotbar slot must be between 1 and 9.");
         }
         this[HotbarSlot1 + slot] = item;
+        SendSlotUpdate(HotbarSlot1 + slot);
     }
     
     /// <summary>

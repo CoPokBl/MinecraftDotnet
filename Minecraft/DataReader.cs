@@ -228,13 +228,13 @@ public class DataReader(byte[] data) : Stream {
     }
     
     // reads a signed 8-bit integer (two's complement)
-    public int ReadByte() {
+    public new sbyte ReadByte() {
         byte b = Read(1)[0];
         if (b >= 128) {
             // Convert to two's complement for negative values
-            return b - 256; // 256 - 128 = 128, so -128 becomes 128
+            return (sbyte)(b - 256); // 256 - 128 = 128, so -128 becomes 128
         }
-        return b & 0xFF;
+        return (sbyte)(b & 0xFF);
     }
 
     public Guid ReadUuid() {

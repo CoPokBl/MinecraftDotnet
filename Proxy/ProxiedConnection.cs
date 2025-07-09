@@ -310,7 +310,20 @@ public class ProxiedConnection : ITaggable {
             Console.WriteLine("NOT Sending packet to player: " + packet.GetType().Name);
             return;
         }
-        Console.WriteLine("Sending packet to player: " + packet.GetType().Name);
+
+        Type[] ignoredPackets = [
+            typeof(ClientBoundSetHeadRotationPacket),
+            typeof(ClientBoundUpdateTimePacket),
+            typeof(ClientBoundUpdateEntityPositionPacket),
+            typeof(ClientBoundBlockUpdatePacket),
+            typeof(ClientBoundUpdateEntityPosAndRotPacket),
+            typeof(ClientBoundSoundEffectPacket),
+            typeof(ClientBoundTeleportEntityPacket)
+        ];
+        if (!ignoredPackets.Contains(packet.GetType())) {
+            Console.WriteLine("Sending packet to player: " + packet.GetType().Name);
+        }
+        
         Player.SendPacket(packet);
     }
     

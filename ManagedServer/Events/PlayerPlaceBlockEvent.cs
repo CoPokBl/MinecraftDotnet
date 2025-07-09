@@ -1,4 +1,5 @@
 using ManagedServer.Entities.Types;
+using ManagedServer.Events.Attributes;
 using ManagedServer.Events.Types;
 using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
@@ -7,6 +8,7 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Events;
 
+[NotCalledByDefault]
 public class PlayerPlaceBlockEvent : ICancelableEvent, IPlayerEvent {
     public required PlayerEntity Player { get; init; }
     public required IVec3 Position { get; set; }
@@ -16,7 +18,7 @@ public class PlayerPlaceBlockEvent : ICancelableEvent, IPlayerEvent {
     /// <summary>
     /// Whether to do nothing and inform the client that the block placement was cancelled.
     /// </summary>
-    public bool Cancelled { get; set; } = true;
+    public bool Cancelled { get; set; }
     
     public Entity Entity {
         get => Player;

@@ -8,7 +8,7 @@ namespace ManagedServer.Features.Basic;
 public class ArmSwingFeature : ScopedFeature {
     
     public override void Register() {
-        Scope.Events.AddListener<PlayerPacketEvent>(e => {
+        AddEventListener<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundSwingArmPacket sa) {
                 return;
             }

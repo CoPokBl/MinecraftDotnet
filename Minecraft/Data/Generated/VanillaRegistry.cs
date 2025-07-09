@@ -19,7 +19,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2025-07-08
+// Last updated: 2025-07-09
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -1274,6 +1274,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, false, 0x0C, typeof(ServerBoundClientInformationPacket), ServerBoundClientInformationPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x0B, typeof(ServerBoundClientTickEndPacket), ServerBoundClientTickEndPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x0E, typeof(ServerBoundAcknowledgeConfigurationPacket), ServerBoundAcknowledgeConfigurationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x10, typeof(ServerBoundClickContainerPacket), ServerBoundClickContainerPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x13, typeof(ServerBoundCookieResponsePacket), ServerBoundCookieResponsePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x14, typeof(ServerBoundPluginMessagePacket), ServerBoundPluginMessagePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x18, typeof(ServerBoundInteractPacket), ServerBoundInteractPacket.Deserialiser);
@@ -1367,6 +1368,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, true, 0x50, typeof(ClientBoundSetActionBarTextPacket), ClientBoundSetActionBarTextPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x56, typeof(ClientBoundSetCameraPacket), ClientBoundSetCameraPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x57, typeof(ClientBoundSetCenterChunkPacket), ClientBoundSetCenterChunkPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x59, typeof(ClientBoundSetCursorItemPacket), ClientBoundSetCursorItemPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x5A, typeof(ClientBoundSetDefaultSpawnPositionPacket), ClientBoundSetDefaultSpawnPositionPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x5C, typeof(ClientBoundSetEntityMetadataPacket), ClientBoundSetEntityMetadataPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x60, typeof(ClientBoundSetExperiencePacket), ClientBoundSetExperiencePacket.Deserialiser);

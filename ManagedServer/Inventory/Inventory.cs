@@ -17,6 +17,7 @@ public abstract class Inventory : IViewable {
     /// The amount of slots in the inventory.
     /// </summary>
     public readonly int Size;
+    public readonly int PlayerInventoryStartIndex;
     
     public abstract IInventoryType Type { get; }
 
@@ -36,8 +37,9 @@ public abstract class Inventory : IViewable {
     internal readonly List<PlayerEntity> Viewers = [];
     internal int LastStateId;
 
-    protected Inventory(int size) {
+    protected Inventory(int size, int playerInventoryStartIndex) {
         Size = size;
+        PlayerInventoryStartIndex = playerInventoryStartIndex;
         Items = new ItemStack[size];
         for (int i = 0; i < size; i++) {
             Items[i] = ItemStack.Air;
@@ -67,10 +69,10 @@ public abstract class Inventory : IViewable {
         });
     }
 
-    public void SendUpdateTo(IAudience audience) {
+    public void SendUpdateTo(PlayerEntity audience) {
         LastStateId = Random.Shared.Next();
         audience.SendPacket(new ClientBoundSetContainerContentPacket {
-            CursorItem = ItemStack.Air,
+            CursorItem = audience.CursorItem,
             SlotData = Items,
             StateId = LastStateId,
             WindowId = WindowId
@@ -83,6 +85,12 @@ public abstract class Inventory : IViewable {
             Type = Type,
             Title = Title
         };
+    }
+
+    public void AddViewer(PlayerEntity player) {
+        Viewers.Add(player);
+        player.SendPacket(GenerateOpenPacket());
+        SendUpdateTo(player);
     }
 
     public PlayerEntity[] GetViewers() {

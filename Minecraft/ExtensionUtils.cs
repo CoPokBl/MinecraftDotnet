@@ -3,6 +3,7 @@ using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Text;
+using NBT;
 
 namespace Minecraft;
 
@@ -73,10 +74,11 @@ public static class ExtensionUtils {
     }
 
     public static void SendSystemMessage(this PlayerConnection con, TextComponent text) {
-        con.SendPacket(new ClientBoundSystemChatMessagePacket {
-            Content = text,
-            ActionBar = false
-        });
+        // con.SendPacket(new ClientBoundSystemChatMessagePacket {
+        //     Content = text,
+        //     ActionBar = false
+        // });
+        Console.WriteLine("[System Message] " + text.ToJsonString());
     }
 
     public static void SendTitle(this PlayerConnection con, TextComponent text, TextComponent subtitle, int fadeIn = 10, int stay = 40, int fadeOut = 10) {
@@ -129,5 +131,12 @@ public static class ExtensionUtils {
         }
         
         return taggable.GetTag(tag);
+    }
+    
+    public static T GetTagOrSetDefault<T>(this ITaggable taggable, Tag<T> tag, T defaultValue) {
+        if (taggable.HasTag(tag)) return taggable.GetTag(tag);
+        taggable.SetTag(tag, defaultValue);
+        return defaultValue;
+
     }
 }

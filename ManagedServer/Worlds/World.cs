@@ -7,6 +7,7 @@ using ManagedServer.Events.Types;
 using ManagedServer.Viewables;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
+using Minecraft.Data.Generated.BlockTypes;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -20,13 +21,14 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Worlds;
 
-public class World : IAudience, IFeatureScope {
+public class World : IAudience, IFeatureScope, ITaggable {
     // State stuff
     public List<PlayerEntity> Players { get; } = [];
     public EventNode<IServerEvent> Events { get; }
     public readonly EntityManager Entities;
     public required ManagedMinecraftServer? Server;
     public bool Immutable { get; set; } = false;
+    private readonly Dictionary<string, object?> _data = new();
 
     private readonly ConcurrentDictionary<IVec2, ChunkData> _chunks = new();
     
@@ -74,7 +76,7 @@ public class World : IAudience, IFeatureScope {
         if (Debug) Console.WriteLine("[WORLD] " + msg);
     }
     
-    public void RegisterFeature(ScopedFeature feature) {
+    public void AddFeature(ScopedFeature feature) {
         feature.Scope = this;
         feature.Register();
     }
@@ -293,10 +295,15 @@ public class World : IAudience, IFeatureScope {
             if (notFound == 0) {
                 return chunks;
             }
+            
+            System.Diagnostics.Debug.Assert(chunks.Length == cChunksPos + notFound);
         
             // We need to load some chunks
             foreach (ChunkData newChunk in _provider.GetChunks(notFound, needed)) {
                 newChunk.PackData();
+                if (cChunksPos >= chunks.Length) {
+                    Console.WriteLine("wtf");
+                }
                 chunks[cChunksPos++] = newChunk;
                 _chunks.TryAdd(new IVec2(newChunk.ChunkX, newChunk.ChunkZ), newChunk);
             }
@@ -319,21 +326,24 @@ public class World : IAudience, IFeatureScope {
     
     public void LoadChunk(IVec2 pos) {
         if (_chunks.ContainsKey(pos)) return;  // already loaded
+
+        lock (_chunks) {
+            ChunkData data = _provider.GetChunk(pos);
+            if (data == null) {
+                throw new Exception($"Failed to load chunk at {pos}");
+            }
         
-        ChunkData data = _provider.GetChunk(pos);
-        if (data == null) {
-            throw new Exception($"Failed to load chunk at {pos}");
+            Console.WriteLine("Manually loading chunk at " + pos);
+            data.PackData();
+            _chunks.TryAdd(pos, data);
         }
-        
-        data.PackData();
-        _chunks.TryAdd(pos, data);
     }
 
     public ClientBoundChunkDataAndUpdateLightPacket GetChunkPacket(IVec2 pos) {
         ClientBoundChunkDataAndUpdateLightPacket packet = new() {
             ChunkX = pos.X,
             ChunkZ = pos.Z,
-            Data = _provider.GetChunk(pos),
+            Data = GetChunks([pos], 1)[0],
             Light = LightData.FullBright
         };
         return packet;
@@ -372,5 +382,17 @@ public class World : IAudience, IFeatureScope {
         foreach (PlayerEntity player in Players) {
             player.SendPacket(packet);
         }
+    }
+    
+    public T GetTag<T>(Tag<T> tag) {
+        return (T)_data[tag.Id]!;
+    }
+
+    public bool HasTag<T>(Tag<T> tag) {
+        return _data.ContainsKey(tag.Id);
+    }
+
+    public void SetTag<T>(Tag<T> tag, T value) {
+        _data[tag.Id] = value;
     }
 }

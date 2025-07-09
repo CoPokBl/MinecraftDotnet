@@ -2,6 +2,7 @@
 using TestServer.Servers.BlockSumo;
 using TestServer.Servers.BlockSumoFFA;
 using TestServer.Servers.MlgRush;
+using TestServer.Servers.SkyWarsLuckyBlock;
 
 if (args.Length == 0) {
     Console.WriteLine("Please specify a gamemode.");
@@ -27,6 +28,10 @@ switch (args[0]) {
     
     case "blocksumoffa":
         await BlockSumoFfa.Start();
+        break;
+    
+    case "skywars":
+        await SkyWarsLuckyBlock.Start();
         break;
     
     default:

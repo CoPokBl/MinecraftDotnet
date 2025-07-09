@@ -36,7 +36,10 @@ public class IndirectPalette : Palette {
     }
     
     public override uint GetBlock(int x, int y, int z) {
-        return PaletteValues[Blocks[x + y * Dimension + z * Dimension * Dimension]];
+        // get the index in the blocks array
+        // keeping in mind that the blocks are stored in y then z then x order
+        // where x is the fastest changing dimension
+        return PaletteValues[Blocks[x + Dimension*z + Dimension*Dimension*y]];
     }
 
     public override byte[] Serialise() {

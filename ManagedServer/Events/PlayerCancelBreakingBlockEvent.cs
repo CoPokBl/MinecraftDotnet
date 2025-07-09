@@ -1,4 +1,5 @@
 using ManagedServer.Entities.Types;
+using ManagedServer.Events.Attributes;
 using ManagedServer.Events.Types;
 using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
@@ -6,6 +7,7 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Events;
 
+[NotCalledByDefault]
 public class PlayerCancelBreakingBlockEvent : IPlayerEvent {
     public required PlayerEntity Player { get; init; }
     public required IVec3 Position { get; set; }

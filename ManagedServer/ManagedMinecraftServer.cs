@@ -1,4 +1,6 @@
+using System.Reflection;
 using ManagedServer.Entities.Types;
+using ManagedServer.Events.Attributes;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
@@ -7,20 +9,15 @@ using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
 using Minecraft.Registry;
-using Minecraft.Schemas;
 
 namespace ManagedServer;
 
 public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience, IFeatureScope {
     public MinecraftRegistry Registry = VanillaRegistry.Data;  // TODO: use this
     
-    public readonly List<World> Worlds = [];
+    public List<World> Worlds { get; } = [];
     public List<PlayerEntity> Players { get; } = [];
-    
-    public void RegisterFeature(ScopedFeature feature) {
-        feature.Scope = this;
-        feature.Register();
-    }
+    public HashSet<Type> CallableEventTypes { get; } = [];
 
     // Used to stop the tasks from being garbage collected
     // ReSharper disable once CollectionNeverQueried.Local
@@ -30,7 +27,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public int ViewDistance = 8;
     public int WorldPacketsPerTick = 3000;
     public int WorldTickDelayMs = 50;
-    public Func<PlayerEntity, TabListEntry[]> TabListProvider;
+    public bool AllowListeningToUnCalledEvents = false;
 
     public ManagedMinecraftServer(params IServerFeature[] feats) {
         foreach (IServerFeature feat in feats) {
@@ -42,7 +39,25 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         RegisterFeatIfNotPresent(new HeartbeatsFeature(3000));
         RegisterFeatIfNotPresent(new LoginProcedureFeature());
 
-        TabListProvider = _ => Players.Select(p => new TabListEntry(p.Uuid, p.Name, 1, p.GameMode)).ToArray();
+        Events.OnListenerAdded += type => {
+            if (AllowListeningToUnCalledEvents) {
+                return;
+            }
+            
+            NotCalledByDefaultAttribute? attribute = type.GetCustomAttribute<NotCalledByDefaultAttribute>();
+            if (attribute == null) {
+                return;
+            }
+            
+            // it's not called by default, so let's make sure that it gets called
+            if (CallableEventTypes.Contains(type)) return;
+            
+            // TODO: Make it a warning and make it work for child event nodes
+            throw new Exception("Event " + type.FullName +
+                                " is not called by default, but you are trying to add a listener for it. If it is called" +
+                                " then please add the [CallsEvent()] attribute to the feature calling it or" +
+                                " add it to the CallableEventTypes property in the ManagedMinecraftServer object.");
+        };
     }
 
     protected void RegisterFeatIfNotPresent(IServerFeature feat) {
@@ -51,6 +66,23 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         }
         else {
             Console.WriteLine("WARNING: Overwritten feature");
+        }
+    }
+    
+    public void AddFeature(ScopedFeature feature) {
+        feature.Scope = this;
+        feature.Register();
+        
+        CallsEventAttribute? callsEventAttribute = feature.GetType().GetCustomAttribute<CallsEventAttribute>();
+        if (callsEventAttribute == null) return;
+        lock (CallableEventTypes) foreach (Type eventType in callsEventAttribute.EventTypes) {
+            CallableEventTypes.Add(eventType);
+        }
+    }
+
+    public void AddFeatures(params ScopedFeature[] features) {
+        foreach (ScopedFeature feat in features) {
+            AddFeature(feat);
         }
     }
 

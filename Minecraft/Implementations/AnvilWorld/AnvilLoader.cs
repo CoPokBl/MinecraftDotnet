@@ -205,15 +205,16 @@ public class AnvilLoader : ITerrainProvider {
     }
 
     public IEnumerable<ChunkData> GetChunks(int count, params IVec2[] chunks) {
-        List<ChunkData> chunkDataList = [];
-        foreach (IVec2 chunk in chunks) {
+        ChunkData[] chunkDataList = new ChunkData[count];
+        for (int i = 0; i < count; i++) {
+            IVec2 chunk = chunks[i];
             ChunkData? data = GetChunkData(chunk.X, chunk.Z);
             if (data == null) continue;
             data.ChunkX = chunk.X;
             data.ChunkZ = chunk.Z;
-            chunkDataList.Add(data);
+            chunkDataList[i] = data;
         }
-        
+
         return chunkDataList;
     }
 }

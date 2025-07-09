@@ -58,6 +58,12 @@ public class MinecraftServer {
         feature.Register(this);
     }
 
+    public void AddFeatures(params IServerFeature[] features) {
+        foreach (IServerFeature feature in features) {
+            AddFeature(feature);
+        }
+    }
+
     /// <summary>
     /// Add a player connection to our list of connections so that it will be handled
     /// by this instance.

@@ -8,5 +8,5 @@ public interface IFeatureScope {
     public EventNode<IServerEvent> Events { get; }
     public List<PlayerEntity> Players { get; }
 
-    public void RegisterFeature(ScopedFeature feature);
+    public void AddFeature(ScopedFeature feature);
 }

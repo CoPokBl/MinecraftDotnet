@@ -2,6 +2,7 @@ using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
+using ManagedServer.Features.Basic;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
@@ -27,8 +28,8 @@ public static class BlockSumoFfa {
     private const int Port = 25565;
 
     public static async Task Start() {
-        ManagedMinecraftServer server = new(
-            new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
+        ManagedMinecraftServer server = ManagedMinecraftServer.NewBasic();
+        server.AddFeatures(new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
                 VersionName = "dotnet",
                 VersionProtocol = connection.Handshake!.ProtocolVersion,
                 OnlinePlayers = 1,
@@ -37,14 +38,12 @@ public static class BlockSumoFfa {
                 Description = TextComponent.FromLegacyString("&b&lBlock Sumo FFA"),
                 PreventsChatReports = true
             }),
-            new PingRespondFeature(),
-            new SimpleChatFeature(),
             new OpenToLanAdFeature("Block Sumo FFA over LAN", Port),
             new TabListFeature(
                 updatePeriod:1000, 
                 headerProvider:_ => TextComponent.Text("Block Sumo FFA").WithColor(TextColor.Hex("#EE7026")).WithBold(), 
                 footerProvider:_ => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic()));
-
+        
         CancellationTokenSource cts = new();
 
         bool run = true;
@@ -63,7 +62,7 @@ public static class BlockSumoFfa {
         PlayerPosition spawn = new(new Vec3(0, 0, 0), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
         ITerrainProvider terrain = new BlockSumoMapProvider(12);
         World world = server.CreateWorld(terrain);
-        world.RegisterFeature(new SimpleCombatFeature(500));
+        world.AddFeature(new SimpleCombatFeature(500));
         // new BlockBreakingFeature(false).Register(world);
 
         IBlock[] blocks = [

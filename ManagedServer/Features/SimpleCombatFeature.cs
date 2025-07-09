@@ -15,7 +15,7 @@ public class SimpleCombatFeature(int attackCooldown = -1) : ScopedFeature {
     private readonly Tag<long> _lastHitTag = new("minecraftdotnet:simplecombat:lasthit");
     
     public override void Register() {
-        Scope.Events.AddListener<PlayerPacketEvent>(e => {
+        AddEventListener<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundInteractPacket packet) {
                 return;
             }

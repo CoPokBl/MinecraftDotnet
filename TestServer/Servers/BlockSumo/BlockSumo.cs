@@ -108,7 +108,7 @@ public static class BlockSumo {
         ITerrainProvider terrain = new BlockSumoMapProvider(8);
         while (run) {
             World world = mServer.CreateWorld(terrain);
-            world.RegisterFeature(new SimpleCombatFeature(500));
+            world.AddFeature(new SimpleCombatFeature(500));
             new BlockBreakingFeature(false).Register(world);
             
             PlayerEntity p1;

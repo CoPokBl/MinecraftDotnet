@@ -34,7 +34,7 @@ public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
 
     public EventNode<IServerEvent> Events { get; } = new();
     public virtual List<PlayerEntity> Players => [];
-    public readonly Dictionary<string, object?> Data = new();
+    private readonly Dictionary<string, object?> Data = new();
 
     private bool _crouching;
     public bool Crouching {
@@ -112,7 +112,7 @@ public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
         }
     }
     
-    public void RegisterFeature(ScopedFeature feature) {
+    public void AddFeature(ScopedFeature feature) {
         feature.Scope = this;
         feature.Register();
     }

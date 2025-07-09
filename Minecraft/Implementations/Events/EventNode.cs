@@ -5,6 +5,7 @@ namespace Minecraft.Implementations.Events;
 public class EventNode<T> {
     public List<(EventNode<T>, Func<T, bool>)> Children { get; } = [];
     public event Action<T>? Callback;
+    public event Action<Type>? OnListenerAdded;  // Ran before adding a listener, useful for debugging or validation
 
     public EventNode<T>? Parent;
 
@@ -41,6 +42,8 @@ public class EventNode<T> {
     }
     
     public Action AddListener<TL>(Action<TL> callback) where TL : T {
+        OnListenerAdded?.Invoke(typeof(TL));
+        
         Action<T> call = obj => {
             if (obj is not TL tl) {
                 return;
@@ -56,6 +59,8 @@ public class EventNode<T> {
     }
 
     public Action AddListener(Type type, Action<T> callback) {
+        OnListenerAdded?.Invoke(type);
+        
         Action<T> call = obj => {
             if (obj!.GetType().IsAssignableTo(type)) {
                 callback((T)obj);
@@ -76,6 +81,8 @@ public class EventNode<T> {
     /// <param name="callback">The listener.</param>
     /// <typeparam name="TL">The event type to listen for.</typeparam>
     public void OnFirst<TL>(Action<TL> callback) where TL : T {
+        OnListenerAdded?.Invoke(typeof(TL));
+        
         Action<T> actualListener = null!;
         actualListener = obj => {
             if (obj is not TL tl) {
@@ -89,6 +96,8 @@ public class EventNode<T> {
     }
     
     public void OnFirstWhere<TL>(Func<TL, bool> condition, Action<TL> callback) where TL : T {
+        OnListenerAdded?.Invoke(typeof(TL));
+        
         Action<T> actualListener = null!;
         actualListener = obj => {
             if (obj is not TL tl || !condition(tl)) {
