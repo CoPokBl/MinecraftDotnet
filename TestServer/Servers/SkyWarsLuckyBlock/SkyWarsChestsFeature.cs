@@ -40,8 +40,8 @@ public class SkyWarsChestsFeature : ScopedFeature {
             ChestInventory inv = ChestInventory.Create(3);
             inv.Title = "SkyWars Chest";
 
-            inv[0] = new ItemStack(15, Item.Stone);
-            inv[1] = new ItemStack(1, Item.GoldenApple);
+            inv[0] = new ItemStack(40, Item.Stone);
+            inv[1] = new ItemStack(8, Item.GoldenApple);
             
             worldData.Add(pos, inv);
             e.World.SetTag(ChestsTag, worldData);

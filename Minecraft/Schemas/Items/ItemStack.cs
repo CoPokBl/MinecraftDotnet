@@ -20,6 +20,27 @@ public class ItemStack(int count, IItem? type = null, IDataComponent[]? componen
     public ItemStack WithCount(int count) {
         return new ItemStack(count, Type, Components, RemoveComponents);
     }
+
+    public bool CanStackWith(ItemStack other) {
+        if (Type.Identifier != other.Type.Identifier) {
+            return false;
+        }
+
+        if (Components.Length != other.Components.Length) {
+            return false;
+        }
+
+        if (RemoveComponents.Length != other.RemoveComponents.Length) {
+            return false;
+        }
+
+        // TODO: Check if all components match
+        return true;
+    }
+    
+    public bool IsAir() {
+        return Count == 0 || Type.Identifier == Item.Air.Identifier;
+    }
     
     public IDataComponent<T>? Get<T>(IDataComponent<T> type) {
         return Components.Where(component => component.Identifier == type.Identifier).Cast<IDataComponent<T>>().FirstOrDefault();
