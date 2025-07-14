@@ -44,16 +44,16 @@ public record SmoothSandstoneSlabBlock(Identifier Identifier, SlabType Type, boo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15141,
-                    false => 15142,
+                    true => 15173,
+                    false => 15174,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15143,
-                    false => 15144,
+                    true => 15175,
+                    false => 15176,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15145,
-                    false => 15146,
+                    true => 15177,
+                    false => 15178,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record SmoothSandstoneSlabBlock(Identifier Identifier, SlabType Type, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            15141 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Top, true),
-            15142 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Top, false),
-            15143 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Bottom, true),
-            15144 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Bottom, false),
-            15145 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Double, true),
-            15146 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Double, false),
+            15173 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Top, true),
+            15174 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Top, false),
+            15175 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Bottom, true),
+            15176 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Bottom, false),
+            15177 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Double, true),
+            15178 => new SmoothSandstoneSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -43,9 +43,9 @@ public record PearlescentFroglightBlock(Identifier Identifier, Axis Axis) : IBlo
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 27629,
-                Axis.Y => 27630,
-                Axis.Z => 27631,
+                Axis.X => 27661,
+                Axis.Y => 27662,
+                Axis.Z => 27663,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record PearlescentFroglightBlock(Identifier Identifier, Axis Axis) : IBlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            27629 => new PearlescentFroglightBlock(Identifier, Axis.X),
-            27630 => new PearlescentFroglightBlock(Identifier, Axis.Y),
-            27631 => new PearlescentFroglightBlock(Identifier, Axis.Z),
+            27661 => new PearlescentFroglightBlock(Identifier, Axis.X),
+            27662 => new PearlescentFroglightBlock(Identifier, Axis.Y),
+            27663 => new PearlescentFroglightBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

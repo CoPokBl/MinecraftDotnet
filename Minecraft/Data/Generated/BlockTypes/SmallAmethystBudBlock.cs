@@ -44,28 +44,28 @@ public record SmallAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool
         get {
             return Facing switch {
                 Cardinal.North => Waterlogged switch {
-                    true => 22097,
-                    false => 22098,
+                    true => 22129,
+                    false => 22130,
                 },
                 Cardinal.East => Waterlogged switch {
-                    true => 22099,
-                    false => 22100,
+                    true => 22131,
+                    false => 22132,
                 },
                 Cardinal.South => Waterlogged switch {
-                    true => 22101,
-                    false => 22102,
+                    true => 22133,
+                    false => 22134,
                 },
                 Cardinal.West => Waterlogged switch {
-                    true => 22103,
-                    false => 22104,
+                    true => 22135,
+                    false => 22136,
                 },
                 Cardinal.Up => Waterlogged switch {
-                    true => 22105,
-                    false => 22106,
+                    true => 22137,
+                    false => 22138,
                 },
                 Cardinal.Down => Waterlogged switch {
-                    true => 22107,
-                    false => 22108,
+                    true => 22139,
+                    false => 22140,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -74,18 +74,18 @@ public record SmallAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            22097 => new SmallAmethystBudBlock(Identifier, Cardinal.North, true),
-            22098 => new SmallAmethystBudBlock(Identifier, Cardinal.North, false),
-            22099 => new SmallAmethystBudBlock(Identifier, Cardinal.East, true),
-            22100 => new SmallAmethystBudBlock(Identifier, Cardinal.East, false),
-            22101 => new SmallAmethystBudBlock(Identifier, Cardinal.South, true),
-            22102 => new SmallAmethystBudBlock(Identifier, Cardinal.South, false),
-            22103 => new SmallAmethystBudBlock(Identifier, Cardinal.West, true),
-            22104 => new SmallAmethystBudBlock(Identifier, Cardinal.West, false),
-            22105 => new SmallAmethystBudBlock(Identifier, Cardinal.Up, true),
-            22106 => new SmallAmethystBudBlock(Identifier, Cardinal.Up, false),
-            22107 => new SmallAmethystBudBlock(Identifier, Cardinal.Down, true),
-            22108 => new SmallAmethystBudBlock(Identifier, Cardinal.Down, false),
+            22129 => new SmallAmethystBudBlock(Identifier, Cardinal.North, true),
+            22130 => new SmallAmethystBudBlock(Identifier, Cardinal.North, false),
+            22131 => new SmallAmethystBudBlock(Identifier, Cardinal.East, true),
+            22132 => new SmallAmethystBudBlock(Identifier, Cardinal.East, false),
+            22133 => new SmallAmethystBudBlock(Identifier, Cardinal.South, true),
+            22134 => new SmallAmethystBudBlock(Identifier, Cardinal.South, false),
+            22135 => new SmallAmethystBudBlock(Identifier, Cardinal.West, true),
+            22136 => new SmallAmethystBudBlock(Identifier, Cardinal.West, false),
+            22137 => new SmallAmethystBudBlock(Identifier, Cardinal.Up, true),
+            22138 => new SmallAmethystBudBlock(Identifier, Cardinal.Up, false),
+            22139 => new SmallAmethystBudBlock(Identifier, Cardinal.Down, true),
+            22140 => new SmallAmethystBudBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

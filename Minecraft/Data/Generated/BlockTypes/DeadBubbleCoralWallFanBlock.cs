@@ -44,20 +44,20 @@ public record DeadBubbleCoralWallFanBlock(Identifier Identifier, Direction Facin
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 13892,
-                    false => 13893,
+                    true => 13924,
+                    false => 13925,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 13894,
-                    false => 13895,
+                    true => 13926,
+                    false => 13927,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 13896,
-                    false => 13897,
+                    true => 13928,
+                    false => 13929,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 13898,
-                    false => 13899,
+                    true => 13930,
+                    false => 13931,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record DeadBubbleCoralWallFanBlock(Identifier Identifier, Direction Facin
     
     public IBlock WithState(uint state) {
         return state switch {
-            13892 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.North, true),
-            13893 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.North, false),
-            13894 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.South, true),
-            13895 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.South, false),
-            13896 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.West, true),
-            13897 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.West, false),
-            13898 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.East, true),
-            13899 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.East, false),
+            13924 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.North, true),
+            13925 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.North, false),
+            13926 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.South, true),
+            13927 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.South, false),
+            13928 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.West, true),
+            13929 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.West, false),
+            13930 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.East, true),
+            13931 => new DeadBubbleCoralWallFanBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

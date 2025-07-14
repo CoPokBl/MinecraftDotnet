@@ -11,5 +11,6 @@
   "minecraft:sculk_charge": "SculkChargeParticle",
   "minecraft:shriek": "ShriekParticle",
   "minecraft:trail": "TrailParticle",
-  "minecraft:vibration": "VibrationParticle"
+  "minecraft:vibration": "VibrationParticle",
+  "minecraft:tinted_leaves": "TintedLeavesParticle"
 }

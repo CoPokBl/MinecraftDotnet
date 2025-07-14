@@ -45,62 +45,62 @@ public record LightningRodBlock(Identifier Identifier, Cardinal Facing, bool Pow
             return Facing switch {
                 Cardinal.North => Powered switch {
                     true => Waterlogged switch {
-                        true => 25752,
-                        false => 25753,
+                        true => 25784,
+                        false => 25785,
                     },
                     false => Waterlogged switch {
-                        true => 25754,
-                        false => 25755,
+                        true => 25786,
+                        false => 25787,
                     },
                 },
                 Cardinal.East => Powered switch {
                     true => Waterlogged switch {
-                        true => 25756,
-                        false => 25757,
+                        true => 25788,
+                        false => 25789,
                     },
                     false => Waterlogged switch {
-                        true => 25758,
-                        false => 25759,
+                        true => 25790,
+                        false => 25791,
                     },
                 },
                 Cardinal.South => Powered switch {
                     true => Waterlogged switch {
-                        true => 25760,
-                        false => 25761,
+                        true => 25792,
+                        false => 25793,
                     },
                     false => Waterlogged switch {
-                        true => 25762,
-                        false => 25763,
+                        true => 25794,
+                        false => 25795,
                     },
                 },
                 Cardinal.West => Powered switch {
                     true => Waterlogged switch {
-                        true => 25764,
-                        false => 25765,
+                        true => 25796,
+                        false => 25797,
                     },
                     false => Waterlogged switch {
-                        true => 25766,
-                        false => 25767,
+                        true => 25798,
+                        false => 25799,
                     },
                 },
                 Cardinal.Up => Powered switch {
                     true => Waterlogged switch {
-                        true => 25768,
-                        false => 25769,
+                        true => 25800,
+                        false => 25801,
                     },
                     false => Waterlogged switch {
-                        true => 25770,
-                        false => 25771,
+                        true => 25802,
+                        false => 25803,
                     },
                 },
                 Cardinal.Down => Powered switch {
                     true => Waterlogged switch {
-                        true => 25772,
-                        false => 25773,
+                        true => 25804,
+                        false => 25805,
                     },
                     false => Waterlogged switch {
-                        true => 25774,
-                        false => 25775,
+                        true => 25806,
+                        false => 25807,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -110,30 +110,30 @@ public record LightningRodBlock(Identifier Identifier, Cardinal Facing, bool Pow
     
     public IBlock WithState(uint state) {
         return state switch {
-            25752 => new LightningRodBlock(Identifier, Cardinal.North, true, true),
-            25753 => new LightningRodBlock(Identifier, Cardinal.North, true, false),
-            25754 => new LightningRodBlock(Identifier, Cardinal.North, false, true),
-            25755 => new LightningRodBlock(Identifier, Cardinal.North, false, false),
-            25756 => new LightningRodBlock(Identifier, Cardinal.East, true, true),
-            25757 => new LightningRodBlock(Identifier, Cardinal.East, true, false),
-            25758 => new LightningRodBlock(Identifier, Cardinal.East, false, true),
-            25759 => new LightningRodBlock(Identifier, Cardinal.East, false, false),
-            25760 => new LightningRodBlock(Identifier, Cardinal.South, true, true),
-            25761 => new LightningRodBlock(Identifier, Cardinal.South, true, false),
-            25762 => new LightningRodBlock(Identifier, Cardinal.South, false, true),
-            25763 => new LightningRodBlock(Identifier, Cardinal.South, false, false),
-            25764 => new LightningRodBlock(Identifier, Cardinal.West, true, true),
-            25765 => new LightningRodBlock(Identifier, Cardinal.West, true, false),
-            25766 => new LightningRodBlock(Identifier, Cardinal.West, false, true),
-            25767 => new LightningRodBlock(Identifier, Cardinal.West, false, false),
-            25768 => new LightningRodBlock(Identifier, Cardinal.Up, true, true),
-            25769 => new LightningRodBlock(Identifier, Cardinal.Up, true, false),
-            25770 => new LightningRodBlock(Identifier, Cardinal.Up, false, true),
-            25771 => new LightningRodBlock(Identifier, Cardinal.Up, false, false),
-            25772 => new LightningRodBlock(Identifier, Cardinal.Down, true, true),
-            25773 => new LightningRodBlock(Identifier, Cardinal.Down, true, false),
-            25774 => new LightningRodBlock(Identifier, Cardinal.Down, false, true),
-            25775 => new LightningRodBlock(Identifier, Cardinal.Down, false, false),
+            25784 => new LightningRodBlock(Identifier, Cardinal.North, true, true),
+            25785 => new LightningRodBlock(Identifier, Cardinal.North, true, false),
+            25786 => new LightningRodBlock(Identifier, Cardinal.North, false, true),
+            25787 => new LightningRodBlock(Identifier, Cardinal.North, false, false),
+            25788 => new LightningRodBlock(Identifier, Cardinal.East, true, true),
+            25789 => new LightningRodBlock(Identifier, Cardinal.East, true, false),
+            25790 => new LightningRodBlock(Identifier, Cardinal.East, false, true),
+            25791 => new LightningRodBlock(Identifier, Cardinal.East, false, false),
+            25792 => new LightningRodBlock(Identifier, Cardinal.South, true, true),
+            25793 => new LightningRodBlock(Identifier, Cardinal.South, true, false),
+            25794 => new LightningRodBlock(Identifier, Cardinal.South, false, true),
+            25795 => new LightningRodBlock(Identifier, Cardinal.South, false, false),
+            25796 => new LightningRodBlock(Identifier, Cardinal.West, true, true),
+            25797 => new LightningRodBlock(Identifier, Cardinal.West, true, false),
+            25798 => new LightningRodBlock(Identifier, Cardinal.West, false, true),
+            25799 => new LightningRodBlock(Identifier, Cardinal.West, false, false),
+            25800 => new LightningRodBlock(Identifier, Cardinal.Up, true, true),
+            25801 => new LightningRodBlock(Identifier, Cardinal.Up, true, false),
+            25802 => new LightningRodBlock(Identifier, Cardinal.Up, false, true),
+            25803 => new LightningRodBlock(Identifier, Cardinal.Up, false, false),
+            25804 => new LightningRodBlock(Identifier, Cardinal.Down, true, true),
+            25805 => new LightningRodBlock(Identifier, Cardinal.Down, true, false),
+            25806 => new LightningRodBlock(Identifier, Cardinal.Down, false, true),
+            25807 => new LightningRodBlock(Identifier, Cardinal.Down, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

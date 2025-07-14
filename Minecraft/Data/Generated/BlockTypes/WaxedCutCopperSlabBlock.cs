@@ -44,16 +44,16 @@ public record WaxedCutCopperSlabBlock(Identifier Identifier, SlabType Type, bool
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 24674,
-                    false => 24675,
+                    true => 24706,
+                    false => 24707,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 24676,
-                    false => 24677,
+                    true => 24708,
+                    false => 24709,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 24678,
-                    false => 24679,
+                    true => 24710,
+                    false => 24711,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record WaxedCutCopperSlabBlock(Identifier Identifier, SlabType Type, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            24674 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Top, true),
-            24675 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Top, false),
-            24676 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Bottom, true),
-            24677 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Bottom, false),
-            24678 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Double, true),
-            24679 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Double, false),
+            24706 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Top, true),
+            24707 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Top, false),
+            24708 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Bottom, true),
+            24709 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Bottom, false),
+            24710 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Double, true),
+            24711 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -44,16 +44,16 @@ public record BlackstoneSlabBlock(Identifier Identifier, SlabType Type, bool Wat
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 20893,
-                    false => 20894,
+                    true => 20925,
+                    false => 20926,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 20895,
-                    false => 20896,
+                    true => 20927,
+                    false => 20928,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 20897,
-                    false => 20898,
+                    true => 20929,
+                    false => 20930,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record BlackstoneSlabBlock(Identifier Identifier, SlabType Type, bool Wat
     
     public IBlock WithState(uint state) {
         return state switch {
-            20893 => new BlackstoneSlabBlock(Identifier, SlabType.Top, true),
-            20894 => new BlackstoneSlabBlock(Identifier, SlabType.Top, false),
-            20895 => new BlackstoneSlabBlock(Identifier, SlabType.Bottom, true),
-            20896 => new BlackstoneSlabBlock(Identifier, SlabType.Bottom, false),
-            20897 => new BlackstoneSlabBlock(Identifier, SlabType.Double, true),
-            20898 => new BlackstoneSlabBlock(Identifier, SlabType.Double, false),
+            20925 => new BlackstoneSlabBlock(Identifier, SlabType.Top, true),
+            20926 => new BlackstoneSlabBlock(Identifier, SlabType.Top, false),
+            20927 => new BlackstoneSlabBlock(Identifier, SlabType.Bottom, true),
+            20928 => new BlackstoneSlabBlock(Identifier, SlabType.Bottom, false),
+            20929 => new BlackstoneSlabBlock(Identifier, SlabType.Double, true),
+            20930 => new BlackstoneSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

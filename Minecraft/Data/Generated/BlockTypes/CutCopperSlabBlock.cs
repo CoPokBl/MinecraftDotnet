@@ -44,16 +44,16 @@ public record CutCopperSlabBlock(Identifier Identifier, SlabType Type, bool Wate
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 24322,
-                    false => 24323,
+                    true => 24354,
+                    false => 24355,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 24324,
-                    false => 24325,
+                    true => 24356,
+                    false => 24357,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 24326,
-                    false => 24327,
+                    true => 24358,
+                    false => 24359,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record CutCopperSlabBlock(Identifier Identifier, SlabType Type, bool Wate
     
     public IBlock WithState(uint state) {
         return state switch {
-            24322 => new CutCopperSlabBlock(Identifier, SlabType.Top, true),
-            24323 => new CutCopperSlabBlock(Identifier, SlabType.Top, false),
-            24324 => new CutCopperSlabBlock(Identifier, SlabType.Bottom, true),
-            24325 => new CutCopperSlabBlock(Identifier, SlabType.Bottom, false),
-            24326 => new CutCopperSlabBlock(Identifier, SlabType.Double, true),
-            24327 => new CutCopperSlabBlock(Identifier, SlabType.Double, false),
+            24354 => new CutCopperSlabBlock(Identifier, SlabType.Top, true),
+            24355 => new CutCopperSlabBlock(Identifier, SlabType.Top, false),
+            24356 => new CutCopperSlabBlock(Identifier, SlabType.Bottom, true),
+            24357 => new CutCopperSlabBlock(Identifier, SlabType.Bottom, false),
+            24358 => new CutCopperSlabBlock(Identifier, SlabType.Double, true),
+            24359 => new CutCopperSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

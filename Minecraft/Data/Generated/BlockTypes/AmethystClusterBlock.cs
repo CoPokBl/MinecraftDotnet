@@ -44,28 +44,28 @@ public record AmethystClusterBlock(Identifier Identifier, Cardinal Facing, bool 
         get {
             return Facing switch {
                 Cardinal.North => Waterlogged switch {
-                    true => 22061,
-                    false => 22062,
+                    true => 22093,
+                    false => 22094,
                 },
                 Cardinal.East => Waterlogged switch {
-                    true => 22063,
-                    false => 22064,
+                    true => 22095,
+                    false => 22096,
                 },
                 Cardinal.South => Waterlogged switch {
-                    true => 22065,
-                    false => 22066,
+                    true => 22097,
+                    false => 22098,
                 },
                 Cardinal.West => Waterlogged switch {
-                    true => 22067,
-                    false => 22068,
+                    true => 22099,
+                    false => 22100,
                 },
                 Cardinal.Up => Waterlogged switch {
-                    true => 22069,
-                    false => 22070,
+                    true => 22101,
+                    false => 22102,
                 },
                 Cardinal.Down => Waterlogged switch {
-                    true => 22071,
-                    false => 22072,
+                    true => 22103,
+                    false => 22104,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -74,18 +74,18 @@ public record AmethystClusterBlock(Identifier Identifier, Cardinal Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            22061 => new AmethystClusterBlock(Identifier, Cardinal.North, true),
-            22062 => new AmethystClusterBlock(Identifier, Cardinal.North, false),
-            22063 => new AmethystClusterBlock(Identifier, Cardinal.East, true),
-            22064 => new AmethystClusterBlock(Identifier, Cardinal.East, false),
-            22065 => new AmethystClusterBlock(Identifier, Cardinal.South, true),
-            22066 => new AmethystClusterBlock(Identifier, Cardinal.South, false),
-            22067 => new AmethystClusterBlock(Identifier, Cardinal.West, true),
-            22068 => new AmethystClusterBlock(Identifier, Cardinal.West, false),
-            22069 => new AmethystClusterBlock(Identifier, Cardinal.Up, true),
-            22070 => new AmethystClusterBlock(Identifier, Cardinal.Up, false),
-            22071 => new AmethystClusterBlock(Identifier, Cardinal.Down, true),
-            22072 => new AmethystClusterBlock(Identifier, Cardinal.Down, false),
+            22093 => new AmethystClusterBlock(Identifier, Cardinal.North, true),
+            22094 => new AmethystClusterBlock(Identifier, Cardinal.North, false),
+            22095 => new AmethystClusterBlock(Identifier, Cardinal.East, true),
+            22096 => new AmethystClusterBlock(Identifier, Cardinal.East, false),
+            22097 => new AmethystClusterBlock(Identifier, Cardinal.South, true),
+            22098 => new AmethystClusterBlock(Identifier, Cardinal.South, false),
+            22099 => new AmethystClusterBlock(Identifier, Cardinal.West, true),
+            22100 => new AmethystClusterBlock(Identifier, Cardinal.West, false),
+            22101 => new AmethystClusterBlock(Identifier, Cardinal.Up, true),
+            22102 => new AmethystClusterBlock(Identifier, Cardinal.Up, false),
+            22103 => new AmethystClusterBlock(Identifier, Cardinal.Down, true),
+            22104 => new AmethystClusterBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

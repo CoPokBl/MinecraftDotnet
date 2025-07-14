@@ -45,22 +45,22 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
             return CanSummon switch {
                 true => Shrieking switch {
                     true => Waterlogged switch {
-                        true => 23958,
-                        false => 23959,
+                        true => 23990,
+                        false => 23991,
                     },
                     false => Waterlogged switch {
-                        true => 23960,
-                        false => 23961,
+                        true => 23992,
+                        false => 23993,
                     },
                 },
                 false => Shrieking switch {
                     true => Waterlogged switch {
-                        true => 23962,
-                        false => 23963,
+                        true => 23994,
+                        false => 23995,
                     },
                     false => Waterlogged switch {
-                        true => 23964,
-                        false => 23965,
+                        true => 23996,
+                        false => 23997,
                     },
                 },
             };
@@ -69,14 +69,14 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
     
     public IBlock WithState(uint state) {
         return state switch {
-            23958 => new SculkShriekerBlock(Identifier, true, true, true),
-            23959 => new SculkShriekerBlock(Identifier, true, true, false),
-            23960 => new SculkShriekerBlock(Identifier, true, false, true),
-            23961 => new SculkShriekerBlock(Identifier, true, false, false),
-            23962 => new SculkShriekerBlock(Identifier, false, true, true),
-            23963 => new SculkShriekerBlock(Identifier, false, true, false),
-            23964 => new SculkShriekerBlock(Identifier, false, false, true),
-            23965 => new SculkShriekerBlock(Identifier, false, false, false),
+            23990 => new SculkShriekerBlock(Identifier, true, true, true),
+            23991 => new SculkShriekerBlock(Identifier, true, true, false),
+            23992 => new SculkShriekerBlock(Identifier, true, false, true),
+            23993 => new SculkShriekerBlock(Identifier, true, false, false),
+            23994 => new SculkShriekerBlock(Identifier, false, true, true),
+            23995 => new SculkShriekerBlock(Identifier, false, true, false),
+            23996 => new SculkShriekerBlock(Identifier, false, false, true),
+            23997 => new SculkShriekerBlock(Identifier, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

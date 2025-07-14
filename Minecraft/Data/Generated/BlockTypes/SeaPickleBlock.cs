@@ -44,20 +44,20 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
         get {
             return Pickles switch {
                 1 => Waterlogged switch {
-                    true => 13956,
-                    false => 13957,
+                    true => 13988,
+                    false => 13989,
                 },
                 2 => Waterlogged switch {
-                    true => 13958,
-                    false => 13959,
+                    true => 13990,
+                    false => 13991,
                 },
                 3 => Waterlogged switch {
-                    true => 13960,
-                    false => 13961,
+                    true => 13992,
+                    false => 13993,
                 },
                 4 => Waterlogged switch {
-                    true => 13962,
-                    false => 13963,
+                    true => 13994,
+                    false => 13995,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Pickles), Pickles, "Unknown value for property pickles.")
             };
@@ -66,14 +66,14 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
     
     public IBlock WithState(uint state) {
         return state switch {
-            13956 => new SeaPickleBlock(Identifier, 1, true),
-            13957 => new SeaPickleBlock(Identifier, 1, false),
-            13958 => new SeaPickleBlock(Identifier, 2, true),
-            13959 => new SeaPickleBlock(Identifier, 2, false),
-            13960 => new SeaPickleBlock(Identifier, 3, true),
-            13961 => new SeaPickleBlock(Identifier, 3, false),
-            13962 => new SeaPickleBlock(Identifier, 4, true),
-            13963 => new SeaPickleBlock(Identifier, 4, false),
+            13988 => new SeaPickleBlock(Identifier, 1, true),
+            13989 => new SeaPickleBlock(Identifier, 1, false),
+            13990 => new SeaPickleBlock(Identifier, 2, true),
+            13991 => new SeaPickleBlock(Identifier, 2, false),
+            13992 => new SeaPickleBlock(Identifier, 3, true),
+            13993 => new SeaPickleBlock(Identifier, 3, false),
+            13994 => new SeaPickleBlock(Identifier, 4, true),
+            13995 => new SeaPickleBlock(Identifier, 4, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

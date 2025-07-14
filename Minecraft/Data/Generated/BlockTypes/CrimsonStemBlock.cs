@@ -43,9 +43,9 @@ public record CrimsonStemBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 19619,
-                Axis.Y => 19620,
-                Axis.Z => 19621,
+                Axis.X => 19651,
+                Axis.Y => 19652,
+                Axis.Z => 19653,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record CrimsonStemBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            19619 => new CrimsonStemBlock(Identifier, Axis.X),
-            19620 => new CrimsonStemBlock(Identifier, Axis.Y),
-            19621 => new CrimsonStemBlock(Identifier, Axis.Z),
+            19651 => new CrimsonStemBlock(Identifier, Axis.X),
+            19652 => new CrimsonStemBlock(Identifier, Axis.Y),
+            19653 => new CrimsonStemBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

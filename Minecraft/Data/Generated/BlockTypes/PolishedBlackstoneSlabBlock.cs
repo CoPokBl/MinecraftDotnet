@@ -44,16 +44,16 @@ public record PolishedBlackstoneSlabBlock(Identifier Identifier, SlabType Type, 
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 21394,
-                    false => 21395,
+                    true => 21426,
+                    false => 21427,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 21396,
-                    false => 21397,
+                    true => 21428,
+                    false => 21429,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 21398,
-                    false => 21399,
+                    true => 21430,
+                    false => 21431,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record PolishedBlackstoneSlabBlock(Identifier Identifier, SlabType Type, 
     
     public IBlock WithState(uint state) {
         return state switch {
-            21394 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Top, true),
-            21395 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Top, false),
-            21396 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Bottom, true),
-            21397 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Bottom, false),
-            21398 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Double, true),
-            21399 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Double, false),
+            21426 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Top, true),
+            21427 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Top, false),
+            21428 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Bottom, true),
+            21429 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Bottom, false),
+            21430 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Double, true),
+            21431 => new PolishedBlackstoneSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

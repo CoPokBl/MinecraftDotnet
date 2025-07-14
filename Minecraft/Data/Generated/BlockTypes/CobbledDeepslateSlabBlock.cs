@@ -44,16 +44,16 @@ public record CobbledDeepslateSlabBlock(Identifier Identifier, SlabType Type, bo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 26048,
-                    false => 26049,
+                    true => 26080,
+                    false => 26081,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 26050,
-                    false => 26051,
+                    true => 26082,
+                    false => 26083,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 26052,
-                    false => 26053,
+                    true => 26084,
+                    false => 26085,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record CobbledDeepslateSlabBlock(Identifier Identifier, SlabType Type, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            26048 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Top, true),
-            26049 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Top, false),
-            26050 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Bottom, true),
-            26051 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Bottom, false),
-            26052 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Double, true),
-            26053 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Double, false),
+            26080 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Top, true),
+            26081 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Top, false),
+            26082 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Bottom, true),
+            26083 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Bottom, false),
+            26084 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Double, true),
+            26085 => new CobbledDeepslateSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

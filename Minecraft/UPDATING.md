@@ -6,7 +6,7 @@
 see the [README](../CodeGen/Data/README.md).
 - See if any new complex particles were added (particles with custom data), if so
 create a new class for them in `/Data/Particles/Types/` and then specify them in
-`CodeGen/Data/complex_particles.json`.
+`CodeGen/Data/complex_particles.json`. Find new particles on the [Minecraft Wiki](https://minecraft.wiki/w/Java_Edition_protocol/Particles).
 - Run the code generator (make sure to set the correct version as an argument)
 
 ### 2. Check for Changes

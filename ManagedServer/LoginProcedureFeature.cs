@@ -21,7 +21,7 @@ internal class LoginProcedureFeature : IServerFeature {
     private static readonly Tag<(Guid, string)> LoginInfoTag = new("minecraftdotnet:loginprocfeat:logininfo");
     
     // We'll just say we know vanilla for now
-    private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.5") ];
+    private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.7") ];
     
     // Defaults for the packet, more will be configurable later
     private readonly Func<PlayerConnection, ClientBoundLoginPacket> _loginPacketProvider = _ => new ClientBoundLoginPacket {

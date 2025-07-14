@@ -45,42 +45,42 @@ public record LightGrayCandleBlock(Identifier Identifier, int Candles, bool Lit,
             return Candles switch {
                 1 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21897,
-                        false => 21898,
+                        true => 21929,
+                        false => 21930,
                     },
                     false => Waterlogged switch {
-                        true => 21899,
-                        false => 21900,
+                        true => 21931,
+                        false => 21932,
                     },
                 },
                 2 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21901,
-                        false => 21902,
+                        true => 21933,
+                        false => 21934,
                     },
                     false => Waterlogged switch {
-                        true => 21903,
-                        false => 21904,
+                        true => 21935,
+                        false => 21936,
                     },
                 },
                 3 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21905,
-                        false => 21906,
+                        true => 21937,
+                        false => 21938,
                     },
                     false => Waterlogged switch {
-                        true => 21907,
-                        false => 21908,
+                        true => 21939,
+                        false => 21940,
                     },
                 },
                 4 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21909,
-                        false => 21910,
+                        true => 21941,
+                        false => 21942,
                     },
                     false => Waterlogged switch {
-                        true => 21911,
-                        false => 21912,
+                        true => 21943,
+                        false => 21944,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Candles), Candles, "Unknown value for property candles.")
@@ -90,22 +90,22 @@ public record LightGrayCandleBlock(Identifier Identifier, int Candles, bool Lit,
     
     public IBlock WithState(uint state) {
         return state switch {
-            21897 => new LightGrayCandleBlock(Identifier, 1, true, true),
-            21898 => new LightGrayCandleBlock(Identifier, 1, true, false),
-            21899 => new LightGrayCandleBlock(Identifier, 1, false, true),
-            21900 => new LightGrayCandleBlock(Identifier, 1, false, false),
-            21901 => new LightGrayCandleBlock(Identifier, 2, true, true),
-            21902 => new LightGrayCandleBlock(Identifier, 2, true, false),
-            21903 => new LightGrayCandleBlock(Identifier, 2, false, true),
-            21904 => new LightGrayCandleBlock(Identifier, 2, false, false),
-            21905 => new LightGrayCandleBlock(Identifier, 3, true, true),
-            21906 => new LightGrayCandleBlock(Identifier, 3, true, false),
-            21907 => new LightGrayCandleBlock(Identifier, 3, false, true),
-            21908 => new LightGrayCandleBlock(Identifier, 3, false, false),
-            21909 => new LightGrayCandleBlock(Identifier, 4, true, true),
-            21910 => new LightGrayCandleBlock(Identifier, 4, true, false),
-            21911 => new LightGrayCandleBlock(Identifier, 4, false, true),
-            21912 => new LightGrayCandleBlock(Identifier, 4, false, false),
+            21929 => new LightGrayCandleBlock(Identifier, 1, true, true),
+            21930 => new LightGrayCandleBlock(Identifier, 1, true, false),
+            21931 => new LightGrayCandleBlock(Identifier, 1, false, true),
+            21932 => new LightGrayCandleBlock(Identifier, 1, false, false),
+            21933 => new LightGrayCandleBlock(Identifier, 2, true, true),
+            21934 => new LightGrayCandleBlock(Identifier, 2, true, false),
+            21935 => new LightGrayCandleBlock(Identifier, 2, false, true),
+            21936 => new LightGrayCandleBlock(Identifier, 2, false, false),
+            21937 => new LightGrayCandleBlock(Identifier, 3, true, true),
+            21938 => new LightGrayCandleBlock(Identifier, 3, true, false),
+            21939 => new LightGrayCandleBlock(Identifier, 3, false, true),
+            21940 => new LightGrayCandleBlock(Identifier, 3, false, false),
+            21941 => new LightGrayCandleBlock(Identifier, 4, true, true),
+            21942 => new LightGrayCandleBlock(Identifier, 4, true, false),
+            21943 => new LightGrayCandleBlock(Identifier, 4, false, true),
+            21944 => new LightGrayCandleBlock(Identifier, 4, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

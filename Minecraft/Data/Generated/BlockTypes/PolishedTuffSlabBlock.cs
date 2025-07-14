@@ -44,16 +44,16 @@ public record PolishedTuffSlabBlock(Identifier Identifier, SlabType Type, bool W
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 22521,
-                    false => 22522,
+                    true => 22553,
+                    false => 22554,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 22523,
-                    false => 22524,
+                    true => 22555,
+                    false => 22556,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 22525,
-                    false => 22526,
+                    true => 22557,
+                    false => 22558,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record PolishedTuffSlabBlock(Identifier Identifier, SlabType Type, bool W
     
     public IBlock WithState(uint state) {
         return state switch {
-            22521 => new PolishedTuffSlabBlock(Identifier, SlabType.Top, true),
-            22522 => new PolishedTuffSlabBlock(Identifier, SlabType.Top, false),
-            22523 => new PolishedTuffSlabBlock(Identifier, SlabType.Bottom, true),
-            22524 => new PolishedTuffSlabBlock(Identifier, SlabType.Bottom, false),
-            22525 => new PolishedTuffSlabBlock(Identifier, SlabType.Double, true),
-            22526 => new PolishedTuffSlabBlock(Identifier, SlabType.Double, false),
+            22553 => new PolishedTuffSlabBlock(Identifier, SlabType.Top, true),
+            22554 => new PolishedTuffSlabBlock(Identifier, SlabType.Top, false),
+            22555 => new PolishedTuffSlabBlock(Identifier, SlabType.Bottom, true),
+            22556 => new PolishedTuffSlabBlock(Identifier, SlabType.Bottom, false),
+            22557 => new PolishedTuffSlabBlock(Identifier, SlabType.Double, true),
+            22558 => new PolishedTuffSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

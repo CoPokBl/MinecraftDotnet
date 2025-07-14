@@ -45,58 +45,58 @@ public record CrimsonButtonBlock(Identifier Identifier, AttachDirection Face, Di
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 20123,
-                        false => 20124,
+                        true => 20155,
+                        false => 20156,
                     },
                     Direction.South => Powered switch {
-                        true => 20125,
-                        false => 20126,
+                        true => 20157,
+                        false => 20158,
                     },
                     Direction.West => Powered switch {
-                        true => 20127,
-                        false => 20128,
+                        true => 20159,
+                        false => 20160,
                     },
                     Direction.East => Powered switch {
-                        true => 20129,
-                        false => 20130,
+                        true => 20161,
+                        false => 20162,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 20131,
-                        false => 20132,
+                        true => 20163,
+                        false => 20164,
                     },
                     Direction.South => Powered switch {
-                        true => 20133,
-                        false => 20134,
+                        true => 20165,
+                        false => 20166,
                     },
                     Direction.West => Powered switch {
-                        true => 20135,
-                        false => 20136,
+                        true => 20167,
+                        false => 20168,
                     },
                     Direction.East => Powered switch {
-                        true => 20137,
-                        false => 20138,
+                        true => 20169,
+                        false => 20170,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 20139,
-                        false => 20140,
+                        true => 20171,
+                        false => 20172,
                     },
                     Direction.South => Powered switch {
-                        true => 20141,
-                        false => 20142,
+                        true => 20173,
+                        false => 20174,
                     },
                     Direction.West => Powered switch {
-                        true => 20143,
-                        false => 20144,
+                        true => 20175,
+                        false => 20176,
                     },
                     Direction.East => Powered switch {
-                        true => 20145,
-                        false => 20146,
+                        true => 20177,
+                        false => 20178,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -107,30 +107,30 @@ public record CrimsonButtonBlock(Identifier Identifier, AttachDirection Face, Di
     
     public IBlock WithState(uint state) {
         return state switch {
-            20123 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            20124 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            20125 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            20126 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            20127 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            20128 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            20129 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            20130 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            20131 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            20132 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            20133 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            20134 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            20135 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            20136 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            20137 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            20138 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            20139 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            20140 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            20141 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            20142 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            20143 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            20144 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            20145 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            20146 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            20155 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            20156 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            20157 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            20158 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            20159 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            20160 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            20161 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            20162 => new CrimsonButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            20163 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            20164 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            20165 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            20166 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            20167 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            20168 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            20169 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            20170 => new CrimsonButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            20171 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            20172 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            20173 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            20174 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            20175 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            20176 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            20177 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            20178 => new CrimsonButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

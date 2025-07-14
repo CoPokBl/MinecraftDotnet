@@ -44,16 +44,16 @@ public record PolishedAndesiteSlabBlock(Identifier Identifier, SlabType Type, bo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15171,
-                    false => 15172,
+                    true => 15203,
+                    false => 15204,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15173,
-                    false => 15174,
+                    true => 15205,
+                    false => 15206,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15175,
-                    false => 15176,
+                    true => 15207,
+                    false => 15208,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record PolishedAndesiteSlabBlock(Identifier Identifier, SlabType Type, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            15171 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Top, true),
-            15172 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Top, false),
-            15173 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Bottom, true),
-            15174 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Bottom, false),
-            15175 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Double, true),
-            15176 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Double, false),
+            15203 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Top, true),
+            15204 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Top, false),
+            15205 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Bottom, true),
+            15206 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Bottom, false),
+            15207 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Double, true),
+            15208 => new PolishedAndesiteSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

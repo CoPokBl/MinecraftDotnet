@@ -43,16 +43,16 @@ public record PolishedBlackstonePressurePlateBlock(Identifier Identifier, bool P
     public uint StateId {
         get {
             return Powered switch {
-                true => 21400,
-                false => 21401,
+                true => 21432,
+                false => 21433,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            21400 => new PolishedBlackstonePressurePlateBlock(Identifier, true),
-            21401 => new PolishedBlackstonePressurePlateBlock(Identifier, false),
+            21432 => new PolishedBlackstonePressurePlateBlock(Identifier, true),
+            21433 => new PolishedBlackstonePressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -47,100 +47,6 @@ public record WarpedTrapdoorBlock(Identifier Identifier, Direction Facing, Warpe
                     Half.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 19835,
-                                false => 19836,
-                            },
-                            false => Waterlogged switch {
-                                true => 19837,
-                                false => 19838,
-                            },
-                        },
-                        false => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19839,
-                                false => 19840,
-                            },
-                            false => Waterlogged switch {
-                                true => 19841,
-                                false => 19842,
-                            },
-                        },
-                    },
-                    Half.Bottom => Open switch {
-                        true => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19843,
-                                false => 19844,
-                            },
-                            false => Waterlogged switch {
-                                true => 19845,
-                                false => 19846,
-                            },
-                        },
-                        false => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19847,
-                                false => 19848,
-                            },
-                            false => Waterlogged switch {
-                                true => 19849,
-                                false => 19850,
-                            },
-                        },
-                    },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
-                },
-                Direction.South => HalfValue switch {
-                    Half.Top => Open switch {
-                        true => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19851,
-                                false => 19852,
-                            },
-                            false => Waterlogged switch {
-                                true => 19853,
-                                false => 19854,
-                            },
-                        },
-                        false => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19855,
-                                false => 19856,
-                            },
-                            false => Waterlogged switch {
-                                true => 19857,
-                                false => 19858,
-                            },
-                        },
-                    },
-                    Half.Bottom => Open switch {
-                        true => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19859,
-                                false => 19860,
-                            },
-                            false => Waterlogged switch {
-                                true => 19861,
-                                false => 19862,
-                            },
-                        },
-                        false => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19863,
-                                false => 19864,
-                            },
-                            false => Waterlogged switch {
-                                true => 19865,
-                                false => 19866,
-                            },
-                        },
-                    },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
-                },
-                Direction.West => HalfValue switch {
-                    Half.Top => Open switch {
-                        true => Powered switch {
-                            true => Waterlogged switch {
                                 true => 19867,
                                 false => 19868,
                             },
@@ -184,7 +90,7 @@ public record WarpedTrapdoorBlock(Identifier Identifier, Direction Facing, Warpe
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
                 },
-                Direction.East => HalfValue switch {
+                Direction.South => HalfValue switch {
                     Half.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
@@ -231,6 +137,100 @@ public record WarpedTrapdoorBlock(Identifier Identifier, Direction Facing, Warpe
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
                 },
+                Direction.West => HalfValue switch {
+                    Half.Top => Open switch {
+                        true => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19899,
+                                false => 19900,
+                            },
+                            false => Waterlogged switch {
+                                true => 19901,
+                                false => 19902,
+                            },
+                        },
+                        false => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19903,
+                                false => 19904,
+                            },
+                            false => Waterlogged switch {
+                                true => 19905,
+                                false => 19906,
+                            },
+                        },
+                    },
+                    Half.Bottom => Open switch {
+                        true => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19907,
+                                false => 19908,
+                            },
+                            false => Waterlogged switch {
+                                true => 19909,
+                                false => 19910,
+                            },
+                        },
+                        false => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19911,
+                                false => 19912,
+                            },
+                            false => Waterlogged switch {
+                                true => 19913,
+                                false => 19914,
+                            },
+                        },
+                    },
+                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                },
+                Direction.East => HalfValue switch {
+                    Half.Top => Open switch {
+                        true => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19915,
+                                false => 19916,
+                            },
+                            false => Waterlogged switch {
+                                true => 19917,
+                                false => 19918,
+                            },
+                        },
+                        false => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19919,
+                                false => 19920,
+                            },
+                            false => Waterlogged switch {
+                                true => 19921,
+                                false => 19922,
+                            },
+                        },
+                    },
+                    Half.Bottom => Open switch {
+                        true => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19923,
+                                false => 19924,
+                            },
+                            false => Waterlogged switch {
+                                true => 19925,
+                                false => 19926,
+                            },
+                        },
+                        false => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19927,
+                                false => 19928,
+                            },
+                            false => Waterlogged switch {
+                                true => 19929,
+                                false => 19930,
+                            },
+                        },
+                    },
+                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -238,70 +238,70 @@ public record WarpedTrapdoorBlock(Identifier Identifier, Direction Facing, Warpe
     
     public IBlock WithState(uint state) {
         return state switch {
-            19835 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, true),
-            19836 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, false),
-            19837 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, true),
-            19838 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, false),
-            19839 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, true),
-            19840 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, false),
-            19841 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, true),
-            19842 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, false),
-            19843 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, true),
-            19844 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, false),
-            19845 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, true),
-            19846 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, false),
-            19847 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, true),
-            19848 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, false),
-            19849 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, true),
-            19850 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, false),
-            19851 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, true),
-            19852 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, false),
-            19853 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, true),
-            19854 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, false),
-            19855 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, true),
-            19856 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, false),
-            19857 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, true),
-            19858 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, false),
-            19859 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, true),
-            19860 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, false),
-            19861 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, true),
-            19862 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, false),
-            19863 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, true),
-            19864 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, false),
-            19865 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, true),
-            19866 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, false),
-            19867 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, true),
-            19868 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, false),
-            19869 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, true),
-            19870 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, false),
-            19871 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, true),
-            19872 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, false),
-            19873 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, true),
-            19874 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, false),
-            19875 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, true),
-            19876 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, false),
-            19877 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, true),
-            19878 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, false),
-            19879 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, true),
-            19880 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, false),
-            19881 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, true),
-            19882 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, false),
-            19883 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, true),
-            19884 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, false),
-            19885 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, true),
-            19886 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, false),
-            19887 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, true),
-            19888 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, false),
-            19889 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, true),
-            19890 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, false),
-            19891 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, true),
-            19892 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, false),
-            19893 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, true),
-            19894 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, false),
-            19895 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, true),
-            19896 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, false),
-            19897 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, true),
-            19898 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, false),
+            19867 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, true),
+            19868 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, false),
+            19869 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, true),
+            19870 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, false),
+            19871 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, true),
+            19872 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, false),
+            19873 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, true),
+            19874 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, false),
+            19875 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, true),
+            19876 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, false),
+            19877 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, true),
+            19878 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, false),
+            19879 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, true),
+            19880 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, false),
+            19881 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, true),
+            19882 => new WarpedTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, false),
+            19883 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, true),
+            19884 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, false),
+            19885 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, true),
+            19886 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, false),
+            19887 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, true),
+            19888 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, false),
+            19889 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, true),
+            19890 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, false),
+            19891 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, true),
+            19892 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, false),
+            19893 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, true),
+            19894 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, false),
+            19895 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, true),
+            19896 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, false),
+            19897 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, true),
+            19898 => new WarpedTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, false),
+            19899 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, true),
+            19900 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, false),
+            19901 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, true),
+            19902 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, false),
+            19903 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, true),
+            19904 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, false),
+            19905 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, true),
+            19906 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, false),
+            19907 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, true),
+            19908 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, false),
+            19909 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, true),
+            19910 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, false),
+            19911 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, true),
+            19912 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, false),
+            19913 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, true),
+            19914 => new WarpedTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, false),
+            19915 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, true),
+            19916 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, false),
+            19917 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, true),
+            19918 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, false),
+            19919 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, true),
+            19920 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, false),
+            19921 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, true),
+            19922 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, false),
+            19923 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, true),
+            19924 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, false),
+            19925 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, true),
+            19926 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, false),
+            19927 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, true),
+            19928 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, false),
+            19929 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, true),
+            19930 => new WarpedTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

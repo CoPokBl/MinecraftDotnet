@@ -47,100 +47,6 @@ public record CrimsonTrapdoorBlock(Identifier Identifier, Direction Facing, Crim
                     Half.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 19771,
-                                false => 19772,
-                            },
-                            false => Waterlogged switch {
-                                true => 19773,
-                                false => 19774,
-                            },
-                        },
-                        false => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19775,
-                                false => 19776,
-                            },
-                            false => Waterlogged switch {
-                                true => 19777,
-                                false => 19778,
-                            },
-                        },
-                    },
-                    Half.Bottom => Open switch {
-                        true => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19779,
-                                false => 19780,
-                            },
-                            false => Waterlogged switch {
-                                true => 19781,
-                                false => 19782,
-                            },
-                        },
-                        false => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19783,
-                                false => 19784,
-                            },
-                            false => Waterlogged switch {
-                                true => 19785,
-                                false => 19786,
-                            },
-                        },
-                    },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
-                },
-                Direction.South => HalfValue switch {
-                    Half.Top => Open switch {
-                        true => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19787,
-                                false => 19788,
-                            },
-                            false => Waterlogged switch {
-                                true => 19789,
-                                false => 19790,
-                            },
-                        },
-                        false => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19791,
-                                false => 19792,
-                            },
-                            false => Waterlogged switch {
-                                true => 19793,
-                                false => 19794,
-                            },
-                        },
-                    },
-                    Half.Bottom => Open switch {
-                        true => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19795,
-                                false => 19796,
-                            },
-                            false => Waterlogged switch {
-                                true => 19797,
-                                false => 19798,
-                            },
-                        },
-                        false => Powered switch {
-                            true => Waterlogged switch {
-                                true => 19799,
-                                false => 19800,
-                            },
-                            false => Waterlogged switch {
-                                true => 19801,
-                                false => 19802,
-                            },
-                        },
-                    },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
-                },
-                Direction.West => HalfValue switch {
-                    Half.Top => Open switch {
-                        true => Powered switch {
-                            true => Waterlogged switch {
                                 true => 19803,
                                 false => 19804,
                             },
@@ -184,7 +90,7 @@ public record CrimsonTrapdoorBlock(Identifier Identifier, Direction Facing, Crim
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
                 },
-                Direction.East => HalfValue switch {
+                Direction.South => HalfValue switch {
                     Half.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
@@ -231,6 +137,100 @@ public record CrimsonTrapdoorBlock(Identifier Identifier, Direction Facing, Crim
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
                 },
+                Direction.West => HalfValue switch {
+                    Half.Top => Open switch {
+                        true => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19835,
+                                false => 19836,
+                            },
+                            false => Waterlogged switch {
+                                true => 19837,
+                                false => 19838,
+                            },
+                        },
+                        false => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19839,
+                                false => 19840,
+                            },
+                            false => Waterlogged switch {
+                                true => 19841,
+                                false => 19842,
+                            },
+                        },
+                    },
+                    Half.Bottom => Open switch {
+                        true => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19843,
+                                false => 19844,
+                            },
+                            false => Waterlogged switch {
+                                true => 19845,
+                                false => 19846,
+                            },
+                        },
+                        false => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19847,
+                                false => 19848,
+                            },
+                            false => Waterlogged switch {
+                                true => 19849,
+                                false => 19850,
+                            },
+                        },
+                    },
+                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                },
+                Direction.East => HalfValue switch {
+                    Half.Top => Open switch {
+                        true => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19851,
+                                false => 19852,
+                            },
+                            false => Waterlogged switch {
+                                true => 19853,
+                                false => 19854,
+                            },
+                        },
+                        false => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19855,
+                                false => 19856,
+                            },
+                            false => Waterlogged switch {
+                                true => 19857,
+                                false => 19858,
+                            },
+                        },
+                    },
+                    Half.Bottom => Open switch {
+                        true => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19859,
+                                false => 19860,
+                            },
+                            false => Waterlogged switch {
+                                true => 19861,
+                                false => 19862,
+                            },
+                        },
+                        false => Powered switch {
+                            true => Waterlogged switch {
+                                true => 19863,
+                                false => 19864,
+                            },
+                            false => Waterlogged switch {
+                                true => 19865,
+                                false => 19866,
+                            },
+                        },
+                    },
+                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -238,70 +238,70 @@ public record CrimsonTrapdoorBlock(Identifier Identifier, Direction Facing, Crim
     
     public IBlock WithState(uint state) {
         return state switch {
-            19771 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, true),
-            19772 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, false),
-            19773 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, true),
-            19774 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, false),
-            19775 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, true),
-            19776 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, false),
-            19777 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, true),
-            19778 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, false),
-            19779 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, true),
-            19780 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, false),
-            19781 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, true),
-            19782 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, false),
-            19783 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, true),
-            19784 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, false),
-            19785 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, true),
-            19786 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, false),
-            19787 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, true),
-            19788 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, false),
-            19789 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, true),
-            19790 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, false),
-            19791 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, true),
-            19792 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, false),
-            19793 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, true),
-            19794 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, false),
-            19795 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, true),
-            19796 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, false),
-            19797 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, true),
-            19798 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, false),
-            19799 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, true),
-            19800 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, false),
-            19801 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, true),
-            19802 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, false),
-            19803 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, true),
-            19804 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, false),
-            19805 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, true),
-            19806 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, false),
-            19807 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, true),
-            19808 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, false),
-            19809 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, true),
-            19810 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, false),
-            19811 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, true),
-            19812 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, false),
-            19813 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, true),
-            19814 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, false),
-            19815 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, true),
-            19816 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, false),
-            19817 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, true),
-            19818 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, false),
-            19819 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, true),
-            19820 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, false),
-            19821 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, true),
-            19822 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, false),
-            19823 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, true),
-            19824 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, false),
-            19825 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, true),
-            19826 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, false),
-            19827 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, true),
-            19828 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, false),
-            19829 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, true),
-            19830 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, false),
-            19831 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, true),
-            19832 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, false),
-            19833 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, true),
-            19834 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, false),
+            19803 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, true),
+            19804 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, false),
+            19805 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, true),
+            19806 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, false),
+            19807 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, true),
+            19808 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, false),
+            19809 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, true),
+            19810 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, false),
+            19811 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, true),
+            19812 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, false),
+            19813 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, true),
+            19814 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, false),
+            19815 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, true),
+            19816 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, false),
+            19817 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, true),
+            19818 => new CrimsonTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, false),
+            19819 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, true),
+            19820 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, false),
+            19821 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, true),
+            19822 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, false),
+            19823 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, true),
+            19824 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, false),
+            19825 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, true),
+            19826 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, false),
+            19827 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, true),
+            19828 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, false),
+            19829 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, true),
+            19830 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, false),
+            19831 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, true),
+            19832 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, false),
+            19833 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, true),
+            19834 => new CrimsonTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, false),
+            19835 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, true),
+            19836 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, false),
+            19837 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, true),
+            19838 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, false),
+            19839 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, true),
+            19840 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, false),
+            19841 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, true),
+            19842 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, false),
+            19843 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, true),
+            19844 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, false),
+            19845 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, true),
+            19846 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, false),
+            19847 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, true),
+            19848 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, false),
+            19849 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, true),
+            19850 => new CrimsonTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, false),
+            19851 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, true),
+            19852 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, false),
+            19853 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, true),
+            19854 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, false),
+            19855 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, true),
+            19856 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, false),
+            19857 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, true),
+            19858 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, false),
+            19859 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, true),
+            19860 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, false),
+            19861 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, true),
+            19862 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, false),
+            19863 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, true),
+            19864 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, false),
+            19865 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, true),
+            19866 => new CrimsonTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

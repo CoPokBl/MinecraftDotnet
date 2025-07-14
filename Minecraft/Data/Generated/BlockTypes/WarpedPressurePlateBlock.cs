@@ -43,16 +43,16 @@ public record WarpedPressurePlateBlock(Identifier Identifier, bool Powered) : IB
     public uint StateId {
         get {
             return Powered switch {
-                true => 19705,
-                false => 19706,
+                true => 19737,
+                false => 19738,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            19705 => new WarpedPressurePlateBlock(Identifier, true),
-            19706 => new WarpedPressurePlateBlock(Identifier, false),
+            19737 => new WarpedPressurePlateBlock(Identifier, true),
+            19738 => new WarpedPressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

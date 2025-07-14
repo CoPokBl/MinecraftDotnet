@@ -44,20 +44,20 @@ public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 25936,
-                    false => 25937,
+                    true => 25968,
+                    false => 25969,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 25938,
-                    false => 25939,
+                    true => 25970,
+                    false => 25971,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 25940,
-                    false => 25941,
+                    true => 25972,
+                    false => 25973,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 25942,
-                    false => 25943,
+                    true => 25974,
+                    false => 25975,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            25936 => new BigDripleafStemBlock(Identifier, Direction.North, true),
-            25937 => new BigDripleafStemBlock(Identifier, Direction.North, false),
-            25938 => new BigDripleafStemBlock(Identifier, Direction.South, true),
-            25939 => new BigDripleafStemBlock(Identifier, Direction.South, false),
-            25940 => new BigDripleafStemBlock(Identifier, Direction.West, true),
-            25941 => new BigDripleafStemBlock(Identifier, Direction.West, false),
-            25942 => new BigDripleafStemBlock(Identifier, Direction.East, true),
-            25943 => new BigDripleafStemBlock(Identifier, Direction.East, false),
+            25968 => new BigDripleafStemBlock(Identifier, Direction.North, true),
+            25969 => new BigDripleafStemBlock(Identifier, Direction.North, false),
+            25970 => new BigDripleafStemBlock(Identifier, Direction.South, true),
+            25971 => new BigDripleafStemBlock(Identifier, Direction.South, false),
+            25972 => new BigDripleafStemBlock(Identifier, Direction.West, true),
+            25973 => new BigDripleafStemBlock(Identifier, Direction.West, false),
+            25974 => new BigDripleafStemBlock(Identifier, Direction.East, true),
+            25975 => new BigDripleafStemBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
