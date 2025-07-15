@@ -44,20 +44,20 @@ public record CrimsonWallSignBlock(Identifier Identifier, Direction Facing, bool
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 20363,
-                    false => 20364,
+                    true => 20395,
+                    false => 20396,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 20365,
-                    false => 20366,
+                    true => 20397,
+                    false => 20398,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 20367,
-                    false => 20368,
+                    true => 20399,
+                    false => 20400,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 20369,
-                    false => 20370,
+                    true => 20401,
+                    false => 20402,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record CrimsonWallSignBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            20363 => new CrimsonWallSignBlock(Identifier, Direction.North, true),
-            20364 => new CrimsonWallSignBlock(Identifier, Direction.North, false),
-            20365 => new CrimsonWallSignBlock(Identifier, Direction.South, true),
-            20366 => new CrimsonWallSignBlock(Identifier, Direction.South, false),
-            20367 => new CrimsonWallSignBlock(Identifier, Direction.West, true),
-            20368 => new CrimsonWallSignBlock(Identifier, Direction.West, false),
-            20369 => new CrimsonWallSignBlock(Identifier, Direction.East, true),
-            20370 => new CrimsonWallSignBlock(Identifier, Direction.East, false),
+            20395 => new CrimsonWallSignBlock(Identifier, Direction.North, true),
+            20396 => new CrimsonWallSignBlock(Identifier, Direction.North, false),
+            20397 => new CrimsonWallSignBlock(Identifier, Direction.South, true),
+            20398 => new CrimsonWallSignBlock(Identifier, Direction.South, false),
+            20399 => new CrimsonWallSignBlock(Identifier, Direction.West, true),
+            20400 => new CrimsonWallSignBlock(Identifier, Direction.West, false),
+            20401 => new CrimsonWallSignBlock(Identifier, Direction.East, true),
+            20402 => new CrimsonWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

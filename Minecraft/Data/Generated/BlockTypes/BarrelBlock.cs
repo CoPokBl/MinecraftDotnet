@@ -44,28 +44,28 @@ public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : I
         get {
             return Facing switch {
                 Cardinal.North => Open switch {
-                    true => 19431,
-                    false => 19432,
+                    true => 19463,
+                    false => 19464,
                 },
                 Cardinal.East => Open switch {
-                    true => 19433,
-                    false => 19434,
+                    true => 19465,
+                    false => 19466,
                 },
                 Cardinal.South => Open switch {
-                    true => 19435,
-                    false => 19436,
+                    true => 19467,
+                    false => 19468,
                 },
                 Cardinal.West => Open switch {
-                    true => 19437,
-                    false => 19438,
+                    true => 19469,
+                    false => 19470,
                 },
                 Cardinal.Up => Open switch {
-                    true => 19439,
-                    false => 19440,
+                    true => 19471,
+                    false => 19472,
                 },
                 Cardinal.Down => Open switch {
-                    true => 19441,
-                    false => 19442,
+                    true => 19473,
+                    false => 19474,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -74,18 +74,18 @@ public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : I
     
     public IBlock WithState(uint state) {
         return state switch {
-            19431 => new BarrelBlock(Identifier, Cardinal.North, true),
-            19432 => new BarrelBlock(Identifier, Cardinal.North, false),
-            19433 => new BarrelBlock(Identifier, Cardinal.East, true),
-            19434 => new BarrelBlock(Identifier, Cardinal.East, false),
-            19435 => new BarrelBlock(Identifier, Cardinal.South, true),
-            19436 => new BarrelBlock(Identifier, Cardinal.South, false),
-            19437 => new BarrelBlock(Identifier, Cardinal.West, true),
-            19438 => new BarrelBlock(Identifier, Cardinal.West, false),
-            19439 => new BarrelBlock(Identifier, Cardinal.Up, true),
-            19440 => new BarrelBlock(Identifier, Cardinal.Up, false),
-            19441 => new BarrelBlock(Identifier, Cardinal.Down, true),
-            19442 => new BarrelBlock(Identifier, Cardinal.Down, false),
+            19463 => new BarrelBlock(Identifier, Cardinal.North, true),
+            19464 => new BarrelBlock(Identifier, Cardinal.North, false),
+            19465 => new BarrelBlock(Identifier, Cardinal.East, true),
+            19466 => new BarrelBlock(Identifier, Cardinal.East, false),
+            19467 => new BarrelBlock(Identifier, Cardinal.South, true),
+            19468 => new BarrelBlock(Identifier, Cardinal.South, false),
+            19469 => new BarrelBlock(Identifier, Cardinal.West, true),
+            19470 => new BarrelBlock(Identifier, Cardinal.West, false),
+            19471 => new BarrelBlock(Identifier, Cardinal.Up, true),
+            19472 => new BarrelBlock(Identifier, Cardinal.Up, false),
+            19473 => new BarrelBlock(Identifier, Cardinal.Down, true),
+            19474 => new BarrelBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

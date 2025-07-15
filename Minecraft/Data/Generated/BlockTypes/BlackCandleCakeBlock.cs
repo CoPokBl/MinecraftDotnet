@@ -43,16 +43,16 @@ public record BlackCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock {
     public uint StateId {
         get {
             return Lit switch {
-                true => 22057,
-                false => 22058,
+                true => 22089,
+                false => 22090,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            22057 => new BlackCandleCakeBlock(Identifier, true),
-            22058 => new BlackCandleCakeBlock(Identifier, false),
+            22089 => new BlackCandleCakeBlock(Identifier, true),
+            22090 => new BlackCandleCakeBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

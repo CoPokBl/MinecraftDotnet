@@ -44,12 +44,12 @@ public record LanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged
         get {
             return Hanging switch {
                 true => Waterlogged switch {
-                    true => 19526,
-                    false => 19527,
+                    true => 19558,
+                    false => 19559,
                 },
                 false => Waterlogged switch {
-                    true => 19528,
-                    false => 19529,
+                    true => 19560,
+                    false => 19561,
                 },
             };
         }
@@ -57,10 +57,10 @@ public record LanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged
     
     public IBlock WithState(uint state) {
         return state switch {
-            19526 => new LanternBlock(Identifier, true, true),
-            19527 => new LanternBlock(Identifier, true, false),
-            19528 => new LanternBlock(Identifier, false, true),
-            19529 => new LanternBlock(Identifier, false, false),
+            19558 => new LanternBlock(Identifier, true, true),
+            19559 => new LanternBlock(Identifier, true, false),
+            19560 => new LanternBlock(Identifier, false, true),
+            19561 => new LanternBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

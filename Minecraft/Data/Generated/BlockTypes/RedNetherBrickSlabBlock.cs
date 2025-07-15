@@ -44,16 +44,16 @@ public record RedNetherBrickSlabBlock(Identifier Identifier, SlabType Type, bool
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15165,
-                    false => 15166,
+                    true => 15197,
+                    false => 15198,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15167,
-                    false => 15168,
+                    true => 15199,
+                    false => 15200,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15169,
-                    false => 15170,
+                    true => 15201,
+                    false => 15202,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record RedNetherBrickSlabBlock(Identifier Identifier, SlabType Type, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            15165 => new RedNetherBrickSlabBlock(Identifier, SlabType.Top, true),
-            15166 => new RedNetherBrickSlabBlock(Identifier, SlabType.Top, false),
-            15167 => new RedNetherBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            15168 => new RedNetherBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            15169 => new RedNetherBrickSlabBlock(Identifier, SlabType.Double, true),
-            15170 => new RedNetherBrickSlabBlock(Identifier, SlabType.Double, false),
+            15197 => new RedNetherBrickSlabBlock(Identifier, SlabType.Top, true),
+            15198 => new RedNetherBrickSlabBlock(Identifier, SlabType.Top, false),
+            15199 => new RedNetherBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            15200 => new RedNetherBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            15201 => new RedNetherBrickSlabBlock(Identifier, SlabType.Double, true),
+            15202 => new RedNetherBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

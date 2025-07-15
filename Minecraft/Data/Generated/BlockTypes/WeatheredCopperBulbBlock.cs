@@ -44,12 +44,12 @@ public record WeatheredCopperBulbBlock(Identifier Identifier, bool Lit, bool Pow
         get {
             return Lit switch {
                 true => Powered switch {
-                    true => 25728,
-                    false => 25729,
+                    true => 25760,
+                    false => 25761,
                 },
                 false => Powered switch {
-                    true => 25730,
-                    false => 25731,
+                    true => 25762,
+                    false => 25763,
                 },
             };
         }
@@ -57,10 +57,10 @@ public record WeatheredCopperBulbBlock(Identifier Identifier, bool Lit, bool Pow
     
     public IBlock WithState(uint state) {
         return state switch {
-            25728 => new WeatheredCopperBulbBlock(Identifier, true, true),
-            25729 => new WeatheredCopperBulbBlock(Identifier, true, false),
-            25730 => new WeatheredCopperBulbBlock(Identifier, false, true),
-            25731 => new WeatheredCopperBulbBlock(Identifier, false, false),
+            25760 => new WeatheredCopperBulbBlock(Identifier, true, true),
+            25761 => new WeatheredCopperBulbBlock(Identifier, true, false),
+            25762 => new WeatheredCopperBulbBlock(Identifier, false, true),
+            25763 => new WeatheredCopperBulbBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

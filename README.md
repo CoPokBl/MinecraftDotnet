@@ -2,7 +2,7 @@
 This project is a WIP Minecraft protocol implementation.
 
 It supports:
-- Minecraft 1.21.5
+- Minecraft 1.21.7
 - Serialising and deserialising packets
 - Sending and receiving them over TCP
 - Packet compression

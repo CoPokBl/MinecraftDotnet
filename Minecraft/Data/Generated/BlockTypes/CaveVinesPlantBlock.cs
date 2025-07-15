@@ -43,16 +43,16 @@ public record CaveVinesPlantBlock(Identifier Identifier, bool Berries) : IBlock 
     public uint StateId {
         get {
             return Berries switch {
-                true => 25849,
-                false => 25850,
+                true => 25881,
+                false => 25882,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            25849 => new CaveVinesPlantBlock(Identifier, true),
-            25850 => new CaveVinesPlantBlock(Identifier, false),
+            25881 => new CaveVinesPlantBlock(Identifier, true),
+            25882 => new CaveVinesPlantBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

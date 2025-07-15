@@ -44,12 +44,12 @@ public record ExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool Power
         get {
             return Lit switch {
                 true => Powered switch {
-                    true => 25724,
-                    false => 25725,
+                    true => 25756,
+                    false => 25757,
                 },
                 false => Powered switch {
-                    true => 25726,
-                    false => 25727,
+                    true => 25758,
+                    false => 25759,
                 },
             };
         }
@@ -57,10 +57,10 @@ public record ExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool Power
     
     public IBlock WithState(uint state) {
         return state switch {
-            25724 => new ExposedCopperBulbBlock(Identifier, true, true),
-            25725 => new ExposedCopperBulbBlock(Identifier, true, false),
-            25726 => new ExposedCopperBulbBlock(Identifier, false, true),
-            25727 => new ExposedCopperBulbBlock(Identifier, false, false),
+            25756 => new ExposedCopperBulbBlock(Identifier, true, true),
+            25757 => new ExposedCopperBulbBlock(Identifier, true, false),
+            25758 => new ExposedCopperBulbBlock(Identifier, false, true),
+            25759 => new ExposedCopperBulbBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

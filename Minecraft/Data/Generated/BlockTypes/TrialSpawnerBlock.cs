@@ -44,21 +44,21 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
         get {
             return Ominous switch {
                 true => TrialSpawnerStateValue switch {
-                    TrialSpawnerState.Inactive => 27698,
-                    TrialSpawnerState.WaitingForPlayers => 27699,
-                    TrialSpawnerState.Active => 27700,
-                    TrialSpawnerState.WaitingForRewardEjection => 27701,
-                    TrialSpawnerState.EjectingReward => 27702,
-                    TrialSpawnerState.Cooldown => 27703,
+                    TrialSpawnerState.Inactive => 27730,
+                    TrialSpawnerState.WaitingForPlayers => 27731,
+                    TrialSpawnerState.Active => 27732,
+                    TrialSpawnerState.WaitingForRewardEjection => 27733,
+                    TrialSpawnerState.EjectingReward => 27734,
+                    TrialSpawnerState.Cooldown => 27735,
                     _ => throw new ArgumentOutOfRangeException(nameof(TrialSpawnerStateValue), TrialSpawnerStateValue, "Unknown value for property trial_spawner_state.")
                 },
                 false => TrialSpawnerStateValue switch {
-                    TrialSpawnerState.Inactive => 27704,
-                    TrialSpawnerState.WaitingForPlayers => 27705,
-                    TrialSpawnerState.Active => 27706,
-                    TrialSpawnerState.WaitingForRewardEjection => 27707,
-                    TrialSpawnerState.EjectingReward => 27708,
-                    TrialSpawnerState.Cooldown => 27709,
+                    TrialSpawnerState.Inactive => 27736,
+                    TrialSpawnerState.WaitingForPlayers => 27737,
+                    TrialSpawnerState.Active => 27738,
+                    TrialSpawnerState.WaitingForRewardEjection => 27739,
+                    TrialSpawnerState.EjectingReward => 27740,
+                    TrialSpawnerState.Cooldown => 27741,
                     _ => throw new ArgumentOutOfRangeException(nameof(TrialSpawnerStateValue), TrialSpawnerStateValue, "Unknown value for property trial_spawner_state.")
                 },
             };
@@ -67,18 +67,18 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
     
     public IBlock WithState(uint state) {
         return state switch {
-            27698 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Inactive),
-            27699 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.WaitingForPlayers),
-            27700 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Active),
-            27701 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.WaitingForRewardEjection),
-            27702 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.EjectingReward),
-            27703 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Cooldown),
-            27704 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Inactive),
-            27705 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.WaitingForPlayers),
-            27706 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Active),
-            27707 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.WaitingForRewardEjection),
-            27708 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.EjectingReward),
-            27709 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Cooldown),
+            27730 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Inactive),
+            27731 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.WaitingForPlayers),
+            27732 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Active),
+            27733 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.WaitingForRewardEjection),
+            27734 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.EjectingReward),
+            27735 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Cooldown),
+            27736 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Inactive),
+            27737 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.WaitingForPlayers),
+            27738 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Active),
+            27739 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.WaitingForRewardEjection),
+            27740 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.EjectingReward),
+            27741 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Cooldown),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

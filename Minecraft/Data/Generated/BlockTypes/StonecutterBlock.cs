@@ -43,10 +43,10 @@ public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 19490,
-                Direction.South => 19491,
-                Direction.West => 19492,
-                Direction.East => 19493,
+                Direction.North => 19522,
+                Direction.South => 19523,
+                Direction.West => 19524,
+                Direction.East => 19525,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock
     
     public IBlock WithState(uint state) {
         return state switch {
-            19490 => new StonecutterBlock(Identifier, Direction.North),
-            19491 => new StonecutterBlock(Identifier, Direction.South),
-            19492 => new StonecutterBlock(Identifier, Direction.West),
-            19493 => new StonecutterBlock(Identifier, Direction.East),
+            19522 => new StonecutterBlock(Identifier, Direction.North),
+            19523 => new StonecutterBlock(Identifier, Direction.South),
+            19524 => new StonecutterBlock(Identifier, Direction.West),
+            19525 => new StonecutterBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -44,16 +44,16 @@ public record MossyStoneBrickSlabBlock(Identifier Identifier, SlabType Type, boo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15117,
-                    false => 15118,
+                    true => 15149,
+                    false => 15150,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15119,
-                    false => 15120,
+                    true => 15151,
+                    false => 15152,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15121,
-                    false => 15122,
+                    true => 15153,
+                    false => 15154,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record MossyStoneBrickSlabBlock(Identifier Identifier, SlabType Type, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            15117 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Top, true),
-            15118 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Top, false),
-            15119 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            15120 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            15121 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Double, true),
-            15122 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Double, false),
+            15149 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Top, true),
+            15150 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Top, false),
+            15151 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            15152 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            15153 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Double, true),
+            15154 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

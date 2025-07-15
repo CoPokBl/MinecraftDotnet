@@ -45,42 +45,42 @@ public record MagentaCandleBlock(Identifier Identifier, int Candles, bool Lit, b
             return Candles switch {
                 1 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21801,
-                        false => 21802,
+                        true => 21833,
+                        false => 21834,
                     },
                     false => Waterlogged switch {
-                        true => 21803,
-                        false => 21804,
+                        true => 21835,
+                        false => 21836,
                     },
                 },
                 2 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21805,
-                        false => 21806,
+                        true => 21837,
+                        false => 21838,
                     },
                     false => Waterlogged switch {
-                        true => 21807,
-                        false => 21808,
+                        true => 21839,
+                        false => 21840,
                     },
                 },
                 3 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21809,
-                        false => 21810,
+                        true => 21841,
+                        false => 21842,
                     },
                     false => Waterlogged switch {
-                        true => 21811,
-                        false => 21812,
+                        true => 21843,
+                        false => 21844,
                     },
                 },
                 4 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21813,
-                        false => 21814,
+                        true => 21845,
+                        false => 21846,
                     },
                     false => Waterlogged switch {
-                        true => 21815,
-                        false => 21816,
+                        true => 21847,
+                        false => 21848,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Candles), Candles, "Unknown value for property candles.")
@@ -90,22 +90,22 @@ public record MagentaCandleBlock(Identifier Identifier, int Candles, bool Lit, b
     
     public IBlock WithState(uint state) {
         return state switch {
-            21801 => new MagentaCandleBlock(Identifier, 1, true, true),
-            21802 => new MagentaCandleBlock(Identifier, 1, true, false),
-            21803 => new MagentaCandleBlock(Identifier, 1, false, true),
-            21804 => new MagentaCandleBlock(Identifier, 1, false, false),
-            21805 => new MagentaCandleBlock(Identifier, 2, true, true),
-            21806 => new MagentaCandleBlock(Identifier, 2, true, false),
-            21807 => new MagentaCandleBlock(Identifier, 2, false, true),
-            21808 => new MagentaCandleBlock(Identifier, 2, false, false),
-            21809 => new MagentaCandleBlock(Identifier, 3, true, true),
-            21810 => new MagentaCandleBlock(Identifier, 3, true, false),
-            21811 => new MagentaCandleBlock(Identifier, 3, false, true),
-            21812 => new MagentaCandleBlock(Identifier, 3, false, false),
-            21813 => new MagentaCandleBlock(Identifier, 4, true, true),
-            21814 => new MagentaCandleBlock(Identifier, 4, true, false),
-            21815 => new MagentaCandleBlock(Identifier, 4, false, true),
-            21816 => new MagentaCandleBlock(Identifier, 4, false, false),
+            21833 => new MagentaCandleBlock(Identifier, 1, true, true),
+            21834 => new MagentaCandleBlock(Identifier, 1, true, false),
+            21835 => new MagentaCandleBlock(Identifier, 1, false, true),
+            21836 => new MagentaCandleBlock(Identifier, 1, false, false),
+            21837 => new MagentaCandleBlock(Identifier, 2, true, true),
+            21838 => new MagentaCandleBlock(Identifier, 2, true, false),
+            21839 => new MagentaCandleBlock(Identifier, 2, false, true),
+            21840 => new MagentaCandleBlock(Identifier, 2, false, false),
+            21841 => new MagentaCandleBlock(Identifier, 3, true, true),
+            21842 => new MagentaCandleBlock(Identifier, 3, true, false),
+            21843 => new MagentaCandleBlock(Identifier, 3, false, true),
+            21844 => new MagentaCandleBlock(Identifier, 3, false, false),
+            21845 => new MagentaCandleBlock(Identifier, 4, true, true),
+            21846 => new MagentaCandleBlock(Identifier, 4, true, false),
+            21847 => new MagentaCandleBlock(Identifier, 4, false, true),
+            21848 => new MagentaCandleBlock(Identifier, 4, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -45,58 +45,58 @@ public record WarpedButtonBlock(Identifier Identifier, AttachDirection Face, Dir
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 20147,
-                        false => 20148,
+                        true => 20179,
+                        false => 20180,
                     },
                     Direction.South => Powered switch {
-                        true => 20149,
-                        false => 20150,
+                        true => 20181,
+                        false => 20182,
                     },
                     Direction.West => Powered switch {
-                        true => 20151,
-                        false => 20152,
+                        true => 20183,
+                        false => 20184,
                     },
                     Direction.East => Powered switch {
-                        true => 20153,
-                        false => 20154,
+                        true => 20185,
+                        false => 20186,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 20155,
-                        false => 20156,
+                        true => 20187,
+                        false => 20188,
                     },
                     Direction.South => Powered switch {
-                        true => 20157,
-                        false => 20158,
+                        true => 20189,
+                        false => 20190,
                     },
                     Direction.West => Powered switch {
-                        true => 20159,
-                        false => 20160,
+                        true => 20191,
+                        false => 20192,
                     },
                     Direction.East => Powered switch {
-                        true => 20161,
-                        false => 20162,
+                        true => 20193,
+                        false => 20194,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 20163,
-                        false => 20164,
+                        true => 20195,
+                        false => 20196,
                     },
                     Direction.South => Powered switch {
-                        true => 20165,
-                        false => 20166,
+                        true => 20197,
+                        false => 20198,
                     },
                     Direction.West => Powered switch {
-                        true => 20167,
-                        false => 20168,
+                        true => 20199,
+                        false => 20200,
                     },
                     Direction.East => Powered switch {
-                        true => 20169,
-                        false => 20170,
+                        true => 20201,
+                        false => 20202,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -107,30 +107,30 @@ public record WarpedButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     
     public IBlock WithState(uint state) {
         return state switch {
-            20147 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            20148 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            20149 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            20150 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            20151 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            20152 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            20153 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            20154 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            20155 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            20156 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            20157 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            20158 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            20159 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            20160 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            20161 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            20162 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            20163 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            20164 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            20165 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            20166 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            20167 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            20168 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            20169 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            20170 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            20179 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            20180 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            20181 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            20182 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            20183 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            20184 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            20185 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            20186 => new WarpedButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            20187 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            20188 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            20189 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            20190 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            20191 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            20192 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            20193 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            20194 => new WarpedButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            20195 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            20196 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            20197 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            20198 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            20199 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            20200 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            20201 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            20202 => new WarpedButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

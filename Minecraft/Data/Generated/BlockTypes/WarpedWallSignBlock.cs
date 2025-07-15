@@ -44,20 +44,20 @@ public record WarpedWallSignBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 20371,
-                    false => 20372,
+                    true => 20403,
+                    false => 20404,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 20373,
-                    false => 20374,
+                    true => 20405,
+                    false => 20406,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 20375,
-                    false => 20376,
+                    true => 20407,
+                    false => 20408,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 20377,
-                    false => 20378,
+                    true => 20409,
+                    false => 20410,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record WarpedWallSignBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            20371 => new WarpedWallSignBlock(Identifier, Direction.North, true),
-            20372 => new WarpedWallSignBlock(Identifier, Direction.North, false),
-            20373 => new WarpedWallSignBlock(Identifier, Direction.South, true),
-            20374 => new WarpedWallSignBlock(Identifier, Direction.South, false),
-            20375 => new WarpedWallSignBlock(Identifier, Direction.West, true),
-            20376 => new WarpedWallSignBlock(Identifier, Direction.West, false),
-            20377 => new WarpedWallSignBlock(Identifier, Direction.East, true),
-            20378 => new WarpedWallSignBlock(Identifier, Direction.East, false),
+            20403 => new WarpedWallSignBlock(Identifier, Direction.North, true),
+            20404 => new WarpedWallSignBlock(Identifier, Direction.North, false),
+            20405 => new WarpedWallSignBlock(Identifier, Direction.South, true),
+            20406 => new WarpedWallSignBlock(Identifier, Direction.South, false),
+            20407 => new WarpedWallSignBlock(Identifier, Direction.West, true),
+            20408 => new WarpedWallSignBlock(Identifier, Direction.West, false),
+            20409 => new WarpedWallSignBlock(Identifier, Direction.East, true),
+            20410 => new WarpedWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

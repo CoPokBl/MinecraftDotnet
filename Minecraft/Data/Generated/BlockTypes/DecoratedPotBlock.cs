@@ -45,39 +45,39 @@ public record DecoratedPotBlock(Identifier Identifier, bool Cracked, Direction F
             return Cracked switch {
                 true => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27634,
-                        false => 27635,
+                        true => 27666,
+                        false => 27667,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27636,
-                        false => 27637,
+                        true => 27668,
+                        false => 27669,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27638,
-                        false => 27639,
+                        true => 27670,
+                        false => 27671,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27640,
-                        false => 27641,
+                        true => 27672,
+                        false => 27673,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27642,
-                        false => 27643,
+                        true => 27674,
+                        false => 27675,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27644,
-                        false => 27645,
+                        true => 27676,
+                        false => 27677,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27646,
-                        false => 27647,
+                        true => 27678,
+                        false => 27679,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27648,
-                        false => 27649,
+                        true => 27680,
+                        false => 27681,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -87,22 +87,22 @@ public record DecoratedPotBlock(Identifier Identifier, bool Cracked, Direction F
     
     public IBlock WithState(uint state) {
         return state switch {
-            27634 => new DecoratedPotBlock(Identifier, true, Direction.North, true),
-            27635 => new DecoratedPotBlock(Identifier, true, Direction.North, false),
-            27636 => new DecoratedPotBlock(Identifier, true, Direction.South, true),
-            27637 => new DecoratedPotBlock(Identifier, true, Direction.South, false),
-            27638 => new DecoratedPotBlock(Identifier, true, Direction.West, true),
-            27639 => new DecoratedPotBlock(Identifier, true, Direction.West, false),
-            27640 => new DecoratedPotBlock(Identifier, true, Direction.East, true),
-            27641 => new DecoratedPotBlock(Identifier, true, Direction.East, false),
-            27642 => new DecoratedPotBlock(Identifier, false, Direction.North, true),
-            27643 => new DecoratedPotBlock(Identifier, false, Direction.North, false),
-            27644 => new DecoratedPotBlock(Identifier, false, Direction.South, true),
-            27645 => new DecoratedPotBlock(Identifier, false, Direction.South, false),
-            27646 => new DecoratedPotBlock(Identifier, false, Direction.West, true),
-            27647 => new DecoratedPotBlock(Identifier, false, Direction.West, false),
-            27648 => new DecoratedPotBlock(Identifier, false, Direction.East, true),
-            27649 => new DecoratedPotBlock(Identifier, false, Direction.East, false),
+            27666 => new DecoratedPotBlock(Identifier, true, Direction.North, true),
+            27667 => new DecoratedPotBlock(Identifier, true, Direction.North, false),
+            27668 => new DecoratedPotBlock(Identifier, true, Direction.South, true),
+            27669 => new DecoratedPotBlock(Identifier, true, Direction.South, false),
+            27670 => new DecoratedPotBlock(Identifier, true, Direction.West, true),
+            27671 => new DecoratedPotBlock(Identifier, true, Direction.West, false),
+            27672 => new DecoratedPotBlock(Identifier, true, Direction.East, true),
+            27673 => new DecoratedPotBlock(Identifier, true, Direction.East, false),
+            27674 => new DecoratedPotBlock(Identifier, false, Direction.North, true),
+            27675 => new DecoratedPotBlock(Identifier, false, Direction.North, false),
+            27676 => new DecoratedPotBlock(Identifier, false, Direction.South, true),
+            27677 => new DecoratedPotBlock(Identifier, false, Direction.South, false),
+            27678 => new DecoratedPotBlock(Identifier, false, Direction.West, true),
+            27679 => new DecoratedPotBlock(Identifier, false, Direction.West, false),
+            27680 => new DecoratedPotBlock(Identifier, false, Direction.East, true),
+            27681 => new DecoratedPotBlock(Identifier, false, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

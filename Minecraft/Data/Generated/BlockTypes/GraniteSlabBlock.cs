@@ -44,16 +44,16 @@ public record GraniteSlabBlock(Identifier Identifier, SlabType Type, bool Waterl
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15153,
-                    false => 15154,
+                    true => 15185,
+                    false => 15186,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15155,
-                    false => 15156,
+                    true => 15187,
+                    false => 15188,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15157,
-                    false => 15158,
+                    true => 15189,
+                    false => 15190,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record GraniteSlabBlock(Identifier Identifier, SlabType Type, bool Waterl
     
     public IBlock WithState(uint state) {
         return state switch {
-            15153 => new GraniteSlabBlock(Identifier, SlabType.Top, true),
-            15154 => new GraniteSlabBlock(Identifier, SlabType.Top, false),
-            15155 => new GraniteSlabBlock(Identifier, SlabType.Bottom, true),
-            15156 => new GraniteSlabBlock(Identifier, SlabType.Bottom, false),
-            15157 => new GraniteSlabBlock(Identifier, SlabType.Double, true),
-            15158 => new GraniteSlabBlock(Identifier, SlabType.Double, false),
+            15185 => new GraniteSlabBlock(Identifier, SlabType.Top, true),
+            15186 => new GraniteSlabBlock(Identifier, SlabType.Top, false),
+            15187 => new GraniteSlabBlock(Identifier, SlabType.Bottom, true),
+            15188 => new GraniteSlabBlock(Identifier, SlabType.Bottom, false),
+            15189 => new GraniteSlabBlock(Identifier, SlabType.Double, true),
+            15190 => new GraniteSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

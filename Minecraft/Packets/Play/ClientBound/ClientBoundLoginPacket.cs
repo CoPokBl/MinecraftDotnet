@@ -14,7 +14,7 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
     public required GameMode PreviousGameMode;
     public required GameMode GameMode;
     public required long HashedSeed;
-    public required string DimensionName;
+    public required Identifier DimensionName;
     public required int DimensionType;
     public required bool DoLimitedCrafting;
     public required bool EnableRespawnScreen;
@@ -22,7 +22,7 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
     public required int SimulationDistance;
     public required int ViewDistance;
     public required int MaxPlayers;
-    public required string[] Dimensions;
+    public required Identifier[] Dimensions;
     public required bool IsHardcore;
     public required int EntityId;
 
@@ -56,7 +56,7 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginPacket {
         EntityId = r.ReadInteger(),
         IsHardcore = r.ReadBoolean(),
-        Dimensions = r.ReadPrefixedArray(reader => reader.ReadString()),
+        Dimensions = r.ReadPrefixedArray(reader => (Identifier)reader.ReadString()),
         MaxPlayers = r.ReadVarInt(),
         ViewDistance = r.ReadVarInt(),
         SimulationDistance = r.ReadVarInt(),

@@ -104,7 +104,7 @@ public static class Particle {
     public static readonly SimpleParticle SporeBlossomAir = new("minecraft:spore_blossom_air", 84);
     public static readonly SimpleParticle SquidInk = new("minecraft:squid_ink", 63);
     public static readonly SimpleParticle SweepAttack = new("minecraft:sweep_attack", 64);
-    public static readonly SimpleParticle TintedLeaves = new("minecraft:tinted_leaves", 35);
+    public static readonly TintedLeavesParticle TintedLeaves = new("minecraft:tinted_leaves", 35);
     public static readonly SimpleParticle TotemOfUndying = new("minecraft:totem_of_undying", 65);
     public static readonly TrailParticle Trail = new("minecraft:trail", 48);
     public static readonly SimpleParticle TrialOmen = new("minecraft:trial_omen", 111);
