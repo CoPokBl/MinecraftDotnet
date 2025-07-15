@@ -70,7 +70,7 @@ public class InventoryClickFeature : ScopedFeature {
     }
     
     private static void HandleInventoryClick(PlayerEntity player, ServerBoundClickContainerPacket packet) {
-        // player.SendMessage("Inventory Clicked: " + packet.Slot);
+        // player.SendMessage($"Inventory Clicked: {packet.Slot}, Mode: {packet.Mode}");
         Inventory.Inventory clickedInventory = packet.WindowId == 0 ? player.Inventory : player.OpenInventory!;
         Inventory.Inventory targetInventory = packet.Slot == -999 ? clickedInventory :
             packet.Slot >= clickedInventory.PlayerInventoryStartIndex ? player.Inventory : clickedInventory;
@@ -384,8 +384,86 @@ public class InventoryClickFeature : ScopedFeature {
             }
 
             // Double click (collect to cursor)
+            // Vanilla clients send a left click first and then a double click
+            // So the item we're collecting is already in the cursor
             case 6: {
-                break;  // TODO
+                ItemStack itemToCollect = player.CursorItem;
+                if (itemToCollect.IsAir()) {
+                    // Nothing to collect
+                    break;
+                }
+
+                if (!targetInventory[effectiveSlot].IsAir()) {
+                    // If the clicked slot item, swap it with the cursor item (like a left click)
+                    (targetInventory[effectiveSlot], player.CursorItem) =
+                        (player.CursorItem, targetInventory[effectiveSlot]);
+                    break;
+                }
+                
+                int maxStackSize = itemToCollect.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+                if (itemToCollect.Count >= maxStackSize) {
+                    // Already full stack, so do nothing
+                    break;
+                }
+                
+                // Collect all similar items from both the clicked inventory and the player's inventory
+                // but start with the clicked inventory
+                for (int i = 0; i < clickedInventory.Size; i++) {
+                    ItemStack item = clickedInventory[i];
+                    if (!item.CanStackWith(itemToCollect)) {
+                        continue;
+                    }
+                    
+                    // Okay it's a similar item, collect it
+                    int needed = maxStackSize - itemToCollect.Count;
+
+                    if (needed >= item.Count) {  // Collect all of it
+                        clickedInventory[i] = ItemStack.Air;  // Remove it from the clicked inventory
+                        itemToCollect = itemToCollect.WithCount(itemToCollect.Count + item.Count);
+                    }
+                    else {  // We only need some of it
+                        clickedInventory[i] = item.WithCount(item.Count - needed);
+                        itemToCollect = itemToCollect.WithCount(maxStackSize);  // Fill the stack
+                        break;
+                    }
+
+                    if (itemToCollect.Count >= maxStackSize) {
+                        // We filled the stack, so stop collecting
+                        break;
+                    }
+                }
+                
+                // Now collect from the player's inventory
+                if (itemToCollect.Count < maxStackSize) {  // but only if we still need more items
+                    for (int i = player.Inventory.PlayerInventoryStartIndex; i < PlayerInventory.HotbarSlot9; i++) {
+                        ItemStack item = player.Inventory[i];
+                        if (!item.CanStackWith(itemToCollect)) {
+                            continue;
+                        }
+                    
+                        // Okay it's a similar item, collect it
+                        int needed = maxStackSize - itemToCollect.Count;
+
+                        if (needed >= item.Count) {  // Collect all of it
+                            player.Inventory[i] = ItemStack.Air;  // Remove it from the clicked inventory
+                            itemToCollect = itemToCollect.WithCount(itemToCollect.Count + item.Count);
+                        }
+                        else {  // We only need some of it
+                            player.Inventory[i] = item.WithCount(item.Count - needed);
+                            itemToCollect = itemToCollect.WithCount(maxStackSize);  // Fill the stack
+                            break;
+                        }
+
+                        if (itemToCollect.Count >= maxStackSize) {
+                            // We filled the stack, so stop collecting
+                            break;
+                        }
+                    }
+                }
+                
+                // Finally, set the cursor item to the collected item and clear the slot
+                player.CursorItem = itemToCollect;
+                break;
             }
         }
 
