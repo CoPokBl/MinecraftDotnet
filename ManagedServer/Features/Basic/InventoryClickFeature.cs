@@ -31,8 +31,46 @@ public class InventoryClickFeature : ScopedFeature {
         });
     }
     
+    private static int GetRegularInvDestinationSlot(ItemStack item, Inventory.Inventory inv) {
+        for (int i = 0; i < inv.Size; i++) {
+            int maxStackSize = inv[i].Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+            if (inv[i].CanStackWith(item) && inv[i].Count < maxStackSize) {
+                return i;
+            }
+        }
+
+        for (int i = 0; i < inv.Size; i++) {
+            if (inv[i].IsAir()) {
+                return i;
+            }
+        }
+
+        return -1;  // No available slot found
+    }
+    
+    private static int GetPlayerInvDestinationSlot(ItemStack item, Inventory.Inventory inv) {
+        for (int i = inv.PlayerInventoryStartIndex; i < inv.Size; i++) {
+            int maxStackSize = inv[i].Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+            if (inv[i].CanStackWith(item) && inv[i].Count < maxStackSize) {
+                return i;
+            }
+        }
+
+        // no similar item found, so move to the first empty slot
+        // start from the end of the player inventory to find an empty slot
+        // hotbar slot 9 is the last actual inventory slot (the one after it is the offhand)
+        // so start from there and go backwards
+        for (int i = PlayerInventory.HotbarSlot9; i > inv.PlayerInventoryStartIndex; i--) {
+            if (inv[i].IsAir()) {
+                return i;
+            }
+        }
+        
+        return -1;  // No available slot found
+    }
+    
     private static void HandleInventoryClick(PlayerEntity player, ServerBoundClickContainerPacket packet) {
-        player.SendMessage("Inventory Clicked: " + packet.Slot);
+        // player.SendMessage("Inventory Clicked: " + packet.Slot);
         Inventory.Inventory clickedInventory = packet.WindowId == 0 ? player.Inventory : player.OpenInventory!;
         Inventory.Inventory targetInventory = packet.Slot == -999 ? clickedInventory :
             packet.Slot >= clickedInventory.PlayerInventoryStartIndex ? player.Inventory : clickedInventory;
@@ -151,80 +189,42 @@ public class InventoryClickFeature : ScopedFeature {
                     // Nothing to move
                     return;
                 }
+                
+                Inventory.Inventory destinationInventory = isFromPlayerInventory ? clickedInventory : player.Inventory;
+                Func<ItemStack, Inventory.Inventory, int> destinationSlotGetter = isFromPlayerInventory 
+                    ? GetRegularInvDestinationSlot 
+                    : GetPlayerInvDestinationSlot;
 
-                if (isFromPlayerInventory) {  // going to non player inventory (like a chest)
-                    // check if a similar item exists in the target inventory
-                    bool foundSimilarItem = false;
-                    for (int i = 0; i < clickedInventory.Size; i++) {
-                        if (clickedInventory[i].CanStackWith(itemToMove)) {
-                            // Found a slot to stack it
-                            int newCount = clickedInventory[i].Count + itemToMove.Count;
-                            int maxStackSize = itemToMove.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
-                            if (newCount > maxStackSize) {
-                                // If the new count exceeds the max stack size, split the items
-                                int excessCount = newCount - maxStackSize;
-                                clickedInventory[i] = clickedInventory[i].WithCount(maxStackSize);
-                                targetInventory[effectiveSlot] = itemToMove.WithCount(excessCount);
-                            }
-                            else {
-                                // Otherwise, just stack them
-                                clickedInventory[i] = clickedInventory[i].WithCount(newCount);
-                                targetInventory[effectiveSlot] = ItemStack.Air;  // Clear the slot that it came from
-                            }
-                            
-                            foundSimilarItem = true;
-                            break;  // Exit the loop after stacking
-                        }
+                // We'll keep trying to move more of the item until we run out of it or can't find a slot
+                while (true) {
+                    int destinationSlot = destinationSlotGetter(itemToMove, destinationInventory);
+                    if (destinationSlot == -1) {
+                        targetInventory[effectiveSlot] = itemToMove;  // Put the rest of the item back in the original slot
+                        break;
                     }
-
-                    if (!foundSimilarItem) {  // no similar item found, so move to the first empty slot
-                        for (int i = 0; i < clickedInventory.Size; i++) {
-                            if (clickedInventory[i].IsAir()) {
-                                clickedInventory[i] = itemToMove;
-                                targetInventory[effectiveSlot] = ItemStack.Air;  // Clear the slot that it came from
-                                break;  // Exit the loop after moving
-                            }
-                        }
+                    
+                    ItemStack destinationItem = destinationInventory[destinationSlot];
+                    if (destinationItem.IsAir()) {
+                        // If the best slot is empty, just move the whole itemstack there
+                        destinationInventory[destinationSlot] = itemToMove;
+                        targetInventory[effectiveSlot] = ItemStack.Air; // Clear the slot we moved from
+                        break;
                     }
-                }
-                else {  // It's going into the player's inventory
-                    // check if a similar item exists in the player inventory
-                    bool foundSimilarItem = false;
-                    for (int i = player.Inventory.PlayerInventoryStartIndex; i < player.Inventory.Size; i++) {
-                        if (player.Inventory[i].CanStackWith(itemToMove)) {
-                            // Found a slot to stack it
-                            int newCount = player.Inventory[i].Count + itemToMove.Count;
-                            int maxStackSize = itemToMove.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
-                            if (newCount > maxStackSize) {
-                                // If the new count exceeds the max stack size, split the items
-                                int excessCount = newCount - maxStackSize;
-                                player.Inventory[i] = player.Inventory[i].WithCount(maxStackSize);
-                                targetInventory[effectiveSlot] = itemToMove.WithCount(excessCount);
-                            }
-                            else {
-                                // Otherwise, just stack them
-                                player.Inventory[i] = player.Inventory[i].WithCount(newCount);
-                                targetInventory[effectiveSlot] = ItemStack.Air;  // Clear the slot that it came from
-                            }
-                            
-                            foundSimilarItem = true;
-                            break;  // Exit the loop after stacking
-                        }
+                    
+                    // Okay so it's stackable
+                    int maxStackSize = destinationItem.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+                    int newCount = Math.Min(itemToMove.Count + destinationItem.Count, maxStackSize);
+                    destinationInventory[destinationSlot] = destinationItem.WithCount(newCount);
+                    
+                    int leftOverCount = itemToMove.Count + destinationItem.Count - newCount;
+                    if (leftOverCount <= 0) {
+                        // We moved all the item, so clear the slot we moved from
+                        targetInventory[effectiveSlot] = ItemStack.Air;
+                        break;
                     }
-
-                    if (!foundSimilarItem) {
-                        // no similar item found, so move to the first empty slot
-                        // start from the end of the player inventory to find an empty slot
-                        // hotbar slot 9 is the last actual inventory slot (the one after it is the offhand)
-                        // so start from there and go backwards
-                        for (int i = PlayerInventory.HotbarSlot9; i > player.Inventory.PlayerInventoryStartIndex; i--) {
-                            if (player.Inventory[i].IsAir()) {
-                                player.Inventory[i] = itemToMove;
-                                targetInventory[effectiveSlot] = ItemStack.Air;  // Clear the slot that it came from
-                                break;  // Exit the loop after moving
-                            }
-                        }
-                    }
+                    
+                    // We didn't move all the item, so update the item to move
+                    itemToMove = itemToMove.WithCount(leftOverCount);
                 }
                 break;
             }
@@ -306,8 +306,8 @@ public class InventoryClickFeature : ScopedFeature {
                             case DragType.LeftClick: // Split items across slots
                                 int itemsPerSplit = itemToSplit.Count / slotsToUpdate.Count;
                                 int remainder = itemToSplit.Count % slotsToUpdate.Count;
-                                player.SendMessage("Splitting " + itemToSplit.Count + " items into " + slotsToUpdate.Count + " slots, "
-                                                   + itemsPerSplit + " per slot, with " + remainder + " remainder.");
+                                // player.SendMessage("Splitting " + itemToSplit.Count + " items into " + slotsToUpdate.Count + " slots, "
+                                //                    + itemsPerSplit + " per slot, with " + remainder + " remainder.");
 
                                 foreach (int slotIndex in slotsToUpdate) {
                                     Inventory.Inventory slotInventory = slotIndex >= clickedInventory.PlayerInventoryStartIndex
