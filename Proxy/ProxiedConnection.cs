@@ -156,7 +156,7 @@ public class ProxiedConnection : ITaggable {
     private void HandleServerLoginPacket(MinecraftPacket packet, Action finished) {
         switch (packet) {
             case ClientBoundEncryptionRequestPacket er: {
-                MinecraftPacket resp = Server!.EnableEncryption(er, false).Result;
+                MinecraftPacket resp = Server!.EnableEncryption(er, false);
                 Server!.EncryptionEnabled = false;
                 ServerPacketEvent e = new() {
                     Connection = this,

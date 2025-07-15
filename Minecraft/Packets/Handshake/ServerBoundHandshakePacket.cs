@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Handshake;
@@ -16,6 +17,7 @@ public class ServerBoundHandshakePacket() : ServerBoundPacket {
         Transfer = 3
     }
 
+    [SetsRequiredMembers]
     public ServerBoundHandshakePacket(string hostname, Intention intent, ushort port = 25565, int protocolVersion = 770) : this() {
         Hostname = hostname;
         Port = port;

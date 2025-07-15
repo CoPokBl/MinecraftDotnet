@@ -72,6 +72,14 @@ public readonly struct Vec3(double x, double y, double z) {
         double distanceTopDown = Math.Sqrt(Math.Pow(Math.Abs(X - other.X), 2) + Math.Pow(Math.Abs(Z - other.Z), 2));
         return Math.Sqrt(Math.Pow(distanceTopDown, 2) + Math.Pow(Math.Abs(Y - other.Y), 2));
     }
+    
+    public static Vec3 operator +(Vec3 a, Vec3 b) {
+        return new Vec3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+    }
+    
+    public static Vec3 operator -(Vec3 a, Vec3 b) {
+        return new Vec3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+    }
 
     public void Deconstruct(out double x, out double y, out double z) {
         x = X;

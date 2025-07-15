@@ -36,7 +36,7 @@ public abstract class ServerConnection : MinecraftConnection {
         Events.CallEventCatchErrors(handleEvent);
     }
     
-    public async Task<ServerBoundEncryptionResponsePacket> EnableEncryption(ClientBoundEncryptionRequestPacket er, bool sendResponse = true) {
+    public ServerBoundEncryptionResponsePacket EnableEncryption(ClientBoundEncryptionRequestPacket er, bool sendResponse = true) {
         if (State != ConnectionState.Login) {
             throw new ConnectionStateException(ConnectionState.Login, State, "Connection must be in login state to enable encryption.");
         }
