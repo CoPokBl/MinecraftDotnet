@@ -18,7 +18,7 @@ public class ServerBoundHandshakePacket() : ServerBoundPacket {
     }
 
     [SetsRequiredMembers]
-    public ServerBoundHandshakePacket(string hostname, Intention intent, ushort port = 25565, int protocolVersion = 770) : this() {
+    public ServerBoundHandshakePacket(string hostname, Intention intent, ushort port = 25565, int protocolVersion = 772) : this() {
         Hostname = hostname;
         Port = port;
         ProtocolVersion = protocolVersion;
