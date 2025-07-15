@@ -1,13 +1,12 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
+using ManagedServer.Inventory;
 using ManagedServer.Viewables;
 using Minecraft;
-using Minecraft.Data;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas.Items;
-using static Minecraft.Data.Items.IItem;
 
 namespace ManagedServer.Features.Basic;
 
@@ -141,7 +140,8 @@ public class InventoryClickFeature : ScopedFeature {
             }
 
             // Shift-click
-            case 1: {  // Move to other container (identical for both left and right click)
+            case 1: {
+                // Move to other container (identical for both left and right click)
                 // if the item is coming from the player inventory then it should go to the lowest id available slot in the other.
                 // if it's coming from the other container then it should go to the highest id available slot in the player inventory
                 // because mojang is weird like that.
@@ -212,9 +212,12 @@ public class InventoryClickFeature : ScopedFeature {
                         }
                     }
 
-                    if (!foundSimilarItem) {  // no similar item found, so move to the first empty slot
+                    if (!foundSimilarItem) {
+                        // no similar item found, so move to the first empty slot
                         // start from the end of the player inventory to find an empty slot
-                        for (int i = player.Inventory.Size - 1; i > player.Inventory.PlayerInventoryStartIndex; i--) {
+                        // hotbar slot 9 is the last actual inventory slot (the one after it is the offhand)
+                        // so start from there and go backwards
+                        for (int i = PlayerInventory.HotbarSlot9; i > player.Inventory.PlayerInventoryStartIndex; i--) {
                             if (player.Inventory[i].IsAir()) {
                                 player.Inventory[i] = itemToMove;
                                 targetInventory[effectiveSlot] = ItemStack.Air;  // Clear the slot that it came from
@@ -306,8 +309,7 @@ public class InventoryClickFeature : ScopedFeature {
                                 player.SendMessage("Splitting " + itemToSplit.Count + " items into " + slotsToUpdate.Count + " slots, "
                                                    + itemsPerSplit + " per slot, with " + remainder + " remainder.");
 
-                                for (int i = 0; i < slotsToUpdate.Count; i++) {
-                                    int slotIndex = slotsToUpdate[i];
+                                foreach (int slotIndex in slotsToUpdate) {
                                     Inventory.Inventory slotInventory = slotIndex >= clickedInventory.PlayerInventoryStartIndex
                                         ? player.Inventory
                                         : clickedInventory;
@@ -316,14 +318,25 @@ public class InventoryClickFeature : ScopedFeature {
                                         : slotIndex;
                                     
                                     ItemStack currentItem = slotInventory[targetIndex];
-                                    if (IProtocolType.Equals(currentItem.Type, Item.Air)) {
-                                        slotInventory[targetIndex] =
-                                            itemToSplit.WithCount(itemsPerSplit + (i < remainder ? 1 : 0));
-                                    }
+                                    int existingCount = currentItem.IsAir() ? 0 : currentItem.Count;
+                                    int maxStackSize = itemToSplit.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+                                    
+                                    // So if the current item can be stacked with the item to split
+                                    // then we should add it to the stack. If it can't then we'll 
+                                    // skip that slot. Vanilla clients only send the slots that can
+                                    // be stacked with the item to split. So we'll assume that all
+                                    // slots are valid for stacking.
+                                    if (!currentItem.IsAir() &&
+                                        !currentItem.CanStackWith(itemToSplit.WithCount(itemsPerSplit))) continue;
+                                    // Add the count
+                                    int wantedCount = itemsPerSplit + existingCount;
+                                    int splitCount = Math.Min(wantedCount, maxStackSize);
+                                    remainder += wantedCount - splitCount;  // Add any excess to the remainder
+                                    slotInventory[targetIndex] = itemToSplit.WithCount(splitCount);
                                 }
                                 
-                                // Now the cursor item should be empty
-                                player.CursorItem = ItemStack.Air;
+                                // Now the cursor item should be the remainder (unless it's 0)
+                                player.CursorItem = remainder == 0 ? ItemStack.Air : player.CursorItem.WithCount(remainder);
                                 break;
                             
                             case DragType.RightClick:  // One item per drag (max of the itemToSplit count)
@@ -336,11 +349,18 @@ public class InventoryClickFeature : ScopedFeature {
                                         : slotIndex;
 
                                     ItemStack currentItem = slotInventory[targetIndex];
-                                    if (IProtocolType.Equals(currentItem.Type, Item.Air)) {
-                                        if (itemToSplit.Count > 0) {
-                                            slotInventory[targetIndex] = itemToSplit.WithCount(1);
-                                            itemToSplit = itemToSplit.WithCount(itemToSplit.Count - 1);
-                                        }
+                                    int existingCount = currentItem.IsAir() ? 0 : currentItem.Count;
+                                    bool isMaxStack = (currentItem.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize) <= existingCount;
+                                    if ((currentItem.IsAir() || currentItem.CanStackWith(itemToSplit.WithCount(1))) && 
+                                        !isMaxStack && 
+                                        itemToSplit.Count > 0) {
+                                        // If we:
+                                        // 1. Still have items left on the cursor to split
+                                        // 2. Are currently in an empty slot or a stack that can be stacked with the item to split
+                                        // and isn't already full
+                                        // then we can add one item to the slot
+                                        slotInventory[targetIndex] = itemToSplit.WithCount(existingCount + 1);
+                                        itemToSplit = itemToSplit.WithCount(itemToSplit.Count - 1);
                                     }
                                 }
 

@@ -5,6 +5,10 @@ using Minecraft.Registry;
 
 namespace Minecraft.Schemas.Items;
 
+/// <summary>
+/// Immutable representation of an stack of items.
+/// Or a `Slot` in a container.
+/// </summary>
 public class ItemStack(int count, IItem? type = null, IDataComponent[]? components = null, IDataComponent[]? removeComponents = null) {
     public readonly int Count = count;
     public readonly IItem Type = type ?? Item.Air;
