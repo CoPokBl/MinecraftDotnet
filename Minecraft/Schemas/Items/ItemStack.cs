@@ -24,6 +24,14 @@ public class ItemStack(int count, IItem? type = null, IDataComponent[]? componen
     public ItemStack WithCount(int count) {
         return new ItemStack(count, Type, Components, RemoveComponents);
     }
+    
+    public ItemStack SubtractCount(int count) {
+        if (Count <= count) {
+            return Air;
+        }
+        
+        return new ItemStack(Count - count, Type, Components, RemoveComponents);
+    }
 
     public bool CanStackWith(ItemStack other) {
         if (Type.Identifier != other.Type.Identifier) {

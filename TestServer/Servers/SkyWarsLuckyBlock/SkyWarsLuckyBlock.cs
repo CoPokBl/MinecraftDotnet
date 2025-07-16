@@ -69,8 +69,10 @@ public static class SkyWarsLuckyBlock {
             startTimer = null;
             
             World gameWorld = server.CreateWorld(gameMap);
-            gameWorld.AddFeature(new SimpleCombatFeature(500));
+            gameWorld.AddFeature(new SimpleCombatFeature(500, 2));
             gameWorld.AddFeature(new SkyWarsChestsFeature());
+            gameWorld.AddFeature(new DropItemsOnGroundFeature());
+            gameWorld.AddFeature(new ItemPickupFeature());
             List<PlayerEntity> remainingPlayers = [];
             lock (waitingPlayers) {
                 Queue<Vec3> spawns = CreateRandomSpawns();

@@ -7,7 +7,6 @@ using ManagedServer.Events.Types;
 using ManagedServer.Viewables;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
-using Minecraft.Data.Generated.BlockTypes;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -17,6 +16,8 @@ using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
+using Minecraft.Schemas.Entities.Meta.Types;
+using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Worlds;
@@ -62,6 +63,10 @@ public class World : IAudience, IFeatureScope, ITaggable {
     }
 
     // Data storage tags
+    /// <summary>
+    /// Should store the time when an item was dropped. It will be set to <see cref="DateTime.Now"/> when the item is dropped.
+    /// </summary>
+    public static readonly Tag<DateTime> ItemDropTimeTag = new("minecraftdotnet:world:item_drop_time");
     private static readonly Tag<HashSet<IVec2>> LoadedChunksTag = new("minecraftdotnet:world:loadedchunks");
     private static readonly Tag<Queue<MinecraftPacket>> WaitingPacketsTag = new("minecraftdotnet:world:waitingpackets");
     private static readonly Tag<Action> CancelListenersActionTag = new("minecraftdotnet:world:cancellistener");
@@ -376,6 +381,18 @@ public class World : IAudience, IFeatureScope, ITaggable {
         Server!.ScheduleTask(TimeSpan.FromSeconds(2), () => {
             lightning.Despawn();
         });
+    }
+    
+    public Entity DropItem(Vec3 pos, ItemStack item) {
+        Entity itemEntity = new(EntityType.Item) {
+            Position = pos
+        };
+        itemEntity.SetTag(ItemDropTimeTag, DateTime.Now);
+        Spawn(itemEntity);
+
+        ItemMeta meta = new(item);
+        itemEntity.Meta = meta;
+        return itemEntity;
     }
 
     public void SendPacket(MinecraftPacket packet) {

@@ -10,6 +10,12 @@ public class PlayerInventory : Inventory {
 
     public override IInventoryType Type => InventoryType.Generic9x4;
     public override int WindowId => 0;
+    
+    // We search the hotbar first, then the rest of the inventory. Ignoring armour and crafting slots.
+    public override int[] AddItemSearchOrder => 
+        Enumerable.Range(HotbarSlot1, 9)
+            .Concat(Enumerable.Range(PlayerInventoryStartIndex, HotbarSlot1 - PlayerInventoryStartIndex))
+            .ToArray();
 
     // Slot constants
     public const int CraftingInput1Slot = 1;

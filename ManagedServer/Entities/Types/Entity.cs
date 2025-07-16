@@ -138,6 +138,9 @@ public class Entity : IViewable, ITaggable, IFeatureScope {
             HeadYaw = HeadYaw,
             Data = 0,
             Velocity = SVec3.Zero
+        }, new ClientBoundSetEntityMetadataPacket {
+            EntityId = NetId,
+            Meta = Meta
         }];
     }
 
@@ -216,8 +219,14 @@ public class Entity : IViewable, ITaggable, IFeatureScope {
     /// Method that can be overriden for players.
     /// </summary>
     /// <param name="packets">The packets to send.</param>
-    public virtual void SendToSelfAndViewers(params MinecraftPacket[] packets) {
+    public virtual void SendToSelf(params MinecraftPacket[] packets) {
+        
+    }
+    
+    
+    public void SendToSelfAndViewers(params MinecraftPacket[] packets) {
         SendToViewers(packets);
+        SendToSelf(packets);
     }
 
     public void SendToViewers(params MinecraftPacket[] packets) {

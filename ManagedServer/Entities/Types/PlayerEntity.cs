@@ -15,7 +15,7 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Entities.Types;
 
-public class PlayerEntity : Entity, IAudience {
+public class PlayerEntity : LivingEntity, IAudience {
     public readonly string Name;
     public readonly PlayerConnection Connection;
     public readonly PlayerInventory Inventory;
@@ -290,9 +290,8 @@ public class PlayerEntity : Entity, IAudience {
         // base.Teleport(pos, yaw, pitch);   Don't tell everyone else
     }
 
-    public override void SendToSelfAndViewers(params MinecraftPacket[] packets) {
+    public override void SendToSelf(params MinecraftPacket[] packets) {
         Connection.SendPackets(packets);
-        SendToViewers(packets);
     }
 
     public override MinecraftPacket[] GenerateSpawnEntityPackets() {

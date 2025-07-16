@@ -7,7 +7,6 @@ using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities;
-using Minecraft.Schemas.Entities.Meta;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Vec;
 
@@ -79,6 +78,13 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         return Entities
             .Where(e => e is PlayerEntity)
             .Cast<PlayerEntity>()
+            .ToArray();
+    }
+    
+    // TODO: this needs major optimising (perhaps store entities in a spatial partitioning structure, or per chunk)
+    public Entity[] GetNearbyEntities(Vec3 pos, double distance) {
+        return Entities
+            .Where(e => e.Position.DistanceTo(pos) < distance)
             .ToArray();
     }
 

@@ -11,7 +11,7 @@ using Minecraft.Schemas.Sound;
 
 namespace ManagedServer.Features;
 
-public class SimpleCombatFeature(int attackCooldown = -1) : ScopedFeature {
+public class SimpleCombatFeature(int attackCooldown = -1, float damage = 0) : ScopedFeature {
     private readonly Tag<long> _lastHitTag = new("minecraftdotnet:simplecombat:lasthit");
     
     public override void Register() {
@@ -61,6 +61,10 @@ public class SimpleCombatFeature(int attackCooldown = -1) : ScopedFeature {
                 Pitch = 1f,
                 Seed = 0L
             };
+
+            if (entity is LivingEntity le) {
+                le.Damage(damage);
+            }
             
             if (entity is PlayerEntity p) {
                 // p.SetVelocity(attacker.Direction.Multiply(0.5) with { Y = 0.5 });  // Original

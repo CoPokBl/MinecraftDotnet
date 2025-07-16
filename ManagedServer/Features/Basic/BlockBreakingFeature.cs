@@ -71,6 +71,12 @@ public class BlockBreakingFeature : ScopedFeature {
             BreakBlock(player, pos);
             return;
         }
+
+        if (breakTicks < 0) {
+            // negative break ticks means we can't break it
+            player.World!.SendBlockUpdate(pos, player);
+            return;
+        }
         
         // mining over time
         player.GetTagOrNull(BlockBreakAnimationTimerTag)?.Dispose();

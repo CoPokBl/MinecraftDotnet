@@ -1,5 +1,6 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Viewables;
+using Minecraft.Data.Generated;
 using Minecraft.Data.Inventories;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;
@@ -11,6 +12,7 @@ using Minecraft.Text;
 namespace ManagedServer.Inventory;
 
 public abstract class Inventory : IViewable {
+    private const int DefaultMaxStackSize = 64;
     private static readonly AtomicCounter IdCounter = new(1, sbyte.MaxValue-1);
     
     /// <summary>
@@ -22,6 +24,7 @@ public abstract class Inventory : IViewable {
     public abstract IInventoryType Type { get; }
 
     public virtual int WindowId { get; } = IdCounter.Next();
+    public virtual int[] AddItemSearchOrder => Enumerable.Range(0, Size).ToArray();
     
     public EventNode<IServerEvent> Events { get; }
     
@@ -56,6 +59,76 @@ public abstract class Inventory : IViewable {
             }
             Items[index] = value;
             SendSlotUpdate(index);
+        }
+    }
+    
+    protected int GetBestSlotForItem(ItemStack item) {
+        // Check for a similar item first
+        foreach (int i in AddItemSearchOrder) {
+            if (!this[i].CanStackWith(item)) continue;
+            int maxStackSize = this[i].Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+            if (this[i].Count < maxStackSize) {
+                return i; // Found a slot that can stack with the item
+            }
+        }
+        
+        // If no similar item found, return the first empty slot
+        foreach (int i in AddItemSearchOrder) {
+            if (this[i] == ItemStack.Air) {
+                return i; // Found an empty slot
+            }
+        }
+        
+        // If no empty slot found, return -1 to indicate failure
+        return -1;
+    }
+
+    /// <summary>
+    /// Inserts the specified item into the first empty slot in the inventory.
+    /// </summary>
+    /// <param name="item">The item to add.</param>
+    /// <param name="allOrNothing">Whether to only make changes if the item can be fully added.</param>
+    /// <returns>The remainder of the item. If <see cref="allOrNothing"/> is true then this will either be null or <see cref="item"/></returns>
+    public virtual ItemStack? AddItem(ItemStack item, bool allOrNothing = false) {
+        ItemStack remainingItem = item;
+        Dictionary<int, ItemStack> changedItems = new();
+
+        while (true) {
+            int bestSlot = GetBestSlotForItem(remainingItem);
+            if (bestSlot == -1) {
+                // No suitable slot found, return the remaining item
+                if (allOrNothing) {
+                    // Rollback changes if we couldn't add the item completely
+                    foreach ((int index, ItemStack originalItem) in changedItems) {
+                        this[index] = originalItem;
+                    }
+                    return item; // Return the original item if we couldn't add it
+                }
+                return remainingItem; // Return the remaining item if we couldn't add it
+            }
+            
+            if (this[bestSlot] == ItemStack.Air) {
+                // Found an empty slot, place the item here
+                this[bestSlot] = remainingItem;
+                return null; // Item added successfully
+            }
+            
+            if (!this[bestSlot].CanStackWith(remainingItem)) {
+                // The item cannot stack with the existing item, continue searching
+                continue;
+            }
+            
+            int maxStackSize = this[bestSlot].Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+            int newStackCount = Math.Min(this[bestSlot].Count + remainingItem.Count, maxStackSize);
+            int remainingCount = remainingItem.Count - (newStackCount - this[bestSlot].Count);
+            changedItems[bestSlot] = this[bestSlot];
+            this[bestSlot] = this[bestSlot].WithCount(newStackCount);
+            if (remainingCount <= 0) {
+                // Successfully added the item, return null to indicate no remaining item
+                return null;
+            }
+            // Update the remaining item with the count that was not added
+            remainingItem = remainingItem.WithCount(remainingCount);
         }
     }
 
