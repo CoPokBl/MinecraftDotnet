@@ -255,6 +255,19 @@ public class DataReader(byte[] data) : Stream {
         return TextComponent.FromTag(ReadNbt());
     }
     
+    public Quaternion ReadQuaternion() {
+        return new Quaternion(ReadFloat(), ReadFloat(), ReadFloat(), ReadFloat());
+    }
+    
+    // int id or T
+    // If id is 0, it returns the value of T, otherwise it returns the id - 1
+    public Or<int, T>ReadIdOr<T>(Func<DataReader, T> readerAdapter) {
+        int id = ReadVarInt();
+        return id == 0 
+            ? Or<int, T>.FromValue2(readerAdapter.Invoke(this)) 
+            : Or<int, T>.FromValue1(id - 1);
+    }
+    
     public T[] ReadPrefixedArray<T>(Func<DataReader, T> readerAdapter) {
         return ReadArray(ReadVarInt(), readerAdapter);
     }

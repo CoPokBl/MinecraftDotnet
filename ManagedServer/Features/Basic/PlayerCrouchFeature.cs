@@ -1,7 +1,6 @@
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using Minecraft.Packets.Play.ServerBound;
-using Minecraft.Schemas;
 
 namespace ManagedServer.Features.Basic;
 
@@ -10,24 +9,20 @@ public class PlayerCrouchFeature : ScopedFeature {
     
     public override void Register() {
         AddEventListener<PlayerPacketHandleEvent>(e => {
-            if (e.Packet is not ServerBoundPlayerCommandPacket packet) {
+            if (e.Packet is not ServerBoundPlayerInputPacket packet) {
                 return;
             }
 
-            bool? newValue = packet.PlayAction switch {
-                PlayerAction.PressSneak => true,
-                PlayerAction.ReleaseSneak => false,
-                _ => null
-            };
+            bool value = packet.Flags.HasFlag(ServerBoundPlayerInputPacket.Input.Sneak);
             
-            if (newValue is null) {
+            if (value == e.Player.Crouching) {  // didn't change
                 return;
             }
             
             PlayerCrouchEvent crouchEvent = new() {
                 Player = e.Player,
                 World = e.World,
-                IsCrouching = newValue.Value
+                IsCrouching = value
             };
             Scope.Events.CallEvent(crouchEvent);
             

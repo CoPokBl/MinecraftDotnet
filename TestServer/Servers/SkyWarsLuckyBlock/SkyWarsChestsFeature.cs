@@ -1,7 +1,6 @@
 using ManagedServer;
 using ManagedServer.Events;
 using ManagedServer.Inventory;
-using ManagedServer.Viewables;
 using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;

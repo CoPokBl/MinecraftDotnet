@@ -1,12 +1,13 @@
 namespace Minecraft.Schemas.Blocks.BlockEnums;
 
+// IDs are used by EntityMeta, do not change them
 public enum Cardinal {
-    North,
-    East,
-    South,
-    West,
-    Up,
-    Down
+    North = 2,
+    East = 5,
+    South = 3,
+    West = 4,
+    Up = 1,
+    Down = 0
 }
 
 public static class CardinalExtensions {

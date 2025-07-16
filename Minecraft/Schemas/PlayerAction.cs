@@ -1,13 +1,11 @@
 namespace Minecraft.Schemas;
 
 public enum PlayerAction {
-    PressSneak = 0,
-    ReleaseSneak = 1,
-    LeaveBed = 2,
-    StartSprinting = 3,
-    StopSprinting = 4,
-    StartHorseJump = 5,
-    StopHorseJump = 6,
-    OpenVehicleInventory = 7,
-    StartElytraFlight = 8
+    LeaveBed = 0,
+    StartSprinting = 1,
+    StopSprinting = 2,
+    StartHorseJump = 3,
+    StopHorseJump = 4,
+    OpenVehicleInventory = 5,
+    StartElytraFlight = 6
 }

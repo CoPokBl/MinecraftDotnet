@@ -115,7 +115,7 @@ public class DataWriter : Stream, IWritable {
         return this;
     }
 
-    public DataWriter WriteMetaParam<T>(T? val, int index, MetaFieldType type, Action<T, DataWriter> writeAction) where T : class {
+    public DataWriter WriteEntityMetaParam<T>(T? val, int index, MetaFieldType type, Action<T, DataWriter> writeAction) where T : class {
         if (val == null) {
             return this;
         }
@@ -123,7 +123,7 @@ public class DataWriter : Stream, IWritable {
         return WriteUnsignedByte((byte)index).WriteVarInt((int)type).Write(val, writeAction);
     }
     
-    public DataWriter WriteMetaParam<T>(T? val, int index, MetaFieldType type, Action<T, DataWriter> writeAction) where T : struct {
+    public DataWriter WriteEntityMetaParam<T>(T? val, int index, MetaFieldType type, Action<T, DataWriter> writeAction) where T : struct {
         if (val == null) {
             return this;
         }
@@ -175,6 +175,13 @@ public class DataWriter : Stream, IWritable {
         return WriteFloat(value.X)
             .WriteFloat(value.Y)
             .WriteFloat(value.Z);
+    }
+    
+    public DataWriter WriteQuaternion(Quaternion value) {
+        return WriteFloat(value.X)
+            .WriteFloat(value.Y)
+            .WriteFloat(value.Z)
+            .WriteFloat(value.W);
     }
     
     // A single-precision 32-bit IEEE 754 floating point number, big endian
@@ -445,6 +452,17 @@ public class DataWriter : Stream, IWritable {
 
     public DataWriter WriteAngle(Angle angle) {
         return Write(angle.Value);
+    }
+    
+    public DataWriter WriteIdOr<T>(Or<int, T> idOr, Action<T, DataWriter> writerAction) {
+        if (idOr.IsValue1) {
+            return WriteVarInt(idOr.Value1 + 1);  // +1 because 0 is reserved for no value
+        }
+        
+        // If it's a right value, write the value using the provided action
+        WriteVarInt(0); // 0 indicates a right value
+        writerAction.Invoke(idOr.Value2!, this);
+        return this;
     }
 
     public DataWriter WritePrefixedArray<T>(T[] values, Action<T, DataWriter> writerAction) {

@@ -4,6 +4,7 @@ using ManagedServer.Events.Types;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Entities;
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -11,13 +12,14 @@ using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Entities.Types;
 
-public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
+public class Entity : IViewable, ITaggable, IFeatureScope {
     public Guid Uuid = Guid.NewGuid();
-    public readonly IEntityType Type = type;
+    public readonly IEntityType Type;
     public Vec3 Position = Vec3.Zero;
     public Angle Pitch = Angle.Zero;
     public Angle Yaw = Angle.Zero;
@@ -33,8 +35,20 @@ public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
     }
 
     public EventNode<IServerEvent> Events { get; } = new();
+
+    public EntityMeta Meta {
+        get => _meta;
+        set {
+            _meta = value;
+            SendToViewers(new ClientBoundSetEntityMetadataPacket {
+                EntityId = NetId,
+                Meta = _meta
+            });
+        }
+    }
+
     public virtual List<PlayerEntity> Players => [];
-    private readonly Dictionary<string, object?> Data = new();
+    private readonly Dictionary<string, object?> _data = new();
 
     private bool _crouching;
     public bool Crouching {
@@ -55,6 +69,51 @@ public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
     public int NetId;
     public EntityManager? Manager;
     public World? World;
+    private EntityMeta _meta;
+
+    public Entity(IEntityType type, EntityMeta? meta = null) {
+        Type = type;
+
+        if (meta == null) {
+            // guess the meta type based on the entity type
+            if (type.Identifier == EntityType.Player.Identifier) {
+                Meta = new PlayerMeta();
+            } else if (type.Identifier == EntityType.Arrow.Identifier) {
+                Meta = new ArrowMeta();
+            } else if (type.Identifier == EntityType.AreaEffectCloud.Identifier) {
+                Meta = new AreaEffectCloudMeta();
+            } else if (type.Identifier == EntityType.FallingBlock.Identifier) {
+                Meta = new FallingBlockMeta();
+            } else if (type.Identifier == EntityType.Item.Identifier) {
+                Meta = new ItemMeta();
+            } else if (type.Identifier == EntityType.Painting.Identifier) {
+                Meta = new PaintingMeta();
+            } else if (type.Identifier == EntityType.EndCrystal.Identifier) {
+                Meta = new EndCrystalMeta();
+            } else if (type.Identifier == EntityType.ExperienceOrb.Identifier) {
+                Meta = new ExperienceOrbMeta();
+            } else if (type.Identifier == EntityType.EyeOfEnder.Identifier) {
+                Meta = new EyeOfEnderMeta();
+            } else if (type.Identifier == EntityType.Fireball.Identifier) {
+                Meta = new FireballMeta();
+            } else if (type.Identifier == EntityType.FireworkRocket.Identifier) {
+                Meta = new FireworkRocketMeta();
+            } else if (type.Identifier == EntityType.FishingBobber.Identifier) {
+                Meta = new FishingBobberMeta();
+            } else if (type.Identifier == EntityType.Interaction.Identifier) {
+                Meta = new InteractionMeta();
+            } else if (type.Identifier == EntityType.ItemFrame.Identifier) {
+                Meta = new ItemFrameMeta();
+            } else if (type.Identifier == EntityType.Item.Identifier) {
+                Meta = new ItemMeta();
+            } else {
+                Meta = new EntityMeta();
+            }
+        }
+        else {
+            Meta = meta;
+        }
+    }
 
     /// <summary>
     /// A unit vector pointing in the direction that the player is facing.
@@ -178,14 +237,14 @@ public class Entity(IEntityType type) : IViewable, ITaggable, IFeatureScope {
     }
     
     public T GetTag<T>(Tag<T> tag) {
-        return (T)Data[tag.Id]!;
+        return (T)_data[tag.Id]!;
     }
 
     public bool HasTag<T>(Tag<T> tag) {
-        return Data.ContainsKey(tag.Id);
+        return _data.ContainsKey(tag.Id);
     }
 
     public void SetTag<T>(Tag<T> tag, T value) {
-        Data[tag.Id] = value;
+        _data[tag.Id] = value;
     }
 }

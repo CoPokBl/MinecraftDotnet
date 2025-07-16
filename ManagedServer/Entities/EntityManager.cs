@@ -8,6 +8,7 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Entities.Meta;
+using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Entities;

@@ -1,5 +1,6 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
+using ManagedServer.Events.Attributes;
 using ManagedServer.Inventory;
 using ManagedServer.Viewables;
 using Minecraft;
@@ -10,6 +11,7 @@ using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Features.Basic;
 
+[CallsEvent(typeof(PlayerDropItemEvent))]
 public class InventoryClickFeature : ScopedFeature {
     private static readonly Tag<DragType> DraggingTag = new("managedserver:inventoryclick:dragging");
     private static readonly Tag<List<int>> DragSlotsTag = new("managedserver:inventoryclick:drag_slots");
@@ -69,7 +71,7 @@ public class InventoryClickFeature : ScopedFeature {
         return -1;  // No available slot found
     }
     
-    private static void HandleInventoryClick(PlayerEntity player, ServerBoundClickContainerPacket packet) {
+    private void HandleInventoryClick(PlayerEntity player, ServerBoundClickContainerPacket packet) {
         // player.SendMessage($"Inventory Clicked: {packet.Slot}, Mode: {packet.Mode}");
         Inventory.Inventory clickedInventory = packet.WindowId == 0 ? player.Inventory : player.OpenInventory!;
         Inventory.Inventory targetInventory = packet.Slot == -999 ? clickedInventory :
@@ -85,18 +87,9 @@ public class InventoryClickFeature : ScopedFeature {
                     // Left click (apply to whole stack)
                     case 0: {
                         if (packet.Slot < 0) {
-                            // Clicked outside the inventory (so drop it I guess)
-                            player.CursorItem = packet.Button switch {
-                                0 => // Left click (drop stack)
-                                    ItemStack.Air,
-                                1 => // Right click (drop single item)
-                                    player.CursorItem.Count > 1
-                                        ? player.CursorItem.WithCount(player.CursorItem.Count - 1)
-                                        : // There is more than one item, so subtract one
-                                        ItemStack.Air // There is only one item, so drop it all
-                                ,
-                                _ => throw new ArgumentOutOfRangeException($"Unknown button type: {packet.Button}")
-                            };
+                            // Clicked outside the inventory (so drop stack)
+                            bool removeItem = HandleDrop(player, player.CursorItem);
+                            player.CursorItem = removeItem ? ItemStack.Air : player.CursorItem;
                         }
                         else {
                             if (targetInventory[effectiveSlot].CanStackWith(player.CursorItem)) {
@@ -143,9 +136,12 @@ public class InventoryClickFeature : ScopedFeature {
                         }
                         else {
                             if (packet.Slot < 0) {  // Drop single item
-                                player.CursorItem = player.CursorItem.Count > 1
-                                    ? player.CursorItem.WithCount(player.CursorItem.Count - 1)
-                                    : ItemStack.Air; // Drop single item
+                                bool removeSingleItem = HandleDrop(player, player.CursorItem.WithCount(1));
+                                if (removeSingleItem) {
+                                    player.CursorItem = player.CursorItem.Count > 1
+                                        ? player.CursorItem.WithCount(player.CursorItem.Count - 1)
+                                        : ItemStack.Air; // Drop single item
+                                }
                             }
                             else {
                                 // Right click inside the inventory with item in cursor
@@ -248,6 +244,9 @@ public class InventoryClickFeature : ScopedFeature {
             case 4: {
                 switch (packet.Button) {
                     case 0: // Drop key, so drop one (usually Q)
+                        if (!HandleDrop(player, targetInventory[effectiveSlot].WithCount(1))) {
+                            break;
+                        }
                         targetInventory[effectiveSlot] = targetInventory[effectiveSlot].Count > 1
                             ? targetInventory[effectiveSlot].WithCount(targetInventory[effectiveSlot].Count - 1)
                             : // There is more than one item, so subtract one
@@ -255,6 +254,9 @@ public class InventoryClickFeature : ScopedFeature {
                         break;
 
                     case 1: // Control + Drop key, so drop all (usually Ctrl + Q)
+                        if (!HandleDrop(player, targetInventory[effectiveSlot])) {
+                            break;
+                        }
                         targetInventory[effectiveSlot] = ItemStack.Air; // Drop all items in the slot
                         break;
                 }
@@ -469,5 +471,22 @@ public class InventoryClickFeature : ScopedFeature {
 
         clickedInventory.SendUpdateTo(player);
         player.Inventory.SendUpdateTo(player);
+    }
+
+    /// <summary>
+    /// Process a drop action from the player.
+    /// </summary>
+    /// <param name="player">The player performing the drop.</param>
+    /// <param name="item">The item being dropped.</param>
+    /// <returns>Whether the item should be removed from the inventory.</returns>
+    private bool HandleDrop(PlayerEntity player, ItemStack item) {
+        PlayerDropItemEvent e = new() {
+            Player = player,
+            Item = item,
+            World = player.World!
+        };
+        Scope.Events.CallEvent(e);
+        
+        return !e.Cancelled;
     }
 }

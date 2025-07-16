@@ -1,3 +1,4 @@
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities.Meta;
 
@@ -7,16 +8,16 @@ public class ClientBoundSetEntityMetadataPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:set_entity_data";
     
     public required int EntityId;
-    public required EntityMeta Meta;
+    public required EntityMetaContainer Meta;
 
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry reg) {
         return w
             .WriteVarInt(EntityId)
-            .Write(Meta.Serialise)
-            .Write(0xFF);
+            .Write(wr => Meta.Write(reg, wr));
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
-        throw new NotImplementedException("Deserialisation of EntityMeta is not implemented yet.");
+    public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundSetEntityMetadataPacket {
+        EntityId = r.ReadVarInt(),
+        Meta = new EntityMetaContainer().ReadData(reg, r)
     };
 }

@@ -18,12 +18,18 @@ public class Optional<T>(bool present, T? val) {
             return val!;
         }
     }
-
-    public Optional(T v) : this(true, v) { }
+    
+    public Optional(T? v) : this(v != null, v) { }
     
     public Optional() : this(false, default) { }
 
-    public static implicit operator Optional<T>(T val) {
-        return new Optional<T>(val);
+    public static implicit operator Optional<T>(T? val) {
+        return val == null ? new Optional<T>() : new Optional<T>(val);
     }
+    
+    public static Optional<T> FromNullable(T? val) {
+        return new Optional<T>(val != null, val);
+    }
+
+    public static readonly Optional<T> Empty = new();
 }
