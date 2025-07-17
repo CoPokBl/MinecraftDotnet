@@ -365,7 +365,7 @@ public class World : IAudience, IFeatureScope, ITaggable {
         }
     }
 
-    public void StrikeLightning(Vec3 pos, bool silent = false) {
+    public void StrikeLightning(Vec3 pos) {
         Entity lightning = new(EntityType.LightningBolt) {
             Position = pos,
             Yaw = Angle.Zero,
@@ -373,10 +373,6 @@ public class World : IAudience, IFeatureScope, ITaggable {
             NetId = Entities.NewNetId
         };
         Spawn(lightning);
-
-        if (!silent) {
-            this.PlaySound(SoundType.LightningBoltThunder, pos);
-        }
         
         Server!.ScheduleTask(TimeSpan.FromSeconds(2), () => {
             lightning.Despawn();
