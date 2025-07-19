@@ -73,6 +73,7 @@ public static class SkyWarsLuckyBlock {
             gameWorld.AddFeature(new SkyWarsChestsFeature());
             gameWorld.AddFeature(new DropItemsOnGroundFeature());
             gameWorld.AddFeature(new ItemPickupFeature());
+            gameWorld.AddFeature(new LuckyBlocksFeature());
             List<PlayerEntity> remainingPlayers = [];
             lock (waitingPlayers) {
                 Queue<Vec3> spawns = CreateRandomSpawns();

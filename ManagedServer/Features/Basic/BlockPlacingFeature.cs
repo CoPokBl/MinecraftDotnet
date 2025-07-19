@@ -67,7 +67,8 @@ public class BlockPlacingFeature(bool consumeItem = true) : ScopedFeature {
             Player = player,
             Block = block,
             Position = target,
-            World = player.World!
+            World = player.World!,
+            UsedItem = heldItem
         };
         Scope.Events.CallEvent(placeEvent);
 

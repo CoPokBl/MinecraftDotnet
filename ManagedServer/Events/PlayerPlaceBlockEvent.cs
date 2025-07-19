@@ -4,6 +4,7 @@ using ManagedServer.Events.Types;
 using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
 using Minecraft.Implementations.Events;
+using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Events;
@@ -13,6 +14,7 @@ public class PlayerPlaceBlockEvent : ICancelableEvent, IPlayerEvent {
     public required PlayerEntity Player { get; init; }
     public required IVec3 Position { get; set; }
     public required IBlock Block { get; set; }
+    public required ItemStack UsedItem { get; init; }
     public required World World { get; init; }
 
     /// <summary>

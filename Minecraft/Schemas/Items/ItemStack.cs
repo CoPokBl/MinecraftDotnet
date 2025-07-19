@@ -3,9 +3,10 @@ using Minecraft.Data.Generated;
 using Minecraft.Data.Items;
 using Minecraft.Implementations.Tags;
 using Minecraft.Registry;
-using Minecraft.Schemas.Vec;
 using NBT;
 using NBT.Tags;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Minecraft.Schemas.Items;
 
@@ -13,7 +14,7 @@ namespace Minecraft.Schemas.Items;
 /// Immutable representation of an stack of items.
 /// Or a `Slot` in a container.
 /// </summary>
-public class ItemStack(int count, IItem? type = null, Dictionary<IDataComponent, object>? components = null, IDataComponent[]? removeComponents = null) {
+public class ItemStack(int count, IItem? type = null, Dictionary<IDataComponent, object>? components = null, IDataComponent[]? removeComponents = null) : ITaggable {
     public readonly int Count = count;
     public readonly IItem Type = type ?? Item.Air;
     public readonly Dictionary<IDataComponent, object> Components = components ?? [];
@@ -30,6 +31,10 @@ public class ItemStack(int count, IItem? type = null, Dictionary<IDataComponent,
     
     public ItemStack WithCount(int count) {
         return new ItemStack(count, Type, Components, RemoveComponents);
+    }
+
+    public int GetMaxStackSize(int def = 64) {
+        return GetStruct(DataComponent.MaxStackSize) ?? def;
     }
     
     public ItemStack SubtractCount(int count) {
@@ -68,7 +73,7 @@ public class ItemStack(int count, IItem? type = null, Dictionary<IDataComponent,
 
     public T? GetStruct<T>(IDataComponent<T> type) where T : struct {
         Components.TryGetValue(type, out object? component);
-        return component == null ? default : (T)component;
+        return component == null ? null : (T)component;
     }
     
     public void Write(DataWriter writer, MinecraftRegistry registry) {
@@ -122,16 +127,9 @@ public class ItemStack(int count, IItem? type = null, Dictionary<IDataComponent,
         }
         
         CompoundTag nbt = Get(DataComponent.CustomData)!.GetCompound();
-
-        return typeof(T) switch {
-            { } t when t == typeof(int) => (T)(object)nbt[tag.Id].GetInteger(),
-            { } t when t == typeof(string) => (T)(object)nbt[tag.Id].GetString(),
-            { } t when t == typeof(float) => (T)(object)nbt[tag.Id].GetFloat(),
-            { } t when t == typeof(double) => (T)(object)nbt[tag.Id].GetDouble(),
-            { } t when t == typeof(bool) => (T)(object)nbt[tag.Id].GetBoolean(),
-            { } t when t == typeof(byte) => (T)(object)nbt[tag.Id].GetByte(),
-            _ => throw new NotSupportedException($"Tag type {typeof(T)} is not supported.")
-        };
+        JToken json = INbtTag.ToJson(nbt[tag.Id]!);
+        
+        return json.ToObject<T>() ?? throw new InvalidCastException($"Cannot cast tag {tag.Id} to {typeof(T).Name}.");
     }
     
     public bool HasTag<T>(Tag<T> tag) {
@@ -148,15 +146,8 @@ public class ItemStack(int count, IItem? type = null, Dictionary<IDataComponent,
                 .ToArray()));
         }
         
-        INbtTag nbtVal = value switch {
-            int i => new IntegerTag(tag.Id, i),
-            string s => new StringTag(tag.Id, s),
-            float f => new FloatTag(tag.Id, f),
-            double d => new DoubleTag(tag.Id, d),
-            bool b => new BooleanTag(tag.Id, b),
-            sbyte b => new ByteTag(tag.Id, b),
-            _ => throw new NotSupportedException($"Tag type {typeof(T)} is not supported.")
-        };
+        JToken json = JToken.FromObject(value);
+        INbtTag nbtVal = INbtTag.FromJson(tag.Id, json);
         
         nbt = new CompoundTag(null, nbt.Children
             .Where(t => t?.GetName() != tag.Id)
