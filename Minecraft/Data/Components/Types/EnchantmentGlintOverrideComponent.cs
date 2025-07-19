@@ -3,15 +3,14 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record EnchantmentGlintOverrideComponent(bool Value) : IDataComponent<bool> {
-    public Identifier Identifier => "minecraft:enchantment_glint_override";
-    public static EnchantmentGlintOverrideComponent Default => new(false);
+public record EnchantmentGlintOverrideComponent(int ProtocolId) : IDataComponent<bool> {
+    public override Identifier Identifier => "minecraft:enchantment_glint_override";
     
-    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        return writer.WriteBoolean(Value);
+    public override DataWriter WriteData(bool val, DataWriter writer, MinecraftRegistry registry) {
+        return writer.WriteBoolean(val);
     }
 
-    public IDataComponent ReadData(DataReader reader, MinecraftRegistry registry) {
-        return new EnchantmentGlintOverrideComponent(reader.ReadBoolean());
+    public override object ReadData(DataReader reader, MinecraftRegistry registry) {
+        return reader.ReadBoolean();
     }
 }

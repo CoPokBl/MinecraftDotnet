@@ -5,15 +5,14 @@ using NBT.Tags;
 
 namespace Minecraft.Data.Components.Types;
 
-public record CustomDataComponent(INbtTag Value) : IDataComponent<INbtTag> {
-    public static CustomDataComponent Default => new(new EmptyTag());
-    public Identifier Identifier => "minecraft:custom_data";
+public record CustomDataComponent(int ProtocolId) : IDataComponent<INbtTag> {
+    public override Identifier Identifier => "minecraft:custom_data";
     
-    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        return writer.WriteNbt(Value);
+    public override DataWriter WriteData(INbtTag val, DataWriter writer, MinecraftRegistry registry) {
+        return writer.WriteNbt(val);
     }
 
-    public IDataComponent ReadData(DataReader reader, MinecraftRegistry registry) {
-        return new CustomDataComponent(reader.ReadNbt());
+    public override INbtTag ReadData(DataReader reader, MinecraftRegistry registry) {
+        return reader.ReadNbt();
     }
 }

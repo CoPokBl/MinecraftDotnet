@@ -12,6 +12,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
+using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Play.ClientBound;
@@ -53,11 +54,11 @@ public static class BlockSumoFfa {
         };
 
         ItemStack blockItem = new ItemStack(64, Item.BambooBlock)
-            .With(new CustomNameComponent(Value: TextComponent.Text("Michael's Bamboo").WithColor(TextColor.Green).WithBold().WithItalic(false)))
-            .With(new DamageComponent(Value: 10))
-            .With(new RarityComponent(Value: ItemRarity.Epic))
-            .With(new MaxDamageComponent(Value: 100))
-            .With(new TooltipDisplayComponent(Value: new TooltipDisplayComponent.Info(true)));
+            .With(DataComponent.CustomName, TextComponent.Text("Michael's Bamboo").WithColor(TextColor.Green).WithBold().WithItalic(false))
+            .With(DataComponent.Damage, 10)
+            .With(DataComponent.Rarity, ItemRarity.Epic)
+            .With(DataComponent.MaxDamage, 100)
+            .With(DataComponent.TooltipDisplay, new TooltipDisplayComponent.Info(true));
         
         PlayerPosition spawn = new(new Vec3(0, 0, 0), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
         ITerrainProvider terrain = new BlockSumoMapProvider(12);

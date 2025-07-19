@@ -3,15 +3,14 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record MaxDamageComponent(int Value) : IDataComponent<int> {
-    public static MaxDamageComponent Default => new(0);
-    public Identifier Identifier => "minecraft:max_damage";
+public record MaxDamageComponent(int ProtocolId) : IDataComponent<int> {
+    public override Identifier Identifier => "minecraft:max_damage";
     
-    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        return writer.WriteVarInt(Value);
+    public override DataWriter WriteData(int val, DataWriter writer, MinecraftRegistry registry) {
+        return writer.WriteVarInt(val);
     }
 
-    public IDataComponent ReadData(DataReader reader, MinecraftRegistry registry) {
-        return new MaxDamageComponent(reader.ReadVarInt());
+    public override object ReadData(DataReader reader, MinecraftRegistry registry) {
+        return reader.ReadVarInt();
     }
 }

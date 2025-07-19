@@ -3,15 +3,14 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record DamageComponent(int Value) : IDataComponent<int> {
-    public static DamageComponent Default => new(0);
-    public Identifier Identifier => "minecraft:damage";
+public record DamageComponent(int ProtocolId) : IDataComponent<int> {
+    public override Identifier Identifier => "minecraft:damage";
 
-    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        return writer.WriteVarInt(Value);
+    public override DataWriter WriteData(int val, DataWriter writer, MinecraftRegistry registry) {
+        return writer.WriteVarInt(val);
     }
 
-    public IDataComponent ReadData(DataReader reader, MinecraftRegistry registry) {
-        return new DamageComponent(reader.ReadVarInt());
+    public override object ReadData(DataReader reader, MinecraftRegistry registry) {
+        return reader.ReadVarInt();
     }
 }

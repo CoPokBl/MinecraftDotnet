@@ -66,7 +66,7 @@ public abstract class Inventory : IViewable {
         // Check for a similar item first
         foreach (int i in AddItemSearchOrder) {
             if (!this[i].CanStackWith(item)) continue;
-            int maxStackSize = this[i].Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+            int maxStackSize = this[i].GetStruct(DataComponent.MaxStackSize) ?? DefaultMaxStackSize;
             if (this[i].Count < maxStackSize) {
                 return i; // Found a slot that can stack with the item
             }
@@ -118,7 +118,7 @@ public abstract class Inventory : IViewable {
                 continue;
             }
             
-            int maxStackSize = this[bestSlot].Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+            int maxStackSize = this[bestSlot].GetStruct(DataComponent.MaxStackSize) ?? DefaultMaxStackSize;
             int newStackCount = Math.Min(this[bestSlot].Count + remainingItem.Count, maxStackSize);
             int remainingCount = remainingItem.Count - (newStackCount - this[bestSlot].Count);
             changedItems[bestSlot] = this[bestSlot];

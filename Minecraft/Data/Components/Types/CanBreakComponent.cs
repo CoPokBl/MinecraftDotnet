@@ -4,16 +4,15 @@ using Minecraft.Schemas.Blocks;
 
 namespace Minecraft.Data.Components.Types;
 
-public record CanBreakComponent(params BlockPredicate[] Value) : IDataComponent<BlockPredicate[]> {
-    public Identifier Identifier => "minecraft:can_break";
-    public static CanBreakComponent Default => new();
+public record CanBreakComponent(int ProtocolId) : IDataComponent<BlockPredicate[]> {
+    public override Identifier Identifier => "minecraft:can_break";
     
-    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        return writer.WritePrefixedArray(Value, (predicate, w) => w.Write(wr => predicate.Write(wr, registry)));
+    public override DataWriter WriteData(BlockPredicate[] val, DataWriter writer, MinecraftRegistry registry) {
+        return writer.WritePrefixedArray(val, (predicate, w) => w.Write(wr => predicate.Write(wr, registry)));
     }
 
-    public IDataComponent ReadData(DataReader reader, MinecraftRegistry registry) {
+    public override BlockPredicate[] ReadData(DataReader reader, MinecraftRegistry registry) {
         BlockPredicate[] predicates = reader.ReadPrefixedArray(r => BlockPredicate.Read(r, registry));
-        return new CanPlaceOnComponent(predicates);
+        return predicates;
     }
 }

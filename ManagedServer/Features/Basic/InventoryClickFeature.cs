@@ -35,7 +35,7 @@ public class InventoryClickFeature : ScopedFeature {
     
     private static int GetRegularInvDestinationSlot(ItemStack item, Inventory.Inventory inv) {
         for (int i = 0; i < inv.Size; i++) {
-            int maxStackSize = inv[i].Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+            int maxStackSize = inv[i].GetStruct(DataComponent.MaxStackSize) ?? DefaultMaxStackSize;
             if (inv[i].CanStackWith(item) && inv[i].Count < maxStackSize) {
                 return i;
             }
@@ -52,7 +52,7 @@ public class InventoryClickFeature : ScopedFeature {
     
     private static int GetPlayerInvDestinationSlot(ItemStack item, Inventory.Inventory inv) {
         for (int i = inv.PlayerInventoryStartIndex; i < inv.Size; i++) {
-            int maxStackSize = inv[i].Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+            int maxStackSize = inv[i].GetStruct(DataComponent.MaxStackSize) ?? DefaultMaxStackSize;
             if (inv[i].CanStackWith(item) && inv[i].Count < maxStackSize) {
                 return i;
             }
@@ -95,7 +95,7 @@ public class InventoryClickFeature : ScopedFeature {
                             if (targetInventory[effectiveSlot].CanStackWith(player.CursorItem)) {
                                 // Clicked inside the inventory (stack with cursor)
                                 int newCount = targetInventory[effectiveSlot].Count + player.CursorItem.Count;
-                                int maxStackSize = player.CursorItem.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+                                int maxStackSize = player.CursorItem.GetStruct(DataComponent.MaxStackSize) ?? DefaultMaxStackSize;
                                 if (newCount > maxStackSize) {
                                     // If the new count exceeds the max stack size, split the items
                                     int excessCount = newCount - maxStackSize;
@@ -148,7 +148,7 @@ public class InventoryClickFeature : ScopedFeature {
                                 if (targetInventory[effectiveSlot].CanStackWith(player.CursorItem) || targetInventory[effectiveSlot].IsAir()) {
                                     // deposit one of the cursor items into the slot
                                     int newCount = targetInventory[effectiveSlot].Count + 1;
-                                    int maxStackSize = player.CursorItem.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+                                    int maxStackSize = player.CursorItem.GetStruct(DataComponent.MaxStackSize) ?? DefaultMaxStackSize;
                                     if (newCount > maxStackSize) {
                                         // not allowed, do nothing
                                     }
@@ -208,7 +208,7 @@ public class InventoryClickFeature : ScopedFeature {
                     }
                     
                     // Okay so it's stackable
-                    int maxStackSize = destinationItem.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+                    int maxStackSize = destinationItem.GetStruct(DataComponent.MaxStackSize) ?? DefaultMaxStackSize;
                     int newCount = Math.Min(itemToMove.Count + destinationItem.Count, maxStackSize);
                     destinationInventory[destinationSlot] = destinationItem.WithCount(newCount);
                     
@@ -321,7 +321,7 @@ public class InventoryClickFeature : ScopedFeature {
                                     
                                     ItemStack currentItem = slotInventory[targetIndex];
                                     int existingCount = currentItem.IsAir() ? 0 : currentItem.Count;
-                                    int maxStackSize = itemToSplit.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+                                    int maxStackSize = itemToSplit.GetStruct(DataComponent.MaxStackSize) ?? DefaultMaxStackSize;
                                     
                                     // So if the current item can be stacked with the item to split
                                     // then we should add it to the stack. If it can't then we'll 
@@ -352,7 +352,7 @@ public class InventoryClickFeature : ScopedFeature {
 
                                     ItemStack currentItem = slotInventory[targetIndex];
                                     int existingCount = currentItem.IsAir() ? 0 : currentItem.Count;
-                                    bool isMaxStack = (currentItem.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize) <= existingCount;
+                                    bool isMaxStack = (currentItem.GetStruct(DataComponent.MaxStackSize) ?? DefaultMaxStackSize) <= existingCount;
                                     if ((currentItem.IsAir() || currentItem.CanStackWith(itemToSplit.WithCount(1))) && 
                                         !isMaxStack && 
                                         itemToSplit.Count > 0) {
@@ -402,7 +402,7 @@ public class InventoryClickFeature : ScopedFeature {
                     break;
                 }
                 
-                int maxStackSize = itemToCollect.Get(DataComponent.MaxStackSize)?.Value ?? DefaultMaxStackSize;
+                int maxStackSize = itemToCollect.GetStruct(DataComponent.MaxStackSize) ?? DefaultMaxStackSize;
                 if (itemToCollect.Count >= maxStackSize) {
                     // Already full stack, so do nothing
                     break;

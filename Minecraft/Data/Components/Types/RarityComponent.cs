@@ -4,15 +4,14 @@ using Minecraft.Schemas.Items;
 
 namespace Minecraft.Data.Components.Types;
 
-public record RarityComponent(ItemRarity Value) : IDataComponent<ItemRarity> {
-    public static RarityComponent Default => new(ItemRarity.Common);
-    public Identifier Identifier => "minecraft:rarity";
+public record RarityComponent(int ProtocolId) : IDataComponent<ItemRarity> {
+    public override Identifier Identifier => "minecraft:rarity";
 
-    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        return writer.WriteVarInt((int)Value);
+    public override DataWriter WriteData(ItemRarity val, DataWriter writer, MinecraftRegistry registry) {
+        return writer.WriteVarInt((int)val);
     }
 
-    public IDataComponent ReadData(DataReader reader, MinecraftRegistry registry) {
-        return new RarityComponent((ItemRarity)reader.ReadVarInt());
+    public override object ReadData(DataReader reader, MinecraftRegistry registry) {
+        return (ItemRarity)reader.ReadVarInt();
     }
 }

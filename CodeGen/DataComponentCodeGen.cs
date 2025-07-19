@@ -61,9 +61,10 @@ public static class DataComponentCodeGen {
                 continue;
             }
             
-            registryAdditions.Append($"{CodeGenUtils.GetIndentation(2)}Data.DataComponents.Add({componentClasses[key]}.Default, {protocolId});\n");
+            string varName = CodeGenUtils.NamespacedIdToPascalName(key);
             
-            fileContent.AppendLine($"{CodeGenUtils.GetIndentation(1)}public static readonly {componentClasses[key]} {CodeGenUtils.NamespacedIdToPascalName(key)} = {componentClasses[key]}.Default;");
+            registryAdditions.Append($"{CodeGenUtils.GetIndentation(2)}Data.DataComponents.Add(DataComponent.{varName}, {protocolId});\n");
+            fileContent.AppendLine($"{CodeGenUtils.GetIndentation(1)}public static readonly {componentClasses[key]} {varName} = new({protocolId});");
         }
         
         fileContent.Append(Footer);

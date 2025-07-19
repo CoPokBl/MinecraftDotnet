@@ -4,16 +4,14 @@ using Minecraft.Schemas.Items;
 
 namespace Minecraft.Data.Components.Types;
 
-public record ToolComponent(Tool Value) : IDataComponent<Tool> {
-    public Identifier Identifier => "minecraft:tool";
+public record ToolComponent(int ProtocolId) : IDataComponent<Tool> {
+    public override Identifier Identifier => "minecraft:tool";
     
-    public static ToolComponent Default => new(new Tool([], 1f, 1, true));
-    
-    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        return writer.Write(Value);
+    public override DataWriter WriteData(Tool val, DataWriter writer, MinecraftRegistry registry) {
+        return writer.Write(val);
     }
 
-    public IDataComponent ReadData(DataReader reader, MinecraftRegistry registry) {
-        return new ToolComponent(Tool.Read(reader));
+    public override Tool ReadData(DataReader reader, MinecraftRegistry registry) {
+        return Tool.Read(reader);
     }
 }

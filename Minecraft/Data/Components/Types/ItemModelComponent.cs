@@ -3,15 +3,14 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record ItemModelComponent(Identifier Value) : IDataComponent<Identifier> {
-    public static ItemModelComponent Default => new("");
-    public Identifier Identifier => "minecraft:item_model";
+public record ItemModelComponent(int ProtocolId) : IDataComponent<Identifier> {
+    public override Identifier Identifier => "minecraft:item_model";
     
-    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        return writer.Write(Value);
+    public override DataWriter WriteData(Identifier val, DataWriter writer, MinecraftRegistry registry) {
+        return writer.Write(val);
     }
 
-    public IDataComponent ReadData(DataReader reader, MinecraftRegistry registry) {
-        return new ItemModelComponent(reader.ReadString());
+    public override string ReadData(DataReader reader, MinecraftRegistry registry) {
+        return reader.ReadString();
     }
 }

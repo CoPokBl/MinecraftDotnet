@@ -3,15 +3,14 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record RepairCostComponent(int Value) : IDataComponent<int> {
-    public Identifier Identifier => "minecraft:repair_cost";
-    public static RepairCostComponent Default => new(0);
+public record RepairCostComponent(int ProtocolId) : IDataComponent<int> {
+    public override Identifier Identifier => "minecraft:repair_cost";
     
-    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        return writer.WriteVarInt(Value);
+    public override DataWriter WriteData(int val, DataWriter writer, MinecraftRegistry registry) {
+        return writer.WriteVarInt(val);
     }
 
-    public IDataComponent ReadData(DataReader reader, MinecraftRegistry registry) {
-        return new RepairCostComponent(reader.ReadVarInt());
+    public override object ReadData(DataReader reader, MinecraftRegistry registry) {
+        return reader.ReadVarInt();
     }
 }

@@ -4,15 +4,14 @@ using Minecraft.Text;
 
 namespace Minecraft.Data.Components.Types;
 
-public record CustomNameComponent(TextComponent Value) : IDataComponent<TextComponent> {
-    public static CustomNameComponent Default => new(TextComponent.Empty());
-    public Identifier Identifier => "minecraft:custom_name";
+public record CustomNameComponent(int ProtocolId) : IDataComponent<TextComponent> {
+    public override Identifier Identifier => "minecraft:custom_name";
     
-    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        return writer.WriteNbt(Value);
+    public override DataWriter WriteData(TextComponent val, DataWriter writer, MinecraftRegistry registry) {
+        return writer.WriteNbt(val);
     }
 
-    public IDataComponent ReadData(DataReader reader, MinecraftRegistry registry) {
-        return new CustomNameComponent(reader.ReadText());
+    public override TextComponent ReadData(DataReader reader, MinecraftRegistry registry) {
+        return reader.ReadText();
     }
 }

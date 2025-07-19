@@ -19,7 +19,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2025-07-16
+// Last updated: 2025-07-19
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -2809,28 +2809,28 @@ public static class VanillaRegistry {
         Data.Items.Add(Item.ZombieVillagerSpawnEgg);
         Data.Items.Add(Item.ZombifiedPiglinSpawnEgg);
 
-        Data.DataComponents.Add(AttributeModifiersComponent.Default, 13);
-        Data.DataComponents.Add(CanBreakComponent.Default, 12);
-        Data.DataComponents.Add(CanPlaceOnComponent.Default, 11);
-        Data.DataComponents.Add(CreativeSlotLockComponent.Default, 17);
-        Data.DataComponents.Add(CustomDataComponent.Default, 0);
-        Data.DataComponents.Add(CustomModelDataComponent.Default, 14);
-        Data.DataComponents.Add(CustomNameComponent.Default, 5);
-        Data.DataComponents.Add(DamageComponent.Default, 3);
-        Data.DataComponents.Add(EnchantmentGlintOverrideComponent.Default, 18);
-        Data.DataComponents.Add(EnchantmentsComponent.Default, 10);
-        Data.DataComponents.Add(FoodComponent.Default, 20);
-        Data.DataComponents.Add(IntangibleProjectileComponent.Default, 19);
-        Data.DataComponents.Add(ItemModelComponent.Default, 7);
-        Data.DataComponents.Add(ItemNameComponent.Default, 6);
-        Data.DataComponents.Add(LoreComponent.Default, 8);
-        Data.DataComponents.Add(MaxDamageComponent.Default, 2);
-        Data.DataComponents.Add(MaxStackSizeComponent.Default, 1);
-        Data.DataComponents.Add(RarityComponent.Default, 9);
-        Data.DataComponents.Add(RepairCostComponent.Default, 16);
-        Data.DataComponents.Add(ToolComponent.Default, 25);
-        Data.DataComponents.Add(TooltipDisplayComponent.Default, 15);
-        Data.DataComponents.Add(UnbreakableComponent.Default, 4);
+        Data.DataComponents.Add(DataComponent.AttributeModifiers, 13);
+        Data.DataComponents.Add(DataComponent.CanBreak, 12);
+        Data.DataComponents.Add(DataComponent.CanPlaceOn, 11);
+        Data.DataComponents.Add(DataComponent.CreativeSlotLock, 17);
+        Data.DataComponents.Add(DataComponent.CustomData, 0);
+        Data.DataComponents.Add(DataComponent.CustomModelData, 14);
+        Data.DataComponents.Add(DataComponent.CustomName, 5);
+        Data.DataComponents.Add(DataComponent.Damage, 3);
+        Data.DataComponents.Add(DataComponent.EnchantmentGlintOverride, 18);
+        Data.DataComponents.Add(DataComponent.Enchantments, 10);
+        Data.DataComponents.Add(DataComponent.Food, 20);
+        Data.DataComponents.Add(DataComponent.IntangibleProjectile, 19);
+        Data.DataComponents.Add(DataComponent.ItemModel, 7);
+        Data.DataComponents.Add(DataComponent.ItemName, 6);
+        Data.DataComponents.Add(DataComponent.Lore, 8);
+        Data.DataComponents.Add(DataComponent.MaxDamage, 2);
+        Data.DataComponents.Add(DataComponent.MaxStackSize, 1);
+        Data.DataComponents.Add(DataComponent.Rarity, 9);
+        Data.DataComponents.Add(DataComponent.RepairCost, 16);
+        Data.DataComponents.Add(DataComponent.Tool, 25);
+        Data.DataComponents.Add(DataComponent.TooltipDisplay, 15);
+        Data.DataComponents.Add(DataComponent.Unbreakable, 4);
 
         Data.EntityTypes.Add(EntityType.AcaciaBoat);
         Data.EntityTypes.Add(EntityType.AcaciaChestBoat);
