@@ -1,6 +1,7 @@
 using System.Reflection;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events.Attributes;
+using ManagedServer.Features;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
@@ -9,11 +10,15 @@ using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
 using Minecraft.Registry;
+using Minecraft.Schemas;
 
 namespace ManagedServer;
 
 public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience, IFeatureScope {
     public MinecraftRegistry Registry = VanillaRegistry.Data;  // TODO: use this
+    public Dictionary<string, Dimension> Dimensions = new() {
+        { "minecraft:overworld", new Dimension() }
+    };
     
     public List<World> Worlds { get; } = [];
     public List<PlayerEntity> Players { get; } = [];
@@ -38,7 +43,6 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         // Add our features if they haven't been overriden
         RegisterFeatIfNotPresent(new PlayerInfoFeature());
         RegisterFeatIfNotPresent(new HeartbeatsFeature(3000));
-        RegisterFeatIfNotPresent(new LoginProcedureFeature());
 
         Events.OnListenerAdded += type => {
             if (AllowListeningToUnCalledEvents) {
@@ -87,8 +91,8 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         }
     }
 
-    public World CreateWorld(ITerrainProvider provider) {
-        World world = new(Events, provider, ViewDistance, WorldPacketsPerTick, WorldTickDelayMs) {
+    public World CreateWorld(ITerrainProvider provider, string dimension = "minecraft:overworld") {
+        World world = new(Events, provider, dimension, ViewDistance, WorldPacketsPerTick, WorldTickDelayMs) {
             Server = this
         };
         Worlds.Add(world);

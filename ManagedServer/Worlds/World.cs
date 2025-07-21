@@ -38,6 +38,9 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     private readonly int _viewDistance;
     private readonly int _packetsPerTick;
     private readonly int _tickDelayMs;
+    public readonly Identifier DimensionId;
+    
+    public Dimension Dimension => Server.Dimensions[DimensionId];
     
     // Props
     private int _time;
@@ -53,11 +56,12 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
     }
 
-    internal World(EventNode<IServerEvent> baseEventNode, ITerrainProvider provider, int viewDistance = 8, int packetsPerTick = 10, int tickDelayMs = 100) {
+    internal World(EventNode<IServerEvent> baseEventNode, ITerrainProvider provider, Identifier dimensionId, int viewDistance = 8, int packetsPerTick = 10, int tickDelayMs = 100) {
         _provider = provider;
         _viewDistance = viewDistance;
         _packetsPerTick = packetsPerTick;
         _tickDelayMs = tickDelayMs;
+        DimensionId = dimensionId;
         Events = baseEventNode.CreateChild<IWorldEvent>(e => e.World == this);
         Entities = new EntityManager(Events, viewDistance*16);
     }
@@ -304,13 +308,10 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             System.Diagnostics.Debug.Assert(chunks.Length == cChunksPos + notFound);
         
             // We need to load some chunks
-            foreach (ChunkData newChunk in _provider.GetChunks(notFound, needed)) {
-                newChunk.PackData();
-                if (cChunksPos >= chunks.Length) {
-                    Console.WriteLine("wtf");
-                }
-                chunks[cChunksPos++] = newChunk;
-                _chunks.TryAdd(new IVec2(newChunk.ChunkX, newChunk.ChunkZ), newChunk);
+            _provider.GetChunks(cChunksPos, notFound, chunks);
+            for (int i = cChunksPos; i < count; i++) {
+                chunks[i].PackData();
+                _chunks.TryAdd(new IVec2(chunks[i].ChunkX, chunks[i].ChunkZ), chunks[i]);
             }
 
             return chunks;
@@ -333,7 +334,11 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         if (_chunks.ContainsKey(pos)) return;  // already loaded
 
         lock (_chunks) {
-            ChunkData data = _provider.GetChunk(pos);
+            ChunkData data = new(Dimension.Height) {
+                ChunkX = pos.X,
+                ChunkZ = pos.Z
+            };
+            _provider.GetChunk(data);
             if (data == null) {
                 throw new Exception($"Failed to load chunk at {pos}");
             }

@@ -4,17 +4,24 @@ using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Schemas.Chunks;
 
-public class ChunkData : IWritable, IDataReadable<ChunkData> {
-    private const int WorldHeight = 384;  // vanilla overworld height TODO: Make dynamic or a parameter
-    private const int ChunkSections = WorldHeight / 16;  // number of sections in a chunk, 24 for vanilla overworld
+public class ChunkData : IWritable {
+    public const int VanillaOverworldHeight = 384;  // vanilla overworld height
     
-    public ChunkSection[] Sections = GenerateEmptySections();  // bottom to top
+    private int ChunkSections => WorldHeight / 16;  // number of sections in a chunk, 24 for vanilla overworld
+    
+    public ChunkSection[] Sections;  // bottom to top
     
     // hints for implementations
     public int ChunkX;
     public int ChunkZ;
+    public int WorldHeight { get; }
 
-    private static ChunkSection[] GenerateEmptySections() {
+    public ChunkData(int worldHeight) {
+        WorldHeight = worldHeight;
+        Sections = GenerateEmptySections();
+    }
+
+    private ChunkSection[] GenerateEmptySections() {
         ChunkSection[] vals = new ChunkSection[ChunkSections];
         for (int i = 0; i < ChunkSections; i++) {
             vals[i] = new ChunkSection();
@@ -105,7 +112,7 @@ public class ChunkData : IWritable, IDataReadable<ChunkData> {
         w.WriteVarInt(0);  // len of 0
     }
 
-    public ChunkData Read(DataReader r) {
+    public static ChunkData Read(DataReader r) {
         // TODO: Heightmaps
         int heightMaps = r.ReadVarInt();
         for (int i = 0; i < heightMaps; i++) {
@@ -114,10 +121,18 @@ public class ChunkData : IWritable, IDataReadable<ChunkData> {
         }
         
         // NON PREFIXED CHUNK SECTION ARRAY (dependant on world height)
-        r.ReadVarInt();  // bytes used in the following chunk sections, unneeded by us
-        for (int i = 0; i < ChunkSections; i++) {
-            Sections[i] = new ChunkSection().Read(r);
+        int sectionBytes = r.ReadVarInt();  // bytes used in the following chunk sections
+        long startPos = r.Position;  // start position of the chunk sections
+
+        List<ChunkSection> sections = [];
+        while (true) {
+            sections.Add(new ChunkSection().Read(r));
+            if (r.Position - startPos >= sectionBytes) {
+                break;  // we have read all sections
+            }
         }
+        
+        int worldHeight = sections.Count * 16;  // calculate world height from sections
         
         // TODO: Block entities
         r.ReadPrefixedArray(re => {
@@ -128,6 +143,8 @@ public class ChunkData : IWritable, IDataReadable<ChunkData> {
             return false;
         });
 
-        return this;
+        return new ChunkData(worldHeight) {
+            Sections = sections.ToArray()
+        };
     }
 }

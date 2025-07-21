@@ -22,7 +22,7 @@ public class ClientBoundChunkDataAndUpdateLightPacket : ClientBoundPacket {
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundChunkDataAndUpdateLightPacket {
         ChunkX = r.ReadInteger(),
         ChunkZ = r.ReadInteger(),
-        Data = new ChunkData().Read(r),
+        Data = ChunkData.Read(r),
         Light = LightData.FullBright  // TODO .Read()
     };
 }

@@ -66,21 +66,24 @@ public class AnvilLoader : ITerrainProvider {
         }
     }
 
-    public ChunkData? GetChunkData(int chunkX, int chunkZ) {
+    public void GetChunkData(ChunkData data) {
+        int chunkX = data.ChunkX;
+        int chunkZ = data.ChunkZ;
+        
         int regionX = chunkX >> 5; // Divide by 32
         int regionZ = chunkZ >> 5; // Divide by 32
         string regionName = RegionNameFor(regionX, regionZ);
         
         if (!_regions.TryGetValue(regionName, out AnvilRegionFile? region)) {
             Console.WriteLine($"Region {regionName} not found.");
-            return null;
+            return;
         }
         
         INbtTag? chunkTag = region.ReadChunkData(chunkX, chunkZ);
         
         if (chunkTag is not CompoundTag chunk) {
             // Console.WriteLine($"Chunk ({chunkX}, {chunkZ}) not found in region {regionName}.");
-            return null;
+            return;
         }
         
         // Console.WriteLine(chunk.ToJsonString());
@@ -88,7 +91,6 @@ public class AnvilLoader : ITerrainProvider {
         // Console.WriteLine("Chunk Status: " + status);
         
         // Load actual chunk data
-        ChunkData data = new();
         INbtTag? sectionsTag = chunk["sections"];
         if (sectionsTag is not ListTag sectionsList) {
             Console.WriteLine(chunk.ToJsonString());
@@ -140,8 +142,6 @@ public class AnvilLoader : ITerrainProvider {
                 }
             }
         }
-        
-        return data;
     }
 
     private static void UnpackPalette(int[] outp, long[] data, int bitsPerEntry) {
@@ -191,12 +191,9 @@ public class AnvilLoader : ITerrainProvider {
         long Time,
         string LevelName);
 
-    public ChunkData GetChunk(IVec2 chunk) {
+    public void GetChunk(ChunkData data) {
         try {
-            ChunkData data = GetChunkData(chunk.X, chunk.Z) ?? new ChunkData();
-            data.ChunkX = chunk.X;
-            data.ChunkZ = chunk.Z;
-            return data;
+            GetChunkData(data);
         }
         catch (Exception e) {
             Console.WriteLine(e);
@@ -204,17 +201,9 @@ public class AnvilLoader : ITerrainProvider {
         }
     }
 
-    public IEnumerable<ChunkData> GetChunks(int count, params IVec2[] chunks) {
-        ChunkData[] chunkDataList = new ChunkData[count];
-        for (int i = 0; i < count; i++) {
-            IVec2 chunk = chunks[i];
-            ChunkData? data = GetChunkData(chunk.X, chunk.Z);
-            if (data == null) continue;
-            data.ChunkX = chunk.X;
-            data.ChunkZ = chunk.Z;
-            chunkDataList[i] = data;
+    public void GetChunks(int start, int count, ChunkData[] chunks) {
+        for (int i = start; i < start + count; i++) {
+            GetChunk(chunks[i]);
         }
-
-        return chunkDataList;
     }
 }

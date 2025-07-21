@@ -1,4 +1,6 @@
+using ManagedServer.Features;
 using ManagedServer.Features.Basic;
+using BlockBreakingFeature = ManagedServer.Features.Basic.BlockBreakingFeature;
 
 namespace ManagedServer;
 
@@ -14,7 +16,8 @@ public partial class ManagedMinecraftServer {
             new BlockBreakingFeature(),
             new InventoryClickFeature(),
             new DropItemsEventFeature(),
-            new ConsumablesFeature()
+            new ConsumablesFeature(),
+            new LoginProcedureFeature()
         );
     }
 

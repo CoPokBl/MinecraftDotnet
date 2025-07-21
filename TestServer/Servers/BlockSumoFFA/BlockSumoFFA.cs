@@ -45,6 +45,8 @@ public static class BlockSumoFfa {
                 headerProvider:_ => TextComponent.Text("Block Sumo FFA").WithColor(TextColor.Hex("#EE7026")).WithBold(), 
                 footerProvider:_ => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic()));
         
+        server.Dimensions.Add("minecraft:potatoland", new Dimension());
+        
         CancellationTokenSource cts = new();
 
         bool run = true;

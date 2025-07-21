@@ -1,10 +1,9 @@
-using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
-using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Implementations.Server.Terrain;
 
+// chunk.ChunkX and chunk.ChunkZ must ALWAYS be set before calling GetChunk or GetChunks
 public interface ITerrainProvider {
-    public ChunkData GetChunk(IVec2 chunk);
-    public IEnumerable<ChunkData> GetChunks(int count, params IVec2[] chunks);
+    public void GetChunk(ChunkData chunk);
+    public void GetChunks(int start, int count, ChunkData[] chunks);
 }

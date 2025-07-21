@@ -28,11 +28,12 @@ public static class AnvilTesting {
                 SamplePlayers = [new SamplePlayer("Potato", "4566e69f-c907-48ee-8d71-d7ba5aa00d20")],
                 Description = "Anvil Testing Server",
                 PreventsChatReports = true
-        }));
-        server.ViewDistance = 16;
+        })) {
+            ViewDistance = 16
+        };
 
         Console.WriteLine("Creating world...");
-        World world = server.CreateWorld(new SpawnCachedTerrainProvider(new AnvilLoader("testanvil", VanillaRegistry.Data)));
+        World world = server.CreateWorld(new AnvilLoader("testanvil", VanillaRegistry.Data));
         Console.WriteLine("World created.");
 
         Stopwatch sw = Stopwatch.StartNew();

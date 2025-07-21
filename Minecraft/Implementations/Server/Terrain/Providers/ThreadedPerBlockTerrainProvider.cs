@@ -15,25 +15,21 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
     /// the number of threads it creates.
     /// However, it is a fair bit faster without a debugger.
     /// </summary>
-    /// <param name="pos">The chunk coords.</param>
+    /// <param name="data">The chunk.</param>
     /// <returns>The generated chunk data.</returns>
-    public ChunkData GetChunk(IVec2 pos) {
-        ChunkData data = new() {
-            ChunkX = pos.X,
-            ChunkZ = pos.Z
-        };
+    public void GetChunk(ChunkData data) {
         Thread[] threads = new Thread[threadCount];
         
         for (int i = 0; i < threadCount; i++) {
             int threadIndex = i;
             Thread t = new(() => {
-                int end = (threadIndex + 1) * 384 / threadCount;
+                int end = (threadIndex + 1) * data.WorldHeight / threadCount;
                 
-                for (int x = 0; x < 16; x++) {
-                    for (int y = threadIndex * 384 / threadCount; y < end; y++) {
-                        for (int z = 0; z < 16; z++) {
-                            int absX = pos.X * 16 + x;
-                            int absZ = pos.Z * 16 + z;
+                for (int x = 0; x < ChunkSection.Size; x++) {
+                    for (int y = threadIndex * data.WorldHeight / threadCount; y < end; y++) {
+                        for (int z = 0; z < ChunkSection.Size; z++) {
+                            int absX = data.ChunkX * ChunkSection.Size + x;
+                            int absZ = data.ChunkZ * ChunkSection.Size + z;
                             data.SetBlock(x, y, z, GetBlock(absX, y, absZ));
                         }
                     }
@@ -47,40 +43,30 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
         foreach (Thread t in threads) {
             t.Join();
         }
-
-        return data;
     }
     
-    public ChunkData SingleThreadedGetChunk(IVec2 pos) {
-        ChunkData data = new() {
-            ChunkX = pos.X,
-            ChunkZ = pos.Z
-        };
-
-        for (int x = 0; x < 16; x++) {
-            for (int y = 0; y < 384; y++) {
-                for (int z = 0; z < 16; z++) {
-                    int absX = pos.X * 16 + x;
-                    int absZ = pos.Z * 16 + z;
+    public void SingleThreadedGetChunk(ChunkData data) {
+        for (int x = 0; x < ChunkSection.Size; x++) {
+            for (int y = 0; y < data.WorldHeight; y++) {
+                for (int z = 0; z < ChunkSection.Size; z++) {
+                    int absX = data.ChunkX * ChunkSection.Size + x;
+                    int absZ = data.ChunkZ * ChunkSection.Size + z;
                     data.SetBlock(x, y, z, GetBlock(absX, y, absZ));
                 }
             }
         }
-
-        return data;
     }
     
-    public IEnumerable<ChunkData> GetChunks(int count, params IVec2[] poses) {
-        ChunkData[] chunks = new ChunkData[count];
+    public void GetChunks(int start, int count, ChunkData[] chunks) {
         Thread[] threads = new Thread[threadCount];
         
         for (int i = 0; i < threadCount; i++) {
             int threadIndex = i;
             Thread t = new(() => {
-                int end = (threadIndex + 1) * count / threadCount;
+                int end = (threadIndex + 1) * count / threadCount + start;
                 
-                for (int j = threadIndex * count / threadCount; j < end; j++) {
-                    chunks[j] = SingleThreadedGetChunk(poses[j]);
+                for (int j = threadIndex * count / threadCount + start; j < end; j++) {
+                    SingleThreadedGetChunk(chunks[j]);
                 }
             });
             
@@ -91,7 +77,5 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
         foreach (Thread t in threads) {
             t.Join();
         }
-    
-        return chunks;
     }
 }

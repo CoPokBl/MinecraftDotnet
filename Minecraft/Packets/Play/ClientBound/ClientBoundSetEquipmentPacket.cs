@@ -50,8 +50,8 @@ public class ClientBoundSetEquipmentPacket() : ClientBoundPacket {
         Dictionary<EquipmentSlot, ItemStack> equipment = new();
         while (true) {
             sbyte slotId = reader.ReadByte();
-            if ((slotId & 0x80) == 0) { // positive
-                EquipmentSlot slot = (EquipmentSlot)(slotId & 0x7F);
+            if (slotId >= 0) { // positive
+                EquipmentSlot slot = (EquipmentSlot)slotId;
                 ItemStack item = ItemStack.Read(reader, registry);
                 equipment[slot] = item;
                 break; // last item

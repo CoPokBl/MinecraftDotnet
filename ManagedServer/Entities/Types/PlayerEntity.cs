@@ -310,6 +310,10 @@ public class PlayerEntity : LivingEntity, IAudience {
         });
     }
 
+    public void Respawn() {
+        // todo
+    }
+
     public override void Teleport(Vec3 pos, Angle? yaw = null, Angle? pitch = null) {
         _waitingTeleport = Random.Shared.Next();
         Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket {

@@ -13,9 +13,9 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 using NBT;
 
-namespace ManagedServer;
+namespace ManagedServer.Features;
 
-internal class LoginProcedureFeature : IServerFeature {
+internal class LoginProcedureFeature : ScopedFeature {
     private const bool EncryptionEnabled = false;
     
     private static readonly Tag<(Guid, string)> LoginInfoTag = new("minecraftdotnet:loginprocfeat:logininfo");
@@ -24,34 +24,38 @@ internal class LoginProcedureFeature : IServerFeature {
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.7") ];
     
     // Defaults for the packet, more will be configurable later
-    private readonly Func<PlayerConnection, ClientBoundLoginPacket> _loginPacketProvider = _ => new ClientBoundLoginPacket {
-        EntityId = 1,
-        IsHardcore = true,
-        Dimensions = ["minecraft:overworld"],
-        MaxPlayers = 5,
-        ViewDistance = 32,
-        SimulationDistance = 8,
-        ReducedDebugInfo = false,
-        EnableRespawnScreen = true,
-        DoLimitedCrafting = false,
-        DimensionType = 0,
-        DimensionName = "minecraft:overworld",
-        HashedSeed = 0L,
-        GameMode = GameMode.Creative,
-        PreviousGameMode = GameMode.Undefined,
-        IsDebug = false,
-        IsFlat = false,
-        PortalCooldown = 4,
-        SeaLevel = 64,
-        EnforcesSecureChat = false
-    };
+    private readonly Func<PlayerConnection, ClientBoundLoginPacket> _loginPacketProvider;
 
-    public void Register(MinecraftServer genericServer) {
-        if (genericServer is not ManagedMinecraftServer server) {
-            throw new ArgumentException("Feature may only be added to a ManagedMinecraftServer.");
+    public LoginProcedureFeature() {
+        _loginPacketProvider = _ => new ClientBoundLoginPacket {
+            EntityId = 1,
+            IsHardcore = true,
+            Dimensions = Scope.Server.Dimensions.Keys.Select(s => (Identifier)s).ToArray(),
+            MaxPlayers = 5,
+            ViewDistance = 32,
+            SimulationDistance = 8,
+            ReducedDebugInfo = false,
+            EnableRespawnScreen = true,
+            DoLimitedCrafting = false,
+            DimensionType = 0,
+            DimensionName = "minecraft:overworld",
+            HashedSeed = 0L,
+            GameMode = GameMode.Creative,
+            PreviousGameMode = GameMode.Undefined,
+            IsDebug = false,
+            IsFlat = false,
+            PortalCooldown = 4,
+            SeaLevel = 64,
+            EnforcesSecureChat = false
+        };
+    }
+
+    public override void Register() {
+        if (Scope is not ManagedMinecraftServer) {
+            throw new InvalidOperationException("LoginProcedureFeature can only be used in ManagedMinecraftServer.");
         }
         
-        server.Events.AddListener<PacketHandleEvent>(async void (e) => {
+        AddEventListener<PacketHandleEvent>(async void (e) => {
             try {
                 switch (e.Packet) {
                     // LOGIN
@@ -95,9 +99,12 @@ internal class LoginProcedureFeature : IServerFeature {
                         e.Connection.SendPackets(
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:dimension_type",
-                                Entries = new Dictionary<string, INbtTag?> {
-                                    { "minecraft:overworld", null }
-                                }
+                                Entries = new Dictionary<string, INbtTag?>(
+                                    Scope.Server.Dimensions
+                                        .Select(kvp => new KeyValuePair<string, INbtTag?>(kvp.Key, kvp.Value.ToNbt())))
+                                // Entries = new Dictionary<string, INbtTag?> {
+                                //     { "minecraft:overworld", null }
+                                // }
                             },
                             new ClientBoundRegistryDataPacket {
                                 RegistryId = "minecraft:cat_variant",
@@ -223,7 +230,30 @@ internal class LoginProcedureFeature : IServerFeature {
                             throw new Exception("You must specify a spawn world for joining players in the PlayerPreLoginEvent.");
                         }
 
-                        ClientBoundLoginPacket packet = _loginPacketProvider.Invoke(e.Connection);
+                        ClientBoundLoginPacket packet = new() {
+                            DimensionName = preLoginEvent.World.DimensionId,
+                            DimensionType = Scope.Server.Dimensions.Keys.ToList()
+                                .IndexOf(preLoginEvent.World.DimensionId),
+                            Dimensions = Scope.Server.Dimensions.Keys.Select(s => (Identifier)s)
+                                .ToArray(),
+                            DoLimitedCrafting = false,
+                            EnableRespawnScreen = true,
+                            EnforcesSecureChat = false,
+                            EntityId = 0,
+                            GameMode = preLoginEvent.GameMode,
+                            SeaLevel = 64,
+                            PortalCooldown = 0,
+                            IsFlat = false,
+                            IsDebug = false,
+                            PreviousGameMode = GameMode.Undefined,
+                            HashedSeed = 0,
+                            ReducedDebugInfo = false,
+                            SimulationDistance = 0,
+                            ViewDistance = Scope.Server.ViewDistance,
+                            MaxPlayers = 0,
+                            IsHardcore = false
+                        };
+                        //_loginPacketProvider.Invoke(e.Connection);
                         packet.GameMode = preLoginEvent.GameMode;
 
                         int pEntityId = Random.Shared.Next();
@@ -237,7 +267,7 @@ internal class LoginProcedureFeature : IServerFeature {
                             NetId = pEntityId
                         };
                         entity.SetWorld(preLoginEvent.World);
-                        server.Players.Add(entity);
+                        Scope.Server.Players.Add(entity);
                         PlayerLoginEvent loginEvent = new() {
                             Player = entity,
                             World = preLoginEvent.World
@@ -252,13 +282,5 @@ internal class LoginProcedureFeature : IServerFeature {
                 Console.WriteLine(ex);
             }
         });
-    }
-    
-    public void Unregister() {
-        
-    }
-
-    public Type[] GetDependencies() {
-        return [];
     }
 }
