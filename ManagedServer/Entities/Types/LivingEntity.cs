@@ -1,6 +1,10 @@
+using Minecraft;
 using Minecraft.Data.Entities;
+using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Entities.Meta.Types;
+using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Entities.Types;
 
@@ -35,6 +39,7 @@ public class LivingEntity : Entity {
     private float _health = 20f;
     private int _food = 20;
     private float _saturation = 20f;
+    private Dictionary<EquipmentSlot, ItemStack> _equipment = [];
     
     public new LivingEntityMeta Meta {
         get => (LivingEntityMeta)base.Meta;
@@ -58,5 +63,34 @@ public class LivingEntity : Entity {
             Food = Food,
             Saturation = Saturation
         });
+    }
+    
+    public void SetEquipmentItem(EquipmentSlot slot, ItemStack item) {
+        _equipment[slot] = item;
+
+        SendToViewers(new ClientBoundSetEquipmentPacket {
+            EntityId = NetId,
+            Equipment = new Dictionary<EquipmentSlot, ItemStack> {
+                { slot, item }
+            }
+        });
+    }
+    
+    public ItemStack GetEquipmentItem(EquipmentSlot slot) {
+        return _equipment.TryGetValue(slot, out ItemStack? item) ? item : ItemStack.Air;
+    }
+
+    public override MinecraftPacket[] GenerateSpawnEntityPackets() {
+        if (_equipment.Count == 0) {  // If no equipment, just return the base packets
+            return base.GenerateSpawnEntityPackets();
+        }
+        
+        MinecraftPacket[] arr = [
+            new ClientBoundSetEquipmentPacket {
+                EntityId = NetId,
+                Equipment = _equipment
+            }
+        ];
+        return arr.Combine(base.GenerateSpawnEntityPackets()).ToArray();
     }
 }

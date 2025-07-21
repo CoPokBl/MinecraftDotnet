@@ -10,6 +10,7 @@ public class PlayerInventory : Inventory {
 
     public override IInventoryType Type => InventoryType.Generic9x4;
     public override int WindowId => 0;
+    public PlayerEntity Owner;
     
     // We search the hotbar first, then the rest of the inventory. Ignoring armour and crafting slots.
     public override int[] AddItemSearchOrder => 
@@ -41,6 +42,7 @@ public class PlayerInventory : Inventory {
     public PlayerInventory(PlayerEntity owner) : base(InventorySize, 9) {
         Viewers.Add(owner);
         Title = owner.Name + "'s Inventory";
+        Owner = owner;
     }
     
     // Props for easy access
@@ -94,5 +96,9 @@ public class PlayerInventory : Inventory {
             throw new ArgumentOutOfRangeException(nameof(slot), "Hotbar slot must be between 1 and 9.");
         }
         return this[HotbarSlot1 + slot];
+    }
+
+    public override void Refresh() {
+        Owner.RefreshEquipment();
     }
 }

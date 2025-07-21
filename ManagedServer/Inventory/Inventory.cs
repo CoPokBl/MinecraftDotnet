@@ -1,6 +1,5 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Viewables;
-using Minecraft.Data.Generated;
 using Minecraft.Data.Inventories;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;
@@ -64,6 +63,7 @@ public abstract class Inventory : IViewable {
             }
             Items[index] = value;
             SendSlotUpdate(index);
+            Refresh(); // Notify that the inventory has changed
         }
     }
 
@@ -163,6 +163,13 @@ public abstract class Inventory : IViewable {
             Type = Type,
             Title = Title
         };
+    }
+
+    /// <summary>
+    /// Called whenever the inventory changes.
+    /// </summary>
+    public virtual void Refresh() {
+        
     }
 
     public void AddViewer(PlayerEntity player) {

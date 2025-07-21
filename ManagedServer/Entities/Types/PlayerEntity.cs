@@ -10,6 +10,7 @@ using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 
@@ -42,6 +43,7 @@ public class PlayerEntity : LivingEntity, IAudience {
             SendPacket(new ClientBoundSetHeldItemPacket {
                 Slot = _activeHotbarSlot
             });
+            RefreshEquipment();
         }
     }
     
@@ -85,7 +87,10 @@ public class PlayerEntity : LivingEntity, IAudience {
 
     public ItemStack HeldItem {
         get => Inventory.GetHotbarItem(ActiveHotbarSlot);
-        set => Inventory.SetHotbarItem(ActiveHotbarSlot, value);
+        set {
+            Inventory.SetHotbarItem(ActiveHotbarSlot, value);
+            RefreshEquipment();
+        }
     }
 
     /// <summary>
@@ -206,6 +211,7 @@ public class PlayerEntity : LivingEntity, IAudience {
 
                 case ServerBoundSetHeldItemPacket sh: {
                     _activeHotbarSlot = sh.Slot;
+                    RefreshEquipment();
                     break;
                 }
 
@@ -217,11 +223,7 @@ public class PlayerEntity : LivingEntity, IAudience {
                     // Respond to some inventory actions
                     switch (pa.ActionStatus) {
                         case ServerBoundPlayerActionPacket.Status.DropItemStack:
-                            Inventory.SendUpdateTo(this);
-                            break;
                         case ServerBoundPlayerActionPacket.Status.DropItem:
-                            Inventory.SendUpdateTo(this);
-                            break;
                         case ServerBoundPlayerActionPacket.Status.UpdateHeldItem:
                             Inventory.SendUpdateTo(this);
                             break;
@@ -260,6 +262,15 @@ public class PlayerEntity : LivingEntity, IAudience {
     public void SwapHeld() {
         (HeldItem, Inventory.Offhand) = (Inventory.Offhand, HeldItem);
         Inventory.SendUpdateTo(this);
+    }
+
+    public void RefreshEquipment() {
+        SetEquipmentItem(EquipmentSlot.MainHand, HeldItem);
+        SetEquipmentItem(EquipmentSlot.OffHand, Inventory.Offhand);
+        SetEquipmentItem(EquipmentSlot.Helmet, Inventory.Helmet);
+        SetEquipmentItem(EquipmentSlot.Chestplate, Inventory.Chestplate);
+        SetEquipmentItem(EquipmentSlot.Leggings, Inventory.Leggings);
+        SetEquipmentItem(EquipmentSlot.Boots, Inventory.Boots);
     }
 
     public override void SetWorld(World world) {
