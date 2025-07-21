@@ -3,11 +3,16 @@ using ManagedServer.Events;
 using ManagedServer.Inventory;
 using Minecraft;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
+using Minecraft.Data.Sounds;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
+using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
+using TestServer.Servers.SkyWarsLuckyBlock.Items;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
@@ -15,8 +20,9 @@ public class SkyWarsChestsFeature : ScopedFeature {
     private static readonly Tag<Dictionary<IVec3, Inventory>> ChestsTag = new("skywars:loot_chests");
 
     private static readonly LootTableEntry[] LootTable = [
+        new(new ItemStack(1, Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 5f), 10, 1, 1),
         new(new ItemStack(1, Item.Stone), 10, 1, 64),
-        new(new ItemStack(1, Item.GoldenApple), 5, 1, 8),
+        new(SkyWarsItemsFeature.CreateItem(typeof(GoldenAppleItem)), 5, 1, 8),
         new(LuckyBlocksFeature.GetLuckyBlock(), 4, 1, 5),
         new(ItemStack.Air, 50, 1, 1)
     ];

@@ -8,6 +8,7 @@ public static class DataComponent {
     public static readonly AttributeModifiersComponent AttributeModifiers = new(13);
     public static readonly CanBreakComponent CanBreak = new(12);
     public static readonly CanPlaceOnComponent CanPlaceOn = new(11);
+    public static readonly ConsumableComponent Consumable = new(21);
     public static readonly CreativeSlotLockComponent CreativeSlotLock = new(17);
     public static readonly CustomDataComponent CustomData = new(0);
     public static readonly CustomModelDataComponent CustomModelData = new(14);

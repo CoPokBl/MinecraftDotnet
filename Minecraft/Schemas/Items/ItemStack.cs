@@ -14,7 +14,11 @@ namespace Minecraft.Schemas.Items;
 /// Immutable representation of an stack of items.
 /// Or a `Slot` in a container.
 /// </summary>
-public class ItemStack(int count, IItem? type = null, Dictionary<IDataComponent, object>? components = null, IDataComponent[]? removeComponents = null) : ITaggable {
+public class ItemStack(
+    int count, IItem? type = null, 
+    Dictionary<IDataComponent, object>? components = null, IDataComponent[]? removeComponents = null) : 
+    IImmutableTaggability<ItemStack> {
+    
     public readonly int Count = count;
     public readonly IItem Type = type ?? Item.Air;
     public readonly Dictionary<IDataComponent, object> Components = components ?? [];
@@ -137,7 +141,7 @@ public class ItemStack(int count, IItem? type = null, Dictionary<IDataComponent,
         return nbt is CompoundTag ct && ct.ChildrenMap.ContainsKey(tag.Id);
     }
     
-    public ItemStack With<T>(Tag<T> tag, T? value) {
+    public ItemStack WithTag<T>(Tag<T> tag, T? value) {
         CompoundTag nbt = Get(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag(null);
 
         if (value == null) {
@@ -156,15 +160,42 @@ public class ItemStack(int count, IItem? type = null, Dictionary<IDataComponent,
         
         return With(DataComponent.CustomData, nbt);
     }
-
-    /// <summary>
-    /// DO NOT USE THIS METHOD.
-    /// ItemStack is immutable, so this method does nothing.
-    /// <p/>
-    /// Use <see cref=""/>
-    /// </summary>
-    [Obsolete("Use With(Tag<T> tag, T value) instead.")]
-    public void SetTag<T>(Tag<T> tag, T value) {
-        throw new NotSupportedException("ItemStack is immutable. Use With(Tag<T> tag, T value) instead.");
+    
+    public ItemStack WithoutTag<T>(Tag<T> tag) {
+        CompoundTag nbt = Get(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag(null);
+        
+        if (!nbt.ChildrenMap.ContainsKey(tag.Id)) {
+            return this;  // No change if tag doesn't exist
+        }
+        
+        nbt = new CompoundTag(null, nbt.Children
+            .Where(t => t?.GetName() != tag.Id)
+            .ToArray());
+        
+        return With(DataComponent.CustomData, nbt);
+    }
+    
+    public T? GetTagOrNull<T>(Tag<T> tag) {
+        if (!HasTag(tag)) {
+            return default;
+        }
+        
+        return GetTag(tag);
+    }
+    
+    public Optional<T> GetTagOptional<T>(Tag<T> tag) {
+        if (!HasTag(tag)) {
+            return Optional<T>.Empty;
+        }
+        
+        return new Optional<T>(GetTag(tag));
+    }
+    
+    public T GetTagOrDefault<T>(Tag<T> tag, T defaultValue) {
+        if (!HasTag(tag)) {
+            return defaultValue;
+        }
+        
+        return GetTag(tag);
     }
 }

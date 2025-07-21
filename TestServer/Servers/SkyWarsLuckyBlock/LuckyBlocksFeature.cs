@@ -1,18 +1,21 @@
 using ManagedServer;
+using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using Minecraft;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
+using TestServer.Servers.SkyWarsLuckyBlock.Items;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
 public class LuckyBlocksFeature : ScopedFeature {
-    private static readonly Tag<LuckyBlock> LuckyBlockItemTag = new("lucky_block_item");
+    private static readonly Tag<LuckyBlockType> LuckyBlockItemTag = new("lucky_block_item");
     
     private static readonly ItemStack[] LuckyItems = [
-        new(5, Item.AcaciaBoat)
+        SkyWarsItemsFeature.CreateItem(typeof(TestItem)),
+        SkyWarsItemsFeature.CreateItem(typeof(KnockbackStickItem))
     ];
     
     private enum LuckyBlockType {
@@ -21,37 +24,42 @@ public class LuckyBlocksFeature : ScopedFeature {
         Ultra
     }
     
-    private record LuckyBlock(LuckyBlockType Type, string Name);
+    private record LuckyBlock(LuckyBlockType Type, Entity? PlacedEntity);
     
-    private readonly List<IVec3> _placedBlocks = [];
+    private readonly Dictionary<IVec3, LuckyBlock> _placedBlocks = [];
 
     public static ItemStack GetLuckyBlock(int count = 1) {
         return new ItemStack(count, Item.YellowStainedGlass)
-            .With(LuckyBlockItemTag, new LuckyBlock(LuckyBlockType.Normal, "Hello there"));
+            .WithTag(LuckyBlockItemTag, LuckyBlockType.Normal);
     }
     
     public override void Register() {
         AddEventListener<PlayerPlaceBlockEvent>(e => {
-            LuckyBlock? block = e.UsedItem.GetTagOrNull(LuckyBlockItemTag);
-            if (block == null) {
+            if (!e.UsedItem.HasTag(LuckyBlockItemTag)) {
                 return;
             }
             
-            Console.WriteLine("Placing lucky block: " + block.Name);
+            LuckyBlockType block = e.UsedItem.GetTag(LuckyBlockItemTag);
             
             // Lucky block placed, let's do something
             e.Block = Block.YellowStainedGlass;
-            _placedBlocks.Add(e.Position);
+
+            Entity insideThing = new(EntityType.Bee) {
+                Position = e.Position.BlockPositionToVec3() - new Vec3(0, 0.3, 0)
+            };
+            e.World.Spawn(insideThing);
+            
+            _placedBlocks.Add(e.Position, new LuckyBlock(block, insideThing));
         });
         
         AddEventListener<PlayerBreakBlockEvent>(e => {
-            if (!_placedBlocks.Contains(e.Position)) {
+            if (!_placedBlocks.Remove(e.Position, out LuckyBlock? block)) {
                 return;
             }
             
             // Lucky block broken, let's do something
-            _placedBlocks.Remove(e.Position);
             e.World.DropItem(e.Position, LuckyItems[Random.Shared.Next(LuckyItems.Length)]);
+            block.PlacedEntity?.Despawn();
         });
     }
 }

@@ -17,6 +17,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     
     public List<World> Worlds { get; } = [];
     public List<PlayerEntity> Players { get; } = [];
+    public ManagedMinecraftServer Server => this;
     public HashSet<Type> CallableEventTypes { get; } = [];
 
     // Used to stop the tasks from being garbage collected
@@ -94,7 +95,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         return world;
     }
     
-    public void ScheduleTask(TimeSpan delay, Action action) {
+    public Action ScheduleTask(TimeSpan delay, Action action) {
         Timer timer = null!;
         timer = new Timer(_ => {
             action();
@@ -102,10 +103,15 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
             _timers.Remove(timer);
         }, null, delay, Timeout.InfiniteTimeSpan);
         _timers.Add(timer);
+
+        return () => {
+            timer.Dispose();
+            _timers.Remove(timer);
+        };
     }
 
     // return true to continue repeating, false to stop
-    public void ScheduleRepeatingTask(TimeSpan delay, Func<bool> action) {
+    public Action ScheduleRepeatingTask(TimeSpan delay, Func<bool> action) {
         Timer timer = null!;
         timer = new Timer(_ => {
             if (action()) return;
@@ -113,6 +119,11 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
             timer.Dispose();
         }, null, delay, delay);
         _timers.Add(timer);
+        
+        return () => {
+            timer.Dispose();
+            _timers.Remove(timer);
+        };
     }
 
     public Task ListenTcp(int port, CancellationToken cancel) {

@@ -1,0 +1,6 @@
+{
+  "minecraft:apply_effects": "ApplyEffectsConsumeEffect",
+  "minecraft:remove_effects": "RemoveEffectsConsumeEffect",
+  "minecraft:teleport_randomly": "TeleportRandomlyConsumeEffect",
+  "minecraft:play_sound": "PlaySoundConsumeEffect"
+}

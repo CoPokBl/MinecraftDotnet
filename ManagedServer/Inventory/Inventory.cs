@@ -52,7 +52,12 @@ public abstract class Inventory : IViewable {
     }
 
     public ItemStack this[int index] {
-        get => Items[index];
+        get {
+            if (index < 0 || index >= Size) {
+                throw new IndexOutOfRangeException($"Index {index} is out of range for inventory of size {Size}.");
+            }
+            return Items[index];
+        }
         set {
             if (index < 0 || index >= Size) {
                 throw new IndexOutOfRangeException($"Index {index} is out of range for inventory of size {Size}.");
@@ -61,7 +66,7 @@ public abstract class Inventory : IViewable {
             SendSlotUpdate(index);
         }
     }
-    
+
     protected int GetBestSlotForItem(ItemStack item) {
         // Check for a similar item first
         foreach (int i in AddItemSearchOrder) {

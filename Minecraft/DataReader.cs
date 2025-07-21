@@ -1,6 +1,9 @@
 using System.Buffers.Binary;
 using System.Collections;
+using System.Reflection;
 using System.Text;
+using Minecraft.Data;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
@@ -47,6 +50,27 @@ public class DataReader(byte[] data) : Stream {
         bool exists = ReadBoolean();
         return exists ? reader(this) : default;
     }
+    
+    // Dumb solution to read data from a type that implements INetworkType<T>
+    // public T Read<T>(MinecraftRegistry reg) where T : INetworkType<T> {
+    //     Type type = typeof(T);
+    //     MethodInfo? info = type.GetMethod("ReadData");
+    //     if (info == null) {
+    //         throw new InvalidOperationException($"Type {type.Name} does not have a ReadData method.");
+    //     }
+    //     if (info.GetParameters().Length != 2 || info.GetParameters()[0].ParameterType != typeof(DataReader) || info.GetParameters()[1].ParameterType != typeof(MinecraftRegistry)) {
+    //         throw new InvalidOperationException($"Type {type.Name} ReadData method must have signature: T ReadData(DataReader reader, MinecraftRegistry registry).");
+    //     }
+    //     
+    //     object? result = info.Invoke(null, [this, reg]);
+    //     if (result == null) {
+    //         throw new InvalidOperationException($"ReadData method of type {type.Name} returned null.");
+    //     }
+    //     if (result is not T t) {
+    //         throw new InvalidOperationException($"ReadData method of type {type.Name} returned an object of type {result.GetType().Name}, expected {typeof(T).Name}.");
+    //     }
+    //     return t;
+    // }
 
     public int ReadVarInt() {
         int value = 0;
@@ -266,6 +290,13 @@ public class DataReader(byte[] data) : Stream {
         return id == 0 
             ? Or<int, T>.FromValue2(readerAdapter.Invoke(this)) 
             : Or<int, T>.FromValue1(id - 1);
+    }
+    
+    public Or<TP, T> ReadIdOr<TP, T>(Func<int, TP> readerAdapter1, Func<DataReader, T> readerAdapter2) {
+        int id = ReadVarInt();
+        return id == 0 
+            ? Or<TP, T>.FromValue2(readerAdapter2.Invoke(this)) 
+            : Or<TP, T>.FromValue1(readerAdapter1.Invoke(id - 1));
     }
     
     public T[] ReadPrefixedArray<T>(Func<DataReader, T> readerAdapter) {

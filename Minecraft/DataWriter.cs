@@ -1,6 +1,8 @@
 using System.Buffers.Binary;
 using System.Collections;
 using System.Text;
+using Minecraft.Data;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities.Meta;
 using Minecraft.Schemas.Vec;
@@ -99,6 +101,17 @@ public class DataWriter : Stream, IWritable {
     public DataWriter Write(IWritable writable) {
         writable.Write(this);
         return this;
+    }
+
+    public DataWriter Write<T>(INetworkType<T> type, T val, MinecraftRegistry reg) {
+        return type.WriteData(val, this, reg);
+    }
+    
+    public DataWriter Write<T>(INetworkType<T> type, MinecraftRegistry reg) where T : INetworkType<T> {
+        if (type is not T t) {
+            throw new ArgumentException("type is not T");
+        }
+        return type.WriteData(t, this, reg);
     }
 
     public DataWriter Write(Func<DataWriter, DataWriter> writeAction) {
@@ -463,6 +476,11 @@ public class DataWriter : Stream, IWritable {
         WriteVarInt(0); // 0 indicates a right value
         writerAction.Invoke(idOr.Value2!, this);
         return this;
+    }
+
+    public DataWriter WriteIdOr<TP, T>(Or<TP, T> idOr, Action<T, DataWriter> writerAction) where TP : IProtocolType {
+        Or<int, T> newOr = idOr.IsValue1 ? Or<int, T>.FromValue1(idOr.Value1!.ProtocolId) : Or<int, T>.FromValue2(idOr.Value2!);
+        return WriteIdOr(newOr, writerAction);
     }
 
     public DataWriter WritePrefixedArray<T>(T[] values, Action<T, DataWriter> writerAction) {

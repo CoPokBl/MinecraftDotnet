@@ -14,7 +14,7 @@ namespace Minecraft.Implementations;
 /// Represents a connection to or from a Minecraft server.
 /// Supports sending and receiving packets.
 /// </summary>
-public abstract class MinecraftConnection : ITaggable {
+public abstract class MinecraftConnection : MappedTaggable {
     /// <summary>
     /// The protocol state of the connection. None means we are pre handshake.
     /// </summary>
@@ -113,19 +113,6 @@ public abstract class MinecraftConnection : ITaggable {
     protected void Log(string s) {
         // Console.WriteLine($"[{GetType().FullName}] [{State}] {s}");
     }
-    
-    public T GetTag<T>(Tag<T> tag) {
-        return (T)_data[tag.Id]!;
-    }
-
-    public bool HasTag<T>(Tag<T> tag) {
-        return _data.ContainsKey(tag.Id);
-    }
-
-    public void SetTag<T>(Tag<T> tag, T value) {
-        _data[tag.Id] = value;
-    }
-    
 #endregion
 
 #region implementation_methods

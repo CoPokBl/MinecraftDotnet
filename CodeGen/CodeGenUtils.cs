@@ -73,24 +73,59 @@ public static class CodeGenUtils {
         """;
     
     private const string Footer = "}\n";
-    
-    public static string CreateSimpleRegistryEntries(JObject registriesJson, string registryName, 
-        string simpleClassName, string className, string regVar, string typeNamespace, Func<string, string>? variableNameGetter = null) {
-        variableNameGetter ??= NamespacedIdToPascalName;
-        
+
+    public static string CreateSimpleRegistryEntries(JObject registriesJson, string registryName,
+        string simpleClassName, string className, string regVar, string typeNamespace,
+        Func<string, string>? variableNameGetter = null) {
+        return CreateSimpleRegistryEntries(BuildRegularRegistryEntries(registriesJson, registryName), simpleClassName, className, regVar, typeNamespace, variableNameGetter);
+    }
+
+    public static (string, int)[] BuildRegularRegistryEntries(JObject registriesJson, string registryName) {
         JObject entitiesJson = registriesJson[registryName]!.ToObject<JObject>()!;
         JObject entityEntriesJson = entitiesJson["entries"]!.ToObject<JObject>()!;
         
-        StringBuilder registryAdditions = new();
-        StringBuilder file = new(Header.Replace("{classname}", className).Replace("{typenamespace}", typeNamespace));
-
-        foreach (KeyValuePair<string, JToken?> entityEntry in entityEntriesJson) {
-            string key = entityEntry.Key;
+        List<(string, int)> entries = [];
+        foreach ((string key, JToken? value) in entityEntriesJson) {
             if (key == "minecraft:intentionally_empty") {
                 continue;  // for some reason, this is in the registry
             }
             
-            int protocolId = entityEntry.Value!["protocol_id"]!.Value<int>();
+            int protocolId = value!["protocol_id"]!.Value<int>();
+            entries.Add((key, protocolId));
+        }
+
+        return entries.ToArray();
+    }
+
+    public static (string, int)[] GetFileRegEntries(string resFile) {
+        JObject obj = JObject.Parse(ReadEmbeddedFile(resFile));
+        List<(string, int)> entries = [];
+        foreach (KeyValuePair<string, JToken?> entry in obj) {
+            if (entry.Key == "minecraft:intentionally_empty") {
+                continue;  // for some reason, this is in the registry
+            }
+            if (entry.Value is JObject entryObj) {
+                int protocolId = entryObj["id"]!.Value<int>();
+                entries.Add((entry.Key, protocolId));
+            } else {
+                throw new InvalidOperationException($"Expected a JObject for entry '{entry.Key}' in {resFile}.");
+            }
+        }
+        return entries.ToArray();
+    }
+    
+    public static string CreateSimpleRegistryEntries((string, int)[] entries, string simpleClassName, string className, 
+        string regVar, string typeNamespace, Func<string, string>? variableNameGetter = null) {
+        variableNameGetter ??= NamespacedIdToPascalName;
+        
+        StringBuilder registryAdditions = new();
+        StringBuilder file = new(Header.Replace("{classname}", className).Replace("{typenamespace}", typeNamespace));
+
+        foreach ((string key, int protocolId) in entries) {
+            if (key == "minecraft:intentionally_empty") {
+                continue;  // for some reason, this is in the registry
+            }
+
             string pascalName = variableNameGetter(key);
             
             // Add to cs file
@@ -103,5 +138,37 @@ public static class CodeGenUtils {
         File.WriteAllText(className + ".cs", file.ToString().Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
 
         return registryAdditions.ToString();
+    }
+
+    public static string CreateSimpleAndComplexRegistryEntries((string, int)[] entries, string simpleClassName, 
+        JObject complexTypes, string className, string regVar, string typeNamespace, 
+        Func<string, string>? variableNameGetter = null) {
+        variableNameGetter ??= NamespacedIdToPascalName;
+        
+        Dictionary<string, string> complexTypesDict = complexTypes.ToObject<Dictionary<string, string>>()!;
+
+        StringBuilder file = new(Header.Replace("{classname}", className).Replace("{typenamespace}", typeNamespace + 
+            $";\nusing Minecraft.Data.{typeNamespace}.Types"));
+        StringBuilder registryEntries = new();
+
+        foreach ((string key, int protocolId) in entries) {
+            string pascalName = variableNameGetter(key);
+
+            // Add to cs file
+            if (!complexTypesDict.TryGetValue(key, out string? typeName)) {
+                file.Append($"{GetIndentation(1)}public static readonly {simpleClassName} {pascalName} = new(\"{key}\", {protocolId});\n");
+            }
+            else {
+                file.Append($"{GetIndentation(1)}public static readonly {typeName} {pascalName} = new(\"{key}\", {protocolId});\n");
+            }
+            
+            // Add to ParticleRegistry
+            registryEntries.Append($"{GetIndentation(2)}Data.{regVar}.Add({className}.{pascalName});\n");
+        }
+        
+        file.Append(Footer);
+        File.WriteAllText($"{className}.cs", file.ToString());
+
+        return registryEntries.ToString();
     }
 }

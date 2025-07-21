@@ -234,6 +234,28 @@ public class PlayerEntity : LivingEntity, IAudience {
             }
         });
     }
+    
+    public ItemStack GetItemInHand(Hand hand) {
+        return hand switch {
+            Hand.MainHand => HeldItem,
+            Hand.OffHand => Inventory.Offhand,
+            _ => throw new ArgumentOutOfRangeException(nameof(hand), "Invalid hand specified.")
+        };
+    }
+    
+    public void SetItemInHand(Hand hand, ItemStack item) {
+        switch (hand) {
+            case Hand.MainHand:
+                HeldItem = item;
+                break;
+            case Hand.OffHand:
+                Inventory.Offhand = item;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(hand), "Invalid hand specified.");
+        }
+        Inventory.SendUpdateTo(this);
+    }
 
     public void SwapHeld() {
         (HeldItem, Inventory.Offhand) = (Inventory.Offhand, HeldItem);

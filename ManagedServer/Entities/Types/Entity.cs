@@ -3,6 +3,7 @@ using ManagedServer.Events;
 using ManagedServer.Events.Types;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
+using Minecraft;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Events;
@@ -17,7 +18,7 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Entities.Types;
 
-public class Entity : IViewable, ITaggable, IFeatureScope {
+public class Entity : MappedTaggable, IViewable, IFeatureScope {
     public Guid Uuid = Guid.NewGuid();
     public readonly IEntityType Type;
     public Vec3 Position = Vec3.Zero;
@@ -48,7 +49,7 @@ public class Entity : IViewable, ITaggable, IFeatureScope {
     }
 
     public virtual List<PlayerEntity> Players => [];
-    private readonly Dictionary<string, object?> _data = new();
+    public ManagedMinecraftServer Server => World.ThrowIfNull().Server;
 
     private bool _crouching;
     public bool Crouching {
@@ -243,17 +244,5 @@ public class Entity : IViewable, ITaggable, IFeatureScope {
 
     public PlayerEntity[] GetViewers() {
         return Manager?.GetViewersOf(this) ?? [];
-    }
-    
-    public T GetTag<T>(Tag<T> tag) {
-        return (T)_data[tag.Id]!;
-    }
-
-    public bool HasTag<T>(Tag<T> tag) {
-        return _data.ContainsKey(tag.Id);
-    }
-
-    public void SetTag<T>(Tag<T> tag, T value) {
-        _data[tag.Id] = value;
     }
 }

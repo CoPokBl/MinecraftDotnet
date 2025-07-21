@@ -19,7 +19,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2025-07-19
+// Last updated: 2025-07-21
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -2812,6 +2812,7 @@ public static class VanillaRegistry {
         Data.DataComponents.Add(DataComponent.AttributeModifiers, 13);
         Data.DataComponents.Add(DataComponent.CanBreak, 12);
         Data.DataComponents.Add(DataComponent.CanPlaceOn, 11);
+        Data.DataComponents.Add(DataComponent.Consumable, 21);
         Data.DataComponents.Add(DataComponent.CreativeSlotLock, 17);
         Data.DataComponents.Add(DataComponent.CustomData, 0);
         Data.DataComponents.Add(DataComponent.CustomModelData, 14);
@@ -4738,6 +4739,52 @@ public static class VanillaRegistry {
         Data.InventoryTypes.Add(InventoryType.Smoker);
         Data.InventoryTypes.Add(InventoryType.Stonecutter);
 
+
+        Data.PotionEffectTypes.Add(PotionEffectType.Speed);
+        Data.PotionEffectTypes.Add(PotionEffectType.Slowness);
+        Data.PotionEffectTypes.Add(PotionEffectType.Haste);
+        Data.PotionEffectTypes.Add(PotionEffectType.MiningFatigue);
+        Data.PotionEffectTypes.Add(PotionEffectType.Strength);
+        Data.PotionEffectTypes.Add(PotionEffectType.InstantHealth);
+        Data.PotionEffectTypes.Add(PotionEffectType.InstantDamage);
+        Data.PotionEffectTypes.Add(PotionEffectType.JumpBoost);
+        Data.PotionEffectTypes.Add(PotionEffectType.Nausea);
+        Data.PotionEffectTypes.Add(PotionEffectType.Regeneration);
+        Data.PotionEffectTypes.Add(PotionEffectType.Resistance);
+        Data.PotionEffectTypes.Add(PotionEffectType.FireResistance);
+        Data.PotionEffectTypes.Add(PotionEffectType.WaterBreathing);
+        Data.PotionEffectTypes.Add(PotionEffectType.Invisibility);
+        Data.PotionEffectTypes.Add(PotionEffectType.Blindness);
+        Data.PotionEffectTypes.Add(PotionEffectType.NightVision);
+        Data.PotionEffectTypes.Add(PotionEffectType.Hunger);
+        Data.PotionEffectTypes.Add(PotionEffectType.Weakness);
+        Data.PotionEffectTypes.Add(PotionEffectType.Poison);
+        Data.PotionEffectTypes.Add(PotionEffectType.Wither);
+        Data.PotionEffectTypes.Add(PotionEffectType.HealthBoost);
+        Data.PotionEffectTypes.Add(PotionEffectType.Absorption);
+        Data.PotionEffectTypes.Add(PotionEffectType.Saturation);
+        Data.PotionEffectTypes.Add(PotionEffectType.Glowing);
+        Data.PotionEffectTypes.Add(PotionEffectType.Levitation);
+        Data.PotionEffectTypes.Add(PotionEffectType.Luck);
+        Data.PotionEffectTypes.Add(PotionEffectType.Unluck);
+        Data.PotionEffectTypes.Add(PotionEffectType.SlowFalling);
+        Data.PotionEffectTypes.Add(PotionEffectType.ConduitPower);
+        Data.PotionEffectTypes.Add(PotionEffectType.DolphinsGrace);
+        Data.PotionEffectTypes.Add(PotionEffectType.BadOmen);
+        Data.PotionEffectTypes.Add(PotionEffectType.HeroOfTheVillage);
+        Data.PotionEffectTypes.Add(PotionEffectType.Darkness);
+        Data.PotionEffectTypes.Add(PotionEffectType.TrialOmen);
+        Data.PotionEffectTypes.Add(PotionEffectType.RaidOmen);
+        Data.PotionEffectTypes.Add(PotionEffectType.WindCharged);
+        Data.PotionEffectTypes.Add(PotionEffectType.Weaving);
+        Data.PotionEffectTypes.Add(PotionEffectType.Oozing);
+        Data.PotionEffectTypes.Add(PotionEffectType.Infested);
+
+        Data.ConsumeEffects.Add(ConsumeEffect.ApplyEffects);
+        Data.ConsumeEffects.Add(ConsumeEffect.ClearAllEffects);
+        Data.ConsumeEffects.Add(ConsumeEffect.PlaySound);
+        Data.ConsumeEffects.Add(ConsumeEffect.RemoveEffects);
+        Data.ConsumeEffects.Add(ConsumeEffect.TeleportRandomly);
 
     }
 }

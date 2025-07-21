@@ -14,6 +14,11 @@ public class Or<T1, T2> {
         Value2 = value;
     }
     
+    public Or(T1? value1, T2? value2) {
+        Value1 = value1;
+        Value2 = value2;
+    }
+    
     public static implicit operator Or<T1, T2>(T1 value) {
         return new Or<T1, T2>(value);
     }

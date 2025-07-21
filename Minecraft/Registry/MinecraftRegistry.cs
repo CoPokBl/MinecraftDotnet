@@ -9,4 +9,6 @@ public class MinecraftRegistry {
     public EntityTypeRegistry EntityTypes { get; init; } = new();
     public SoundTypeRegistry SoundTypes { get; init; } = new();
     public InventoryTypeRegistry InventoryTypes { get; init; } = new();
+    public PotionEffectTypeRegistry PotionEffectTypes { get; init; } = new();
+    public ConsumeEffectRegistry ConsumeEffects { get; init; } = new();
 }

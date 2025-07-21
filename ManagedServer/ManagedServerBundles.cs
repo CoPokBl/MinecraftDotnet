@@ -13,7 +13,8 @@ public partial class ManagedMinecraftServer {
             new PlayerCrouchFeature(),
             new BlockBreakingFeature(),
             new InventoryClickFeature(),
-            new DropItemsEventFeature()
+            new DropItemsEventFeature(),
+            new ConsumablesFeature()
         );
     }
 

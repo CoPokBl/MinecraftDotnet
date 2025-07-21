@@ -19,11 +19,10 @@ using Minecraft.Text;
 
 namespace Proxy;
 
-public class ProxiedConnection : ITaggable {
+public class ProxiedConnection : MappedTaggable {
     public ProxyServer Proxy { get; }
     public readonly PlayerConnection Player;
     public ServerConnection? Server;  // the server that this player is connected to
-    public readonly Dictionary<string, object?> Data = new();
     public int EntityId = -1;
     private readonly Dictionary<string, byte[]> _cookies = [];
     
@@ -325,17 +324,5 @@ public class ProxiedConnection : ITaggable {
         }
         
         Player.SendPacket(packet);
-    }
-    
-    public T GetTag<T>(Tag<T> tag) {
-        return (T)Data[tag.Id]!;
-    }
-
-    public bool HasTag<T>(Tag<T> tag) {
-        return Data.ContainsKey(tag.Id);
-    }
-
-    public void SetTag<T>(Tag<T> tag, T value) {
-        Data[tag.Id] = value;
     }
 }

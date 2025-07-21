@@ -22,12 +22,12 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Worlds;
 
-public class World : IAudience, IFeatureScope, ITaggable {
+public class World : MappedTaggable, IAudience, IFeatureScope {
     // State stuff
     public List<PlayerEntity> Players { get; } = [];
     public EventNode<IServerEvent> Events { get; }
     public readonly EntityManager Entities;
-    public required ManagedMinecraftServer? Server;
+    public required ManagedMinecraftServer Server { get; init; }
     public bool Immutable { get; set; } = false;
     private readonly Dictionary<string, object?> _data = new();
 

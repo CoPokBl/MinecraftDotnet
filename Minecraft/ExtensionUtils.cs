@@ -2,6 +2,7 @@ using System.Collections;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Schemas;
 using Minecraft.Text;
 using NBT;
 
@@ -133,10 +134,9 @@ public static class ExtensionUtils {
         return taggable.GetTag(tag);
     }
     
-    public static T GetTagOrSetDefault<T>(this ITaggable taggable, Tag<T> tag, T defaultValue) {
+    public static T GetTagOrSetDefault<T>(this IMutableTaggability taggable, Tag<T> tag, T defaultValue) {
         if (taggable.HasTag(tag)) return taggable.GetTag(tag);
         taggable.SetTag(tag, defaultValue);
         return defaultValue;
-
     }
 }

@@ -123,6 +123,8 @@ RunStep("Entity Types", EntityTypeCodeGen.CreateEntityTypeEntries);
 RunStep("Sounds", SoundCodeGen.CreateSoundEntries);
 RunStep("Inventory Types", InventoryTypeCodeGen.CreateInventoryTypeEntries);
 RunStep("Tags", TagsCodeGen.CreateTagEntries);
+RunStep("Potion Effects", PotionEffectTypeGen.CreatePotionEffectTypes);
+RunStep("Consume Effects", ConsumeEffectGen.CreateConsumeEffects);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))
