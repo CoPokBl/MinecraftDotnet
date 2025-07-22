@@ -11,12 +11,13 @@ using Minecraft.Schemas.Sound;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
-public class SkyWarsCombatFeature : ScopedFeature {
+public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFeature {
     private const int AttackCooldown = 500; // milliseconds
     
     private static readonly Tag<long> LastHitTag = new("skywars:lasthit");
     public static readonly Tag<float> DamageTag = new("skywars:damage");
     public static readonly Tag<float> KnockbackTag = new("skywars:knockback");
+    public static readonly Tag<bool> SelfAttackingTag = new("skywars:selfattacking");
     
     public override void Register() {
         AddEventListener<PlayerPacketHandleEvent>(e => {
@@ -44,6 +45,10 @@ public class SkyWarsCombatFeature : ScopedFeature {
                 throw;
             }
             
+            ItemStack weapon = attacker.HeldItem;
+            if (weapon.GetTagOrDefault(SelfAttackingTag, false)) {
+                entity = attacker;
+            }
             
             // Check attack cooldown
             if (AttackCooldown != -1) {
@@ -56,8 +61,7 @@ public class SkyWarsCombatFeature : ScopedFeature {
                 
                 entity.SetTag(LastHitTag, time);
             }
-
-            ItemStack weapon = attacker.HeldItem;
+            
             float? weaponDamage = weapon.GetTagOrNull(DamageTag);
             
             float damage = weaponDamage ?? 1.0f;  // Default damage if not specified
@@ -65,6 +69,10 @@ public class SkyWarsCombatFeature : ScopedFeature {
 
             if (entity is LivingEntity le) {
                 le.Damage(damage);
+                if (le.Health <= 0 && le is PlayerEntity pe) {
+                    // death
+                    deathCallback(pe);
+                }
             }
             
             if (entity is PlayerEntity p) {

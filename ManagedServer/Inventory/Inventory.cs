@@ -1,5 +1,8 @@
 using ManagedServer.Entities.Types;
+using ManagedServer.Events;
+using ManagedServer.Events.Types;
 using ManagedServer.Viewables;
+using Minecraft.Data.Generated;
 using Minecraft.Data.Inventories;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;
@@ -39,7 +42,7 @@ public abstract class Inventory : IViewable {
     internal readonly List<PlayerEntity> Viewers = [];
     internal int LastStateId;
 
-    protected Inventory(int size, int playerInventoryStartIndex) {
+    protected Inventory(ManagedMinecraftServer server, int size, int playerInventoryStartIndex) {
         Size = size;
         PlayerInventoryStartIndex = playerInventoryStartIndex;
         Items = new ItemStack[size];
@@ -47,7 +50,7 @@ public abstract class Inventory : IViewable {
             Items[i] = ItemStack.Air;
         }
 
-        Events = new EventNode<IServerEvent>();
+        Events = server.Events.CreateChild(e => e is IInventoryEvent ie && ie.Inventory == this);
     }
 
     public ItemStack this[int index] {
@@ -61,10 +64,31 @@ public abstract class Inventory : IViewable {
             if (index < 0 || index >= Size) {
                 throw new IndexOutOfRangeException($"Index {index} is out of range for inventory of size {Size}.");
             }
+            
+            InventoryChangeEvent changeEvent = new() {
+                Inventory = this,
+                Slot = index,
+                PreviousItem = Items[index],
+                NewItem = value
+            };
+            Events.CallEvent(changeEvent);
+            
             Items[index] = value;
             SendSlotUpdate(index);
             Refresh(); // Notify that the inventory has changed
         }
+    }
+    
+    public void Clear() {
+        for (int i = 0; i < Size; i++) {
+            Items[i] = ItemStack.Air;
+        }
+
+        foreach (PlayerEntity p in Viewers) {
+            SendUpdateTo(p);
+        }
+        
+        Refresh(); // Notify that the inventory has changed
     }
 
     protected int GetBestSlotForItem(ItemStack item) {

@@ -96,6 +96,18 @@ public readonly struct IVec3(int x, int y, int z) : IEquatable<IVec3> {
     public Vec3 BlockPositionToVec3() {
         return new Vec3(X + 0.5, Y + 0.5, Z + 0.5);
     }
+    
+    public IVec3 WithX(int x) {
+        return new IVec3(x, Y, Z);
+    }
+    
+    public IVec3 WithY(int y) {
+        return new IVec3(X, y, Z);
+    }
+    
+    public IVec3 WithZ(int z) {
+        return new IVec3(X, Y, z);
+    }
 
     public void Deconstruct(out int x, out int y, out int z) {
         x = X;
@@ -117,6 +129,25 @@ public readonly struct IVec3(int x, int y, int z) : IEquatable<IVec3> {
 
     public override int GetHashCode() {
         return HashCode.Combine(X, Y, Z);
+    }
+    
+    public static IVec3 operator +(IVec3 a, IVec3 b) {
+        return new IVec3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+    }
+    
+    public static IVec3 operator -(IVec3 a, IVec3 b) {
+        return new IVec3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+    }
+    
+    public static IVec3 operator *(IVec3 a, double scalar) {
+        return new IVec3((int)(a.X * scalar), (int)(a.Y * scalar), (int)(a.Z * scalar));
+    }
+    
+    public static IVec3 operator /(IVec3 a, double scalar) {
+        if (scalar == 0) {
+            throw new DivideByZeroException("Cannot divide by zero.");
+        }
+        return new IVec3((int)(a.X / scalar), (int)(a.Y / scalar), (int)(a.Z / scalar));
     }
 
     public static bool operator ==(IVec3 left, IVec3 right) {

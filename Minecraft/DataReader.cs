@@ -266,9 +266,7 @@ public class DataReader(byte[] data) : Stream {
     }
 
     public Angle ReadAngle() {
-        return new Angle {
-            Value = Read()
-        };
+        return Angle.FromByte(Read());
     }
 
     public INbtTag ReadNbt() {

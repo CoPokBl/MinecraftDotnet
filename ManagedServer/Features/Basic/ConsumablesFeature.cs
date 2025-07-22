@@ -1,5 +1,8 @@
+using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
+using ManagedServer.Inventory;
+using ManagedServer.Viewables;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
@@ -61,8 +64,40 @@ public class ConsumablesFeature : ScopedFeature {
                 }
                 
                 // Cancel the eating task
-                e.Player.GetTag(EatingTaskTag).Invoke();
+                CancelEating(e.Player);
             }
         });
+        
+        AddEventListener<PlayerSwitchHotbarSlotEvent>(e => {
+            CancelEating(e.Player);
+        });
+        
+        AddEventListener<InventoryChangeEvent>(e => {
+            if (e.Inventory is not PlayerInventory pi) {
+                return;
+            }
+
+            if (PlayerInventory.HotbarSlot1 + pi.Owner.ActiveHotbarSlot != e.Slot) {
+                return;  // Not a change to their held item
+            }
+
+            if (e.PreviousItem.Type.Identifier == e.NewItem.Type.Identifier) {
+                return;
+            }
+            
+            // The item in their hand changed, cancel the eating task
+            CancelEating(pi.Owner);
+        });
+    }
+
+    private static void CancelEating(PlayerEntity player) {
+        // They finished using the item, check if they were eating
+        if (!player.HasTag(EatingTaskTag)) {
+            return;
+        }
+        
+        // Cancel the eating task
+        player.GetTag(EatingTaskTag).Invoke();
+        player.RemoveTag(EatingTaskTag);
     }
 }

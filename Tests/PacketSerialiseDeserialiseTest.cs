@@ -111,7 +111,7 @@ public class PacketSerialiseDeserialiseTest {
             Name = "TestPlayer"
         }, false, ConnectionState.Login);
 
-        ChunkData cd = new();
+        ChunkData cd = new(ChunkData.VanillaOverworldHeight);
         cd.SetBlock(10, 100, 10, 10);
         cd.SetBlock(1, 2, 3, 11);
         cd.SetBlock(7, 53, 2, 5);
@@ -152,7 +152,7 @@ public class PacketSerialiseDeserialiseTest {
     [Test]
     public void TestSerialiseSpeed() {
         const int tests = 1_000;
-        ChunkData cd = new();
+        ChunkData cd = new(ChunkData.VanillaOverworldHeight);
         cd.FillRandom();
         ClientBoundChunkDataAndUpdateLightPacket packet = new() {
             ChunkX = 0,

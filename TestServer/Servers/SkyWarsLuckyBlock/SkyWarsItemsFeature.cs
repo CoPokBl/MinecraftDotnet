@@ -1,9 +1,5 @@
 using ManagedServer;
 using ManagedServer.Events;
-using ManagedServer.Viewables;
-using Minecraft;
-using Minecraft.Data.Components.Types;
-using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
@@ -15,10 +11,13 @@ namespace TestServer.Servers.SkyWarsLuckyBlock;
 public class SkyWarsItemsFeature : ScopedFeature {
     private static readonly Tag<string> ItemTypeTag = new("skywars.item_type");
     
-    public static readonly LuckyBlockItem[] Items = [
+    public static readonly SkyWarsItem[] Items = [
         new TestItem(),
         new KnockbackStickItem(),
-        new GoldenAppleItem()
+        new GoldenAppleItem(),
+        new MagicToyStickItem(),
+        new TeleportOrbItem(),
+        new OneUpItem()
     ];
     
     public override void Register() {
@@ -29,7 +28,7 @@ public class SkyWarsItemsFeature : ScopedFeature {
                 return;
             }
             
-            LuckyBlockItem? luckyItem = Items.FirstOrDefault(i => i.Id == id);
+            SkyWarsItem? luckyItem = Items.FirstOrDefault(i => i.Id == id);
             if (luckyItem == null) {
                 return;
             }
@@ -49,35 +48,25 @@ public class SkyWarsItemsFeature : ScopedFeature {
                 return;
             }
             
-            LuckyBlockItem? luckyItem = Items.FirstOrDefault(i => i.Id == id);
+            SkyWarsItem? luckyItem = Items.FirstOrDefault(i => i.Id == id);
             if (luckyItem == null) {
                 return;
             }
             
             // Use the lucky item
-            luckyItem.Use(e.Player);
-
-            // ConsumableComponent.Data? food = item.Get(DataComponent.Consumable);
-            // if (food != null) {  // it's an eat
-            //     e.Player.SendMessage("Eating " + food.ConsumeSeconds);
-            //     
-            //     e.World.Server!.ScheduleTask(TimeSpan.FromSeconds(food.ConsumeSeconds), () => {
-            //         luckyItem.OnEat(e.Player);
-            //         e.Player.HeldItem = e.Player.HeldItem.SubtractCount(1);
-            //     });
-            // }
-            // else {
-            //     e.Player.SendMessage("Using non edible " + luckyItem.Id);
-            // }
+            bool consume = luckyItem.Use(e.Player);
+            if (consume) {
+                e.Player.HeldItem = e.Player.HeldItem.SubtractCount(1);
+            }
         });
     }
 
     public static ItemStack CreateItem(Type itemType) {
-        if (!typeof(LuckyBlockItem).IsAssignableFrom(itemType)) {
+        if (!typeof(SkyWarsItem).IsAssignableFrom(itemType)) {
             throw new ArgumentException("Item type must inherit from LuckyBlockItem", nameof(itemType));
         }
 
-        LuckyBlockItem item = (LuckyBlockItem)Activator.CreateInstance(itemType)!;
+        SkyWarsItem item = (SkyWarsItem)Activator.CreateInstance(itemType)!;
         ItemStack stack = item.Item.WithTag(ItemTypeTag, item.Id);
         return stack;
     }

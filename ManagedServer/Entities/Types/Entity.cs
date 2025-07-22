@@ -127,6 +127,13 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
             return new Vec3(-xz * Math.Sin(rotX), -Math.Sin(rotY), xz * Math.Cos(rotX));
         }
     }
+    
+    //final float rotX = yaw;
+    // final float rotY = pitch;
+    // final double xz = Math.cos(Math.toRadians(rotY));
+    // return new Vec(-xz * Math.sin(Math.toRadians(rotX)),
+    //         -Math.sin(Math.toRadians(rotY)),
+    //         xz * Math.cos(Math.toRadians(rotX)));
 
     public virtual MinecraftPacket[] GenerateSpawnEntityPackets() {
         return [new ClientBoundSpawnEntityPacket {

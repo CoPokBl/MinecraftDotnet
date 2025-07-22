@@ -238,7 +238,7 @@ internal class LoginProcedureFeature : ScopedFeature {
                         e.Connection.SendPacket(packet);
                     
                         // create a player object
-                        PlayerEntity entity = new(e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
+                        PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
                             NetId = pEntityId
                         };
                         entity.SetWorld(preLoginEvent.World);

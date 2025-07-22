@@ -105,10 +105,13 @@ public class PlayerEntity : LivingEntity, IAudience {
             });
         }
     }
+    
+    // Values according to https://minecraft.wiki/w/Player in the Trivia section
+    public double EyeHeight => Crouching ? 1.27 : 1.62;
 
-    public bool OnGround;
+    public bool OnGround { get; private set; }
 
-    public ManagedMinecraftServer Server => World!.Server!;
+    public ManagedMinecraftServer Server;
 
     private int _waitingTeleport = -1;
     
@@ -120,14 +123,14 @@ public class PlayerEntity : LivingEntity, IAudience {
     private int _activeHotbarSlot;
     private ItemStack _cursorItem = ItemStack.Air;
     private Func<PlayerConnection, bool> _playerViewableRule = _ => true;
-    private readonly AtomicCounter _blockBreakTickCounter = new(0, 20);
 
     // Listen to movement packets so we can do stuff
-    public PlayerEntity(PlayerConnection connection, string name) : base(EntityType.Player) {
+    public PlayerEntity(ManagedMinecraftServer server, PlayerConnection connection, string name) : base(EntityType.Player) {
+        Server = server;
         Name = name;
         Connection = connection;
         ViewableRule = con => con != Connection && PlayerViewableRule(con);
-        Inventory = new PlayerInventory(this);
+        Inventory = new PlayerInventory(server, this);
         
         connection.Disconnected += Despawn;
 
@@ -212,6 +215,13 @@ public class PlayerEntity : LivingEntity, IAudience {
                 case ServerBoundSetHeldItemPacket sh: {
                     _activeHotbarSlot = sh.Slot;
                     RefreshEquipment();
+                    
+                    PlayerSwitchHotbarSlotEvent switchEvent = new() {
+                        Player = this,
+                        World = World!,
+                        Slot = _activeHotbarSlot
+                    };
+                    Events.CallEvent(switchEvent);
                     break;
                 }
 
@@ -277,6 +287,22 @@ public class PlayerEntity : LivingEntity, IAudience {
         SetWorld(world);
     }
 
+    protected MinecraftPacket GetRespawnPacket(World world) {
+        return new ClientBoundRespawnPacket {
+            DimensionName = world.DimensionId,
+            DimensionType = 0,
+            HashedSeed = 0,
+            GameMode = GameMode,
+            DataKept = ClientBoundRespawnPacket.DataKeptTypes.All,
+            IsDebug = false,
+            IsFlat = false,
+            Location = null,
+            PortalCooldown = 0,
+            PreviousGameMode = GameMode.Undefined,
+            SeaLevel = 64
+        };
+    }
+
     public void SetWorld(World world, bool sendRespawnPacket = true) {
         // Change the instance that the player sees
         if (World != null) {
@@ -284,19 +310,7 @@ public class PlayerEntity : LivingEntity, IAudience {
             
             // Send a respawn packet to the player
             if (sendRespawnPacket) {
-                SendPacket(new ClientBoundRespawnPacket {
-                    DimensionName = world.DimensionId,
-                    DimensionType = 0,
-                    HashedSeed = 0,
-                    GameMode = GameMode,
-                    DataKept = ClientBoundRespawnPacket.DataKeptTypes.All,
-                    IsDebug = false,
-                    IsFlat = false,
-                    Location = null,
-                    PortalCooldown = 0,
-                    PreviousGameMode = GameMode.Undefined,
-                    SeaLevel = 64
-                });
+                SendPacket(GetRespawnPacket(world));
             }
         }
         
@@ -327,18 +341,26 @@ public class PlayerEntity : LivingEntity, IAudience {
     }
 
     public void Respawn() {
-        // todo
+        SendPacket(GetRespawnPacket(World!));
     }
 
     public override void Teleport(Vec3 pos, Angle? yaw = null, Angle? pitch = null) {
         _waitingTeleport = Random.Shared.Next();
+        TeleportFlags teleportFlags = TeleportFlags.None;
+        if (yaw == null) {
+            teleportFlags |= TeleportFlags.RelativeYaw;
+        }
+        if (pitch == null) {
+            teleportFlags |= TeleportFlags.RelativePitch;
+        }
+        
         Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket {
             TeleportId = _waitingTeleport,
             Position = pos,
             Velocity = Vec3.Zero,
             Yaw = yaw ?? Angle.Zero,
             Pitch = pitch ?? Angle.Zero,
-            Flags = TeleportFlags.None
+            Flags = teleportFlags
         });
         // base.Teleport(pos, yaw, pitch);   Don't tell everyone else
     }

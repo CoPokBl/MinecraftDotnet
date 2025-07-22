@@ -56,6 +56,14 @@ public class LivingEntity : Entity {
         Hurt();
         Health = Math.Max(0, Health - damage);
     }
+
+    public void Heal(float amount = -1) {
+        const float maxHealth = 20f;  // TODO: Actually get this value
+        if (Math.Abs(amount - -1) < 0.01) {
+            amount = maxHealth;
+        }
+        Health = Math.Min(maxHealth, Health + amount);
+    }
     
     protected void SendHealthUpdate() {
         SendToSelf(new ClientBoundSetHealthPacket {

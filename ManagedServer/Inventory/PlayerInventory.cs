@@ -1,6 +1,8 @@
 using ManagedServer.Entities.Types;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Inventories;
+using Minecraft.Implementations.Events;
+using Minecraft.Implementations.Server.Events;
 using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Inventory;
@@ -39,7 +41,7 @@ public class PlayerInventory : Inventory {
     public const int HotbarSlot8 = 43;
     public const int HotbarSlot9 = 44;
     
-    public PlayerInventory(PlayerEntity owner) : base(InventorySize, 9) {
+    public PlayerInventory(ManagedMinecraftServer server, PlayerEntity owner) : base(server, InventorySize, 9) {
         Viewers.Add(owner);
         Title = owner.Name + "'s Inventory";
         Owner = owner;

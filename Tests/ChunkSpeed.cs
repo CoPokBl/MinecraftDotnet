@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
 
 namespace Tests;
@@ -33,15 +34,18 @@ public class ChunkSpeed {
         
         Stopwatch sw = Stopwatch.StartNew();
 
-        IVec2[] poses = new IVec2[viewDistance * viewDistance * 4];
+        ChunkData[] data = new ChunkData[viewDistance * viewDistance * 4];
         int index = 0;
         for (int i = 0; i < viewDistance*2; i++) {
             for (int j = 0; j < viewDistance*2; j++) {
-                poses[index++] = new IVec2(i, j);
+                data[index++] = new ChunkData(ChunkData.VanillaOverworldHeight) {
+                    ChunkX = i,
+                    ChunkZ = j
+                };
             }
         }
 
-        world.GetChunks(poses.Length, poses);
+        world.GetChunks(0, data.Length, data);
 
         TimeSpan time = sw.Elapsed;
         int chunks = 4 * viewDistance * viewDistance;

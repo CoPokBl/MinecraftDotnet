@@ -464,7 +464,7 @@ public class DataWriter : Stream, IWritable {
     }
 
     public DataWriter WriteAngle(Angle angle) {
-        return Write(angle.Value);
+        return Write(angle.ByteValue);
     }
     
     public DataWriter WriteIdOr<T>(Or<int, T> idOr, Action<T, DataWriter> writerAction) {

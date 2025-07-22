@@ -1,3 +1,5 @@
+using System.Diagnostics.Contracts;
+
 namespace Minecraft.Schemas.Vec;
 
 public readonly struct Vec3(double x, double y, double z) {
@@ -38,6 +40,9 @@ public readonly struct Vec3(double x, double y, double z) {
     public Vec3 ZZZ => new(Z, Z, Z);
     // ReSharper restore InconsistentNaming
 
+    public Vec3(double num) : this(num, num, num) { }
+
+    [Pure]
     public Vec3 Normalize() {
         double len = ComputeLength();
         if (len == 0) {
@@ -46,10 +51,12 @@ public readonly struct Vec3(double x, double y, double z) {
         return new Vec3(X/len, Y/len, Z/len);
     }
 
+    [Pure]
     public double ComputeLength() {
         return Math.Sqrt(X*X + Y*Y + Z*Z);
     }
 
+    [Pure]
     public Vec3 Multiply(double scalar) {
         return new Vec3(X * scalar, Y * scalar, Z * scalar);
     }
@@ -60,17 +67,25 @@ public readonly struct Vec3(double x, double y, double z) {
     /// </summary>
     /// <param name="other">The other Vec3.</param>
     /// <returns>The distance between the two Vec3s.</returns>
+    [Pure]
     public double DistanceTo2D(Vec3 other) {
         return Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Z - other.Z, 2));
     }
     
+    [Pure]
     public bool IsWithinRadiusOf(Vec3 other, int radius) {
         return Math.Abs(X - other.X) <= radius && Math.Abs(Z - other.Z) <= radius;
     }
     
+    [Pure]
     public double DistanceTo(Vec3 other) {
         double distanceTopDown = Math.Sqrt(Math.Pow(Math.Abs(X - other.X), 2) + Math.Pow(Math.Abs(Z - other.Z), 2));
         return Math.Sqrt(Math.Pow(distanceTopDown, 2) + Math.Pow(Math.Abs(Y - other.Y), 2));
+    }
+    
+    [Pure]
+    public IVec3 ToBlockPos() {
+        return new IVec3((int)Math.Floor(X), (int)Math.Floor(Y), (int)Math.Floor(Z));
     }
     
     public static Vec3 operator +(Vec3 a, Vec3 b) {
@@ -79,6 +94,17 @@ public readonly struct Vec3(double x, double y, double z) {
     
     public static Vec3 operator -(Vec3 a, Vec3 b) {
         return new Vec3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+    }
+    
+    public static Vec3 operator *(Vec3 a, double scalar) {
+        return new Vec3(a.X * scalar, a.Y * scalar, a.Z * scalar);
+    }
+    
+    public static Vec3 operator /(Vec3 a, double scalar) {
+        if (scalar == 0) {
+            throw new DivideByZeroException("Cannot divide by zero.");
+        }
+        return new Vec3(a.X / scalar, a.Y / scalar, a.Z / scalar);
     }
 
     public void Deconstruct(out double x, out double y, out double z) {

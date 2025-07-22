@@ -210,11 +210,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             X = chunkPos.X,
             Z = chunkPos.Z
         });
-        // connection.SendPacket(new ClientBoundSetCenterChunkPacket {
-        //     X = chunkPos.X,
-        //     Z = chunkPos.Z
-        // });
-        // Console.WriteLine("Center changed to " + chunkPos);
+        
         IEnumerable<MinecraftPacket> orderedPackets = neededPackets.OrderBy(p => {
             if (p is ClientBoundSetCenterChunkPacket) return 0;  // always do this first, otherwise we could get issues
             if (p is not ClientBoundChunkDataAndUpdateLightPacket chunkP) return 100;  // do unload packets last (for faster load, client unloads anyway)
@@ -251,6 +247,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         if (Immutable) {
             throw new InvalidOperationException("World is immutable, cannot set block.");
         }
+        CheckY(pos.Y);
+        
         IVec2 chunk = GetChunkPos(pos);
         LoadChunk(chunk);
         RetrieveChunk(chunk)!.SetBlock(ToChunkLocalPos(GameToProtocolPos(pos)), block);
@@ -258,14 +256,41 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         SendBlockUpdate(pos, this);
     }
     
+    public void SetBlock(Vec3 pos, IBlock block) {
+        // Convert Vec3 to IVec3
+        SetBlock(pos.ToBlockPos(), block);
+    }
+    
     private static IVec3 ToChunkLocalPos(IVec3 pos) {
         return new IVec3((pos.X % 16 + 16) % 16, pos.Y, (pos.Z % 16 + 16) % 16);
     }
     
     public IBlock GetBlock(IVec3 pos) {
+        CheckY(pos.Y);
+        
         IVec2 chunk = GetChunkPos(pos);
         LoadChunk(chunk);
         return RetrieveChunk(chunk)!.LookupBlock(ToChunkLocalPos(GameToProtocolPos(pos)), Server!.Registry);
+    }
+
+    private void CheckY(int y) {
+        if (y < Dimension.MinY || y > Dimension.MinY + Dimension.Height) {
+            throw new ArgumentOutOfRangeException(nameof(y), "Y position is out of bounds for this dimension.");
+        }
+    }
+    
+    public IBlock GetBlock(Vec3 pos) {
+        // Convert Vec3 to IVec3
+        return GetBlock(pos.ToBlockPos());
+    }
+    
+    // get everyone who can see the block at the given position
+    public IAudience GetViewersOf(IVec3 pos) {
+        int blockRange = _viewDistance * 16;
+        List<PlayerEntity> viewers = [];
+        viewers.AddRange(Players.Where(player => player.Position.DistanceTo(pos) <= blockRange));
+        // ReSharper disable once CoVariantArrayConversion
+        return new AudiencesList(viewers.ToArray());
     }
     
     public IVec2 GetChunkPos(Vec3 pos) {
@@ -406,17 +431,5 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         foreach (PlayerEntity player in Players) {
             player.SendPacket(packet);
         }
-    }
-    
-    public T GetTag<T>(Tag<T> tag) {
-        return (T)_data[tag.Id]!;
-    }
-
-    public bool HasTag<T>(Tag<T> tag) {
-        return _data.ContainsKey(tag.Id);
-    }
-
-    public void SetTag<T>(Tag<T> tag, T value) {
-        _data[tag.Id] = value;
     }
 }

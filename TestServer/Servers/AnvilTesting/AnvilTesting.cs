@@ -8,7 +8,6 @@ using Minecraft.Data.Generated;
 using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
-using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;

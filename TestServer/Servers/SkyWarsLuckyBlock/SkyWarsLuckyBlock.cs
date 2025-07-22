@@ -1,48 +1,18 @@
 using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
-using ManagedServer.Features;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
-using Minecraft.Data.Generated;
-using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Features;
-using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
-using Minecraft.Schemas.Vec;
 using Minecraft.Text;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
 public static class SkyWarsLuckyBlock {
-    private static readonly Vec3[] MapSpawns = [
-        new(-20.5, 25, -24.5),
-        new(23.5, 25, -24.5),
-        new(29.5, 25, 0.5),
-        new(21.5, 25, 25.5),
-        new(-22.5, 25, 25.5),
-        new(-28.5, 25, 0.5)
-    ];
-    
-    private static readonly Vec3 SpecSpawn = new(0.5, 25, 0.5);
-
-    private const string MapFolder = "ramen";
     private const int StartTimeSeconds = 5;
-    
-    private static Queue<Vec3> CreateRandomSpawns() {
-        Queue<Vec3> spawns = new();
-        List<Vec3> spawnList = MapSpawns.ToList();
-        
-        while (spawnList.Count > 0) {
-            int index = Random.Shared.Next(spawnList.Count);
-            spawns.Enqueue(spawnList[index]);
-            spawnList.RemoveAt(index);
-        }
-        
-        return spawns;
-    }
     
     public static async Task Start() {
         ManagedMinecraftServer server = ManagedMinecraftServer.NewBasic();
@@ -60,8 +30,6 @@ public static class SkyWarsLuckyBlock {
         server.Dimensions.Add("skywars:game", new Dimension());
 
         World lobby = server.CreateWorld(new TestingProvider(), "skywars:lobby");
-
-        ITerrainProvider gameMap = new AnvilLoader(MapFolder, VanillaRegistry.Data);
         
         Timer? startTimer = null;
         DateTime startTime = DateTime.Now;
@@ -70,66 +38,32 @@ public static class SkyWarsLuckyBlock {
         void StartGame() {
             startTimer?.Dispose();
             startTimer = null;
-            
-            World gameWorld = server.CreateWorld(gameMap, "skywars:game");
-            gameWorld.AddFeature(new SkyWarsChestsFeature());
-            gameWorld.AddFeature(new DropItemsOnGroundFeature());
-            gameWorld.AddFeature(new ItemPickupFeature());
-            gameWorld.AddFeature(new LuckyBlocksFeature());
-            gameWorld.AddFeature(new SkyWarsItemsFeature());
-            gameWorld.AddFeature(new SkyWarsCombatFeature());
-            List<PlayerEntity> remainingPlayers = [];
+
             lock (waitingPlayers) {
-                Queue<Vec3> spawns = CreateRandomSpawns();
-                
-                foreach (PlayerEntity player in waitingPlayers) {
-                    remainingPlayers.Add(player);
-                    player.SetWorld(gameWorld);
-                    player.Teleport(spawns.Dequeue());
-                    player.SendMessage(TextComponent.FromLegacyString("&a&lGame Started! Good luck!"));
-                }
+                PlayerEntity[] players = waitingPlayers.ToArray();
+                SkyWarsGame game = new(server, players, () => {
+                    foreach (PlayerEntity player in players) {
+                        EnqueuePlayer(player);
+                    }
+                });
+                game.Start();
+                waitingPlayers.Clear();
             }
-
-            gameWorld.Events.AddListener<EntityMoveEvent>(e => {
-                if (e.NewPos.Y > -10) {
-                    return;
-                }
-
-                // death
-                if (e.Entity is not PlayerEntity player) {
-                    return;
-                }
-
-                player.SendMessage(TextComponent.FromLegacyString("&cYou fell out of the world!"));
-                player.GameMode = GameMode.Spectator;
-                player.Teleport(SpecSpawn);
-                lock (remainingPlayers) {
-                    remainingPlayers.Remove(player);
-                    if (remainingPlayers.Count != 1) return;
-                    // Winner
-                    PlayerEntity winner = remainingPlayers[0];
-                    winner.SendMessage(TextComponent.FromLegacyString("&a&lYou won the game!"));
-                    winner.Teleport(SpecSpawn);
-                        
-                    gameWorld.SendTitle(
-                        TextComponent.FromLegacyString("&a&lGame Over!"),
-                        TextComponent.FromLegacyString("&7Winner: " + winner.Name), 10, 70, 20);
-                }
-            });
         }
         
-        server.Events.AddListener<PlayerPreLoginEvent>(e => {
-            e.World = lobby;
-            e.GameMode = GameMode.Survival;
-            e.Hardcore = true;
-        });
+        void EnqueuePlayer(PlayerEntity player) {
+            if (player.World != lobby) {
+                player.SetWorld(lobby);
+            }
 
-        server.Events.AddListener<PlayerLoginEvent>(e => {
+            player.GameMode = GameMode.Survival;
+            player.Inventory.Clear();
+            
             lock (waitingPlayers) {
-                waitingPlayers.Add(e.Player);
-                e.Player.Connection.Disconnected += () => {
+                waitingPlayers.Add(player);
+                player.Connection.Disconnected += () => {
                     lock (waitingPlayers) {
-                        waitingPlayers.Remove(e.Player);
+                        waitingPlayers.Remove(player);
                     }
                 };
 
@@ -148,6 +82,16 @@ public static class SkyWarsLuckyBlock {
                     }, null, TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(0.5));
                 }
             }
+        }
+        
+        server.Events.AddListener<PlayerPreLoginEvent>(e => {
+            e.World = lobby;
+            e.GameMode = GameMode.Survival;
+            e.Hardcore = true;
+        });
+
+        server.Events.AddListener<PlayerLoginEvent>(e => {
+            EnqueuePlayer(e.Player);
         });
 
         Console.WriteLine("Starting SkyWars Lucky Block server...");

@@ -3,12 +3,12 @@ using Minecraft.Schemas.Items;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
-public abstract class LuckyBlockItem {
+public abstract class SkyWarsItem {
     public abstract ItemStack Item { get; }
     public abstract string Id { get; }
 
-    public virtual void Use(PlayerEntity player) {
-        
+    public virtual bool Use(PlayerEntity player) {
+        return false;
     }
 
     public virtual void OnEat(PlayerEntity player) {

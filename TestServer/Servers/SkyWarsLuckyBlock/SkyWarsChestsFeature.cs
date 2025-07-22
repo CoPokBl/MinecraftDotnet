@@ -3,14 +3,10 @@ using ManagedServer.Events;
 using ManagedServer.Inventory;
 using Minecraft;
 using Minecraft.Data.Blocks;
-using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
-using Minecraft.Data.Sounds;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
-using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
-using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 using TestServer.Servers.SkyWarsLuckyBlock.Items;
 
@@ -52,7 +48,7 @@ public class SkyWarsChestsFeature : ScopedFeature {
             }
             
             // Generate loot
-            ChestInventory inv = ChestInventory.Create(3);
+            ChestInventory inv = ChestInventory.Create(Scope.Server, 3);
             inv.Title = "SkyWars Chest";
             
             for (int i = 0; i < inv.Size; i++) {

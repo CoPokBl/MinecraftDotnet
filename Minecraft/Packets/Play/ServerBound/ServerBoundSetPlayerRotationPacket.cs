@@ -11,14 +11,14 @@ public class ServerBoundSetPlayerRotationPacket : ServerBoundPacket {
 
     protected override DataWriter WriteData(DataWriter w) {
         return w
-            .WriteFloat(Pitch)
             .WriteFloat(Yaw)
+            .WriteFloat(Pitch)
             .WriteByte((byte)Flags);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundSetPlayerRotationPacket {
-        Pitch = r.ReadFloat(),
         Yaw = r.ReadFloat(),
+        Pitch = r.ReadFloat(),
         Flags = (MovePlayerFlags)r.ReadByte()
     };
 }

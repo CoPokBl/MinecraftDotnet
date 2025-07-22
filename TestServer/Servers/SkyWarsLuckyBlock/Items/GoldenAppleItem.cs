@@ -8,7 +8,7 @@ using Minecraft.Schemas.Sound;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock.Items;
 
-public class GoldenAppleItem : LuckyBlockItem {
+public class GoldenAppleItem : SkyWarsItem {
     public override ItemStack Item => new ItemStack(1, Minecraft.Data.Generated.Item.GoldenApple)
         .With(DataComponent.Consumable, new ConsumableComponent.Data(1f, ConsumableComponent.ConsumeAnimation.Spyglass, 
             Or<ISoundType, SoundEvent>.FromValue1(SoundType.AllayHurt), true, []));
