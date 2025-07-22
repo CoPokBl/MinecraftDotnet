@@ -307,7 +307,13 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             
             System.Diagnostics.Debug.Assert(chunks.Length == cChunksPos + notFound);
         
-            // We need to load some chunks
+            // We need to load some chunks, fill the null ones with blank data
+            for (int i = cChunksPos; i < count; i++) {
+                chunks[i] = new ChunkData(Dimension.Height) {
+                    ChunkX = poses[i].X,
+                    ChunkZ = poses[i].Z
+                };
+            }
             _provider.GetChunks(cChunksPos, notFound, chunks);
             for (int i = cChunksPos; i < count; i++) {
                 chunks[i].PackData();

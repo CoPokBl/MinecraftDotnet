@@ -1,7 +1,5 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
-using Minecraft.Implementations.Server;
-using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Tags;
@@ -22,32 +20,9 @@ internal class LoginProcedureFeature : ScopedFeature {
     
     // We'll just say we know vanilla for now
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.7") ];
-    
-    // Defaults for the packet, more will be configurable later
-    private readonly Func<PlayerConnection, ClientBoundLoginPacket> _loginPacketProvider;
 
     public LoginProcedureFeature() {
-        _loginPacketProvider = _ => new ClientBoundLoginPacket {
-            EntityId = 1,
-            IsHardcore = true,
-            Dimensions = Scope.Server.Dimensions.Keys.Select(s => (Identifier)s).ToArray(),
-            MaxPlayers = 5,
-            ViewDistance = 32,
-            SimulationDistance = 8,
-            ReducedDebugInfo = false,
-            EnableRespawnScreen = true,
-            DoLimitedCrafting = false,
-            DimensionType = 0,
-            DimensionName = "minecraft:overworld",
-            HashedSeed = 0L,
-            GameMode = GameMode.Creative,
-            PreviousGameMode = GameMode.Undefined,
-            IsDebug = false,
-            IsFlat = false,
-            PortalCooldown = 4,
-            SeaLevel = 64,
-            EnforcesSecureChat = false
-        };
+        
     }
 
     public override void Register() {

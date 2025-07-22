@@ -69,7 +69,7 @@ public class MinecraftServer {
     /// by this instance.
     /// </summary>
     /// <param name="connection">The connection.</param>
-    public void AddConnection(PlayerConnection connection) {
+    public virtual void AddConnection(PlayerConnection connection) {
         Connections.Add(connection);
         Events.AddChild<IPacketEvent>(connection.Events, pe => pe.Connection == connection);
         connection.Disconnected += () => Connections.Remove(connection);

@@ -75,11 +75,10 @@ public static class ExtensionUtils {
     }
 
     public static void SendSystemMessage(this PlayerConnection con, TextComponent text) {
-        // con.SendPacket(new ClientBoundSystemChatMessagePacket {
-        //     Content = text,
-        //     ActionBar = false
-        // });
-        Console.WriteLine("[System Message] " + text.ToJsonString());
+        con.SendPacket(new ClientBoundSystemChatMessagePacket {
+            Content = text,
+            ActionBar = false
+        });
     }
 
     public static void SendTitle(this PlayerConnection con, TextComponent text, TextComponent subtitle, int fadeIn = 10, int stay = 40, int fadeOut = 10) {

@@ -1,4 +1,3 @@
-using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using Minecraft.Data.Components.Types;

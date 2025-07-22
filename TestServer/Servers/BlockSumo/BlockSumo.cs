@@ -2,6 +2,7 @@ using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
+using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Generated;
@@ -109,7 +110,6 @@ public static class BlockSumo {
         while (run) {
             World world = mServer.CreateWorld(terrain);
             world.AddFeature(new SimpleCombatFeature(500));
-            new BlockBreakingFeature(false).Register(world);
             
             PlayerEntity p1;
             PlayerEntity p2;
@@ -262,7 +262,7 @@ public static class BlockSumo {
             });
             
             // Win condition
-            world.Events.AddListener<BlockBreakingFeature.BlockBreakEvent>(e => {
+            world.Events.AddListener<PlayerBreakBlockEvent>(e => {
                 if (!(e.Position.Equals(MlgRushMapProvider.P1BedPosClient) || e.Position.Equals(MlgRushMapProvider.P2BedPosClient))) {
                     return;  // not a bed
                 }
@@ -273,14 +273,10 @@ public static class BlockSumo {
                     return;  // someone placed a block where the bed was, we can ignore it
                 }
 
-                if (!CanBreakOwnBed && (p1Bed && e.Connection == c1 || !p1Bed && e.Connection == c2)) {  // they broke their own bed
-                    e.Connection.SendSystemMessage(TextComponent.Text("You can't break your own bed idiot")
+                if (!CanBreakOwnBed && (p1Bed && e.Player == p1 || !p1Bed && e.Player == p2)) {  // they broke their own bed
+                    e.Player.SendMessage(TextComponent.Text("You can't break your own bed idiot")
                         .WithColor(TextColor.Red)
                         .WithBold());
-                    e.Connection.SendPacket(new ClientBoundBlockUpdatePacket {
-                        Location = e.Position,
-                        Block = Block.WhiteWool
-                    });
                     e.Cancelled = true;
                     return;
                 }
@@ -289,10 +285,6 @@ public static class BlockSumo {
                 BroadcastParticle(Particle.Explosion, 10, e.Position);
                 BroadcastParticle(Particle.Firework, 50, e.Position);
                 BroadcastParticle(Particle.Lava, 100, e.Position);
-
-                var thing = Particle.Block with {
-                    BlockState = 1
-                };
                 
                 // a bed broke and it was the player person
                 if (!LifeAfterBed) {

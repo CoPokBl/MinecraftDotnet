@@ -1,22 +1,22 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events.Attributes;
-using ManagedServer.Features;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server;
+using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
 using Minecraft.Registry;
-using Minecraft.Schemas;
 
 namespace ManagedServer;
 
 public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience, IFeatureScope {
-    public MinecraftRegistry Registry = VanillaRegistry.Data;  // TODO: use this
-    public Dictionary<string, Dimension> Dimensions = new() {
+    public MinecraftRegistry Registry = VanillaRegistry.Data;
+    public readonly Dictionary<string, Dimension> Dimensions = new() {
         { "minecraft:overworld", new Dimension() }
     };
     
@@ -92,6 +92,9 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     }
 
     public World CreateWorld(ITerrainProvider provider, string dimension = "minecraft:overworld") {
+        if (!Dimensions.ContainsKey(dimension)) {
+            throw new ArgumentException($"Dimension '{dimension}' does not exist. Please add it to the Dimensions dictionary.");
+        }
         World world = new(Events, provider, dimension, ViewDistance, WorldPacketsPerTick, WorldTickDelayMs) {
             Server = this
         };
@@ -99,6 +102,14 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         return world;
     }
     
+    /// <summary>
+    /// Schedule a task to run after <paramref name="delay"/>.
+    /// </summary>
+    /// <param name="delay">The delay before this task is executed.</param>
+    /// <param name="action">The task to execute after the delay.</param>
+    /// <returns>
+    /// An action that cancels task. If the returned action is invoked, then the task will not be executed.
+    /// </returns>
     public Action ScheduleTask(TimeSpan delay, Action action) {
         Timer timer = null!;
         timer = new Timer(_ => {
@@ -113,21 +124,33 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
             _timers.Remove(timer);
         };
     }
-
-    // return true to continue repeating, false to stop
+    
+    /// <summary>
+    /// Schedule a task that repeats every <paramref name="delay"/> until
+    /// the provided function returns false.
+    /// </summary>
+    /// <param name="delay">The time between each execution of the method.</param>
+    /// <param name="action">
+    /// The method to execute every <paramref name="delay"/>,
+    /// it should return true to continue running or false to stop repeating.</param>
+    /// <returns>An action that can be used</returns>
     public Action ScheduleRepeatingTask(TimeSpan delay, Func<bool> action) {
         Timer timer = null!;
+
+        // timer is supposed to be modified in the outer scope. that's the point.
+        [SuppressMessage("ReSharper", "AccessToModifiedClosure")]
+        void Stop() {
+            timer.Dispose();
+            _timers.Remove(timer);
+        }
+
         timer = new Timer(_ => {
             if (action()) return;
-            _timers.Remove(timer);
-            timer.Dispose();
+            Stop();
         }, null, delay, delay);
         _timers.Add(timer);
-        
-        return () => {
-            timer.Dispose();
-            _timers.Remove(timer);
-        };
+
+        return Stop;
     }
 
     public Task ListenTcp(int port, CancellationToken cancel) {
@@ -143,5 +166,10 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         foreach (PlayerEntity player in Players) {
             player.SendPacket(packet);
         }
+    }
+
+    public override void AddConnection(PlayerConnection connection) {
+        connection.Registry = Registry;
+        base.AddConnection(connection);
     }
 }

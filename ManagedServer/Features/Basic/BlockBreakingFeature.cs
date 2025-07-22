@@ -2,7 +2,6 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using ManagedServer.Viewables;
-using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;

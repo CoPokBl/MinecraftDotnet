@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Minecraft.Data.Blocks;
 using Minecraft.Registry;
 using Minecraft.Schemas.Vec;
@@ -14,8 +15,9 @@ public class ChunkData : IWritable {
     // hints for implementations
     public int ChunkX;
     public int ChunkZ;
-    public int WorldHeight { get; }
+    public required int WorldHeight { get; init; }
 
+    [SetsRequiredMembers]
     public ChunkData(int worldHeight) {
         WorldHeight = worldHeight;
         Sections = GenerateEmptySections();

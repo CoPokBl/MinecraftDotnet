@@ -274,16 +274,32 @@ public class PlayerEntity : LivingEntity, IAudience {
     }
 
     public override void SetWorld(World world) {
+        SetWorld(world);
+    }
+
+    public void SetWorld(World world, bool sendRespawnPacket = true) {
         // Change the instance that the player sees
         if (World != null) {
             World.RemovePlayer(this);
             
-            // TODO: Send respawn packet for new world
+            // Send a respawn packet to the player
+            if (sendRespawnPacket) {
+                SendPacket(new ClientBoundRespawnPacket {
+                    DimensionName = world.DimensionId,
+                    DimensionType = 0,
+                    HashedSeed = 0,
+                    GameMode = GameMode,
+                    DataKept = ClientBoundRespawnPacket.DataKeptTypes.All,
+                    IsDebug = false,
+                    IsFlat = false,
+                    Location = null,
+                    PortalCooldown = 0,
+                    PreviousGameMode = GameMode.Undefined,
+                    SeaLevel = 64
+                });
+            }
         }
-
-        // Connection.SendPacket(new ClientBoundRespawnPacket(0, "minecraft:overworld", 0,
-        //     GameMode.Survival, GameMode.Undefined, false, false, null, 0, 64,
-        //     ClientBoundRespawnPacket.DataKeptTypes.All));
+        
         world.AddPlayer(this);
         
         base.SetWorld(world);

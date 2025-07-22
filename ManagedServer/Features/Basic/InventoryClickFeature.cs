@@ -4,7 +4,6 @@ using ManagedServer.Events.Attributes;
 using ManagedServer.Inventory;
 using ManagedServer.Viewables;
 using Minecraft;
-using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas.Items;

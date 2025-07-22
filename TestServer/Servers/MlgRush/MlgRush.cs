@@ -2,10 +2,13 @@ using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
+using ManagedServer.Features.Basic;
+using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Particles;
+using Minecraft.Data.Particles.Types;
 using Minecraft.Data.Sounds;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
@@ -30,7 +33,13 @@ public static class MlgRush {
     private const bool CanBreakOwnBed = true;
 
     public static async Task Start() {
-        ManagedMinecraftServer mServer = new(
+        ManagedMinecraftServer server = ManagedMinecraftServer.NewBasic();
+        server.AddFeatures(
+            new OpenToLanAdFeature("MLG Rush over LAN", Port),
+            new TabListFeature(
+                updatePeriod:1000, 
+                headerProvider:c => TextComponent.Text("MLG Rush").WithColor(TextColor.Hex("#EE7026")).WithBold(), 
+                footerProvider:c => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic()),
             new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
                 VersionName = "dotnet",
                 VersionProtocol = connection.Handshake!.ProtocolVersion,
@@ -39,14 +48,8 @@ public static class MlgRush {
                 SamplePlayers = [new SamplePlayer("Potato", "4566e69f-c907-48ee-8d71-d7ba5aa00d20")],
                 Description = "MLG Rush",
                 PreventsChatReports = true
-            }),
-            new PingRespondFeature(),
-            new SimpleChatFeature(),
-            new OpenToLanAdFeature("MLG Rush over LAN", Port),
-            new TabListFeature(
-                updatePeriod:1000, 
-                headerProvider:c => TextComponent.Text("MLG Rush").WithColor(TextColor.Hex("#EE7026")).WithBold(), 
-                footerProvider:c => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic()));
+            })
+        );
 
         CancellationTokenSource cts = new();
 
@@ -60,45 +63,41 @@ public static class MlgRush {
         object queuePlayersLock = new();
         List<PlayerEntity> connectionQueue = [];
 
-        World lobbyWorld = mServer.CreateWorld(new TestingProvider());
+        World lobbyWorld = server.CreateWorld(new TestingProvider());
+        
+        server.Events.AddListener<PlayerPreLoginEvent>(e => {
+            e.GameMode = GameMode.Adventure;
+            e.Hardcore = true;
+            e.World = lobbyWorld;
+
+            MinecraftPacket links = new ClientBoundServerLinksPacket {
+                Links = [
+                    ClientBoundServerLinksPacket.ServerLink.Override(ClientBoundServerLinksPacket.BuiltinLabel.Feedback, "https://serble.net")
+                ]
+            };
+            e.Connection.SendPacket(links);
+        });
+        server.Events.AddListener<PlayerLoginEvent>(e => {
+            e.Player.Teleport(new Vec3(0, 100, 0));
+            Console.WriteLine("Teleported joining player in lobby");
+
+            lock (queuePlayersLock) {
+                connectionQueue.Add(e.Player);
+                if (connectionQueue.Count >= 2) {
+                    gotPlayers.Set();
+                }
+            }
+
+            e.Player.Connection.Disconnected += () => {
+                lock (queuePlayersLock) {
+                    connectionQueue.Remove(e.Player);
+                }
+            };
+        });
         
         TcpMinecraftListener listener = new(connection => {
             Console.WriteLine("Got new connection");
-            mServer.AddConnection(connection);
-            connection.Events.OnFirst<PlayerPreLoginEvent>(e => {
-                e.GameMode = GameMode.Adventure;
-                e.Hardcore = true;
-                e.World = lobbyWorld;
-
-                MinecraftPacket links = new ClientBoundServerLinksPacket {
-                    Links = [
-                        ClientBoundServerLinksPacket.ServerLink.Override(ClientBoundServerLinksPacket.BuiltinLabel.Feedback, "https://serble.net")
-                    ]
-                };
-                connection.SendPacket(links);
-            });
-            connection.Events.OnFirst<PlayerLoginEvent>(e => {
-                e.Player.Teleport(new Vec3(0, 100, 0));
-                Console.WriteLine("Teleported joining player in lobby");
-
-                lock (queuePlayersLock) {
-                    connectionQueue.Add(e.Player);
-                    if (connectionQueue.Count >= 2) {
-                        gotPlayers.Set();
-                    }
-                }
-
-                e.Player.Connection.Disconnected += () => {
-                    lock (queuePlayersLock) {
-                        connectionQueue.Remove(e.Player);
-                    }
-                };
-            });
-            // connection.Events.AddListener<PacketHandleEvent>(e => {
-            //     if (e.Packet is ServerBoundUseItemOnPacket uio) {
-            //         Console.WriteLine(JsonConvert.SerializeObject(uio, Formatting.Indented));
-            //     }
-            // });
+            server.AddConnection(connection);
         }, cts.Token);
         
         Console.WriteLine("Server ready, listening...");
@@ -106,9 +105,8 @@ public static class MlgRush {
 
         ITerrainProvider terrain = new MlgRushMapProvider();
         while (run) {
-            World world = mServer.CreateWorld(terrain);
+            World world = server.CreateWorld(terrain);
             world.AddFeature(new SimpleCombatFeature(500));
-            new BlockBreakingFeature(false).Register(world);
             
             PlayerEntity p1 = null!;
             PlayerEntity p2 = null!;
@@ -128,11 +126,6 @@ public static class MlgRush {
             
             PlayerConnection c1 = p1.Connection;
             PlayerConnection c2 = p2.Connection;
-            
-            // c1 and c2 need to be declared.
-            new PlaceOneBlockFeature(con => {
-                return con == c1 ? Block.BlueWool : Block.RedWool;
-            }, 5).Register(world);
             
             // TODO: Tab list
             // server.Feature<TabListFeature>()!.RegisterPlayer(c1);
@@ -208,14 +201,9 @@ public static class MlgRush {
             });
             
             // Give them both blocks
-            ClientBoundSetContainerSlotPacket giveItemPacket = new() {
-                WindowId = 0,
-                StateId = 0,
-                SlotId = 36,
-                Data = new ItemStack(64, Item.BambooBlock)
-            };
-            c1.SendPacket(giveItemPacket);
-            c2.SendPacket(giveItemPacket);
+            ItemStack item = new(64, Item.BambooBlock);
+            p1.Inventory.SetHotbarItem(0, item);
+            p2.Inventory.SetHotbarItem(0, item);
 
             const int dieLevel = -10;
             world.Events.AddListener<EntityMoveEvent>(e => {
@@ -238,7 +226,6 @@ public static class MlgRush {
                 });
                 
                 e.Entity.Teleport(e.Entity == p1 ? p1Spawn : p2Spawn);
-                ((PlayerEntity)e.Entity).Connection.SendPacket(giveItemPacket);
                 
                 // play nice sound
                 PlayerEntity killer = e.Entity == p1 ? p2 : p1;
@@ -257,7 +244,7 @@ public static class MlgRush {
             });
             
             // Win condition
-            world.Events.AddListener<BlockBreakingFeature.BlockBreakEvent>(e => {
+            world.Events.AddListener<PlayerBreakBlockEvent>(e => {
                 if (!(e.Position.Equals(MlgRushMapProvider.P1BedPosClient) || e.Position.Equals(MlgRushMapProvider.P2BedPosClient))) {
                     return;  // not a bed
                 }
@@ -268,14 +255,10 @@ public static class MlgRush {
                     return;  // someone placed a block where the bed was, we can ignore it
                 }
 
-                if (!CanBreakOwnBed && (p1Bed && e.Connection == c1 || !p1Bed && e.Connection == c2)) {  // they broke their own bed
-                    e.Connection.SendSystemMessage(TextComponent.Text("You can't break your own bed idiot")
+                if (!CanBreakOwnBed && (p1Bed && e.Player == p1 || !p1Bed && e.Player == p2)) {  // they broke their own bed
+                    e.Player.SendMessage(TextComponent.Text("You can't break your own bed idiot")
                         .WithColor(TextColor.Red)
                         .WithBold());
-                    e.Connection.SendPacket(new ClientBoundBlockUpdatePacket {
-                        Location = e.Position,
-                        Block = Block.WhiteWool
-                    });
                     e.Cancelled = true;
                     return;
                 }
@@ -284,10 +267,6 @@ public static class MlgRush {
                 BroadcastParticle(Particle.Explosion, 10, e.Position);
                 BroadcastParticle(Particle.Firework, 50, e.Position);
                 BroadcastParticle(Particle.Lava, 100, e.Position);
-
-                var thing = Particle.Block with {
-                    BlockState = 1
-                };
                 
                 // a bed broke and it was the player person
                 if (!LifeAfterBed) {
@@ -318,6 +297,40 @@ public static class MlgRush {
                 BroadcastSound(SoundType.FireExtinguish);
             });
             
+            const float disappearTime = 5f;
+            world.Events.AddListener<PlayerPlaceBlockEvent>(e => {
+                e.Cancelled = false;
+                e.Block = e.Player == p1 ? Block.BlueWool : Block.RedWool;
+
+                if (e.Position.Y > 1) {
+                    e.Cancelled = true;
+                    return;
+                }
+                
+                e.Player.Inventory.SetHotbarItem(0, item);
+            
+                AtomicCounter count = new(-1);
+                int breakingEntity = Random.Shared.Next();
+                server.ScheduleRepeatingTask(TimeSpan.FromSeconds(disappearTime/9), () => {
+                    count.Increment();
+                    if (count.Value == 9) {
+                        e.World.SendPacket(new ClientBoundSetBlockDestroyStagePacket {
+                            EntityId = breakingEntity,
+                            Block = e.Position,
+                            Stage = 16
+                        });
+                        e.World.SetBlock(e.Position, Block.Air);
+                        return false;
+                    }
+                
+                    e.World.SendPacket(new ClientBoundSetBlockDestroyStagePacket {
+                        EntityId = breakingEntity,
+                        Block = e.Position,
+                        Stage = (byte)count.Value
+                    });
+                    return true;
+                });
+            });
         }
         
         Console.WriteLine("Bye!");

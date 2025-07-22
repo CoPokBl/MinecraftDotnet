@@ -55,8 +55,11 @@ public static class SkyWarsLuckyBlock {
             Description = TextComponent.FromLegacyString("&a&lSkyWars"),
             PreventsChatReports = true
         }));
+        
+        server.Dimensions.Add("skywars:lobby", new Dimension());
+        server.Dimensions.Add("skywars:game", new Dimension());
 
-        World lobby = server.CreateWorld(new TestingProvider());
+        World lobby = server.CreateWorld(new TestingProvider(), "skywars:lobby");
 
         ITerrainProvider gameMap = new AnvilLoader(MapFolder, VanillaRegistry.Data);
         
@@ -68,7 +71,7 @@ public static class SkyWarsLuckyBlock {
             startTimer?.Dispose();
             startTimer = null;
             
-            World gameWorld = server.CreateWorld(gameMap);
+            World gameWorld = server.CreateWorld(gameMap, "skywars:game");
             gameWorld.AddFeature(new SkyWarsChestsFeature());
             gameWorld.AddFeature(new DropItemsOnGroundFeature());
             gameWorld.AddFeature(new ItemPickupFeature());
