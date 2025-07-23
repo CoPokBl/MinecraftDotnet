@@ -20,7 +20,11 @@ public static class EntityTypeCodeGen {
                 double width = entry["width"]!.ToObject<double>();
                 double height = entry["height"]!.ToObject<double>();
                 double eyeHeight = entry["eyeHeight"]?.ToObject<double>() ?? height * 0.85;
-                return $"{fireImmune.ToString().ToLower()}, {width}, {height}, {eyeHeight}";
+                double acceleration = entry["acceleration"]?.ToObject<double>() ?? 0.08;
+                double drag = entry["drag"]?.ToObject<double>() ?? 0.02;
+                int clientTrackingRange = entry["clientTrackingRange"]!.ToObject<int>();
+                
+                return $"{fireImmune.ToString().ToLower()}, {width}, {height}, {eyeHeight}, {acceleration}, {drag}, {clientTrackingRange}";
             });
     }
 }

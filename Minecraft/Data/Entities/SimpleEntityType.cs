@@ -8,4 +8,7 @@ public record SimpleEntityType(
     bool FireImmune, 
     double Width, 
     double Height, 
-    double EyeHeight) : IEntityType;
+    double EyeHeight,
+    double Acceleration,
+    double Drag,
+    int ClientTrackingRange) : IEntityType;
