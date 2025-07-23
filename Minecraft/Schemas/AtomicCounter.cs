@@ -2,12 +2,13 @@ namespace Minecraft.Schemas;
 
 public class AtomicCounter(int start, int max = int.MaxValue) {
     private readonly object _lock = new();
+    private readonly int _start = start;
     private int _value = start;
 
     public void Increment() {
         lock (_lock) {
             if (_value >= max) {
-                Value = start;
+                Value = _start;
             } else _value++;
         }
     }

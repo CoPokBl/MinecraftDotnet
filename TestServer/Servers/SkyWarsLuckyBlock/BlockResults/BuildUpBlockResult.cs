@@ -10,7 +10,7 @@ public class BuildUpBlockResult : IBlockResult {
     
     public void Trigger(World world, PlayerEntity? player, IVec3 position) {
         int yOffset = 0;
-        world.Server.ScheduleRepeatingTask(TimeSpan.FromSeconds(0.2), () => {
+        world.Server.Scheduler.ScheduleRepeatingTask(TimeSpan.FromSeconds(0.2), () => {
             if (position.Y - yOffset < world.Dimension.MinY + 1) {
                 return false; // Stop the task
             }

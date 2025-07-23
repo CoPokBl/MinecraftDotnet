@@ -423,7 +423,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         };
         Spawn(lightning);
         
-        Server!.ScheduleTask(TimeSpan.FromSeconds(2), () => {
+        Server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(2), () => {
             lightning.Despawn();
         });
     }

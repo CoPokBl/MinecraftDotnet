@@ -309,7 +309,7 @@ public static class MlgRush {
             
                 AtomicCounter count = new(-1);
                 int breakingEntity = Random.Shared.Next();
-                server.ScheduleRepeatingTask(TimeSpan.FromSeconds(disappearTime/9), () => {
+                server.Scheduler.ScheduleRepeatingTask(TimeSpan.FromSeconds(disappearTime/9), () => {
                     count.Increment();
                     if (count.Value == 9) {
                         e.World.SendPacket(new ClientBoundSetBlockDestroyStagePacket {

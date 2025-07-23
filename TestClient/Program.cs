@@ -30,11 +30,12 @@ else {
 }
 Console.WriteLine("Successfully authenticated as " + profile.Username);
 
-const string serverUrl = "michael-endy";
+const string serverUrl = "bore.pub";
+const int serverPort = 11188;
 const bool actuallyAuth = false;
-const int maxAccounts = 2000;  // sim 50 players all queuing
+const int maxAccounts = 100;  // sim 50 players all queuing
 const bool queue = false;  // otherwise they will play solo
-const int joinDelay = 0;  // delay between joining players
+const int joinDelay = 100;  // delay between joining players
 
 int i = 0;
 while (true) {
@@ -44,7 +45,7 @@ while (true) {
         break;
     }
     Console.WriteLine($"Connecting to {serverUrl}... (id: {id})");
-    ServerConnection connection = await MinecraftClientUtils.ConnectToServer(serverUrl);
+    ServerConnection connection = await MinecraftClientUtils.ConnectToServer(serverUrl, serverPort);
     MinecraftPacket lastPacket = null!;
     MinecraftPacket lastSentPacket = null!;
     DateTime lastKeepAlive = DateTime.Now;
@@ -166,6 +167,15 @@ while (true) {
                     Sequence = Random.Shared.Next(),
                     UsedHand = Hand.MainHand,
                     Yaw = Angle.Zero
+                });
+                connection.SendPacket(new ServerBoundChatMessagePacket {
+                    Signature = new byte[256],
+                    Acknowledged = new byte[3],
+                    Checksum = 0,
+                    Message = "queue",
+                    MessageCount = 1,
+                    Salt = Random.Shared.NextInt64(),
+                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
                 });
                 break;
             }

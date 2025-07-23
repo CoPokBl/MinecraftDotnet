@@ -115,7 +115,7 @@ public abstract class PlayerConnection : MinecraftConnection {
     /// </summary>
     /// <param name="minSize"></param>
     /// <exception cref="ConnectionStateException">When <see cref="MinecraftConnection.State"/> is not <see cref="ConnectionState.Login"/>.</exception>
-    public async Task SetCompression(int minSize) {
+    public void SetCompression(int minSize) {
         if (State != ConnectionState.Login) {
             throw new ConnectionStateException(ConnectionState.Login, State, "Connection must be in login state to enable compression.");
         }
@@ -131,7 +131,7 @@ public abstract class PlayerConnection : MinecraftConnection {
     /// </summary>
     /// <param name="requestAuthentication">Whether to set <see cref="ClientBoundEncryptionRequestPacket.ShouldAuthenticate"/> to true.</param>
     /// <exception cref="ConnectionStateException">When <see cref="MinecraftConnection.State"/> is not <see cref="ConnectionState.Login"/>.</exception>
-    public async Task EnableEncryption(bool requestAuthentication = false) {
+    public void EnableEncryption(bool requestAuthentication = false) {
         if (State != ConnectionState.Login) {
             throw new ConnectionStateException(ConnectionState.Login, State, "Connection must be in login state to enable encryption.");
         }

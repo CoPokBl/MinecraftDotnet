@@ -43,11 +43,10 @@ public class PlayerLoginFeature(
             switch (e.Packet) {
                 // LOGIN
                 case ServerBoundLoginStartPacket ls: {
-                    e.Connection.SetCompression(1).ContinueWith(_ => {
-                        e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
-                            Username = ls.Name,
-                            Uuid = ls.Uuid
-                        });
+                    e.Connection.SetCompression(1);
+                    e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
+                        Username = ls.Name,
+                        Uuid = ls.Uuid
                     });
                     break;
                 }

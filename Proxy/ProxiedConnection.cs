@@ -32,7 +32,7 @@ public class ProxiedConnection : MappedTaggable {
     // constants
     private const string ProxiedServer = "localhost";
     private const int ProxiedPort = 25565;  // default Minecraft port, can be changed if needed
-    private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.5") ];
+    private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.7") ];
 
     public ProxiedConnection(ProxyServer proxy, PlayerConnection player) {
         Proxy = proxy;
@@ -60,7 +60,7 @@ public class ProxiedConnection : MappedTaggable {
                     // LOGIN
                     case ServerBoundLoginStartPacket ls: {
                         _loginStartPacket = ls;
-                        await e.Connection.SetCompression(64);
+                        e.Connection.SetCompression(64);
                         e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {
                             Uuid = ls.Uuid,
                             Username = ls.Name
@@ -91,6 +91,7 @@ public class ProxiedConnection : MappedTaggable {
                 }
             }
             catch (Exception ex) {
+                Console.WriteLine(ex);
                 throw; // TODO handle exception
             }
         });
@@ -140,6 +141,11 @@ public class ProxiedConnection : MappedTaggable {
 
         Server.State = ConnectionState.Login;
         Server.SendPacket(_loginStartPacket.ThrowIfNull());
+        
+        Server.Disconnected += () => {
+            Console.WriteLine("Server disconnected, leaving server...");
+            Player.SendSystemMessage("You have been disconnected from the server.");
+        };
 
         Action cancelServerLoginListener = null!;
         Action finishedLogin = () => {
@@ -223,7 +229,7 @@ public class ProxiedConnection : MappedTaggable {
             return;
         }
         
-        // Console.WriteLine("Sending packet to server: " + packet.GetType().Name);
+        Console.WriteLine("Sending packet to server: " + packet.GetType().Name);
         Server.SendPacket(packet);
         // if (Player.State == Server.State) {
         //     Console.WriteLine("Sending packet to server: " + packet.GetType().Name);
@@ -249,6 +255,7 @@ public class ProxiedConnection : MappedTaggable {
 
     // packet from server to player
     private void OnServerPacket(MinecraftPacket packet) {
+        Console.WriteLine("SERVER PACKET: " + packet.GetType().Name);
         if (packet is ClientBoundLoginPacket lp) {
             EntityId = lp.EntityId;
         }
@@ -268,6 +275,7 @@ public class ProxiedConnection : MappedTaggable {
         if (packet is ClientBoundDisconnectPacket dc) {
             Player.SendSystemMessage(TextComponent.Text("You have been disconnected from your server: ").With(dc.Reason));
             Player.SendSystemMessage("You can rejoin by using .join <host> <port>");
+            Console.WriteLine("Disconnecting player from server: " + dc.Reason);
             return;
         }
 
@@ -324,5 +332,6 @@ public class ProxiedConnection : MappedTaggable {
         }
         
         Player.SendPacket(packet);
+        Console.WriteLine("Done!");
     }
 }

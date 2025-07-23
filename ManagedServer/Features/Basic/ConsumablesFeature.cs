@@ -2,6 +2,7 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using ManagedServer.Inventory;
+using ManagedServer.Scheduling;
 using ManagedServer.Viewables;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
@@ -15,7 +16,7 @@ namespace ManagedServer.Features.Basic;
 
 [CallsEvent(typeof(PlayerConsumeItemEvent))]
 public class ConsumablesFeature : ScopedFeature {
-    private static readonly Tag<Action> EatingTaskTag = new("consumables:eating_task");
+    private static readonly Tag<ScheduledTask> EatingTaskTag = new("consumables:eating_task");
     
     public override void Register() {
         AddEventListener<PlayerPacketHandleEvent>(e => {
@@ -28,7 +29,7 @@ public class ConsumablesFeature : ScopedFeature {
                 }
             
                 // Okay they started, record it
-                Action cancel = Scope.Server.ScheduleTask(TimeSpan.FromSeconds(food.ConsumeSeconds), () => {
+                ScheduledTask task = Scope.Server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(food.ConsumeSeconds), () => {
                     PlayerConsumeItemEvent consumeEvent = new() {
                         Player = e.Player,
                         World = e.World,
@@ -50,7 +51,7 @@ public class ConsumablesFeature : ScopedFeature {
                     // Remove the item from the player's hand
                     e.Player.SetItemInHand(usePacket.UsedHand, item.SubtractCount(consumeEvent.ConsumedAmount));
                 });
-                e.Player.SetTag(EatingTaskTag, cancel);
+                e.Player.SetTag(EatingTaskTag, task);
             }
             
             else if (e.Packet is ServerBoundPlayerActionPacket actionPacket) {
@@ -97,7 +98,7 @@ public class ConsumablesFeature : ScopedFeature {
         }
         
         // Cancel the eating task
-        player.GetTag(EatingTaskTag).Invoke();
+        player.GetTag(EatingTaskTag).Cancel();
         player.RemoveTag(EatingTaskTag);
     }
 }

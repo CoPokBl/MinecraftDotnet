@@ -70,10 +70,10 @@ public class SimpleChatFeature : IServerFeature {
     }
 
     public class SimpleChatEvent : IServerEvent, ICancelableEvent {
-        public PlayerConnection Connection { get; init; }
-        public string Msg { get; init; }
-        public List<PlayerConnection> Recipients { get; set; }
-        public TextComponent FinalMessage { get; set; }
+        public required PlayerConnection Connection { get; init; }
+        public required string Msg { get; init; }
+        public required List<PlayerConnection> Recipients { get; set; }
+        public required TextComponent FinalMessage { get; set; }
         public bool Cancelled { get; set; }
     }
 }

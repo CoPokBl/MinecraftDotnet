@@ -34,9 +34,9 @@ internal class LoginProcedureFeature : ScopedFeature {
                     // LOGIN
                     case ServerBoundLoginStartPacket ls: {
                         e.Connection.SetTag(LoginInfoTag, (ls.Uuid, ls.Name));
-                        await e.Connection.SetCompression(10);
+                        e.Connection.SetCompression(10);
                         if (EncryptionEnabled) {
-                            await e.Connection.EnableEncryption();
+                            e.Connection.EnableEncryption();
                         }
                         else {
                             e.Connection.SendPackets(new ClientBoundLoginSuccessPacket {

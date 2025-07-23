@@ -4,6 +4,7 @@ using System.Reflection;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
+using ManagedServer.Scheduling;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
@@ -22,13 +23,12 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public List<PlayerEntity> Players { get; } = [];
     public ManagedMinecraftServer Server => this;
     public FeatureHandler FeatureHandler { get; }
-
-    // Used to stop the tasks from being garbage collected
-    // ReSharper disable once CollectionNeverQueried.Local
-    private readonly List<Timer> _timers = [];
+    public ServerScheduler Scheduler { get; }
+    public ulong CurrentTick { get; private set; } = 0;
+    
     private Thread _ticker = null!;
-    private bool _started = false;
-    private CancellationTokenSource _cts = new();
+    private bool _started;
+    private readonly CancellationTokenSource _cts = new();
     
     // Configurable stuff
     public int ViewDistance = 8;
@@ -45,6 +45,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
 
     public ManagedMinecraftServer(params IServerFeature[] feats) {
         FeatureHandler = new FeatureHandler(this);
+        Scheduler = new ServerScheduler(this);
         
         foreach (IServerFeature feat in feats) {
             AddFeature(feat);
@@ -131,6 +132,8 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
                 Console.WriteLine($"WARNING: Tick took {tickTime.TotalMilliseconds}ms, exceeding target of {TargetTickTime.TotalMilliseconds}ms." +
                                   $"Running behind by {elapsed - tickTimer.Elapsed}");
             }
+            
+            CurrentTick++;
         }
     }
 
@@ -143,62 +146,6 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         };
         Worlds.Add(world);
         return world;
-    }
-    
-    /// <summary>
-    /// Schedule a task to run after <paramref name="delay"/>.
-    /// </summary>
-    /// <param name="delay">The delay before this task is executed.</param>
-    /// <param name="action">The task to execute after the delay.</param>
-    /// <returns>
-    /// An action that cancels task. If the returned action is invoked, then the task will not be executed.
-    /// </returns>
-    public Action ScheduleTask(TimeSpan delay, Action action) {
-        Timer timer = null!;
-        timer = new Timer(_ => {
-            action();
-            // ReSharper disable once AccessToModifiedClosure
-            try {
-                _timers.Remove(timer);
-            }
-            catch (Exception e) {
-                Console.WriteLine(e);
-            }
-        }, null, delay, Timeout.InfiniteTimeSpan);
-        _timers.Add(timer);
-
-        return () => {
-            timer.Dispose();
-            _timers.Remove(timer);
-        };
-    }
-    
-    /// <summary>
-    /// Schedule a task that repeats every <paramref name="delay"/> until
-    /// the provided function returns false.
-    /// </summary>
-    /// <param name="delay">The time between each execution of the method.</param>
-    /// <param name="action">
-    /// The method to execute every <paramref name="delay"/>,
-    /// it should return true to continue running or false to stop repeating.</param>
-    /// <returns>An action that can be used</returns>
-    public Action ScheduleRepeatingTask(TimeSpan delay, Func<bool> action) {
-        Timer timer = null!;
-
-        // timer is supposed to be modified in the outer scope. that's the point.
-        [SuppressMessage("ReSharper", "AccessToModifiedClosure")]
-        void Stop() {
-            timer.Dispose();
-            _timers.Remove(timer);
-        }
-
-        timer = new Timer(_ => {
-            if (action()) return;
-            Stop();
-        }, null, delay, delay);
-        _timers.Add(timer);
-
-        return Stop;
     }
 
     public Task ListenTcp(int port, CancellationToken cancel) {

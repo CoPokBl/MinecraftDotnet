@@ -62,7 +62,7 @@ public static class SkyWarsLuckyBlock {
             player.GameMode = GameMode.Survival;
             player.Inventory.Clear();
 
-            server.ScheduleTask(TimeSpan.FromSeconds(1), () => {
+            server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(1), () => {
                 player.Teleport(LobbySpawn);
             });
             

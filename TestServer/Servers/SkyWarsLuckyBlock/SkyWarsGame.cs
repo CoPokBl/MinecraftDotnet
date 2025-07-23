@@ -92,7 +92,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
                 TextComponent.FromLegacyString("&a&lGame Over!"),
                 TextComponent.FromLegacyString("&7Winner: " + winner.Name), 10, 70, 20);
 
-            World.Server.ScheduleTask(TimeSpan.FromSeconds(10), gameEndCallback.Invoke);
+            World.Server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(10), gameEndCallback.Invoke);
         }
     }
 

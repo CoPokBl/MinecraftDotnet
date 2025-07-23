@@ -98,7 +98,7 @@ public static class BlockSumoFfa {
             
             AtomicCounter count = new(-1);
             int breakingEntity = Random.Shared.Next();
-            server.ScheduleRepeatingTask(TimeSpan.FromSeconds(disappearTime/9), () => {
+            server.Scheduler.ScheduleRepeatingTask(TimeSpan.FromSeconds(disappearTime/9), () => {
                 count.Increment();
                 if (count.Value == 9) {
                     e.World.SendPacket(new ClientBoundSetBlockDestroyStagePacket {
@@ -166,7 +166,7 @@ public static class BlockSumoFfa {
                 player.GameMode = GameMode.Spectator;
                 player.Connection.SendTitle(TextComponent.FromLegacyString("&c&lNoob"), TextComponent.Empty());
 
-                server.ScheduleTask(TimeSpan.FromSeconds(2), () => {
+                server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(2), () => {
                     player.GameMode = GameMode.Survival;
                     player.Teleport(spawn);
                 });
