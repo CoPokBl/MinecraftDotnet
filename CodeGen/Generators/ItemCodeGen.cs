@@ -1,7 +1,7 @@
 using System.Text;
 using Newtonsoft.Json.Linq;
 
-namespace CodeGen;
+namespace CodeGen.Generators;
 
 public static class ItemCodeGen {
     private const string Header = 

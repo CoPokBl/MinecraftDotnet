@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using CodeGen;
+using CodeGen.Generators;
 using Newtonsoft.Json.Linq;
 
 Console.WriteLine("=================================================");
@@ -125,6 +126,7 @@ RunStep("Inventory Types", InventoryTypeCodeGen.CreateInventoryTypeEntries);
 RunStep("Tags", TagsCodeGen.CreateTagEntries);
 RunStep("Potion Effects", PotionEffectTypeGen.CreatePotionEffectTypes);
 RunStep("Consume Effects", ConsumeEffectGen.CreateConsumeEffects);
+RunStep("Block Entity Types", BlockEntityTypeCodeGen.CreateBlockEntityTypes);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

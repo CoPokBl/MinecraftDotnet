@@ -19,7 +19,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2025-07-21
+// Last updated: 2025-07-24
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -1372,6 +1372,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, true, 0x59, typeof(ClientBoundSetCursorItemPacket), ClientBoundSetCursorItemPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x5A, typeof(ClientBoundSetDefaultSpawnPositionPacket), ClientBoundSetDefaultSpawnPositionPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x5C, typeof(ClientBoundSetEntityMetadataPacket), ClientBoundSetEntityMetadataPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x5E, typeof(ClientBoundSetEntityVelocityPacket), ClientBoundSetEntityVelocityPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x5F, typeof(ClientBoundSetEquipmentPacket), ClientBoundSetEquipmentPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x60, typeof(ClientBoundSetExperiencePacket), ClientBoundSetExperiencePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x61, typeof(ClientBoundSetHealthPacket), ClientBoundSetHealthPacket.Deserialiser);
@@ -4786,6 +4787,54 @@ public static class VanillaRegistry {
         Data.ConsumeEffects.Add(ConsumeEffect.PlaySound);
         Data.ConsumeEffects.Add(ConsumeEffect.RemoveEffects);
         Data.ConsumeEffects.Add(ConsumeEffect.TeleportRandomly);
+
+        Data.BlockEntityTypes.Add(BlockEntityType.Banner);
+        Data.BlockEntityTypes.Add(BlockEntityType.Barrel);
+        Data.BlockEntityTypes.Add(BlockEntityType.Beacon);
+        Data.BlockEntityTypes.Add(BlockEntityType.Bed);
+        Data.BlockEntityTypes.Add(BlockEntityType.Beehive);
+        Data.BlockEntityTypes.Add(BlockEntityType.Bell);
+        Data.BlockEntityTypes.Add(BlockEntityType.BlastFurnace);
+        Data.BlockEntityTypes.Add(BlockEntityType.BrewingStand);
+        Data.BlockEntityTypes.Add(BlockEntityType.BrushableBlock);
+        Data.BlockEntityTypes.Add(BlockEntityType.CalibratedSculkSensor);
+        Data.BlockEntityTypes.Add(BlockEntityType.Campfire);
+        Data.BlockEntityTypes.Add(BlockEntityType.Chest);
+        Data.BlockEntityTypes.Add(BlockEntityType.ChiseledBookshelf);
+        Data.BlockEntityTypes.Add(BlockEntityType.CommandBlock);
+        Data.BlockEntityTypes.Add(BlockEntityType.Comparator);
+        Data.BlockEntityTypes.Add(BlockEntityType.Conduit);
+        Data.BlockEntityTypes.Add(BlockEntityType.Crafter);
+        Data.BlockEntityTypes.Add(BlockEntityType.CreakingHeart);
+        Data.BlockEntityTypes.Add(BlockEntityType.DaylightDetector);
+        Data.BlockEntityTypes.Add(BlockEntityType.DecoratedPot);
+        Data.BlockEntityTypes.Add(BlockEntityType.Dispenser);
+        Data.BlockEntityTypes.Add(BlockEntityType.Dropper);
+        Data.BlockEntityTypes.Add(BlockEntityType.EnchantingTable);
+        Data.BlockEntityTypes.Add(BlockEntityType.EndGateway);
+        Data.BlockEntityTypes.Add(BlockEntityType.EndPortal);
+        Data.BlockEntityTypes.Add(BlockEntityType.EnderChest);
+        Data.BlockEntityTypes.Add(BlockEntityType.Furnace);
+        Data.BlockEntityTypes.Add(BlockEntityType.HangingSign);
+        Data.BlockEntityTypes.Add(BlockEntityType.Hopper);
+        Data.BlockEntityTypes.Add(BlockEntityType.Jigsaw);
+        Data.BlockEntityTypes.Add(BlockEntityType.Jukebox);
+        Data.BlockEntityTypes.Add(BlockEntityType.Lectern);
+        Data.BlockEntityTypes.Add(BlockEntityType.MobSpawner);
+        Data.BlockEntityTypes.Add(BlockEntityType.Piston);
+        Data.BlockEntityTypes.Add(BlockEntityType.SculkCatalyst);
+        Data.BlockEntityTypes.Add(BlockEntityType.SculkSensor);
+        Data.BlockEntityTypes.Add(BlockEntityType.SculkShrieker);
+        Data.BlockEntityTypes.Add(BlockEntityType.ShulkerBox);
+        Data.BlockEntityTypes.Add(BlockEntityType.Sign);
+        Data.BlockEntityTypes.Add(BlockEntityType.Skull);
+        Data.BlockEntityTypes.Add(BlockEntityType.Smoker);
+        Data.BlockEntityTypes.Add(BlockEntityType.StructureBlock);
+        Data.BlockEntityTypes.Add(BlockEntityType.TestBlock);
+        Data.BlockEntityTypes.Add(BlockEntityType.TestInstanceBlock);
+        Data.BlockEntityTypes.Add(BlockEntityType.TrappedChest);
+        Data.BlockEntityTypes.Add(BlockEntityType.TrialSpawner);
+        Data.BlockEntityTypes.Add(BlockEntityType.Vault);
 
     }
 }

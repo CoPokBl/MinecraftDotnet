@@ -30,6 +30,12 @@ public class BlockPlacingFeature : ScopedFeature {
         IVec3 target = use.Position.GetBlockTowards(use.Face);
         player.Inventory.SendSlotUpdate(player.ActiveHotbarSlot);
         
+        IBlock existingBlock = player.World!.GetBlock(target);
+        if (!existingBlock.Replaceable) {
+            // can't replace this block
+            return;
+        }
+        
         // let's get the block
         ItemStack heldItem = player.HeldItem;
         Identifier? blockId = heldItem.Type.CorrespondingBlock;

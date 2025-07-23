@@ -1,6 +1,6 @@
 using Newtonsoft.Json.Linq;
 
-namespace CodeGen;
+namespace CodeGen.Generators;
 
 public static class SoundCodeGen {
     

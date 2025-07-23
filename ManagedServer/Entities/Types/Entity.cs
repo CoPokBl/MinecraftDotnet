@@ -59,10 +59,14 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         }
     }
     
-    public virtual Vec3 Velocity {
+    public virtual Vec3 Velocity {  // units: m/(1/20)s
         get => _velocity;
         set {
             _velocity = value;
+            SendToViewers(new ClientBoundSetEntityVelocityPacket {  // protocol velocity is in 8000ths of a block per tick (50ms)
+                EntityId = NetId,
+                Velocity = new SVec3((short)(value.X * 8000), (short)(value.Y * 8000), (short)(value.Z * 8000)),
+            });
         }
     }
 
