@@ -73,7 +73,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     // these should be set by an entity tracker
     // not doing so is unsupported and will cause issues.
-    public int NetId;
+    public int NetId = -1;
     public EntityManager? Manager;
     public World? World;
     
@@ -210,7 +210,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         Manager?.BaseEventNode.RemoveChild(Events);
 
         World?.Entities.Despawn(this);
-        world.Entities.Spawn(this, NetId);  // this ensures that Manager will not be null (it sets it)
+        world.Entities.Spawn(this, NetId == -1 ? null : NetId);  // this ensures that Manager will not be null (it sets it)
         World = world;
 
         Debug.Assert(Manager != null, nameof(Manager) + " != null");
