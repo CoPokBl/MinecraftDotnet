@@ -12,7 +12,7 @@ using Minecraft.Schemas.Vec;
 namespace ManagedServer.Features.Basic;
 
 [CallsEvent(typeof(PlayerPlaceBlockEvent))]
-public class BlockPlacingFeature(bool consumeItem = true) : ScopedFeature {
+public class BlockPlacingFeature : ScopedFeature {
     private const double PlayerWidth = 0.6;
     private const double PlayerHeight = 1.8;
     
@@ -82,7 +82,7 @@ public class BlockPlacingFeature(bool consumeItem = true) : ScopedFeature {
         player.World!.SetBlock(placeEvent.Position, placeEvent.Block);
         player.SendPacket(ackPacket);
 
-        if (consumeItem) {
+        if (placeEvent.ConsumeItem) {
             ItemStack newItem = heldItem.Count > 1 ? heldItem.WithCount(heldItem.Count - 1) : ItemStack.Air;
             player.Inventory.SetHotbarItem(player.ActiveHotbarSlot, newItem);
         }

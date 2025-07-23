@@ -1,31 +1,31 @@
 using ManagedServer.Features;
 using ManagedServer.Features.Basic;
+using ManagedServer.Features.Bundles;
 using BlockBreakingFeature = ManagedServer.Features.Basic.BlockBreakingFeature;
 
 namespace ManagedServer;
 
 public partial class ManagedMinecraftServer {
+    public static readonly FeatureBundle BasicsBundle = new(
+        new ArmSwingFeature(),
+        new PongFeature(),
+        new BasicChatFeature(),
+        new BlockPlacingFeature(),
+        new PlayerCrouchFeature(),
+        new BlockBreakingFeature(),
+        new InventoryClickFeature(),
+        new DropItemsEventFeature(),
+        new ConsumablesFeature(),
+        new LoginProcedureFeature()
+    );
 
     public static ManagedMinecraftServer NewBasic() {
-        return New(
-            new ArmSwingFeature(),
-            new PongFeature(),
-            new BasicChatFeature(),
-            new BlockPlacingFeature(),
-            new PlayerCrouchFeature(),
-            new BlockBreakingFeature(),
-            new InventoryClickFeature(),
-            new DropItemsEventFeature(),
-            new ConsumablesFeature(),
-            new LoginProcedureFeature()
-        );
+        return New(BasicsBundle);
     }
-
-    public static ManagedMinecraftServer New(params ScopedFeature[] features) {
+    
+    public static ManagedMinecraftServer New(params FeatureBundle[] bundle) {
         ManagedMinecraftServer server = new();
-        foreach (ScopedFeature feature in features) {
-            server.AddFeature(feature);
-        }
+        server.AddFeatures(bundle);
         return server;
     }
 }

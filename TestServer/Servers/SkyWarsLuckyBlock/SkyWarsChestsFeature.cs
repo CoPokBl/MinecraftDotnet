@@ -16,15 +16,13 @@ public class SkyWarsChestsFeature : ScopedFeature {
     private static readonly Tag<Dictionary<IVec3, Inventory>> ChestsTag = new("skywars:loot_chests");
 
     private static readonly LootTableEntry[] LootTable = [
-        new(new ItemStack(1, Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 5f), 10, 1, 1),
-        new(new ItemStack(1, Item.Stone), 10, 1, 64),
-        new(SkyWarsItemsFeature.CreateItem(typeof(GoldenAppleItem)), 5, 1, 8),
-        new(LuckyBlocksFeature.GetLuckyBlock(), 4, 1, 5),
-        new(ItemStack.Air, 50, 1, 1)
+        new(new ItemStack(1, Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 5f), 0.5f, 1, 1),
+        new(new ItemStack(1, Item.Stone), 10, 16, 256),
+        new(SkyWarsItemsFeature.CreateItem(typeof(GoldenAppleItem)), 0.5f, 1, 8),
+        new(LuckyBlocksFeature.GetLuckyBlock(), 1f, 1, 32)
     ];
-    private static readonly int WeightSum = LootTable.Sum(entry => entry.Weight);
     
-    private record LootTableEntry(ItemStack Item, int Weight, int MinCount, int MaxCount);
+    private record LootTableEntry(ItemStack Item, float Chance, int MinCount, int MaxCount);
     
     public override void Register() {
         AddEventListener<PlayerPacketHandleEvent>(e => {
@@ -50,14 +48,26 @@ public class SkyWarsChestsFeature : ScopedFeature {
             // Generate loot
             ChestInventory inv = ChestInventory.Create(Scope.Server, 3);
             inv.Title = "SkyWars Chest";
-            
+
+            int[] emptySlotsArr = new int[inv.Size];
             for (int i = 0; i < inv.Size; i++) {
-                int num = Random.Shared.Next(WeightSum);
-                foreach (LootTableEntry entry in LootTable) {
-                    num -= entry.Weight;
-                    if (num >= 0) continue;
-                    inv[i] = entry.Item.WithCount(Random.Shared.Next(entry.MinCount, entry.MaxCount + 1));
-                    break;
+                emptySlotsArr[i] = i;
+            }
+            Random.Shared.Shuffle(emptySlotsArr);
+            Queue<int> emptySlots = new(emptySlotsArr);
+            
+            foreach (LootTableEntry entry in LootTable) {
+                if (!(Random.Shared.NextDouble() < entry.Chance)) continue;
+                
+                // Add to loot
+                int count = Random.Shared.Next(entry.MinCount, entry.MaxCount);
+                int itemMaxStack = entry.Item.GetMaxStackSize();
+
+                while (count > 0) {
+                    int effectiveMax = Random.Shared.Next(1, itemMaxStack);
+                    int amount = Math.Min(count, effectiveMax);
+                    inv[emptySlots.Dequeue()] = entry.Item.WithCount(amount);
+                    count -= amount;
                 }
             }
             

@@ -8,11 +8,9 @@ namespace TestServer.Servers.SkyWarsLuckyBlock.BlockResults;
 
 public class BuildUpBlockResult : IBlockResult {
     
-    public void Trigger(PlayerEntity player, IVec3 position) {
-        World world = player.World!;
-        
+    public void Trigger(World world, PlayerEntity? player, IVec3 position) {
         int yOffset = 0;
-        player.Server.ScheduleRepeatingTask(TimeSpan.FromSeconds(0.2), () => {
+        world.Server.ScheduleRepeatingTask(TimeSpan.FromSeconds(0.2), () => {
             if (position.Y - yOffset < world.Dimension.MinY + 1) {
                 return false; // Stop the task
             }

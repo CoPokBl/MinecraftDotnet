@@ -1,0 +1,17 @@
+using ManagedServer.Events.Attributes;
+using ManagedServer.Events.Types;
+using ManagedServer.Worlds;
+using Minecraft.Data.Blocks;
+using Minecraft.Implementations.Events;
+using Minecraft.Schemas.Vec;
+
+namespace ManagedServer.Events;
+
+[BuiltinEvent]
+public class WorldChangeEvent : IWorldEvent, ICancelableEvent {
+    public required World World { get; init; }
+    public required IVec3 Position { get; init; }
+    public required IBlock OldState { get; init; }
+    public required IBlock NewState { get; set; }
+    public bool Cancelled { get; set; } = false;
+}

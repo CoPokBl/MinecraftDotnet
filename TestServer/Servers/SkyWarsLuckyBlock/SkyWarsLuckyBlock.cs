@@ -7,12 +7,15 @@ using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Vec;
 using Minecraft.Text;
+using PolarWorlds;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
 public static class SkyWarsLuckyBlock {
     private const int StartTimeSeconds = 5;
+    private static readonly Vec3 LobbySpawn = new(5, 66, 5);
     
     public static async Task Start() {
         ManagedMinecraftServer server = ManagedMinecraftServer.NewBasic();
@@ -29,7 +32,8 @@ public static class SkyWarsLuckyBlock {
         server.Dimensions.Add("skywars:lobby", new Dimension());
         server.Dimensions.Add("skywars:game", new Dimension());
 
-        World lobby = server.CreateWorld(new TestingProvider(), "skywars:lobby");
+        World lobby = server.CreateWorld(new PolarLoader("testpolar.polar"), "skywars:lobby");
+        SkyWarsGame.LoadWorld();
         
         Timer? startTimer = null;
         DateTime startTime = DateTime.Now;
@@ -58,6 +62,10 @@ public static class SkyWarsLuckyBlock {
 
             player.GameMode = GameMode.Survival;
             player.Inventory.Clear();
+
+            server.ScheduleTask(TimeSpan.FromSeconds(1), () => {
+                player.Teleport(LobbySpawn);
+            });
             
             lock (waitingPlayers) {
                 waitingPlayers.Add(player);
@@ -94,7 +102,22 @@ public static class SkyWarsLuckyBlock {
             EnqueuePlayer(e.Player);
         });
 
+        lobby.Events.AddListener<PlayerBreakBlockEvent>(e => {
+            e.Cancelled = true;
+        });
+
+        lobby.Events.AddListener<EntityMoveEvent>(e => {
+            if (e.Entity is not PlayerEntity player) {
+                return;
+            }
+
+            if (e.NewPos.Y < 50) {
+                player.Teleport(LobbySpawn);
+            }
+        });
+
         Console.WriteLine("Starting SkyWars Lucky Block server...");
+        Console.WriteLine("Feature: " + server.FeatureHandler.Features.Count);
         await server.ListenTcp(25565, CancellationToken.None);
     }
 }

@@ -23,7 +23,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public List<World> Worlds { get; } = [];
     public List<PlayerEntity> Players { get; } = [];
     public ManagedMinecraftServer Server => this;
-    public HashSet<Type> CallableEventTypes { get; } = [];
+    public FeatureHandler FeatureHandler { get; }
 
     // Used to stop the tasks from being garbage collected
     // ReSharper disable once CollectionNeverQueried.Local
@@ -36,6 +36,8 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public bool AllowListeningToUnCalledEvents = false;
 
     public ManagedMinecraftServer(params IServerFeature[] feats) {
+        FeatureHandler = new FeatureHandler(this);
+        
         foreach (IServerFeature feat in feats) {
             AddFeature(feat);
         }
@@ -55,7 +57,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
             }
             
             // it's not called by default, so let's make sure that it gets called
-            if (CallableEventTypes.Contains(type)) return;
+            if (FeatureHandler.CallableEventTypes.Contains(type)) return;
             
             // TODO: Make it a warning and make it work for child event nodes
             throw new Exception("Event " + type.FullName +
@@ -71,23 +73,6 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         }
         else {
             Console.WriteLine("WARNING: Overwritten feature");
-        }
-    }
-    
-    public void AddFeature(ScopedFeature feature) {
-        feature.Scope = this;
-        feature.Register();
-        
-        CallsEventAttribute? callsEventAttribute = feature.GetType().GetCustomAttribute<CallsEventAttribute>();
-        if (callsEventAttribute == null) return;
-        lock (CallableEventTypes) foreach (Type eventType in callsEventAttribute.EventTypes) {
-            CallableEventTypes.Add(eventType);
-        }
-    }
-
-    public void AddFeatures(params ScopedFeature[] features) {
-        foreach (ScopedFeature feat in features) {
-            AddFeature(feat);
         }
     }
 
@@ -170,6 +155,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
 
     public override void AddConnection(PlayerConnection connection) {
         connection.Registry = Registry;
-        base.AddConnection(connection);
+        Connections.Add(connection);
+        connection.Disconnected += () => Connections.Remove(connection);
     }
 }

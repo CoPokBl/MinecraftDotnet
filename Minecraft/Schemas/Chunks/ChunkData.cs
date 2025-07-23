@@ -18,9 +18,9 @@ public class ChunkData : IWritable {
     public required int WorldHeight { get; init; }
 
     [SetsRequiredMembers]
-    public ChunkData(int worldHeight) {
+    public ChunkData(int worldHeight, ChunkSection[]? sections = null) {
         WorldHeight = worldHeight;
-        Sections = GenerateEmptySections();
+        Sections = sections ?? GenerateEmptySections();
     }
 
     private ChunkSection[] GenerateEmptySections() {

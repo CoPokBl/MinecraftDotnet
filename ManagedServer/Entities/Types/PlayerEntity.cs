@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using ManagedServer.Events;
 using ManagedServer.Inventory;
 using ManagedServer.Viewables;
@@ -123,6 +124,8 @@ public class PlayerEntity : LivingEntity, IAudience {
     private int _activeHotbarSlot;
     private ItemStack _cursorItem = ItemStack.Air;
     private Func<PlayerConnection, bool> _playerViewableRule = _ => true;
+    private ConcurrentQueue<MinecraftPacket> _packetSendingQueue = new();
+    private ConcurrentQueue<MinecraftPacket> _packetProcessQueue = new();
 
     // Listen to movement packets so we can do stuff
     public PlayerEntity(ManagedMinecraftServer server, PlayerConnection connection, string name) : base(EntityType.Player) {
@@ -161,14 +164,20 @@ public class PlayerEntity : LivingEntity, IAudience {
         });
         
         connection.Events.AddListener<PacketHandleEvent>(e => {
-            PlayerPacketHandleEvent playerEvent = new() {
+            // _packetProcessQueue.Enqueue(e.Packet);
+            HandlePacket(e.Packet);
+        });
+    }
+
+    private void HandlePacket(MinecraftPacket packet) {
+        PlayerPacketHandleEvent playerEvent = new() {
                 Player = this,
-                Packet = e.Packet,
+                Packet = packet,
                 World = World!
             };
             Events.CallEvent(playerEvent);
             
-            switch (e.Packet) {
+            switch (packet) {
                 case ServerBoundSetPlayerPositionPacket sp: {
                     if (_waitingTeleport != -1) return;
                     OnGround = sp.Flags.HasFlag(MovePlayerFlags.OnGround);
@@ -226,10 +235,6 @@ public class PlayerEntity : LivingEntity, IAudience {
                 }
 
                 case ServerBoundPlayerActionPacket pa: {
-                    // MinecraftPacket ackPacket = new ClientBoundAcknowledgeBlockChangePacket {
-                    //     SequenceId = pa.Sequence
-                    // };
-                    
                     // Respond to some inventory actions
                     switch (pa.ActionStatus) {
                         case ServerBoundPlayerActionPacket.Status.DropItemStack:
@@ -244,7 +249,6 @@ public class PlayerEntity : LivingEntity, IAudience {
                     break;
                 }
             }
-        });
     }
     
     public ItemStack GetItemInHand(Hand hand) {

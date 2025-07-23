@@ -1,5 +1,6 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
+using ManagedServer.Events.Attributes;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Tags;
@@ -13,6 +14,7 @@ using NBT;
 
 namespace ManagedServer.Features;
 
+[CallsEvent(typeof(PlayerPreLoginEvent), typeof(PlayerLoginEvent))]
 internal class LoginProcedureFeature : ScopedFeature {
     private const bool EncryptionEnabled = false;
     
@@ -20,10 +22,6 @@ internal class LoginProcedureFeature : ScopedFeature {
     
     // We'll just say we know vanilla for now
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.7") ];
-
-    public LoginProcedureFeature() {
-        
-    }
 
     public override void Register() {
         if (Scope is not ManagedMinecraftServer) {
@@ -239,7 +237,8 @@ internal class LoginProcedureFeature : ScopedFeature {
                     
                         // create a player object
                         PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
-                            NetId = pEntityId
+                            NetId = pEntityId,
+                            GameMode = preLoginEvent.GameMode
                         };
                         entity.SetWorld(preLoginEvent.World);
                         Scope.Server.Players.Add(entity);

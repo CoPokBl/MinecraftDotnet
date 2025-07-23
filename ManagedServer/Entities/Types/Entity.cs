@@ -50,6 +50,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
 
     public virtual List<PlayerEntity> Players => [];
     public ManagedMinecraftServer Server => World.ThrowIfNull().Server;
+    public FeatureHandler FeatureHandler { get; }
 
     private bool _crouching;
     public bool Crouching {
@@ -74,6 +75,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
 
     public Entity(IEntityType type, EntityMeta? meta = null) {
         Type = type;
+        FeatureHandler = new FeatureHandler(this);
 
         if (meta == null) {
             // guess the meta type based on the entity type
@@ -180,11 +182,6 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         if (pitch != null) {
             Pitch = pitch.Value;
         }
-    }
-    
-    public void AddFeature(ScopedFeature feature) {
-        feature.Scope = this;
-        feature.Register();
     }
 
     public void Teleport(PlayerPosition pos) {

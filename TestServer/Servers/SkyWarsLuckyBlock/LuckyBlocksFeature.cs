@@ -68,9 +68,24 @@ public class LuckyBlocksFeature : ScopedFeature {
                 return;
             }
             
+            // Lucky block broken (by player), let's do something
+            IBlockResult blockResult = LuckyBlocks[Random.Shared.Next(LuckyBlocks.Length)];
+            blockResult.Trigger(e.World, e.Player, e.Position);
+            block.PlacedEntity?.Despawn();
+        });
+        
+        AddEventListener<WorldChangeEvent>(e => {
+            if (e.NewState.Identifier != Block.Air.Identifier) {
+                return;
+            }
+            
+            if (!_placedBlocks.Remove(e.Position, out LuckyBlock? block)) {
+                return;
+            }
+            
             // Lucky block broken, let's do something
             IBlockResult blockResult = LuckyBlocks[Random.Shared.Next(LuckyBlocks.Length)];
-            blockResult.Trigger(e.Player, e.Position);
+            blockResult.Trigger(e.World, null, e.Position);
             block.PlacedEntity?.Despawn();
         });
     }

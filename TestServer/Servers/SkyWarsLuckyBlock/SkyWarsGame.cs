@@ -3,12 +3,14 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
 using ManagedServer.Features.Basic;
+using ManagedServer.Features.Bundles;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
@@ -34,6 +36,22 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
     public readonly List<PlayerEntity> RemainingPlayers = [];
     public World World { get; private set; } = null!;
     public bool HasEnded { get; private set; }
+    
+    private static FeatureBundle SkyWarsFeatures => new(
+        new SkyWarsChestsFeature(),
+        new DropItemsOnGroundFeature(),
+        new ItemPickupFeature(),
+        new LuckyBlocksFeature(),
+        new SkyWarsItemsFeature(),
+        new RespawnFeature()
+    );
+
+    internal static void LoadWorld() {
+        GameMap.GetChunk(new ChunkData(384) {
+            ChunkX = 0,
+            ChunkZ = 0
+        });
+    }
     
     private static Queue<Vec3> CreateRandomSpawns() {
         Queue<Vec3> spawns = new();
@@ -80,12 +98,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
 
     public void Start() {
         World = server.CreateWorld(GameMap, "skywars:game");
-        World.AddFeature(new SkyWarsChestsFeature());
-        World.AddFeature(new DropItemsOnGroundFeature());
-        World.AddFeature(new ItemPickupFeature());
-        World.AddFeature(new LuckyBlocksFeature());
-        World.AddFeature(new SkyWarsItemsFeature());
-        World.AddFeature(new RespawnFeature());
+        World.AddFeatures(SkyWarsFeatures);
         
         Queue<Vec3> spawns = CreateRandomSpawns();
         
@@ -94,6 +107,10 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
             player.SetWorld(World);
             player.Teleport(spawns.Dequeue());
             player.SendMessage(TextComponent.FromLegacyString("&a&lGame Started! Good luck!"));
+        }
+
+        foreach (PlayerEntity player in players) {
+            player.GameMode = GameMode.Survival;
         }
         
         World.AddFeature(new SkyWarsCombatFeature(p => Die(p, "You were killed!")));

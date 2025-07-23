@@ -28,6 +28,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     public EventNode<IServerEvent> Events { get; }
     public readonly EntityManager Entities;
     public required ManagedMinecraftServer Server { get; init; }
+    public FeatureHandler FeatureHandler { get; }
     public bool Immutable { get; set; } = false;
     private readonly Dictionary<string, object?> _data = new();
 
@@ -64,6 +65,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         DimensionId = dimensionId;
         Events = baseEventNode.CreateChild<IWorldEvent>(e => e.World == this);
         Entities = new EntityManager(Events, viewDistance*16);
+        FeatureHandler = new FeatureHandler(this);
     }
 
     // Data storage tags
@@ -83,11 +85,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
     private void Log(string msg) {
         if (Debug) Console.WriteLine("[WORLD] " + msg);
-    }
-    
-    public void AddFeature(ScopedFeature feature) {
-        feature.Scope = this;
-        feature.Register();
     }
     
     public void AddPlayer(PlayerEntity player) {
@@ -248,6 +245,21 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             throw new InvalidOperationException("World is immutable, cannot set block.");
         }
         CheckY(pos.Y);
+        
+        // event
+        WorldChangeEvent changeEvent = new() {
+            World = this,
+            Position = pos,
+            OldState = GetBlock(pos),
+            NewState = block
+        };
+        Events.CallEvent(changeEvent);
+        
+        if (changeEvent.Cancelled) {
+            // don't change the block, send update to client
+            SendBlockUpdate(pos, this);
+            return;
+        }
         
         IVec2 chunk = GetChunkPos(pos);
         LoadChunk(chunk);
@@ -422,7 +434,9 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         itemEntity.SetTag(ItemDropTimeTag, DateTime.Now);
         Spawn(itemEntity);
 
-        ItemMeta meta = new(item);
+        ItemMeta meta = new(item) {
+            NoGravity = true
+        };
         itemEntity.Meta = meta;
         return itemEntity;
     }

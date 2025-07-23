@@ -4,6 +4,13 @@ namespace ManagedServer;
 
 public abstract class ScopedFeature {
     public IFeatureScope Scope { get; set; } = null!;
+
+    /// <summary>
+    /// Controls the behaviour of the feature when it is registered while it is already registered.
+    /// If true, then the existing feature will remain registered and the new one will not be added.
+    /// If false, then an error will be thrown.
+    /// </summary>
+    public virtual bool IgnoreDuplicateRegistration => true;
     
     protected readonly List<Action> EventCancelers = [];
 

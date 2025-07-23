@@ -251,6 +251,31 @@ public class DataReader(byte[] data) : Stream {
         return entries;
     }
     
+    public ushort[] ReadPrefixedPacketDataArray(int bitsPerEntry) {
+        int entriesPerLong = 64 / bitsPerEntry;  // How many entries fit into one long
+        int longCount = ReadVarInt();  // Read the number of longs
+        int entryCount = longCount * entriesPerLong;  // Total number of entries
+    
+        ushort[] entries = new ushort[entryCount];
+        int currentEntry = 0;
+
+        for (int i = 0; i < longCount; i++) {
+            // Read out one long of data
+            byte[] bytes = Read(sizeof(long)).Reverse().ToArray();
+            BitArray bits = new(bytes);
+
+            for (int j = 0; j < entriesPerLong; j++) {
+                ushort entry = FromNBitInteger(bitsPerEntry, bits.Range(j*bitsPerEntry, bitsPerEntry).Reverse());
+                entries[currentEntry++] = entry;
+                if (currentEntry == entryCount) {
+                    break;  // it's the last long
+                }
+            }
+        }
+
+        return entries;
+    }
+    
     // reads a signed 8-bit integer (two's complement)
     public new sbyte ReadByte() {
         byte b = Read(1)[0];
