@@ -11,6 +11,7 @@
         <Authors>CoPokBl</Authors>
         <PackageProjectUrl>https://github.com/CoPokBl/MinecraftDotnet</PackageProjectUrl>
         <RepositoryUrl>https://github.com/CoPokBl/MinecraftDotnet.git</RepositoryUrl>
+        <Description>Library for interacting the Minecraft Java network protocol. As well as some other utils.</Description>
     </PropertyGroup>
 
     <ItemGroup>

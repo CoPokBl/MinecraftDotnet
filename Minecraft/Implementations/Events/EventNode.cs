@@ -9,11 +9,11 @@ public class EventNode<T> {
 
     public EventNode<T>? Parent;
 
-    public EventNode<T> CreateChild<TS>(Func<TS, bool>? condition = null) where TS : T {
+    public EventNode<T> CreateChild<TS>(Func<TS, bool> condition) where TS : T {
         EventNode<T> child = new() {
             Parent = this
         };
-        Children.Add((child, condition == null ? e => e is TS : e => e is TS ts && condition(ts)));
+        Children.Add((child, e => e is not TS ts || condition(ts)));
         return child;
     }
     
@@ -31,8 +31,8 @@ public class EventNode<T> {
         Children.Add((child, condition));
     }
     
-    public void AddChild<TS>(EventNode<T> child, Func<TS, bool>? condition = null) where TS : T {
-        Children.Add((child, condition == null ? e => e is TS : e => e is TS ts && condition(ts)));
+    public void AddChild<TS>(EventNode<T> child, Func<TS, bool> condition) where TS : T {
+        Children.Add((child, e => e is not TS ts || condition(ts)));
         child.Parent = this;
     }
     

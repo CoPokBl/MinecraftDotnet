@@ -282,7 +282,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         
         IVec2 chunk = GetChunkPos(pos);
         LoadChunk(chunk);
-        return RetrieveChunk(chunk)!.LookupBlock(ToChunkLocalPos(GameToProtocolPos(pos)), Server!.Registry);
+        IVec3 chunkLocalPos = ToChunkLocalPos(GameToProtocolPos(pos));
+        return RetrieveChunk(chunk)!.LookupBlock(chunkLocalPos, Server.Registry);
     }
 
     private void CheckY(int y) {

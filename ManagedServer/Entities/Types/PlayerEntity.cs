@@ -167,6 +167,18 @@ public class PlayerEntity : LivingEntity, IAudience {
             // _packetProcessQueue.Enqueue(e.Packet);
             HandlePacket(e.Packet);
         });
+
+        Server.Events.AddListener<ServerTickEvent>(_ => {
+            // Drain the packet queue
+            while (_packetSendingQueue.TryDequeue(out MinecraftPacket? packet)) {
+                Connection.SendPacket(packet);
+            }
+            
+            // Process packets that were received
+            while (_packetProcessQueue.TryDequeue(out MinecraftPacket? processPacket)) {
+                HandlePacket(processPacket);
+            }
+        });
     }
 
     private void HandlePacket(MinecraftPacket packet) {

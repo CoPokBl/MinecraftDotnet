@@ -60,7 +60,7 @@ public class LuckyBlocksFeature : ScopedFeature {
             };
             e.World.Spawn(insideThing);
             
-            _placedBlocks.Add(e.Position, new LuckyBlock(block, insideThing));
+            _placedBlocks.TryAdd(e.Position, new LuckyBlock(block, insideThing));
         });
         
         AddEventListener<PlayerBreakBlockEvent>(e => {
@@ -75,7 +75,7 @@ public class LuckyBlocksFeature : ScopedFeature {
         });
         
         AddEventListener<WorldChangeEvent>(e => {
-            if (e.NewState.Identifier != Block.Air.Identifier) {
+            if (e.NewState.Identifier == Block.YellowStainedGlass.Identifier) {
                 return;
             }
             

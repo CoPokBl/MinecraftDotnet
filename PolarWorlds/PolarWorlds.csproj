@@ -4,6 +4,13 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>MinecraftDotnet.Polar</PackageId>
+        <Version>0.0.1</Version>
+        <Title>Polar World Support</Title>
+        <Authors>CoPokBl</Authors>
+        <PackageProjectUrl>https://github.com/CoPokBl/MinecraftDotnet</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/CoPokBl/MinecraftDotnet.git</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>

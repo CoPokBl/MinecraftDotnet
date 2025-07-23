@@ -4,8 +4,6 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Worlds;
 using Minecraft;
-using Minecraft.Data.Generated;
-using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Packets.Play.ServerBound;

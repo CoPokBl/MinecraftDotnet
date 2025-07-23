@@ -4,7 +4,6 @@ using ManagedServer.Events;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Implementations.Server.Features;
-using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
@@ -118,6 +117,7 @@ public static class SkyWarsLuckyBlock {
 
         Console.WriteLine("Starting SkyWars Lucky Block server...");
         Console.WriteLine("Feature: " + server.FeatureHandler.Features.Count);
+        server.Start();
         await server.ListenTcp(25565, CancellationToken.None);
     }
 }
