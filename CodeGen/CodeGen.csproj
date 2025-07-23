@@ -25,6 +25,8 @@
       <EmbeddedResource Include="Data\potion_effect.json" />
       <None Remove="Data\complex_consume_effects.json" />
       <EmbeddedResource Include="Data\complex_consume_effects.json" />
+      <None Remove="Data\entity_type.json" />
+      <EmbeddedResource Include="Data\entity_data.json" />
     </ItemGroup>
 
 </Project>

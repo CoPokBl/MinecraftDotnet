@@ -35,8 +35,6 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         }
     }
 
-    public EventNode<IServerEvent> Events { get; } = new();
-
     public EntityMeta Meta {
         get => _meta;
         set {
@@ -47,12 +45,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
             });
         }
     }
-
-    public virtual List<PlayerEntity> Players => [];
-    public ManagedMinecraftServer Server => World.ThrowIfNull().Server;
-    public FeatureHandler FeatureHandler { get; }
-
-    private bool _crouching;
+    
     public bool Crouching {
         get => _crouching;
 
@@ -66,12 +59,27 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         }
     }
     
+    public virtual Vec3 Velocity {
+        get => _velocity;
+        set {
+            _velocity = value;
+        }
+    }
+
+    public virtual List<PlayerEntity> Players => [];  // for ScopedFeature
+    public ManagedMinecraftServer Server => World.ThrowIfNull().Server;
+    public FeatureHandler FeatureHandler { get; }
+    public EventNode<IServerEvent> Events { get; } = new();
+    
     // these should be set by an entity tracker
     // not doing so is unsupported and will cause issues.
     public int NetId;
     public EntityManager? Manager;
     public World? World;
-    private EntityMeta _meta;
+    
+    private EntityMeta _meta = null!;  // set by the constructor, so it is never null
+    private bool _crouching;
+    private Vec3 _velocity = Vec3.Zero;
 
     public Entity(IEntityType type, EntityMeta? meta = null) {
         Type = type;
@@ -116,6 +124,8 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         else {
             Meta = meta;
         }
+
+        Events.AddListener<ServerTickEvent>(_ => Tick());
     }
 
     /// <summary>
@@ -128,6 +138,10 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
             double xz = Math.Cos(rotY);
             return new Vec3(-xz * Math.Sin(rotX), -Math.Sin(rotY), xz * Math.Cos(rotX));
         }
+    }
+
+    protected void Tick() {
+        
     }
     
     //final float rotX = yaw;

@@ -94,6 +94,10 @@ public class PlayerEntity : LivingEntity, IAudience {
         }
     }
 
+    public override Vec3 Velocity {
+        set => SetVelocity(value);
+    }
+
     /// <summary>
     /// The entity that the player is viewing through. (Like in spectator when you click on an entity)
     /// </summary>
@@ -108,7 +112,8 @@ public class PlayerEntity : LivingEntity, IAudience {
     }
     
     // Values according to https://minecraft.wiki/w/Player in the Trivia section
-    public double EyeHeight => Crouching ? 1.27 : 1.62;
+    // 1.27 seems to be the sqrt of 1.62 (the eye height of player while not crouching)
+    public double EyeHeight => Crouching ? 1.27 : EntityType.Player.EyeHeight;
 
     public bool OnGround { get; private set; }
 

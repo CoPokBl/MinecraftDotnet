@@ -226,7 +226,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     public void Spawn(Entity entity, int? id = null) {
-        Entities.Spawn(entity, id);
+        if (id != null) entity.NetId = id.Value;
+        entity.SetWorld(this);
     }
 
     private static HashSet<IVec2> GetPlayerLoadedChunks(PlayerConnection connection) {

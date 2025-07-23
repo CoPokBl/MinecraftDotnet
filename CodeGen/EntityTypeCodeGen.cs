@@ -5,12 +5,22 @@ namespace CodeGen;
 public static class EntityTypeCodeGen {
 
     public static string CreateEntityTypeEntries(JObject registriesJson) {
+        JObject entityDataJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("entity_data.json"));
+        
         return CodeGenUtils.CreateSimpleRegistryEntries(
             registriesJson, 
             "minecraft:entity_type", 
             "SimpleEntityType", 
             "EntityType",
             "EntityTypes",
-            "Entities");
+            "Entities",
+            extraSimpleParams: key => {
+                JObject entry = entityDataJson[key]!.ToObject<JObject>()!;
+                bool fireImmune = entry["fireImmune"]?.ToObject<bool>() ?? false;
+                double width = entry["width"]!.ToObject<double>();
+                double height = entry["height"]!.ToObject<double>();
+                double eyeHeight = entry["eyeHeight"]?.ToObject<double>() ?? height * 0.85;
+                return $"{fireImmune.ToString().ToLower()}, {width}, {height}, {eyeHeight}";
+            });
     }
 }

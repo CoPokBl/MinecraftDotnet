@@ -76,8 +76,9 @@ public static class CodeGenUtils {
 
     public static string CreateSimpleRegistryEntries(JObject registriesJson, string registryName,
         string simpleClassName, string className, string regVar, string typeNamespace,
-        Func<string, string>? variableNameGetter = null) {
-        return CreateSimpleRegistryEntries(BuildRegularRegistryEntries(registriesJson, registryName), simpleClassName, className, regVar, typeNamespace, variableNameGetter);
+        Func<string, string>? variableNameGetter = null, Func<string, string>? extraSimpleParams = null) {
+        return CreateSimpleRegistryEntries(BuildRegularRegistryEntries(registriesJson, registryName), simpleClassName, 
+            className, regVar, typeNamespace, variableNameGetter, extraSimpleParams);
     }
 
     public static (string, int)[] BuildRegularRegistryEntries(JObject registriesJson, string registryName) {
@@ -115,7 +116,7 @@ public static class CodeGenUtils {
     }
     
     public static string CreateSimpleRegistryEntries((string, int)[] entries, string simpleClassName, string className, 
-        string regVar, string typeNamespace, Func<string, string>? variableNameGetter = null) {
+        string regVar, string typeNamespace, Func<string, string>? variableNameGetter = null, Func<string, string>? extraSimpleParams = null) {
         variableNameGetter ??= NamespacedIdToPascalName;
         
         StringBuilder registryAdditions = new();
@@ -129,7 +130,8 @@ public static class CodeGenUtils {
             string pascalName = variableNameGetter(key);
             
             // Add to cs file
-            file.Append($"{GetIndentation(1)}public static {simpleClassName} {pascalName} => new(\"{key}\", {protocolId});\n");
+            string extraParams = extraSimpleParams != null ? ", " + extraSimpleParams(key) : string.Empty;
+            file.Append($"{GetIndentation(1)}public static {simpleClassName} {pascalName} => new(\"{key}\", {protocolId}{extraParams});\n");
             registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({className}.{pascalName});");
         }
         
