@@ -5,12 +5,14 @@ using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Schemas.Chunks;
 
-public class ChunkData : IWritable {
+public class ChunkData {
     public const int VanillaOverworldHeight = 384;  // vanilla overworld height
     
     private int ChunkSections => WorldHeight / 16;  // number of sections in a chunk, 24 for vanilla overworld
     
     public ChunkSection[] Sections;  // bottom to top
+    
+    public Dictionary<IVec3, BlockEntity> BlockEntities = new();  // block entities in this chunk, indexed by position in chunk
     
     // hints for implementations
     public int ChunkX;
@@ -84,7 +86,7 @@ public class ChunkData : IWritable {
         return LookupBlock(pos.X, pos.Y, pos.Z, registry);
     }
     
-    public void Write(DataWriter w) {
+    public void Write(DataWriter w, MinecraftRegistry reg) {
         // https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure
         // Height map, not quite sure how this works
         w.WriteVarInt(0);  // no hightmaps pls
@@ -110,11 +112,11 @@ public class ChunkData : IWritable {
         w.WriteVarInt(chunkData.Count);  // length of chunk data
         w.Write(chunkData);  // write the chunk data
         
-        // prefixed array of block entities, ignore for now
-        w.WriteVarInt(0);  // len of 0
+        // prefixed array of block entities
+        w.WritePrefixedArray(BlockEntities.Values.ToArray(), (entity, wr) => entity.WriteData(entity, wr, reg));
     }
 
-    public static ChunkData Read(DataReader r) {
+    public static ChunkData Read(DataReader r, MinecraftRegistry reg) {
         // TODO: Heightmaps
         int heightMaps = r.ReadVarInt();
         for (int i = 0; i < heightMaps; i++) {
@@ -136,17 +138,13 @@ public class ChunkData : IWritable {
         
         int worldHeight = sections.Count * 16;  // calculate world height from sections
         
-        // TODO: Block entities
-        r.ReadPrefixedArray(re => {
-            re.Read();
-            re.ReadShort();
-            re.ReadVarInt();
-            re.ReadNbt();
-            return false;
-        });
+        Dictionary<IVec3, BlockEntity> blockEntities = r
+            .ReadPrefixedArray(re => BlockEntity.ReadData(re, reg))
+            .ToDictionary(a => new IVec3(a.X, a.Y, a.Z));
 
         return new ChunkData(worldHeight) {
-            Sections = sections.ToArray()
+            Sections = sections.ToArray(),
+            BlockEntities = blockEntities
         };
     }
 }

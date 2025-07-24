@@ -5,6 +5,8 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Types;
 using ManagedServer.Viewables;
+using Minecraft;
+using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Events;
@@ -19,6 +21,7 @@ using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
+using NBT;
 
 namespace ManagedServer.Worlds;
 
@@ -241,7 +244,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         connection.SetTag(LoadedChunksTag, chunks);
     }
 
-    public void SetBlock(IVec3 pos, IBlock block) {
+    public void SetBlock(IVec3 pos, IBlock block, IBlockEntityType? blockEntityType = null, INbtTag? blockEntityData = null) {
         if (Immutable) {
             throw new InvalidOperationException("World is immutable, cannot set block.");
         }
@@ -263,15 +266,48 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
         
         IVec2 chunk = GetChunkPos(pos);
+        IVec3 localPos = ToChunkLocalPos(GameToProtocolPos(pos));  // local protocol pos (y is 0 indexed)
+        
         LoadChunk(chunk);
-        RetrieveChunk(chunk)!.SetBlock(ToChunkLocalPos(GameToProtocolPos(pos)), block);
+        ChunkData data = RetrieveChunk(chunk)!;
+        data.SetBlock(localPos, block);
+        if (blockEntityType == null) {
+            data.BlockEntities.Remove(pos);
+        }
+        else {
+            data.BlockEntities[pos] = new BlockEntity(
+                // local Y is game coords not protocol coords
+                localPos.X, pos.Y, localPos.Z, blockEntityType, blockEntityData.ThrowIfNull()
+            );
+        }
         
         SendBlockUpdate(pos, this);
     }
     
-    public void SetBlock(Vec3 pos, IBlock block) {
+    public void SetBlock(Vec3 pos, IBlock block, IBlockEntityType? blockEntityType = null, INbtTag? blockEntityData = null) {
         // Convert Vec3 to IVec3
-        SetBlock(pos.ToBlockPos(), block);
+        SetBlock(pos.ToBlockPos(), block, blockEntityType, blockEntityData);
+    }
+    
+    public void SetBlockData(IVec3 pos, BlockEntity? data) {
+        if (Immutable) {
+            throw new InvalidOperationException("World is immutable, cannot set block data.");
+        }
+        CheckY(pos.Y);
+        
+        IVec2 chunk = GetChunkPos(pos);
+        LoadChunk(chunk);
+        IVec3 chunkLocalPos = ToChunkLocalPos(pos);
+        ChunkData chunkData = RetrieveChunk(chunk)!;
+        
+        if (data == null) {
+            chunkData.BlockEntities.Remove(chunkLocalPos);
+        }
+        else {
+            chunkData.BlockEntities[chunkLocalPos] = data;
+        }
+        
+        SendBlockUpdate(pos, this);
     }
     
     private static IVec3 ToChunkLocalPos(IVec3 pos) {
@@ -286,16 +322,25 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         IVec3 chunkLocalPos = ToChunkLocalPos(GameToProtocolPos(pos));
         return RetrieveChunk(chunk)!.LookupBlock(chunkLocalPos, Server.Registry);
     }
+    
+    public IBlock GetBlock(Vec3 pos) {
+        // Convert Vec3 to IVec3
+        return GetBlock(pos.ToBlockPos());
+    }
+    
+    public BlockEntity? GetBlockData(IVec3 pos) {
+        CheckY(pos.Y);
+        
+        IVec2 chunk = GetChunkPos(pos);
+        LoadChunk(chunk);
+        IVec3 chunkLocalPos = ToChunkLocalPos(pos);
+        return RetrieveChunk(chunk)!.BlockEntities!.GetValueOrDefault(chunkLocalPos, null);
+    }
 
     private void CheckY(int y) {
         if (y < Dimension.MinY || y > Dimension.MinY + Dimension.Height) {
             throw new ArgumentOutOfRangeException(nameof(y), "Y position is out of bounds for this dimension.");
         }
-    }
-    
-    public IBlock GetBlock(Vec3 pos) {
-        // Convert Vec3 to IVec3
-        return GetBlock(pos.ToBlockPos());
     }
     
     // get everyone who can see the block at the given position
@@ -318,12 +363,12 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     /// </summary>
     /// <param name="pos">The position to convert</param>
     /// <returns>The new position.</returns>
-    public static IVec3 ProtocolToGamePos(IVec3 pos) {
-        return new IVec3(pos.X, pos.Y - 64, pos.Z);
+    public IVec3 ProtocolToGamePos(IVec3 pos) {
+        return new IVec3(pos.X, pos.Y + Dimension.MinY, pos.Z);
     }
     
-    private static IVec3 GameToProtocolPos(IVec3 pos) {
-        return new IVec3(pos.X, pos.Y + 64, pos.Z);
+    private IVec3 GameToProtocolPos(IVec3 pos) {
+        return new IVec3(pos.X, pos.Y - Dimension.MinY, pos.Z);
     }
 
     private ChunkData[] GetChunks(IVec2[] poses, int count) {
@@ -368,6 +413,15 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             Block = GetBlock(pos),
             Location = pos
         });
+
+        BlockEntity? data = GetBlockData(pos);
+        if (data != null) {
+            audience.SendPacket(new ClientBoundBlockEntityDataPacket {
+                Position = pos,
+                Data = data.Data,
+                Type = data.Type
+            });
+        }
     }
     
     private ChunkData? RetrieveChunk(IVec2 pos) {

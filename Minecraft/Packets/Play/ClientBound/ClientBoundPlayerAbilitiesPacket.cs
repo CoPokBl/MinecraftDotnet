@@ -11,6 +11,7 @@ public class ClientBoundPlayerAbilitiesPacket : ClientBoundPacket {
     
     [Flags]
     public enum Abilities {
+        None = 0x00,
         Invulnerable = 0x01,
         Flying = 0x02,
         AllowFlying = 0x04,

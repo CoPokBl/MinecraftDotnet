@@ -1326,6 +1326,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, true, 0x02, typeof(ClientBoundEntityAnimationPacket), ClientBoundEntityAnimationPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x04, typeof(ClientBoundAcknowledgeBlockChangePacket), ClientBoundAcknowledgeBlockChangePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x05, typeof(ClientBoundSetBlockDestroyStagePacket), ClientBoundSetBlockDestroyStagePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x06, typeof(ClientBoundBlockEntityDataPacket), ClientBoundBlockEntityDataPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x08, typeof(ClientBoundBlockUpdatePacket), ClientBoundBlockUpdatePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x00, typeof(ClientBoundBundleDelimiterPacket), ClientBoundBundleDelimiterPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x0A, typeof(ClientBoundChangeDifficultyPacket), ClientBoundChangeDifficultyPacket.Deserialiser);

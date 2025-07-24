@@ -57,6 +57,9 @@ internal class LoginProcedureFeature : ScopedFeature {
                     }
                 
                     case ServerBoundLoginAcknowledgedPacket: {
+                        e.Connection.SendPacket(new ClientBoundFeatureFlagsPacket {
+                            Flags = ["minecraft:vanilla"]
+                        });
                         e.Connection.SendPacket(new ClientBoundKnownPacksPacket {
                             Packs = _knownPacks
                         });

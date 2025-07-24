@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
@@ -81,10 +82,26 @@ public class PolarLoader : ITerrainProvider {
         reader.Position = 0;
         reader.UpdateData(outputBuffer);
     }
+    
+    private static int GetXFromIndex(int index) {
+        return index & 0xF;  // 0-3 bits
+    }
+    
+    private static int GetYFromIndex(int index) {
+        int y = (index & 0x07FFFFF0) >>> 4;
+        if ((index & 0x08000000) != 0) y = -y;  // bit 28 indicates negative Y
+        return y;  // 4-28 bits
+    }
+    
+    private static int GetZFromIndex(int index) {
+        return (index >>> 28) & 0xF;  // bits 28-31
+    }
 
     private static ChunkData ReadChunk(DataReader reader, short version, int dataVersion, int sectionCount) {
         int chunkX = reader.ReadVarInt();
         int chunkZ = reader.ReadVarInt();
+        
+        Dictionary<IVec3, BlockEntity> blockEntities = new();
         
         ChunkSection[] sections = new ChunkSection[sectionCount];
         for (int i = 0; i < sectionCount; i++) {
@@ -94,12 +111,19 @@ public class PolarLoader : ITerrainProvider {
         // TODO: Actually store block entities
         int blockEntityCount = reader.ReadVarInt();
         for (int i = 0; i < blockEntityCount; i++) {
-            reader.ReadInteger();  // posIndex
+            int posIndex = reader.ReadInteger();  // posIndex
             string? id = reader.ReadPrefixedOptional(r => r.ReadString());
 
             INbtTag nbt = new CompoundTag(null);
             if (reader.ReadBoolean()) {
                 nbt = reader.ReadNbt();
+                BlockEntity entity = new(
+                    GetXFromIndex(posIndex), 
+                    GetYFromIndex(posIndex), 
+                    GetZFromIndex(posIndex), 
+                    VanillaRegistry.Data.BlockEntityTypes[id.ThrowIfNull()],
+                    nbt);
+                blockEntities.Add(new IVec3(entity.X, entity.Y, entity.Z), entity);
             }
         }
         
@@ -120,7 +144,8 @@ public class PolarLoader : ITerrainProvider {
         return new ChunkData(sectionCount * 16) {
             ChunkX = chunkX,
             ChunkZ = chunkZ,
-            Sections = sections
+            Sections = sections,
+            BlockEntities = blockEntities
         };
     }
 

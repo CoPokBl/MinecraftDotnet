@@ -1,7 +1,7 @@
+using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Data.Blocks;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Registry;
-using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
 using NBT;
@@ -12,11 +12,17 @@ namespace Minecraft.Implementations.AnvilWorld;
 public class AnvilLoader : ITerrainProvider {
     private readonly MinecraftRegistry _registry;
     private readonly Dictionary<string, AnvilRegionFile> _regions = [];
+    private readonly int _minY;
     
     public AnvilWorldInfo WorldInfo { get; private init; }
     
-    public AnvilLoader(string path, MinecraftRegistry registry) {
+    public AnvilLoader(string path, MinecraftRegistry registry, int minY = -64) {
+        if (minY % 16 != 0) {
+            throw new ArgumentException("minY must be a multiple of 16.", nameof(minY));
+        }
+        
         _registry = registry;
+        _minY = minY;
         string levelDatPath = Path.Join(path, "level");
         if (!File.Exists(levelDatPath)) {
             throw new Exception("Invalid world: level not found in the specified path.");
@@ -46,8 +52,6 @@ public class AnvilLoader : ITerrainProvider {
             LevelName: levelData["LevelName"].ThrowIfNull().GetString()
         );
         
-        Console.WriteLine($"World: {WorldInfo}");
-        
         // get regions
         string regionPath = Path.Join(path, "region");
         if (!Directory.Exists(regionPath)) {
@@ -60,7 +64,6 @@ public class AnvilLoader : ITerrainProvider {
         }
 
         foreach (string regionFile in regionFiles) {
-            Console.WriteLine($"Found region file: {regionFile}");
             AnvilRegionFile region = new(regionFile);
             _regions[Path.GetFileName(regionFile)] = region;
         }
@@ -75,20 +78,16 @@ public class AnvilLoader : ITerrainProvider {
         string regionName = RegionNameFor(regionX, regionZ);
         
         if (!_regions.TryGetValue(regionName, out AnvilRegionFile? region)) {
-            Console.WriteLine($"Region {regionName} not found.");
             return;
         }
         
         INbtTag? chunkTag = region.ReadChunkData(chunkX, chunkZ);
         
         if (chunkTag is not CompoundTag chunk) {
-            // Console.WriteLine($"Chunk ({chunkX}, {chunkZ}) not found in region {regionName}.");
             return;
         }
         
-        // Console.WriteLine(chunk.ToJsonString());
         string status = chunk["status"]?.GetString() ?? "Unknown";
-        // Console.WriteLine("Chunk Status: " + status);
         
         // Load actual chunk data
         INbtTag? sectionsTag = chunk["sections"];
@@ -103,16 +102,15 @@ public class AnvilLoader : ITerrainProvider {
         foreach (INbtTag sectionTag in sectionsList.Tags) {
             CompoundTag sectionData = sectionTag.GetCompound();
             int sectionY = sectionData["Y"].GetInteger();
-            // Console.WriteLine($"Section Y: {sectionY}");
-            int yOffset = sectionY * 16;
-            
-            // TODO: Throw out invalid sections, see Minestom implementation (above and below valid area)
-            if (sectionY < -4 || sectionY > 11) {
-                // Console.WriteLine($"Invalid section Y: {sectionY}, skipping.");
+            int yOffset = sectionY * ChunkSection.Size;
+
+            int minSection = _minY / ChunkSection.Size;
+            int maxSection = (_minY + data.WorldHeight) / ChunkSection.Size;
+            if (sectionY < minSection || sectionY > maxSection) {
                 continue;
             }
             
-            ChunkSection section = data.Sections[sectionY + 4];  // Sections are indexed from -4 to 11, so we add 4 to the Y value to get index
+            ChunkSection section = data.Sections[sectionY - minSection];
             
             CompoundTag blockStates = sectionData["block_states"].GetCompound();
             ListTag blockPalette = blockStates["palette"].GetList();  // list of compound tags
@@ -124,6 +122,7 @@ public class AnvilLoader : ITerrainProvider {
                 // Console.WriteLine("Single block state found: " + palette[0]);
             }
             else {
+                // Console.WriteLine(chunk.ToJsonString());
                 long[] packedStates = blockStates["data"].GetLongs();
                 UnpackPalette(blockStateIndices, packedStates, packedStates.Length * 64 / blockStateIndices.Length);
                 
@@ -134,13 +133,32 @@ public class AnvilLoader : ITerrainProvider {
                             int paletteIndex = blockStateIndices[blockIndex];
                             IBlock block = palette[paletteIndex];
                             data.SetBlock(x, y + yOffset + 64, z, block);
-                            // if (y + yOffset < 5) {
-                            //     Console.WriteLine($"Block: {x},{y + yOffset},{z} = {block} (Index: {paletteIndex})");
-                            // }
                         }
                     }
                 }
             }
+        }
+        
+        // Block entities
+        ListTag blockEntitiesTag = chunk["block_entities"].GetList();
+        foreach (INbtTag blockEntityGeneric in blockEntitiesTag.Tags) {
+            CompoundTag blockEntityData = blockEntityGeneric.GetCompound();
+            
+            // get important props
+            string id = blockEntityData["id"].GetString();
+            IBlockEntityType type = _registry.BlockEntityTypes[id];
+            
+            int x = blockEntityData["x"].GetInteger();
+            int y = blockEntityData["y"].GetInteger();
+            int z = blockEntityData["z"].GetInteger();
+            bool _ = blockEntityData["keepPacked"].GetBoolean();  // What is this prop for? We'll ignore it for now
+            
+            // Create a new compound tag for the block entity
+            // but without any of the above properties
+            string[] excludeProps = ["id", "x", "y", "z", "keepPacked"];
+            CompoundTag entityData = new(null, blockEntityData.Children.Where(t => 
+                !excludeProps.Contains(t?.GetName())).ToArray());
+            data.BlockEntities[new IVec3(x, y, z)] = new BlockEntity(x, y, z, type, entityData);
         }
     }
 

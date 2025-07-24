@@ -116,7 +116,6 @@ public static class SkyWarsLuckyBlock {
         });
 
         Console.WriteLine("Starting SkyWars Lucky Block server...");
-        Console.WriteLine("Feature: " + server.FeatureHandler.Features.Count);
         server.Start();
         await server.ListenTcp(25565, CancellationToken.None);
     }
