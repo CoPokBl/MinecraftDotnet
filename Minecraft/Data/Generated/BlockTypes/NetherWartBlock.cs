@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record NetherWartBlock(Identifier Identifier, int Age) : IBlock {
 
     public Identifier Category => "minecraft:nether_wart";
+    public int ProtocolId => 353;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

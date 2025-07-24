@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock {
 
     public Identifier Category => "minecraft:stonecutter";
+    public int ProtocolId => 815;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;

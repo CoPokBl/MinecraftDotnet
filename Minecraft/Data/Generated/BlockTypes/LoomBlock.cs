@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock {
 
     public Identifier Category => "minecraft:loom";
+    public int ProtocolId => 806;
     public double Hardness => 2.5;
     public double ExplosionResistance => 2.5;
     public double Friction => 0.6;

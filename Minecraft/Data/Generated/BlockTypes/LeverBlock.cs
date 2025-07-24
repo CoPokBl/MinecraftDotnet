@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record LeverBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock {
 
     public Identifier Category => "minecraft:lever";
+    public int ProtocolId => 245;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

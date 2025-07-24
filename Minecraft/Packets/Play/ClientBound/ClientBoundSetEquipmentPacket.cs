@@ -38,7 +38,7 @@ public class ClientBoundSetEquipmentPacket() : ClientBoundPacket {
             }
 
             w.WriteByte(slotId);
-            item.Write(w, registry);
+            w.Write(item, registry);
         }
 
         return w;
@@ -52,12 +52,12 @@ public class ClientBoundSetEquipmentPacket() : ClientBoundPacket {
             sbyte slotId = reader.ReadByte();
             if (slotId >= 0) { // positive
                 EquipmentSlot slot = (EquipmentSlot)slotId;
-                ItemStack item = ItemStack.Read(reader, registry);
+                ItemStack item = reader.Read<ItemStack>(registry);
                 equipment[slot] = item;
                 break; // last item
             } else { // negative
                 EquipmentSlot slot = (EquipmentSlot)(slotId & 0x7F);
-                ItemStack item = ItemStack.Read(reader, registry);
+                ItemStack item = reader.Read<ItemStack>(registry);
                 equipment[slot] = item;
             }
         }

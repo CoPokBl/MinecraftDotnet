@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record JungleLogBlock(Identifier Identifier, Axis Axis) : IBlock {
 
     public Identifier Category => "minecraft:rotated_pillar";
+    public int ProtocolId => 52;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;

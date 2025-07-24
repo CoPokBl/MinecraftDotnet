@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using Minecraft.Data;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Text;
 
@@ -14,7 +16,7 @@ public class ClientBoundServerLinksPacket() : ClientBoundPacket {
         Links = links;
     }
     
-    public abstract class ServerLink : IWritable {
+    public abstract class ServerLink : INetworkType<ServerLink> {
         
         public static ServerLink Override(BuiltinLabel label, string url) {
             return new OverrideLink(label, url);
@@ -34,7 +36,7 @@ public class ClientBoundServerLinksPacket() : ClientBoundPacket {
             public string Url { get; } = url;
         }
         
-        public void Write(DataWriter writer) {
+        public DataWriter WriteData(DataWriter writer, MinecraftRegistry _) {
             writer.WriteBoolean(this is OverrideLink);  // true for varint (link type), false for custom link (text component)
             switch (this) {
                 case OverrideLink overrideLink:
@@ -46,9 +48,10 @@ public class ClientBoundServerLinksPacket() : ClientBoundPacket {
                     writer.WriteString(customLink.Url);
                     break;
             }
+            return writer;
         }
 
-        public static ServerLink Read(DataReader r) {
+        public static ServerLink ReadData(DataReader r, MinecraftRegistry _) {
             if (r.ReadBoolean()) {  // Check if it's an override link
                 BuiltinLabel label = (BuiltinLabel)r.ReadVarInt();
                 string url = r.ReadString();
@@ -77,12 +80,12 @@ public class ClientBoundServerLinksPacket() : ClientBoundPacket {
         Announcements = 9
     }
 
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry reg) {
         return w
-            .WritePrefixedArray(Links, (link, wr) => link.Write(wr));
+            .WritePrefixedArray(Links, reg);
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundServerLinksPacket {
-        Links = r.ReadPrefixedArray(ServerLink.Read)
+    public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundServerLinksPacket {
+        Links = r.ReadPrefixedArray<ServerLink>(reg)
     };
 }

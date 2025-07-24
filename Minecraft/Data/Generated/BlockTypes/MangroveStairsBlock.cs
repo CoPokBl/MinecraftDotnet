@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record MangroveStairsBlock(Identifier Identifier, Direction Facing, MangroveStairsBlock.Half HalfValue, StairShape Shape, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:stair";
+    public int ProtocolId => 488;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

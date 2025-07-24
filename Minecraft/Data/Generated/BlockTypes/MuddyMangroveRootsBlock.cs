@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record MuddyMangroveRootsBlock(Identifier Identifier, Axis Axis) : IBlock {
 
     public Identifier Category => "minecraft:rotated_pillar";
+    public int ProtocolId => 59;
     public double Hardness => 0.7;
     public double ExplosionResistance => 0.7;
     public double Friction => 0.6;

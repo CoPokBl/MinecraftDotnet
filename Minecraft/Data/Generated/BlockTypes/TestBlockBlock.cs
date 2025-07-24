@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValue) : IBlock {
 
     public Identifier Category => "minecraft:test";
+    public int ProtocolId => 867;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record DarkPrismarineStairsBlock(Identifier Identifier, Direction Facing, DarkPrismarineStairsBlock.Half HalfValue, StairShape Shape, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:stair";
+    public int ProtocolId => 500;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record ComparatorBlock(Identifier Identifier, Direction Facing, ComparatorBlock.Mode ModeValue, bool Powered) : IBlock {
 
     public Identifier Category => "minecraft:comparator";
+    public int ProtocolId => 441;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

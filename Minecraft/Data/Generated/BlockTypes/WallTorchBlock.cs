@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record WallTorchBlock(Identifier Identifier, Direction Facing) : IBlock {
 
     public Identifier Category => "minecraft:wall_torch";
+    public int ProtocolId => 182;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

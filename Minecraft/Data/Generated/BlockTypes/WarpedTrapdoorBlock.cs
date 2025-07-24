@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record WarpedTrapdoorBlock(Identifier Identifier, Direction Facing, WarpedTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:trapdoor";
+    public int ProtocolId => 852;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

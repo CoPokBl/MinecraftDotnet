@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record SuspiciousGravelBlock(Identifier Identifier, int Dusted) : IBlock {
 
     public Identifier Category => "minecraft:brushable";
+    public int ProtocolId => 41;
     public double Hardness => 0.25;
     public double ExplosionResistance => 0.25;
     public double Friction => 0.6;

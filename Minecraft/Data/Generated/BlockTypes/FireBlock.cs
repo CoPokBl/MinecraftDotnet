@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record FireBlock(Identifier Identifier, int Age, bool East, bool North, bool South, bool Up, bool West) : IBlock {
 
     public Identifier Category => "minecraft:fire";
+    public int ProtocolId => 183;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

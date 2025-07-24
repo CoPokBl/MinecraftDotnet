@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record ChippedAnvilBlock(Identifier Identifier, Direction Facing) : IBlock {
 
     public Identifier Category => "minecraft:anvil";
+    public int ProtocolId => 436;
     public double Hardness => 5;
     public double ExplosionResistance => 1200;
     public double Friction => 0.6;

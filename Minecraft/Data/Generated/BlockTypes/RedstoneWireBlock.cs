@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection East, RedstoneWireConnection North, int Power, RedstoneWireConnection South, RedstoneWireConnection West) : IBlock {
 
     public Identifier Category => "minecraft:redstone_wire";
+    public int ProtocolId => 189;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

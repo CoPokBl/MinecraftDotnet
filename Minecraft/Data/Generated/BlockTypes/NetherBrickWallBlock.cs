@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record NetherBrickWallBlock(Identifier Identifier, WallSide East, WallSide North, WallSide South, bool Up, bool Waterlogged, WallSide West) : IBlock {
 
     public Identifier Category => "minecraft:wall";
+    public int ProtocolId => 799;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

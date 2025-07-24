@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripleafBlock.Tilt TiltValue, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:big_dripleaf";
+    public int ProtocolId => 1054;
     public double Hardness => 0.1;
     public double ExplosionResistance => 0.1;
     public double Friction => 0.6;

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument InstrumentValue, int Note, bool Powered) : IBlock {
 
     public Identifier Category => "minecraft:note";
+    public int ProtocolId => 109;
     public double Hardness => 0.8;
     public double ExplosionResistance => 0.8;
     public double Friction => 0.6;

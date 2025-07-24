@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record WheatBlock(Identifier Identifier, int Age) : IBlock {
 
     public Identifier Category => "minecraft:crop";
+    public int ProtocolId => 194;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

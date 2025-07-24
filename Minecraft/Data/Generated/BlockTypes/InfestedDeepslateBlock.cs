@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record InfestedDeepslateBlock(Identifier Identifier, Axis Axis) : IBlock {
 
     public Identifier Category => "minecraft:infested_rotated_pillar";
+    public int ProtocolId => 1080;
     public double Hardness => 1.5;
     public double ExplosionResistance => 0.75;
     public double Friction => 0.6;

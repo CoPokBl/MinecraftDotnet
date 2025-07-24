@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeValue, Cardinal Facing, bool Short) : IBlock {
 
     public Identifier Category => "minecraft:piston_head";
+    public int ProtocolId => 139;
     public double Hardness => 1.5;
     public double ExplosionResistance => 1.5;
     public double Friction => 0.6;

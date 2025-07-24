@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record DeepslateBlock(Identifier Identifier, Axis Axis) : IBlock {
 
     public Identifier Category => "minecraft:rotated_pillar";
+    public int ProtocolId => 1060;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

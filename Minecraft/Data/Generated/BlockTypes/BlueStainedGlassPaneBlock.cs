@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record BlueStainedGlassPaneBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
 
     public Identifier Category => "minecraft:stained_glass_pane";
+    public int ProtocolId => 479;
     public double Hardness => 0.3;
     public double ExplosionResistance => 0.3;
     public double Friction => 0.6;

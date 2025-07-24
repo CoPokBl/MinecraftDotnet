@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record BlueGlazedTerracottaBlock(Identifier Identifier, Direction Facing) : IBlock {
 
     public Identifier Category => "minecraft:glazed_terracotta";
+    public int ProtocolId => 673;
     public double Hardness => 1.4;
     public double ExplosionResistance => 1.4;
     public double Friction => 0.6;

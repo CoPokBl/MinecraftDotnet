@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock {
 
     public Identifier Category => "minecraft:fence_gate";
+    public int ProtocolId => 603;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

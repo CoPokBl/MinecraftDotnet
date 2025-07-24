@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
 
     public Identifier Category => "minecraft:piglinwallskull";
+    public int ProtocolId => 434;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

@@ -8,11 +8,11 @@ public record CanPlaceOnComponent(int ProtocolId) : IDataComponent<BlockPredicat
     public override Identifier Identifier => "minecraft:can_place_on";
     
     public override DataWriter WriteData(BlockPredicate[] val, DataWriter writer, MinecraftRegistry registry) {
-        return writer.WritePrefixedArray(val, (predicate, w) => w.Write(wr => predicate.Write(wr, registry)));
+        return writer.WritePrefixedArray(val, registry);
     }
 
     public override BlockPredicate[] ReadData(DataReader reader, MinecraftRegistry registry) {
-        BlockPredicate[] predicates = reader.ReadPrefixedArray(r => BlockPredicate.Read(r, registry));
+        BlockPredicate[] predicates = reader.ReadPrefixedArray<BlockPredicate>(registry);
         return predicates;
     }
 }

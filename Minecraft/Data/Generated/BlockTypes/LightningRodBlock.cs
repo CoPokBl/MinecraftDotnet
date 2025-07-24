@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record LightningRodBlock(Identifier Identifier, Cardinal Facing, bool Powered, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:lightning_rod";
+    public int ProtocolId => 1041;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record SmoothSandstoneStairsBlock(Identifier Identifier, Direction Facing, SmoothSandstoneStairsBlock.Half HalfValue, StairShape Shape, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:stair";
+    public int ProtocolId => 772;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

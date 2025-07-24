@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record CrimsonSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:slab";
+    public int ProtocolId => 845;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

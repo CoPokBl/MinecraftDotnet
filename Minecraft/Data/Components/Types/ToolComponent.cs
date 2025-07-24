@@ -8,10 +8,10 @@ public record ToolComponent(int ProtocolId) : IDataComponent<Tool> {
     public override Identifier Identifier => "minecraft:tool";
     
     public override DataWriter WriteData(Tool val, DataWriter writer, MinecraftRegistry registry) {
-        return writer.Write(val);
+        return writer.Write(val, registry);
     }
 
     public override Tool ReadData(DataReader reader, MinecraftRegistry registry) {
-        return Tool.Read(reader);
+        return reader.Read<Tool>(registry);
     }
 }

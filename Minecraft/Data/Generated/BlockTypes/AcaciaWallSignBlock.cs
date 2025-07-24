@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record AcaciaWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:wall_sign";
+    public int ProtocolId => 214;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

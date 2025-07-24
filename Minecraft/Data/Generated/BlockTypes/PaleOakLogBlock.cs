@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record PaleOakLogBlock(Identifier Identifier, Axis Axis) : IBlock {
 
     public Identifier Category => "minecraft:rotated_pillar";
+    public int ProtocolId => 56;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;

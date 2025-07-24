@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record OxidizedCopperTrapdoorBlock(Identifier Identifier, Direction Facing, OxidizedCopperTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:weathering_copper_trap_door";
+    public int ProtocolId => 1019;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

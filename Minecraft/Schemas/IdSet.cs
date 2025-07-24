@@ -1,8 +1,11 @@
+using Minecraft.Data;
+using Minecraft.Registry;
+
 namespace Minecraft.Schemas;
 
-public abstract record IdSet : IWritable {
+public abstract record IdSet : INetworkType<IdSet> {
     
-    public static IdSet Read(DataReader reader) {
+    public static IdSet ReadData(DataReader reader, MinecraftRegistry _) {
         int length = reader.ReadVarInt();
         if (length == 0) {
             return new Tag(reader.ReadString());
@@ -14,16 +17,16 @@ public abstract record IdSet : IWritable {
     }
 
     public record Tag(Identifier TagName) : IdSet {
-        public override void Write(DataWriter writer) {
-            writer.WriteVarInt(0).Write(TagName);
+        public override DataWriter WriteData(DataWriter writer, MinecraftRegistry reg) {
+            return writer.WriteVarInt(0).Write(TagName);
         }
     }
 
     public record Ids(int[] Values) : IdSet {
-        public override void Write(DataWriter writer) {
-            writer.WriteVarInt(Values.Length + 1).WriteArray(Values, (i, w) => w.WriteVarInt(i));
+        public override DataWriter WriteData(DataWriter writer, MinecraftRegistry reg) {
+            return writer.WriteVarInt(Values.Length + 1).WriteArray(Values, (i, w) => w.WriteVarInt(i));
         }
     }
 
-    public abstract void Write(DataWriter writer);
+    public abstract DataWriter WriteData(DataWriter writer, MinecraftRegistry reg);
 }

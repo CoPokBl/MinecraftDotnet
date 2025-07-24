@@ -84,7 +84,7 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
         int id = r.ReadVarInt();
         SoundEvent? ev = null;
         if (id == 0) {
-            ev = SoundEvent.Deserialise(r, reg);
+            ev = r.Read<SoundEvent>(reg);
         }
         else id--;
 

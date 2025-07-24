@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record PurpleWallBannerBlock(Identifier Identifier, Direction Facing) : IBlock {
 
     public Identifier Category => "minecraft:wall_banner";
+    public int ProtocolId => 557;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

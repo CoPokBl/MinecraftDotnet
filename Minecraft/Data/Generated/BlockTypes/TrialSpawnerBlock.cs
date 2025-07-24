@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawnerBlock.TrialSpawnerState TrialSpawnerStateValue) : IBlock {
 
     public Identifier Category => "minecraft:trial_spawner";
+    public int ProtocolId => 1094;
     public double Hardness => 50;
     public double ExplosionResistance => 50;
     public double Friction => 0.6;

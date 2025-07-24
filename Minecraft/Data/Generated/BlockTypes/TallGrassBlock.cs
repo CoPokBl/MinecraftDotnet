@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record TallGrassBlock(Identifier Identifier, BlockHalf Half) : IBlock {
 
     public Identifier Category => "minecraft:double_plant";
+    public int ProtocolId => 529;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record MangroveLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:mangrove_leaves";
+    public int ProtocolId => 96;
     public double Hardness => 0.2;
     public double ExplosionResistance => 0.2;
     public double Friction => 0.6;

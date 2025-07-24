@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record ChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:chain";
+    public int ProtocolId => 327;
     public double Hardness => 5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

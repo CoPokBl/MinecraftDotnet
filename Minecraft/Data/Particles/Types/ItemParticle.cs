@@ -8,12 +8,12 @@ public record ItemParticle(Identifier Identifier, int ProtocolId, ItemStack? Ite
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
-            .Write(w => (Item ?? ItemStack.Air).Write(w, registry));
+            .Write(Item ?? ItemStack.Air, registry);
     }
 
     public IParticle ReadData(DataReader reader, MinecraftRegistry registry) {
         return this with {
-            Item = ItemStack.Read(reader, registry)
+            Item = reader.Read<ItemStack>(registry)
         };
     }
 }

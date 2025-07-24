@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record MyceliumBlock(Identifier Identifier, bool Snowy) : IBlock {
 
     public Identifier Category => "minecraft:mycelium";
+    public int ProtocolId => 342;
     public double Hardness => 0.6;
     public double ExplosionResistance => 0.6;
     public double Friction => 0.6;

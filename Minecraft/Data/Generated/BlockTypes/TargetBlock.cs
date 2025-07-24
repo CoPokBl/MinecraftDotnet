@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record TargetBlock(Identifier Identifier, int Power) : IBlock {
 
     public Identifier Category => "minecraft:target";
+    public int ProtocolId => 870;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

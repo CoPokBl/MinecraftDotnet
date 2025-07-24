@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record AcaciaTrapdoorBlock(Identifier Identifier, Direction Facing, AcaciaTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:trapdoor";
+    public int ProtocolId => 305;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

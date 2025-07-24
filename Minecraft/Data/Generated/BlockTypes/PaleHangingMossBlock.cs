@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
 
     public Identifier Category => "minecraft:hanging_moss";
+    public int ProtocolId => 1099;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

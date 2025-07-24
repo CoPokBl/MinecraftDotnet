@@ -1,3 +1,4 @@
+using Minecraft.Data;
 using Minecraft.Registry;
 
 namespace Minecraft.Schemas;
@@ -7,12 +8,12 @@ public record ItemAttributeModifier(
     Identifier Id,
     double Value,
     AttributeOperation Operation,
-    AttributeActiveSlot Slot) {
+    AttributeActiveSlot Slot) : INetworkType<ItemAttributeModifier> {
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
             .WriteVarInt(Attribute)
-            .Write(Id)
+            .WriteString(Id)
             .WriteDouble(Value)
             .WriteVarInt((int)Operation)
             .WriteVarInt((int)Slot);

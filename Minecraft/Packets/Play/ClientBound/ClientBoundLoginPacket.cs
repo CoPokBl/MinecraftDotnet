@@ -53,10 +53,10 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
             .WriteBoolean(EnforcesSecureChat);
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginPacket {
+    public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundLoginPacket {
         EntityId = r.ReadInteger(),
         IsHardcore = r.ReadBoolean(),
-        Dimensions = r.ReadPrefixedArray(reader => (Identifier)reader.ReadString()),
+        Dimensions = r.ReadPrefixedArray<Identifier>(reg),
         MaxPlayers = r.ReadVarInt(),
         ViewDistance = r.ReadVarInt(),
         SimulationDistance = r.ReadVarInt(),

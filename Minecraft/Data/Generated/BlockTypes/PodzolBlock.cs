@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record PodzolBlock(Identifier Identifier, bool Snowy) : IBlock {
 
     public Identifier Category => "minecraft:snowy_dirt";
+    public int ProtocolId => 11;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

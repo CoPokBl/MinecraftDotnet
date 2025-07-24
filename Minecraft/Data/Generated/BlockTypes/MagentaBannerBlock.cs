@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record MagentaBannerBlock(Identifier Identifier, int Rotation) : IBlock {
 
     public Identifier Category => "minecraft:banner";
+    public int ProtocolId => 533;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

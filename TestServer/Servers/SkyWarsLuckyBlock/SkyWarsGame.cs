@@ -9,6 +9,7 @@ using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Terrain;
+using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Items;
@@ -111,6 +112,17 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
 
         foreach (PlayerEntity player in players) {
             player.GameMode = GameMode.Survival;
+            
+            player.SendPacket(new ClientBoundUpdateTagsPacket {
+                Tags = [
+                    new ClientBoundUpdateTagsPacket.TagSet("block", [
+                        new ClientBoundUpdateTagsPacket.Tag("climbable", [
+                            Block.Ladder.ProtocolId,
+                            Block.Potatoes.ProtocolId
+                        ])
+                    ])
+                ]
+            });
         }
         
         World.AddFeature(new SkyWarsCombatFeature(p => Die(p, "You were killed!")));

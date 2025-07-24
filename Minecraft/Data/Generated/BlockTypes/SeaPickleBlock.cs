@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:sea_pickle";
+    public int ProtocolId => 756;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

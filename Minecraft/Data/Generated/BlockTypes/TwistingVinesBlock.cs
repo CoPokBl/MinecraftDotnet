@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record TwistingVinesBlock(Identifier Identifier, int Age) : IBlock {
 
     public Identifier Category => "minecraft:twisting_vines";
+    public int ProtocolId => 840;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

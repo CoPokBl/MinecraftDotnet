@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, VaultBlock.VaultState VaultStateValue) : IBlock {
 
     public Identifier Category => "minecraft:vault";
+    public int ProtocolId => 1095;
     public double Hardness => 50;
     public double ExplosionResistance => 50;
     public double Friction => 0.6;

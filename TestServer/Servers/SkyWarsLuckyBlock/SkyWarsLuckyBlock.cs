@@ -30,7 +30,7 @@ public static class SkyWarsLuckyBlock {
         
         server.Dimensions.Add("skywars:lobby", new Dimension());
         server.Dimensions.Add("skywars:game", new Dimension());
-
+        
         World lobby = server.CreateWorld(new PolarLoader("testpolar.polar"), "skywars:lobby");
         SkyWarsGame.LoadWorld();
         

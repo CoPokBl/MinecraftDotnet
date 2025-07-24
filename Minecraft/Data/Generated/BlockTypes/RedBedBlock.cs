@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record RedBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock {
 
     public Identifier Category => "minecraft:bed";
+    public int ProtocolId => 124;
     public double Hardness => 0.2;
     public double ExplosionResistance => 0.2;
     public double Friction => 0.6;

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggered) : IBlock {
 
     public Identifier Category => "minecraft:dropper";
+    public int ProtocolId => 451;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;

@@ -1,18 +1,20 @@
+using Minecraft.Data;
 using Minecraft.Data.Blocks;
+using Minecraft.Registry;
 
 namespace Minecraft.Schemas.Items;
 
-public record Tool(ToolRule[] Rules, float DefaultMiningSpeed, int DamagePerBlock, bool CanMineInCreative) : IWritable {
+public record Tool(ToolRule[] Rules, float DefaultMiningSpeed, int DamagePerBlock, bool CanMineInCreative) : INetworkType<Tool> {
     
-    public void Write(DataWriter writer) {
-        writer.WritePrefixedArray(Rules, (rule, w) => rule.Write(w));
+    public DataWriter WriteData(DataWriter writer, MinecraftRegistry reg) {
+        writer.WritePrefixedArray(Rules, reg);
         writer.WriteFloat(DefaultMiningSpeed);
         writer.WriteVarInt(DamagePerBlock);
-        writer.WriteBoolean(CanMineInCreative);
+        return writer.WriteBoolean(CanMineInCreative);
     }
     
-    public static Tool Read(DataReader reader) {
-        ToolRule[] rules = reader.ReadPrefixedArray(ToolRule.Read);
+    public static Tool ReadData(DataReader reader, MinecraftRegistry reg) {
+        ToolRule[] rules = reader.ReadPrefixedArray<ToolRule>(reg);
         float defaultMiningSpeed = reader.ReadFloat();
         int damagePerBlock = reader.ReadVarInt();
         bool canMineInCreative = reader.ReadBoolean();

@@ -4,9 +4,7 @@ using NBT.Tags;
 
 namespace Minecraft.Data.Blocks;
 
-public interface IBlock {
-    public Identifier Identifier { get; }
-    
+public interface IBlock : IProtocolType {
     public Identifier Category { get; }
     public double Hardness { get; }
     public double ExplosionResistance { get; }

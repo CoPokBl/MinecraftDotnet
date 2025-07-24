@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:rail";
+    public int ProtocolId => 209;
     public double Hardness => 0.7;
     public double ExplosionResistance => 0.7;
     public double Friction => 0.6;

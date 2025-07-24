@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record BeeNestBlock(Identifier Identifier, Direction Facing, int HoneyLevel) : IBlock {
 
     public Identifier Category => "minecraft:beehive";
+    public int ProtocolId => 871;
     public double Hardness => 0.3;
     public double ExplosionResistance => 0.3;
     public double Friction => 0.6;

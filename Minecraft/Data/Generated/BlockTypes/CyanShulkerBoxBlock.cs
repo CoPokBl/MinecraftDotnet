@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record CyanShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock {
 
     public Identifier Category => "minecraft:shulker_box";
+    public int ProtocolId => 655;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;

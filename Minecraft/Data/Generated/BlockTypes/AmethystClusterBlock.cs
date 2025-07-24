@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record AmethystClusterBlock(Identifier Identifier, Cardinal Facing, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:amethyst_cluster";
+    public int ProtocolId => 940;
     public double Hardness => 1.5;
     public double ExplosionResistance => 1.5;
     public double Friction => 0.6;

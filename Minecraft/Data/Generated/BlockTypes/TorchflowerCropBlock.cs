@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record TorchflowerCropBlock(Identifier Identifier, int Age) : IBlock {
 
     public Identifier Category => "minecraft:torchflower_crop";
+    public int ProtocolId => 630;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

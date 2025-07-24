@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record SculkCatalystBlock(Identifier Identifier, bool Bloom) : IBlock {
 
     public Identifier Category => "minecraft:sculk_catalyst";
+    public int ProtocolId => 965;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

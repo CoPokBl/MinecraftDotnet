@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Facing) : IBlock {
 
     public Identifier Category => "minecraft:end_portal_frame";
+    public int ProtocolId => 361;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;

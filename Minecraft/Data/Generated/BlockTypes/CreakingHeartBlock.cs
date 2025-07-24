@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeartBlock.CreakingHeartState CreakingHeartStateValue, bool Natural) : IBlock {
 
     public Identifier Category => "minecraft:creaking_heart";
+    public int ProtocolId => 186;
     public double Hardness => 10;
     public double ExplosionResistance => 10;
     public double Friction => 0.6;

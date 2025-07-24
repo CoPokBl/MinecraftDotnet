@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record DeepslateTileSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:slab";
+    public int ProtocolId => 1071;
     public double Hardness => 3.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

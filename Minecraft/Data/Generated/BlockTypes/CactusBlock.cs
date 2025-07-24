@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record CactusBlock(Identifier Identifier, int Age) : IBlock {
 
     public Identifier Category => "minecraft:cactus";
+    public int ProtocolId => 266;
     public double Hardness => 0.4;
     public double ExplosionResistance => 0.4;
     public double Friction => 0.6;

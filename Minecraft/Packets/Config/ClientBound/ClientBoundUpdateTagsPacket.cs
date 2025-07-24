@@ -1,3 +1,5 @@
+using Minecraft.Data;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Config.ClientBound;
@@ -7,40 +9,40 @@ public class ClientBoundUpdateTagsPacket : ClientBoundPacket {
     
     public required TagSet[] Tags;
 
-    public record TagSet(string Registry, Tag[] Tags) : IWritable {
-        public void Write(DataWriter writer) {
-            writer
+    public record TagSet(string Registry, Tag[] Tags) : INetworkType<TagSet> {
+        public DataWriter WriteData(DataWriter writer, MinecraftRegistry reg) {
+            return writer
                 .WriteString(Registry)
-                .WritePrefixedArray(Tags, (tag, wr) => wr.Write(tag));
+                .WritePrefixedArray(Tags, reg);
         }
 
-        public static TagSet Read(DataReader reader) {
+        public static TagSet ReadData(DataReader reader, MinecraftRegistry reg) {
             return new TagSet(
                 reader.ReadString(), 
-                reader.ReadPrefixedArray(Tag.Read));
+                reader.ReadPrefixedArray<Tag>(reg));
         }
     }
 
-    public record Tag(string Name, int[] Entries) : IWritable {
-        public void Write(DataWriter writer) {
-            writer
+    public record Tag(string Name, int[] Entries) : INetworkType<Tag> {
+        public DataWriter WriteData(DataWriter writer, MinecraftRegistry _) {
+            return writer
                 .WriteString(Name)
                 .WritePrefixedArray(Entries, (i, wr) => wr.WriteVarInt(i));
         }
 
-        public static Tag Read(DataReader reader) {
+        public static Tag ReadData(DataReader reader, MinecraftRegistry _) {
             return new Tag(
                 reader.ReadString(), 
                 reader.ReadPrefixedArray(r => r.ReadVarInt()));
         }
     }
 
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry reg) {
         return w
-            .WritePrefixedArray(Tags, (tagSet, writer) => tagSet.Write(writer));
+            .WritePrefixedArray(Tags, reg);
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateTagsPacket {
-        Tags = r.ReadPrefixedArray(TagSet.Read)
+    public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundUpdateTagsPacket {
+        Tags = r.ReadPrefixedArray<TagSet>(reg)
     };
 }

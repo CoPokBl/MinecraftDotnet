@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record LadderBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:ladder";
+    public int ProtocolId => 208;
     public double Hardness => 0.4;
     public double ExplosionResistance => 0.4;
     public double Friction => 0.6;

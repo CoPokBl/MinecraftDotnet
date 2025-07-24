@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record WaxedExposedCopperTrapdoorBlock(Identifier Identifier, Direction Facing, WaxedExposedCopperTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:trapdoor";
+    public int ProtocolId => 1022;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

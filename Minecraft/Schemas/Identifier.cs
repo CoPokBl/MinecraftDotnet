@@ -1,6 +1,9 @@
+using Minecraft.Data;
+using Minecraft.Registry;
+
 namespace Minecraft.Schemas;
 
-public readonly struct Identifier(string ns, string key) : IEquatable<Identifier>, IWritable {
+public readonly struct Identifier(string ns, string key) : IEquatable<Identifier>, INetworkType<Identifier>, IWritable {
     public readonly string Namespace = ns;
     public readonly string Key = key;
 
@@ -21,8 +24,16 @@ public readonly struct Identifier(string ns, string key) : IEquatable<Identifier
         return $"{Namespace}:{Key}";
     }
 
+    public DataWriter WriteData(DataWriter writer, MinecraftRegistry _) {
+        return writer.WriteString(ToString());
+    }
+
     public void Write(DataWriter writer) {
         writer.WriteString(ToString());
+    }
+
+    public static Identifier ReadData(DataReader reader, MinecraftRegistry registry) {
+        return reader.ReadString();
     }
 
     public bool Equals(Identifier other) {

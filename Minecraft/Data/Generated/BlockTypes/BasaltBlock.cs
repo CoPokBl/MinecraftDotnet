@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record BasaltBlock(Identifier Identifier, Axis Axis) : IBlock {
 
     public Identifier Category => "minecraft:rotated_pillar";
+    public int ProtocolId => 275;
     public double Hardness => 1.25;
     public double ExplosionResistance => 4.2;
     public double Friction => 0.6;

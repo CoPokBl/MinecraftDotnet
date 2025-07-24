@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record VineBlock(Identifier Identifier, bool East, bool North, bool South, bool Up, bool West) : IBlock {
 
     public Identifier Category => "minecraft:vine";
+    public int ProtocolId => 335;
     public double Hardness => 0.2;
     public double ExplosionResistance => 0.2;
     public double Friction => 0.6;

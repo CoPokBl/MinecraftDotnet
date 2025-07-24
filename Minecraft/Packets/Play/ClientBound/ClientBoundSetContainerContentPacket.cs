@@ -16,16 +16,14 @@ public class ClientBoundSetContainerContentPacket : ClientBoundPacket {
         return w
             .WriteVarInt(WindowId)
             .WriteVarInt(StateId)
-            .WritePrefixedArray(SlotData, (slot, writer) => {
-                slot.Write(writer, registry);
-            })
-            .Write(wr => CursorItem.Write(wr, registry));
+            .WritePrefixedArray(SlotData, registry)
+            .Write(CursorItem, registry);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundSetContainerContentPacket {
         WindowId = r.ReadVarInt(),
         StateId = r.ReadVarInt(),
-        SlotData = r.ReadPrefixedArray(re => ItemStack.Read(re, reg)),
-        CursorItem = ItemStack.Read(r, reg)
+        SlotData = r.ReadPrefixedArray<ItemStack>(reg),
+        CursorItem = r.Read<ItemStack>(reg)
     };
 }

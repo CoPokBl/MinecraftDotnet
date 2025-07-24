@@ -10,10 +10,10 @@ public class ClientBoundSetCursorItemPacket : ClientBoundPacket {
     public required ItemStack Item;
     
     protected override DataWriter WriteData(DataWriter w, MinecraftRegistry reg) {
-        return w.Write(wr => Item.Write(wr, reg));
+        return w.Write(Item, reg);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundSetCursorItemPacket {
-        Item = ItemStack.Read(r, reg)
+        Item = r.Read<ItemStack>(reg)
     };
 }

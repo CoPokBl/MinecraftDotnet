@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record ChorusFlowerBlock(Identifier Identifier, int Age) : IBlock {
 
     public Identifier Category => "minecraft:chorus_flower";
+    public int ProtocolId => 625;
     public double Hardness => 0.4;
     public double ExplosionResistance => 0.4;
     public double Friction => 0.6;

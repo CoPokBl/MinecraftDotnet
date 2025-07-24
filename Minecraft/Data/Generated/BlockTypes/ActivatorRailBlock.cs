@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record ActivatorRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:powered_rail";
+    public int ProtocolId => 450;
     public double Hardness => 0.7;
     public double ExplosionResistance => 0.7;
     public double Friction => 0.6;

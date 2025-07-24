@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentValue, Direction Facing, bool Powered) : IBlock {
 
     public Identifier Category => "minecraft:bell";
+    public int ProtocolId => 816;
     public double Hardness => 5;
     public double ExplosionResistance => 5;
     public double Friction => 0.6;

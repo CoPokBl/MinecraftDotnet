@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock {
 
     public Identifier Category => "minecraft:tall_seagrass";
+    public int ProtocolId => 137;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

@@ -113,7 +113,7 @@ public class ChunkData {
         w.Write(chunkData);  // write the chunk data
         
         // prefixed array of block entities
-        w.WritePrefixedArray(BlockEntities.Values.ToArray(), (entity, wr) => entity.WriteData(entity, wr, reg));
+        w.WritePrefixedArray(BlockEntities.Values.ToArray(), reg);
     }
 
     public static ChunkData Read(DataReader r, MinecraftRegistry reg) {
@@ -139,7 +139,7 @@ public class ChunkData {
         int worldHeight = sections.Count * 16;  // calculate world height from sections
         
         Dictionary<IVec3, BlockEntity> blockEntities = r
-            .ReadPrefixedArray(re => BlockEntity.ReadData(re, reg))
+            .ReadPrefixedArray<BlockEntity>(reg)
             .ToDictionary(a => new IVec3(a.X, a.Y, a.Z));
 
         return new ChunkData(worldHeight) {

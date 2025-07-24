@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record CrimsonSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:standing_sign";
+    public int ProtocolId => 861;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

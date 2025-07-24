@@ -26,14 +26,14 @@ public record PotionEffect(
         return new PotionEffect(type, amplifier, duration, ambient, showParticles, showIcon, hasHiddenEffect);
     }
 
-    public DataWriter WriteData(PotionEffect val, DataWriter writer, MinecraftRegistry registry) {
+    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
-            .WriteVarInt(val.Type.ProtocolId)
-            .WriteVarInt(val.Amplifier)
-            .WriteVarInt(val.Duration)
-            .WriteBoolean(val.Ambient)
-            .WriteBoolean(val.ShowParticles)
-            .WriteBoolean(val.ShowIcon)
-            .WriteBoolean(val.HasHiddenEffect);
+            .WriteVarInt(Type.ProtocolId)
+            .WriteVarInt(Amplifier)
+            .WriteVarInt(Duration)
+            .WriteBoolean(Ambient)
+            .WriteBoolean(ShowParticles)
+            .WriteBoolean(ShowIcon)
+            .WriteBoolean(HasHiddenEffect);
     }
 }

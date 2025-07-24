@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record NetherBrickFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
 
     public Identifier Category => "minecraft:fence";
+    public int ProtocolId => 351;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

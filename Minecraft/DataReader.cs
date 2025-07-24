@@ -51,26 +51,13 @@ public class DataReader(byte[] data) : Stream {
         return exists ? reader(this) : default;
     }
     
-    // Dumb solution to read data from a type that implements INetworkType<T>
-    // public T Read<T>(MinecraftRegistry reg) where T : INetworkType<T> {
-    //     Type type = typeof(T);
-    //     MethodInfo? info = type.GetMethod("ReadData");
-    //     if (info == null) {
-    //         throw new InvalidOperationException($"Type {type.Name} does not have a ReadData method.");
-    //     }
-    //     if (info.GetParameters().Length != 2 || info.GetParameters()[0].ParameterType != typeof(DataReader) || info.GetParameters()[1].ParameterType != typeof(MinecraftRegistry)) {
-    //         throw new InvalidOperationException($"Type {type.Name} ReadData method must have signature: T ReadData(DataReader reader, MinecraftRegistry registry).");
-    //     }
-    //     
-    //     object? result = info.Invoke(null, [this, reg]);
-    //     if (result == null) {
-    //         throw new InvalidOperationException($"ReadData method of type {type.Name} returned null.");
-    //     }
-    //     if (result is not T t) {
-    //         throw new InvalidOperationException($"ReadData method of type {type.Name} returned an object of type {result.GetType().Name}, expected {typeof(T).Name}.");
-    //     }
-    //     return t;
-    // }
+    public T? ReadPrefixedOptional<T>(MinecraftRegistry reg) where T : INetworkType<T> {
+        return ReadPrefixedOptional(r => T.ReadData(r, reg));
+    }
+
+    public T Read<T>(MinecraftRegistry reg) where T : INetworkType<T> {
+        return T.ReadData(this, reg);
+    }
 
     public int ReadVarInt() {
         int value = 0;
@@ -324,6 +311,10 @@ public class DataReader(byte[] data) : Stream {
     
     public T[] ReadPrefixedArray<T>(Func<DataReader, T> readerAdapter) {
         return ReadArray(ReadVarInt(), readerAdapter);
+    }
+    
+    public T[] ReadPrefixedArray<T>(MinecraftRegistry reg) where T : INetworkType<T> {
+        return ReadArray(ReadVarInt(), (r, i) => T.ReadData(r, reg));
     }
 
     public T[] ReadArray<T>(int length, Func<DataReader, T> readerAdapter) {

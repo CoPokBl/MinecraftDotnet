@@ -26,9 +26,11 @@ public class ServerBoundClickContainerPacket : ServerBoundPacket {
                     wr.WriteShort(pair.Key)
                         .Write(wri => {
                             wri.WriteBoolean(pair.Value != null);
-                            pair.Value?.Write(wri, reg);
+                            if (pair.Value != null) {
+                                wri.Write(pair.Value, reg);
+                            }
                         }))
-                .WritePrefixedOptional(CursorItem, (slot, wr) => slot.Write(wr, reg));
+                .WritePrefixedOptional(CursorItem, reg);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ServerBoundClickContainerPacket {
@@ -40,9 +42,9 @@ public class ServerBoundClickContainerPacket : ServerBoundPacket {
         ChangedSlots = r.ReadPrefixedArray(r2 => {
             short key = r2.ReadShort();
             bool hasValue = r2.ReadBoolean();
-            HashedSlot? value = hasValue ? HashedSlot.Read(r2, reg) : null;
+            HashedSlot? value = hasValue ? r2.Read<HashedSlot>(reg) : null;
             return (key, value);
         }).ToDictionary(pair => pair.key, pair => pair.value),
-        CursorItem = r.ReadPrefixedOptional(r2 => HashedSlot.Read(r2, reg))
+        CursorItem = r.ReadPrefixedOptional<HashedSlot>(reg)
     };
 }

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
 
     public Identifier Category => "minecraft:respawn_anchor";
+    public int ProtocolId => 878;
     public double Hardness => 50;
     public double ExplosionResistance => 1200;
     public double Friction => 0.6;

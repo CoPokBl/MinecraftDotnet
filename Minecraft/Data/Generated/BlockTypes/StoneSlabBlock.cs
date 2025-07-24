@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record StoneSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:slab";
+    public int ProtocolId => 578;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

@@ -1,3 +1,4 @@
+using Minecraft.Data;
 using Minecraft.Data.Components;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Items;
@@ -17,7 +18,7 @@ namespace Minecraft.Schemas.Items;
 public class ItemStack(
     int count, IItem? type = null, 
     Dictionary<IDataComponent, object>? components = null, IDataComponent[]? removeComponents = null) : 
-    IImmutableTaggability<ItemStack> {
+    IImmutableTaggability<ItemStack>, INetworkType<ItemStack> {
     
     public readonly int Count = count;
     public readonly IItem Type = type ?? Item.Air;
@@ -80,10 +81,9 @@ public class ItemStack(
         return component == null ? null : (T)component;
     }
     
-    public void Write(DataWriter writer, MinecraftRegistry registry) {
+    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         if (Count == 0) {
-            writer.WriteVarInt(0);
-            return;
+            return writer.WriteVarInt(0);
         }
         
         writer.WriteVarInt(Count);
@@ -96,11 +96,11 @@ public class ItemStack(
             .WriteVarInt(kvp.Key.ProtocolId)
             .Write(wr => kvp.Key.WriteData(kvp.Value, wr, registry)));
         
-        writer.WriteArray(RemoveComponents, (component, w) => w
+        return writer.WriteArray(RemoveComponents, (component, w) => w
             .WriteVarInt(registry.DataComponents[component.Identifier]));
     }
 
-    public static ItemStack Read(DataReader reader, MinecraftRegistry registry) {
+    public static ItemStack ReadData(DataReader reader, MinecraftRegistry registry) {
         int count = reader.ReadVarInt();
         if (count == 0) {
             return new ItemStack(0);

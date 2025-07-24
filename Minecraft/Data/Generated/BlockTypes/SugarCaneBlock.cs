@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record SugarCaneBlock(Identifier Identifier, int Age) : IBlock {
 
     public Identifier Category => "minecraft:sugar_cane";
+    public int ProtocolId => 269;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

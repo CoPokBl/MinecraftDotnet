@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record LavaBlock(Identifier Identifier, int Level) : IBlock {
 
     public Identifier Category => "minecraft:liquid";
+    public int ProtocolId => 36;
     public double Hardness => 100;
     public double ExplosionResistance => 100;
     public double Friction => 0.6;

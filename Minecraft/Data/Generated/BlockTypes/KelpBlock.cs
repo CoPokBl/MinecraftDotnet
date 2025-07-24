@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record KelpBlock(Identifier Identifier, int Age) : IBlock {
 
     public Identifier Category => "minecraft:kelp";
+    public int ProtocolId => 710;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

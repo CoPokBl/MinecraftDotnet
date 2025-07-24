@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Power) : IBlock {
 
     public Identifier Category => "minecraft:daylight_detector";
+    public int ProtocolId => 442;
     public double Hardness => 0.2;
     public double ExplosionResistance => 0.2;
     public double Friction => 0.6;

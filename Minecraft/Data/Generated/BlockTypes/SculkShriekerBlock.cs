@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shrieking, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:sculk_shrieker";
+    public int ProtocolId => 966;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

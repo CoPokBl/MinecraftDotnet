@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record CutCopperSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:weathering_copper_slab";
+    public int ProtocolId => 992;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

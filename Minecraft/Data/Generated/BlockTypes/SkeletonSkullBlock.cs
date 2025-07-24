@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record SkeletonSkullBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock {
 
     public Identifier Category => "minecraft:skull";
+    public int ProtocolId => 421;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

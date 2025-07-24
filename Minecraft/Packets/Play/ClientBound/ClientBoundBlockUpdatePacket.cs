@@ -18,6 +18,6 @@ public class ClientBoundBlockUpdatePacket : ClientBoundPacket {
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundBlockUpdatePacket {
         Location = r.ReadPosition(),
-        Block = reg.Blocks[(uint)r.ReadVarInt()]
+        Block = reg.Blocks.GetByStateId((uint)r.ReadVarInt())
     };
 }

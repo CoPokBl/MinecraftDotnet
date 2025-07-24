@@ -17,13 +17,13 @@ public class ClientBoundSetContainerSlotPacket : ClientBoundPacket {
             .WriteVarInt(WindowId)
             .WriteVarInt(StateId)
             .WriteShort(SlotId)
-            .Write(wr => Data.Write(wr, registry));
+            .Write(Data, registry);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundSetContainerSlotPacket {
         WindowId = r.ReadVarInt(),
         StateId = r.ReadVarInt(),
         SlotId = r.ReadShort(),
-        Data = ItemStack.Read(r, reg)
+        Data = r.Read<ItemStack>(reg)
     };
 }

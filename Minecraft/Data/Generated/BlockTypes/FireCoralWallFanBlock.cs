@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record FireCoralWallFanBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:coral_wall_fan";
+    public int ProtocolId => 754;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

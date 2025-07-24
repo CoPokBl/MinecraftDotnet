@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record DeadBubbleCoralWallFanBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:base_coral_wall_fan";
+    public int ProtocolId => 748;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

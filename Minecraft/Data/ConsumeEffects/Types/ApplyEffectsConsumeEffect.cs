@@ -13,7 +13,7 @@ public record ApplyEffectsConsumeEffect(Identifier Identifier, int ProtocolId, P
 
     public IConsumeEffect ReadData(DataReader reader, MinecraftRegistry registry) {
         return this with {
-            Effects = reader.ReadPrefixedArray(r => PotionEffect.ReadData(r, registry))
+            Effects = reader.ReadPrefixedArray<PotionEffect>(registry)
         };
     }
 }

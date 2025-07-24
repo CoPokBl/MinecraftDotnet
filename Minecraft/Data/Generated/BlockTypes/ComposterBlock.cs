@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
 
     public Identifier Category => "minecraft:composter";
+    public int ProtocolId => 869;
     public double Hardness => 0.6;
     public double ExplosionResistance => 0.6;
     public double Friction => 0.6;

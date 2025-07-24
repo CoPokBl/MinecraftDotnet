@@ -77,9 +77,9 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
                     Name = r.ReadString(),
                     Properties = r.ReadPrefixedArray(re => {
                         return new Property {
-                            Name = r.ReadString(),
-                            Value = r.ReadString(),
-                            Signature = r.ReadPrefixedOptional(red => red.ReadString())
+                            Name = re.ReadString(),
+                            Value = re.ReadString(),
+                            Signature = re.ReadPrefixedOptional(red => red.ReadString())
                         };
                     })
                 };

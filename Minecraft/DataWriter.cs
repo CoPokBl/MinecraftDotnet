@@ -102,16 +102,12 @@ public class DataWriter : Stream, IWritable {
         writable.Write(this);
         return this;
     }
-
-    public DataWriter Write<T>(INetworkType<T> type, T val, MinecraftRegistry reg) {
-        return type.WriteData(val, this, reg);
-    }
     
     public DataWriter Write<T>(INetworkType<T> type, MinecraftRegistry reg) where T : INetworkType<T> {
-        if (type is not T t) {
+        if (type is not T) {
             throw new ArgumentException("type is not T");
         }
-        return type.WriteData(t, this, reg);
+        return type.WriteData(this, reg);
     }
 
     public DataWriter Write(Func<DataWriter, DataWriter> writeAction) {
@@ -434,6 +430,10 @@ public class DataWriter : Stream, IWritable {
         return this;
     }
     
+    public DataWriter WritePrefixedOptional<T>(T? value, MinecraftRegistry reg) where T : class, INetworkType<T> {
+        return WritePrefixedOptional(value, (v, w) => v.WriteData(w, reg));
+    }
+    
     public DataWriter WritePrefixedOptional<T>(Optional<T> value, Action<T, DataWriter> writer) {
         if (!value.Present) {
             return WriteBoolean(false);
@@ -482,9 +482,17 @@ public class DataWriter : Stream, IWritable {
         Or<int, T> newOr = idOr.IsValue1 ? Or<int, T>.FromValue1(idOr.Value1!.ProtocolId) : Or<int, T>.FromValue2(idOr.Value2!);
         return WriteIdOr(newOr, writerAction);
     }
+    
+    public DataWriter WriteIdOr<TP, T>(Or<TP, T> idOr, MinecraftRegistry reg) where TP : IProtocolType where T : INetworkType<T> {
+        return WriteIdOr(idOr, (type, writer) => type.WriteData(writer, reg));
+    }
 
     public DataWriter WritePrefixedArray<T>(T[] values, Action<T, DataWriter> writerAction) {
         return WriteVarInt(values.Length).WriteArray(values, writerAction);
+    }
+    
+    public DataWriter WritePrefixedArray<T>(T[] values, MinecraftRegistry reg) where T : INetworkType<T> {
+        return WritePrefixedArray(values, (type, writer) => type.WriteData(writer, reg));
     }
 
     public DataWriter WriteArray<T>(IEnumerable<T> values, Action<T, DataWriter> writerAction) {

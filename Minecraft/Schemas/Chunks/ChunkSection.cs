@@ -152,11 +152,11 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     }
     
     public IBlock LookupBlock(int x, int y, int z, MinecraftRegistry? registry = null) {
-        return (registry ?? VanillaRegistry.Data).Blocks[GetBlock(x, y, z)];
+        return (registry ?? VanillaRegistry.Data).Blocks.GetByStateId(GetBlock(x, y, z));
     }
     
     public IBlock LookupBlock(IVec3 pos, MinecraftRegistry? registry = null) {
-        return (registry ?? VanillaRegistry.Data).Blocks[GetBlock(pos)];
+        return (registry ?? VanillaRegistry.Data).Blocks.GetByStateId(GetBlock(pos));
     }
     
     public void Write(DataWriter w) {

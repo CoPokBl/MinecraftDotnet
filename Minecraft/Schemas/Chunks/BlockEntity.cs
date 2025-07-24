@@ -41,11 +41,11 @@ public record BlockEntity(byte PackedXz, short Y, IBlockEntityType Type, INbtTag
     /// </summary>
     public int Z => PackedXz & 0xF;
 
-    public DataWriter WriteData(BlockEntity val, DataWriter writer, MinecraftRegistry registry) {
-        writer.Write(val.PackedXz);
-        writer.WriteShort(val.Y);
-        writer.WriteVarInt(val.Type.ProtocolId);
-        writer.WriteNbt(val.Data);
+    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
+        writer.Write(PackedXz);
+        writer.WriteShort(Y);
+        writer.WriteVarInt(Type.ProtocolId);
+        writer.WriteNbt(Data);
         return writer;
     }
     

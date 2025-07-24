@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record FurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : IBlock {
 
     public Identifier Category => "minecraft:furnace";
+    public int ProtocolId => 196;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;

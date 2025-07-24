@@ -11,7 +11,7 @@ public record AttributeModifiersComponent(int ProtocolId) : IDataComponent<ItemA
     }
 
     public override ItemAttributeModifier[] ReadData(DataReader reader, MinecraftRegistry registry) {
-        ItemAttributeModifier[] modifiers = reader.ReadPrefixedArray(r => ItemAttributeModifier.ReadData(r, registry));
+        ItemAttributeModifier[] modifiers = reader.ReadPrefixedArray<ItemAttributeModifier>(registry);
         return modifiers;
     }
 }

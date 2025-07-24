@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction Facing, bool Powered) : IBlock {
 
     public Identifier Category => "minecraft:trip_wire_hook";
+    public int ProtocolId => 370;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

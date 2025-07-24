@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record WildflowersBlock(Identifier Identifier, Direction Facing, int FlowerAmount) : IBlock {
 
     public Identifier Category => "minecraft:flower_bed";
+    public int ProtocolId => 1051;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record GlowLichenBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool Waterlogged, bool West) : IBlock {
 
     public Identifier Category => "minecraft:glow_lichen";
+    public int ProtocolId => 336;
     public double Hardness => 0.2;
     public double ExplosionResistance => 0.2;
     public double Friction => 0.6;

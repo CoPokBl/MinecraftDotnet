@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record CyanCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock {
 
     public Identifier Category => "minecraft:candle_cake";
+    public int ProtocolId => 931;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:wall_hanging_sign";
+    public int ProtocolId => 241;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record WitherSkeletonWallSkullBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
 
     public Identifier Category => "minecraft:wither_wall_skull";
+    public int ProtocolId => 424;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

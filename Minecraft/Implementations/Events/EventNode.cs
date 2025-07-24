@@ -126,6 +126,10 @@ public class EventNode<T> {
             
             (EventNode<T>, Func<T, bool>)[] children = Children.ToArray();  // avoid modifying while iterating
             foreach ((EventNode<T> child, Func<T, bool> condition) in children) {
+                if (condition == null!) {
+                    Console.WriteLine("WARNING: EventNode<T> has a null condition, this is probably a bug in the code.");
+                    continue;
+                }
                 if (condition(e)) {
                     child.ExecuteEventCallbacks(e);
                 }

@@ -13,7 +13,7 @@ public record ConsumableComponent(int ProtocolId) : IDataComponent<ConsumableCom
         return writer.Write(w => {
             w.WriteFloat(val.ConsumeSeconds);
             w.WriteVarInt((int)val.Animation);
-            w.WriteIdOr(val.Sound, (se, wr) => se.Write(wr));
+            w.WriteIdOr(val.Sound, registry);
             w.WriteBoolean(val.HasParticles);
             w.WritePrefixedArray(val.Effects, (effect, wr) => effect.WriteData(wr.WriteVarInt(effect.ProtocolId), registry));
         });
@@ -24,7 +24,7 @@ public record ConsumableComponent(int ProtocolId) : IDataComponent<ConsumableCom
         ConsumeAnimation animation = (ConsumeAnimation)reader.ReadVarInt();
         Or<ISoundType, SoundEvent> sound = reader.ReadIdOr(
             id => registry.SoundTypes[id],
-            r => SoundEvent.Deserialise(r, registry)
+            r => r.Read<SoundEvent>(registry)
         );
         bool hasParticles = reader.ReadBoolean();
         IConsumeEffect[] effects = reader.ReadPrefixedArray(r => {

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record CherryTrapdoorBlock(Identifier Identifier, Direction Facing, CherryTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:trapdoor";
+    public int ProtocolId => 306;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hanging, int Stage, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:mangrove_propagule";
+    public int ProtocolId => 33;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

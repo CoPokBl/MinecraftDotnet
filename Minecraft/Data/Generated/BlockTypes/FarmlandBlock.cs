@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
 
     public Identifier Category => "minecraft:farm";
+    public int ProtocolId => 195;
     public double Hardness => 0.6;
     public double ExplosionResistance => 0.6;
     public double Friction => 0.6;

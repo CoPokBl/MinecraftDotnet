@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBlock {
 
     public Identifier Category => "minecraft:cave_vines";
+    public int ProtocolId => 1044;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

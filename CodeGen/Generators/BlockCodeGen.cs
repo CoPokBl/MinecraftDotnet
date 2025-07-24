@@ -160,6 +160,7 @@ public static class Block {
             
             // FETCH ADDITIONAL DATA
             JObject dataEntry = blocksDataJson[id]!.ToObject<JObject>()!;
+            int protocolId = dataEntry["id"].ToObject<int>();
             string category = blockData["definition"]!["type"]!.ToObject<string>()!;
             string translationKey = dataEntry["translationKey"]!.ToObject<string>()!;
             double explosionResistance = dataEntry["explosionResistance"]!.ToObject<double>();
@@ -217,9 +218,9 @@ public static class Block {
                 JObject state = states[0].ToObject<JObject>()!;
                 int stateId = state["id"]!.ToObject<int>();
 
-                registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {stateId});\n");
+                registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, {stateId});\n");
                 blocksFileEntries.Append($"{CodeGenUtils.GetIndentation(1)}public static readonly SimpleBlock {staticVarName} = " +
-                                         $"new(\"{id}\", {stateId}, {propArgsStringRecord});\n");
+                                         $"new(\"{id}\", {protocolId}, {stateId}, {propArgsStringRecord});\n");
                 continue;  // they don't need a record class, just a simple block
             }
             
@@ -238,10 +239,10 @@ public static class Block {
 
                 bool defaultIsWaterlogged = (stateOneIsWaterlogged ? state1 : state2).ContainsKey("default");
                 
-                registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {waterloggedState}, {airLoggedState});\n");
+                registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, {waterloggedState}, {airLoggedState});\n");
                 blocksFileEntries.Append(
                     $"{CodeGenUtils.GetIndentation(1)}public static readonly WaterloggableBlock {staticVarName} = " +
-                    $"new(\"{id}\", {airLoggedState}, {waterloggedState}, {defaultIsWaterlogged.ToString().ToLower()}, {propArgsStringRecord});\n");
+                    $"new(\"{id}\", {protocolId}, {airLoggedState}, {waterloggedState}, {defaultIsWaterlogged.ToString().ToLower()}, {propArgsStringRecord});\n");
                 continue;  // they don't need a record class, just a simple block
             }
             
@@ -251,6 +252,7 @@ public static class Block {
             // COMPILE ALL THE DATA INTO PROPS
             StringBuilder staticData = new();
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public Identifier Category => {toCsStr(category)};\n");
+            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public int ProtocolId => {protocolId};\n");
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double Hardness => {hardness};\n");
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double ExplosionResistance => {explosionResistance};\n");
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double Friction => {friction};\n");
@@ -416,7 +418,7 @@ public static class Block {
             }
             
             // =====================================================
-            //                    State Id Logic
+            //                  To State Id Logic
             // =====================================================
             string toStateLogic = "return ";
 
@@ -463,7 +465,7 @@ public static class Block {
             toStateLogic += ";";
             
             // =====================================================
-            //               Get State Logic
+            //               From State Logic
             // =====================================================
             JObject? defaultState = null;
             int[] stateIds = new int[states.Count];
@@ -552,7 +554,7 @@ public static class Block {
             }
 
             string defaultBlockDefinition = $"new(\"{id}\", {string.Join(", ", regParams)})";
-            registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, \"{id}\", {string.Join(", ", stateIds)});\n");
+            registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, {string.Join(", ", stateIds)});\n");
             blocksFileEntries.Append(
                 $"{CodeGenUtils.GetIndentation(1)}public static readonly {pascalName} {staticVarName} = {defaultBlockDefinition};\n");
             

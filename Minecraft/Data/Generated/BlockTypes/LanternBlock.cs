@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record LanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:lantern";
+    public int ProtocolId => 817;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;

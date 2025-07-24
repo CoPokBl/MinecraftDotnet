@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves LeavesValue, int Stage) : IBlock {
 
     public Identifier Category => "minecraft:bamboo_stalk";
+    public int ProtocolId => 760;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

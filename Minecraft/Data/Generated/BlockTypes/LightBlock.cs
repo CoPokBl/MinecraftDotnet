@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record LightBlock(Identifier Identifier, int Level, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:light";
+    public int ProtocolId => 493;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000.8;
     public double Friction => 0.6;

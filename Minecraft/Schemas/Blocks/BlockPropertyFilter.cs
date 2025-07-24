@@ -1,3 +1,6 @@
+using Minecraft.Data;
+using Minecraft.Registry;
+
 namespace Minecraft.Schemas.Blocks;
 
 public record BlockPropertyFilter(
@@ -5,7 +8,7 @@ public record BlockPropertyFilter(
     bool ExactMatch = false,
     string? ExactValue = null,
     string? MinValue = null,
-    string? MaxValue = null) : IWritable {
+    string? MaxValue = null) : INetworkType<BlockPropertyFilter> {
     
     public static BlockPropertyFilter Exact(string prop, string value) {
         return new BlockPropertyFilter(prop, true, value);
@@ -15,7 +18,7 @@ public record BlockPropertyFilter(
         return new BlockPropertyFilter(prop, false, null, min, max);
     }
     
-    public void Write(DataWriter writer) {
+    public DataWriter WriteData(DataWriter writer, MinecraftRegistry _) {
         writer.WriteString(Name);
         writer.WriteBoolean(ExactMatch);
         if (ExactMatch) {
@@ -24,9 +27,10 @@ public record BlockPropertyFilter(
             writer.WriteString(MinValue.ThrowIfNull());
             writer.WriteString(MaxValue.ThrowIfNull());
         }
+        return writer;
     }
     
-    public static BlockPropertyFilter Read(DataReader reader) {
+    public static BlockPropertyFilter ReadData(DataReader reader, MinecraftRegistry _) {
         string name = reader.ReadString();
         bool exactMatch = reader.ReadBoolean();
         string? exactValue = exactMatch ? reader.ReadString() : null;

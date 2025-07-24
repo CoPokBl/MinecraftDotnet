@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record WaxedExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : IBlock {
 
     public Identifier Category => "minecraft:copper_bulb_block";
+    public int ProtocolId => 1038;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

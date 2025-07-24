@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record RedSandstoneWallBlock(Identifier Identifier, WallSide East, WallSide North, WallSide South, bool Up, bool Waterlogged, WallSide West) : IBlock {
 
     public Identifier Category => "minecraft:wall";
+    public int ProtocolId => 794;
     public double Hardness => 0.8;
     public double ExplosionResistance => 0.8;
     public double Friction => 0.6;

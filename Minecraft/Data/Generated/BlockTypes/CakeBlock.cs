@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
 
     public Identifier Category => "minecraft:cake";
+    public int ProtocolId => 283;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

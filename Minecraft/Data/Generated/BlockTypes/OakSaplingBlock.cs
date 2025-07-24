@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record OakSaplingBlock(Identifier Identifier, int Stage) : IBlock {
 
     public Identifier Category => "minecraft:sapling";
+    public int ProtocolId => 25;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

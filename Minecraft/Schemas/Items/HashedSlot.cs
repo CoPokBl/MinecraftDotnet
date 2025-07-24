@@ -1,3 +1,4 @@
+using Minecraft.Data;
 using Minecraft.Data.Components;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Items;
@@ -6,13 +7,13 @@ using Minecraft.Registry;
 namespace Minecraft.Schemas.Items;
 
 // this field should be prefixed optional when used in the ClickContainer packet
-public class HashedSlot(int count, IItem? type = null, (IDataComponent, int)[]? components = null, IDataComponent[]? removeComponents = null) {
+public class HashedSlot(int count, IItem? type = null, (IDataComponent, int)[]? components = null, IDataComponent[]? removeComponents = null) : INetworkType<HashedSlot> {
     public readonly int Count = count;
     public readonly IItem Type = type ?? Item.Air;
     public readonly (IDataComponent, int)[] Components = components ?? [];
     public readonly IDataComponent[] RemoveComponents = removeComponents ?? [];
     
-    public void Write(DataWriter writer, MinecraftRegistry registry) {
+    public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         writer.WriteVarInt(Type.ProtocolId);
         writer.WriteVarInt(Count);
 
@@ -20,11 +21,11 @@ public class HashedSlot(int count, IItem? type = null, (IDataComponent, int)[]? 
             .WriteVarInt(registry.DataComponents[component.Item1.Identifier])
             .WriteInteger(component.Item2));
         
-        writer.WritePrefixedArray(RemoveComponents, (component, w) => w
+        return writer.WritePrefixedArray(RemoveComponents, (component, w) => w
             .WriteVarInt(registry.DataComponents[component.Identifier]));
     }
 
-    public static HashedSlot Read(DataReader reader, MinecraftRegistry registry) {
+    public static HashedSlot ReadData(DataReader reader, MinecraftRegistry registry) {
         int itemId = reader.ReadVarInt();
         int count = reader.ReadVarInt();
 

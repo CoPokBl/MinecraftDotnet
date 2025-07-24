@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record BlastFurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : IBlock {
 
     public Identifier Category => "minecraft:blast_furnace";
+    public int ProtocolId => 809;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;

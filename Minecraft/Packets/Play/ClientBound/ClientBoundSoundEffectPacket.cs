@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Minecraft.Data.Sounds;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
@@ -66,10 +67,10 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
         Seed = seed;
     }
 
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry reg) {
         if (Event != null) {
             w.WriteVarInt(0)
-                .Write(Event);
+                .Write(Event, reg);
         }
         else w.WriteVarInt(Type.ThrowIfNull().ProtocolId + 1);
 
@@ -90,7 +91,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
         int id = r.ReadVarInt();
         SoundEvent? ev = null;
         if (id == 0) {
-            ev = SoundEvent.Deserialise(r, reg);
+            ev = r.Read<SoundEvent>(reg);
         }
         else id--;
         

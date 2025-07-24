@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record WaxedExposedCopperDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
 
     public Identifier Category => "minecraft:door";
+    public int ProtocolId => 1014;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

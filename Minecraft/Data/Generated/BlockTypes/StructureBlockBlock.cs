@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mode ModeValue) : IBlock {
 
     public Identifier Category => "minecraft:structure";
+    public int ProtocolId => 865;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;

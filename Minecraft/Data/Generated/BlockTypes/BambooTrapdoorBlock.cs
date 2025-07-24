@@ -12,6 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 public record BambooTrapdoorBlock(Identifier Identifier, Direction Facing, BambooTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
 
     public Identifier Category => "minecraft:trapdoor";
+    public int ProtocolId => 310;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
