@@ -18,7 +18,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
     public ISoundType? Type;
     public SoundEvent? Event;
     public required SoundCategory Category;
-    public required Vec3 Pos;
+    public required Vec3<double> Pos;
     public required float Volume;
     public required float Pitch;
     public required long Seed;
@@ -36,7 +36,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
     /// <param name="pitch">The pitch.</param>
     /// <param name="seed">Seed to use for random effects by the Notchian client.</param>
     [SetsRequiredMembers]
-    public ClientBoundSoundEffectPacket(SoundEvent soundEvent, SoundCategory category, Vec3 pos, float volume, float pitch, long seed) : this() {
+    public ClientBoundSoundEffectPacket(SoundEvent soundEvent, SoundCategory category, Vec3<double> pos, float volume, float pitch, long seed) : this() {
         Event = soundEvent;
         Category = category;
         Pos = pos;
@@ -58,7 +58,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
     /// <param name="pitch">The pitch.</param>
     /// <param name="seed">Seed to use for random effects by the Notchian client.</param>
     [SetsRequiredMembers]
-    public ClientBoundSoundEffectPacket(ISoundType type, SoundCategory category, Vec3 pos, float volume, float pitch, long seed) : this() {
+    public ClientBoundSoundEffectPacket(ISoundType type, SoundCategory category, Vec3<double> pos, float volume, float pitch, long seed) : this() {
         Type = type;
         Category = category;
         Pos = pos;
@@ -99,7 +99,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
             Type = reg.SoundTypes[id],
             Event = ev,
             Category = (SoundCategory)r.ReadVarInt(),
-            Pos = new Vec3(
+            Pos = new Vec3<double>(
                 (double)r.ReadVarInt() / (1 << 3),
                 (double)r.ReadVarInt() / (1 << 3),
                 (double)r.ReadVarInt() / (1 << 3)),

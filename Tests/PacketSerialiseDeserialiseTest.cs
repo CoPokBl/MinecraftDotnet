@@ -124,14 +124,14 @@ public class PacketSerialiseDeserialiseTest {
             Data = cd,
             Light = LightData.FullBright
         };
-        chunk.Data.BlockEntities.Add(new IVec3(0, 0, 0), new BlockEntity(0, 0, 0, BlockEntityType.Beacon, new BooleanTag("hello", true)));
+        chunk.Data.BlockEntities.Add(new Vec3<int>(0, 0, 0), new BlockEntity(0, 0, 0, BlockEntityType.Beacon, new BooleanTag("hello", true)));
         ClientBoundChunkDataAndUpdateLightPacket chunkDe = SerialiseAndDeserialise(chunk, true, ConnectionState.Play);
         Assert.That(chunkDe.Data.GetBlock(10, 100, 10), Is.EqualTo(10));
         Assert.That(chunkDe.Data.GetBlock(1, 2, 3), Is.EqualTo(11));
         Assert.That(chunkDe.Data.GetBlock(7, 53, 2), Is.EqualTo(5));
         Assert.That(chunkDe.Data.GetBlock(2, 7, 3), Is.EqualTo(0));
         Assert.That(chunkDe.Data.BlockEntities, Has.Count.EqualTo(1));
-        Assert.That(chunkDe.Data.BlockEntities[new IVec3(0, 0, 0)].Type, Is.EqualTo(BlockEntityType.Beacon));
+        Assert.That(chunkDe.Data.BlockEntities[new Vec3<int>(0, 0, 0)].Type, Is.EqualTo(BlockEntityType.Beacon));
 
         ClientBoundPlayerInfoUpdatePacket badPacket = new() {
             Data = null!

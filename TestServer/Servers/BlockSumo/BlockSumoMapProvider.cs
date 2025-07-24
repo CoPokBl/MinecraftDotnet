@@ -9,21 +9,21 @@ public class BlockSumoMapProvider : ThreadedPerBlockTerrainProvider {
 
     private static readonly IBlock PlatformBlock = Block.RawCopperBlock;
 
-    private Dictionary<IVec3, IBlock> Map = new();
+    private readonly Dictionary<Vec3<int>, IBlock> _map = new();
 
     public BlockSumoMapProvider(int radius) {
         for (int x = -radius; x < radius; x++) {
             for (int z = -radius; z < radius; z++) {
-                if (new IVec3(x, 0, z).DistanceTo(IVec3.Zero) > radius) {
+                if (new Vec3<int>(x, 0, z).DistanceTo(Vec3<int>.Zero) > radius) {
                     continue;
                 }
                 
-                Map.Add(new IVec3(x, 60, z), PlatformBlock);
+                _map.Add(new Vec3<int>(x, 60, z), PlatformBlock);
             }
         }
     }
     
     public override uint GetBlock(int x, int y, int z) {
-        return Map.GetValueOrDefault(new IVec3(x, y, z), Block.Air).StateId;
+        return _map.GetValueOrDefault(new Vec3<int>(x, y, z), Block.Air).StateId;
     }
 }

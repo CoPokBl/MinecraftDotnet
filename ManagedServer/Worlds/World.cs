@@ -35,7 +35,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     public bool Immutable { get; set; } = false;
     private readonly Dictionary<string, object?> _data = new();
 
-    private readonly ConcurrentDictionary<IVec2, ChunkData> _chunks = new();
+    private readonly ConcurrentDictionary<Vec2<int>, ChunkData> _chunks = new();
     
     // Params
     private readonly ITerrainProvider _provider;
@@ -76,7 +76,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     /// Should store the time when an item was dropped. It will be set to <see cref="DateTime.Now"/> when the item is dropped.
     /// </summary>
     public static readonly Tag<DateTime> ItemDropTimeTag = new("minecraftdotnet:world:item_drop_time");
-    private static readonly Tag<HashSet<IVec2>> LoadedChunksTag = new("minecraftdotnet:world:loadedchunks");
+    private static readonly Tag<HashSet<Vec2<int>>> LoadedChunksTag = new("minecraftdotnet:world:loadedchunks");
     private static readonly Tag<Queue<MinecraftPacket>> WaitingPacketsTag = new("minecraftdotnet:world:waitingpackets");
     private static readonly Tag<Action> CancelListenersActionTag = new("minecraftdotnet:world:cancellistener");
     
@@ -145,47 +145,47 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 return;
             }
             
-            IVec2 chunkPos = new((int)Math.Floor(e.NewPos.X / 16), (int)Math.Floor(e.NewPos.Z / 16));
+            Vec2<int> chunkPos = new((int)Math.Floor(e.NewPos.X / 16), (int)Math.Floor(e.NewPos.Z / 16));
             HandlePlayerMove(pe.Connection, chunkPos);
         });
         player.Connection.SetTag(CancelListenersActionTag, cancelAction);
         Players.Add(player);
     }
 
-    public void HandlePlayerMove(PlayerConnection connection, IVec2 chunkPos) {
+    public void HandlePlayerMove(PlayerConnection connection, Vec2<int> chunkPos) {
         Stopwatch sw;
         int unloadingBench;
         if (Benchmark) {
             sw = Stopwatch.StartNew();
         }
         
-        HashSet<IVec2> loaded = GetPlayerLoadedChunks(connection);
+        HashSet<Vec2<int>> loaded = GetPlayerLoadedChunks(connection);
         // Console.WriteLine($"{loaded.Count} chunks are loaded");
 
         List<MinecraftPacket> neededPackets = [];
-        List<IVec2> unloaded = [];
-        foreach (IVec2 loadedChunk in loaded) {
+        List<Vec2<int>> unloaded = [];
+        foreach (Vec2<int> loadedChunk in loaded) {
             if (loadedChunk.IsWithinRadiusOf(chunkPos, UnloadDistance)) continue;
             
             neededPackets.Add(new ClientBoundUnloadChunkPacket {
                 X = loadedChunk.X,
-                Z = loadedChunk.Z
+                Z = loadedChunk.Y
             });  // not within radius, unload it
             unloaded.Add(loadedChunk);
             // Console.WriteLine($"Unloading {loadedChunk.X}, {loadedChunk.Z}");
         }
-        foreach (IVec2 c in unloaded) {
+        foreach (Vec2<int> c in unloaded) {
             loaded.Remove(c);
         }
 
         if (Benchmark) unloadingBench = (int)sw.ElapsedMilliseconds;
     
         // Okay, now get everything that should be loaded
-        IVec2[] toLoad = new IVec2[(_viewDistance*2+1)*(_viewDistance*2+1)];
+        Vec2<int>[] toLoad = new Vec2<int>[(_viewDistance*2+1)*(_viewDistance*2+1)];
         int i = 0;
         for (int x = 0; x < _viewDistance * 2 + 1; x++) {
             for (int z = 0; z < _viewDistance * 2 + 1; z++) {
-                IVec2 chunk = new(x + chunkPos.X - _viewDistance, z + chunkPos.Z - _viewDistance);
+                Vec2<int> chunk = new(x + chunkPos.X - _viewDistance, z + chunkPos.Y - _viewDistance);
                 
                 if (!loaded.Contains(chunk)) {
                     // okay, so we need to load chunk
@@ -208,13 +208,13 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         
         neededPackets.Add(new ClientBoundSetCenterChunkPacket {
             X = chunkPos.X,
-            Z = chunkPos.Z
+            Z = chunkPos.Y
         });
         
         IEnumerable<MinecraftPacket> orderedPackets = neededPackets.OrderBy(p => {
             if (p is ClientBoundSetCenterChunkPacket) return 0;  // always do this first, otherwise we could get issues
             if (p is not ClientBoundChunkDataAndUpdateLightPacket chunkP) return 100;  // do unload packets last (for faster load, client unloads anyway)
-            return new IVec2(chunkP.ChunkX, chunkP.ChunkZ).DistanceTo(chunkPos);  // do closer chunks first for quicker load
+            return new Vec2<int>(chunkP.ChunkX, chunkP.ChunkZ).DistanceTo(chunkPos);  // do closer chunks first for quicker load
         });
         
         Queue<MinecraftPacket> waitingPackets = connection.GetTag(WaitingPacketsTag);
@@ -233,18 +233,18 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         entity.SetWorld(this);
     }
 
-    private static HashSet<IVec2> GetPlayerLoadedChunks(PlayerConnection connection) {
+    private static HashSet<Vec2<int>> GetPlayerLoadedChunks(PlayerConnection connection) {
         if (!connection.HasTag(LoadedChunksTag)) {
             throw new Exception("Loaded chunks don't exist");
         }
         return connection.GetTag(LoadedChunksTag);
     }
 
-    private static void SetPlayerLoadedChunks(PlayerConnection connection, HashSet<IVec2> chunks) {
+    private static void SetPlayerLoadedChunks(PlayerConnection connection, HashSet<Vec2<int>> chunks) {
         connection.SetTag(LoadedChunksTag, chunks);
     }
 
-    public void SetBlock(IVec3 pos, IBlock block, IBlockEntityType? blockEntityType = null, INbtTag? blockEntityData = null) {
+    public void SetBlock(Vec3<int> pos, IBlock block, IBlockEntityType? blockEntityType = null, INbtTag? blockEntityData = null) {
         if (Immutable) {
             throw new InvalidOperationException("World is immutable, cannot set block.");
         }
@@ -265,8 +265,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             return;
         }
         
-        IVec2 chunk = GetChunkPos(pos);
-        IVec3 localPos = ToChunkLocalPos(GameToProtocolPos(pos));  // local protocol pos (y is 0 indexed)
+        Vec2<int> chunk = GetChunkPos(pos);
+        Vec3<int> localPos = ToChunkLocalPos(GameToProtocolPos(pos));  // local protocol pos (y is 0 indexed)
         
         LoadChunk(chunk);
         ChunkData data = RetrieveChunk(chunk)!;
@@ -284,20 +284,20 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         SendBlockUpdate(pos, this);
     }
     
-    public void SetBlock(Vec3 pos, IBlock block, IBlockEntityType? blockEntityType = null, INbtTag? blockEntityData = null) {
+    public void SetBlock(Vec3<double> pos, IBlock block, IBlockEntityType? blockEntityType = null, INbtTag? blockEntityData = null) {
         // Convert Vec3 to IVec3
         SetBlock(pos.ToBlockPos(), block, blockEntityType, blockEntityData);
     }
     
-    public void SetBlockData(IVec3 pos, BlockEntity? data) {
+    public void SetBlockData(Vec3<int> pos, BlockEntity? data) {
         if (Immutable) {
             throw new InvalidOperationException("World is immutable, cannot set block data.");
         }
         CheckY(pos.Y);
         
-        IVec2 chunk = GetChunkPos(pos);
+        Vec2<int> chunk = GetChunkPos(pos);
         LoadChunk(chunk);
-        IVec3 chunkLocalPos = ToChunkLocalPos(pos);
+        Vec3<int> chunkLocalPos = ToChunkLocalPos(pos);
         ChunkData chunkData = RetrieveChunk(chunk)!;
         
         if (data == null) {
@@ -310,38 +310,38 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         SendBlockUpdate(pos, this);
     }
     
-    private static IVec3 ToChunkLocalPos(IVec3 pos) {
-        return new IVec3((pos.X % 16 + 16) % 16, pos.Y, (pos.Z % 16 + 16) % 16);
+    private static Vec3<int> ToChunkLocalPos(Vec3<int> pos) {
+        return new Vec3<int>((pos.X % 16 + 16) % 16, pos.Y, (pos.Z % 16 + 16) % 16);
     }
     
-    public IBlock GetBlock(IVec3 pos) {
+    public IBlock GetBlock(Vec3<int> pos) {
         CheckY(pos.Y);
         
-        IVec2 chunk = GetChunkPos(pos);
+        Vec2<int> chunk = GetChunkPos(pos);
         LoadChunk(chunk);
-        IVec3 chunkLocalPos = ToChunkLocalPos(GameToProtocolPos(pos));
+        Vec3<int> chunkLocalPos = ToChunkLocalPos(GameToProtocolPos(pos));
         return RetrieveChunk(chunk)!.LookupBlock(chunkLocalPos, Server.Registry);
     }
     
-    public IBlock GetBlock(Vec3 pos) {
+    public IBlock GetBlock(Vec3<double> pos) {
         // Convert Vec3 to IVec3
         return GetBlock(pos.ToBlockPos());
     }
 
-    public IBlock GetBlockOr(IVec3 pos, IBlock def) {
+    public IBlock GetBlockOr(Vec3<int> pos, IBlock def) {
         return IsInBounds(pos) ? GetBlock(pos) : def;
     }
     
-    public IBlock GetBlockOr(Vec3 pos, IBlock def) {
+    public IBlock GetBlockOr(Vec3<double> pos, IBlock def) {
         return GetBlockOr(pos.ToBlockPos(), def);
     }
     
-    public BlockEntity? GetBlockData(IVec3 pos) {
+    public BlockEntity? GetBlockData(Vec3<int> pos) {
         CheckY(pos.Y);
         
-        IVec2 chunk = GetChunkPos(pos);
+        Vec2<int> chunk = GetChunkPos(pos);
         LoadChunk(chunk);
-        IVec3 chunkLocalPos = ToChunkLocalPos(pos);
+        Vec3<int> chunkLocalPos = ToChunkLocalPos(pos);
         return RetrieveChunk(chunk)!.BlockEntities!.GetValueOrDefault(chunkLocalPos, null);
     }
 
@@ -352,7 +352,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
     
     // get everyone who can see the block at the given position
-    public IAudience GetViewersOf(IVec3 pos) {
+    public IAudience GetViewersOf(Vec3<int> pos) {
         int blockRange = _viewDistance * 16;
         List<PlayerEntity> viewers = [];
         viewers.AddRange(Players.Where(player => player.Position.DistanceTo(pos) <= blockRange));
@@ -360,8 +360,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         return new AudiencesList(viewers.ToArray());
     }
     
-    public IVec2 GetChunkPos(Vec3 pos) {
-        return new IVec2((int)Math.Floor(pos.X / 16), (int)Math.Floor(pos.Z / 16));
+    public Vec2<int> GetChunkPos(Vec3<double> pos) {
+        return new Vec2<int>((int)Math.Floor(pos.X / 16), (int)Math.Floor(pos.Z / 16));
     }
 
     /// <summary>
@@ -371,18 +371,18 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     /// </summary>
     /// <param name="pos">The position to convert</param>
     /// <returns>The new position.</returns>
-    public IVec3 ProtocolToGamePos(IVec3 pos) {
-        return new IVec3(pos.X, pos.Y + Dimension.MinY, pos.Z);
+    public Vec3<int> ProtocolToGamePos(Vec3<int> pos) {
+        return new Vec3<int>(pos.X, pos.Y + Dimension.MinY, pos.Z);
     }
     
-    private IVec3 GameToProtocolPos(IVec3 pos) {
-        return new IVec3(pos.X, pos.Y - Dimension.MinY, pos.Z);
+    private Vec3<int> GameToProtocolPos(Vec3<int> pos) {
+        return new Vec3<int>(pos.X, pos.Y - Dimension.MinY, pos.Z);
     }
 
-    private ChunkData[] GetChunks(IVec2[] poses, int count) {
+    private ChunkData[] GetChunks(Vec2<int>[] poses, int count) {
         lock (_chunks) {
             ChunkData[] chunks = new ChunkData[count];
-            IVec2[] needed = new IVec2[count];
+            Vec2<int>[] needed = new Vec2<int>[count];
             int notFound = 0;
             int cChunksPos = 0;
             for (int i = 0; i < count; i++) {
@@ -403,20 +403,20 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             for (int i = cChunksPos; i < count; i++) {
                 chunks[i] = new ChunkData(Dimension.Height) {
                     ChunkX = poses[i].X,
-                    ChunkZ = poses[i].Z
+                    ChunkZ = poses[i].Y
                 };
             }
             _provider.GetChunks(cChunksPos, notFound, chunks);
             for (int i = cChunksPos; i < count; i++) {
                 chunks[i].PackData();
-                _chunks.TryAdd(new IVec2(chunks[i].ChunkX, chunks[i].ChunkZ), chunks[i]);
+                _chunks.TryAdd(new Vec2<int>(chunks[i].ChunkX, chunks[i].ChunkZ), chunks[i]);
             }
 
             return chunks;
         }
     }
 
-    public void SendBlockUpdate(IVec3 pos, IAudience audience) {
+    public void SendBlockUpdate(Vec3<int> pos, IAudience audience) {
         audience.SendPacket(new ClientBoundBlockUpdatePacket {
             Block = GetBlock(pos),
             Location = pos
@@ -432,18 +432,18 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
     }
     
-    private ChunkData? RetrieveChunk(IVec2 pos) {
+    private ChunkData? RetrieveChunk(Vec2<int> pos) {
         _chunks.TryGetValue(pos, out ChunkData? data);
         return data;
     }
     
-    public void LoadChunk(IVec2 pos) {
+    public void LoadChunk(Vec2<int> pos) {
         if (_chunks.ContainsKey(pos)) return;  // already loaded
 
         lock (_chunks) {
             ChunkData data = new(Dimension.Height) {
                 ChunkX = pos.X,
-                ChunkZ = pos.Z
+                ChunkZ = pos.Y
             };
             _provider.GetChunk(data);
             if (data == null) {
@@ -456,17 +456,17 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
     }
 
-    public ClientBoundChunkDataAndUpdateLightPacket GetChunkPacket(IVec2 pos) {
+    public ClientBoundChunkDataAndUpdateLightPacket GetChunkPacket(Vec2<int> pos) {
         ClientBoundChunkDataAndUpdateLightPacket packet = new() {
             ChunkX = pos.X,
-            ChunkZ = pos.Z,
+            ChunkZ = pos.Y,
             Data = GetChunks([pos], 1)[0],
             Light = LightData.FullBright
         };
         return packet;
     }
     
-    public void AddChunkPackets(IVec2[] poses, int count, List<MinecraftPacket> list) {
+    public void AddChunkPackets(Vec2<int>[] poses, int count, List<MinecraftPacket> list) {
         foreach (ChunkData data in GetChunks(poses, count)) {
             list.Add(new ClientBoundChunkDataAndUpdateLightPacket{
                 ChunkX = data.ChunkX,
@@ -477,7 +477,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
     }
 
-    public void StrikeLightning(Vec3 pos) {
+    public void StrikeLightning(Vec3<double> pos) {
         Entity lightning = new(EntityType.LightningBolt) {
             Position = pos,
             Yaw = Angle.Zero,
@@ -491,7 +491,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         });
     }
     
-    public Entity DropItem(Vec3 pos, ItemStack item) {
+    public Entity DropItem(Vec3<double> pos, ItemStack item) {
         Entity itemEntity = new(EntityType.Item) {
             Position = pos
         };
@@ -509,7 +509,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
     }
 
-    public bool IsInBounds(Vec3 pos) {
+    public bool IsInBounds(Vec3<double> pos) {
         return pos.Y >= Dimension.MinY && pos.Y < Dimension.MinY + Dimension.Height;
     }
 }

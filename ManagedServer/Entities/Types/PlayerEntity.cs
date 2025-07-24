@@ -94,7 +94,7 @@ public class PlayerEntity : LivingEntity, IAudience {
         }
     }
 
-    public override Vec3 Velocity {
+    public override Vec3<double> Velocity {
         set => SetVelocity(value);
     }
 
@@ -338,10 +338,10 @@ public class PlayerEntity : LivingEntity, IAudience {
         base.SetWorld(world);
     }
 
-    public void SetVelocity(Vec3 velocity) {
+    public void SetVelocity(Vec3<double> velocity) {
         Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket {
             TeleportId = Random.Shared.Next(),
-            Position = Vec3.Zero,
+            Position = Vec3<double>.Zero,
             Velocity = velocity,
             Pitch = Angle.Zero,
             Yaw = Angle.Zero,
@@ -363,7 +363,7 @@ public class PlayerEntity : LivingEntity, IAudience {
         SendPacket(GetRespawnPacket(World!));
     }
 
-    public override void Teleport(Vec3 pos, Angle? yaw = null, Angle? pitch = null) {
+    public override void Teleport(Vec3<double> pos, Angle? yaw = null, Angle? pitch = null) {
         _waitingTeleport = Random.Shared.Next();
         TeleportFlags teleportFlags = TeleportFlags.None;
         if (yaw == null) {
@@ -376,7 +376,7 @@ public class PlayerEntity : LivingEntity, IAudience {
         Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket {
             TeleportId = _waitingTeleport,
             Position = pos,
-            Velocity = Vec3.Zero,
+            Velocity = Vec3<double>.Zero,
             Yaw = yaw ?? Angle.Zero,
             Pitch = pitch ?? Angle.Zero,
             Flags = teleportFlags

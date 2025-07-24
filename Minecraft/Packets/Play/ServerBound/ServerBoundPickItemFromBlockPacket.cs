@@ -6,7 +6,7 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundPickItemFromBlockPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:pick_item_from_block";
     
-    public required IVec3 Location;
+    public required Vec3<int> Location;
     public required bool IncludeData;
 
     protected override DataWriter WriteData(DataWriter w) {

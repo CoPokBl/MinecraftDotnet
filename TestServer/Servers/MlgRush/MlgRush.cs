@@ -76,7 +76,7 @@ public static class MlgRush {
             e.Connection.SendPacket(links);
         });
         server.Events.AddListener<PlayerLoginEvent>(e => {
-            e.Player.Teleport(new Vec3(0, 100, 0));
+            e.Player.Teleport(new Vec3<double>(0, 100, 0));
             Console.WriteLine("Teleported joining player in lobby");
 
             lock (queuePlayersLock) {
@@ -152,12 +152,12 @@ public static class MlgRush {
                 c2.SendPacket(packet);
             }
 
-            void BroadcastParticle(IParticle particle, int count, Vec3 pos) {
+            void BroadcastParticle(IParticle particle, int count, Vec3<double> pos) {
                 MinecraftPacket packet = new ClientBoundParticlePacket {
                     AlwaysVisible = true,
                     LongDistance = true,
                     MaxSpeed = 1f,
-                    Offset = FVec3.Zero,
+                    Offset = Vec3<float>.Zero,
                     Position = pos,
                     ParticleCount = count,
                     Particle = particle
@@ -183,8 +183,8 @@ public static class MlgRush {
             bool p1HasBed = true;
             bool p2HasBed = true;
 
-            PlayerPosition p1Spawn = new(new Vec3(MlgRushMapProvider.P1SpawnX, 0, 0.5), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
-            PlayerPosition p2Spawn = new(new Vec3(MlgRushMapProvider.P2SpawnX, 0, 0.5), Vec3.Zero, Angle.FromDegrees(90), Angle.Zero);
+            PlayerPosition p1Spawn = new(new Vec3<double>(MlgRushMapProvider.P1SpawnX, 0, 0.5), Vec3<double>.Zero, Angle.FromDegrees(-90), Angle.Zero);
+            PlayerPosition p2Spawn = new(new Vec3<double>(MlgRushMapProvider.P2SpawnX, 0, 0.5), Vec3<double>.Zero, Angle.FromDegrees(90), Angle.Zero);
             
             // Start the game
             p1.SetWorld(world);
@@ -216,8 +216,8 @@ public static class MlgRush {
                 // Move them away for the other player to prevent tp blocking breaking
                 e.Entity.SendToViewers(new ClientBoundTeleportEntityPacket {
                     EntityId = e.Entity.NetId,
-                    Position = new Vec3(0, -100, 0),
-                    Velocity = Vec3.Zero,
+                    Position = new Vec3<double>(0, -100, 0),
+                    Velocity = Vec3<double>.Zero,
                     Yaw = Angle.Zero,
                     Pitch = Angle.Zero,
                     OnGround = false

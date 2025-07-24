@@ -12,7 +12,7 @@ public class PlayerEntityInteractEvent : IPlayerEvent {
     public required PlayerEntity Player { get; init; }
     public required World World { get; init; }
     public required ServerBoundInteractPacket.InteractType Type;
-    public FVec3? TargetLocation;
+    public Vec3<float>? TargetLocation;
     public Hand? UsedHand;
     public required bool SneakPressed;
     

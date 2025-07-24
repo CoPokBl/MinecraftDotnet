@@ -22,7 +22,7 @@ namespace ManagedServer.Entities.Types;
 public class Entity : MappedTaggable, IViewable, IFeatureScope {
     public Guid Uuid = Guid.NewGuid();
     public readonly IEntityType Type;
-    public Vec3 Position = Vec3.Zero;
+    public Vec3<double> Position = Vec3<double>.Zero;
     public Angle Pitch = Angle.Zero;
     public Angle Yaw = Angle.Zero;
     public Angle HeadYaw = Angle.Zero;
@@ -62,13 +62,13 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         }
     }
     
-    public virtual Vec3 Velocity {  // units: m/(1/20)s
+    public virtual Vec3<double> Velocity {  // units: m/(1/20)s
         get => _velocity;
         set {
             _velocity = value;
             SendToViewers(new ClientBoundSetEntityVelocityPacket {  // protocol velocity is in 8000ths of a block per tick (50ms)
                 EntityId = NetId,
-                Velocity = new SVec3((short)(value.X * 8000), (short)(value.Y * 8000), (short)(value.Z * 8000)),
+                Velocity = new Vec3<short>((short)(value.X * 8000), (short)(value.Y * 8000), (short)(value.Z * 8000)),
             });
         }
     }
@@ -88,13 +88,13 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     private EntityMeta _meta = null!;  // set by the constructor, so it is never null
     private bool _crouching;
-    private Vec3 _velocity = Vec3.Zero;
+    private Vec3<double> _velocity = Vec3<double>.Zero;
 
     public Entity(IEntityType type, EntityMeta? meta = null) {
         Type = type;
         FeatureHandler = new FeatureHandler(this);
         
-        BoundingBox = new Aabb(new Vec3(Type.Width * -0.5, 0.0, Type.Height * -0.5), new Vec3(Type.Width, Type.Height, Type.Width));
+        BoundingBox = new Aabb(new Vec3<double>(Type.Width * -0.5, 0.0, Type.Height * -0.5), new Vec3<double>(Type.Width, Type.Height, Type.Width));
 
         if (meta == null) {
             // guess the meta type based on the entity type
@@ -142,12 +142,12 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     /// <summary>
     /// A unit vector pointing in the direction that the player is facing.
     /// </summary>
-    public Vec3 Direction {
+    public Vec3<double> Direction {
         get {
             double rotX = Yaw.Radians;
             double rotY = Pitch.Radians;
             double xz = Math.Cos(rotY);
-            return new Vec3(-xz * Math.Sin(rotX), -Math.Sin(rotY), xz * Math.Cos(rotX));
+            return new Vec3<double>(-xz * Math.Sin(rotX), -Math.Sin(rotY), xz * Math.Cos(rotX));
         }
     }
 
@@ -172,7 +172,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
             Yaw = Yaw,
             HeadYaw = HeadYaw,
             Data = 0,
-            Velocity = SVec3.Zero
+            Velocity = Vec3<short>.Zero
         }, new ClientBoundSetEntityMetadataPacket {
             EntityId = NetId,
             Meta = Meta
@@ -186,7 +186,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     /// <param name="yaw">Their new yaw.</param>
     /// <param name="pitch">Their new pitch.</param>
     /// <param name="forceTeleport">Whether to force this method to use the Teleport packet.</param>
-    public void Move(Vec3 newPos, Angle? yaw = null, Angle? pitch = null, bool forceTeleport = false) {
+    public void Move(Vec3<double> newPos, Angle? yaw = null, Angle? pitch = null, bool forceTeleport = false) {
         EntityMoveEvent e = new() {
             Entity = this,
             NewPos = newPos,
@@ -213,7 +213,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         Teleport(pos.Position, pos.Yaw, pos.Pitch);
     }
 
-    public virtual void Teleport(Vec3 pos, Angle? yaw = null, Angle? pitch = null) {
+    public virtual void Teleport(Vec3<double> pos, Angle? yaw = null, Angle? pitch = null) {
         Move(pos, yaw, pitch, true);
     }
 

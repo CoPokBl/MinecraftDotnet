@@ -11,9 +11,9 @@ public class ClientBoundSetCenterChunkPacket() : ClientBoundPacket {
     public required int Z;
 
     [SetsRequiredMembers]
-    public ClientBoundSetCenterChunkPacket(IVec2 pos) : this() {
+    public ClientBoundSetCenterChunkPacket(Vec2<int> pos) : this() {
         X = pos.X;
-        Z = pos.Z;
+        Z = pos.Y;
     }
 
     protected override DataWriter WriteData(DataWriter w) {

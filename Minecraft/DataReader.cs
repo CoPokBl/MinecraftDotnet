@@ -124,25 +124,25 @@ public class DataReader(byte[] data) : Stream {
         return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
     }
     
-    public Vec3 ReadVec3() {
+    public Vec3<double> ReadVec3() {
         double x = ReadDouble();
         double y = ReadDouble();
         double z = ReadDouble();
-        return new Vec3(x, y, z);
+        return new Vec3<double>(x, y, z);
     }
     
-    public SVec3 ReadSVec3() {
+    public Vec3<short> ReadSVec3() {
         short x = ReadShort();
         short y = ReadShort();
         short z = ReadShort();
-        return new SVec3(x, y, z);
+        return new Vec3<short>(x, y, z);
     }
     
-    public FVec3 ReadFVec3() {
+    public Vec3<float> ReadFVec3() {
         float x = ReadFloat();
         float y = ReadFloat();
         float z = ReadFloat();
-        return new FVec3(x, y, z);
+        return new Vec3<float>(x, y, z);
     }
     
     public float ReadFloat() {
@@ -175,7 +175,7 @@ public class DataReader(byte[] data) : Stream {
     // An integer/block position: x (-33554432 to 33554431), z (-33554432 to 33554431), y (-2048 to 2047)
     // x as a 26-bit integer, followed by z as a 26-bit integer, followed by y as a 12-bit integer (all signed, two's complement).
     // Should be 8 bytes in total and big-endian.
-    public IVec3 ReadPosition() {
+    public Vec3<int> ReadPosition() {
         // Read 8 bytes
         byte[] buffer = Read(8);
 
@@ -195,7 +195,7 @@ public class DataReader(byte[] data) : Stream {
         int y = (int)(packed & 0xFFF);
         y = SignExtend(y, 12);
 
-        return new IVec3(x, y, z);
+        return new Vec3<int>(x, y, z);
     }
     
     // From an N-bit integer represented as a BitArray in big-endian order.

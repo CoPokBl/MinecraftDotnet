@@ -7,9 +7,9 @@ public class ServerBoundUseItemOnPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:use_item_on";
     
     public required Hand ActiveHand;
-    public required IVec3 Position;
+    public required Vec3<int> Position;
     public required BlockFace Face;
-    public required FVec3 CursorPosition;
+    public required Vec3<float> CursorPosition;
     public required bool InsideBlock;
     public required bool WorldBorderHit;
     public required int Sequence;

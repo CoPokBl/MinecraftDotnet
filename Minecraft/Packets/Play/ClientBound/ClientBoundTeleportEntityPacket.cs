@@ -7,8 +7,8 @@ public class ClientBoundTeleportEntityPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:entity_position_sync";
     
     public required int EntityId;
-    public required Vec3 Position;
-    public required Vec3 Velocity;
+    public required Vec3<double> Position;
+    public required Vec3<double> Velocity;
     public required Angle Yaw;
     public required Angle Pitch;
     public required bool OnGround;

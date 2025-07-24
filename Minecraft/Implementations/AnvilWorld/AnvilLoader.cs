@@ -42,7 +42,7 @@ public class AnvilLoader : ITerrainProvider {
             Thundering: levelData["thundering"].ThrowIfNull().GetBoolean(),
             GameType: levelData["GameType"].ThrowIfNull().GetInteger(),
             RainTicks: levelData["rainTime"].ThrowIfNull().GetInteger(),
-            Spawn: new IVec3(levelData["SpawnX"].ThrowIfNull().GetInteger(),
+            Spawn: new Vec3<int>(levelData["SpawnX"].ThrowIfNull().GetInteger(),
                 levelData["SpawnY"].ThrowIfNull().GetInteger(), 
                 levelData["SpawnZ"].ThrowIfNull().GetInteger()),
             ThunderTicks: levelData["thunderTime"].ThrowIfNull().GetInteger(),
@@ -158,7 +158,7 @@ public class AnvilLoader : ITerrainProvider {
             string[] excludeProps = ["id", "x", "y", "z", "keepPacked"];
             CompoundTag entityData = new(null, blockEntityData.Children.Where(t => 
                 !excludeProps.Contains(t?.GetName())).ToArray());
-            data.BlockEntities[new IVec3(x, y, z)] = new BlockEntity(x, y, z, type, entityData);
+            data.BlockEntities[new Vec3<int>(x, y, z)] = new BlockEntity(x, y, z, type, entityData);
         }
     }
 
@@ -202,7 +202,7 @@ public class AnvilLoader : ITerrainProvider {
         bool Thundering,
         int GameType,
         int RainTicks,
-        IVec3 Spawn,
+        Vec3<int> Spawn,
         int ThunderTicks,
         int Version,
         long LastPlayed,

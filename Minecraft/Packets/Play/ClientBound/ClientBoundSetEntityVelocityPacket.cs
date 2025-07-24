@@ -7,7 +7,7 @@ public class ClientBoundSetEntityVelocityPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:set_entity_motion";
     
     public required int EntityId;
-    public required SVec3 Velocity;
+    public required Vec3<short> Velocity;
 
     protected override DataWriter WriteData(DataWriter w) {
         return w.WriteVarInt(EntityId).WriteVec3(Velocity);

@@ -1,6 +1,7 @@
 using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
+using ManagedServer.Features;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Implementations.Server.Features;
@@ -14,7 +15,7 @@ namespace TestServer.Servers.SkyWarsLuckyBlock;
 
 public static class SkyWarsLuckyBlock {
     private const int StartTimeSeconds = 5;
-    private static readonly Vec3 LobbySpawn = new(5, 66, 5);
+    private static readonly Vec3<double> LobbySpawn = new(5, 66, 5);
     
     public static async Task Start() {
         ManagedMinecraftServer server = ManagedMinecraftServer.NewBasic();
@@ -27,6 +28,7 @@ public static class SkyWarsLuckyBlock {
             Description = TextComponent.FromLegacyString("&a&lSkyWars"),
             PreventsChatReports = true
         }));
+        server.AddFeature(new SimpleBenchmarkFeature());
         
         server.Dimensions.Add("skywars:lobby", new Dimension());
         server.Dimensions.Add("skywars:game", new Dimension());

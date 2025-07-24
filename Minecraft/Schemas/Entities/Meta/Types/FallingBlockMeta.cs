@@ -2,11 +2,11 @@ using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Schemas.Entities.Meta.Types;
 
-public record FallingBlockMeta(IVec3? SpawnPosition = null) : EntityMeta {
+public record FallingBlockMeta(Vec3<int>? SpawnPosition = null) : EntityMeta {
     
     public override EntityMeta LoadFields(EntityMetaContainer container) {
         return (FallingBlockMeta)base.LoadFields(container) with {
-            SpawnPosition = container.GetValue<IVec3>(8)
+            SpawnPosition = container.GetValue<Vec3<int>>(8)
         };
     }
 

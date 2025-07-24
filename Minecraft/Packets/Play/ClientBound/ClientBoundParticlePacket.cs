@@ -10,8 +10,8 @@ public class ClientBoundParticlePacket : ClientBoundPacket {
     
     public required bool LongDistance;
     public required bool AlwaysVisible;
-    public required Vec3 Position;
-    public required FVec3 Offset;
+    public required Vec3<double> Position;
+    public required Vec3<float> Offset;
     public required float MaxSpeed;
     public required int ParticleCount;
     public required IParticle Particle;

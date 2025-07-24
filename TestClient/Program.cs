@@ -64,7 +64,7 @@ while (true) {
         lastSentPacket = e.Packet;
     });
 
-    Vec3 position = new(0, 100, 0);
+    Vec3<double> position = new(0, 100, 0);
     connection.Events.AddListener<PacketHandleEvent>(e => {
         // Console.WriteLine($"[{id}] Got packet: " + e.Packet.GetType().FullName);
         lastPacket = e.Packet;
@@ -140,7 +140,7 @@ while (true) {
                                         Yaw = Angle.Zero
                                     });
                                 }
-                                position += new Vec3(Random.Shared.NextDouble() - 0.5, 0, Random.Shared.NextDouble() - 0.5);
+                                position += new Vec3<double>(Random.Shared.NextDouble() - 0.5, 0, Random.Shared.NextDouble() - 0.5);
                                 connection.SendPacket(new ServerBoundSetPlayerPositionPacket {
                                     Position = position,
                                     Flags = MovePlayerFlags.None

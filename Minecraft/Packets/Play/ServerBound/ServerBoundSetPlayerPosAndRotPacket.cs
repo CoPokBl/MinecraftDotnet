@@ -9,7 +9,7 @@ public class ServerBoundSetPlayerPosAndRotPacket : ServerBoundPacket {
     public required MovePlayerFlags Flags;
     public required float Pitch;
     public required float Yaw;
-    public required Vec3 Position;
+    public required Vec3<double> Position;
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

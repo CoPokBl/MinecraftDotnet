@@ -52,8 +52,8 @@ public static class AudienceExtensions {
         });
     }
 
-    public static void ShowParticle(this IAudience audience, IParticle particle, Vec3 position, int count = 1, 
-        float maxSpeed = 1f, bool longDistance = false, bool alwaysVisible = false, FVec3 offset = default) {
+    public static void ShowParticle(this IAudience audience, IParticle particle, Vec3<double> position, int count = 1, 
+        float maxSpeed = 1f, bool longDistance = false, bool alwaysVisible = false, Vec3<float> offset = default) {
         audience.SendPacket(new ClientBoundParticlePacket {
             Particle = particle,
             Position = position,
@@ -65,7 +65,7 @@ public static class AudienceExtensions {
         });
     }
 
-    public static void PlaySound(this IAudience audience, ISoundType type, Vec3 pos, SoundCategory category = SoundCategory.Master, float volume = 1f) {
+    public static void PlaySound(this IAudience audience, ISoundType type, Vec3<double> pos, SoundCategory category = SoundCategory.Master, float volume = 1f) {
         audience.SendPacket(new ClientBoundSoundEffectPacket {
             Category = category,
             Type = type,

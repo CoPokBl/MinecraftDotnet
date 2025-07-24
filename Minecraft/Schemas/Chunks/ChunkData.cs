@@ -12,7 +12,7 @@ public class ChunkData {
     
     public ChunkSection[] Sections;  // bottom to top
     
-    public Dictionary<IVec3, BlockEntity> BlockEntities = new();  // block entities in this chunk, indexed by position in chunk
+    public Dictionary<Vec3<int>, BlockEntity> BlockEntities = new();  // block entities in this chunk, indexed by position in chunk
     
     // hints for implementations
     public int ChunkX;
@@ -66,7 +66,7 @@ public class ChunkData {
         SetBlock(x, y, z, block.StateId);
     }
     
-    public void SetBlock(IVec3 pos, IBlock block) {
+    public void SetBlock(Vec3<int> pos, IBlock block) {
         SetBlock(pos.X, pos.Y, pos.Z, block);
     }
 
@@ -82,7 +82,7 @@ public class ChunkData {
         return Sections[chunkSection].LookupBlock(x, chunkY, z, registry);
     }
     
-    public IBlock LookupBlock(IVec3 pos, MinecraftRegistry? registry = null) {
+    public IBlock LookupBlock(Vec3<int> pos, MinecraftRegistry? registry = null) {
         return LookupBlock(pos.X, pos.Y, pos.Z, registry);
     }
     
@@ -138,9 +138,9 @@ public class ChunkData {
         
         int worldHeight = sections.Count * 16;  // calculate world height from sections
         
-        Dictionary<IVec3, BlockEntity> blockEntities = r
+        Dictionary<Vec3<int>, BlockEntity> blockEntities = r
             .ReadPrefixedArray<BlockEntity>(reg)
-            .ToDictionary(a => new IVec3(a.X, a.Y, a.Z));
+            .ToDictionary(a => new Vec3<int>(a.X, a.Y, a.Z));
 
         return new ChunkData(worldHeight) {
             Sections = sections.ToArray(),

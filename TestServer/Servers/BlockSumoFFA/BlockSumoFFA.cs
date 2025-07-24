@@ -60,7 +60,7 @@ public static class BlockSumoFfa {
             .With(DataComponent.MaxDamage, 100)
             .With(DataComponent.TooltipDisplay, new TooltipDisplayComponent.Info(true));
         
-        PlayerPosition spawn = new(new Vec3(0, 0, 0), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
+        PlayerPosition spawn = new(new Vec3<double>(0, 0, 0), Vec3<double>.Zero, Angle.FromDegrees(-90), Angle.Zero);
         ITerrainProvider terrain = new BlockSumoMapProvider(12);
         World world = server.CreateWorld(terrain, "minecraft:potatoland");
         world.AddFeature(new SimpleCombatFeature(500));

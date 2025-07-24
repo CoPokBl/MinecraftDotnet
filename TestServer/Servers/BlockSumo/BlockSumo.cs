@@ -80,7 +80,7 @@ public static class BlockSumo {
                 connection.SendPacket(links);
             });
             connection.Events.OnFirst<PlayerLoginEvent>(e => {
-                e.Player.Teleport(new Vec3(0, 100, 0));
+                e.Player.Teleport(new Vec3<double>(0, 100, 0));
                 Console.WriteLine("Teleported joining player in lobby");
 
                 lock (queuePlayersLock) {
@@ -162,12 +162,12 @@ public static class BlockSumo {
                 c2.SendPacket(packet);
             }
 
-            void BroadcastParticle(IParticle particle, int count, Vec3 pos) {
+            void BroadcastParticle(IParticle particle, int count, Vec3<double> pos) {
                 MinecraftPacket packet = new ClientBoundParticlePacket {
                     AlwaysVisible = true,
                     LongDistance = true,
                     MaxSpeed = 1f,
-                    Offset = FVec3.Zero,
+                    Offset = Vec3<float>.Zero,
                     Position = pos,
                     ParticleCount = count,
                     Particle = particle
@@ -193,7 +193,7 @@ public static class BlockSumo {
             bool p1HasBed = true;
             bool p2HasBed = true;
 
-            PlayerPosition spawn = new(new Vec3(0, 0, 0), Vec3.Zero, Angle.FromDegrees(-90), Angle.Zero);
+            PlayerPosition spawn = new(new Vec3<double>(0, 0, 0), Vec3<double>.Zero, Angle.FromDegrees(-90), Angle.Zero);
             
             // Start the game
             p1.SetWorld(world);

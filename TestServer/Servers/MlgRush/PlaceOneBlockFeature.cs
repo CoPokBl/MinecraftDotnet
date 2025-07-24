@@ -26,13 +26,13 @@ public class PlaceOneBlockFeature(Func<PlayerConnection, IBlock> block, int disa
                 return;
             }
 
-            IVec3 target = ui.Position.GetBlockTowards(ui.Face);
+            Vec3<int> target = ui.Position.GetBlockTowards(ui.Face);
             
             // is player inside that block?
             bool insideEntity = false;
             foreach (Entity en in world.Entities.Entities.Where(en => en is PlayerEntity)) {
-                Vec3 pos = ((PlayerEntity)en).Position;
-                Vec3 blockPos = new(target.X + 0.5, target.Y + 0.5, target.Z + 0.5);
+                Vec3<double> pos = ((PlayerEntity)en).Position;
+                Vec3<double> blockPos = new(target.X + 0.5, target.Y + 0.5, target.Z + 0.5);
                 if (Math.Abs(pos.X - blockPos.X) < 0.5 + PlayerWidth/2 && 
                     Math.Abs(pos.Z - blockPos.Z) < 0.5 + PlayerWidth/2 && 
                     Math.Abs(pos.Y + PlayerHeight/2 - blockPos.Y) < 0.5 + PlayerHeight/2) {

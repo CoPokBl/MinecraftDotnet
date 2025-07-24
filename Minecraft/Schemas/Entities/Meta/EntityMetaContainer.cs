@@ -23,9 +23,9 @@ public class EntityMetaContainer {
             reader.ReadPrefixedOptional(r => r.ReadText())) },
         { MetaFieldType.Slot, (reg, reader) => new MetaField<ItemStack>(MetaFieldType.Slot, reader.Read<ItemStack>(reg)) },
         { MetaFieldType.Boolean, (_, reader) => new MetaField<bool>(MetaFieldType.Boolean, reader.ReadBoolean()) },
-        { MetaFieldType.Rotations, (_, reader) => new MetaField<FVec3>(MetaFieldType.Rotations, reader.ReadFVec3()) },
-        { MetaFieldType.Position, (_, reader) => new MetaField<IVec3>(MetaFieldType.Position, reader.ReadPosition()) },
-        { MetaFieldType.OptionalPosition, (_, reader) => new MetaField<Optional<IVec3>>(MetaFieldType.OptionalPosition, 
+        { MetaFieldType.Rotations, (_, reader) => new MetaField<Vec3<float>>(MetaFieldType.Rotations, reader.ReadFVec3()) },
+        { MetaFieldType.Position, (_, reader) => new MetaField<Vec3<int>>(MetaFieldType.Position, reader.ReadPosition()) },
+        { MetaFieldType.OptionalPosition, (_, reader) => new MetaField<Optional<Vec3<int>>>(MetaFieldType.OptionalPosition, 
             reader.ReadPrefixedOptional(r => r.ReadPosition())) },
         { MetaFieldType.Direction, (_, reader) => new MetaField<Cardinal>(MetaFieldType.Direction, (Cardinal)reader.ReadVarInt()) },
         { MetaFieldType.OptionalLivingEntityReference, (_, reader) => new MetaField<Optional<Guid>>(MetaFieldType.OptionalLivingEntityReference, 
@@ -50,7 +50,7 @@ public class EntityMetaContainer {
         { MetaFieldType.FrogVariant, (_, reader) => new MetaField<int>(MetaFieldType.FrogVariant, reader.ReadVarInt()) },
         { MetaFieldType.PigVariant, (_, reader) => new MetaField<int>(MetaFieldType.PigVariant, reader.ReadVarInt()) },
         { MetaFieldType.ChickenVariant, (_, reader) => new MetaField<int>(MetaFieldType.ChickenVariant, reader.ReadVarInt()) },
-        { MetaFieldType.OptionalGlobalPosition, (_, reader) => new MetaField<Optional<(Identifier, IVec3)>>(MetaFieldType.OptionalGlobalPosition, 
+        { MetaFieldType.OptionalGlobalPosition, (_, reader) => new MetaField<Optional<(Identifier, Vec3<int>)>>(MetaFieldType.OptionalGlobalPosition, 
             reader.ReadPrefixedOptional(r => (r.ReadString(), r.ReadPosition()))) },
         { MetaFieldType.PaintingVariant, (_, reader) => new MetaField<Or<int, PaintingVariant>>(MetaFieldType.PaintingVariant, 
             reader.ReadIdOr(PaintingVariant.Read)) },
@@ -58,7 +58,7 @@ public class EntityMetaContainer {
             (SnifferState)reader.ReadVarInt()) },
         { MetaFieldType.ArmadilloState, (_, reader) => new MetaField<ArmadilloState>(MetaFieldType.ArmadilloState,
             (ArmadilloState)reader.ReadVarInt()) },
-        { MetaFieldType.Vector3, (_, reader) => new MetaField<FVec3>(MetaFieldType.Vector3, reader.ReadFVec3()) },
+        { MetaFieldType.Vector3, (_, reader) => new MetaField<Vec3<float>>(MetaFieldType.Vector3, reader.ReadFVec3()) },
         { MetaFieldType.Quaternion, (_, reader) => new MetaField<Quaternion>(MetaFieldType.Quaternion, reader.ReadQuaternion()) }
     };
     
@@ -73,10 +73,10 @@ public class EntityMetaContainer {
             writer.WritePrefixedOptional(field.GetValue<Optional<TextComponent>>(), (c, w) => w.WriteNbt(c)) },
         { MetaFieldType.Slot, (reg, writer, field) => writer.Write(field.GetValue<ItemStack>(), reg) },
         { MetaFieldType.Boolean, (_, writer, field) => writer.WriteBoolean(field.GetValue<bool>()) },
-        { MetaFieldType.Rotations, (_, writer, field) => writer.WriteVec3(field.GetValue<FVec3>()) },
-        { MetaFieldType.Position, (_, writer, field) => writer.WritePosition(field.GetValue<IVec3>()) },
+        { MetaFieldType.Rotations, (_, writer, field) => writer.WriteVec3(field.GetValue<Vec3<float>>()) },
+        { MetaFieldType.Position, (_, writer, field) => writer.WritePosition(field.GetValue<Vec3<int>>()) },
         { MetaFieldType.OptionalPosition, (_, writer, field) => 
-            writer.WritePrefixedOptional(field.GetValue<Optional<IVec3>>(), (pos, w) => w.WritePosition(pos)) },
+            writer.WritePrefixedOptional(field.GetValue<Optional<Vec3<int>>>(), (pos, w) => w.WritePosition(pos)) },
         { MetaFieldType.Direction, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<Cardinal>()) },
         { MetaFieldType.OptionalLivingEntityReference, (_, writer, field) => 
             writer.WritePrefixedOptional(field.GetValue<Optional<Guid>>(), (uuid, w) => w.WriteUuid(uuid)) },
@@ -104,13 +104,13 @@ public class EntityMetaContainer {
         { MetaFieldType.PigVariant, (_, writer, field) => writer.WriteVarInt(field.GetValue<int>()) },
         { MetaFieldType.ChickenVariant, (_, writer, field) => writer.WriteVarInt(field.GetValue<int>()) },
         { MetaFieldType.OptionalGlobalPosition, (_, writer, field) => 
-            writer.WritePrefixedOptional(field.GetValue<Optional<(Identifier, IVec3)>>(), 
+            writer.WritePrefixedOptional(field.GetValue<Optional<(Identifier, Vec3<int>)>>(), 
                 (tuple, w) => w.WriteString(tuple.Item1).WritePosition(tuple.Item2)) },
         { MetaFieldType.PaintingVariant, (_, writer, field) => 
             writer.WriteIdOr(field.GetValue<Or<int, PaintingVariant>>(), (v, w) => v.Write(w)) },
         { MetaFieldType.SnifferState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<SnifferState>()) },
         { MetaFieldType.ArmadilloState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<ArmadilloState>()) },
-        { MetaFieldType.Vector3, (_, writer, field) => writer.WriteVec3(field.GetValue<FVec3>()) },
+        { MetaFieldType.Vector3, (_, writer, field) => writer.WriteVec3(field.GetValue<Vec3<float>>()) },
         { MetaFieldType.Quaternion, (_, writer, field) => writer.WriteQuaternion(field.GetValue<Quaternion>()) }
     };
 

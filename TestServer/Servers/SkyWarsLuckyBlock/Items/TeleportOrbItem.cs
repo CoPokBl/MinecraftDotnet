@@ -13,14 +13,14 @@ public class TeleportOrbItem : SkyWarsItem {
     public override string Id => "teleport_orb";
 
     public override bool Use(PlayerEntity player) {
-        IVec3? targetBlock = SkyWarsUtils.GetTargetBlock(player);
+        Vec3<int>? targetBlock = SkyWarsUtils.GetTargetBlock(player);
         if (targetBlock == null) {
             player.SendMessage("No target found within range.");
             return false;
         }
         
         // Teleport the player to the target block
-        player.Teleport(targetBlock.Value + new IVec3(0, 2, 0));
+        player.Teleport(targetBlock.Value + new Vec3<int>(0, 2, 0));
         player.SendMessage(TextComponent.FromLegacyString("&aYou have been teleported!"));
         player.ShowParticle(Particle.Enchant, targetBlock.Value, maxSpeed: 0.1f);
         return true;

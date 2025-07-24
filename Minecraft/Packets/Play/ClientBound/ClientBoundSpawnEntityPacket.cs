@@ -10,12 +10,12 @@ public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
     public required int Id;
     public required Guid Uuid;
     public required IEntityType EntityType;
-    public required Vec3 Position;
+    public required Vec3<double> Position;
     public required Angle Pitch;
     public required Angle Yaw;
     public required Angle HeadYaw;
     public required int Data;
-    public required SVec3 Velocity;
+    public required Vec3<short> Velocity;
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

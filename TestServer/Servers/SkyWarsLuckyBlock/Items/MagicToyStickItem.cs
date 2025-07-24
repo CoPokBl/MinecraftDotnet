@@ -21,7 +21,7 @@ public class MagicToyStickItem : SkyWarsItem {
     public override string Id => "magic_toy_stick";
 
     public override bool Use(PlayerEntity player) {
-        IVec3? targetBlock = SkyWarsUtils.GetTargetBlock(player, MaxDistance, true);
+        Vec3<int>? targetBlock = SkyWarsUtils.GetTargetBlock(player, MaxDistance, true);
         if (targetBlock == null) {
             player.SendMessage("No target found within range.");
             return false;
@@ -31,7 +31,7 @@ public class MagicToyStickItem : SkyWarsItem {
         return true;
     }
 
-    private static void Hit(PlayerEntity player, IVec3 location) {
+    private static void Hit(PlayerEntity player, Vec3<int> location) {
         player.SendMessage("Boom!");
         World world = player.World!;
 
@@ -41,7 +41,7 @@ public class MagicToyStickItem : SkyWarsItem {
         for (int x = -ExplodeRadius; x <= ExplodeRadius; x++) {
             for (int y = -ExplodeRadius; y <= ExplodeRadius; y++) {
                 for (int z = -ExplodeRadius; z <= ExplodeRadius; z++) {
-                    IVec3 blockPos = location + new IVec3(x, y, z);
+                    Vec3<int> blockPos = location + new Vec3<int>(x, y, z);
 
                     if (blockPos.DistanceTo(location) > ExplodeRadius) {
                         continue; // Skip blocks outside the radius
@@ -64,7 +64,7 @@ public class MagicToyStickItem : SkyWarsItem {
                 !(playerEntity.Position.DistanceTo(location) <= LaunchRadius)) continue;
             
             // Direction should be away from the explosion but with some vertical component
-            Vec3 direction = (playerEntity.Position - location).Normalize() * LaunchPower;
+            Vec3<double> direction = (playerEntity.Position - location).Normalize() * LaunchPower;
             playerEntity.SetVelocity(direction);
         }
         

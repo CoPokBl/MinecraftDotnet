@@ -12,7 +12,7 @@ namespace ManagedServer.Events;
 [NotCalledByDefault]
 public class PlayerPlaceBlockEvent : ICancelableEvent, IPlayerEvent {
     public required PlayerEntity Player { get; init; }
-    public required IVec3 Position { get; set; }
+    public required Vec3<int> Position { get; set; }
     public required IBlock Block { get; set; }
     public bool ConsumeItem { get; set; } = true;
     public required ItemStack UsedItem { get; init; }

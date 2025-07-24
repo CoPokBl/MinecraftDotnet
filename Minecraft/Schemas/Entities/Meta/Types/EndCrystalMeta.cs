@@ -3,12 +3,12 @@ using Minecraft.Schemas.Vec;
 namespace Minecraft.Schemas.Entities.Meta.Types;
 
 public record EndCrystalMeta(
-    Optional<IVec3>? BeamTarget = null,
+    Optional<Vec3<int>>? BeamTarget = null,
     bool? ShowBottom = null) : EntityMeta {
     
     public override EntityMeta LoadFields(EntityMetaContainer container) {
         return (EndCrystalMeta)base.LoadFields(container) with {
-            BeamTarget = container.GetValue<Optional<IVec3>>(8),
+            BeamTarget = container.GetValue<Optional<Vec3<int>>>(8),
             ShowBottom = container.GetValue<bool>(9)
         };
     }

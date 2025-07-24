@@ -36,7 +36,7 @@ public static class AnvilTesting {
 
         Stopwatch sw = Stopwatch.StartNew();
         for (int i = 0; i < 1; i++) {
-            world.GetChunkPacket(new IVec2(0, 0));
+            world.GetChunkPacket(new Vec2<int>(0, 0));
         }
         Console.WriteLine($"Chunk packet took {sw.ElapsedMilliseconds}ms");
         
@@ -46,13 +46,13 @@ public static class AnvilTesting {
         });
 
         server.Events.AddListener<PlayerLoginEvent>(e => {
-            e.Player.Teleport(new Vec3(0, 200, 0));
+            e.Player.Teleport(new Vec3<double>(0, 200, 0));
         });
 
         world.Events.AddListener<EntityMoveEvent>(e => {
             if (e.NewPos.Y < 0) {
                 // If the player falls below Y=0, teleport them back to the spawn point
-                e.Entity.Teleport(new Vec3(0, 200, 0));
+                e.Entity.Teleport(new Vec3<double>(0, 200, 0));
                 ((PlayerEntity)e.Entity).Connection.SendSystemMessage("You fell below the world! Teleporting back to spawn.");
             }
         });

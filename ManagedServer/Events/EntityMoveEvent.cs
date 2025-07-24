@@ -9,6 +9,6 @@ namespace ManagedServer.Events;
 [BuiltinEvent]
 public class EntityMoveEvent : IEntityEvent {
     public required Entity Entity { get; init; }
-    public required Vec3 NewPos { get; init; }
+    public required Vec3<double> NewPos { get; init; }
     public required World World { get; init; }
 }

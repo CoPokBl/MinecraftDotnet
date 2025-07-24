@@ -37,7 +37,7 @@ public class LuckyBlocksFeature : ScopedFeature {
     
     private record LuckyBlock(LuckyBlockType Type, Entity? PlacedEntity);
     
-    private readonly Dictionary<IVec3, LuckyBlock> _placedBlocks = [];
+    private readonly Dictionary<Vec3<int>, LuckyBlock> _placedBlocks = [];
 
     public static ItemStack GetLuckyBlock(int count = 1) {
         return new ItemStack(count, Item.YellowStainedGlass)
@@ -56,7 +56,7 @@ public class LuckyBlocksFeature : ScopedFeature {
             e.Block = Block.YellowStainedGlass;
 
             Entity insideThing = new(EntityType.Bee) {
-                Position = e.Position.BlockPositionToVec3() - new Vec3(0, 0.3, 0)
+                Position = e.Position.BlockPosToDouble() - new Vec3<double>(0, 0.3, 0)
             };
             e.World.Spawn(insideThing);
             

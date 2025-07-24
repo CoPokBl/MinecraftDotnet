@@ -136,7 +136,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         Blocks[x, y, z] = state;
     }
 
-    public void SetBlock(IVec3 pos, uint state) {
+    public void SetBlock(Vec3<int> pos, uint state) {
         SetBlock(pos.X, pos.Y, pos.Z, state);
     }
 
@@ -147,7 +147,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         return Blocks[x, y, z];
     }
     
-    public uint GetBlock(IVec3 pos) {
+    public uint GetBlock(Vec3<int> pos) {
         return GetBlock(pos.X, pos.Y, pos.Z);
     }
     
@@ -155,7 +155,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         return (registry ?? VanillaRegistry.Data).Blocks.GetByStateId(GetBlock(x, y, z));
     }
     
-    public IBlock LookupBlock(IVec3 pos, MinecraftRegistry? registry = null) {
+    public IBlock LookupBlock(Vec3<int> pos, MinecraftRegistry? registry = null) {
         return (registry ?? VanillaRegistry.Data).Blocks.GetByStateId(GetBlock(pos));
     }
     

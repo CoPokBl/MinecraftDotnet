@@ -47,7 +47,7 @@ public class BlockBreakingFeature : ScopedFeature {
         });
     }
     
-    private void ProcessDigStart(PlayerEntity player, IVec3 pos) {
+    private void ProcessDigStart(PlayerEntity player, Vec3<int> pos) {
         IBlock block = player.World!.GetBlock(pos);
         
         PlayerStartBreakingBlockEvent startEvent = new() {
@@ -92,7 +92,7 @@ public class BlockBreakingFeature : ScopedFeature {
         player.SetTag(BlockBreakAnimationTimerTag, breakTimer);
     }
 
-    private void ProcessDigEnd(PlayerEntity player, IVec3 pos) {
+    private void ProcessDigEnd(PlayerEntity player, Vec3<int> pos) {
         StopBlockBreakAnimation(player, pos);
         
         IBlock block = player.World!.GetBlock(pos);
@@ -101,7 +101,7 @@ public class BlockBreakingFeature : ScopedFeature {
         BreakBlock(player, pos);
     }
     
-    private void ProcessDigCancel(PlayerEntity player, IVec3 pos) {
+    private void ProcessDigCancel(PlayerEntity player, Vec3<int> pos) {
         PlayerCancelBreakingBlockEvent cancelEvent = new() {
             Player = player,
             Position = pos,
@@ -113,7 +113,7 @@ public class BlockBreakingFeature : ScopedFeature {
         StopBlockBreakAnimation(player, pos);
     }
     
-    private static void StopBlockBreakAnimation(PlayerEntity player, IVec3 pos) {
+    private static void StopBlockBreakAnimation(PlayerEntity player, Vec3<int> pos) {
         player.GetTagOrNull(BlockBreakAnimationTimerTag)?.Dispose();
         player.SetTag(BlockBreakAnimationTimerTag, null);
         player.GetTagOrSetDefault(BreakTickCounterTag, new AtomicCounter(0, 20)).Value = 0;
@@ -125,7 +125,7 @@ public class BlockBreakingFeature : ScopedFeature {
         });
     }
 
-    private void BreakBlock(PlayerEntity player, IVec3 pos) {
+    private void BreakBlock(PlayerEntity player, Vec3<int> pos) {
         PlayerBreakBlockEvent breakEvent = new() {
             Player = player,
             Position = pos,

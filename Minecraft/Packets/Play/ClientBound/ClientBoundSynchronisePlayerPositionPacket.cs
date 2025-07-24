@@ -8,8 +8,8 @@ public class ClientBoundSynchronisePlayerPositionPacket : ClientBoundPacket {
     
     public required Angle Pitch;
     public required Angle Yaw;
-    public required Vec3 Velocity;
-    public required Vec3 Position;
+    public required Vec3<double> Velocity;
+    public required Vec3<double> Position;
     public required int TeleportId;
     public required TeleportFlags Flags;
 

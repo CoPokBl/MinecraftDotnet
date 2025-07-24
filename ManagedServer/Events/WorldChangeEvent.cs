@@ -10,7 +10,7 @@ namespace ManagedServer.Events;
 [BuiltinEvent]
 public class WorldChangeEvent : IWorldEvent, ICancelableEvent {
     public required World World { get; init; }
-    public required IVec3 Position { get; init; }
+    public required Vec3<int> Position { get; init; }
     public required IBlock OldState { get; init; }
     public required IBlock NewState { get; set; }
     public bool Cancelled { get; set; } = false;

@@ -9,9 +9,9 @@ public class ClientBoundUnloadChunkPacket() : ClientBoundPacket {
     public required int X;
     public required int Z;
 
-    public ClientBoundUnloadChunkPacket(IVec2 pos) : this() {
+    public ClientBoundUnloadChunkPacket(Vec2<int> pos) : this() {
         X = pos.X;
-        Z = pos.Z;
+        Z = pos.Y;
     }
 
     protected override DataWriter WriteData(DataWriter w) {

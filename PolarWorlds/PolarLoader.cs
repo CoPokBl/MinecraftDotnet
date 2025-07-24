@@ -18,7 +18,7 @@ public class PolarLoader : ITerrainProvider {
     private const int MaxHeightmaps = 32;
     private const int BlockPaletteSize = 4096;
     
-    public Dictionary<IVec2, ChunkData> Chunks = null!;
+    public Dictionary<Vec2<int>, ChunkData> Chunks = null!;
 
     public PolarLoader(string path) : this(File.ReadAllBytes(path)) {
         
@@ -67,7 +67,7 @@ public class PolarLoader : ITerrainProvider {
         Chunks = [];
         for (int i = 0; i < chunkCount; i++) {
             ChunkData chunkData = ReadChunk(reader, version, dataVersion, maxSection - minSection + 1);
-            Chunks.Add(new IVec2(chunkData.ChunkX, chunkData.ChunkZ), chunkData);
+            Chunks.Add(new Vec2<int>(chunkData.ChunkX, chunkData.ChunkZ), chunkData);
         }
     }
 
@@ -101,7 +101,7 @@ public class PolarLoader : ITerrainProvider {
         int chunkX = reader.ReadVarInt();
         int chunkZ = reader.ReadVarInt();
         
-        Dictionary<IVec3, BlockEntity> blockEntities = new();
+        Dictionary<Vec3<int>, BlockEntity> blockEntities = new();
         
         ChunkSection[] sections = new ChunkSection[sectionCount];
         for (int i = 0; i < sectionCount; i++) {
@@ -123,7 +123,7 @@ public class PolarLoader : ITerrainProvider {
                     GetZFromIndex(posIndex), 
                     VanillaRegistry.Data.BlockEntityTypes[id.ThrowIfNull()],
                     nbt);
-                blockEntities.Add(new IVec3(entity.X, entity.Y, entity.Z), entity);
+                blockEntities.Add(new Vec3<int>(entity.X, entity.Y, entity.Z), entity);
             }
         }
         
@@ -250,7 +250,7 @@ public class PolarLoader : ITerrainProvider {
     }
 
     public void GetChunk(ChunkData chunk) {
-        Chunks.TryGetValue(new IVec2(chunk.ChunkX, chunk.ChunkZ), out ChunkData? data);
+        Chunks.TryGetValue(new Vec2<int>(chunk.ChunkX, chunk.ChunkZ), out ChunkData? data);
         if (data == null) {
             Console.WriteLine("Polar chunk not found: " + chunk.ChunkX + ", " + chunk.ChunkZ);
             return;
@@ -261,7 +261,7 @@ public class PolarLoader : ITerrainProvider {
 
     public void GetChunks(int start, int count, ChunkData[] chunks) {
         for (int i = start; i < start + count; i++) {
-            if (Chunks.TryGetValue(new IVec2(chunks[i].ChunkX, chunks[i].ChunkZ), out ChunkData? data)) {
+            if (Chunks.TryGetValue(new Vec2<int>(chunks[i].ChunkX, chunks[i].ChunkZ), out ChunkData? data)) {
                 chunks[i] = data;
             } else {
                 Console.WriteLine("Polar chunk not found: " + chunks[i].ChunkX + ", " + chunks[i].ChunkZ);

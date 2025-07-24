@@ -5,7 +5,7 @@ using Minecraft.Text;
 
 namespace Minecraft.Data.Particles.Types;
 
-public record TrailParticle(Identifier Identifier, int ProtocolId, Vec3 Target = default, TextColor Color = default, int Duration = 0) : IParticle {
+public record TrailParticle(Identifier Identifier, int ProtocolId, Vec3<double> Target = default, TextColor Color = default, int Duration = 0) : IParticle {
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer

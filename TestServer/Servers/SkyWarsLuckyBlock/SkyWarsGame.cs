@@ -22,7 +22,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
     private const string MapFolder = "ramen";
     private static readonly ITerrainProvider GameMap = new AnvilLoader(MapFolder, VanillaRegistry.Data);
     
-    private static readonly Vec3[] MapSpawns = [
+    private static readonly Vec3<double>[] MapSpawns = [
         new(-20.5, 25, -24.5),
         new(23.5, 25, -24.5),
         new(29.5, 25, 0.5),
@@ -31,7 +31,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
         new(-28.5, 25, 0.5)
     ];
     
-    private static readonly Vec3 SpecSpawn = new(0.5, 25, 0.5);
+    private static readonly Vec3<double> SpecSpawn = new(0.5, 25, 0.5);
     private const int StartTimeSeconds = 5;
     
     public readonly List<PlayerEntity> RemainingPlayers = [];
@@ -54,9 +54,9 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
         });
     }
     
-    private static Queue<Vec3> CreateRandomSpawns() {
-        Queue<Vec3> spawns = new();
-        List<Vec3> spawnList = MapSpawns.ToList();
+    private static Queue<Vec3<double>> CreateRandomSpawns() {
+        Queue<Vec3<double>> spawns = new();
+        List<Vec3<double>> spawnList = MapSpawns.ToList();
         
         while (spawnList.Count > 0) {
             int index = Random.Shared.Next(spawnList.Count);
@@ -101,7 +101,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
         World = server.CreateWorld(GameMap, "skywars:game");
         World.AddFeatures(SkyWarsFeatures);
         
-        Queue<Vec3> spawns = CreateRandomSpawns();
+        Queue<Vec3<double>> spawns = CreateRandomSpawns();
         
         foreach (PlayerEntity player in players) {
             RemainingPlayers.Add(player);

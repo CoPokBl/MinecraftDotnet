@@ -11,7 +11,7 @@ public record CompositeBox(params ICollisionBox[] Children) : ICollisionBox {
         return Children.Select(child => child.CollidesWhichAabb(other)).FirstOrDefault(child => child != null);
     }
 
-    public ICollisionBox Add(Vec3 other) {
+    public ICollisionBox Add(Vec3<double> other) {
         return new CompositeBox(Children.Select(child => child.Add(other)).ToArray());
     }
 }

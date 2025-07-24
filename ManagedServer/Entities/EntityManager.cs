@@ -82,14 +82,14 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     }
     
     // TODO: this needs major optimising (perhaps store entities in a spatial partitioning structure, or per chunk)
-    public Entity[] GetNearbyEntities(Vec3 pos, double distance) {
+    public Entity[] GetNearbyEntities(Vec3<double> pos, double distance) {
         return Entities
             .Where(e => e.Position.DistanceTo(pos) < distance)
             .ToArray();
     }
 
     // uses the most appropriate packet type
-    public void MoveEntity(Entity entity, Vec3 newPos, Angle? yaw = null, Angle? pitch = null) {
+    public void MoveEntity(Entity entity, Vec3<double> newPos, Angle? yaw = null, Angle? pitch = null) {
         double deltaX = Math.Abs(newPos.X - entity.Position.X);
         double deltaY = Math.Abs(newPos.Y - entity.Position.Y);
         double deltaZ = Math.Abs(newPos.Z - entity.Position.Z);
@@ -104,7 +104,7 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             return;
         }
         
-        FVec3 deltaPos = new(
+        Vec3<float> deltaPos = new(
             (float)newPos.X - (float)entity.Position.X, 
             (float)newPos.Y - (float)entity.Position.Y, 
             (float)newPos.Z - (float)entity.Position.Z);
@@ -139,12 +139,12 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         });
     }
 
-    public void TeleportEntity(Entity entity, Vec3 newPos, Angle yaw, Angle pitch) {
+    public void TeleportEntity(Entity entity, Vec3<double> newPos, Angle yaw, Angle pitch) {
         MinecraftPacket packet =
             new ClientBoundTeleportEntityPacket {
                 EntityId = entity.NetId,
                 Position = newPos,
-                Velocity = Vec3.Zero,
+                Velocity = Vec3<double>.Zero,
                 Pitch = pitch,
                 Yaw = yaw,
                 OnGround = true

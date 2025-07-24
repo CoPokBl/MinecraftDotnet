@@ -203,10 +203,10 @@ server.Events.AddListener<PlayerPacketEvent>(e => {
             int z = int.Parse(args[2]);
             int teleportId = Random.Shared.Next();
             e.Connection.Player.SendPacket(new ClientBoundSynchronisePlayerPositionPacket {
-                Position = new Vec3(x, y, z),
+                Position = new Vec3<double>(x, y, z),
                 Yaw = 0f,
                 Pitch = 0f,
-                Velocity = Vec3.Zero,
+                Velocity = Vec3<double>.Zero,
                 Flags = TeleportFlags.None,
                 TeleportId = teleportId
             });
@@ -249,7 +249,7 @@ server.Events.AddListener<ServerPacketEvent>(e => {
     switch (e.Packet) {
         case ClientBoundSynchronisePlayerPositionPacket sp: {
             if (antiKb) {
-                sp.Velocity = Vec3.Zero;
+                sp.Velocity = Vec3<double>.Zero;
                 e.Connection.Player.SendSystemMessage("Anti-Knockback is enabled, velocity set to zero.");
             }
             break;

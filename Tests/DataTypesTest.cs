@@ -9,8 +9,8 @@ public class DataTypesTest {
     
     [Test]
     public void TestBlockPosition() {
-        IVec3 position = new(143, 532, 353);
-        IVec3 redone = new DataReader(new DataWriter().WritePosition(position).ToArray()).ReadPosition();
+        Vec3<int> position = new(143, 532, 353);
+        Vec3<int> redone = new DataReader(new DataWriter().WritePosition(position).ToArray()).ReadPosition();
         Assert.Multiple(() => {
             Assert.That(redone.X, Is.EqualTo(position.X));
             Assert.That(redone.Y, Is.EqualTo(position.Y));

@@ -10,7 +10,7 @@ public readonly struct Quaternion(float x, float y, float z, float w) {
     
     public Quaternion(float x, float y, float z) : this(x, y, z, 1) { }
     
-    public Quaternion(FVec3 vector, float w) : this(vector.X, vector.Y, vector.Z, w) { }
+    public Quaternion(Vec3<float> vector, float w) : this(vector.X, vector.Y, vector.Z, w) { }
     
     public Quaternion() : this(0, 0, 0, 1) { }
 

@@ -8,7 +8,7 @@ namespace TestServer.Servers.SkyWarsLuckyBlock.BlockResults;
 
 public class FullHealBlockResult : IBlockResult {
     
-    public void Trigger(World world, PlayerEntity? player, IVec3 position) {
+    public void Trigger(World world, PlayerEntity? player, Vec3<int> position) {
         player?.Heal();
         player?.SendMessage(TextComponent.FromLegacyString("&aYou have been fully healed!"));
     }

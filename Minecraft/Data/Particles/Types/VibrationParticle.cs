@@ -8,7 +8,7 @@ public record VibrationParticle(Identifier Identifier, int ProtocolId, Vibration
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
-            .Write(PositionSource ?? new BlockPositionSource(IVec3.Zero))
+            .Write(PositionSource ?? new BlockPositionSource(Vec3<int>.Zero))
             .WriteVarInt(Ticks);
     }
 
@@ -32,7 +32,7 @@ public record VibrationParticle(Identifier Identifier, int ProtocolId, Vibration
         }
     }
 
-    public record BlockPositionSource(IVec3 Position) : IPositionSource {
+    public record BlockPositionSource(Vec3<int> Position) : IPositionSource {
         public int Type => 0;
 
         public void Write(DataWriter writer) {

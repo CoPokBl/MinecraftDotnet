@@ -7,7 +7,7 @@ public class ClientBoundSetBlockDestroyStagePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:block_destruction";
     
     public required int EntityId;
-    public required IVec3 Block;
+    public required Vec3<int> Block;
     public required byte Stage;
 
     protected override DataWriter WriteData(DataWriter w) {

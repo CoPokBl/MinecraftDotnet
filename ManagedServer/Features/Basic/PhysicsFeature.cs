@@ -26,20 +26,20 @@ public class PhysicsFeature : ScopedFeature {
 
     private void MoveEntity(World world, Entity entity, double delta) {
         // entity.Velocity = entity.Velocity.WithY(entity.Velocity.Y - entity.Type.Acceleration * 20.0 * delta);
-        Vec3 newPos = entity.Position + entity.Velocity;
+        Vec3<double> newPos = entity.Position + entity.Velocity;
         
         double drag = 0.98;
         
         // On ground check
-        Vec3 groundCheckPos = entity.Position - new Vec3(0, 0.01, 0);
+        Vec3<double> groundCheckPos = entity.Position - new Vec3<double>(0, 0.01, 0);
         
         if (world.IsInBounds(groundCheckPos)) {
             IBlock groundBlock = world.GetBlock(groundCheckPos);
             entity.OnGround = groundBlock.CollisionShape.Add(groundCheckPos.ToBlockPos())
-                .CollidesWithAabb((Aabb)entity.BoundingBox.Add(entity.Position - new Vec3(0, 0.001, 0)));
+                .CollidesWithAabb((Aabb)entity.BoundingBox.Add(entity.Position - new Vec3<double>(0, 0.001, 0)));
 
             if (entity.OnGround) {
-                IBlock frictionBlock = world.GetBlockOr(entity.Position - new Vec3(0, 0.999, 0), Block.Air);
+                IBlock frictionBlock = world.GetBlockOr(entity.Position - new Vec3<double>(0, 0.999, 0), Block.Air);
                 drag *= frictionBlock.Friction;
             }
         }
@@ -47,9 +47,9 @@ public class PhysicsFeature : ScopedFeature {
             entity.OnGround = false;
         }
         
-        entity.Velocity *= new Vec3(drag, 0.98, drag);
+        entity.Velocity *= new Vec3<double>(drag, 0.98, drag);
 
-        Vec3 size = entity.BoundingBox.Size;
+        Vec3<double> size = entity.BoundingBox.Size;
 
         for (int axis = 0; axis < 3; axis++) {
             double movement = entity.Velocity[axis];
@@ -58,8 +58,8 @@ public class PhysicsFeature : ScopedFeature {
                 continue;
             }
 
-            Vec3 checkPos = entity.Position + Vec3.FromAxis(axis, movement);
-            Vec3 moveOffset = movement > 0 ? Vec3.FromAxis(axis, size[axis]) : Vec3.Zero;
+            Vec3<double> checkPos = entity.Position + Vec3<double>.FromAxis(axis, movement);
+            Vec3<double> moveOffset = movement > 0 ? Vec3<double>.FromAxis(axis, size[axis]) : Vec3<double>.Zero;
 
             // Go through each corner
             for (int otherAxis = 0; otherAxis < 3; otherAxis++) {
@@ -68,9 +68,9 @@ public class PhysicsFeature : ScopedFeature {
                 }
                 
                 for (double far = 0; far < 2; far++) {
-                    Vec3 corner = checkPos + entity.BoundingBox.Position + Vec3.FromAxis(otherAxis, size[otherAxis] * far) + moveOffset;
+                    Vec3<double> corner = checkPos + entity.BoundingBox.Position + Vec3<double>.FromAxis(otherAxis, size[otherAxis] * far) + moveOffset;
                     
-                    IVec3 blockPos = corner.ToBlockPos();
+                    Vec3<int> blockPos = corner.ToBlockPos();
                     IBlock block = world.GetBlockOr(blockPos, Block.Air);
                     if (block.StateId == Block.Air.StateId) {
                         continue;

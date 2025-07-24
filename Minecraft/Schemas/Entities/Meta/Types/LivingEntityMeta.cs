@@ -9,7 +9,7 @@ public record LivingEntityMeta(
     bool? IsPotionAmbient = null,
     int? ArrowsInEntity = null,
     int? BeeStingersInEntity = null,
-    Optional<IVec3>? SleepingBed = null) : EntityMeta {
+    Optional<Vec3<int>>? SleepingBed = null) : EntityMeta {
 
     public override EntityMeta LoadFields(EntityMetaContainer container) {
         return (LivingEntityMeta)base.LoadFields(container) with {
@@ -19,7 +19,7 @@ public record LivingEntityMeta(
             IsPotionAmbient = container.GetValue<bool>(11),
             ArrowsInEntity = container.GetValue<int>(12),
             BeeStingersInEntity = container.GetValue<int>(13),
-            SleepingBed = container.GetValue<Optional<IVec3>>(14)
+            SleepingBed = container.GetValue<Optional<Vec3<int>>>(14)
         };
     }
 

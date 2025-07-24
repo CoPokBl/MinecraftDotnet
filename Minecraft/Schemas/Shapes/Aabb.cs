@@ -2,11 +2,11 @@ using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Schemas.Shapes;
 
-public record Aabb(Vec3 Position, Vec3 Size) : ICollisionBox {
-    public Vec3 End => Position + Size;
-    public Vec3[] Corners => [
-        Position, Position + new Vec3(Size.X, 0, 0), Position + new Vec3(0, 0, Size.Z), Position + new Vec3(Size.X, 0, Size.Z),
-        Position + new Vec3(0, Size.Y, 0), Position + new Vec3(Size.X, Size.Y, 0), Position + new Vec3(0, Size.Y, Size.Z), Position + Size
+public record Aabb(Vec3<double> Position, Vec3<double> Size) : ICollisionBox {
+    public Vec3<double> End => Position + Size;
+    public Vec3<double>[] Corners => [
+        Position, Position + new Vec3<double>(Size.X, 0, 0), Position + new Vec3<double>(0, 0, Size.Z), Position + new Vec3<double>(Size.X, 0, Size.Z),
+        Position + new Vec3<double>(0, Size.Y, 0), Position + new Vec3<double>(Size.X, Size.Y, 0), Position + new Vec3<double>(0, Size.Y, Size.Z), Position + Size
     ];
     
     public static Aabb FromString(string str) {
@@ -28,8 +28,8 @@ public record Aabb(Vec3 Position, Vec3 Size) : ICollisionBox {
         if (startValues.Length != 3 || endValues.Length != 3) {
             throw new FormatException($"Invalid AABB values: {str}");
         }
-        Vec3 position = new(startValues[0], startValues[1], startValues[2]);
-        Vec3 size = new(endValues[0] - startValues[0], endValues[1] - startValues[1], endValues[2] - startValues[2]);
+        Vec3<double> position = new(startValues[0], startValues[1], startValues[2]);
+        Vec3<double> size = new(endValues[0] - startValues[0], endValues[1] - startValues[1], endValues[2] - startValues[2]);
         return new Aabb(position, size);
     }
 
@@ -50,7 +50,7 @@ public record Aabb(Vec3 Position, Vec3 Size) : ICollisionBox {
         return CollidesWithAabb(other) ? this : null;
     }
 
-    public ICollisionBox Add(Vec3 other) {
+    public ICollisionBox Add(Vec3<double> other) {
         return this with {
             Position = Position + other
         };

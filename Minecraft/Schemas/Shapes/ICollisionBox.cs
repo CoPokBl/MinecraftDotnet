@@ -32,5 +32,5 @@ public interface ICollisionBox {
     public Aabb? CollidesWhichAabb(Aabb other);
     
     [Pure]
-    public ICollisionBox Add(Vec3 other);
+    public ICollisionBox Add(Vec3<double> other);
 }

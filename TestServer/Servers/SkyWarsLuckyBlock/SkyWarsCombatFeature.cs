@@ -76,7 +76,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
             }
             
             if (entity is PlayerEntity p) {
-                p.SetVelocity(attacker.Direction.Multiply(0.90 + knockback * 0.3) with { Y = 0.4 });  // Original 2.0 GOOD
+                p.SetVelocity(attacker.Direction.Multiply(0.90 + knockback * 0.3).WithY(0.4));  // Original 2.0 GOOD
                 p.PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);
             }
             else {

@@ -8,7 +8,7 @@ public class ServerBoundInteractPacket : ServerBoundPacket {
     
     public required int EntityId;
     public required InteractType Type;
-    public FVec3? Target;
+    public Vec3<float>? Target;
     public Hand? UsedHand;
     public required bool SneakPressed;
 
@@ -32,7 +32,7 @@ public class ServerBoundInteractPacket : ServerBoundPacket {
         };
     }
     
-    public static ServerBoundInteractPacket InteractAt(int entityId, FVec3 target, Hand hand, bool sneakPressed) {
+    public static ServerBoundInteractPacket InteractAt(int entityId, Vec3<float> target, Hand hand, bool sneakPressed) {
         return new ServerBoundInteractPacket {
             EntityId = entityId,
             Type = InteractType.InteractAt,
@@ -70,7 +70,7 @@ public class ServerBoundInteractPacket : ServerBoundPacket {
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
         int entityId = r.ReadVarInt();
         InteractType type = (InteractType)r.ReadVarInt();
-        FVec3? target = null;
+        Vec3<float>? target = null;
         Hand? usedHand = null;
         if (type == InteractType.InteractAt) {
             target = r.ReadFVec3();

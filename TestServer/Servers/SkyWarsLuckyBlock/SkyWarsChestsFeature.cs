@@ -13,7 +13,7 @@ using TestServer.Servers.SkyWarsLuckyBlock.Items;
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
 public class SkyWarsChestsFeature : ScopedFeature {
-    private static readonly Tag<Dictionary<IVec3, Inventory>> ChestsTag = new("skywars:loot_chests");
+    private static readonly Tag<Dictionary<Vec3<int>, Inventory>> ChestsTag = new("skywars:loot_chests");
 
     private static readonly LootTableEntry[] LootTable = [
         new(new ItemStack(1, Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 5f), 0.5f, 1, 1),
@@ -30,7 +30,7 @@ public class SkyWarsChestsFeature : ScopedFeature {
                 return;
             }
 
-            IVec3 pos = packet.Position;
+            Vec3<int> pos = packet.Position;
             IBlock block = e.World.GetBlock(pos);
 
             if (!IBlock.SimilarTo(block, Block.Chest)) {
@@ -38,7 +38,7 @@ public class SkyWarsChestsFeature : ScopedFeature {
             }
             
             // Chest right click
-            Dictionary<IVec3, Inventory> worldData = e.World.GetTagOrSetDefault(ChestsTag, []);
+            Dictionary<Vec3<int>, Inventory> worldData = e.World.GetTagOrSetDefault(ChestsTag, []);
 
             if (worldData.TryGetValue(pos, out Inventory? value)) {
                 e.Player.OpenInventory = value;

@@ -7,7 +7,7 @@ public class ServerBoundSetPlayerPositionPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:move_player_pos";
     
     public required MovePlayerFlags Flags;
-    public required Vec3 Position;
+    public required Vec3<double> Position;
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

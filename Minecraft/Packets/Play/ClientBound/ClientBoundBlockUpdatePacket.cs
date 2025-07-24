@@ -7,7 +7,7 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundBlockUpdatePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:block_update";
     
-    public required IVec3 Location;
+    public required Vec3<int> Location;
     public required IBlock Block;
 
     protected override DataWriter WriteData(DataWriter w) {
