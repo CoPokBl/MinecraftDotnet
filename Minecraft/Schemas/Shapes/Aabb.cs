@@ -3,7 +3,12 @@ using Minecraft.Schemas.Vec;
 namespace Minecraft.Schemas.Shapes;
 
 public record Aabb(Vec3 Position, Vec3 Size) : ICollisionBox {
-
+    public Vec3 End => Position + Size;
+    public Vec3[] Corners => [
+        Position, Position + new Vec3(Size.X, 0, 0), Position + new Vec3(0, 0, Size.Z), Position + new Vec3(Size.X, 0, Size.Z),
+        Position + new Vec3(0, Size.Y, 0), Position + new Vec3(Size.X, Size.Y, 0), Position + new Vec3(0, Size.Y, Size.Z), Position + Size
+    ];
+    
     public static Aabb FromString(string str) {
         str = str.Trim();
         
@@ -32,5 +37,26 @@ public record Aabb(Vec3 Position, Vec3 Size) : ICollisionBox {
     private static float[] ParseAabbValues(string str) {
         string[] parts = str.Split(',');
         return parts.Select(p => float.Parse(p.Trim())).ToArray();
+    }
+
+    public bool CollidesWithAabb(Aabb other) {
+        return Position.X < other.Position.X + other.Size.X &&
+               Position.X + Size.X > other.Position.X &&
+               Position.Y < other.Position.Y + other.Size.Y &&
+               Position.Y + Size.Y > other.Position.Y;
+    }
+
+    public Aabb? CollidesWhichAabb(Aabb other) {
+        return CollidesWithAabb(other) ? this : null;
+    }
+
+    public ICollisionBox Add(Vec3 other) {
+        return this with {
+            Position = Position + other
+        };
+    }
+
+    public Aabb Contract(double amount) {
+        return new Aabb(Position + amount, Size - amount * 2.0);
     }
 }

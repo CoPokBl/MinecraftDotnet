@@ -115,8 +115,6 @@ public class PlayerEntity : LivingEntity, IAudience {
     // 1.27 seems to be the sqrt of 1.62 (the eye height of player while not crouching)
     public double EyeHeight => Crouching ? 1.27 : EntityType.Player.EyeHeight;
 
-    public bool OnGround { get; private set; }
-
     public ManagedMinecraftServer Server;
 
     private int _waitingTeleport = -1;

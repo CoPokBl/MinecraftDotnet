@@ -1,3 +1,6 @@
+using System.Diagnostics.Contracts;
+using Minecraft.Schemas.Vec;
+
 namespace Minecraft.Schemas.Shapes;
 
 public interface ICollisionBox {
@@ -23,4 +26,11 @@ public interface ICollisionBox {
         }
         return new CompositeBox(boxes); // If there are multiple boxes, return a CompositeBox
     }
+
+    public bool CollidesWithAabb(Aabb other);
+
+    public Aabb? CollidesWhichAabb(Aabb other);
+    
+    [Pure]
+    public ICollisionBox Add(Vec3 other);
 }

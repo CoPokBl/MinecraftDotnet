@@ -59,6 +59,38 @@ public readonly struct BigVec3(BigInteger x, BigInteger y, BigInteger z) : IEqua
     public override int GetHashCode() {
         return HashCode.Combine(X, Y, Z);
     }
+    
+    public static BigVec3 operator +(BigVec3 a, BigVec3 b) {
+        return new BigVec3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+    }
+    
+    public static BigVec3 operator -(BigVec3 a, BigVec3 b) {
+        return new BigVec3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+    }
+    
+    public static BigVec3 operator *(BigVec3 a, BigInteger scalar) {
+        return new BigVec3(a.X * scalar, a.Y * scalar, a.Z * scalar);
+    }
+    
+    public static BigVec3 operator /(BigVec3 a, BigInteger scalar) {
+        if (scalar == 0) {
+            throw new DivideByZeroException("Cannot divide by zero.");
+        }
+        
+        return new BigVec3(a.X / scalar, a.Y / scalar, a.Z / scalar);
+    }
+    
+    public static BigVec3 operator *(BigVec3 a, BigVec3 b) {
+        return new BigVec3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+    }
+    
+    public static BigVec3 operator /(BigVec3 a, BigVec3 b) {
+        if (b.X == 0 || b.Y == 0 || b.Z == 0) {
+            throw new DivideByZeroException("Cannot divide by zero.");
+        }
+        
+        return new BigVec3(a.X / b.X, a.Y / b.Y, a.Z / b.Z);
+    }
 
     public static bool operator ==(BigVec3 left, BigVec3 right) {
         return left.Equals(right);

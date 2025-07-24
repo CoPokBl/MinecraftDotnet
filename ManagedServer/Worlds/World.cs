@@ -327,6 +327,14 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         // Convert Vec3 to IVec3
         return GetBlock(pos.ToBlockPos());
     }
+
+    public IBlock GetBlockOr(IVec3 pos, IBlock def) {
+        return IsInBounds(pos) ? GetBlock(pos) : def;
+    }
+    
+    public IBlock GetBlockOr(Vec3 pos, IBlock def) {
+        return GetBlockOr(pos.ToBlockPos(), def);
+    }
     
     public BlockEntity? GetBlockData(IVec3 pos) {
         CheckY(pos.Y);
@@ -490,9 +498,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         itemEntity.SetTag(ItemDropTimeTag, DateTime.Now);
         Spawn(itemEntity);
 
-        ItemMeta meta = new(item) {
-            NoGravity = true
-        };
+        ItemMeta meta = new(item);
         itemEntity.Meta = meta;
         return itemEntity;
     }
@@ -501,5 +507,9 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         foreach (PlayerEntity player in Players) {
             player.SendPacket(packet);
         }
+    }
+
+    public bool IsInBounds(Vec3 pos) {
+        return pos.Y >= Dimension.MinY && pos.Y < Dimension.MinY + Dimension.Height;
     }
 }

@@ -16,7 +16,8 @@ public partial class ManagedMinecraftServer {
         new InventoryClickFeature(),
         new DropItemsEventFeature(),
         new ConsumablesFeature(),
-        new LoginProcedureFeature()
+        new LoginProcedureFeature(),
+        new PhysicsFeature()
     );
 
     public static ManagedMinecraftServer NewBasic() {

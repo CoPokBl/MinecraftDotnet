@@ -14,6 +14,7 @@ using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities.Meta.Types;
+using Minecraft.Schemas.Shapes;
 using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Entities.Types;
@@ -25,6 +26,8 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     public Angle Pitch = Angle.Zero;
     public Angle Yaw = Angle.Zero;
     public Angle HeadYaw = Angle.Zero;
+    
+    public Aabb BoundingBox { get; init; }
 
     private Func<PlayerConnection, bool> _viewableRule = _ => true;
     public Func<PlayerConnection, bool> ViewableRule {
@@ -69,6 +72,8 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
             });
         }
     }
+    
+    public bool OnGround { get; set; }
 
     public virtual List<PlayerEntity> Players => [];  // for ScopedFeature
     public ManagedMinecraftServer Server => World.ThrowIfNull().Server;
@@ -88,6 +93,8 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     public Entity(IEntityType type, EntityMeta? meta = null) {
         Type = type;
         FeatureHandler = new FeatureHandler(this);
+        
+        BoundingBox = new Aabb(new Vec3(Type.Width * -0.5, 0.0, Type.Height * -0.5), new Vec3(Type.Width, Type.Height, Type.Width));
 
         if (meta == null) {
             // guess the meta type based on the entity type
