@@ -1,27 +1,23 @@
 using System.Reflection;
+using Minecraft.Schemas;
 
 namespace Minecraft.Implementations.Events;
 
 public class EventNode<T> {
-    public List<(EventNode<T>, Func<T, bool>)> Children { get; } = [];
     public event Action<T>? Callback;
     public event Action<Type>? OnListenerAdded;  // Ran before adding a listener, useful for debugging or validation
 
     public EventNode<T>? Parent;
 
+    public volatile CopyOnWriteList<(EventNode<T>, Func<T, bool>)> Children = [];
+
     public EventNode<T> CreateChild<TS>(Func<TS, bool> condition) where TS : T {
-        EventNode<T> child = new() {
-            Parent = this
-        };
-        Children.Add((child, e => e is not TS ts || condition(ts)));
-        return child;
+        return CreateChild(e => e is not TS ts || condition(ts));
     }
     
     public EventNode<T> CreateChild(Func<T, bool>? condition = null) {
-        EventNode<T> child = new() {
-            Parent = this
-        };
-        Children.Add((child, condition ?? (_ => true)));
+        EventNode<T> child = new();
+        AddChild(child, condition);
         return child;
     }
     
@@ -32,13 +28,12 @@ public class EventNode<T> {
     }
     
     public void AddChild<TS>(EventNode<T> child, Func<TS, bool> condition) where TS : T {
-        Children.Add((child, e => e is not TS ts || condition(ts)));
-        child.Parent = this;
+        AddChild(child, e => e is not TS ts || condition(ts));
     }
     
     public void RemoveChild(EventNode<T> child) {
-        Children.RemoveAll(c => c.Item1 == child);
         child.Parent = null;
+        Children.RemoveAll(c => c.Item1 == child);
     }
     
     public Action AddListener<TL>(Action<TL> callback) where TL : T {
@@ -120,30 +115,16 @@ public class EventNode<T> {
     }
     
     private void ExecuteEventCallbacks(T e) {
-        try {
-            // Stopwatch sw = Stopwatch.StartNew();
-            Callback?.Invoke(e);
-            
-            (EventNode<T>, Func<T, bool>)[] children = Children.ToArray();  // avoid modifying while iterating
-            foreach ((EventNode<T> child, Func<T, bool> condition) in children) {
-                if (condition == null!) {
-                    Console.WriteLine("WARNING: EventNode<T> has a null condition, this is probably a bug in the code.");
-                    continue;
-                }
-                if (condition(e)) {
-                    child.ExecuteEventCallbacks(e);
-                }
+        Callback?.Invoke(e);
+        
+        foreach ((EventNode<T> child, Func<T, bool> condition) in Children) {
+            if (condition == null!) {
+                Console.WriteLine("WARNING: EventNode<T> has a null condition, this is probably a bug in the code.");
+                continue;
             }
-            // if (sw.ElapsedMilliseconds > 0) Console.WriteLine($"Event ({e.GetType().FullName}) took {sw.ElapsedMilliseconds}ms");
-        }
-        catch (StackOverflowException) {
-            Console.WriteLine("Stack overflow occured while handling event");
-            throw;
-        }
-        catch (Exception exception) {
-            Console.WriteLine("An error occured while handling an event:");
-            Console.WriteLine(exception);
-            throw;
+            if (condition(e)) {
+                child.ExecuteEventCallbacks(e);
+            }
         }
     }
 

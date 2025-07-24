@@ -16,6 +16,9 @@ public class DropItemsEventFeature : ScopedFeature {
             
             if (packet.ActionStatus == ServerBoundPlayerActionPacket.Status.DropItem) {
                 ItemStack item = e.Player.HeldItem.WithCount(1);
+                if (item.IsAir()) {
+                    return;
+                }
 
                 PlayerDropItemEvent dropEvent = new() {
                     Player = e.Player,
@@ -32,6 +35,9 @@ public class DropItemsEventFeature : ScopedFeature {
             }
             else if (packet.ActionStatus == ServerBoundPlayerActionPacket.Status.DropItemStack) {
                 ItemStack item = e.Player.HeldItem;
+                if (item.IsAir()) {
+                    return;
+                }
 
                 PlayerDropItemEvent dropEvent = new() {
                     Player = e.Player,

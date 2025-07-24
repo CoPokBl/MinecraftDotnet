@@ -28,7 +28,7 @@ public static class SkyWarsLuckyBlock {
             Description = TextComponent.FromLegacyString("&a&lSkyWars"),
             PreventsChatReports = true
         }));
-        server.AddFeature(new SimpleBenchmarkFeature());
+        // server.AddFeature(new SimpleBenchmarkFeature());
         
         server.Dimensions.Add("skywars:lobby", new Dimension());
         server.Dimensions.Add("skywars:game", new Dimension());

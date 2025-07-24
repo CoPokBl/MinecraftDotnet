@@ -1,8 +1,6 @@
 using ManagedServer.Entities.Types;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Inventories;
-using Minecraft.Implementations.Events;
-using Minecraft.Implementations.Server.Events;
 using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Inventory;

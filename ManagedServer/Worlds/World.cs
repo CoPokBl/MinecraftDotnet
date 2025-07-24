@@ -45,6 +45,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     public readonly Identifier DimensionId;
     
     public Dimension Dimension => Server.Dimensions[DimensionId];
+    private readonly int _maxY;
     
     // Props
     private int _time;
@@ -60,15 +61,24 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
     }
 
-    internal World(EventNode<IServerEvent> baseEventNode, ITerrainProvider provider, Identifier dimensionId, int viewDistance = 8, int packetsPerTick = 10, int tickDelayMs = 100) {
+    internal World(ManagedMinecraftServer server, EventNode<IServerEvent> baseEventNode, ITerrainProvider provider, Identifier dimensionId, int viewDistance = 8, int packetsPerTick = 10, int tickDelayMs = 100) {
         _provider = provider;
         _viewDistance = viewDistance;
         _packetsPerTick = packetsPerTick;
         _tickDelayMs = tickDelayMs;
+        Server = server;
         DimensionId = dimensionId;
         Events = baseEventNode.CreateChild<IWorldEvent>(e => e.World == this);
         Entities = new EntityManager(Events, viewDistance*16);
         FeatureHandler = new FeatureHandler(this);
+
+        if (!Server.Dimensions.ContainsKey(DimensionId)) {
+            throw new ArgumentException($"Dimension {DimensionId} does not exist in the server's dimensions.");
+        }
+
+        _maxY = Dimension.MinY + Dimension.Height;  // precompute this so we don't have to do it every time
+
+        Events.AddListener<ServerTickEvent>(_ => Tick());
     }
 
     // Data storage tags
@@ -88,6 +98,10 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
     private void Log(string msg) {
         if (Debug) Console.WriteLine("[WORLD] " + msg);
+    }
+
+    private void Tick() {
+        
     }
     
     public void AddPlayer(PlayerEntity player) {
@@ -110,6 +124,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
         bool disconnected = false;
         connection.Disconnected += () => disconnected = true;
+        
+        // TODO: Don't use threads, use the tick system or manage it better (investigate performance)
         Task.Run(async () => {
             Stopwatch sw = Stopwatch.StartNew();
             while (!disconnected) {
@@ -128,7 +144,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 }
 
                 // Console.WriteLine($"Sending {packets.Count} packets for terrain");
-                connection.SendPackets(false, packets.ToArray());
+                connection.SendPackets(packets.ToArray());
                 Log("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
             }
         });
@@ -346,7 +362,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     private void CheckY(int y) {
-        if (y < Dimension.MinY || y > Dimension.MinY + Dimension.Height) {
+        if (y < Dimension.MinY || y > _maxY) {
             throw new ArgumentOutOfRangeException(nameof(y), "Y position is out of bounds for this dimension.");
         }
     }
@@ -510,6 +526,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     public bool IsInBounds(Vec3<double> pos) {
-        return pos.Y >= Dimension.MinY && pos.Y < Dimension.MinY + Dimension.Height;
+        return pos.Y >= Dimension.MinY && pos.Y < _maxY;
     }
 }

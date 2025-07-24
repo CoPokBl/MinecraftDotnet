@@ -89,19 +89,10 @@ public abstract class MinecraftConnection : MappedTaggable {
     }
     
 #region packets
-    public void SendPackets(bool sequentially, params MinecraftPacket[] packets) {
-        foreach (MinecraftPacket packet in packets) {
-            if (sequentially) {
-                SendPacket(packet);
-            }
-            else {
-                SendPacket(packet);
-            }
-        }
-    }
-    
     public void SendPackets(params MinecraftPacket[] packets) {
-        SendPackets(true, packets);
+        foreach (MinecraftPacket packet in packets) {
+            SendPacket(packet);
+        }
     }
 
     public virtual void SendPacket(MinecraftPacket packet) {

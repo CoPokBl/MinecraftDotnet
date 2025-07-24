@@ -1,4 +1,3 @@
-using System.Drawing;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Worlds;
@@ -10,6 +9,7 @@ using Minecraft.Schemas.Vec;
 namespace ManagedServer.Features.Basic;
 
 public class PhysicsFeature : ScopedFeature {
+    
     public override void Register() {
         AddEventListener<ServerTickEvent>(e => {
             foreach (World world in e.Server.Worlds) {
@@ -90,7 +90,11 @@ public class PhysicsFeature : ScopedFeature {
                 }
             }
         }
-        
+
+        // Optimisation: if the entity's position hasn't changed, we can skip the move
+        if (entity.Position.DistanceSquaredTo(newPos) < 0.001) {
+            return;
+        }
         entity.Move(newPos);
     }
 }

@@ -61,17 +61,9 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
             _crouching = value;
         }
     }
-    
-    public virtual Vec3<double> Velocity {  // units: m/(1/20)s
-        get => _velocity;
-        set {
-            _velocity = value;
-            SendToViewers(new ClientBoundSetEntityVelocityPacket {  // protocol velocity is in 8000ths of a block per tick (50ms)
-                EntityId = NetId,
-                Velocity = new Vec3<short>((short)(value.X * 8000), (short)(value.Y * 8000), (short)(value.Z * 8000)),
-            });
-        }
-    }
+
+    private Vec3<double> _lastVelocity = Vec3<double>.Zero;
+    public virtual Vec3<double> Velocity { get; set; } = Vec3<double>.Zero;  // units: m/(1/20)s
     
     public bool OnGround { get; set; }
 
@@ -88,7 +80,6 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     private EntityMeta _meta = null!;  // set by the constructor, so it is never null
     private bool _crouching;
-    private Vec3<double> _velocity = Vec3<double>.Zero;
 
     public Entity(IEntityType type, EntityMeta? meta = null) {
         Type = type;
@@ -152,15 +143,15 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     }
 
     protected void Tick() {
-        
+        // Check for changed properties
+        if (_lastVelocity != Velocity) {
+            SendToViewers(new ClientBoundSetEntityVelocityPacket {  // protocol velocity is in 8000ths of a block per tick (50ms)
+                EntityId = NetId,
+                Velocity = new Vec3<short>((short)(Velocity.X * 8000), (short)(Velocity.Y * 8000), (short)(Velocity.Z * 8000)),
+            });
+            _lastVelocity = Velocity;
+        }
     }
-    
-    //final float rotX = yaw;
-    // final float rotY = pitch;
-    // final double xz = Math.cos(Math.toRadians(rotY));
-    // return new Vec(-xz * Math.sin(Math.toRadians(rotX)),
-    //         -Math.sin(Math.toRadians(rotY)),
-    //         xz * Math.cos(Math.toRadians(rotX)));
 
     public virtual MinecraftPacket[] GenerateSpawnEntityPackets() {
         return [new ClientBoundSpawnEntityPacket {

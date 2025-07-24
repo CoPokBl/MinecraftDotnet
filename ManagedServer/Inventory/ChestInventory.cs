@@ -1,7 +1,5 @@
 using Minecraft.Data.Generated;
 using Minecraft.Data.Inventories;
-using Minecraft.Implementations.Events;
-using Minecraft.Implementations.Server.Events;
 
 namespace ManagedServer.Inventory;
 

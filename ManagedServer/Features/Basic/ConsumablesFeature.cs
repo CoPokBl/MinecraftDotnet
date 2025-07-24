@@ -3,7 +3,6 @@ using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using ManagedServer.Inventory;
 using ManagedServer.Scheduling;
-using ManagedServer.Viewables;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;

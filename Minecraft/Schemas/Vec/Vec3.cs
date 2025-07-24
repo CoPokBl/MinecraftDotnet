@@ -141,11 +141,15 @@ public readonly struct Vec3<T>(T x, T y, T z) : IEquatable<Vec3<T>> where T : IN
 
     [Pure]
     public double DistanceTo(Vec3<T> other) {
+        return Math.Sqrt(DistanceSquaredTo(other));
+    }
+    
+    [Pure]
+    public double DistanceSquaredTo(Vec3<T> other) {
         double absX = T.Abs(X - other.X).ToDouble();
         double absY = T.Abs(Y - other.Y).ToDouble();
         double absZ = T.Abs(Z - other.Z).ToDouble();
-        double distanceTopDown = Math.Sqrt(absX * absX + absZ * absZ);
-        return Math.Sqrt(Math.Pow(distanceTopDown, 2) + absY*absY);
+        return absX * absX + absY * absY + absZ * absZ;
     }
 
     [Pure]

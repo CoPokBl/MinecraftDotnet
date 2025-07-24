@@ -2,7 +2,6 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Types;
 using ManagedServer.Viewables;
-using Minecraft.Data.Generated;
 using Minecraft.Data.Inventories;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;

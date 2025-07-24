@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
@@ -113,12 +112,17 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         TimeSpan elapsed = TimeSpan.Zero;  // the amount of time that is supposed to have passed since the start of the tick
         TimeSpan tickTime = TimeSpan.Zero;
         while (!_cts.IsCancellationRequested) {
+            TimeSpan tickStart = tickTimer.Elapsed;
             ServerTickEvent tickEvent = new() {
                 Delta = tickTime,
                 TargetDelta = TargetTickTime,
                 Server = this
             };
-            Events.CallEvent(tickEvent);
+            Exception? exception = Events.CallEventCatchErrors(tickEvent);
+            if (exception != null) {
+                HandleError(exception);
+            }
+            TimeSpan realTickDuration = tickTimer.Elapsed - tickStart;
             
             tickTime = tickTimer.Elapsed - elapsed;
             
@@ -129,19 +133,24 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
             }
             else {
                 // If we took too long, log a warning
-                Console.WriteLine($"WARNING: Tick took {tickTime.TotalMilliseconds}ms, exceeding target of {TargetTickTime.TotalMilliseconds}ms." +
-                                  $"Running behind by {elapsed - tickTimer.Elapsed}");
+                Console.WriteLine($"WARNING: Tick took {realTickDuration.TotalMilliseconds}ms, exceeding target of {TargetTickTime.TotalMilliseconds}ms." +
+                                  $"Running behind by {elapsed - tickTimer.Elapsed - TargetTickTime}");
             }
             
             CurrentTick++;
         }
     }
 
+    public void HandleError(Exception exception) {
+        Console.WriteLine("An error occurred in the server:");
+        Console.WriteLine(exception);
+    }
+
     public World CreateWorld(ITerrainProvider provider, string dimension = "minecraft:overworld") {
         if (!Dimensions.ContainsKey(dimension)) {
             throw new ArgumentException($"Dimension '{dimension}' does not exist. Please add it to the Dimensions dictionary.");
         }
-        World world = new(Events, provider, dimension, ViewDistance, WorldPacketsPerTick, WorldTickDelayMs) {
+        World world = new(this, Events, provider, dimension, ViewDistance, WorldPacketsPerTick, WorldTickDelayMs) {
             Server = this
         };
         Worlds.Add(world);

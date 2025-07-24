@@ -526,6 +526,9 @@ public class InventoryClickFeature : ScopedFeature {
     /// <param name="item">The item being dropped.</param>
     /// <returns>Whether the item should be removed from the inventory.</returns>
     private bool HandleDrop(PlayerEntity player, ItemStack item) {
+        if (item.IsAir()) {
+            return false;
+        }
         PlayerDropItemEvent e = new() {
             Player = player,
             Item = item,
