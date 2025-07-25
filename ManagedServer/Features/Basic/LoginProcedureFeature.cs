@@ -253,6 +253,10 @@ internal class LoginProcedureFeature : ScopedFeature {
                             
                                 entity.SetWorld(preLoginEvent.World);
                                 Scope.Server.Players.Add(entity);
+                                
+                                e.Connection.Disconnected += () => {
+                                    Scope.Server.Players.Remove(entity);
+                                };
                             
                                 entity.SendPacket(entity.GetPlayerInfoPacket());
                             

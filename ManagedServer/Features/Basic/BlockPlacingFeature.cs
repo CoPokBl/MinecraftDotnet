@@ -28,6 +28,9 @@ public class BlockPlacingFeature : ScopedFeature {
     
     private void CheckBlockPlace(PlayerEntity player, ServerBoundUseItemOnPacket use) {
         Vec3<int> target = use.Position.GetBlockTowards(use.Face);
+        if (!player.World!.IsInBounds(target)) {
+            return;  // out of bounds, can't place block
+        }
         player.Inventory.SendSlotUpdate(player.ActiveHotbarSlot);
         
         IBlock existingBlock = player.World!.GetBlock(target);

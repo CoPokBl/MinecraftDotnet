@@ -90,10 +90,11 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     private static readonly Tag<HashSet<Vec2<int>>> LoadedChunksTag = new("minecraftdotnet:world:loadedchunks");
     private static readonly Tag<Queue<MinecraftPacket>> WaitingPacketsTag = new("minecraftdotnet:world:waitingpackets");
     private static readonly Tag<Action> CancelListenersActionTag = new("minecraftdotnet:world:cancellistener");
+    private static readonly Tag<Vec2<int>> CurrentChunkTag = new("minecraftdotnet:world:currentchunk");
     
     // Some fun constants
     private int UnloadDistance => _viewDistance + UnloadDistanceMod;
-    private const bool Benchmark = true;
+    private const bool Benchmark = false;
     private const bool Debug = false;
     private const int UnloadDistanceMod = 1;  // Used to reduce the number of packets needed when travelling back and forth
 
@@ -106,6 +107,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
     
     public void AddPlayer(PlayerEntity player) {
+        Log("Adding player " + player.Name + " to world " + DimensionId);
         PlayerEnteringWorldEvent enterEvent = new() {
             Player = player,
             World = this
@@ -154,10 +156,12 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             }
         });
         Action cancelAction = null!;
+        Log("Registering player move listener for " + player.Name);
         cancelAction = player.Events.AddListener<EntityMoveEvent>(e => {
             if (e.Entity is not PlayerEntity pe) {
                 throw new Exception("Entity is not PlayerEntity (called on PlayerEntity eventnode)");
             }
+            Log("Player " + pe.Name + " moved to " + e.NewPos);
             
             // are they no longer in this world?
             if (!Players.Contains(pe)) {
@@ -174,12 +178,14 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     public void HandlePlayerMove(PlayerConnection connection, Vec2<int> chunkPos) {
+        Log("Handle player move");
         Stopwatch sw;
         int unloadingBench;
         if (Benchmark) {
             sw = Stopwatch.StartNew();
         }
         
+        Log("Handling player move to chunk " + chunkPos);
         HashSet<Vec2<int>> loaded = GetPlayerLoadedChunks(connection);
         // Console.WriteLine($"{loaded.Count} chunks are loaded");
 

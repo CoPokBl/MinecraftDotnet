@@ -40,6 +40,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         { "minecraft:overworld", new Dimension() }
     };
     public MinecraftRegistry Registry = VanillaRegistry.Data;
+    public Action<string> LogAction = Console.WriteLine;
     
     private TimeSpan TargetTickTime => TimeSpan.FromSeconds(1.0 / TargetTicksPerSecond);
 
@@ -81,7 +82,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
             AddFeature(feat);
         }
         else {
-            Console.WriteLine("WARNING: Overwritten feature");
+            LogAction("WARNING: Overwritten feature");
         }
     }
 
@@ -109,13 +110,12 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     }
 
     private void Ticker() {
-        Stopwatch tickTimer = Stopwatch.StartNew();
-        TimeSpan elapsed = TimeSpan.Zero;  // the amount of time that is supposed to have passed since the start of the tick
-        TimeSpan tickTime = TimeSpan.Zero;
+        Stopwatch tickTimer = new();
+        TimeSpan lastTickTime = TimeSpan.Zero;
         while (!_cts.IsCancellationRequested) {
-            TimeSpan tickStart = tickTimer.Elapsed;
+            tickTimer.Restart();
             ServerTickEvent tickEvent = new() {
-                Delta = tickTime,
+                Delta = lastTickTime,
                 TargetDelta = TargetTickTime,
                 Server = this
             };
@@ -123,19 +123,17 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
             if (exception != null) {
                 HandleError(exception);
             }
-            TimeSpan realTickDuration = tickTimer.Elapsed - tickStart;
+            TimeSpan tickTime = tickTimer.Elapsed;
+            lastTickTime = tickTime;
             
-            tickTime = tickTimer.Elapsed - elapsed;
-            
-            elapsed += TargetTickTime;
             if (tickTime < TargetTickTime) {
                 // Sleep for the remaining time to maintain the target tick rate
                 Thread.Sleep(TargetTickTime - tickTime);
             }
             else {
                 // If we took too long, log a warning
-                Console.WriteLine($"WARNING: Tick took {realTickDuration.TotalMilliseconds}ms, exceeding target of {TargetTickTime.TotalMilliseconds}ms." +
-                                  $"Running behind by {elapsed - tickTimer.Elapsed - TargetTickTime}");
+                LogAction($"WARNING: Tick took {tickTime.TotalMilliseconds}ms, " + 
+                          $"exceeding target of {TargetTickTime.TotalMilliseconds}ms.");
             }
             
             CurrentTick++;
@@ -143,8 +141,8 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     }
 
     public void HandleError(Exception exception) {
-        Console.WriteLine("An error occurred in the server:");
-        Console.WriteLine(exception);
+        LogAction("An error occurred in the server:");
+        LogAction(exception.ToString());
     }
 
     public World CreateWorld(ITerrainProvider provider, string dimension = "minecraft:overworld") {

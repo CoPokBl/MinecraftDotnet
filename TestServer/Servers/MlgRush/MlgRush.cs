@@ -63,6 +63,7 @@ public static class MlgRush {
         List<PlayerEntity> connectionQueue = [];
 
         World lobbyWorld = server.CreateWorld(new TestingProvider());
+        server.Start();
         
         server.Events.AddListener<PlayerPreLoginEvent>(e => {
             e.GameMode = GameMode.Adventure;

@@ -234,6 +234,10 @@ public class InventoryClickFeature : ScopedFeature {
                     // if the item is coming from the player inventory then it should go to the lowest id available slot in the other.
                     // if it's coming from the other container then it should go to the highest id available slot in the player inventory
                     // because mojang is weird like that.
+                    if (effectiveSlot == -1) {
+                        // huh
+                        break;
+                    }
                     ItemStack itemToMove = targetInventory[effectiveSlot];
                     bool isFromPlayerInventory = targetInventory == player.Inventory;
                     if (itemToMove.IsAir()) {
