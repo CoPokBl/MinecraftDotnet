@@ -86,6 +86,10 @@ public class PhysicsFeature : ScopedFeature {
                     }
 
                     double pos = collision.Position[axis] + (movement > 0 ? -entity.BoundingBox.Size[axis] * 0.5 : collision.Size[axis] + entity.BoundingBox.Size[axis] * 0.5);
+                    if (axis == 1) {
+                        pos -= entity.BoundingBox.Size[axis] * 0.5;
+                    }
+                    
                     newPos = newPos.With(axis, pos);
                     checkPos = checkPos.With(axis, pos);
                     entity.Velocity = entity.Velocity.With(axis, 0);
