@@ -4,6 +4,7 @@ using ManagedServer.Events;
 using ManagedServer.Features;
 using ManagedServer.Features.Basic;
 using ManagedServer.Features.Bundles;
+using ManagedServer.Features.Impl;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;

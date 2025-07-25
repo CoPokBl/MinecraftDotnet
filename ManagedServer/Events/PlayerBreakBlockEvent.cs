@@ -10,7 +10,6 @@ namespace ManagedServer.Events;
 
 [NotCalledByDefault]
 public class PlayerBreakBlockEvent : ICancelableEvent, IPlayerEvent {
-    
     public required PlayerEntity Player { get; init; }
     public required Vec3<int> Position { get; set; }
     public required IBlock Block { get; set; }

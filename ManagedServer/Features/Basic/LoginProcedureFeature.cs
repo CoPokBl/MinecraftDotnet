@@ -3,6 +3,7 @@ using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
+using Minecraft.Implementations.Server.Tools;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Config.ServerBound;
@@ -12,11 +13,11 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 using NBT;
 
-namespace ManagedServer.Features;
+namespace ManagedServer.Features.Basic;
 
 [CallsEvent(typeof(PlayerPreLoginEvent), typeof(PlayerLoginEvent))]
 internal class LoginProcedureFeature : ScopedFeature {
-    private const bool EncryptionEnabled = false;
+    private const bool EncryptionEnabled = true;
     
     private static readonly Tag<(Guid, string)> LoginInfoTag = new("minecraftdotnet:loginprocfeat:logininfo");
     
@@ -237,19 +238,29 @@ internal class LoginProcedureFeature : ScopedFeature {
                     
                         // send the play login packet
                         e.Connection.SendPacket(packet);
-                    
-                        // create a player object
-                        PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
-                            NetId = pEntityId,
-                            GameMode = preLoginEvent.GameMode
-                        };
-                        entity.SetWorld(preLoginEvent.World);
-                        Scope.Server.Players.Add(entity);
-                        PlayerLoginEvent loginEvent = new() {
-                            Player = entity,
-                            World = preLoginEvent.World
-                        };
-                        e.Connection.Events.CallEventCatchErrors(loginEvent);
+                        
+                        (Guid, string) loginInfo = e.Connection.GetTag(LoginInfoTag);
+                        
+                        _ = SkinFetcher.GetPlayerSkin(loginInfo.Item1).ContinueWith(skin => {
+                            // create a player object
+                            PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
+                                NetId = pEntityId,
+                                GameMode = preLoginEvent.GameMode,
+                                Uuid = loginInfo.Item1,
+                                Skin = skin.Result
+                            };
+                            
+                            entity.SetWorld(preLoginEvent.World);
+                            Scope.Server.Players.Add(entity);
+                            
+                            entity.SendPacket(entity.GetPlayerInfoPacket());
+                            
+                            PlayerLoginEvent loginEvent = new() {
+                                Player = entity,
+                                World = preLoginEvent.World
+                            };
+                            e.Connection.Events.CallEventCatchErrors(loginEvent);
+                        });
                         break;
                     }
                 }

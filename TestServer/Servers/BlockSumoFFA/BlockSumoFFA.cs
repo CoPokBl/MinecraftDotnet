@@ -2,6 +2,7 @@ using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
+using ManagedServer.Features.Impl;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
@@ -19,7 +20,6 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
-using TestServer.Servers.BlockSumo;
 
 namespace TestServer.Servers.BlockSumoFFA;
 
@@ -37,11 +37,12 @@ public static class BlockSumoFfa {
                 Description = TextComponent.FromLegacyString("&b&lBlock Sumo FFA"),
                 PreventsChatReports = true
             }),
-            new OpenToLanAdFeature("Block Sumo FFA over LAN", Port),
-            new TabListFeature(
-                updatePeriod:1000, 
-                headerProvider:_ => TextComponent.Text("Block Sumo FFA").WithColor(TextColor.Hex("#EE7026")).WithBold(), 
-                footerProvider:_ => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic()));
+            new OpenToLanAdFeature("Block Sumo FFA over LAN", Port)
+            // new TabListFeature(
+            //     updatePeriod:1000, 
+            //     headerProvider:_ => TextComponent.Text("Block Sumo FFA").WithColor(TextColor.Hex("#EE7026")).WithBold(), 
+            //     footerProvider:_ => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic())
+            );
         
         server.Dimensions.Add("minecraft:potatoland", new Dimension());
         
@@ -64,7 +65,6 @@ public static class BlockSumoFfa {
         ITerrainProvider terrain = new BlockSumoMapProvider(12);
         World world = server.CreateWorld(terrain, "minecraft:potatoland");
         world.AddFeature(new SimpleCombatFeature(500));
-        // new BlockBreakingFeature(false).Register(world);
 
         IBlock[] blocks = [
             Block.WhiteConcretePowder,

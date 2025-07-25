@@ -8,7 +8,7 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Items;
 
-namespace ManagedServer.Features;
+namespace ManagedServer.Features.Impl;
 
 public class ItemPickupFeature : ScopedFeature {
     private const double PickupRange = 2.0;

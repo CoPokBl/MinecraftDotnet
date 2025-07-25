@@ -7,6 +7,9 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Events;
 
+/// <summary>
+/// An event that occurs when a block in the world changes.
+/// </summary>
 [BuiltinEvent]
 public class WorldChangeEvent : IWorldEvent, ICancelableEvent {
     public required World World { get; init; }

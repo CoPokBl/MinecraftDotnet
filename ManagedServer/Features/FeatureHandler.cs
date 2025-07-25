@@ -1,7 +1,7 @@
 using System.Reflection;
 using ManagedServer.Events.Attributes;
 
-namespace ManagedServer;
+namespace ManagedServer.Features;
 
 public class FeatureHandler(IFeatureScope scope) {
     public readonly List<ScopedFeature> Features = [];

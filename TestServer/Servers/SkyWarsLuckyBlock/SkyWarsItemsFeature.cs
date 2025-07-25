@@ -1,5 +1,6 @@
 using ManagedServer;
 using ManagedServer.Events;
+using ManagedServer.Features;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;

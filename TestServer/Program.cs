@@ -1,5 +1,4 @@
 ﻿using TestServer.Servers.AnvilTesting;
-using TestServer.Servers.BlockSumo;
 using TestServer.Servers.BlockSumoFFA;
 using TestServer.Servers.MlgRush;
 using TestServer.Servers.SkyWarsLuckyBlock;
@@ -20,10 +19,6 @@ switch (args[0]) {
     
     case "anvil":
         await AnvilTesting.Start();
-        break;
-    
-    case "blocksumo":
-        await BlockSumo.Start();
         break;
     
     case "blocksumoffa":

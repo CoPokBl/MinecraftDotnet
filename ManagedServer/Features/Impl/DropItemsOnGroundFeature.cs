@@ -1,7 +1,7 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 
-namespace ManagedServer.Features;
+namespace ManagedServer.Features.Impl;
 
 public class DropItemsOnGroundFeature : ScopedFeature {
     

@@ -25,8 +25,9 @@ public class PhysicsFeature : ScopedFeature {
     }
 
     private void MoveEntity(World world, Entity entity, double delta) {
-        // entity.Velocity = entity.Velocity.WithY(entity.Velocity.Y - entity.Type.Acceleration * 20.0 * delta);
-        Vec3<double> newPos = entity.Position + entity.Velocity;
+        if (!(entity.Meta.NoGravity ?? false)) {
+            entity.Velocity = entity.Velocity.WithY(entity.Velocity.Y - entity.Type.Acceleration * 20.0 * delta);
+        }
         
         double drag = 0.98;
         
@@ -50,6 +51,7 @@ public class PhysicsFeature : ScopedFeature {
         entity.Velocity *= new Vec3<double>(drag, 0.98, drag);
 
         Vec3<double> size = entity.BoundingBox.Size;
+        Vec3<double> newPos = entity.Position + entity.Velocity;
 
         for (int axis = 0; axis < 3; axis++) {
             double movement = entity.Velocity[axis];

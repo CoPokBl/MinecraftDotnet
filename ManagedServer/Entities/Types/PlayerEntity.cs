@@ -110,6 +110,8 @@ public class PlayerEntity : LivingEntity, IAudience {
             });
         }
     }
+
+    public PlayerSkin? Skin { get; internal set; }
     
     // Values according to https://minecraft.wiki/w/Player in the Trivia section
     // 1.27 seems to be the sqrt of 1.62 (the eye height of player while not crouching)
@@ -388,16 +390,28 @@ public class PlayerEntity : LivingEntity, IAudience {
         Connection.SendPackets(packets);
     }
 
+    public MinecraftPacket GetPlayerInfoPacket() {
+        return new ClientBoundPlayerInfoUpdatePacket {
+            Data = new ClientBoundPlayerInfoUpdatePacket.PlayerData(ClientBoundPlayerInfoUpdatePacket.PlayerActions
+                    .AddPlayer)
+                .WithPlayer(Uuid, new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer {
+                    Name = Name,
+                    Properties = Skin == null
+                        ? []
+                        : [
+                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer.Property {
+                                Name = "textures",
+                                Value = Skin.Textures,
+                                Signature = Skin.Signature
+                            }
+                        ]
+                })
+        };
+    }
+
     public override MinecraftPacket[] GenerateSpawnEntityPackets() {
         MinecraftPacket[] arr = [
-            new ClientBoundPlayerInfoUpdatePacket {
-                Data = new ClientBoundPlayerInfoUpdatePacket.PlayerData(ClientBoundPlayerInfoUpdatePacket.PlayerActions
-                        .AddPlayer)
-                    .WithPlayer(Uuid, new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer {
-                        Name = Name,
-                        Properties = []
-                    })
-            }
+            GetPlayerInfoPacket()
         ];
         return arr.Combine(base.GenerateSpawnEntityPackets()).ToArray();
     }

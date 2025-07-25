@@ -1,6 +1,6 @@
 using Minecraft.Implementations.Server.Events;
 
-namespace ManagedServer;
+namespace ManagedServer.Features;
 
 public abstract class ScopedFeature {
     public IFeatureScope Scope { get; set; } = null!;

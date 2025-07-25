@@ -1,5 +1,6 @@
 using System.Reflection;
 using Minecraft.Schemas;
+using Minecraft.Schemas.DataStructs;
 
 namespace Minecraft.Implementations.Events;
 

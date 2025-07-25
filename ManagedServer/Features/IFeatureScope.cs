@@ -3,7 +3,7 @@ using ManagedServer.Features.Bundles;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;
 
-namespace ManagedServer;
+namespace ManagedServer.Features;
 
 public interface IFeatureScope {
     public EventNode<IServerEvent> Events { get; }

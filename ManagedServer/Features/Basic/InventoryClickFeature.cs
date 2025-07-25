@@ -11,6 +11,12 @@ using Newtonsoft.Json;
 
 namespace ManagedServer.Features.Basic;
 
+/// <summary>
+/// Feature that implements inventory click handling for players.
+/// This includes handling left and right clicks, shift-clicks, hotkeying items, dragging
+/// and dropping items, and double-clicking to collect items.
+/// It also handles the drop key for dropping items from the inventory and fires the <see cref="PlayerDropItemEvent"/>.
+/// </summary>
 [CallsEvent(typeof(PlayerDropItemEvent))]
 public class InventoryClickFeature : ScopedFeature {
     private static readonly Tag<DragType> DraggingTag = new("managedserver:inventoryclick:dragging");
@@ -34,14 +40,18 @@ public class InventoryClickFeature : ScopedFeature {
     }
     
     private static int GetRegularInvDestinationSlot(ItemStack item, Inventory.Inventory inv) {
-        for (int i = 0; i < inv.Size; i++) {
+        return SearchRangeForDestinationSlot(item, inv, 0, inv.Size-1);
+    }
+    
+    private static int SearchRangeForDestinationSlot(ItemStack item, Inventory.Inventory inv, int startIndex, int endIndex) {
+        for (int i = startIndex; i < endIndex + 1; i++) {
             int maxStackSize = inv[i].GetMaxStackSize(DefaultMaxStackSize);
             if (inv[i].CanStackWith(item) && inv[i].Count < maxStackSize) {
                 return i;
             }
         }
 
-        for (int i = 0; i < inv.Size; i++) {
+        for (int i = startIndex; i < endIndex + 1; i++) {
             if (inv[i].IsAir()) {
                 return i;
             }
@@ -70,6 +80,43 @@ public class InventoryClickFeature : ScopedFeature {
         
         return -1;  // No available slot found
     }
+
+    private static void TransferItemToInventorySection(ItemStack itemToMove, int originSlot, Inventory.Inventory originInventory, 
+        Inventory.Inventory destinationInventory, Func<ItemStack, Inventory.Inventory, int> destinationSlotGetter) {
+        while (true) {
+            int destinationSlot = destinationSlotGetter(itemToMove, destinationInventory);
+            if (destinationSlot == -1) {
+                originInventory[originSlot] =
+                    itemToMove; // Put the rest of the item back in the original slot
+                return;
+            }
+
+            ItemStack destinationItem = destinationInventory[destinationSlot];
+            if (destinationItem.IsAir()) {
+                // If the best slot is empty, just move the whole itemstack there
+                originInventory[originSlot] = ItemStack.Air; // Clear the slot we moved from
+                destinationInventory[destinationSlot] = itemToMove;
+                return;
+            }
+
+            // Okay so it's stackable
+            int maxStackSize = destinationItem.GetMaxStackSize(DefaultMaxStackSize);
+            int newCount = Math.Min(itemToMove.Count + destinationItem.Count, maxStackSize);
+
+            int leftOverCount = itemToMove.Count + destinationItem.Count - newCount;
+            if (leftOverCount <= 0) {
+                // We moved all the item, so clear the slot we moved from
+                originInventory[originSlot] = ItemStack.Air;
+                destinationInventory[destinationSlot] = destinationItem.WithCount(newCount);
+                return;
+            }
+                        
+            destinationInventory[destinationSlot] = destinationItem.WithCount(newCount);
+
+            // We didn't move all the item, so update the item to move
+            itemToMove = itemToMove.WithCount(leftOverCount);
+        }
+    }
     
     private void HandleInventoryClick(PlayerEntity player, ServerBoundClickContainerPacket packet) {
         // player.SendMessage($"Inventory Clicked: {packet.Slot}, Mode: {packet.Mode}");
@@ -80,8 +127,7 @@ public class InventoryClickFeature : ScopedFeature {
             ? packet.Slot
             : packet.Slot - clickedInventory.PlayerInventoryStartIndex + player.Inventory.PlayerInventoryStartIndex;
 
-        try
-        {
+        try {
             switch (packet.Mode) {
                 // Regular clicks (left and right)
                 case 0: {
@@ -202,47 +248,30 @@ public class InventoryClickFeature : ScopedFeature {
                         : GetPlayerInvDestinationSlot;
 
                     if (isFromPlayerInventory && destinationInventory == player.Inventory) {
-                        // TODO
                         // They only have one inventory open (their own)
-                        // This needs to be implemented
+                        
+                        // The way this works is that it treats the hotbar and remaining inventory as
+                        // two separate inventories and the item should be moved to the first available slot
+                        // in the other 'section' to where it came from.
+                        
+                        // For example, if the item is in the hotbar, it should be moved to the first available slot
+                        // in the remaining inventory, and vice versa.
+                        
+                        bool isHotbarItem = effectiveSlot is >= PlayerInventory.HotbarSlot1 and <= PlayerInventory.HotbarSlot9;
+                        Func<ItemStack, Inventory.Inventory, int> slotGetter = isHotbarItem
+                            ? (stack, inv) => SearchRangeForDestinationSlot(stack, inv,
+                                clickedInventory.PlayerInventoryStartIndex, PlayerInventory.HotbarSlot1 - 1)
+                            : (stack, inv) => SearchRangeForDestinationSlot(stack, inv,
+                                PlayerInventory.HotbarSlot1, PlayerInventory.HotbarSlot9);
+
+                        // Move the item to the first available slot in the other section
+                        TransferItemToInventorySection(itemToMove, effectiveSlot, clickedInventory, clickedInventory, slotGetter);
                         break;
                     }
 
                     // We'll keep trying to move more of the item until we run out of it or can't find a slot
-                    while (true) {
-                        int destinationSlot = destinationSlotGetter(itemToMove, destinationInventory);
-                        if (destinationSlot == -1) {
-                            targetInventory[effectiveSlot] =
-                                itemToMove; // Put the rest of the item back in the original slot
-                            break;
-                        }
-
-                        ItemStack destinationItem = destinationInventory[destinationSlot];
-                        if (destinationItem.IsAir()) {
-                            // If the best slot is empty, just move the whole itemstack there
-                            targetInventory[effectiveSlot] = ItemStack.Air; // Clear the slot we moved from
-                            destinationInventory[destinationSlot] = itemToMove;
-                            break;
-                        }
-
-                        // Okay so it's stackable
-                        int maxStackSize = destinationItem.GetMaxStackSize(DefaultMaxStackSize);
-                        int newCount = Math.Min(itemToMove.Count + destinationItem.Count, maxStackSize);
-
-                        int leftOverCount = itemToMove.Count + destinationItem.Count - newCount;
-                        if (leftOverCount <= 0) {
-                            // We moved all the item, so clear the slot we moved from
-                            targetInventory[effectiveSlot] = ItemStack.Air;
-                            destinationInventory[destinationSlot] = destinationItem.WithCount(newCount);
-                            break;
-                        }
-                        
-                        destinationInventory[destinationSlot] = destinationItem.WithCount(newCount);
-
-                        // We didn't move all the item, so update the item to move
-                        itemToMove = itemToMove.WithCount(leftOverCount);
-                    }
-
+                    TransferItemToInventorySection(itemToMove, effectiveSlot, targetInventory, destinationInventory,
+                        destinationSlotGetter);
                     break;
                 }
 
@@ -516,7 +545,9 @@ public class InventoryClickFeature : ScopedFeature {
         }
 
         clickedInventory.SendUpdateTo(player);
-        player.Inventory.SendUpdateTo(player);
+        if (clickedInventory != player.Inventory) {
+            player.Inventory.SendUpdateTo(player);
+        }
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
+using ManagedServer.Features;
 using ManagedServer.Viewables;
 using Minecraft;
 using Minecraft.Data.Generated;
@@ -75,12 +76,10 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
                 }
             }
             
+            entity.Velocity = attacker.Direction.Multiply(0.90 + knockback * 0.3).WithY(0.4);  // Original 2.0 GOOD
+
             if (entity is PlayerEntity p) {
-                p.SetVelocity(attacker.Direction.Multiply(0.90 + knockback * 0.3).WithY(0.4));  // Original 2.0 GOOD
                 p.PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);
-            }
-            else {
-                e.Player.SendMessage("Entity is not player");
             }
             
             entity.GetAudience().PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);

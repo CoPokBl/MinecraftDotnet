@@ -1,6 +1,7 @@
 using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
+using ManagedServer.Features;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Schemas.Items;
@@ -26,7 +27,9 @@ public class LuckyBlocksFeature : ScopedFeature {
             .WithTag(SkyWarsCombatFeature.DamageTag, 6f)
             .With(DataComponent.ItemName, "Self Attacking Sword")
             .With(DataComponent.Lore, [TextComponent.FromLegacyString("&7You didn't think we'd let you win that easily, did you?")])),
-        new ItemBlockResult(typeof(OneUpItem))
+        new ItemBlockResult(typeof(OneUpItem)),
+        new BobBlockResult(),
+        new JacobBlockResult()
     ];
     
     private enum LuckyBlockType {
@@ -57,6 +60,10 @@ public class LuckyBlocksFeature : ScopedFeature {
 
             Entity insideThing = new(EntityType.Bee) {
                 Position = e.Position.BlockPosToDouble() - new Vec3<double>(0, 0.3, 0)
+            };
+            insideThing.Meta = insideThing.Meta with {
+                NoGravity = true,
+                Silent = true
             };
             e.World.Spawn(insideThing);
             

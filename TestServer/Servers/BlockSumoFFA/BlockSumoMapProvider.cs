@@ -3,7 +3,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Schemas.Vec;
 
-namespace TestServer.Servers.BlockSumo;
+namespace TestServer.Servers.BlockSumoFFA;
 
 public class BlockSumoMapProvider : ThreadedPerBlockTerrainProvider {
 

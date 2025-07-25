@@ -1,6 +1,6 @@
 using ManagedServer.Events;
 
-namespace ManagedServer.Features;
+namespace ManagedServer.Features.Impl;
 
 public class SimpleBenchmarkFeature : ScopedFeature {
     private const int SampleSize = 20*10;  // 10 seconds of ticks at 20 ticks per second

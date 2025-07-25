@@ -9,7 +9,7 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas.Sound;
 
-namespace ManagedServer.Features;
+namespace ManagedServer.Features.Impl;
 
 public class SimpleCombatFeature(int attackCooldown = -1, float damage = 0) : ScopedFeature {
     private readonly Tag<long> _lastHitTag = new("minecraftdotnet:simplecombat:lasthit");

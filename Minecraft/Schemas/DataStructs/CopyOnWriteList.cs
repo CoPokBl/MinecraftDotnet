@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Minecraft.Schemas;
+namespace Minecraft.Schemas.DataStructs;
 
 /// <summary>
 /// A list that allows for copy-on-write semantics.
