@@ -18,7 +18,8 @@ public partial class ManagedMinecraftServer {
         new ConsumablesFeature(),
         new LoginProcedureFeature(),
         new PhysicsFeature(),
-        new SimpleTabListFeature()
+        new SimpleTabListFeature(),
+        new PlayerSkinLayersFeature()
     );
 
     public static ManagedMinecraftServer NewBasic() {

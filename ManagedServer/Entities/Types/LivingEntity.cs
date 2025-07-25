@@ -8,7 +8,9 @@ using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Entities.Types;
 
-public class LivingEntity : Entity {
+public class LivingEntity(IEntityType type, LivingEntityMeta? meta = null) 
+    : Entity(type, meta ?? new LivingEntityMeta()) {
+    
     public float Health {
         get => _health;
         set {
@@ -44,12 +46,6 @@ public class LivingEntity : Entity {
     public new LivingEntityMeta Meta {
         get => (LivingEntityMeta)base.Meta;
         set => base.Meta = value;
-    }
-    
-    public LivingEntity(IEntityType type, EntityMeta? meta = null) : base(type, meta ?? new LivingEntityMeta()) {
-        if (meta is not null and not LivingEntityMeta) {
-            throw new ArgumentException("Meta must be of type LivingEntityMeta", nameof(meta));
-        }
     }
 
     public void Damage(float damage) {

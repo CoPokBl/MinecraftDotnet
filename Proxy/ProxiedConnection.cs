@@ -32,6 +32,7 @@ public class ProxiedConnection : MappedTaggable {
     // constants
     private const string ProxiedServer = "localhost";
     private const int ProxiedPort = 25565;  // default Minecraft port, can be changed if needed
+    private const bool LogPackets = false;  // whether to log packets or not
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.7") ];
 
     public ProxiedConnection(ProxyServer proxy, PlayerConnection player) {
@@ -228,8 +229,10 @@ public class ProxiedConnection : MappedTaggable {
             Console.WriteLine("Dropping packet because server is null: " + packet.GetType().Name);
             return;
         }
-        
-        Console.WriteLine("Sending packet to server: " + packet.GetType().Name);
+
+        if (LogPackets) {
+            Console.WriteLine("Sending packet to server: " + packet.GetType().Name);
+        }
         Server.SendPacket(packet);
         // if (Player.State == Server.State) {
         //     Console.WriteLine("Sending packet to server: " + packet.GetType().Name);
@@ -255,7 +258,9 @@ public class ProxiedConnection : MappedTaggable {
 
     // packet from server to player
     private void OnServerPacket(MinecraftPacket packet) {
-        Console.WriteLine("SERVER PACKET: " + packet.GetType().Name);
+        if (LogPackets) {
+            Console.WriteLine("SERVER PACKET: " + packet.GetType().Name);
+        }
         if (packet is ClientBoundLoginPacket lp) {
             EntityId = lp.EntityId;
         }
@@ -332,6 +337,5 @@ public class ProxiedConnection : MappedTaggable {
         }
         
         Player.SendPacket(packet);
-        Console.WriteLine("Done!");
     }
 }

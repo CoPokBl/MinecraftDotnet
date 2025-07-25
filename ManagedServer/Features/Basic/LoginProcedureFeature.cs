@@ -3,8 +3,8 @@ using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
-using Minecraft.Implementations.Server.Tools;
 using Minecraft.Implementations.Tags;
+using Minecraft.Implementations.Utils;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Config.ServerBound;
 using Minecraft.Packets.Login.ClientBound;
@@ -242,24 +242,29 @@ internal class LoginProcedureFeature : ScopedFeature {
                         (Guid, string) loginInfo = e.Connection.GetTag(LoginInfoTag);
                         
                         _ = SkinFetcher.GetPlayerSkin(loginInfo.Item1).ContinueWith(skin => {
-                            // create a player object
-                            PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
-                                NetId = pEntityId,
-                                GameMode = preLoginEvent.GameMode,
-                                Uuid = loginInfo.Item1,
-                                Skin = skin.Result
-                            };
+                            try {
+                                // create a player object
+                                PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
+                                    NetId = pEntityId,
+                                    GameMode = preLoginEvent.GameMode,
+                                    Uuid = loginInfo.Item1,
+                                    Skin = skin.Result
+                                };
                             
-                            entity.SetWorld(preLoginEvent.World);
-                            Scope.Server.Players.Add(entity);
+                                entity.SetWorld(preLoginEvent.World);
+                                Scope.Server.Players.Add(entity);
                             
-                            entity.SendPacket(entity.GetPlayerInfoPacket());
+                                entity.SendPacket(entity.GetPlayerInfoPacket());
                             
-                            PlayerLoginEvent loginEvent = new() {
-                                Player = entity,
-                                World = preLoginEvent.World
-                            };
-                            e.Connection.Events.CallEventCatchErrors(loginEvent);
+                                PlayerLoginEvent loginEvent = new() {
+                                    Player = entity,
+                                    World = preLoginEvent.World
+                                };
+                                e.Connection.Events.CallEventCatchErrors(loginEvent);
+                            }
+                            catch (Exception exception) {
+                                Scope.Server.HandleError(exception);
+                            }
                         });
                         break;
                     }

@@ -22,7 +22,7 @@ public abstract class PlayerConnection : MinecraftConnection {
     public ServerBoundHandshakePacket? Handshake;
     public EventNode<IServerEvent> Events = new();  // its parent should be the server's
 
-    protected static readonly Type[] DontLog = [
+    public static readonly Type[] DontLog = [
         typeof(ServerBoundClientTickEndPacket),
         typeof(ServerBoundKeepAlivePacket),
         typeof(ServerBoundSetPlayerPositionPacket),

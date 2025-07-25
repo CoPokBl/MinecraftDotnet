@@ -106,7 +106,11 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
     
     public void AddPlayer(PlayerEntity player) {
-        PlayerConnection connection = player.Connection;
+        PlayerEnteringWorldEvent enterEvent = new() {
+            Player = player,
+            World = this
+        };
+        Events.CallEvent(enterEvent);
         
         player.SendPacket(new ClientBoundUpdateTimePacket {
             ClientAdvanceTime = false,
@@ -114,17 +118,17 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             WorldAge = _time
         });
         
-        _ = Entities.InformNewPlayer(connection);
-        SetPlayerLoadedChunks(connection, []);  // reset, just in case they were in a different world
-        connection.SendPacket(new ClientBoundGameEventPacket {
+        Entities.InformNewPlayer(player);
+        SetPlayerLoadedChunks(player.Connection, []);  // reset, just in case they were in a different world
+        player.SendPacket(new ClientBoundGameEventPacket {
             Event = GameEvent.StartWaitingForLevelChunks,
             Value = 0f
         });
         Queue<MinecraftPacket> waitingPackets = new();
-        connection.SetTag(WaitingPacketsTag, waitingPackets);
+        player.Connection.SetTag(WaitingPacketsTag, waitingPackets);
 
         bool disconnected = false;
-        connection.Disconnected += () => disconnected = true;
+        player.Connection.Disconnected += () => disconnected = true;
         
         // TODO: Don't use threads, use the tick system or manage it better (investigate performance)
         Task.Run(async () => {
@@ -145,7 +149,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 }
 
                 // Console.WriteLine($"Sending {packets.Count} packets for terrain");
-                connection.SendPackets(packets.ToArray());
+                player.SendPackets(packets.ToArray());
                 Log("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
             }
         });
@@ -241,6 +245,12 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     public void RemovePlayer(PlayerEntity player) {
+        PlayerLeavingWorldEvent leaveEvent = new() {
+            Player = player,
+            World = this
+        };
+        Events.CallEvent(leaveEvent);
+        
         Players.Remove(player);
         player.Connection.GetTag(CancelListenersActionTag).Invoke();  // stop listening
     }
@@ -438,13 +448,20 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             Block = GetBlock(pos),
             Location = pos
         });
-
+        
         BlockEntity? data = GetBlockData(pos);
         if (data != null) {
-            audience.SendPacket(new ClientBoundBlockEntityDataPacket {
-                Position = pos,
-                Data = data.Data,
-                Type = data.Type
+            Server.Scheduler.ScheduleNextTick(() => {
+                // Check it again just in case it was changed since the tick
+                BlockEntity? updatedData = GetBlockData(pos);
+                if (updatedData == null) {
+                    return;  // no data, nothing to send
+                }
+                audience.SendPacket(new ClientBoundBlockEntityDataPacket {
+                    Position = pos,
+                    Data = updatedData.Data,
+                    Type = updatedData.Type
+                });
             });
         }
     }
@@ -467,7 +484,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 throw new Exception($"Failed to load chunk at {pos}");
             }
         
-            Console.WriteLine("Manually loading chunk at " + pos);
             data.PackData();
             _chunks.TryAdd(pos, data);
         }

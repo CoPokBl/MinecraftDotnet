@@ -7,6 +7,7 @@ using ManagedServer.Worlds;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
 using PolarWorlds;
@@ -35,6 +36,13 @@ public static class SkyWarsLuckyBlock {
         
         World lobby = server.CreateWorld(new PolarLoader("testpolar.polar"), "skywars:lobby");
         SkyWarsGame.LoadWorld();
+
+        NpcEntity billy = new(new PlayerMeta(SkinFlags:SkinParts.All)) {
+            Position = LobbySpawn,
+            Name = ChatUtils.FormatLegacy("&a&lBilly"),
+            Skin = PlayerSkin.FromUsername("Technoblade").Result
+        };
+        billy.SetWorld(lobby);
         
         Timer? startTimer = null;
         DateTime startTime = DateTime.Now;

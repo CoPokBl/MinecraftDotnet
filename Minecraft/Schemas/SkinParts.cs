@@ -1,7 +1,7 @@
 namespace Minecraft.Schemas;
 
 [Flags]
-public enum SkinParts {
+public enum SkinParts : sbyte {  // sbyte because PlayerMeta stores it as a byte
     CapeEnabled = 0x01,
     JacketEnabled = 0x02,
     LeftSleeveEnabled = 0x04,

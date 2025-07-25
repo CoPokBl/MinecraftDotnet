@@ -19,12 +19,12 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     private int _currentId = 9;
     public int NewNetId => Random.Shared.Next();//_currentId++;
 
-    public async Task InformNewPlayer(PlayerConnection connection) {
+    public void InformNewPlayer(PlayerEntity player) {
         foreach (Entity entity in Entities) {
-            if (!entity.ViewableRule(connection)) {
+            if (!entity.ViewableRule(player)) {
                 continue;
             }
-            connection.SendPackets(entity.GenerateSpawnEntityPackets());
+            player.SendPackets(entity.GenerateSpawnEntityPackets());
         }
     }
 
@@ -69,7 +69,7 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         return Entities
             .Where(e => e is PlayerEntity pe && 
                         pe.Position.DistanceTo2D(entity.Position) < viewDistanceBlocks &&
-                        entity.ViewableRule(pe.Connection))
+                        entity.ViewableRule(pe))
             .Select(e => (PlayerEntity)e)
             .ToArray();
     }

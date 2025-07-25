@@ -12,6 +12,7 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities;
+using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 
@@ -23,6 +24,11 @@ public class PlayerEntity : LivingEntity, IAudience {
     public readonly PlayerInventory Inventory;
 
     public override List<PlayerEntity> Players => [this];
+    
+    public new PlayerMeta Meta {
+        get => (PlayerMeta)base.Meta;
+        set => base.Meta = value;
+    }
 
     public Inventory.Inventory? OpenInventory {
         get => _openInventory;
@@ -66,7 +72,7 @@ public class PlayerEntity : LivingEntity, IAudience {
         }
     }
     
-    public Func<PlayerConnection, bool> PlayerViewableRule {
+    public Func<PlayerEntity, bool> PlayerViewableRule {
         get => _playerViewableRule;
         set {
             _playerViewableRule = value;
@@ -128,16 +134,17 @@ public class PlayerEntity : LivingEntity, IAudience {
     private Inventory.Inventory? _openInventory;
     private int _activeHotbarSlot;
     private ItemStack _cursorItem = ItemStack.Air;
-    private Func<PlayerConnection, bool> _playerViewableRule = _ => true;
-    private ConcurrentQueue<MinecraftPacket> _packetSendingQueue = new();
-    private ConcurrentQueue<MinecraftPacket> _packetProcessQueue = new();
+    private Func<PlayerEntity, bool> _playerViewableRule = _ => true;
+    private readonly ConcurrentQueue<MinecraftPacket> _packetSendingQueue = new();
+    private readonly ConcurrentQueue<MinecraftPacket> _packetProcessQueue = new();
 
     // Listen to movement packets so we can do stuff
-    public PlayerEntity(ManagedMinecraftServer server, PlayerConnection connection, string name) : base(EntityType.Player) {
+    public PlayerEntity(ManagedMinecraftServer server, PlayerConnection connection, string name, PlayerMeta? meta = null) 
+        : base(EntityType.Player, meta ?? new PlayerMeta()) {
         Server = server;
         Name = name;
         Connection = connection;
-        ViewableRule = con => con != Connection && PlayerViewableRule(con);
+        ViewableRule = p => p != this && PlayerViewableRule(p);
         Inventory = new PlayerInventory(server, this);
         
         connection.Disconnected += Despawn;
@@ -169,8 +176,8 @@ public class PlayerEntity : LivingEntity, IAudience {
         });
         
         connection.Events.AddListener<PacketHandleEvent>(e => {
-            // _packetProcessQueue.Enqueue(e.Packet);
-            HandlePacket(e.Packet);
+            _packetProcessQueue.Enqueue(e.Packet);
+            // HandlePacket(e.Packet);
         });
 
         Server.Events.AddListener<ServerTickEvent>(_ => {
@@ -188,84 +195,84 @@ public class PlayerEntity : LivingEntity, IAudience {
 
     private void HandlePacket(MinecraftPacket packet) {
         PlayerPacketHandleEvent playerEvent = new() {
-                Player = this,
-                Packet = packet,
-                World = World!
-            };
-            Events.CallEvent(playerEvent);
-            
-            switch (packet) {
-                case ServerBoundSetPlayerPositionPacket sp: {
-                    if (_waitingTeleport != -1) return;
-                    OnGround = sp.Flags.HasFlag(MovePlayerFlags.OnGround);
-                    Move(sp.Position);
-                    break;
-                }
-
-                case ServerBoundSetPlayerPosAndRotPacket sp: {
-                    if (_waitingTeleport != -1) return;
-                    OnGround = sp.Flags.HasFlag(MovePlayerFlags.OnGround);
-                    Move(sp.Position, Angle.FromDegrees(sp.Yaw), Angle.FromDegrees(sp.Pitch));
-                    break;
-                }
-
-                case ServerBoundSetPlayerRotationPacket sr: {
-                    if (_waitingTeleport != -1) return;
-                    OnGround = sr.Flags.HasFlag(MovePlayerFlags.OnGround);
-                    Move(Position, Angle.FromDegrees(sr.Yaw), Angle.FromDegrees(sr.Pitch));
-                    break;
-                }
-
-                // don't move player when they haven't sent ack for teleports
-                case ServerBoundConfirmTeleportPacket ct: {
-                    if (ct.TeleportId == _waitingTeleport) {
-                        _waitingTeleport = -1;
-                    }
-                    break;
-                }
-
-                case ServerBoundInteractPacket ip: {
-                    PlayerEntityInteractEvent interactEvent = new() {
-                        Target = Manager!.GetEntityById(ip.EntityId)!,
-                        Player = this,
-                        Type = ip.Type,
-                        TargetLocation = ip.Target,
-                        UsedHand = ip.UsedHand,
-                        SneakPressed = ip.SneakPressed,
-                        World = World!
-                    };
-                    Events.CallEvent(interactEvent);
-                    break;
-                }
-
-                case ServerBoundSetHeldItemPacket sh: {
-                    _activeHotbarSlot = sh.Slot;
-                    RefreshEquipment();
-                    
-                    PlayerSwitchHotbarSlotEvent switchEvent = new() {
-                        Player = this,
-                        World = World!,
-                        Slot = _activeHotbarSlot
-                    };
-                    Events.CallEvent(switchEvent);
-                    break;
-                }
-
-                case ServerBoundPlayerActionPacket pa: {
-                    // Respond to some inventory actions
-                    switch (pa.ActionStatus) {
-                        case ServerBoundPlayerActionPacket.Status.DropItemStack:
-                        case ServerBoundPlayerActionPacket.Status.DropItem:
-                        case ServerBoundPlayerActionPacket.Status.UpdateHeldItem:
-                            Inventory.SendUpdateTo(this);
-                            break;
-                        case ServerBoundPlayerActionPacket.Status.SwapItem:
-                            SwapHeld();
-                            break;
-                    }
-                    break;
-                }
+            Player = this,
+            Packet = packet,
+            World = World!
+        };
+        Events.CallEvent(playerEvent);
+        
+        switch (packet) {
+            case ServerBoundSetPlayerPositionPacket sp: {
+                if (_waitingTeleport != -1) return;
+                OnGround = sp.Flags.HasFlag(MovePlayerFlags.OnGround);
+                Move(sp.Position);
+                break;
             }
+
+            case ServerBoundSetPlayerPosAndRotPacket sp: {
+                if (_waitingTeleport != -1) return;
+                OnGround = sp.Flags.HasFlag(MovePlayerFlags.OnGround);
+                Move(sp.Position, Angle.FromDegrees(sp.Yaw), Angle.FromDegrees(sp.Pitch));
+                break;
+            }
+
+            case ServerBoundSetPlayerRotationPacket sr: {
+                if (_waitingTeleport != -1) return;
+                OnGround = sr.Flags.HasFlag(MovePlayerFlags.OnGround);
+                Move(Position, Angle.FromDegrees(sr.Yaw), Angle.FromDegrees(sr.Pitch));
+                break;
+            }
+
+            // don't move player when they haven't sent ack for teleports
+            case ServerBoundConfirmTeleportPacket ct: {
+                if (ct.TeleportId == _waitingTeleport) {
+                    _waitingTeleport = -1;
+                }
+                break;
+            }
+
+            case ServerBoundInteractPacket ip: {
+                PlayerEntityInteractEvent interactEvent = new() {
+                    Target = Manager!.GetEntityById(ip.EntityId)!,
+                    Player = this,
+                    Type = ip.Type,
+                    TargetLocation = ip.Target,
+                    UsedHand = ip.UsedHand,
+                    SneakPressed = ip.SneakPressed,
+                    World = World!
+                };
+                Events.CallEvent(interactEvent);
+                break;
+            }
+
+            case ServerBoundSetHeldItemPacket sh: {
+                _activeHotbarSlot = sh.Slot;
+                RefreshEquipment();
+                
+                PlayerSwitchHotbarSlotEvent switchEvent = new() {
+                    Player = this,
+                    World = World!,
+                    Slot = _activeHotbarSlot
+                };
+                Events.CallEvent(switchEvent);
+                break;
+            }
+
+            case ServerBoundPlayerActionPacket pa: {
+                // Respond to some inventory actions
+                switch (pa.ActionStatus) {
+                    case ServerBoundPlayerActionPacket.Status.DropItemStack:
+                    case ServerBoundPlayerActionPacket.Status.DropItem:
+                    case ServerBoundPlayerActionPacket.Status.UpdateHeldItem:
+                        Inventory.SendUpdateTo(this);
+                        break;
+                    case ServerBoundPlayerActionPacket.Status.SwapItem:
+                        SwapHeld();
+                        break;
+                }
+                break;
+            }
+        }
     }
     
     public ItemStack GetItemInHand(Hand hand) {
@@ -387,7 +394,7 @@ public class PlayerEntity : LivingEntity, IAudience {
     }
 
     public override void SendToSelf(params MinecraftPacket[] packets) {
-        Connection.SendPackets(packets);
+        Connection?.SendPackets(packets);
     }
 
     public MinecraftPacket GetPlayerInfoPacket() {

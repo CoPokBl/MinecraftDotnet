@@ -30,8 +30,8 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     public Aabb BoundingBox { get; init; }
 
-    private Func<PlayerConnection, bool> _viewableRule = _ => true;
-    public Func<PlayerConnection, bool> ViewableRule {
+    private Func<PlayerEntity, bool> _viewableRule = _ => true;
+    public Func<PlayerEntity, bool> ViewableRule {
         get => _viewableRule;
         set {
             _viewableRule = value;
@@ -43,7 +43,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         get => _meta;
         set {
             _meta = value;
-            SendToViewers(new ClientBoundSetEntityMetadataPacket {
+            SendToSelfAndViewers(new ClientBoundSetEntityMetadataPacket {
                 EntityId = NetId,
                 Meta = _meta
             });

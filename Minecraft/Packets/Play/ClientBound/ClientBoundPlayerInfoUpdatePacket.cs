@@ -62,6 +62,10 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
             }
 
             public byte[] Serialise() {
+                if (Name.Length > 16) {
+                    throw new ArgumentException("Player name cannot be longer than 16 characters.");
+                }
+                
                 return new DataWriter()
                     .WriteString(Name)
                     .WritePrefixedArray(Properties,

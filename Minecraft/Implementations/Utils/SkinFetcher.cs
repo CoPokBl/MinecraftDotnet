@@ -2,7 +2,7 @@ using System.Net;
 using Minecraft.Schemas;
 using Newtonsoft.Json.Linq;
 
-namespace Minecraft.Implementations.Server.Tools;
+namespace Minecraft.Implementations.Utils;
 
 public static class SkinFetcher {
     private const string FetchUrl = "https://sessionserver.mojang.com/session/minecraft/profile/";
