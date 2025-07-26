@@ -161,7 +161,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             if (e.Entity is not PlayerEntity pe) {
                 throw new Exception("Entity is not PlayerEntity (called on PlayerEntity eventnode)");
             }
-            Log("Player " + pe.Name + " moved to " + e.NewPos);
             
             // are they no longer in this world?
             if (!Players.Contains(pe)) {
@@ -178,7 +177,12 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     public void HandlePlayerMove(PlayerConnection connection, Vec2<int> chunkPos) {
-        Log("Handle player move");
+        if (connection.HasTag(CurrentChunkTag) && connection.GetTagOrNull(CurrentChunkTag) == chunkPos) {
+            // they haven't moved
+            return;
+        }
+        connection.SetTag(CurrentChunkTag, chunkPos);
+        
         Stopwatch sw;
         int unloadingBench;
         if (Benchmark) {
@@ -228,7 +232,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         if (neededPackets.Count == 0) return;  // don't bother if nothing changed
         
         if (Benchmark) {
-            Log($"Terrain packet generation took {sw.ElapsedMilliseconds}ms, unloading: {unloadingBench}ms");
+            Log($"Terrain packet generation took {sw.ElapsedMilliseconds}ms ({neededPackets.Count} packets), unloading: {unloadingBench}ms");
         }
         
         SetPlayerLoadedChunks(connection, loaded);

@@ -20,8 +20,10 @@ public class ConsumablesFeature : ScopedFeature {
     public override void Register() {
         AddEventListener<PlayerPacketHandleEvent>(e => {
             if (e.Packet is ServerBoundUseItemPacket usePacket) {
+                Console.WriteLine("a");
                 ItemStack item = usePacket.UsedHand == Hand.MainHand ? e.Player.HeldItem : e.Player.Inventory.Offhand;
                 ConsumableComponent.Data? food = item.Get(DataComponent.Consumable);
+                Console.WriteLine("Using consumable");
             
                 if (food == null) {
                     return; // Not a consumable item

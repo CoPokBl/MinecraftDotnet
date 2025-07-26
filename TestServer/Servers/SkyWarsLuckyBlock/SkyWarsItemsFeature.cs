@@ -56,11 +56,10 @@ public class SkyWarsItemsFeature : ScopedFeature {
                 return;
             }
             
-            e.Cancelled = true;
-            
             // Use the lucky item
             bool consume = luckyItem.Use(e.Player);
             if (consume) {
+                e.Cancelled = true;
                 e.Player.HeldItem = e.Player.HeldItem.SubtractCount(1);
             }
         });
