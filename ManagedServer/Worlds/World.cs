@@ -498,16 +498,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             _chunks.TryAdd(pos, data);
         }
     }
-
-    public ClientBoundChunkDataAndUpdateLightPacket GetChunkPacket(Vec2<int> pos) {
-        ClientBoundChunkDataAndUpdateLightPacket packet = new() {
-            ChunkX = pos.X,
-            ChunkZ = pos.Y,
-            Data = GetChunks([pos], 1)[0],
-            Light = LightData.FullBright
-        };
-        return packet;
-    }
     
     public void AddChunkPackets(Vec2<int>[] poses, int count, List<MinecraftPacket> list) {
         foreach (ChunkData data in GetChunks(poses, count)) {

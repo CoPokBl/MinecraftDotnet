@@ -33,12 +33,6 @@ public static class AnvilTesting {
         // World world = server.CreateWorld(new AnvilLoader("testanvil", VanillaRegistry.Data));
         World world = server.CreateWorld(new PolarLoader("testpolar.polar"));
         Console.WriteLine("World created.");
-
-        Stopwatch sw = Stopwatch.StartNew();
-        for (int i = 0; i < 1; i++) {
-            world.GetChunkPacket(new Vec2<int>(0, 0));
-        }
-        Console.WriteLine($"Chunk packet took {sw.ElapsedMilliseconds}ms");
         
         server.Events.AddListener<PlayerPreLoginEvent>(e => {
             e.World = world;

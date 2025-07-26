@@ -20,7 +20,7 @@ public class TeleportOrbItem : SkyWarsItem {
         }
         
         // Teleport the player to the target block
-        player.Teleport(targetBlock.Value + new Vec3<int>(0, 2, 0));
+        player.Teleport(targetBlock.Value.BlockPosToDouble() + new Vec3<int>(0, 2, 0));
         player.SendMessage(TextComponent.FromLegacyString("&aYou have been teleported!"));
         player.ShowParticle(Particle.Enchant, targetBlock.Value, maxSpeed: 0.1f);
         return true;
