@@ -4,8 +4,8 @@ namespace Minecraft.Implementations.Server.Terrain.Providers;
 
 public class ThreadedChunksTerrainProvider(ITerrainProvider child, int threadCount = 16) : ITerrainProvider {
     
-    public void GetChunk(ChunkData chunk) {
-        child.GetChunk(chunk);
+    public void GetChunk(ref ChunkData chunk) {
+        child.GetChunk(ref chunk);
     }
 
     public void GetChunks(int start, int count, ChunkData[] chunks) {
@@ -17,7 +17,7 @@ public class ThreadedChunksTerrainProvider(ITerrainProvider child, int threadCou
                 int end = (threadIndex + 1) * count / threadCount + start;
                 
                 for (int j = threadIndex * count / threadCount + start; j < end; j++) {
-                    GetChunk(chunks[j]);
+                    GetChunk(ref chunks[j]);
                 }
             });
             

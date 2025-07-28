@@ -45,23 +45,25 @@ public class AnvilRegionFile : IDisposable {
     public INbtTag? ReadChunkData(int chunkX, int chunkZ) {
         if (!HasChunkData(chunkX, chunkZ)) return null;
 
-        int location = _locations[GetChunkIndex(chunkX, chunkZ)];
-        _file.Seek((long) (location >> 8) * SectorSize, SeekOrigin.Begin); // Move to start of first sector
-        int length = ReadInteger(_file);
-        int compressionType = ReadByte(_file);
-        NbtCompressionType compression = compressionType switch {
-            1 => NbtCompressionType.GZip,
-            2 => NbtCompressionType.ZLib,
-            3 => NbtCompressionType.None,
-            _ => throw new IOException("Unsupported compression type: " + compressionType)
-        };
+        lock (_file) {
+            int location = _locations[GetChunkIndex(chunkX, chunkZ)];
+            _file.Seek((long) (location >> 8) * SectorSize, SeekOrigin.Begin); // Move to start of first sector
+            int length = ReadInteger(_file);
+            int compressionType = ReadByte(_file);
+            NbtCompressionType compression = compressionType switch {
+                1 => NbtCompressionType.GZip,
+                2 => NbtCompressionType.ZLib,
+                3 => NbtCompressionType.None,
+                _ => throw new IOException("Unsupported compression type: " + compressionType)
+            };
 
-        // Read the raw content
-        byte[] data = new byte[length - 1];
-        _file.ReadExactly(data);
+            // Read the raw content
+            byte[] data = new byte[length - 1];
+            _file.ReadExactly(data);
 
-        // Parse it as a compound tag
-        return NbtReader.ReadNbt(data, true, compression).GetCompound()[""];
+            // Parse it as a compound tag
+            return NbtReader.ReadNbt(data, true, compression).GetCompound()[""];
+        }
     }
     
     public bool HasChunkData(int chunkX, int chunkZ) {

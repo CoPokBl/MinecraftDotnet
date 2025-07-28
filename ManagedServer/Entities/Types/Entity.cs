@@ -209,15 +209,15 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         Move(pos, yaw, pitch, true);
     }
 
-    public virtual void SetWorld(World world) {
+    public virtual void SetWorld(World? world) {
         Manager?.BaseEventNode.RemoveChild(Events);
 
         World?.Entities.Despawn(this);
-        world.Entities.Spawn(this, NetId == -1 ? null : NetId);  // this ensures that Manager will not be null (it sets it)
+        world?.Entities.Spawn(this, NetId == -1 ? null : NetId);  // this ensures that Manager will not be null (it sets it)
         World = world;
 
         Debug.Assert(Manager != null, nameof(Manager) + " != null");
-        Manager!.BaseEventNode.AddChild<IEntityEvent>(Events, ee => ee.Entity == this);
+        Manager?.BaseEventNode.AddChild<IEntityEvent>(Events, ee => ee.Entity == this);
     }
 
     public void Despawn() {

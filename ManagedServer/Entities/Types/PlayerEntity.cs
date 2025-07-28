@@ -117,8 +117,21 @@ public class PlayerEntity : LivingEntity, IAudience {
         }
     }
 
-    public PlayerSkin? Skin { get; internal set; }
-    
+    public PlayerSkin? Skin {
+        get => _skin;
+        set {
+            _skin = value;
+            
+            // To change the skin, we need to remove the player info and send a new one
+            SendToSelfAndViewers(new ClientBoundPlayerInfoRemovePacket {
+                Uuids = [ Uuid ]
+            }, GetPlayerInfoPacket());
+            if (World != null) {
+                ResetEntity();
+            }
+        }
+    }
+
     // Values according to https://minecraft.wiki/w/Player in the Trivia section
     // 1.27 seems to be the sqrt of 1.62 (the eye height of player while not crouching)
     public double EyeHeight => Crouching ? 1.27 : EntityType.Player.EyeHeight;
@@ -135,6 +148,8 @@ public class PlayerEntity : LivingEntity, IAudience {
     private int _activeHotbarSlot;
     private ItemStack _cursorItem = ItemStack.Air;
     private Func<PlayerEntity, bool> _playerViewableRule = _ => true;
+    private PlayerSkin? _skin;
+    
     private readonly ConcurrentQueue<MinecraftPacket> _packetSendingQueue = new();
     private readonly ConcurrentQueue<MinecraftPacket> _packetProcessQueue = new();
 
@@ -147,7 +162,15 @@ public class PlayerEntity : LivingEntity, IAudience {
         ViewableRule = p => p != this && PlayerViewableRule(p);
         Inventory = new PlayerInventory(server, this);
         
-        connection.Disconnected += Despawn;
+        connection.Disconnected += () => {
+            PlayerDisconnectEvent disconnectEvent = new() {
+                Player = this,
+                World = World!
+            };
+            Events.CallEvent(disconnectEvent);
+            
+            Despawn();
+        };
 
         connection.Events.AddListener<PacketSendingEvent>(e => {
             PlayerPacketOutEvent playerEvent = new() {
@@ -311,7 +334,7 @@ public class PlayerEntity : LivingEntity, IAudience {
         SetEquipmentItem(EquipmentSlot.Boots, Inventory.Boots);
     }
 
-    public override void SetWorld(World world) {
+    public override void SetWorld(World? world) {
         SetWorld(world);
     }
 
@@ -331,19 +354,19 @@ public class PlayerEntity : LivingEntity, IAudience {
         };
     }
 
-    public void SetWorld(World world, bool sendRespawnPacket = true) {
+    public void SetWorld(World? world, bool sendRespawnPacket = true) {
         // Change the instance that the player sees
         if (World != null) {
             World.RemovePlayer(this);
             
             // Send a respawn packet to the player
-            if (sendRespawnPacket) {
+            if (sendRespawnPacket && world != null) {
                 SendPacket(GetRespawnPacket(world));
             }
         }
-        
-        world.AddPlayer(this);
-        
+
+        world?.AddPlayer(this);
+
         base.SetWorld(world);
     }
 
@@ -369,7 +392,35 @@ public class PlayerEntity : LivingEntity, IAudience {
     }
 
     public void Respawn() {
-        SendPacket(GetRespawnPacket(World!));
+        Respawn(World!);
+    }
+
+    public void Respawn(World world) {
+        SendPacket(GetRespawnPacket(world));
+        
+        // Send updates to the player
+        Teleport(Position);
+        Inventory.SendUpdateTo(this);
+        SendHealthUpdate();
+    }
+
+    /// <summary>
+    /// Respawns the entity by first despawning it and then respawning it again.
+    /// </summary>
+    public void ResetEntity() {
+        if (World == null) {
+            throw new InvalidOperationException("Cannot reset entity without a world.");
+        }
+        
+        this.SendPackets(new ClientBoundSetHealthPacket {
+            Health = 0,
+            Saturation = 1,
+            Food = 1
+        });
+        SendHealthUpdate();
+        Respawn();
+        World.ResetPlayer(this);
+        Manager!.Respawn(this);
     }
 
     public override void Teleport(Vec3<double> pos, Angle? yaw = null, Angle? pitch = null) {

@@ -49,10 +49,11 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
     );
 
     internal static void LoadWorld() {
-        GameMap.GetChunk(new ChunkData(384) {
+        ChunkData data = new(384) {
             ChunkX = 0,
             ChunkZ = 0
-        });
+        };
+        GameMap.GetChunk(ref data);
     }
     
     private static Queue<Vec3<double>> CreateRandomSpawns() {
@@ -139,6 +140,10 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
             }
 
             Die(player, "You fell out of the world!");
+        });
+
+        World.Events.AddListener<PlayerDisconnectEvent>(e => {
+            Die(e.Player, "You disconnected from the game!");
         });
     }
 }

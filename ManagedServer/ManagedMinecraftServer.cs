@@ -37,7 +37,8 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public bool AllowListeningToUnCalledEvents = false;
     public int TargetTicksPerSecond = 20;
     public readonly Dictionary<string, Dimension> Dimensions = new() {
-        { "minecraft:overworld", new Dimension() }
+        { "minecraft:overworld", new Dimension() },
+        { "minecraft:dummy_world", new Dimension() }  // Dummy world for respawning players
     };
     public MinecraftRegistry Registry = VanillaRegistry.Data;
     public Action<string> LogAction = Console.WriteLine;

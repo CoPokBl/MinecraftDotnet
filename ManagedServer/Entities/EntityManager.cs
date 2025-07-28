@@ -49,6 +49,13 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         Entities.Remove(entity);
     }
 
+    public void Respawn(Entity entity) {
+        SendPacketsFor(entity, new ClientBoundRemoveEntitiesPacket {
+            Entities = [entity.NetId]
+        });
+        SendPacketsFor(entity, entity.GenerateSpawnEntityPackets());
+    }
+
     public void SendPacketsFor(Entity entity, params MinecraftPacket[] packets) {
         entity.SendPacketsToViewers(packets);
     }

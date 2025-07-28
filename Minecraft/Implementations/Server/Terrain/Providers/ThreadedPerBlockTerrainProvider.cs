@@ -17,20 +17,21 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
     /// </summary>
     /// <param name="data">The chunk.</param>
     /// <returns>The generated chunk data.</returns>
-    public void GetChunk(ChunkData data) {
+    public void GetChunk(ref ChunkData data) {
         Thread[] threads = new Thread[threadCount];
         
+        ChunkData dat = data;
         for (int i = 0; i < threadCount; i++) {
             int threadIndex = i;
             Thread t = new(() => {
-                int end = (threadIndex + 1) * data.WorldHeight / threadCount;
+                int end = (threadIndex + 1) * dat.WorldHeight / threadCount;
                 
                 for (int x = 0; x < ChunkSection.Size; x++) {
-                    for (int y = threadIndex * data.WorldHeight / threadCount; y < end; y++) {
+                    for (int y = threadIndex * dat.WorldHeight / threadCount; y < end; y++) {
                         for (int z = 0; z < ChunkSection.Size; z++) {
-                            int absX = data.ChunkX * ChunkSection.Size + x;
-                            int absZ = data.ChunkZ * ChunkSection.Size + z;
-                            data.SetBlock(x, y, z, GetBlock(absX, y, absZ));
+                            int absX = dat.ChunkX * ChunkSection.Size + x;
+                            int absZ = dat.ChunkZ * ChunkSection.Size + z;
+                            dat.SetBlock(x, y, z, GetBlock(absX, y, absZ));
                         }
                     }
                 }
@@ -43,6 +44,8 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
         foreach (Thread t in threads) {
             t.Join();
         }
+        
+        data = dat; // Update the original data reference with the modified chunk data
     }
     
     public void SingleThreadedGetChunk(ChunkData data) {

@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
@@ -7,7 +6,6 @@ using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
 using NBT;
 using NBT.Tags;
-using Org.BouncyCastle.Utilities.Zlib;
 using ZstdSharp;
 
 namespace PolarWorlds;
@@ -108,7 +106,6 @@ public class PolarLoader : ITerrainProvider {
             sections[i] = ReadSection(reader, version, dataVersion);
         }
         
-        // TODO: Actually store block entities
         int blockEntityCount = reader.ReadVarInt();
         for (int i = 0; i < blockEntityCount; i++) {
             int posIndex = reader.ReadInteger();  // posIndex
@@ -249,14 +246,14 @@ public class PolarLoader : ITerrainProvider {
         Present = 3
     }
 
-    public void GetChunk(ChunkData chunk) {
+    public void GetChunk(ref ChunkData chunk) {
         Chunks.TryGetValue(new Vec2<int>(chunk.ChunkX, chunk.ChunkZ), out ChunkData? data);
         if (data == null) {
             Console.WriteLine("Polar chunk not found: " + chunk.ChunkX + ", " + chunk.ChunkZ);
             return;
         }
         
-        chunk.Sections = data.Sections;
+        chunk = data;  // Update the original chunk reference with the loaded data
     }
 
     public void GetChunks(int start, int count, ChunkData[] chunks) {

@@ -1,7 +1,6 @@
 using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
-using ManagedServer.Features;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Implementations.Server.Features;
@@ -71,10 +70,6 @@ public static class SkyWarsLuckyBlock {
 
             player.GameMode = GameMode.Survival;
             player.Inventory.Clear();
-
-            server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(1), () => {
-                player.Teleport(LobbySpawn);
-            });
             
             lock (waitingPlayers) {
                 waitingPlayers.Add(player);
@@ -113,6 +108,30 @@ public static class SkyWarsLuckyBlock {
 
         lobby.Events.AddListener<PlayerBreakBlockEvent>(e => {
             e.Cancelled = true;
+        });
+
+        server.Events.AddListener<PlayerChatEvent>(e => {
+            if (!e.RawMessage.StartsWith("skin ")) {
+                return;
+            }
+            
+            string skinName = e.RawMessage[5..].Trim();
+            if (string.IsNullOrEmpty(skinName)) {
+                e.Player.SendMessage("Please provide a skin name.");
+                return;
+            }
+
+            Task.Run(() => {
+                PlayerSkin? skin = PlayerSkin.FromUsername(skinName).Result;
+                if (skin == null) {
+                    e.Player.SendMessage("Skin not found: " + skinName);
+                    return;
+                }
+
+                e.Player.Skin = skin;
+                e.Player.SendMessage("Skin set to: " + skinName);
+            });
+            e.Player.SendMessage("Loading skin: " + skinName);
         });
 
         lobby.Events.AddListener<EntityMoveEvent>(e => {

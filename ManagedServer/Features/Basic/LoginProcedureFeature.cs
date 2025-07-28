@@ -241,30 +241,33 @@ internal class LoginProcedureFeature : ScopedFeature {
                         
                         (Guid, string) loginInfo = e.Connection.GetTag(LoginInfoTag);
                         
+                        // create a player object
+                        PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
+                            NetId = pEntityId,
+                            GameMode = preLoginEvent.GameMode,
+                            Uuid = loginInfo.Item1,
+                            Skin = null
+                        };
+                            
+                        entity.SetWorld(preLoginEvent.World);
+                        Scope.Server.Players.Add(entity);
+                                
+                        e.Connection.Disconnected += () => {
+                            Scope.Server.Players.Remove(entity);
+                        };
+                            
+                        entity.SendPacket(entity.GetPlayerInfoPacket());
+                            
+                        PlayerLoginEvent loginEvent = new() {
+                            Player = entity,
+                            World = preLoginEvent.World
+                        };
+                        e.Connection.Events.CallEventCatchErrors(loginEvent);
+                        
+                        // Load skin asynchronously
                         _ = SkinFetcher.GetPlayerSkin(loginInfo.Item1).ContinueWith(skin => {
                             try {
-                                // create a player object
-                                PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
-                                    NetId = pEntityId,
-                                    GameMode = preLoginEvent.GameMode,
-                                    Uuid = loginInfo.Item1,
-                                    Skin = skin.Result
-                                };
-                            
-                                entity.SetWorld(preLoginEvent.World);
-                                Scope.Server.Players.Add(entity);
-                                
-                                e.Connection.Disconnected += () => {
-                                    Scope.Server.Players.Remove(entity);
-                                };
-                            
-                                entity.SendPacket(entity.GetPlayerInfoPacket());
-                            
-                                PlayerLoginEvent loginEvent = new() {
-                                    Player = entity,
-                                    World = preLoginEvent.World
-                                };
-                                e.Connection.Events.CallEventCatchErrors(loginEvent);
+                                entity.Skin = skin.Result;
                             }
                             catch (Exception exception) {
                                 Scope.Server.HandleError(exception);

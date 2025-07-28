@@ -25,6 +25,10 @@ public class PhysicsFeature : ScopedFeature {
     }
 
     private void MoveEntity(World world, Entity entity, double delta) {
+        if (!world.IsChunkLoaded(world.GetChunkPos(entity.Position))) {
+            return;  // entity is in an unloaded chunk, skip physics
+        }
+        
         if (!(entity.Meta.NoGravity ?? false)) {
             entity.Velocity = entity.Velocity.WithY(entity.Velocity.Y - entity.Type.Acceleration * 20.0 * delta);
         }

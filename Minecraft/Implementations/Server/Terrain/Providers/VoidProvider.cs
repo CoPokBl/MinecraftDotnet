@@ -3,7 +3,7 @@ using Minecraft.Schemas.Chunks;
 namespace Minecraft.Implementations.Server.Terrain.Providers;
 
 public class VoidProvider : ITerrainProvider {
-    public void GetChunk(ChunkData chunk) {
+    public void GetChunk(ref ChunkData chunk) {
         
     }
 

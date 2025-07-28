@@ -69,7 +69,7 @@ public class AnvilLoader : ITerrainProvider {
         }
     }
 
-    public void GetChunkData(ChunkData data) {
+    public void GetChunkData(ref ChunkData data) {
         int chunkX = data.ChunkX;
         int chunkZ = data.ChunkZ;
         
@@ -209,9 +209,9 @@ public class AnvilLoader : ITerrainProvider {
         long Time,
         string LevelName);
 
-    public void GetChunk(ChunkData data) {
+    public void GetChunk(ref ChunkData data) {
         try {
-            GetChunkData(data);
+            GetChunkData(ref data);
         }
         catch (Exception e) {
             Console.WriteLine(e);
@@ -221,7 +221,7 @@ public class AnvilLoader : ITerrainProvider {
 
     public void GetChunks(int start, int count, ChunkData[] chunks) {
         for (int i = start; i < start + count; i++) {
-            GetChunk(chunks[i]);
+            GetChunk(ref chunks[i]);
         }
     }
 }

@@ -32,7 +32,12 @@ public class TcpPlayerConnection(TcpClient client) : PlayerConnection, IDisposab
         lock (_sendLock) {
             // packet.WriteTo(Stream, State, CompressionThreshold);
             // Stopwatch ssw = Stopwatch.StartNew();
-            Stream.Write(buff);
+            try {
+                Stream.Write(buff);
+            }
+            catch (Exception) {
+                InvokeDisconnected();
+            }
             // Console.WriteLine("Wrote packet in " + ssw.ElapsedMilliseconds + "ms, size: " + buff.Length);
         }
     }
