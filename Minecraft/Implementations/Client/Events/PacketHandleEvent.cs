@@ -9,6 +9,6 @@ namespace Minecraft.Implementations.Client.Events;
 /// This event is effectively readonly.
 /// </summary>
 /// <remarks>To modify an incoming packet use <see cref="PacketReceiveEvent"/>.</remarks>
-public class PacketHandleEvent : ClientEvent {
+public class PacketHandleEvent : IClientEvent {
     public required MinecraftPacket Packet { get; init; }
 }

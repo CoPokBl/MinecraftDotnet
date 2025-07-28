@@ -146,14 +146,14 @@ public class EventNode<T> {
         GetWaiterFor(condition).Wait(cancellationToken);
     }
     
-    public ManualResetEventSlim GetWaiterFor<TE>(Func<TE, bool> condition) where TE : T {
-        ManualResetEventSlim mre = new(false);
+    public Task<TE> GetWaiterFor<TE>(Func<TE, bool>? condition = null) where TE : T {
+        TaskCompletionSource<TE> tcs = new();
         OnFirst<TE>(v => {
-            if (condition(v)) {
-                mre.Set();
+            if (condition == null || condition(v)) {
+                tcs.SetResult(v);
             }
         });
-        return mre;
+        return tcs.Task;
     }
 
     /// <summary>

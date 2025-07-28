@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Config.ClientBound;
 public class ClientBoundFeatureFlagsPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:update_enabled_features";
     
-    public required string[] Flags;
+    public required Identifier[] Flags;
     
     protected override DataWriter WriteData(DataWriter w) {
         return w
@@ -13,6 +13,6 @@ public class ClientBoundFeatureFlagsPacket : ClientBoundPacket {
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundFeatureFlagsPacket {
-        Flags = r.ReadPrefixedArray(re => re.ReadString())
+        Flags = r.ReadPrefixedArray(re => (Identifier)re.ReadString())
     };
 }

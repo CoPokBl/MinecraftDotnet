@@ -29,7 +29,7 @@ internal class LoginProcedureFeature : ScopedFeature {
             throw new InvalidOperationException("LoginProcedureFeature can only be used in ManagedMinecraftServer.");
         }
         
-        AddEventListener<PacketHandleEvent>(async void (e) => {
+        AddEventListener<PacketHandleEvent>(void (e) => {
             try {
                 switch (e.Packet) {
                     // LOGIN

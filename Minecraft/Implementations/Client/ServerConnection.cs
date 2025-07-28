@@ -10,7 +10,7 @@ using Minecraft.Schemas;
 namespace Minecraft.Implementations.Client;
 
 public abstract class ServerConnection : MinecraftConnection {
-    public EventNode<ClientEvent> Events = new();
+    public EventNode<IClientEvent> Events = new();
     public byte[]? ServerPubKey;
 
     protected static readonly MinecraftPacket[] DontLog = [];
@@ -93,6 +93,7 @@ public abstract class ServerConnection : MinecraftConnection {
         Events.CallEvent(e);
 
         if (e.Cancelled) {
+            Console.WriteLine("Cancelled");
             return;
         }
         

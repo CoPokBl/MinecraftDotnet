@@ -100,9 +100,9 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
             Event = ev,
             Category = (SoundCategory)r.ReadVarInt(),
             Pos = new Vec3<double>(
-                (double)r.ReadVarInt() / (1 << 3),
-                (double)r.ReadVarInt() / (1 << 3),
-                (double)r.ReadVarInt() / (1 << 3)),
+                (double)r.ReadInteger() / (1 << 3),
+                (double)r.ReadInteger() / (1 << 3),
+                (double)r.ReadInteger() / (1 << 3)),
             Volume = r.ReadFloat(),
             Pitch = r.ReadFloat(),
             Seed = r.ReadLong()

@@ -13,9 +13,13 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 using NBT;
 using Newtonsoft.Json;
+using TestClient;
 
 // ClientBoundStatusResponsePacket status = await ServerPinger.QueryServer("mc.emortal.dev");
 // Console.WriteLine($"Description: {status.Description!.ToJsonString()}");
+
+TestBot.Start().Wait();
+return 0;
 
 // Get resource pack URL
 MicrosoftAuthenticator.MinecraftProfile profile;

@@ -37,6 +37,19 @@ public class CompoundTag(string? name, params INbtTag?[] children) : INbtTag {
         return this;
     }
     
+    public CompoundTag WithChild(INbtTag child) {
+        if (child == null) {
+            throw new ArgumentNullException(nameof(child), "Child cannot be null");
+        }
+        if (child.GetName() == null) {
+            throw new ArgumentException("Child tags of a compound tag must have names", nameof(child));
+        }
+        
+        List<INbtTag?> children = Children.ToList();
+        children.Add(child);
+        return new CompoundTag(Name, children.ToArray());
+    }
+    
     public byte GetPrefix() {
         return NbtTagPrefix.Compound;
     }

@@ -4,7 +4,6 @@ using ManagedServer.Events;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Implementations.Server.Features;
-using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities.Meta.Types;
@@ -34,7 +33,7 @@ public static class SkyWarsLuckyBlock {
         server.Dimensions.Add("skywars:lobby", new Dimension());
         server.Dimensions.Add("skywars:game", new Dimension());
         
-        World lobby = server.CreateWorld(new VoidProvider(), "skywars:lobby");
+        World lobby = server.CreateWorld(new PolarLoader("testpolar.polar"), "skywars:lobby");
         SkyWarsGame.LoadWorld();
 
         NpcEntity billy = new(new PlayerMeta(SkinFlags:SkinParts.All)) {

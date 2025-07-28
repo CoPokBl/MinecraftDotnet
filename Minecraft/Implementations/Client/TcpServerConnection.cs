@@ -32,7 +32,7 @@ public class TcpServerConnection(TcpClient client) : ServerConnection {
         }
         
         lock (_sendLock) {
-            Stream.WriteAsync(packet.Serialise(State, CompressionThreshold), _cts.Token).AsTask();
+            Stream.Write(packet.Serialise(State, CompressionThreshold));
         }
     }
     

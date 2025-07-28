@@ -6,7 +6,7 @@ public class ClientBoundRespawnPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:respawn";
     
     public required int DimensionType;
-    public required string DimensionName;
+    public required Identifier DimensionName;
     public required long HashedSeed;
     public required GameMode GameMode;
     public required GameMode PreviousGameMode;

@@ -17,7 +17,7 @@ public class SkyWarsChestsFeature : ScopedFeature {
     private static readonly Tag<Dictionary<Vec3<int>, Inventory>> ChestsTag = new("skywars:loot_chests");
 
     private static readonly LootTableEntry[] LootTable = [
-        new(new ItemStack(1, Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 5f), 0.5f, 1, 1),
+        new(new ItemStack(1, Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 5f), 0.75f, 1, 1),
         new(new ItemStack(1, Item.Stone), 10, 16, 256),
         new(SkyWarsItemsFeature.CreateItem(typeof(GoldenAppleItem)), 0.5f, 1, 8),
         new(LuckyBlocksFeature.GetLuckyBlock(), 1f, 1, 32)
