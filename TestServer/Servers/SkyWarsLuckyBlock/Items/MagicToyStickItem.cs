@@ -13,7 +13,7 @@ public class MagicToyStickItem : SkyWarsItem {
     private const double MaxDistance = 100.0; // Maximum distance the stick can reach
     private const int ExplodeRadius = 5; // Radius of the explosion effect
     private const int LaunchRadius = 6; // Radius of players being launched into the air
-    private const double LaunchPower = 4;
+    private const double LaunchPower = 1.05;
     
     public override ItemStack Item => new ItemStack(1, Minecraft.Data.Generated.Item.BreezeRod)
         .With(DataComponent.ItemName, TextComponent.FromLegacyString("&c&lMagic Toy Stick"))
@@ -33,41 +33,6 @@ public class MagicToyStickItem : SkyWarsItem {
 
     private static void Hit(PlayerEntity player, Vec3<int> location) {
         player.SendMessage("Boom!");
-        World world = player.World!;
-
-        IAudience audience = world.GetViewersOf(location);
-        
-        // Destroy all blocks in a 5 block radius
-        for (int x = -ExplodeRadius; x <= ExplodeRadius; x++) {
-            for (int y = -ExplodeRadius; y <= ExplodeRadius; y++) {
-                for (int z = -ExplodeRadius; z <= ExplodeRadius; z++) {
-                    Vec3<int> blockPos = location + new Vec3<int>(x, y, z);
-
-                    if (blockPos.DistanceTo(location) > ExplodeRadius) {
-                        continue; // Skip blocks outside the radius
-                    }
-                    
-                    IBlock block = world.GetBlock(blockPos);
-                    if (block.Identifier != Block.Air.Identifier) {
-                        world.SetBlock(blockPos, Block.Air);
-                    }
-                    
-                    audience.ShowParticle(Particle.Explosion, blockPos);
-                }
-            }
-        }
-        
-        // Launch nearby players into the air
-        Entity[] nearby = world.Entities.GetNearbyEntities(location, 5);
-        foreach (Entity entity in nearby) {
-            if (entity is not PlayerEntity playerEntity ||
-                !(playerEntity.Position.DistanceTo(location) <= LaunchRadius)) continue;
-            
-            // Direction should be away from the explosion but with some vertical component
-            Vec3<double> direction = (playerEntity.Position - location).Normalize() * LaunchPower;
-            playerEntity.SetVelocity(direction);
-        }
-        
-        audience.PlaySound(SoundType.GenericExplode, location);
+        DoKaboom(player, location, ExplodeRadius, LaunchRadius, LaunchPower);
     }
 }

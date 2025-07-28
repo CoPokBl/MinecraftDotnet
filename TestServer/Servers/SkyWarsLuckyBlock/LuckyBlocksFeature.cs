@@ -22,6 +22,7 @@ public class LuckyBlocksFeature : ScopedFeature {
         new ItemBlockResult(typeof(TeleportOrbItem)),
         new ItemBlockResult(new ItemStack(1, Item.Potato)),
         new BuildUpBlockResult(),
+        new ItemBlockResult(typeof(InstaboomTntItem)),
         new ItemBlockResult(new ItemStack(1, Item.IronSword)
             .WithTag(SkyWarsCombatFeature.SelfAttackingTag, true)
             .WithTag(SkyWarsCombatFeature.DamageTag, 6f)

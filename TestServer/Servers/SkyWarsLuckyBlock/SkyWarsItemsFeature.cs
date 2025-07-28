@@ -18,7 +18,8 @@ public class SkyWarsItemsFeature : ScopedFeature {
         new GoldenAppleItem(),
         new MagicToyStickItem(),
         new TeleportOrbItem(),
-        new OneUpItem()
+        new OneUpItem(),
+        new InstaboomTntItem()
     ];
     
     public override void Register() {
@@ -63,13 +64,32 @@ public class SkyWarsItemsFeature : ScopedFeature {
                 e.Player.HeldItem = e.Player.HeldItem.SubtractCount(1);
             }
         });
+        
+        AddEventListener<PlayerPlaceBlockEvent>(e => {
+            string? id = e.UsedItem.GetTagOrNull(ItemTypeTag);
+            
+            if (id == null) {
+                return;
+            }
+            
+            SkyWarsItem? luckyItem = Items.FirstOrDefault(i => i.Id == id);
+            if (luckyItem == null) {
+                return;
+            }
+            
+            // Use the lucky item
+            bool consume = luckyItem.OnPlace(e.Player, e.Position);
+            if (!consume) {
+                e.Cancelled = true;
+            }
+        });
     }
 
     public static ItemStack CreateItem(Type itemType) {
         if (!typeof(SkyWarsItem).IsAssignableFrom(itemType)) {
             throw new ArgumentException("Item type must inherit from LuckyBlockItem", nameof(itemType));
         }
-
+        
         SkyWarsItem item = (SkyWarsItem)Activator.CreateInstance(itemType)!;
         ItemStack stack = item.Item.WithTag(ItemTypeTag, item.Id);
         return stack;

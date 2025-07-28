@@ -1,5 +1,10 @@
 using ManagedServer.Entities.Types;
+using ManagedServer.Viewables;
+using ManagedServer.Worlds;
+using Minecraft.Data.Blocks;
+using Minecraft.Data.Generated;
 using Minecraft.Schemas.Items;
+using Minecraft.Schemas.Vec;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
@@ -13,5 +18,48 @@ public abstract class SkyWarsItem {
 
     public virtual void OnEat(PlayerEntity player) {
         
+    }
+
+    public virtual bool OnPlace(PlayerEntity player, Vec3<int> position) {
+        return true;
+    }
+
+    public static void DoKaboom(PlayerEntity player, Vec3<int> position, int explodeRadius, int launchRadius, double launchPower) {
+        World world = player.World!;
+            
+        IAudience audience = world.GetViewersOf(position);
+        
+        // Destroy all blocks in a 5 block radius
+        for (int x = -explodeRadius; x <= explodeRadius; x++) {
+            for (int y = -explodeRadius; y <= explodeRadius; y++) {
+                for (int z = -explodeRadius; z <= explodeRadius; z++) {
+                    Vec3<int> blockPos = position + new Vec3<int>(x, y, z);
+
+                    if (blockPos.DistanceTo(position) > explodeRadius) {
+                        continue; // Skip blocks outside the radius
+                    }
+                    
+                    IBlock block = world.GetBlockOr(blockPos, Block.Air);
+                    if (block.Identifier != Block.Air.Identifier) {
+                        world.SetBlock(blockPos, Block.Air);
+                    }
+                    
+                    audience.ShowParticle(Particle.DragonBreath, blockPos);
+                }
+            }
+        }
+            
+        Vec3<double> pos = position.BlockPosToDouble();
+        
+        // Launch nearby players into the air
+        Entity[] nearby = world.Entities.GetNearbyEntities(pos, explodeRadius);
+        foreach (Entity entity in nearby) {
+            if (!(entity.Position.DistanceTo(pos) <= launchRadius)) continue;
+            
+            Vec3<double> normalizedDirection = (entity.Position - pos).Normalize();
+            entity.Velocity = normalizedDirection * (launchRadius - (entity.Position - pos).ComputeLength()) * launchPower;
+        }
+        
+        audience.PlaySound(SoundType.GenericExplode, pos);
     }
 }
