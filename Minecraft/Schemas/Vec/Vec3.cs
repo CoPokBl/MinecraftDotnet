@@ -1,11 +1,18 @@
 using System.Diagnostics.Contracts;
 using System.Numerics;
+using Newtonsoft.Json;
 
 namespace Minecraft.Schemas.Vec;
 
+[JsonObject(MemberSerialization.OptIn)]
 public readonly struct Vec3<T>(T x, T y, T z) : IEquatable<Vec3<T>> where T : INumber<T> {
+    [JsonProperty]
     public readonly T X = x;
+    
+    [JsonProperty]
     public readonly T Y = y;
+    
+    [JsonProperty]
     public readonly T Z = z;
 
     public Vec3() : this(T.Zero, T.Zero, T.Zero) { }

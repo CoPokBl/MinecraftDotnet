@@ -1,9 +1,14 @@
 using System.Numerics;
+using Newtonsoft.Json;
 
 namespace Minecraft.Schemas.Vec;
 
+[JsonObject(MemberSerialization.OptIn)]
 public readonly struct Vec2<T>(T x, T y) : IEquatable<Vec2<T>> where T : INumber<T>  {
+    [JsonProperty]
     public readonly T X = x;
+    
+    [JsonProperty]
     public readonly T Y = y;
     
     public Vec2() : this(T.Zero, T.Zero) { }
