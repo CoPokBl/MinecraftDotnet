@@ -7,6 +7,10 @@ public static class ItemCodeGen {
     private const string Header = 
 """
 using Minecraft.Data.Items;
+using Minecraft.Data.Components;
+using Minecraft.Data.Components.Types;
+using Minecraft.Schemas.Sound;
+using Minecraft.Schemas;
 
 namespace Minecraft.Data.Generated;
 
@@ -79,19 +83,75 @@ public static class Item {
         { "int", token => token.ToObject<int>().ToString() },
         { "ConsumableComponent.Data", token => {
             JObject obj = token.ToObject<JObject>()!;
-            float consumeSeconds = obj["consume_seconds"]?.Value<float>() ?? 1.6f;
-            string animationStr = obj["animation"]?.Value<string>() ?? "Eat";
-            if (animationStr != "Eat") {
-                throw new Exception("Unsupported consume animation: " + animationStr);
-            }
+            float consumeSeconds = obj["consume_seconds"]?.Value<float>() ?? 1.6f;  // consume seconds
+            string animationStr = obj["animation"]?.Value<string>() ?? "Eat";  // animation
+            animationStr = CodeGenUtils.NamespacedIdToPascalName(animationStr);
             
-            string sound = obj["sound"]?.ToObject<string>() ?? "minecraft:generic_eat";
-            if (sound != "minecraft:generic_eat") {
-                throw new Exception("Unsupported consume sound: " + sound);
-            }
+            string sound = obj["sound"]?.ToObject<string>() ?? "minecraft:entity.generic.eat";
+            sound = SoundCodeGen.GetVariableName(sound);
             
             bool hasParticles = obj["has_consume_particles"]?.Value<bool>() ?? true;
             JArray consumeEffects = obj["on_consume_effects"]?.ToObject<JArray>() ?? [];
+            List<string> consumeEffectDefs = [];
+            foreach (JToken consumeEffect in consumeEffects) {
+                string type = consumeEffect["type"]?.Value<string>() ?? throw new Exception("Consume effect type not found");
+                string consumeEffectDef;
+                switch (type) {
+                    case "minecraft:apply_effects": {
+                        float probability = consumeEffect["probability"]?.Value<float>() ?? 1.0f;
+                        JArray effects = consumeEffect["effects"]?.ToObject<JArray>() ?? throw new Exception("Consume effect effects not found");
+                        List<string> inlineEffectDefs = [];
+                        foreach (JToken effect in effects) {
+                            string effectId = effect["id"]?.ToObject<string>()!;
+                            string potionTypeEffectGuess = CodeGenUtils.NamespacedIdToPascalName(effectId);
+                            sbyte amplifier = effect["amplifier"]?.Value<sbyte>() ?? 0;
+                            int duration = effect["duration"]?.Value<int>() ?? 0;
+                            bool ambient = effect["ambient"]?.Value<bool>() ?? false;
+                            bool showParticles = effect["show_particles"]?.Value<bool>() ?? true;
+                            bool showIcon = effect["show_icon"]?.Value<bool>() ?? true;
+                            // TODO: Handle hidden effects
+                            Func<bool, string> boolStr = b => b ? "true" : "false";
+                            inlineEffectDefs.Add($"new PotionEffect(PotionEffectType.{potionTypeEffectGuess}, {amplifier}, {duration}, " +
+                                                 $"{boolStr(ambient)}, {boolStr(showParticles)}, {boolStr(showIcon)}, false)");
+                        }
+                        //[{string.Join(", ", inlineEffectDefs)}], {probability}
+                        consumeEffectDef = $"ConsumeEffect.ApplyEffects with {{ Effects = [{string.Join(", ", inlineEffectDefs)}], Probability = {probability}f }}";
+                        break;
+                    }
+
+                    case "minecraft:play_sound": {
+                        string soundId = consumeEffect["sound"]?.ToObject<string>() ?? throw new Exception("Consume effect sound not found");
+                        string soundTypeGuess = SoundCodeGen.GetVariableName(soundId);
+                        consumeEffectDef = $"ConsumeEffect.PlaySound with {{ Sound = new SoundEvent(SoundType.{soundTypeGuess}, null) }}";
+                        break;
+                    }
+
+                    case "minecraft:clear_all_effects": {
+                        consumeEffectDef = "ConsumeEffect.ClearAllEffects";
+                        break;
+                    }
+
+                    case "minecraft:teleport_randomly": {
+                        consumeEffectDef = "ConsumeEffect.TeleportRandomly";
+                        break;
+                    }
+
+                    case "minecraft:remove_effects": {
+                        string effect = consumeEffect["effects"]?.ToObject<string>() ?? throw new Exception("Consume effect effects not found");
+                        consumeEffectDef = $"ConsumeEffect.RemoveEffects with {{ Effects = new IdSet.Tag(\"{effect}\") }}";
+                        break;
+                    }
+                    
+                    default:
+                        throw new Exception("Unsupported consume effect type: " + type);
+                }
+
+                consumeEffectDefs.Add(consumeEffectDef);
+            }
+            
+            return $"new ConsumableComponent.Data({consumeSeconds}f, ConsumableComponent.ConsumeAnimation.{animationStr}, " +
+                   $"new SoundEvent(SoundType.{sound}, null), {hasParticles.ToString().ToLowerInvariant()}, " +
+                   $"[{string.Join(", ", consumeEffectDefs)}])";
         } }
     };
 }
