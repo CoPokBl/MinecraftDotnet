@@ -178,6 +178,7 @@ public static class Item {
                    $"new SoundEvent(SoundType.{sound}, null), {hasParticles.ToString().ToLowerInvariant()}, " +
                    $"[{string.Join(", ", consumeEffectDefs)}])";
         } },
+        { "TooltipDisplayComponent.Info", token => "new TooltipDisplayComponent.Info(false)" },  // This field is always empty
         { "bool", token => token.ToObject<bool>().ToString().ToLower() },
         { "(int, int)[]", _ => "Array.Empty<(int, int)>()" },
         { "EquippableComponent.Data", token => {
