@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using Newtonsoft.Json.Linq;
 
@@ -197,24 +198,51 @@ public static class Item {
             string damageOnHurt = obj["damage_on_hurt"]?.ToObject<bool>().ToString().ToLower() ?? "true";
 
             string allowedEntities = "null";
-            if (obj.ContainsKey("allowed_entities")) {
-                JToken allowedToken = obj["allowed_entities"]!;
-
-                if (allowedToken.Type == JTokenType.String) {
-                    allowedEntities = $"new IdSet.Tag(\"{allowedToken.ToObject<string>()!}\")";
-                }
-                else { // is array of strings (identifiers of entities)
-                    List<string> names = [];
-                    foreach (JToken jEntity in allowedToken.ToObject<JArray>()!) {
-                        string entity = jEntity.ToObject<string>()!;
-                        names.Add("EntityType." + CodeGenUtils.NamespacedIdToPascalName(entity));
-                    }
-                    
-                    allowedEntities = $"IdSet.FromProtocolTypes({string.Join(", ", names)})";
-                }
+            if (obj.TryGetValue("allowed_entities", out JToken? allowedToken)) {
+                allowedEntities = GetIdSet(allowedToken, id => "EntityType." + CodeGenUtils.NamespacedIdToPascalName(id));
             }
 
             return $"new EquippableComponent.Data({slot}, {sound}, {model}, {cameraOverlay}, {allowedEntities}, {dispensable}, {swappable}, {damageOnHurt})";
+        }},
+        { "Tool", token => {
+            JObject obj = token.ToObject<JObject>()!;
+
+            float defaultMiningSpeed = obj["default_mining_speed"]?.ToObject<float>() ?? 1.0f;
+            int damagePerBlock = obj["damage_per_block"]?.ToObject<int>() ?? 1;
+            bool canMineInCreative = obj["can_destroy_blocks_in_creative"]?.ToObject<bool>() ?? true;
+
+            List<string> rules = [];
+            foreach (JToken jRule in obj["rules"]!.ToObject<JArray>()!) {
+                JObject oRule = jRule.ToObject<JObject>()!;
+                string speed = oRule["speed"]?.ToObject<float>().ToString(CultureInfo.InvariantCulture) ?? "null";
+                if (speed != "null") {
+                    speed += 'f';
+                }
+                
+                string correctForDrops = oRule["correct_for_drops"]?.ToObject<bool>().ToString().ToLower() ?? "null";
+                string blocks = GetIdSet(oRule["blocks"]!, id => "Block." + CodeGenUtils.NamespacedIdToPascalName(id));
+                
+                rules.Add($"new ToolRule({blocks}, {speed}, {correctForDrops})");
+            }
+            
+            return $"new Tool([{string.Join(", ", rules)}], {defaultMiningSpeed}, {damagePerBlock}, {canMineInCreative.ToString().ToLower()})";
         }}
     };
+
+    private static string GetIdSet(JToken obj, Func<string, string> transformer) {
+        if (obj.Type == JTokenType.String) {
+            string id = obj.ToObject<string>()!;
+            if (id.StartsWith('#')) {
+                return $"new IdSet.Tag(\"{id[1..]}\")";
+            }
+
+            return $"IdSet.FromProtocolTypes({transformer(id)})";
+        }
+        
+        // is array of strings (identifiers of ids)
+        IEnumerable<string> names = obj.ToObject<JArray>()!
+            .Select(jId => transformer(jId.ToObject<string>()!));
+
+        return $"IdSet.FromProtocolTypes({string.Join(", ", names)})";
+    }
 }
