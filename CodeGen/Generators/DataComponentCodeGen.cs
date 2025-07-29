@@ -18,6 +18,9 @@ public static class DataComponentCodeGen {
         """;
     
     private const string Footer = "}\n";
+    
+    internal static readonly Dictionary<string, string> ComponentClasses = new();
+    internal static readonly Dictionary<string, string> ComponentTypes = new();
 
     public static string CreateComponentEntries(JObject registriesJson) {
         JObject entries = registriesJson["minecraft:data_component_type"]!["entries"]!.ToObject<JObject>()!;
@@ -28,8 +31,6 @@ public static class DataComponentCodeGen {
         string componentTypesFolder = Path.Combine(Directory.GetCurrentDirectory(), "..", "Components", "Types");
         string[] files = Directory.GetFiles(componentTypesFolder, "*.cs", SearchOption.AllDirectories);
         
-        Dictionary<string, string> componentClasses = new();
-        Dictionary<string, string> componentTypes = new();
         foreach (string file in files) {
             string fileName = Path.GetFileNameWithoutExtension(file);
 
@@ -49,14 +50,14 @@ public static class DataComponentCodeGen {
                 Console.WriteLine($"Warning: Identifier not found in {fileName}");
                 continue;
             }
-            componentClasses.Add(ident, fileName);
-            componentTypes.Add(ident, type);
+            ComponentClasses.Add(ident, fileName);
+            ComponentTypes.Add(ident, type);
         }
 
         foreach ((string key, JToken? value) in entries) {
             int protocolId = value!["protocol_id"]!.Value<int>();
 
-            if (!componentClasses.ContainsKey(key)) {
+            if (!ComponentClasses.ContainsKey(key)) {
                 Console.WriteLine("Warning: Component class not found for key: " + key);
                 continue;
             }
@@ -64,7 +65,7 @@ public static class DataComponentCodeGen {
             string varName = CodeGenUtils.NamespacedIdToPascalName(key);
             
             registryAdditions.Append($"{CodeGenUtils.GetIndentation(2)}Data.DataComponents.Add(DataComponent.{varName}, {protocolId});\n");
-            fileContent.AppendLine($"{CodeGenUtils.GetIndentation(1)}public static readonly {componentClasses[key]} {varName} = new({protocolId});");
+            fileContent.AppendLine($"{CodeGenUtils.GetIndentation(1)}public static readonly {ComponentClasses[key]} {varName} = new({protocolId});");
         }
         
         fileContent.Append(Footer);

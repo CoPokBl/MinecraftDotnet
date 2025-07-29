@@ -2,6 +2,7 @@ using System.Collections;
 using Minecraft;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
+using Newtonsoft.Json;
 
 namespace Tests;
 
@@ -106,5 +107,25 @@ public class DataTypesTest {
         BitArray arr = new([true, true, false, false, true, false, true]);
         BitArray range = arr.Range(1, 3);
         Assert.That(range, Is.EqualTo([true, false, false]));
+    }
+    
+    [Test]
+    public void TestDouble() {
+        const double value = 123.456789;
+        byte[] data = new DataWriter().WriteDouble(value).ToArray();
+        double back = new DataReader(data).ReadDouble();
+        
+        Assert.That(back, Is.EqualTo(value));
+    }
+
+    [Test]
+    public void TestIdentifierJson() {
+        Identifier id = "minecraft:stone";
+        Console.WriteLine(id);
+        string json = JsonConvert.SerializeObject(id);
+        Console.WriteLine(json);
+        Identifier back = JsonConvert.DeserializeObject<Identifier>(json);
+        Console.WriteLine(back);
+        Assert.That(back, Is.EqualTo(id));
     }
 }

@@ -21,7 +21,7 @@ public class ConsumablesFeature : ScopedFeature {
         AddEventListener<PlayerPacketHandleEvent>(e => {
             if (e.Packet is ServerBoundUseItemPacket usePacket) {
                 ItemStack item = usePacket.UsedHand == Hand.MainHand ? e.Player.HeldItem : e.Player.Inventory.Offhand;
-                ConsumableComponent.Data? food = item.Get(DataComponent.Consumable);
+                ConsumableComponent.Data? food = item.GetOrNull(DataComponent.Consumable);
             
                 if (food == null) {
                     return; // Not a consumable item

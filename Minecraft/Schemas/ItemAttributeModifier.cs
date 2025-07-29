@@ -1,10 +1,13 @@
 using Minecraft.Data;
+using Minecraft.Data.Attributes;
 using Minecraft.Registry;
+using Minecraft.Schemas.Entities.Attributes;
 
 namespace Minecraft.Schemas;
 
+// TODO: Fix this not working (error on client)
 public record ItemAttributeModifier(
-    int Attribute,
+    IAttribute Attribute,
     Identifier Id,
     double Value,
     AttributeOperation Operation,
@@ -12,7 +15,7 @@ public record ItemAttributeModifier(
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
-            .WriteVarInt(Attribute)
+            .WriteVarInt(Attribute.ProtocolId)
             .WriteString(Id)
             .WriteDouble(Value)
             .WriteVarInt((int)Operation)
@@ -21,11 +24,15 @@ public record ItemAttributeModifier(
     
     public static ItemAttributeModifier ReadData(DataReader reader, MinecraftRegistry registry) {
         return new ItemAttributeModifier(
-            reader.ReadVarInt(),
+            registry.Attributes[reader.ReadVarInt()],
             reader.ReadString(),
             reader.ReadDouble(),
             (AttributeOperation)reader.ReadVarInt(),
             (AttributeActiveSlot)reader.ReadVarInt()
         );
+    }
+    
+    public AttributeModifier ToAttributeModifier() {
+        return new AttributeModifier(Id, Value, Operation);
     }
 }

@@ -19,7 +19,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2025-07-24
+// Last updated: 2025-07-30
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -1394,6 +1394,31 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, true, 0x7F, typeof(ClientBoundUpdateTagsPacket), ClientBoundUpdateTagsPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Status, true, 0x01, typeof(ClientBoundPingResponsePacket), ClientBoundPingResponsePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Status, true, 0x00, typeof(ClientBoundStatusResponsePacket), ClientBoundStatusResponsePacket.Deserialiser);
+
+        Data.DataComponents.Add(DataComponent.AttributeModifiers, 13);
+        Data.DataComponents.Add(DataComponent.CanBreak, 12);
+        Data.DataComponents.Add(DataComponent.CanPlaceOn, 11);
+        Data.DataComponents.Add(DataComponent.Consumable, 21);
+        Data.DataComponents.Add(DataComponent.CreativeSlotLock, 17);
+        Data.DataComponents.Add(DataComponent.CustomData, 0);
+        Data.DataComponents.Add(DataComponent.CustomModelData, 14);
+        Data.DataComponents.Add(DataComponent.CustomName, 5);
+        Data.DataComponents.Add(DataComponent.Damage, 3);
+        Data.DataComponents.Add(DataComponent.EnchantmentGlintOverride, 18);
+        Data.DataComponents.Add(DataComponent.Enchantments, 10);
+        Data.DataComponents.Add(DataComponent.Equippable, 28);
+        Data.DataComponents.Add(DataComponent.Food, 20);
+        Data.DataComponents.Add(DataComponent.IntangibleProjectile, 19);
+        Data.DataComponents.Add(DataComponent.ItemModel, 7);
+        Data.DataComponents.Add(DataComponent.ItemName, 6);
+        Data.DataComponents.Add(DataComponent.Lore, 8);
+        Data.DataComponents.Add(DataComponent.MaxDamage, 2);
+        Data.DataComponents.Add(DataComponent.MaxStackSize, 1);
+        Data.DataComponents.Add(DataComponent.Rarity, 9);
+        Data.DataComponents.Add(DataComponent.RepairCost, 16);
+        Data.DataComponents.Add(DataComponent.Tool, 25);
+        Data.DataComponents.Add(DataComponent.TooltipDisplay, 15);
+        Data.DataComponents.Add(DataComponent.Unbreakable, 4);
 
         Data.Items.Add(Item.AcaciaBoat);
         Data.Items.Add(Item.AcaciaButton);
@@ -2811,30 +2836,6 @@ public static class VanillaRegistry {
         Data.Items.Add(Item.ZombieSpawnEgg);
         Data.Items.Add(Item.ZombieVillagerSpawnEgg);
         Data.Items.Add(Item.ZombifiedPiglinSpawnEgg);
-
-        Data.DataComponents.Add(DataComponent.AttributeModifiers, 13);
-        Data.DataComponents.Add(DataComponent.CanBreak, 12);
-        Data.DataComponents.Add(DataComponent.CanPlaceOn, 11);
-        Data.DataComponents.Add(DataComponent.Consumable, 21);
-        Data.DataComponents.Add(DataComponent.CreativeSlotLock, 17);
-        Data.DataComponents.Add(DataComponent.CustomData, 0);
-        Data.DataComponents.Add(DataComponent.CustomModelData, 14);
-        Data.DataComponents.Add(DataComponent.CustomName, 5);
-        Data.DataComponents.Add(DataComponent.Damage, 3);
-        Data.DataComponents.Add(DataComponent.EnchantmentGlintOverride, 18);
-        Data.DataComponents.Add(DataComponent.Enchantments, 10);
-        Data.DataComponents.Add(DataComponent.Food, 20);
-        Data.DataComponents.Add(DataComponent.IntangibleProjectile, 19);
-        Data.DataComponents.Add(DataComponent.ItemModel, 7);
-        Data.DataComponents.Add(DataComponent.ItemName, 6);
-        Data.DataComponents.Add(DataComponent.Lore, 8);
-        Data.DataComponents.Add(DataComponent.MaxDamage, 2);
-        Data.DataComponents.Add(DataComponent.MaxStackSize, 1);
-        Data.DataComponents.Add(DataComponent.Rarity, 9);
-        Data.DataComponents.Add(DataComponent.RepairCost, 16);
-        Data.DataComponents.Add(DataComponent.Tool, 25);
-        Data.DataComponents.Add(DataComponent.TooltipDisplay, 15);
-        Data.DataComponents.Add(DataComponent.Unbreakable, 4);
 
         Data.EntityTypes.Add(EntityType.AcaciaBoat);
         Data.EntityTypes.Add(EntityType.AcaciaChestBoat);
@@ -4836,6 +4837,42 @@ public static class VanillaRegistry {
         Data.BlockEntityTypes.Add(BlockEntityType.TrappedChest);
         Data.BlockEntityTypes.Add(BlockEntityType.TrialSpawner);
         Data.BlockEntityTypes.Add(BlockEntityType.Vault);
+
+        Data.Attributes.Add(Attribute.Armor);
+        Data.Attributes.Add(Attribute.ArmorToughness);
+        Data.Attributes.Add(Attribute.AttackDamage);
+        Data.Attributes.Add(Attribute.AttackKnockback);
+        Data.Attributes.Add(Attribute.AttackSpeed);
+        Data.Attributes.Add(Attribute.BlockBreakSpeed);
+        Data.Attributes.Add(Attribute.BlockInteractionRange);
+        Data.Attributes.Add(Attribute.BurningTime);
+        Data.Attributes.Add(Attribute.CameraDistance);
+        Data.Attributes.Add(Attribute.EntityInteractionRange);
+        Data.Attributes.Add(Attribute.ExplosionKnockbackResistance);
+        Data.Attributes.Add(Attribute.FallDamageMultiplier);
+        Data.Attributes.Add(Attribute.FlyingSpeed);
+        Data.Attributes.Add(Attribute.FollowRange);
+        Data.Attributes.Add(Attribute.Gravity);
+        Data.Attributes.Add(Attribute.JumpStrength);
+        Data.Attributes.Add(Attribute.KnockbackResistance);
+        Data.Attributes.Add(Attribute.Luck);
+        Data.Attributes.Add(Attribute.MaxAbsorption);
+        Data.Attributes.Add(Attribute.MaxHealth);
+        Data.Attributes.Add(Attribute.MiningEfficiency);
+        Data.Attributes.Add(Attribute.MovementEfficiency);
+        Data.Attributes.Add(Attribute.MovementSpeed);
+        Data.Attributes.Add(Attribute.OxygenBonus);
+        Data.Attributes.Add(Attribute.SafeFallDistance);
+        Data.Attributes.Add(Attribute.Scale);
+        Data.Attributes.Add(Attribute.SneakingSpeed);
+        Data.Attributes.Add(Attribute.SpawnReinforcements);
+        Data.Attributes.Add(Attribute.StepHeight);
+        Data.Attributes.Add(Attribute.SubmergedMiningSpeed);
+        Data.Attributes.Add(Attribute.SweepingDamageRatio);
+        Data.Attributes.Add(Attribute.TemptRange);
+        Data.Attributes.Add(Attribute.WaterMovementEfficiency);
+        Data.Attributes.Add(Attribute.WaypointReceiveRange);
+        Data.Attributes.Add(Attribute.WaypointTransmitRange);
 
     }
 }

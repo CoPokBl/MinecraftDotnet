@@ -16,6 +16,7 @@ using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Packets.Status.ServerBound;
 using Minecraft.Schemas;
 using Minecraft.Text;
+using Newtonsoft.Json;
 
 namespace Proxy;
 
@@ -30,7 +31,7 @@ public class ProxiedConnection : MappedTaggable {
     private Action? _cancelServerPacketListener;
     
     // constants
-    private const string ProxiedServer = "localhost";
+    private const string ProxiedServer = "michael-endy";
     private const int ProxiedPort = 25565;  // default Minecraft port, can be changed if needed
     private const bool LogPackets = false;  // whether to log packets or not
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.7") ];
@@ -334,6 +335,15 @@ public class ProxiedConnection : MappedTaggable {
         ];
         if (!ignoredPackets.Contains(packet.GetType())) {
             Console.WriteLine("Sending packet to player: " + packet.GetType().Name);
+            try {
+                if (packet is ClientBoundParticlePacket) {
+                    Console.WriteLine(JsonConvert.SerializeObject(packet, Formatting.Indented));
+                }
+            }
+            catch (Exception exception) {
+                Console.WriteLine(exception);
+                throw;
+            }
         }
         
         Player.SendPacket(packet);

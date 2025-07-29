@@ -16,6 +16,7 @@ public static class DataComponent {
     public static readonly DamageComponent Damage = new(3);
     public static readonly EnchantmentGlintOverrideComponent EnchantmentGlintOverride = new(18);
     public static readonly EnchantmentsComponent Enchantments = new(10);
+    public static readonly EquippableComponent Equippable = new(28);
     public static readonly FoodComponent Food = new(20);
     public static readonly IntangibleProjectileComponent IntangibleProjectile = new(19);
     public static readonly ItemModelComponent ItemModel = new(7);

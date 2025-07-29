@@ -16,6 +16,6 @@ public class GoldenAppleItem : SkyWarsItem {
     public override string Id => "golden_apple";
 
     public override void OnEat(PlayerEntity player) {
-        player.Heal(4);
+        player.Heal(6);
     }
 }

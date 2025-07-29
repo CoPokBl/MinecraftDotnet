@@ -33,7 +33,7 @@ public static class BlockUtils {
             }
         }
 
-        Tool? toolData = tool.Get(DataComponent.Tool);
+        Tool? toolData = tool.GetOrNull(DataComponent.Tool);
         
         bool isBestTool = CanBreakBlock(toolData, block);
         float speedMultiplier;

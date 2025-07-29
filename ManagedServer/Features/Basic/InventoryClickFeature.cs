@@ -17,7 +17,7 @@ namespace ManagedServer.Features.Basic;
 /// and dropping items, and double-clicking to collect items.
 /// It also handles the drop key for dropping items from the inventory and fires the <see cref="PlayerDropItemEvent"/>.
 /// </summary>
-[CallsEvent(typeof(PlayerDropItemEvent))]
+[CallsEvent(typeof(PlayerDropItemEvent), typeof(InventoryClickEvent))]
 public class InventoryClickFeature : ScopedFeature {
     private static readonly Tag<DragType> DraggingTag = new("managedserver:inventoryclick:dragging");
     private static readonly Tag<List<int>> DragSlotsTag = new("managedserver:inventoryclick:drag_slots");
@@ -127,6 +127,24 @@ public class InventoryClickFeature : ScopedFeature {
             ? packet.Slot
             : packet.Slot - clickedInventory.PlayerInventoryStartIndex + player.Inventory.PlayerInventoryStartIndex;
 
+        InventoryClickEvent clickEvent = new() {
+            Player = player,
+            Inventory = clickedInventory,
+            Slot = effectiveSlot,
+            ClickedItem = effectiveSlot > 0 ? targetInventory[effectiveSlot] : null,
+            CursorItem = player.CursorItem,
+            World = player.World!
+        };
+        CallEvent(clickEvent);
+
+        if (clickEvent.Cancelled) {
+            clickedInventory.SendUpdateTo(player);
+            if (clickedInventory != player.Inventory) {
+                player.Inventory.SendUpdateTo(player);
+            }
+            return; // Cancelled the click, so do nothing
+        }
+        
         try {
             switch (packet.Mode) {
                 // Regular clicks (left and right)

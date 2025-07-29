@@ -35,6 +35,12 @@ public class TextComponent : CompoundTagSerialisable {
             Content = TextContent.Text(msg)
         };
     }
+    
+    public static TextComponent Translatable(string key, string? fallback = null, TextComponent[]? with = null) {
+        return new TextComponent {
+            Content = TextContent.Translatable(key, fallback, with)
+        };
+    }
 
     public static TextComponent Containing(TextContent content) {
         return new TextComponent {

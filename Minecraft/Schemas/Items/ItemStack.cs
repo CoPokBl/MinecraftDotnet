@@ -6,7 +6,6 @@ using Minecraft.Implementations.Tags;
 using Minecraft.Registry;
 using NBT;
 using NBT.Tags;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Minecraft.Schemas.Items;
@@ -39,7 +38,7 @@ public class ItemStack(
     }
 
     public int GetMaxStackSize(int def = 64) {
-        return GetStruct(DataComponent.MaxStackSize) ?? def;
+        return GetStructOrNull(DataComponent.MaxStackSize) ?? def;
     }
     
     public ItemStack SubtractCount(int count) {
@@ -71,14 +70,36 @@ public class ItemStack(
         return Count == 0 || Type.Identifier == Item.Air.Identifier;
     }
     
-    public T? Get<T>(IDataComponent<T> type) {
-        Components.TryGetValue(type, out object? component);
-        return component == null ? default : (T)component;
+    public T Get<T>(IDataComponent<T> type, bool ignoreDefaults = false) {
+        if (Components.TryGetValue(type, out object? component)) {
+            return (T)component;
+        }
+        if (component == null && ignoreDefaults) {
+            throw new KeyNotFoundException($"Component {type.Identifier} not found in ItemStack.");
+        }
+        
+        // Look for default value
+        if (Type.DefaultComponents.TryGetValue(type, out object? defaultComponent)) {
+            return (T)defaultComponent;
+        }
+        
+        throw new KeyNotFoundException($"Component {type.Identifier} not found in ItemStack and no default value available.");
+    }
+    
+    public T GetOrDefault<T>(IDataComponent<T> type, T defaultValue) {
+        return Has(type) ? Get(type) : defaultValue;
+    }
+    
+    public T? GetOrNull<T>(IDataComponent<T> type) where T : class {
+        return Has(type) ? Get(type) : null;
+    }
+    
+    public bool Has<T>(IDataComponent<T> type) {
+        return Components.ContainsKey(type) || Type.DefaultComponents.ContainsKey(type);
     }
 
-    public T? GetStruct<T>(IDataComponent<T> type) where T : struct {
-        Components.TryGetValue(type, out object? component);
-        return component == null ? null : (T)component;
+    public T? GetStructOrNull<T>(IDataComponent<T> type) where T : struct {
+        return Has(type) ? Get(type) : null;
     }
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
@@ -137,12 +158,12 @@ public class ItemStack(
     }
     
     public bool HasTag<T>(Tag<T> tag) {
-        INbtTag? nbt = Get(DataComponent.CustomData);
+        INbtTag? nbt = GetOrNull(DataComponent.CustomData);
         return nbt is CompoundTag ct && ct.ChildrenMap.ContainsKey(tag.Id);
     }
     
     public ItemStack WithTag<T>(Tag<T> tag, T? value) {
-        CompoundTag nbt = Get(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag(null);
+        CompoundTag nbt = GetOrNull(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag(null);
 
         if (value == null) {
             return With(DataComponent.CustomData, new CompoundTag(null, nbt.Children
@@ -162,7 +183,7 @@ public class ItemStack(
     }
     
     public ItemStack WithoutTag<T>(Tag<T> tag) {
-        CompoundTag nbt = Get(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag(null);
+        CompoundTag nbt = GetOrNull(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag(null);
         
         if (!nbt.ChildrenMap.ContainsKey(tag.Id)) {
             return this;  // No change if tag doesn't exist

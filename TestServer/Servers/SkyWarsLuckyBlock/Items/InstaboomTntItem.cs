@@ -10,7 +10,7 @@ using Minecraft.Text;
 namespace TestServer.Servers.SkyWarsLuckyBlock.Items;
 
 public class InstaboomTntItem : SkyWarsItem {
-    public override ItemStack Item => new ItemStack(1, Minecraft.Data.Generated.Item.Tnt)
+    public override ItemStack Item => new ItemStack(4, Minecraft.Data.Generated.Item.Tnt)
         .With(DataComponent.ItemName, TextComponent.FromLegacyString("&cInstaboom TNT"))
         .With(DataComponent.EnchantmentGlintOverride, true);
     
@@ -21,7 +21,7 @@ public class InstaboomTntItem : SkyWarsItem {
     private const double LaunchPower = 1.025;
     
     public override bool OnPlace(PlayerEntity player, Vec3<int> position) {
-        DoKaboom(player, position, ExplodeRadius, LaunchRadius, LaunchPower);
+        DoKaboom(player.World!, position, ExplodeRadius, LaunchRadius, LaunchPower);
         World world = player.World!;
         player.Server.Scheduler.ScheduleNextTick(() => {
             world.SetBlock(position, Block.Air);

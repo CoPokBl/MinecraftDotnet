@@ -33,6 +33,6 @@ public class MagicToyStickItem : SkyWarsItem {
 
     private static void Hit(PlayerEntity player, Vec3<int> location) {
         player.SendMessage("Boom!");
-        DoKaboom(player, location, ExplodeRadius, LaunchRadius, LaunchPower);
+        DoKaboom(player.World!, location, ExplodeRadius, LaunchRadius, LaunchPower);
     }
 }

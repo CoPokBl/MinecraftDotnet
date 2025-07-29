@@ -5,6 +5,7 @@ using ManagedServer.Features;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
+using Minecraft.Data.Attributes;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Events;
@@ -14,9 +15,11 @@ using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities.Attributes;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Shapes;
 using Minecraft.Schemas.Vec;
+using Newtonsoft.Json;
 
 namespace ManagedServer.Entities.Types;
 
@@ -81,6 +84,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     private EntityMeta _meta = null!;  // set by the constructor, so it is never null
     private bool _crouching;
+    private Dictionary<IAttribute, (double Base, List<AttributeModifier> Modifiers)> _attributes = [];
 
     public Entity(IEntityType type, EntityMeta? meta = null) {
         Type = type;
@@ -235,6 +239,116 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
             EntityId = NetId,
             Yaw = Angle.Zero
         });
+    }
+    
+    public void AddAttributeModifier(IAttribute attribute, AttributeModifier modifier) {
+        if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
+            value = (attribute.Default, []);
+            _attributes[attribute] = value;
+        }
+        
+        (double baseValue, List<AttributeModifier> modifiers) = value;
+        if (modifiers.Any(m => m.Id == modifier.Id)) {
+            throw new InvalidOperationException($"Attribute modifier with name {modifier.Id} already exists for attribute {attribute.Identifier}.");
+        }
+        
+        modifiers.Add(modifier);
+        _attributes[attribute] = (baseValue, modifiers);
+        
+        SendAttributeUpdate(attribute);  // send update to viewers
+    }
+    
+    public bool RemoveAttributeModifier(IAttribute attribute, Identifier id) {
+        if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
+            return false;  // no modifiers to remove
+        }
+        
+        List<AttributeModifier> modifiers = value.Modifiers;
+        if (modifiers.RemoveAll(m => m.Id == id) > 0) {
+            _attributes[attribute] = (value.Base, modifiers);
+            SendAttributeUpdate(attribute);  // send update to viewers
+            return true;  // modifier was removed
+        }
+        
+        return false;  // modifier not found
+    }
+    
+    public void ClearAttributeModifiers(IAttribute attribute) {
+        if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
+            return;  // no modifiers to clear
+        }
+        
+        _attributes[attribute] = (value.Base, []);
+        SendAttributeUpdate(attribute);  // send update to viewers
+    }
+    
+    public void SetAttributeBaseValue(IAttribute attribute, double baseValue) {
+        if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
+            value = (attribute.Default, []);
+            _attributes[attribute] = value;
+        }
+        
+        _attributes[attribute] = (baseValue, value.Modifiers);
+        SendAttributeUpdate(attribute);  // send update to viewers
+    }
+    
+    public double GetAttributeBaseValue(IAttribute attribute) {
+        if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
+            return attribute.Default;
+        }
+        
+        return value.Base;
+    }
+    
+    public double GetAttributeValue(IAttribute attribute) {
+        if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
+            return attribute.Default;
+        }
+        
+        double total = value.Base;
+        
+        AttributeModifier[] adds = value.Modifiers.Where(m => m.Operation == AttributeOperation.Add).ToArray();
+        AttributeModifier[] addsMultBase = value.Modifiers.Where(m => m.Operation == AttributeOperation.AddMultipliedBase).ToArray();
+        AttributeModifier[] addsMultTotal = value.Modifiers.Where(m => m.Operation == AttributeOperation.AddMultipliedTotal).ToArray();
+        
+        if (adds.Length > 0) {
+            total += adds.Sum(m => m.Value);
+        }
+        if (addsMultBase.Length > 0) {
+            total += addsMultBase.Sum(m => m.Value * value.Base);
+        }
+        if (addsMultTotal.Length > 0) {
+            total += addsMultTotal.Sum(m => m.Value * total);
+        }
+        
+        return total;
+    }
+    
+    public void SendAttributeUpdate(IAttribute attribute) {
+        if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
+            return;  // no modifiers to send
+        }
+        
+        SendToSelfAndViewers(new ClientBoundUpdateAttributesPacket {
+            EntityId = NetId,
+            Attributes = [
+                new AttributeValue(attribute, value.Base, value.Modifiers.ToArray())
+            ]
+        });
+    }
+    
+    public void SendAttributeUpdates() {
+        List<AttributeValue> attributes = [];
+        foreach (KeyValuePair<IAttribute, (double Base, List<AttributeModifier> Modifiers)> entry in _attributes) {
+            attributes.Add(new AttributeValue(entry.Key, entry.Value.Base, entry.Value.Modifiers.ToArray()));
+        }
+        
+        if (attributes.Count > 0) {
+            SendToSelfAndViewers(new ClientBoundUpdateAttributesPacket {
+                EntityId = NetId,
+                Attributes = attributes.ToArray()
+            });
+        }
     }
     
     /// <summary>

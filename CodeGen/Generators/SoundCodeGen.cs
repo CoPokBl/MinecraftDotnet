@@ -16,7 +16,7 @@ public static class SoundCodeGen {
     }
     
     // they look like this: minecraft:ambient.basalt_deltas.additions
-    private static string GetVariableName(string key) {
+    internal static string GetVariableName(string key) {
         // first get rid of the namespace
         string name = key.Split(':')[1];
         // then get rid of category

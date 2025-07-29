@@ -58,6 +58,11 @@ public class ClientWorld {
                 _chunks[new Vec2<int>(cdul.ChunkX, cdul.ChunkZ)] = cdul.Data;
                 break;
             }
+
+            case ClientBoundBlockUpdatePacket bu: {
+                SetBlock(bu.Location, bu.Block);
+                break;
+            }
         }
     }
     
@@ -100,6 +105,20 @@ public class ClientWorld {
         Vec2<int> chunk = GetChunkPos(pos);
         Vec3<int> chunkLocalPos = ToChunkLocalPos(pos);
         return RetrieveChunk(chunk)!.BlockEntities!.GetValueOrDefault(chunkLocalPos, null);
+    }
+    
+    private void SetBlock(Vec3<int> pos, IBlock block) {
+        CheckY(pos.Y);
+
+        Vec2<int> chunk = GetChunkPos(pos);
+        Vec3<int> chunkLocalPos = ToChunkLocalPos(GameToProtocolPos(pos));
+
+        ChunkData? data = RetrieveChunk(chunk);
+        if (data == null) {
+            throw new InvalidOperationException($"Chunk at {chunk} is not loaded. Please load the chunk before setting blocks.");
+        }
+
+        data.SetBlock(chunkLocalPos, block);
     }
 
     #endregion
