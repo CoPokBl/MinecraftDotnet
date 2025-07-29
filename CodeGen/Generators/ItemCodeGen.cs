@@ -9,6 +9,7 @@ public static class ItemCodeGen {
 using Minecraft.Data.Items;
 using Minecraft.Data.Components;
 using Minecraft.Data.Components.Types;
+using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas;
 using Minecraft.Text;
@@ -100,6 +101,11 @@ public static class Item {
             return $"TextComponent.Translatable(\"{translationKey}\")";
         } },
         { "Identifier", token => $"\"{token.ToObject<string>()!}\"" },
+        { "ItemRarity", token => {
+            string rarityStr = token.ToObject<string>()!;
+            string rarityGuess = CodeGenUtils.NamespacedIdToPascalName(rarityStr);
+            return $"ItemRarity.{rarityGuess}";
+        } },
         { "ConsumableComponent.Data", token => {
             JObject obj = token.ToObject<JObject>()!;
             float consumeSeconds = obj["consume_seconds"]?.Value<float>() ?? 1.6f;  // consume seconds
