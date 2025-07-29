@@ -11,6 +11,7 @@ using Minecraft.Data.Components;
 using Minecraft.Data.Components.Types;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas;
+using Minecraft.Text;
 
 namespace Minecraft.Data.Generated;
 
@@ -89,6 +90,16 @@ public static class Item {
             return "new FoodComponent.Info(" + 
                    $"{nutrition}, {saturation}f, {canAlwaysEat.ToString().ToLowerInvariant()})";
         } },
+        { "TextComponent", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            if (!obj.ContainsKey("translate")) {
+                throw new Exception("TextComponent must have a 'translate' key, other types are not supported.");
+            }
+            
+            string translationKey = obj["translate"]!.Value<string>()!;
+            return $"TextComponent.Translatable(\"{translationKey}\")";
+        } },
+        { "Identifier", token => $"\"{token.ToObject<string>()!}\"" },
         { "ConsumableComponent.Data", token => {
             JObject obj = token.ToObject<JObject>()!;
             float consumeSeconds = obj["consume_seconds"]?.Value<float>() ?? 1.6f;  // consume seconds
