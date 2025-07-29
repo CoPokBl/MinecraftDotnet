@@ -81,6 +81,14 @@ public static class Item {
 
     private static readonly Dictionary<string, Func<JToken, string>> Deserialisers = new() {
         { "int", token => token.ToObject<int>().ToString() },
+        { "FoodComponent.Info", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            int nutrition = obj["nutrition"]?.Value<int>() ?? throw new Exception("Nutrition missing");  // nutrition
+            float saturation = obj["saturation"]?.Value<float>() ?? throw new Exception("Saturation missing");  // saturation modifier
+            bool canAlwaysEat = obj["can_always_eat"]?.Value<bool>() ?? false;  // can always eat
+            return "new FoodComponent.Info(" + 
+                   $"{nutrition}, {saturation}f, {canAlwaysEat.ToString().ToLowerInvariant()})";
+        } },
         { "ConsumableComponent.Data", token => {
             JObject obj = token.ToObject<JObject>()!;
             float consumeSeconds = obj["consume_seconds"]?.Value<float>() ?? 1.6f;  // consume seconds
