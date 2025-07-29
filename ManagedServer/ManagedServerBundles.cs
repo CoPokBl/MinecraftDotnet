@@ -19,7 +19,9 @@ public partial class ManagedMinecraftServer {
         new LoginProcedureFeature(),
         new PhysicsFeature(),
         new SimpleTabListFeature(),
-        new PlayerSkinLayersFeature()
+        new PlayerSkinLayersFeature(),
+        new UseItemEventFeature(),
+        new RightClickToEquipArmourFeature()
     );
 
     public static ManagedMinecraftServer NewBasic() {

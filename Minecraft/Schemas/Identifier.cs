@@ -1,8 +1,11 @@
 using Minecraft.Data;
 using Minecraft.Registry;
+using Newtonsoft.Json;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Minecraft.Schemas;
 
+[JsonConverter(typeof(IdentifierConverter))]
 public readonly struct Identifier(string ns, string key) : IEquatable<Identifier>, INetworkType<Identifier>, IWritable {
     public readonly string Namespace = ns;
     public readonly string Key = key;
@@ -54,5 +57,26 @@ public readonly struct Identifier(string ns, string key) : IEquatable<Identifier
 
     public static bool operator !=(Identifier left, Identifier right) {
         return !(left == right);
+    }
+}
+
+// This serialiser will serialise it as a string in the format "namespace:key"
+public class IdentifierConverter : JsonConverter<Identifier> {
+    
+    public override void WriteJson(JsonWriter writer, Identifier value, JsonSerializer serializer) {
+        writer.WriteValue(value.ToString());
+    }
+
+    public override Identifier ReadJson(JsonReader reader, Type objectType, Identifier existingValue, bool hasExistingValue,
+        JsonSerializer serializer) {
+        if (reader.TokenType != JsonToken.String) {
+            throw new JsonSerializationException("Expected string token for Identifier");
+        }
+
+        if (reader.Value is not string value) {
+            throw new JsonSerializationException("Expected string value for Identifier");
+        }
+        
+        return Identifier.Parse(value);
     }
 }

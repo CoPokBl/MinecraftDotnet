@@ -9,4 +9,8 @@ public interface IProtocolType {
     public static bool Equals(IProtocolType i1, IProtocolType i2) {
         return i1.Identifier == i2.Identifier;
     }
+    
+    public int GetHashCode() {
+        return Identifier.GetHashCode();
+    }
 }

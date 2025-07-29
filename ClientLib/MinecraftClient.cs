@@ -2,6 +2,8 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using ClientLib.Events;
 using ClientLib.Features;
+using ClientLib.Features.Basic;
+using ClientLib.Scheduling;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Client;
 using Minecraft.Implementations.Client.Events;
@@ -43,11 +45,18 @@ public class MinecraftClient : MappedTaggable, IFeatureScope {
     public GameMode GameMode { get; set; } = GameMode.Survival;
     public GameMode PreviousGameMode { get; set; } = GameMode.Undefined;
     public GameRuleSet GameRules { get; private set; } = new();
-    public Vec3<double> Position { get; set; } = new(0, 0, 0);
+    public Vec3<double> Position {
+        get => _position;
+        set {
+            _position = value;
+            SendPositionUpdate();
+        }
+    }
     public List<PlayerInfoEntry> PlayerInfoEntries { get; } = [];
 
     public MinecraftClient Client => this;
     public MinecraftRegistry ProtocolRegistry { get; }
+    public ClientScheduler Scheduler { get; }
     public ulong CurrentTick { get; private set; } = 0;
     public volatile bool LoggedIn = false;
     
@@ -57,8 +66,10 @@ public class MinecraftClient : MappedTaggable, IFeatureScope {
     private TimeSpan TargetTickTime => TimeSpan.FromSeconds(1.0 / TargetTicksPerSecond);
     public int TargetTicksPerSecond = 20;
     
+    private Vec3<double> _position = new(0, 0, 0);
+    
     public static readonly FeatureBundle BasicFeatures = new(
-        
+        new GravityFeature()
     );
 
     private static void Log(string a) {
@@ -70,6 +81,7 @@ public class MinecraftClient : MappedTaggable, IFeatureScope {
         World = ClientWorld.Default(this);
         Inventory = new ClientInventory(this);
         ProtocolRegistry = registry ?? VanillaRegistry.Data;
+        Scheduler = new ClientScheduler(this);
         
         FeatureHandler = new FeatureHandler(this);
         
@@ -308,11 +320,10 @@ public class MinecraftClient : MappedTaggable, IFeatureScope {
         
         switch (packet) {
             case ClientBoundSynchronisePlayerPositionPacket spp: {
-                Position = spp.Position;
                 SendPacket(new ServerBoundConfirmTeleportPacket {
                     TeleportId = spp.TeleportId
                 });
-                SendPositionUpdate();
+                Position = spp.Position;
                 break;
             }
 

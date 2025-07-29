@@ -116,10 +116,10 @@ Directory.SetCurrentDirectory(codeDir);
 StringBuilder registryEntries = new();
 
 RunStep("Particles", ParticleCodeGen.CreateParticleEntries);
-RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
+// RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
 RunStep("Packets", PacketCodeGen.CreatePacketEntries);
-RunStep("Items", ItemCodeGen.CreateItemEntries);
 RunStep("Data Components", DataComponentCodeGen.CreateComponentEntries);
+RunStep("Items", ItemCodeGen.CreateItemEntries);
 RunStep("Entity Types", EntityTypeCodeGen.CreateEntityTypeEntries);
 RunStep("Sounds", SoundCodeGen.CreateSoundEntries);
 RunStep("Inventory Types", InventoryTypeCodeGen.CreateInventoryTypeEntries);
@@ -127,6 +127,7 @@ RunStep("Tags", TagsCodeGen.CreateTagEntries);
 RunStep("Potion Effects", PotionEffectTypeGen.CreatePotionEffectTypes);
 RunStep("Consume Effects", ConsumeEffectGen.CreateConsumeEffects);
 RunStep("Block Entity Types", BlockEntityTypeCodeGen.CreateBlockEntityTypes);
+RunStep("Attributes", AttributeCodeGen.CreateAttributeEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

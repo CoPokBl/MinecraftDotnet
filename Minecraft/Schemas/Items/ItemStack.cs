@@ -6,7 +6,6 @@ using Minecraft.Implementations.Tags;
 using Minecraft.Registry;
 using NBT;
 using NBT.Tags;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Minecraft.Schemas.Items;
@@ -74,6 +73,10 @@ public class ItemStack(
     public T? Get<T>(IDataComponent<T> type) {
         Components.TryGetValue(type, out object? component);
         return component == null ? default : (T)component;
+    }
+    
+    public bool Has<T>(IDataComponent<T> type) {
+        return Components.ContainsKey(type);
     }
 
     public T? GetStruct<T>(IDataComponent<T> type) where T : struct {

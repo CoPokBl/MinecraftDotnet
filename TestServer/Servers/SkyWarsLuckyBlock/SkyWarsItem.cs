@@ -24,9 +24,7 @@ public abstract class SkyWarsItem {
         return true;
     }
 
-    public static void DoKaboom(PlayerEntity player, Vec3<int> position, int explodeRadius, int launchRadius, double launchPower) {
-        World world = player.World!;
-            
+    public static void DoKaboom(World world, Vec3<int> position, int explodeRadius, int launchRadius, double launchPower) {
         IAudience audience = world.GetViewersOf(position);
         
         // Destroy all blocks in a 5 block radius

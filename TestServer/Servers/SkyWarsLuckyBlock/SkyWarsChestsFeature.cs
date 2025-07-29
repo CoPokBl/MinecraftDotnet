@@ -1,4 +1,3 @@
-using ManagedServer;
 using ManagedServer.Events;
 using ManagedServer.Features;
 using ManagedServer.Inventory;
@@ -7,9 +6,12 @@ using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
+using Minecraft.Text;
 using TestServer.Servers.SkyWarsLuckyBlock.Items;
+using Attribute = Minecraft.Data.Generated.Attribute;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
@@ -17,10 +19,35 @@ public class SkyWarsChestsFeature : ScopedFeature {
     private static readonly Tag<Dictionary<Vec3<int>, Inventory>> ChestsTag = new("skywars:loot_chests");
 
     private static readonly LootTableEntry[] LootTable = [
-        new(new ItemStack(1, Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 5f), 0.75f, 1, 1),
         new(new ItemStack(1, Item.Stone), 10, 16, 256),
         new(SkyWarsItemsFeature.CreateItem(typeof(GoldenAppleItem)), 0.5f, 1, 8),
-        new(LuckyBlocksFeature.GetLuckyBlock(), 1f, 1, 32)
+        new(LuckyBlocksFeature.GetLuckyBlock(), 1f, 1, 32),
+        
+        // weapons
+        new(new ItemStack(1, Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 4f), 0.8f, 1, 1),
+        new(new ItemStack(1, Item.IronSword).WithTag(SkyWarsCombatFeature.DamageTag, 6f), 0.3f, 1, 1),
+        new(new ItemStack(1, Item.DiamondSword).WithTag(SkyWarsCombatFeature.DamageTag, 8f), 0.1f, 1, 1),
+        
+        // armour
+        new(new ItemStack(1, Item.IronChestplate).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.6f), 0.15f, 1, 1),
+        new(new ItemStack(1, Item.IronLeggings).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.6f), 0.15f, 1, 1),
+        new(new ItemStack(1, Item.IronHelmet).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.6f), 0.15f, 1, 1),
+        new(new ItemStack(1, Item.IronBoots).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.6f), 0.15f, 1, 1),
+        new(new ItemStack(1, Item.GoldenChestplate).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.8f), 0.2f, 1, 1),
+        new(new ItemStack(1, Item.GoldenLeggings).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.8f), 0.2f, 1, 1),
+        new(new ItemStack(1, Item.GoldenHelmet).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.8f), 0.2f, 1, 1),
+        new(new ItemStack(1, Item.GoldenBoots).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.8f), 0.2f, 1, 1),
+        new(new ItemStack(1, Item.DiamondChestplate).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.4f), 0.1f, 1, 1),
+        new(new ItemStack(1, Item.DiamondLeggings).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.4f), 0.1f, 1, 1),
+        new(new ItemStack(1, Item.DiamondHelmet).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.4f), 0.1f, 1, 1),
+        new(new ItemStack(1, Item.DiamondBoots).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.4f), 0.1f, 1, 1),
+        new(new ItemStack(1, Item.TurtleHelmet)
+            .WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.2f)
+            .With(DataComponent.ItemName, TextComponent.FromLegacyString("&aHelmet of the no moving and no damage"))
+            .WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
+                new AttributeModifiersFeature.Modifier(Attribute.MovementSpeed.Identifier, -0.5, 
+                    "skywars:nomovenodamagehelmet", AttributeOperation.AddMultipliedTotal)
+            ]), 0.1f, 1, 1),
     ];
     
     private record LootTableEntry(ItemStack Item, float Chance, int MinCount, int MaxCount);

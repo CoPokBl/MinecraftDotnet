@@ -15,6 +15,7 @@ using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
+using Attribute = Minecraft.Data.Generated.Attribute;
 
 namespace ManagedServer.Entities.Types;
 
@@ -161,6 +162,10 @@ public class PlayerEntity : LivingEntity, IAudience {
         Connection = connection;
         ViewableRule = p => p != this && PlayerViewableRule(p);
         Inventory = new PlayerInventory(server, this);
+        
+        // There doesn't seem to be a good way to get this default value
+        // and Minestom hardcodes it, so I guess we will too
+        SetAttributeBaseValue(Attribute.MovementSpeed, 0.1);
         
         connection.Disconnected += () => {
             PlayerDisconnectEvent disconnectEvent = new() {

@@ -1,4 +1,5 @@
 using ClientLib;
+using ClientLib.Features;
 using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
@@ -12,6 +13,7 @@ public class TestBot {
     public static async Task Start() {
         ServerConnection con = await MinecraftClientUtils.ConnectToServer("localhost", 25565);
         MinecraftClient client = new(con);
+        client.AddFeatures(MinecraftClient.BasicFeatures);
         client.Login("potato", 25565, ProtocolVersionConstants.ProtocolVersion);
         Console.WriteLine("Finished login");
         

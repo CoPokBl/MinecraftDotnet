@@ -19,6 +19,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
     public static readonly Tag<float> DamageTag = new("skywars:damage");
     public static readonly Tag<float> KnockbackTag = new("skywars:knockback");
     public static readonly Tag<bool> SelfAttackingTag = new("skywars:selfattacking");
+    public static readonly Tag<float> DamageMultiplierTag = new("skywars:damage_multiplier");
     
     public override void Register() {
         AddEventListener<PlayerPacketHandleEvent>(e => {
@@ -64,9 +65,15 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
             }
             
             float? weaponDamage = weapon.GetTagOrNull(DamageTag);
+            float knockback = (float?)weapon.GetTagOrNull(KnockbackTag) ?? 0.0f; // Default knockback if not specified
             
             float damage = weaponDamage ?? 1.0f;  // Default damage if not specified
-            float knockback = (float?)weapon.GetTagOrNull(KnockbackTag) ?? 0.0f; // Default knockback if not specified
+            
+            // apply damage mods
+            damage *= attacker.Inventory.Helmet.GetTagOrDefault(DamageMultiplierTag, 1.0f);
+            damage *= attacker.Inventory.Chestplate.GetTagOrDefault(DamageMultiplierTag, 1.0f);
+            damage *= attacker.Inventory.Leggings.GetTagOrDefault(DamageMultiplierTag, 1.0f);
+            damage *= attacker.Inventory.Boots.GetTagOrDefault(DamageMultiplierTag, 1.0f);
 
             if (entity is LivingEntity le) {
                 le.Damage(damage);

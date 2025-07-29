@@ -12,4 +12,5 @@ public class MinecraftRegistry {
     public PotionEffectTypeRegistry PotionEffectTypes { get; init; } = new();
     public ConsumeEffectRegistry ConsumeEffects { get; init; } = new();
     public BlockEntityTypeRegistry BlockEntityTypes { get; init; } = new();
+    public AttributeRegistry Attributes { get; init; } = new();
 }

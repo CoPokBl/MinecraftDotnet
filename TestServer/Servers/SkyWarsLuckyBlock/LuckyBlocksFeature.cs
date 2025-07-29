@@ -15,22 +15,24 @@ namespace TestServer.Servers.SkyWarsLuckyBlock;
 public class LuckyBlocksFeature : ScopedFeature {
     private static readonly Tag<LuckyBlockType> LuckyBlockItemTag = new("lucky_block_item");
     
-    private static readonly IBlockResult[] LuckyBlocks = [
-        new ItemBlockResult(typeof(KnockbackStickItem)),
-        new ItemBlockResult(typeof(MagicToyStickItem)),
-        new FullHealBlockResult(),
-        new ItemBlockResult(typeof(TeleportOrbItem)),
-        new ItemBlockResult(new ItemStack(1, Item.Potato)),
-        new BuildUpBlockResult(),
-        new ItemBlockResult(typeof(InstaboomTntItem)),
-        new ItemBlockResult(new ItemStack(1, Item.IronSword)
+    private static readonly (int weight, IBlockResult result)[] LuckyBlocks = [
+        (10, new ItemBlockResult(typeof(KnockbackStickItem))),
+        (10, new ItemBlockResult(typeof(MagicToyStickItem))),
+        (10, new FullHealBlockResult()),
+        (10, new ItemBlockResult(typeof(TeleportOrbItem))),
+        (10, new ItemBlockResult(new ItemStack(1, Item.Potato))),
+        (10, new BuildUpBlockResult()),
+        (10, new ItemBlockResult(typeof(InstaboomTntItem))),
+        (10, new ItemBlockResult(new ItemStack(1, Item.IronSword)
             .WithTag(SkyWarsCombatFeature.SelfAttackingTag, true)
-            .WithTag(SkyWarsCombatFeature.DamageTag, 6f)
+            .WithTag(SkyWarsCombatFeature.DamageTag, 2f)
+            .WithTag(SkyWarsCombatFeature.KnockbackTag, 20)
             .With(DataComponent.ItemName, "Self Attacking Sword")
-            .With(DataComponent.Lore, [TextComponent.FromLegacyString("&7You didn't think we'd let you win that easily, did you?")])),
-        new ItemBlockResult(typeof(OneUpItem)),
-        new BobBlockResult(),
-        new JacobBlockResult()
+            .With(DataComponent.Lore,
+                [TextComponent.FromLegacyString("&7You didn't think we'd let you win that easily, did you?")]))),
+        (10, new ItemBlockResult(typeof(OneUpItem))),
+        (5, new JacobBlockResult()),
+        (1, new NukeBlockResult())
     ];
     
     private enum LuckyBlockType {
@@ -46,6 +48,24 @@ public class LuckyBlocksFeature : ScopedFeature {
     public static ItemStack GetLuckyBlock(int count = 1) {
         return new ItemStack(count, Item.YellowStainedGlass)
             .WithTag(LuckyBlockItemTag, LuckyBlockType.Normal);
+    }
+    
+    private static int TotalWeight => LuckyBlocks.Sum(x => x.weight);
+    
+    private static IBlockResult GetRandomResult() {
+        int totalWeight = TotalWeight;
+        int randomWeight = Random.Shared.Next(totalWeight);
+        int currentWeight = 0;
+        
+        foreach ((int weight, IBlockResult result) in LuckyBlocks) {
+            currentWeight += weight;
+            if (randomWeight < currentWeight) {
+                return result;
+            }
+        }
+        
+        // Fallback, should never happen
+        throw new InvalidOperationException("No lucky block result found.");
     }
     
     public override void Register() {
@@ -77,8 +97,7 @@ public class LuckyBlocksFeature : ScopedFeature {
             }
             
             // Lucky block broken (by player), let's do something
-            IBlockResult blockResult = LuckyBlocks[Random.Shared.Next(LuckyBlocks.Length)];
-            blockResult.Trigger(e.World, e.Player, e.Position);
+            GetRandomResult().Trigger(e.World, e.Player, e.Position);
             block.PlacedEntity?.Despawn();
         });
         
@@ -92,7 +111,7 @@ public class LuckyBlocksFeature : ScopedFeature {
             }
             
             // Lucky block broken, let's do something
-            IBlockResult blockResult = LuckyBlocks[Random.Shared.Next(LuckyBlocks.Length)];
+            IBlockResult blockResult = GetRandomResult();
             blockResult.Trigger(e.World, null, e.Position);
             block.PlacedEntity?.Despawn();
         });

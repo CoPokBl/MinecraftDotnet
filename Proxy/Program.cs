@@ -6,9 +6,11 @@ using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities.Attributes;
 using Minecraft.Schemas.Vec;
 using Newtonsoft.Json;
 using Proxy;
+using Attribute = Minecraft.Data.Generated.Attribute;
 
 MicrosoftAuthenticator.MinecraftProfile profile;
 if (File.Exists("profile.json")) {
@@ -129,8 +131,8 @@ server.Events.AddListener<PlayerPacketEvent>(e => {
             e.Connection.Player.SendPacket(new ClientBoundUpdateAttributesPacket {
                 EntityId = e.Connection.EntityId,
                 Attributes = [
-                    new ClientBoundUpdateAttributesPacket.AttributeValue(9, reach),
-                    new ClientBoundUpdateAttributesPacket.AttributeValue(6, reach)
+                    new AttributeValue(Attribute.BlockInteractionRange, reach),
+                    new AttributeValue(Attribute.EntityInteractionRange, reach)
                 ]
             });
             e.Connection.Player.SendSystemMessage($"Reach set to {reach} blocks. (EID: {e.Connection.EntityId})");
@@ -149,7 +151,7 @@ server.Events.AddListener<PlayerPacketEvent>(e => {
             e.Connection.Player.SendPacket(new ClientBoundUpdateAttributesPacket {
                 EntityId = e.Connection.EntityId,
                 Attributes = [
-                    new ClientBoundUpdateAttributesPacket.AttributeValue(24, scale)
+                    new AttributeValue(Attribute.Scale, scale)
                 ]
             });
             e.Connection.Player.SendSystemMessage($"Scale set to {scale}. (EID: {e.Connection.EntityId})");
@@ -168,7 +170,7 @@ server.Events.AddListener<PlayerPacketEvent>(e => {
             e.Connection.Player.SendPacket(new ClientBoundUpdateAttributesPacket {
                 EntityId = e.Connection.EntityId,
                 Attributes = [
-                    new ClientBoundUpdateAttributesPacket.AttributeValue(14, strength)
+                    new AttributeValue(Attribute.JumpStrength, strength)
                 ]
             });
             e.Connection.Player.SendSystemMessage($"Jump set to {strength}. (EID: {e.Connection.EntityId})");

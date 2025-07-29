@@ -1,4 +1,5 @@
 using Minecraft.Data.ConsumeEffects;
+using Minecraft.Data.Generated;
 using Minecraft.Data.Sounds;
 using Minecraft.Registry;
 using Minecraft.Schemas;
@@ -34,7 +35,18 @@ public record ConsumableComponent(int ProtocolId) : IDataComponent<ConsumableCom
         return new Data(consumeSeconds, animation, sound, hasParticles, effects);
     }
     
-    public record Data(float ConsumeSeconds, ConsumeAnimation Animation, Or<ISoundType, SoundEvent> Sound, bool HasParticles, IConsumeEffect[] Effects);
+    private const float DefaultConsumeSeconds = 1.6f;
+
+    public record Data(
+        float ConsumeSeconds = DefaultConsumeSeconds,
+        ConsumeAnimation Animation = ConsumeAnimation.Eat,
+        Or<ISoundType, SoundEvent>? Sound = null,
+        bool HasParticles = true,
+        IConsumeEffect[]? Effects = null) {
+        
+        public IConsumeEffect[] Effects { get; init; } = Effects ?? [];
+        public Or<ISoundType, SoundEvent> Sound { get; init; } = Sound ?? Or<ISoundType, SoundEvent>.FromValue1(SoundType.GenericEat);
+    }
     
     public enum ConsumeAnimation {
         None = 0,

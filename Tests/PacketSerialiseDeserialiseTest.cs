@@ -7,9 +7,11 @@ using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
+using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using NBT.Tags;
 using Newtonsoft.Json;
+using Attribute = Minecraft.Data.Generated.Attribute;
 
 namespace Tests;
 
@@ -113,6 +115,18 @@ public class PacketSerialiseDeserialiseTest {
             Uuid = Guid.NewGuid(),
             Name = "TestPlayer"
         }, false, ConnectionState.Login);
+
+        SerialiseAndDeserialise(new ClientBoundSetContainerContentPacket {
+            CursorItem = ItemStack.Air,
+            SlotData = [
+                new ItemStack(1, Item.IronBoots)
+                    .With(DataComponent.AttributeModifiers, [
+                        new ItemAttributeModifier(Attribute.Scale, "minecraft:thing", 0.5, AttributeOperation.Add, AttributeActiveSlot.Any)
+                    ])
+            ],
+            StateId = 5,
+            WindowId = 100
+        }, true, ConnectionState.Play);
 
         ChunkData cd = new(ChunkData.VanillaOverworldHeight);
         cd.SetBlock(10, 100, 10, 10);

@@ -45,7 +45,9 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
         new ItemPickupFeature(),
         new LuckyBlocksFeature(),
         new SkyWarsItemsFeature(),
-        new RespawnFeature()
+        new RespawnFeature(),
+        new AttributeModifiersFeature(),
+        new ArmourSlotEnforcementFeature()
     );
 
     internal static void LoadWorld() {
