@@ -46,6 +46,7 @@ public record EquippableComponent(int ProtocolId) : IDataComponent<EquippableCom
         Chest = 3,
         Head = 4,
         OffHand = 5,
-        Body = 6
+        Body = 6,
+        Saddle = 7 // TODO: Check if this is correct? It's not in the protocol but it is in a default component
     }
 }

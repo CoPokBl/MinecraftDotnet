@@ -28,5 +28,9 @@ public abstract record IdSet : INetworkType<IdSet> {
         }
     }
 
+    public static Ids FromProtocolTypes(params IProtocolType[] protocolTypes) {
+        return new Ids(protocolTypes.Select(t => t.ProtocolId).ToArray());
+    }
+
     public abstract DataWriter WriteData(DataWriter writer, MinecraftRegistry reg);
 }

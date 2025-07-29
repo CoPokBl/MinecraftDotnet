@@ -171,6 +171,43 @@ public static class Item {
             return $"new ConsumableComponent.Data({consumeSeconds}f, ConsumableComponent.ConsumeAnimation.{animationStr}, " +
                    $"new SoundEvent(SoundType.{sound}, null), {hasParticles.ToString().ToLowerInvariant()}, " +
                    $"[{string.Join(", ", consumeEffectDefs)}])";
-        } }
+        } },
+        { "bool", token => token.ToObject<bool>().ToString().ToLower() },
+        { "(int, int)[]", _ => "Array.Empty<(int, int)>()" },
+        { "EquippableComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+
+            string slot = "EquippableComponent.Slot." + CodeGenUtils.NamespacedIdToPascalName(obj["slot"]?.ToObject<string>()!);
+            if (slot == "EquippableComponent.Slot.Offhand") {
+                slot = "EquippableComponent.Slot.OffHand";
+            }
+            
+            string sound = obj.ContainsKey("equip_sound") ? "SoundType." + SoundCodeGen.GetVariableName(obj["equip_sound"]!.ToObject<string>()!) : "SoundType.ArmorEquipGeneric";
+            string model = obj.ContainsKey("asset_id") ? '"' + obj["asset_id"]?.ToObject<string>() + '"' : "null";
+            string cameraOverlay = obj.ContainsKey("camera_overlay") ? '"' + obj["camera_overlay"]?.ToObject<string>() + '"' : "null";
+            string dispensable = obj["dispensable"]?.ToObject<bool>().ToString().ToLower() ?? "true";
+            string swappable = obj["swappable"]?.ToObject<bool>().ToString().ToLower() ?? "true";
+            string damageOnHurt = obj["damage_on_hurt"]?.ToObject<bool>().ToString().ToLower() ?? "true";
+
+            string allowedEntities = "null";
+            if (obj.ContainsKey("allowed_entities")) {
+                JToken allowedToken = obj["allowed_entities"]!;
+
+                if (allowedToken.Type == JTokenType.String) {
+                    allowedEntities = $"new IdSet.Tag(\"{allowedToken.ToObject<string>()!}\")";
+                }
+                else { // is array of strings (identifiers of entities)
+                    List<string> names = [];
+                    foreach (JToken jEntity in allowedToken.ToObject<JArray>()!) {
+                        string entity = jEntity.ToObject<string>()!;
+                        names.Add("EntityType." + CodeGenUtils.NamespacedIdToPascalName(entity));
+                    }
+                    
+                    allowedEntities = $"IdSet.FromProtocolTypes({string.Join(", ", names)})";
+                }
+            }
+
+            return $"new EquippableComponent.Data({slot}, {sound}, {model}, {cameraOverlay}, {allowedEntities}, {dispensable}, {swappable}, {damageOnHurt})";
+        }}
     };
 }
