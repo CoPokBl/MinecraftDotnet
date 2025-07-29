@@ -116,7 +116,7 @@ Directory.SetCurrentDirectory(codeDir);
 StringBuilder registryEntries = new();
 
 RunStep("Particles", ParticleCodeGen.CreateParticleEntries);
-// RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
+RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
 RunStep("Packets", PacketCodeGen.CreatePacketEntries);
 RunStep("Data Components", DataComponentCodeGen.CreateComponentEntries);
 RunStep("Items", ItemCodeGen.CreateItemEntries);

@@ -69,11 +69,15 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
             
             float damage = weaponDamage ?? 1.0f;  // Default damage if not specified
             
-            // apply damage mods
-            damage *= attacker.Inventory.Helmet.GetTagOrDefault(DamageMultiplierTag, 1.0f);
-            damage *= attacker.Inventory.Chestplate.GetTagOrDefault(DamageMultiplierTag, 1.0f);
-            damage *= attacker.Inventory.Leggings.GetTagOrDefault(DamageMultiplierTag, 1.0f);
-            damage *= attacker.Inventory.Boots.GetTagOrDefault(DamageMultiplierTag, 1.0f);
+            if (entity is PlayerEntity p) {
+                p.PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);
+                
+                // apply damage mods
+                damage *= p.Inventory.Helmet.GetTagOrDefault(DamageMultiplierTag, 1.0f);
+                damage *= p.Inventory.Chestplate.GetTagOrDefault(DamageMultiplierTag, 1.0f);
+                damage *= p.Inventory.Leggings.GetTagOrDefault(DamageMultiplierTag, 1.0f);
+                damage *= p.Inventory.Boots.GetTagOrDefault(DamageMultiplierTag, 1.0f);
+            }
 
             if (entity is LivingEntity le) {
                 le.Damage(damage);
@@ -84,10 +88,6 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
             }
             
             entity.Velocity = attacker.Direction.Multiply(0.90 + knockback * 0.3).WithY(0.4);  // Original 2.0 GOOD
-
-            if (entity is PlayerEntity p) {
-                p.PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);
-            }
             
             entity.GetAudience().PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);
             entity.Hurt();

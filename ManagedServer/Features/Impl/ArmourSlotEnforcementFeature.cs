@@ -9,11 +9,7 @@ namespace ManagedServer.Features.Impl;
 /// Enforces that only items that have the <see cref="Minecraft.Data.Components.Types.EquippableComponent"/> component
 /// can be equipped in the armour slots of a player's inventory. And that the item type matches the slot type.
 /// </summary>
-/// <param name="includeVanillaItems">
-/// Whether to allow vanilla armour items that don't have the <see cref="Minecraft.Data.Components.Types.EquippableComponent"/>
-/// component to be equipped in their respective armour slots.
-/// </param>
-public class ArmourSlotEnforcementFeature(bool includeVanillaItems = true) : ScopedFeature {
+public class ArmourSlotEnforcementFeature : ScopedFeature {
     private static readonly int[] ArmourSlots = [
         PlayerInventory.HelmetSlot,
         PlayerInventory.ChestplateSlot,
@@ -36,11 +32,11 @@ public class ArmourSlotEnforcementFeature(bool includeVanillaItems = true) : Sco
                 return;
             }
             
-            EquippableComponent.Slot? slot = e.CursorItem.Get(DataComponent.Equippable)?.Slot;
-            bool validHelmet = slot == EquippableComponent.Slot.Head || (includeVanillaItems && VanillaTags.ItemHeadArmor.Contains(e.CursorItem.Type.Identifier));
-            bool validChestplate = slot == EquippableComponent.Slot.Chest || (includeVanillaItems && VanillaTags.ItemChestArmor.Contains(e.CursorItem.Type.Identifier));
-            bool validLeggings = slot == EquippableComponent.Slot.Legs || (includeVanillaItems && VanillaTags.ItemLegArmor.Contains(e.CursorItem.Type.Identifier));
-            bool validBoots = slot == EquippableComponent.Slot.Feet || (includeVanillaItems && VanillaTags.ItemFootArmor.Contains(e.CursorItem.Type.Identifier));
+            EquippableComponent.Slot? slot = e.CursorItem.GetOrNull(DataComponent.Equippable)?.Slot;
+            bool validHelmet = slot == EquippableComponent.Slot.Head;
+            bool validChestplate = slot == EquippableComponent.Slot.Chest;
+            bool validLeggings = slot == EquippableComponent.Slot.Legs;
+            bool validBoots = slot == EquippableComponent.Slot.Feet;
 
             switch (e.Slot) {
                 case PlayerInventory.HelmetSlot:

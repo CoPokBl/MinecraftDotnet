@@ -14,7 +14,7 @@ public class RightClickToEquipArmourFeature : ScopedFeature {
                 return;
             }
             
-            EquippableComponent.Slot slot = e.Item.Get(DataComponent.Equippable)!.Slot;
+            EquippableComponent.Slot slot = e.Item.GetOrNull(DataComponent.Equippable)!.Slot;
             int targetSlot = slot switch {
                 EquippableComponent.Slot.Head => PlayerInventory.HelmetSlot,
                 EquippableComponent.Slot.Chest => PlayerInventory.ChestplateSlot,
