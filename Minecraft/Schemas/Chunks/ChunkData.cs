@@ -25,6 +25,21 @@ public class ChunkData {
         Sections = sections ?? GenerateEmptySections();
     }
 
+    public ChunkData Clone() {
+        ChunkData clone = new(WorldHeight) {
+            ChunkX = ChunkX,
+            ChunkZ = ChunkZ,
+            Sections = new ChunkSection[ChunkSections],
+            BlockEntities = new Dictionary<Vec3<int>, BlockEntity>(BlockEntities)
+        };
+        
+        for (int i = 0; i < ChunkSections; i++) {
+            clone.Sections[i] = Sections[i].Clone();
+        }
+        
+        return clone;
+    }
+
     private ChunkSection[] GenerateEmptySections() {
         ChunkSection[] vals = new ChunkSection[ChunkSections];
         for (int i = 0; i < ChunkSections; i++) {

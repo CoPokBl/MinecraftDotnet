@@ -67,12 +67,14 @@ public static class SkyWarsLuckyBlock {
         }
         
         void EnqueuePlayer(PlayerEntity player) {
+            player.GameMode = GameMode.Survival;
+            player.Inventory.Clear();
+            player.Health = 20;
+            player.ClearAttributeModifiers();
+            
             if (player.World != lobby) {
                 player.SetWorld(lobby);
             }
-
-            player.GameMode = GameMode.Survival;
-            player.Inventory.Clear();
             
             lock (waitingPlayers) {
                 waitingPlayers.Add(player);

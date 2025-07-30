@@ -7,6 +7,7 @@ using Minecraft;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
 
@@ -45,6 +46,10 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
             catch (Exception exception) {
                 Console.WriteLine(exception);
                 throw;
+            }
+
+            if (attacker.GameMode == GameMode.Spectator && entity is not PlayerEntity { Name: "Michael" }) {
+                return;
             }
             
             ItemStack weapon = attacker.HeldItem;

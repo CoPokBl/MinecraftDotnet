@@ -282,6 +282,13 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         SendAttributeUpdate(attribute);  // send update to viewers
     }
     
+    public void ClearAttributeModifiers() {
+        foreach (KeyValuePair<IAttribute, (double Base, List<AttributeModifier> Modifiers)> kvp in _attributes) {
+            _attributes[kvp.Key] = (kvp.Value.Base, []);
+        }
+        SendAttributeUpdates();  // send updates for all attributes
+    }
+    
     public void SetAttributeBaseValue(IAttribute attribute, double baseValue) {
         if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
             value = (attribute.Default, []);

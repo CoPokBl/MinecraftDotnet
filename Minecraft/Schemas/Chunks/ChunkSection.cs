@@ -72,6 +72,14 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
             _palette = value;
         }
     }
+    
+    public ChunkSection Clone() {
+        ChunkSection clone = new() {
+            _blocks = _blocks?.Clone() as uint[,,],
+            _palette = _palette
+        };
+        return clone;
+    }
 
     /// <summary>
     /// Pack data into a <see cref="Minecraft.Schemas.Chunks.Palettes.Palette"/>.

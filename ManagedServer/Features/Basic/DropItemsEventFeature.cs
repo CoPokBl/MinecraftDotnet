@@ -1,6 +1,7 @@
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Features.Basic;
@@ -11,6 +12,10 @@ public class DropItemsEventFeature : ScopedFeature {
     public override void Register() {
         AddEventListener<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundPlayerActionPacket packet) {
+                return;
+            }
+
+            if (e.Player.GameMode == GameMode.Spectator) {
                 return;
             }
             

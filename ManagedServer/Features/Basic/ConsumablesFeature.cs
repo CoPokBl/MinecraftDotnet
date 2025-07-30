@@ -19,12 +19,22 @@ public class ConsumablesFeature : ScopedFeature {
     
     public override void Register() {
         AddEventListener<PlayerPacketHandleEvent>(e => {
+            if (e.Player.GameMode == GameMode.Spectator) {
+                return;
+            }
+            
             if (e.Packet is ServerBoundUseItemPacket usePacket) {
                 ItemStack item = usePacket.UsedHand == Hand.MainHand ? e.Player.HeldItem : e.Player.Inventory.Offhand;
                 ConsumableComponent.Data? food = item.GetOrNull(DataComponent.Consumable);
+                FoodComponent.Info? foodInfo = item.GetOrNull(DataComponent.Food);
+                bool canAlwaysEat = foodInfo?.CanAlwaysEat ?? true;
             
                 if (food == null) {
                     return; // Not a consumable item
+                }
+
+                if (!canAlwaysEat && e.Player.Food >= 20) {
+                    return;  // Not hungry
                 }
             
                 // Okay they started, record it

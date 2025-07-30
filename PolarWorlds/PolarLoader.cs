@@ -419,7 +419,7 @@ public class PolarLoader : ITerrainProvider {
             return;
         }
         
-        chunk = data;  // Update the original chunk reference with the loaded data
+        chunk = data.Clone();  // Update the original chunk reference with the loaded data
     }
 
     public void GetChunks(int start, int count, ChunkData[] chunks) {
