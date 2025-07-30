@@ -29,4 +29,6 @@ public static class DataComponent {
     public static readonly ToolComponent Tool = new(25);
     public static readonly TooltipDisplayComponent TooltipDisplay = new(15);
     public static readonly UnbreakableComponent Unbreakable = new(4);
+    public static readonly UseCooldownComponent UseCooldown = new(23);
+    public static readonly UseRemainderComponent UseRemainder = new(22);
 }

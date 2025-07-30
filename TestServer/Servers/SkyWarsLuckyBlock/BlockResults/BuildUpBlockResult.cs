@@ -17,7 +17,7 @@ public class BuildUpBlockResult : IBlockResult {
             
             world.SetBlock(position.WithY(position.Y + yOffset), Block.IronBlock);
             world.SetBlock(position.WithY(position.Y - yOffset), Block.IronBlock);
-            world.PlaySound(SoundType.IronGolemHurt, position.WithY(position.Y + yOffset));
+            world.PlaySound(SoundType.IronGolemHurt, position.WithY(position.Y + yOffset), volume:0.2f);
             yOffset++;
 
             return true;

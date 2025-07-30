@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Minecraft.Data;
 using Minecraft.Data.Components;
 using Minecraft.Data.Generated;
@@ -15,26 +16,31 @@ namespace Minecraft.Schemas.Items;
 /// Or a `Slot` in a container.
 /// </summary>
 public class ItemStack(
-    int count, IItem? type = null, 
-    Dictionary<IDataComponent, object>? components = null, IDataComponent[]? removeComponents = null) : 
+    IItem type,
+    int count = 1,
+    Dictionary<IDataComponent, object>? components = null,
+    IDataComponent[]? removeComponents = null) : 
     IImmutableTaggability<ItemStack>, INetworkType<ItemStack> {
+
+    public int Count { get; } = count;
+    public IItem Type { get; }  = type;
+    public IReadOnlyDictionary<IDataComponent, object> Components => new ReadOnlyDictionary<IDataComponent, object>(_components);
+    public IReadOnlyCollection<IDataComponent> RemoveComponents => new ReadOnlyCollection<IDataComponent>(_removeComponents);
     
-    public readonly int Count = count;
-    public readonly IItem Type = type ?? Item.Air;
-    public readonly Dictionary<IDataComponent, object> Components = components ?? [];
-    public readonly IDataComponent[] RemoveComponents = removeComponents ?? [];
+    private readonly Dictionary<IDataComponent, object> _components  = components ?? [];
+    private readonly IDataComponent[] _removeComponents  = removeComponents ?? [];
     
-    public static readonly ItemStack Air = new(0);
+    public static readonly ItemStack Air = new(Item.Air, 0);
 
     public ItemStack With<T>(IDataComponent<T> component, T value) where T : notnull {
-        Dictionary<IDataComponent, object> newComponents = new(Components) {
+        Dictionary<IDataComponent, object> newComponents = new(_components) {
             [component] = value
         };
-        return new ItemStack(Count, Type, newComponents, RemoveComponents);
+        return new ItemStack(Type, Count, newComponents, _removeComponents);
     }
     
     public ItemStack WithCount(int count) {
-        return new ItemStack(count, Type, Components, RemoveComponents);
+        return new ItemStack(Type, count, _components, _removeComponents);
     }
 
     public int GetMaxStackSize(int def = 64) {
@@ -46,7 +52,7 @@ public class ItemStack(
             return Air;
         }
         
-        return new ItemStack(Count - count, Type, Components, RemoveComponents);
+        return new ItemStack(Type, Count - count, _components, _removeComponents);
     }
 
     public bool CanStackWith(ItemStack other) {
@@ -54,11 +60,11 @@ public class ItemStack(
             return false;
         }
 
-        if (Components.Count != other.Components.Count) {
+        if (_components.Count != other._components.Count) {
             return false;
         }
 
-        if (RemoveComponents.Length != other.RemoveComponents.Length) {
+        if (_removeComponents.Length != other._removeComponents.Length) {
             return false;
         }
 
@@ -71,7 +77,7 @@ public class ItemStack(
     }
     
     public T Get<T>(IDataComponent<T> type, bool ignoreDefaults = false) {
-        if (Components.TryGetValue(type, out object? component)) {
+        if (_components.TryGetValue(type, out object? component)) {
             return (T)component;
         }
         if (component == null && ignoreDefaults) {
@@ -95,7 +101,7 @@ public class ItemStack(
     }
     
     public bool Has<T>(IDataComponent<T> type) {
-        return Components.ContainsKey(type) || Type.DefaultComponents.ContainsKey(type);
+        return _components.ContainsKey(type) || Type.DefaultComponents.ContainsKey(type);
     }
 
     public T? GetStructOrNull<T>(IDataComponent<T> type) where T : struct {
@@ -103,28 +109,28 @@ public class ItemStack(
     }
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        if (Count == 0) {
+        if (Count == 0 || Type.Identifier == "minecraft:air") {
             return writer.WriteVarInt(0);
         }
         
         writer.WriteVarInt(Count);
         writer.WriteVarInt(Type.ProtocolId);
         
-        writer.WriteVarInt(Components.Count);  // components to add
-        writer.WriteVarInt(RemoveComponents.Length);  // components to remove
+        writer.WriteVarInt(_components.Count);  // components to add
+        writer.WriteVarInt(_removeComponents.Length);  // components to remove
 
-        writer.WriteArray(Components, (kvp, w) => w
+        writer.WriteArray(_components, (kvp, w) => w
             .WriteVarInt(kvp.Key.ProtocolId)
             .Write(wr => kvp.Key.WriteData(kvp.Value, wr, registry)));
         
-        return writer.WriteArray(RemoveComponents, (component, w) => w
+        return writer.WriteArray(_removeComponents, (component, w) => w
             .WriteVarInt(registry.DataComponents[component.Identifier]));
     }
 
     public static ItemStack ReadData(DataReader reader, MinecraftRegistry registry) {
         int count = reader.ReadVarInt();
         if (count == 0) {
-            return new ItemStack(0);
+            return Air;
         }
         
         int itemId = reader.ReadVarInt();
@@ -143,7 +149,7 @@ public class ItemStack(
             return registry.DataComponents[netId];
         });
         
-        return new ItemStack(count, registry.Items[itemId], new Dictionary<IDataComponent, object>(components), removeComponents);
+        return new ItemStack(registry.Items[itemId], count, new Dictionary<IDataComponent, object>(components), removeComponents);
     }
 
     public T GetTag<T>(Tag<T> tag) {
@@ -151,7 +157,7 @@ public class ItemStack(
             throw new KeyNotFoundException($"Tag {tag.Id} not found in ItemStack.");
         }
         
-        CompoundTag nbt = Get(DataComponent.CustomData)!.GetCompound();
+        CompoundTag nbt = Get(DataComponent.CustomData).GetCompound();
         JToken json = INbtTag.ToJson(nbt[tag.Id]!);
         
         return json.ToObject<T>() ?? throw new InvalidCastException($"Cannot cast tag {tag.Id} to {typeof(T).Name}.");

@@ -201,7 +201,7 @@ public static class MlgRush {
             });
             
             // Give them both blocks
-            ItemStack item = new(64, Item.BambooBlock);
+            ItemStack item = new(Item.BambooBlock, 64);
             p1.Inventory.SetHotbarItem(0, item);
             p2.Inventory.SetHotbarItem(0, item);
 

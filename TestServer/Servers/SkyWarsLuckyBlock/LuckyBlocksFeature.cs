@@ -20,11 +20,11 @@ public class LuckyBlocksFeature : ScopedFeature {
         (10, new ItemBlockResult(typeof(MagicToyStickItem))),
         (10, new FullHealBlockResult()),
         (10, new ItemBlockResult(typeof(TeleportOrbItem))),
-        (10, new ItemBlockResult(new ItemStack(1, Item.Potato))),
+        (10, new ItemBlockResult(new ItemStack(Item.Potato))),
         (10, new BuildUpBlockResult()),
         (10, new ItemBlockResult(typeof(InstaboomTntItem))),
-        (10, new ItemBlockResult(new ItemStack(1, Item.IronSword)
-            .WithTag(SkyWarsCombatFeature.SelfAttackingTag, true)
+        (10, new ItemBlockResult(new ItemStack(Item.IronSword)
+            // .WithTag(SkyWarsCombatFeature.SelfAttackingTag, true)
             .WithTag(SkyWarsCombatFeature.DamageTag, 2f)
             .WithTag(SkyWarsCombatFeature.KnockbackTag, 20)
             .With(DataComponent.ItemName, "Self Attacking Sword")
@@ -46,7 +46,7 @@ public class LuckyBlocksFeature : ScopedFeature {
     private readonly Dictionary<Vec3<int>, LuckyBlock> _placedBlocks = [];
 
     public static ItemStack GetLuckyBlock(int count = 1) {
-        return new ItemStack(count, Item.YellowStainedGlass)
+        return new ItemStack(Item.YellowStainedGlass, count)
             .WithTag(LuckyBlockItemTag, LuckyBlockType.Normal);
     }
     

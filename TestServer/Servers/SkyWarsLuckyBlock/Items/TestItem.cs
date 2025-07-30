@@ -6,7 +6,7 @@ using Minecraft.Schemas.Items;
 namespace TestServer.Servers.SkyWarsLuckyBlock.Items;
 
 public class TestItem : SkyWarsItem {
-    public override ItemStack Item => new ItemStack(1, Minecraft.Data.Generated.Item.AcaciaBoat)
+    public override ItemStack Item => new ItemStack(Minecraft.Data.Generated.Item.AcaciaBoat)
         .With(DataComponent.ItemName, "Test Item");
     public override string Id => "test";
 

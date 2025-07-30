@@ -119,7 +119,7 @@ public class PacketSerialiseDeserialiseTest {
         SerialiseAndDeserialise(new ClientBoundSetContainerContentPacket {
             CursorItem = ItemStack.Air,
             SlotData = [
-                new ItemStack(1, Item.IronBoots)
+                new ItemStack(Item.IronBoots)
                     .With(DataComponent.AttributeModifiers, [
                         new ItemAttributeModifier(Attribute.Scale, "minecraft:thing", 0.5, AttributeOperation.Add, AttributeActiveSlot.Any)
                     ])

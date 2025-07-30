@@ -15,7 +15,7 @@ public class MagicToyStickItem : SkyWarsItem {
     private const int LaunchRadius = 6; // Radius of players being launched into the air
     private const double LaunchPower = 1.05;
     
-    public override ItemStack Item => new ItemStack(1, Minecraft.Data.Generated.Item.BreezeRod)
+    public override ItemStack Item => new ItemStack(Minecraft.Data.Generated.Item.BreezeRod)
         .With(DataComponent.ItemName, TextComponent.FromLegacyString("&c&lMagic Toy Stick"))
         .With(DataComponent.EnchantmentGlintOverride, true);
     public override string Id => "magic_toy_stick";

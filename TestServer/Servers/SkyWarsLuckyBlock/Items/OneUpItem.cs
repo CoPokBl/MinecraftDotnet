@@ -7,7 +7,7 @@ using Minecraft.Text;
 namespace TestServer.Servers.SkyWarsLuckyBlock.Items;
 
 public class OneUpItem : SkyWarsItem {
-    public override ItemStack Item => new ItemStack(1, Minecraft.Data.Generated.Item.RedMushroom)
+    public override ItemStack Item => new ItemStack(Minecraft.Data.Generated.Item.RedMushroom)
         .With(DataComponent.ItemName, "One-Up Mushroom");
     public override string Id => "skywars:one_up_item";
 

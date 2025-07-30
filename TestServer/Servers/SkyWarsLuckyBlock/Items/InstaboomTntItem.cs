@@ -10,7 +10,7 @@ using Minecraft.Text;
 namespace TestServer.Servers.SkyWarsLuckyBlock.Items;
 
 public class InstaboomTntItem : SkyWarsItem {
-    public override ItemStack Item => new ItemStack(4, Minecraft.Data.Generated.Item.Tnt)
+    public override ItemStack Item => new ItemStack(Minecraft.Data.Generated.Item.Tnt, 4)
         .With(DataComponent.ItemName, TextComponent.FromLegacyString("&cInstaboom TNT"))
         .With(DataComponent.EnchantmentGlintOverride, true);
     

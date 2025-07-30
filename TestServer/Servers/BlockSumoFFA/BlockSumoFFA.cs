@@ -54,7 +54,7 @@ public static class BlockSumoFfa {
             run = false;
         };
 
-        ItemStack blockItem = new ItemStack(64, Item.BambooBlock)
+        ItemStack blockItem = new ItemStack(Item.BambooBlock, 64)
             .With(DataComponent.CustomName, TextComponent.Text("Michael's Bamboo").WithColor(TextColor.Green).WithBold().WithItalic(false))
             .With(DataComponent.Damage, 10)
             .With(DataComponent.Rarity, ItemRarity.Epic)

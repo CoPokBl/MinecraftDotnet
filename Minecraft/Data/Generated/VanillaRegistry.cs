@@ -1419,6 +1419,8 @@ public static class VanillaRegistry {
         Data.DataComponents.Add(DataComponent.Tool, 25);
         Data.DataComponents.Add(DataComponent.TooltipDisplay, 15);
         Data.DataComponents.Add(DataComponent.Unbreakable, 4);
+        Data.DataComponents.Add(DataComponent.UseCooldown, 23);
+        Data.DataComponents.Add(DataComponent.UseRemainder, 22);
 
         Data.Items.Add(Item.AcaciaBoat);
         Data.Items.Add(Item.AcaciaButton);

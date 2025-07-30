@@ -66,7 +66,7 @@ public static class AudienceExtensions {
     }
 
     public static void PlaySound(this IAudience audience, ISoundType type, Vec3<double> pos, 
-        SoundCategory category = SoundCategory.Master, float volume = 100f, float pitch = 1f) {
+        SoundCategory category = SoundCategory.Master, float volume = 1f, float pitch = 1f) {
         audience.SendPacket(new ClientBoundSoundEffectPacket {
             Category = category,
             Type = type,
@@ -78,7 +78,7 @@ public static class AudienceExtensions {
     }
 
     public static void PlaySound(this IAudience audience, ISoundType type, Entity entity,
-        SoundCategory category = SoundCategory.Master, float volume = 100f, float pitch = 1f) {
+        SoundCategory category = SoundCategory.Master, float volume = 1f, float pitch = 1f) {
         audience.SendPacket(new ClientBoundEntitySoundEffectPacket {
             EntityId = entity.NetId,
             Type = type,

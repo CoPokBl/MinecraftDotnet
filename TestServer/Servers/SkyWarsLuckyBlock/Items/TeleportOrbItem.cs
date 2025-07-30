@@ -15,7 +15,7 @@ public class TeleportOrbItem : SkyWarsItem {
     
     private static readonly Tag<DateTime> LastUsedTag = new("skywars:teleport_orb_last_used");
     
-    public override ItemStack Item => new ItemStack(3, Minecraft.Data.Generated.Item.EnderEye)
+    public override ItemStack Item => new ItemStack(Minecraft.Data.Generated.Item.EnderEye, 3)
         .With(DataComponent.ItemName, TextComponent.FromLegacyString("&bTeleport Orb &7(Right Click)"));
     public override string Id => "teleport_orb";
 

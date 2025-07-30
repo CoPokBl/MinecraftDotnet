@@ -203,7 +203,7 @@ public static class Item {
             }
 
             return $"new EquippableComponent.Data({slot}, {sound}, {model}, {cameraOverlay}, {allowedEntities}, {dispensable}, {swappable}, {damageOnHurt})";
-        }},
+        } },
         { "Tool", token => {
             JObject obj = token.ToObject<JObject>()!;
 
@@ -214,10 +214,7 @@ public static class Item {
             List<string> rules = [];
             foreach (JToken jRule in obj["rules"]!.ToObject<JArray>()!) {
                 JObject oRule = jRule.ToObject<JObject>()!;
-                string speed = oRule["speed"]?.ToObject<float>().ToString(CultureInfo.InvariantCulture) ?? "null";
-                if (speed != "null") {
-                    speed += 'f';
-                }
+                string speed = ParseOptionalFloat(oRule["speed"]);
                 
                 string correctForDrops = oRule["correct_for_drops"]?.ToObject<bool>().ToString().ToLower() ?? "null";
                 string blocks = GetIdSet(oRule["blocks"]!, id => "Block." + CodeGenUtils.NamespacedIdToPascalName(id));
@@ -226,7 +223,22 @@ public static class Item {
             }
             
             return $"new Tool([{string.Join(", ", rules)}], {defaultMiningSpeed}, {damagePerBlock}, {canMineInCreative.ToString().ToLower()})";
-        }}
+        } },
+        { "ItemStack", token => {
+            // Assumption: is always just a type with a count
+            JObject obj = token.ToObject<JObject>()!;
+            string itemName = CodeGenUtils.NamespacedIdToPascalName(obj["id"]!.ToObject<string>()!);
+            int itemCount = obj["count"]?.ToObject<int>() ?? 1;
+
+            return $"new ItemStack({itemName}, {itemCount})";
+        } },
+        { "UseCooldownComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            string seconds = ParseOptionalFloat(obj["seconds"]);
+            string cooldownGroup = obj["cooldown_group"]?.ToObject<string>() ?? "null";
+
+            return $"new UseCooldownComponent.Data({seconds}, {cooldownGroup})";
+        } }
     };
 
     private static string GetIdSet(JToken obj, Func<string, string> transformer) {
@@ -244,5 +256,13 @@ public static class Item {
             .Select(jId => transformer(jId.ToObject<string>()!));
 
         return $"IdSet.FromProtocolTypes({string.Join(", ", names)})";
+    }
+
+    private static string ParseOptionalFloat(JToken? obj) {
+        if (obj == null) {
+            return "null";
+        }
+        
+        return obj.ToObject<float>().ToString(CultureInfo.InvariantCulture) + "f";
     }
 }
