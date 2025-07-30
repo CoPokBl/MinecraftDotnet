@@ -15,4 +15,13 @@ public static class AxisExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Axis.")
         };
     }
+    
+    public static string ToName(this Axis axis) {
+        return axis switch {
+            Axis.X => "x",
+            Axis.Y => "y",
+            Axis.Z => "z",
+            _ => throw new ArgumentOutOfRangeException(nameof(axis), axis, "Unknown Axis value.")
+        };
+    }
 }

@@ -260,4 +260,12 @@ public record AcaciaHangingSignBlock(Identifier Identifier, bool Attached, int R
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("attached", Attached.ToString().ToLower()),
+            new StringTag("rotation", Rotation.ToString()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

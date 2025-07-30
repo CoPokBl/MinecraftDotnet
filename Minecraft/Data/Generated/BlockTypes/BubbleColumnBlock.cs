@@ -64,4 +64,10 @@ public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("drag", Drag.ToString().ToLower())
+        );
+    }
+    
 }

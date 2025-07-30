@@ -91,4 +91,11 @@ public record CommandBlockBlock(Identifier Identifier, bool Conditional, Cardina
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("conditional", Conditional.ToString().ToLower()),
+            new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

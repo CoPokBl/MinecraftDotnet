@@ -159,6 +159,14 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("ominous", Ominous.ToString().ToLower()),
+            new StringTag("vault_state", VaultStateToName(VaultStateValue))
+        );
+    }
+    
     public enum VaultState {
         Inactive,
         Active,
@@ -173,6 +181,16 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
             "unlocking" => VaultState.Unlocking,
             "ejecting" => VaultState.Ejecting,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for VaultState.")
+        };
+    }
+
+    public static string VaultStateToName(VaultState value) {
+        return value switch {
+            VaultState.Inactive => "inactive",
+            VaultState.Active => "active",
+            VaultState.Unlocking => "unlocking",
+            VaultState.Ejecting => "ejecting",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown VaultState value.")
         };
     }
 }

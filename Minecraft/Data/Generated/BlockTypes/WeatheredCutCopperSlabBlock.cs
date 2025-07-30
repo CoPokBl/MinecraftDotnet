@@ -80,4 +80,11 @@ public record WeatheredCutCopperSlabBlock(Identifier Identifier, SlabType Type, 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("type", Type.ToName()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

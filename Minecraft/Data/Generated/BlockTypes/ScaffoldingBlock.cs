@@ -164,4 +164,12 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("bottom", Bottom.ToString().ToLower()),
+            new StringTag("distance", Distance.ToString()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

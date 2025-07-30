@@ -64,4 +64,10 @@ public record StonePressurePlateBlock(Identifier Identifier, bool Powered) : IBl
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

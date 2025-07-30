@@ -67,4 +67,10 @@ public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("hatch", Hatch.ToString())
+        );
+    }
+    
 }

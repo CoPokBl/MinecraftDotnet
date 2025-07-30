@@ -293,6 +293,12 @@ public class DataWriter : Stream, IWritable {
         return this;
     }
     
+    public DataWriter WritePrefixedPacketDataArray(int bitsPerEntry, ushort[] entries) {
+        long[] packed = PackToLongArray(bitsPerEntry, entries);
+        WritePrefixedArray(packed, (l, w) => w.WriteLong(l));
+        return this;
+    }
+    
     public static long[] PackToLongArray(int bitsPerEntry, ushort[] data) {
         double intsPerLong = Math.Floor(64d / bitsPerEntry);
         int intsPerLongCeil = (int)Math.Ceiling(intsPerLong);

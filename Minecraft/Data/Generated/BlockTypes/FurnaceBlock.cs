@@ -86,4 +86,11 @@ public record FurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("lit", Lit.ToString().ToLower())
+        );
+    }
+    
 }

@@ -141,6 +141,14 @@ public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeVa
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("type", TypeToName(TypeValue)),
+            new StringTag("facing", Facing.ToName()),
+            new StringTag("short", Short.ToString().ToLower())
+        );
+    }
+    
     public enum Type {
         Normal,
         Sticky,
@@ -151,6 +159,14 @@ public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeVa
             "normal" => Type.Normal,
             "sticky" => Type.Sticky,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Type.")
+        };
+    }
+
+    public static string TypeToName(Type value) {
+        return value switch {
+            Type.Normal => "normal",
+            Type.Sticky => "sticky",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Type value.")
         };
     }
 }

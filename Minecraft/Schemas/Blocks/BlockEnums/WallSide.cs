@@ -15,4 +15,13 @@ public static class WallSideExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for WallSide.")
         };
     }
+    
+    public static string ToName(this WallSide side) {
+        return side switch {
+            WallSide.None => "none",
+            WallSide.Low => "low",
+            WallSide.Tall => "tall",
+            _ => throw new ArgumentOutOfRangeException(nameof(side), side, "Unknown WallSide value.")
+        };
+    }
 }

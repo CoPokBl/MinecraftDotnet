@@ -16,12 +16,14 @@ using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
+using PolarWorlds;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
 public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, Action gameEndCallback) {
-    private const string MapFolder = "ramen";
-    private static readonly ITerrainProvider GameMap = new AnvilLoader(MapFolder, VanillaRegistry.Data);
+    private static readonly ITerrainProvider[] Maps = [
+        new PolarLoader("ramen.polar", VanillaRegistry.Data)
+    ];
     
     private static readonly Vec3<double>[] MapSpawns = [
         new(-20.5, 25, -24.5),
@@ -55,7 +57,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
             ChunkX = 0,
             ChunkZ = 0
         };
-        GameMap.GetChunk(ref data);
+        Maps[0].GetChunk(ref data);
     }
     
     private static Queue<Vec3<double>> CreateRandomSpawns() {
@@ -102,7 +104,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
     }
 
     public void Start() {
-        World = server.CreateWorld(GameMap, "skywars:game");
+        World = server.CreateWorld(Maps[0], "skywars:game");
         World.AddFeatures(SkyWarsFeatures);
         
         Queue<Vec3<double>> spawns = CreateRandomSpawns();

@@ -33,4 +33,22 @@ public static class OrientationExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Orientation.")
         };
     }
+    
+    public static string ToName(this Orientation orientation) {
+        return orientation switch {
+            Orientation.DownEast => "down_east",
+            Orientation.DownNorth => "down_north",
+            Orientation.DownSouth => "down_south",
+            Orientation.DownWest => "down_west",
+            Orientation.UpEast => "up_east",
+            Orientation.UpNorth => "up_north",
+            Orientation.UpSouth => "up_south",
+            Orientation.UpWest => "up_west",
+            Orientation.WestUp => "west_up",
+            Orientation.EastUp => "east_up",
+            Orientation.NorthUp => "north_up",
+            Orientation.SouthUp => "south_up",
+            _ => throw new ArgumentOutOfRangeException(nameof(orientation), orientation, "Unknown Orientation value.")
+        };
+    }
 }

@@ -21,4 +21,8 @@ public record SimpleBlock(Identifier Identifier, int ProtocolId, uint StateId, I
     public IBlock WithState(CompoundTag properties) {
         return this;
     }
+
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null);
+    }
 }

@@ -1,3 +1,4 @@
+using System.Reflection;
 using ManagedServer.Entities.Types;
 using ManagedServer.Viewables;
 using Minecraft.Data.Blocks;
@@ -36,5 +37,14 @@ public static class SkyWarsUtils {
         
         player.SendMessage("No target found within range.");
         return null;
+    }
+    
+    public static byte[] ReadPolarMap(string fileName) {
+        // Assembly assembly = Assembly.GetExecutingAssembly();
+        // using Stream stream = assembly.GetManifestResourceStream($"TestServer.Servers.SkyWarsLuckyBlock.Maps.{fileName}")!;
+        // using MemoryStream memoryStream = new();
+        // stream.CopyTo(memoryStream);
+        // return memoryStream.ToArray();
+        return File.ReadAllBytes(Path.Combine("Servers", "SkyWarsLuckyBlock", "Maps", fileName));
     }
 }

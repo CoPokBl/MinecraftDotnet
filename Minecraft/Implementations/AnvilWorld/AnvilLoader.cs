@@ -90,10 +90,11 @@ public class AnvilLoader : ITerrainProvider {
         string status = chunk["status"]?.GetString() ?? "Unknown";
         
         // Load actual chunk data
-        INbtTag? sectionsTag = chunk["sections"];
+        INbtTag? sectionsTag = chunk["sections"] ?? chunk["Sections"];
         if (sectionsTag is not ListTag sectionsList) {
-            Console.WriteLine(chunk.ToJsonString());
-            throw new Exception($"Invalid chunk data: 'sections' tag not found or is not a ListTag. Null: {sectionsTag == null}");
+            // Probably old format, just ignore
+            return;
+            // throw new Exception($"Invalid chunk data: 'sections' tag not found or is not a ListTag. Null: {sectionsTag == null}");
         }
         
         // Allocate once for block state indices
@@ -160,6 +161,33 @@ public class AnvilLoader : ITerrainProvider {
                 !excludeProps.Contains(t?.GetName())).ToArray());
             data.BlockEntities[new Vec3<int>(x, y, z)] = new BlockEntity(x, y, z, type, entityData);
         }
+    }
+
+    public ChunkData[] GetAllChunks() {
+        List<ChunkData> chunks = [];
+        foreach ((string regionName, AnvilRegionFile region) in _regions) {
+            Console.WriteLine("Checking region: " + regionName);
+            string[] nameParts = regionName.Split('.');
+            int regionX = int.Parse(nameParts[1]);
+            int regionZ = int.Parse(nameParts[2]);
+            
+            for (int x = 0; x < 32; x++) {
+                for (int z = 0; z < 32; z++) {
+                    int chunkX = regionX * 32 + x;
+                    int chunkZ = regionZ * 32 + z;
+                    if (region.HasChunkData(chunkX, chunkZ)) {
+                        ChunkData chunkData = new(ChunkData.VanillaOverworldHeight) {
+                            ChunkX = chunkX,
+                            ChunkZ = chunkZ
+                        };
+                        GetChunkData(ref chunkData);
+                        chunks.Add(chunkData);
+                        Console.WriteLine("Got chunk at " + chunkX + ", " + chunkZ + " in region " + regionName);
+                    }
+                }
+            }
+        }
+        return chunks.ToArray();
     }
 
     private static void UnpackPalette(int[] outp, long[] data, int bitsPerEntry) {

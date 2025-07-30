@@ -106,4 +106,11 @@ public record LeafLitterBlock(Identifier Identifier, Direction Facing, int Segme
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("segment_amount", SegmentAmount.ToString())
+        );
+    }
+    
 }

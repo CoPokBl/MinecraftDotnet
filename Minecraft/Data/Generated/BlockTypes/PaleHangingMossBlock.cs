@@ -64,4 +64,10 @@ public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("tip", Tip.ToString().ToLower())
+        );
+    }
+    
 }

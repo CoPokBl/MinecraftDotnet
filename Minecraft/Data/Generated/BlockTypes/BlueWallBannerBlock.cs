@@ -69,4 +69,10 @@ public record BlueWallBannerBlock(Identifier Identifier, Direction Facing) : IBl
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

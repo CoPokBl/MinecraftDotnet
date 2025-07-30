@@ -91,6 +91,13 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("ominous", Ominous.ToString().ToLower()),
+            new StringTag("trial_spawner_state", TrialSpawnerStateToName(TrialSpawnerStateValue))
+        );
+    }
+    
     public enum TrialSpawnerState {
         Inactive,
         WaitingForPlayers,
@@ -109,6 +116,18 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
             "ejecting_reward" => TrialSpawnerState.EjectingReward,
             "cooldown" => TrialSpawnerState.Cooldown,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for TrialSpawnerState.")
+        };
+    }
+
+    public static string TrialSpawnerStateToName(TrialSpawnerState value) {
+        return value switch {
+            TrialSpawnerState.Inactive => "inactive",
+            TrialSpawnerState.WaitingForPlayers => "waiting_for_players",
+            TrialSpawnerState.Active => "active",
+            TrialSpawnerState.WaitingForRewardEjection => "waiting_for_reward_ejection",
+            TrialSpawnerState.EjectingReward => "ejecting_reward",
+            TrialSpawnerState.Cooldown => "cooldown",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown TrialSpawnerState value.")
         };
     }
 }

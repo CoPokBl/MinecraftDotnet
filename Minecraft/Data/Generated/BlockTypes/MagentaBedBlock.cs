@@ -127,4 +127,12 @@ public record MagentaBedBlock(Identifier Identifier, Direction Facing, bool Occu
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("occupied", Occupied.ToString().ToLower()),
+            new StringTag("part", Part.ToName())
+        );
+    }
+    
 }

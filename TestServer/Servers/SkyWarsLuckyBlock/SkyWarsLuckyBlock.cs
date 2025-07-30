@@ -3,6 +3,7 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
@@ -33,8 +34,10 @@ public static class SkyWarsLuckyBlock {
         server.Dimensions.Add("skywars:lobby", new Dimension());
         server.Dimensions.Add("skywars:game", new Dimension());
         
-        World lobby = server.CreateWorld(new PolarLoader("testpolar.polar"), "skywars:lobby");
+        Console.WriteLine("Loading maps...");
+        World lobby = server.CreateWorld(new PolarLoader(SkyWarsUtils.ReadPolarMap("lobby.polar"), VanillaRegistry.Data), "skywars:lobby");
         SkyWarsGame.LoadWorld();
+        Console.WriteLine("Maps loaded successfully.");
 
         NpcEntity billy = new(new PlayerMeta(SkinFlags:SkinParts.All)) {
             Position = LobbySpawn,

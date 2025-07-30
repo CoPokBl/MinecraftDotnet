@@ -399,4 +399,12 @@ public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhas
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("power", Power.ToString()),
+            new StringTag("sculk_sensor_phase", SculkSensorPhase.ToName()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

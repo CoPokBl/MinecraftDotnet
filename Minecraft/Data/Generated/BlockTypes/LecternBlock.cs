@@ -119,4 +119,12 @@ public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("has_book", HasBook.ToString().ToLower()),
+            new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

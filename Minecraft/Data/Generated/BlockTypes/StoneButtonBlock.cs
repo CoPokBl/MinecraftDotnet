@@ -144,4 +144,12 @@ public record StoneButtonBlock(Identifier Identifier, AttachDirection Face, Dire
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("face", Face.ToName()),
+            new StringTag("facing", Facing.ToName()),
+            new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

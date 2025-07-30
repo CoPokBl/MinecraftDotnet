@@ -64,4 +64,10 @@ public record DeepslateRedstoneOreBlock(Identifier Identifier, bool Lit) : IBloc
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("lit", Lit.ToString().ToLower())
+        );
+    }
+    
 }

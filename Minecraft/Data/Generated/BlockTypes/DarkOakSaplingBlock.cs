@@ -65,4 +65,10 @@ public record DarkOakSaplingBlock(Identifier Identifier, int Stage) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("stage", Stage.ToString())
+        );
+    }
+    
 }

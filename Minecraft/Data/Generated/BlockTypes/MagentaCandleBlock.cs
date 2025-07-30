@@ -119,4 +119,12 @@ public record MagentaCandleBlock(Identifier Identifier, int Candles, bool Lit, b
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("candles", Candles.ToString()),
+            new StringTag("lit", Lit.ToString().ToLower()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

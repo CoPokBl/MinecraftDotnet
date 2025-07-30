@@ -171,4 +171,12 @@ public record DriedGhastBlock(Identifier Identifier, Direction Facing, int Hydra
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("hydration", Hydration.ToString()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

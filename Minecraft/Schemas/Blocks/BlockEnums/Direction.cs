@@ -17,4 +17,14 @@ public static class DirectionExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Direction.")
         };
     }
+    
+    public static string ToName(this Direction direction) {
+        return direction switch {
+            Direction.North => "north",
+            Direction.South => "south",
+            Direction.East => "east",
+            Direction.West => "west",
+            _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, "Unknown Direction value.")
+        };
+    }
 }

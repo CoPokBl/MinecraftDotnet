@@ -39,32 +39,6 @@ public class DataTypesTest {
         Assert.That(DataReader.FromNBitInteger(5, DataWriter.ToNBitInteger(5, 3)), Is.EqualTo(3));
     }
     
-    void UnpackPalette(int[] outp, long[] data, int bitsPerEntry) {
-        double intsPerLong = Math.Floor(64d / bitsPerEntry);
-        int intsPerLongCeil = (int)Math.Ceiling(intsPerLong);
-
-        long mask = (1L << bitsPerEntry) - 1L;
-        for (int i = 0; i < outp.Length; i++) {
-            int longIndex = i / intsPerLongCeil;
-            int subIndex = i % intsPerLongCeil;
-
-            outp[i] = (int) ((data[longIndex] >>> (bitsPerEntry * subIndex)) & mask);
-        }
-    }
-    
-    void PackPalette(long[] outp, int[] data, int bitsPerEntry) {
-        double intsPerLong = Math.Floor(64d / bitsPerEntry);
-        int intsPerLongCeil = (int)Math.Ceiling(intsPerLong);
-
-        long mask = (1L << bitsPerEntry) - 1L;
-        for (int i = 0; i < data.Length; i++) {
-            int longIndex = i / intsPerLongCeil;
-            int subIndex = i % intsPerLongCeil;
-
-            outp[longIndex] |= ((long)data[i] & mask) << (bitsPerEntry * subIndex);
-        }
-    }
-    
     public static long[] PackToLongArray(int[] data, int bitsPerEntry) {
         double intsPerLong = Math.Floor(64d / bitsPerEntry);
         int intsPerLongCeil = (int)Math.Ceiling(intsPerLong);
@@ -100,6 +74,14 @@ public class DataTypesTest {
         for (int i = 0; i < someData.Length; i++) {
             Assert.That(unpackedData[i], Is.EqualTo(someData[i]));
         }
+    }
+
+    [Test]
+    public void TestLengthPrefixedPacketDataArray() {
+        ushort[] someData = [31, 23, 04, 16, 31, 23, 04, 16, 31, 23, 04, 16, 31, 23, 04, 16, 28, 29, 30, 1, 2, 3, 4, 5, 7];
+        byte[] packedData = new DataWriter().WritePrefixedPacketDataArray(5, someData).ToArray();
+        ushort[] unpackedData = new DataReader(packedData).ReadPrefixedPacketDataArray(5);
+        
     }
 
     [Test]

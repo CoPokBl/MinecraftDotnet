@@ -69,4 +69,10 @@ public record BrownWallBannerBlock(Identifier Identifier, Direction Facing) : IB
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

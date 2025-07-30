@@ -325,4 +325,14 @@ public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("half", Half.ToName()),
+            new StringTag("hinge", Hinge.ToName()),
+            new StringTag("open", Open.ToString().ToLower()),
+            new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

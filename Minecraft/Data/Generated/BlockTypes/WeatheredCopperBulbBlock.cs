@@ -73,4 +73,11 @@ public record WeatheredCopperBulbBlock(Identifier Identifier, bool Lit, bool Pow
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("lit", Lit.ToString().ToLower()),
+            new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

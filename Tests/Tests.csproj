@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Minecraft\Minecraft.csproj" />
+      <ProjectReference Include="..\PolarWorlds\PolarWorlds.csproj" />
     </ItemGroup>
 
 </Project>

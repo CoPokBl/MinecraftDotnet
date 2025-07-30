@@ -75,6 +75,12 @@ public record {name}(Identifier Identifier, {args}) : IBlock {
         {load_state_logic}
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+{to_nbt_fields}
+        );
+    }
+    
 {enums}}
 
 """;
@@ -401,6 +407,8 @@ public static class Block {
                 if (prop.Type != PropertyType.Enum) continue;
                 string enumName = CodeGenUtils.NamespacedIdToPascalName(prop.Name);
                 string[] enumValues = ((EnumProperty)prop).AllowedValues;
+                
+                // Definition
                 enumsCode += $"    public enum {enumName} {{\n";
                 foreach (string enumValue in enumValues) {
                     enumsCode += $"{CodeGenUtils.GetIndentation(2)}{CodeGenUtils.NamespacedIdToPascalName(enumValue)},\n";
@@ -413,6 +421,15 @@ public static class Block {
                 enumsCode = enumValues.Aggregate(enumsCode, (current, enumValue) => 
                     current + $"{CodeGenUtils.GetIndentation(3)}\"{enumValue}\" => {enumName}.{CodeGenUtils.NamespacedIdToPascalName(enumValue)},\n");
                 enumsCode += $"{CodeGenUtils.GetIndentation(3)}_ => throw new ArgumentOutOfRangeException(nameof(value), value, \"Unknown value for {enumName}.\")\n" +
+                             $"{CodeGenUtils.GetIndentation(2)}}};\n" +
+                             $"{CodeGenUtils.GetIndentation(1)}}}\n";
+                
+                // We also need a ToName method
+                enumsCode += $"\n{CodeGenUtils.GetIndentation(1)}public static string {enumName}ToName({enumName} value) {{\n" +
+                             $"{CodeGenUtils.GetIndentation(2)}return value switch {{\n";
+                enumsCode = enumValues.Aggregate(enumsCode, (current, enumValue) =>
+                    current + $"{CodeGenUtils.GetIndentation(3)}{enumName}.{CodeGenUtils.NamespacedIdToPascalName(enumValue)} => \"{enumValue}\",\n");
+                enumsCode += $"{CodeGenUtils.GetIndentation(3)}_ => throw new ArgumentOutOfRangeException(nameof(value), value, \"Unknown {enumName} value.\")\n" +
                              $"{CodeGenUtils.GetIndentation(2)}}};\n" +
                              $"{CodeGenUtils.GetIndentation(1)}}}\n";
             }
@@ -532,12 +549,40 @@ public static class Block {
             }
             loadStateLogic.Append($"{CodeGenUtils.GetIndentation(2)}}};");
             
+            // =====================================================
+            //               To NBT State Logic
+            // =====================================================
+            List<string> toNbtFields = [];
+            Func<string, string, string> toNbtFieldGenerator = (name, strVal) => $"{CodeGenUtils.GetIndentation(3)}new StringTag(\"{name}\", {strVal})";
+            Action<string, string> addNbtField = (name, strVal) => {
+                toNbtFields.Add(toNbtFieldGenerator(name, strVal));
+            };
+            foreach (IProperty prop in props) {
+                string pascalPropName = GetPascalPropName(prop);
+                switch (prop) {
+                    case EnumProperty:
+                        addNbtField(prop.Name, $"{CodeGenUtils.NamespacedIdToPascalName(prop.Name)}ToName({pascalPropName})");
+                        break;
+                    case BooleanProperty:
+                        addNbtField(prop.Name, $"{pascalPropName}.ToString().ToLower()");
+                        break;
+                    case IntegerProperty:
+                        addNbtField(prop.Name, $"{pascalPropName}.ToString()");
+                        break;
+                    case ExistingEnumProperty ee: {
+                        addNbtField(prop.Name, $"{pascalPropName}.ToName()");
+                        break;
+                    }
+                }
+            }
+            
             string file = TemplateFile.Replace("{name}", pascalName)
                 .Replace("{args}", argsCode)
                 .Replace("{to_state_logic}", toStateLogic)
                 .Replace("{from_state_logic}", fromStateLogic)
                 .Replace("{enums}", enumsCode)
                 .Replace("{load_state_logic}", loadStateLogic.ToString())
+                .Replace("{to_nbt_fields}", string.Join(",\n", toNbtFields))
                 .Replace("{reginfo}", staticData.ToString())
                 .Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"));
             

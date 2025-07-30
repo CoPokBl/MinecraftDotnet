@@ -126,6 +126,14 @@ public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeart
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("axis", Axis.ToName()),
+            new StringTag("creaking_heart_state", CreakingHeartStateToName(CreakingHeartStateValue)),
+            new StringTag("natural", Natural.ToString().ToLower())
+        );
+    }
+    
     public enum CreakingHeartState {
         Uprooted,
         Dormant,
@@ -138,6 +146,15 @@ public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeart
             "dormant" => CreakingHeartState.Dormant,
             "awake" => CreakingHeartState.Awake,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for CreakingHeartState.")
+        };
+    }
+
+    public static string CreakingHeartStateToName(CreakingHeartState value) {
+        return value switch {
+            CreakingHeartState.Uprooted => "uprooted",
+            CreakingHeartState.Dormant => "dormant",
+            CreakingHeartState.Awake => "awake",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown CreakingHeartState value.")
         };
     }
 }

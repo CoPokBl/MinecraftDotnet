@@ -64,4 +64,10 @@ public record MangrovePressurePlateBlock(Identifier Identifier, bool Powered) : 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

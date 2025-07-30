@@ -83,4 +83,11 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("eye", Eye.ToString().ToLower()),
+            new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

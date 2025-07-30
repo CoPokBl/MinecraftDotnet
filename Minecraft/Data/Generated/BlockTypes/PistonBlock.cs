@@ -91,4 +91,11 @@ public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing)
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("extended", Extended.ToString().ToLower()),
+            new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

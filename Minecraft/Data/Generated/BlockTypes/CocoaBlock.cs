@@ -95,4 +95,11 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("age", Age.ToString()),
+            new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

@@ -106,4 +106,11 @@ public record PinkPetalsBlock(Identifier Identifier, Direction Facing, int Flowe
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("flower_amount", FlowerAmount.ToString())
+        );
+    }
+    
 }

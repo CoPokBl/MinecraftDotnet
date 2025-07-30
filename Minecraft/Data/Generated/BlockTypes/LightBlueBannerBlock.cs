@@ -93,4 +93,10 @@ public record LightBlueBannerBlock(Identifier Identifier, int Rotation) : IBlock
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("rotation", Rotation.ToString())
+        );
+    }
+    
 }

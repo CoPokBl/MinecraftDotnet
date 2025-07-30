@@ -73,4 +73,10 @@ public record LightGrayShulkerBoxBlock(Identifier Identifier, Cardinal Facing) :
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

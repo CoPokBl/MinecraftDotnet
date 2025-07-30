@@ -4421,4 +4421,14 @@ public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection Ea
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("east", East.ToName()),
+            new StringTag("north", North.ToName()),
+            new StringTag("power", Power.ToString()),
+            new StringTag("south", South.ToName()),
+            new StringTag("west", West.ToName())
+        );
+    }
+    
 }

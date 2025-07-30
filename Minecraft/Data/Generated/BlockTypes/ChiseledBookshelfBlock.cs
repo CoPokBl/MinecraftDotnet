@@ -1083,4 +1083,16 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("slot_0_occupied", Slot0Occupied.ToString().ToLower()),
+            new StringTag("slot_1_occupied", Slot1Occupied.ToString().ToLower()),
+            new StringTag("slot_2_occupied", Slot2Occupied.ToString().ToLower()),
+            new StringTag("slot_3_occupied", Slot3Occupied.ToString().ToLower()),
+            new StringTag("slot_4_occupied", Slot4Occupied.ToString().ToLower()),
+            new StringTag("slot_5_occupied", Slot5Occupied.ToString().ToLower())
+        );
+    }
+    
 }

@@ -3582,6 +3582,14 @@ public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument In
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("instrument", InstrumentToName(InstrumentValue)),
+            new StringTag("note", Note.ToString()),
+            new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
     public enum Instrument {
         Harp,
         Basedrum,
@@ -3634,6 +3642,35 @@ public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument In
             "piglin" => Instrument.Piglin,
             "custom_head" => Instrument.CustomHead,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Instrument.")
+        };
+    }
+
+    public static string InstrumentToName(Instrument value) {
+        return value switch {
+            Instrument.Harp => "harp",
+            Instrument.Basedrum => "basedrum",
+            Instrument.Snare => "snare",
+            Instrument.Hat => "hat",
+            Instrument.Bass => "bass",
+            Instrument.Flute => "flute",
+            Instrument.Bell => "bell",
+            Instrument.Guitar => "guitar",
+            Instrument.Chime => "chime",
+            Instrument.Xylophone => "xylophone",
+            Instrument.IronXylophone => "iron_xylophone",
+            Instrument.CowBell => "cow_bell",
+            Instrument.Didgeridoo => "didgeridoo",
+            Instrument.Bit => "bit",
+            Instrument.Banjo => "banjo",
+            Instrument.Pling => "pling",
+            Instrument.Zombie => "zombie",
+            Instrument.Skeleton => "skeleton",
+            Instrument.Creeper => "creeper",
+            Instrument.Dragon => "dragon",
+            Instrument.WitherSkeleton => "wither_skeleton",
+            Instrument.Piglin => "piglin",
+            Instrument.CustomHead => "custom_head",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Instrument value.")
         };
     }
 }

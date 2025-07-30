@@ -69,6 +69,12 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("mode", ModeToName(ModeValue))
+        );
+    }
+    
     public enum Mode {
         Start,
         Log,
@@ -83,6 +89,16 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
             "fail" => Mode.Fail,
             "accept" => Mode.Accept,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Mode.")
+        };
+    }
+
+    public static string ModeToName(Mode value) {
+        return value switch {
+            Mode.Start => "start",
+            Mode.Log => "log",
+            Mode.Fail => "fail",
+            Mode.Accept => "accept",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Mode value.")
         };
     }
 }

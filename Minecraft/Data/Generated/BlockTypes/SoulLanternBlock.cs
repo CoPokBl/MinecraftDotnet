@@ -73,4 +73,11 @@ public record SoulLanternBlock(Identifier Identifier, bool Hanging, bool Waterlo
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("hanging", Hanging.ToString().ToLower()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

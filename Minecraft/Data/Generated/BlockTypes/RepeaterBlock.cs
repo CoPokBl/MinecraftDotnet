@@ -300,4 +300,13 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("delay", Delay.ToString()),
+            new StringTag("facing", Facing.ToName()),
+            new StringTag("locked", Locked.ToString().ToLower()),
+            new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

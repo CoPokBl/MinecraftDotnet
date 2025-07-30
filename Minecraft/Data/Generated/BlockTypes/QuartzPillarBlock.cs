@@ -67,4 +67,10 @@ public record QuartzPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("axis", Axis.ToName())
+        );
+    }
+    
 }

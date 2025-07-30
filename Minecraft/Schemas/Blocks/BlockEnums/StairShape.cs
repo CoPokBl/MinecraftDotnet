@@ -19,4 +19,15 @@ public static class StairShapeExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for StairShape.")
         };
     }
+    
+    public static string ToName(this StairShape stairShape) {
+        return stairShape switch {
+            StairShape.Straight => "straight",
+            StairShape.InnerLeft => "inner_left",
+            StairShape.InnerRight => "inner_right",
+            StairShape.OuterLeft => "outer_left",
+            StairShape.OuterRight => "outer_right",
+            _ => throw new ArgumentOutOfRangeException(nameof(stairShape), stairShape, "Unknown StairShape value.")
+        };
+    }
 }

@@ -144,4 +144,12 @@ public record LeverBlock(Identifier Identifier, AttachDirection Face, Direction 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("face", Face.ToName()),
+            new StringTag("facing", Facing.ToName()),
+            new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

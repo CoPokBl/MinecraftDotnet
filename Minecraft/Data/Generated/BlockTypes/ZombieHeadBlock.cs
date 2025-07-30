@@ -131,4 +131,11 @@ public record ZombieHeadBlock(Identifier Identifier, bool Powered, int Rotation)
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("powered", Powered.ToString().ToLower()),
+            new StringTag("rotation", Rotation.ToString())
+        );
+    }
+    
 }

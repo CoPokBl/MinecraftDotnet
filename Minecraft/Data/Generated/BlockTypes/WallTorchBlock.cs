@@ -69,4 +69,10 @@ public record WallTorchBlock(Identifier Identifier, Direction Facing) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

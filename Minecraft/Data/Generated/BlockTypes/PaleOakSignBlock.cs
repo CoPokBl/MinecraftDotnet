@@ -158,4 +158,11 @@ public record PaleOakSignBlock(Identifier Identifier, int Rotation, bool Waterlo
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("rotation", Rotation.ToString()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

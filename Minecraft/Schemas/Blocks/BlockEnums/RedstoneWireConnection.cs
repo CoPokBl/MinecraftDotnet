@@ -15,4 +15,13 @@ public static class RedstoneWireConnectionExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for RedstoneWireConnection.")
         };
     }
+    
+    public static string ToName(this RedstoneWireConnection connection) {
+        return connection switch {
+            RedstoneWireConnection.Up => "up",
+            RedstoneWireConnection.Side => "side",
+            RedstoneWireConnection.None => "none",
+            _ => throw new ArgumentOutOfRangeException(nameof(connection), connection, "Unknown RedstoneWireConnection value.")
+        };
+    }
 }

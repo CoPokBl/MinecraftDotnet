@@ -64,4 +64,10 @@ public record SculkCatalystBlock(Identifier Identifier, bool Bloom) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("bloom", Bloom.ToString().ToLower())
+        );
+    }
+    
 }

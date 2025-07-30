@@ -340,6 +340,15 @@ public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, PaleOa
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("half", HalfToName(HalfValue)),
+            new StringTag("shape", Shape.ToName()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
     public enum Half {
         Top,
         Bottom,
@@ -350,6 +359,14 @@ public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, PaleOa
             "top" => Half.Top,
             "bottom" => Half.Bottom,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Half.")
+        };
+    }
+
+    public static string HalfToName(Half value) {
+        return value switch {
+            Half.Top => "top",
+            Half.Bottom => "bottom",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Half value.")
         };
     }
 }

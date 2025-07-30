@@ -22,4 +22,16 @@ public static class CardinalExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Cardinal.")
         };
     }
+    
+    public static string ToName(this Cardinal cardinal) {
+        return cardinal switch {
+            Cardinal.North => "north",
+            Cardinal.East => "east",
+            Cardinal.South => "south",
+            Cardinal.West => "west",
+            Cardinal.Up => "up",
+            Cardinal.Down => "down",
+            _ => throw new ArgumentOutOfRangeException(nameof(cardinal), cardinal, "Unknown Cardinal value.")
+        };
+    }
 }

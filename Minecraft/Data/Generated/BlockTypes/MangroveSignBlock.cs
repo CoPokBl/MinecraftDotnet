@@ -158,4 +158,11 @@ public record MangroveSignBlock(Identifier Identifier, int Rotation, bool Waterl
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("rotation", Rotation.ToString()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

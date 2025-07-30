@@ -37,6 +37,7 @@ public interface IBlock : IProtocolType {
 
     public IBlock WithState(uint state);
     public IBlock WithState(CompoundTag properties);
+    public CompoundTag ToStateNbt();
 
     public bool Equals(IBlock? other) {
         return other?.StateId == StateId;

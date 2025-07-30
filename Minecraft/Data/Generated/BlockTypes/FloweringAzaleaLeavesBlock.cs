@@ -161,4 +161,12 @@ public record FloweringAzaleaLeavesBlock(Identifier Identifier, int Distance, bo
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("distance", Distance.ToString()),
+            new StringTag("persistent", Persistent.ToString().ToLower()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

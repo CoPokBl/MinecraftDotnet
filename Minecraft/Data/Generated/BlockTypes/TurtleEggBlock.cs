@@ -98,4 +98,11 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("eggs", Eggs.ToString()),
+            new StringTag("hatch", Hatch.ToString())
+        );
+    }
+    
 }

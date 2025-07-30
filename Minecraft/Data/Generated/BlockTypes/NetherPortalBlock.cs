@@ -65,6 +65,12 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("axis", AxisToName(AxisValue))
+        );
+    }
+    
     public enum Axis {
         X,
         Z,
@@ -75,6 +81,14 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
             "x" => Axis.X,
             "z" => Axis.Z,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Axis.")
+        };
+    }
+
+    public static string AxisToName(Axis value) {
+        return value switch {
+            Axis.X => "x",
+            Axis.Z => "z",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Axis value.")
         };
     }
 }

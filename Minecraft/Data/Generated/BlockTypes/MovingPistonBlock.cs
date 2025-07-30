@@ -92,6 +92,13 @@ public record MovingPistonBlock(Identifier Identifier, MovingPistonBlock.Type Ty
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("type", TypeToName(TypeValue)),
+            new StringTag("facing", Facing.ToName())
+        );
+    }
+    
     public enum Type {
         Normal,
         Sticky,
@@ -102,6 +109,14 @@ public record MovingPistonBlock(Identifier Identifier, MovingPistonBlock.Type Ty
             "normal" => Type.Normal,
             "sticky" => Type.Sticky,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Type.")
+        };
+    }
+
+    public static string TypeToName(Type value) {
+        return value switch {
+            Type.Normal => "normal",
+            Type.Sticky => "sticky",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Type value.")
         };
     }
 }

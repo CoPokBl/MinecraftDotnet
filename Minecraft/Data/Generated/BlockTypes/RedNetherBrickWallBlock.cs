@@ -1236,4 +1236,15 @@ public record RedNetherBrickWallBlock(Identifier Identifier, WallSide East, Wall
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("east", East.ToName()),
+            new StringTag("north", North.ToName()),
+            new StringTag("south", South.ToName()),
+            new StringTag("up", Up.ToString().ToLower()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower()),
+            new StringTag("west", West.ToName())
+        );
+    }
+    
 }

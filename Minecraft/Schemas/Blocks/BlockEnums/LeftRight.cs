@@ -13,4 +13,12 @@ public static class LeftRightExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for LeftRight.")
         };
     }
+    
+    public static string ToName(this LeftRight leftRight) {
+        return leftRight switch {
+            LeftRight.Left => "left",
+            LeftRight.Right => "right",
+            _ => throw new ArgumentOutOfRangeException(nameof(leftRight), leftRight, "Unknown LeftRight value.")
+        };
+    }
 }

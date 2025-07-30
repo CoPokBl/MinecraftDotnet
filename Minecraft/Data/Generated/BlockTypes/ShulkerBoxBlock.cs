@@ -73,4 +73,10 @@ public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

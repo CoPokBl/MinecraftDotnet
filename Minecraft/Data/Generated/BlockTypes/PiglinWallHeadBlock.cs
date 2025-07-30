@@ -86,4 +86,11 @@ public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

@@ -64,4 +64,10 @@ public record MyceliumBlock(Identifier Identifier, bool Snowy) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("snowy", Snowy.ToString().ToLower())
+        );
+    }
+    
 }

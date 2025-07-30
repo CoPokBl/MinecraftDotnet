@@ -98,4 +98,11 @@ public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : I
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("open", Open.ToString().ToLower())
+        );
+    }
+    
 }

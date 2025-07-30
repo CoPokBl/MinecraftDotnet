@@ -1,7 +1,10 @@
 using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
+using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Terrain;
+using Minecraft.Registry;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
 using NBT;
@@ -15,15 +18,57 @@ public class PolarLoader : ITerrainProvider {
     private const short LatestVersion = 7;
     private const int MaxHeightmaps = 32;
     private const int BlockPaletteSize = 4096;
+    private const int DataVersion = 4325;
     
     public Dictionary<Vec2<int>, ChunkData> Chunks = null!;
+    private MinecraftRegistry _registry;
 
-    public PolarLoader(string path) : this(File.ReadAllBytes(path)) {
+    public PolarLoader(string path, MinecraftRegistry registry) : this(File.ReadAllBytes(path), registry) {
         
     }
     
-    public PolarLoader(byte[] data) {
+    public PolarLoader(byte[] data, MinecraftRegistry registry) {
+        _registry = registry;
         Load(data);
+    }
+
+    public static byte[] CreateWorld(AnvilLoader anvilWorld) {
+        ChunkData[] chunks = anvilWorld.GetAllChunks();
+        if (chunks.Length == 0) {
+            throw new InvalidOperationException("No chunks found in the Anvil world.");
+        }
+        return CreateWorld(chunks);
+    }
+
+    public static byte[] CreateWorld(ChunkData[] chunks, MinecraftRegistry? registry = null) {
+        registry ??= VanillaRegistry.Data;
+        
+        DataWriter writer = new();
+
+        writer.WriteInteger(MagicNumber);
+        writer.WriteShort(LatestVersion);
+        writer.WriteVarInt(DataVersion);
+
+        // This data will be compressed later
+        DataWriter data = new();
+        data.WriteByte(0);  // Min section
+        data.WriteByte(chunks[0].WorldHeight / ChunkSection.Size - 1);  // Max section
+
+        data.WritePrefixedArray(Array.Empty<byte>(), (b, w) => w.Write(b));  // User data
+        
+        data.WriteVarInt(chunks.Length);  // Number of chunks
+        foreach (ChunkData chunk in chunks) {
+            Console.WriteLine("Writing chunk: " + chunk.ChunkX + ", " + chunk.ChunkZ);
+            WriteChunk(data, chunk, registry);
+        }
+        
+        // Cool, now we compress the data
+        writer.WriteByte((sbyte)CompressionType.Zstd);  // Compression type
+        byte[] compressedData = CompressZstd(data.ToArray());
+        writer.WriteVarInt((int)data.Length);  // Original length of the data before compression
+        Console.WriteLine("Compressed data length: " + data.Length);
+        writer.Write(compressedData);  // Compressed data
+        return writer.ToArray();
     }
 
     public void Load(byte[] data) {
@@ -40,8 +85,8 @@ public class PolarLoader : ITerrainProvider {
         }
         
         int dataVersion = reader.ReadVarInt();
-        
-        CompressionType compressionType = GetCompressionFromId(reader.ReadByte());
+
+        CompressionType compressionType = (CompressionType)reader.ReadByte();
         int compressedDataLength = reader.ReadVarInt();  // original length of the data before compression
 
         switch (compressionType) {
@@ -71,7 +116,7 @@ public class PolarLoader : ITerrainProvider {
 
     private static void DecompressZstd(DataReader reader, int length) {
         using Decompressor decompressor = new();
-        byte[] outputBuffer = new byte[length];  // 10 MB output buffer
+        byte[] outputBuffer = new byte[length];
         int byteCount = decompressor.Unwrap(reader.ReadRemaining(), outputBuffer);
         if (byteCount > length) {
             throw new InvalidDataException($"Decompressed data length {byteCount} exceeds expected length {length}.");
@@ -81,21 +126,71 @@ public class PolarLoader : ITerrainProvider {
         reader.UpdateData(outputBuffer);
     }
     
-    private static int GetXFromIndex(int index) {
+    private static byte[] CompressZstd(ReadOnlySpan<byte> data) {
+        using Compressor compressor = new();
+        return compressor.Wrap(data).ToArray();
+    }
+    
+    public static int GetXFromIndex(int index) {
         return index & 0xF;  // 0-3 bits
     }
     
-    private static int GetYFromIndex(int index) {
+    public static int GetYFromIndex(int index) {
         int y = (index & 0x07FFFFF0) >>> 4;
         if ((index & 0x08000000) != 0) y = -y;  // bit 28 indicates negative Y
         return y;  // 4-28 bits
     }
     
-    private static int GetZFromIndex(int index) {
+    public static int GetZFromIndex(int index) {
         return (index >>> 28) & 0xF;  // bits 28-31
     }
+    
+    public static int GetIndexFromCoords(int x, int y, int z) {
+        if (x < 0 || x > 15 || y < -2048 || y > 2047 || z < 0 || z > 15) {
+            throw new ArgumentOutOfRangeException("Coordinates out of range for Polar chunk indexing.");
+        }
 
-    private static ChunkData ReadChunk(DataReader reader, short version, int dataVersion, int sectionCount) {
+        int index = 0;
+        index |= x & 0xF;  // 0-3 bits for X
+        index |= (z & 0xF) << 28;
+        if (y < 0) {
+            index |= 0x08000000;  // Set bit 28 if Y is negative
+            index |= ((-y) << 4) & 0x07FFFFF0;  // 4-28 bits for Y, shifted left by 4
+        }
+        else {
+            index |= (y << 4) & 0x07FFFFF0;  // 4-28 bits for Y, shifted left by 4
+        }
+        return index;
+    }
+
+    private static void WriteChunk(DataWriter writer, ChunkData data, MinecraftRegistry registry) {
+        writer.WriteVarInt(data.ChunkX);
+        writer.WriteVarInt(data.ChunkZ);
+        
+        foreach (ChunkSection section in data.Sections) {
+            WriteSection(writer, section, registry);
+        }
+        
+        // Block entities
+        writer.WriteVarInt(data.BlockEntities.Count);
+        foreach (BlockEntity entity in data.BlockEntities.Values) {
+            writer.WriteInteger(GetIndexFromCoords(entity.X, entity.Y, entity.Z));
+            writer.WritePrefixedOptional(Optional<Identifier>.FromNullable(entity.Type.Identifier), 
+                (v, w) => w.WriteString(v.Value));
+            writer.WriteBoolean(true);
+            
+            writer.WriteNbt(entity.Data);
+        }
+        
+        // Heightmaps
+        // we don't support that yet, so just write 0
+        const int heightmapMask = 0;  // No heightmaps
+        writer.WriteInteger(heightmapMask);
+        
+        writer.WritePrefixedArray(Array.Empty<byte>(), (b, w) => w.Write(b));  // User data
+    }
+
+    private ChunkData ReadChunk(DataReader reader, short version, int dataVersion, int sectionCount) {
         int chunkX = reader.ReadVarInt();
         int chunkZ = reader.ReadVarInt();
         
@@ -118,7 +213,7 @@ public class PolarLoader : ITerrainProvider {
                     GetXFromIndex(posIndex), 
                     GetYFromIndex(posIndex), 
                     GetZFromIndex(posIndex), 
-                    VanillaRegistry.Data.BlockEntityTypes[id.ThrowIfNull()],
+                    _registry.BlockEntityTypes[id.ThrowIfNull()],
                     nbt);
                 blockEntities.Add(new Vec3<int>(entity.X, entity.Y, entity.Z), entity);
             }
@@ -146,16 +241,86 @@ public class PolarLoader : ITerrainProvider {
         };
     }
 
-    private static ChunkSection ReadSection(DataReader reader, short version, int dataVersion) {
+    private static void WriteSection(DataWriter writer, ChunkSection section, MinecraftRegistry registry) {
+        List<string> blockPalette = [];
+        ushort[] blockData = new ushort[ChunkSection.Size * ChunkSection.Size * ChunkSection.Size];
+        int cBlockDataIndex = 0;
+        for (int y = 0; y < ChunkSection.Size; y++) {
+            for (int z = 0; z < ChunkSection.Size; z++) {
+                for (int x = 0; x < ChunkSection.Size; x++) {
+                    IBlock block = section.LookupBlock(x, y, z, registry);
+                    string blockStr = GetStateStringFromBlock(block);
+                    
+                    int paletteIndex;
+                    if (blockPalette.Contains(blockStr)) {
+                        paletteIndex = blockPalette.IndexOf(blockStr);
+                    }
+                    else {
+                        paletteIndex = blockPalette.Count;
+                        blockPalette.Add(blockStr);
+                    }
+                    blockData[cBlockDataIndex++] = (ushort)paletteIndex;
+                }
+            }
+        }
+
+        // if (blockPalette.Count == 1) {
+        //     writer.WriteBoolean(true);
+        //     return;
+        // }
+        
+        writer.WriteBoolean(false);
+
+        // Block data
+        {
+            writer.WritePrefixedArray(blockPalette.ToArray(), (id, w) => w.WriteString(id));
+            int bitsPerEntry = (int) Math.Ceiling(Math.Log(blockPalette.Count) / Math.Log(2));
+            if (bitsPerEntry > 0) {
+                writer.WritePrefixedPacketDataArray(bitsPerEntry, blockData);
+            }
+        }
+        
+        // TODO: Biome data
+        {
+            string[] biomePalette = ["minecraft:plains"];
+            writer.WritePrefixedArray(biomePalette, (id, w) => w.WriteString(id));
+            int bitsPerEntry = (int) Math.Ceiling(Math.Log(biomePalette.Length) / Math.Log(2));
+            if (bitsPerEntry > 0) {
+                throw new NotImplementedException("Biome data packing is not implemented yet.");
+            }
+        }
+        
+        
+        // TODO: Light data
+        writer.WriteByte((byte)LightContent.Missing);  // Block light
+        writer.WriteByte((byte)LightContent.Missing);  // Sky light
+    }
+
+    private ChunkSection ReadSection(DataReader reader, short version, int dataVersion) {
+        ChunkSection section = new();
+        
         if (reader.ReadBoolean()) {
-            return new ChunkSection();
+            return section;
         }
         
         string[] blockPalette = reader.ReadPrefixedArray(r => r.ReadString());
-        ushort[]? blockData = null;  // palette indices for blocks
         if (blockPalette.Length > 1) {
             int bitsPerEntry = (int) Math.Ceiling(Math.Log(blockPalette.Length) / Math.Log(2));
-            blockData = reader.ReadPrefixedPacketDataArray(bitsPerEntry);
+            ushort[] blockData = reader.ReadPrefixedPacketDataArray(bitsPerEntry);  // palette indices for blocks
+            for (int y = 0; y < ChunkSection.Size; y++) {
+                for (int z = 0; z < ChunkSection.Size; z++) {
+                    for (int x = 0; x < ChunkSection.Size; x++) {
+                        int index = y * ChunkSection.Size * ChunkSection.Size + z * ChunkSection.Size + x;
+                        string key = blockPalette[blockData[index]];
+                        
+                        uint stateId = GetBlockFromString(key).StateId;
+                        section.Blocks[x, y, z] = stateId;
+                    }
+                }
+            }
+        }
+        else {
+            section.Fill(_registry.Blocks[blockPalette[0]]);
         }
         
         string[] biomePalette = reader.ReadPrefixedArray(r => r.ReadString());
@@ -178,30 +343,15 @@ public class PolarLoader : ITerrainProvider {
         if (skyLightContent == LightContent.Present) {
             skyLight = reader.ReadArray(2048, r => r.Read());
         }
-
-        ChunkSection section = new();
-        if (blockData != null) {
-            for (int y = 0; y < ChunkSection.Size; y++) {
-                for (int z = 0; z < ChunkSection.Size; z++) {
-                    for (int x = 0; x < ChunkSection.Size; x++) {
-                        int index = y * ChunkSection.Size * ChunkSection.Size + z * ChunkSection.Size + x;
-                        string key = blockPalette[blockData[index]];
-                        
-                        uint stateId = GetBlockFromString(key).StateId;
-                        section.Blocks[x, y, z] = stateId;
-                    }
-                }
-            }
-        }
         
         return section;
     }
     
-    private static IBlock GetBlockFromString(string blockStr) {
+    private IBlock GetBlockFromString(string blockStr) {
         // Example: "minecraft:stone[variant=granite]"
         string[] parts = blockStr.Split('[', 2);
         string blockName = parts[0];
-        IBlock block = VanillaRegistry.Data.Blocks[blockName];
+        IBlock block = _registry.Blocks[blockName];
         
         if (parts.Length <= 1) {
             return block;
@@ -226,12 +376,28 @@ public class PolarLoader : ITerrainProvider {
         return new CompoundTag(null, props.ToArray());
     }
     
-    private static CompressionType GetCompressionFromId(sbyte id) {
-        return id switch {
-            0 => CompressionType.None,
-            1 => CompressionType.Zstd,
-            _ => throw new ArgumentOutOfRangeException(nameof(id), $"Unknown compression type: {id}")
-        };
+    private static string GetStateStringFromBlock(IBlock block) {
+        // Example: "minecraft:stone[variant=granite]"
+        string blockName = block.Identifier.ToString();
+        string propsStr = GetPropsStringFromBlock(block);
+        if (string.IsNullOrEmpty(propsStr)) {
+            return blockName;  // No properties, just return the block name
+        }
+        return $"{blockName}[{propsStr}]";
+    }
+
+    private static string GetPropsStringFromBlock(IBlock block) {
+        CompoundTag properties = block.ToStateNbt();
+        List<string> props = [];
+        foreach (INbtTag? tag in properties.Children) {
+            if (tag is StringTag stringTag) {
+                props.Add($"{stringTag.Name}={stringTag.Value}");
+            }
+            else {
+                throw new NotSupportedException($"Unsupported tag type: {tag!.GetType().Name}");
+            }
+        }
+        return string.Join(",", props);
     }
     
     private enum CompressionType : sbyte {

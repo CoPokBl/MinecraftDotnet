@@ -67,4 +67,10 @@ public record StrippedMangroveLogBlock(Identifier Identifier, Axis Axis) : IBloc
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("axis", Axis.ToName())
+        );
+    }
+    
 }

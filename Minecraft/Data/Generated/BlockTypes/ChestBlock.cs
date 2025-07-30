@@ -144,6 +144,14 @@ public record ChestBlock(Identifier Identifier, ChestBlock.Type TypeValue, Direc
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("type", TypeToName(TypeValue)),
+            new StringTag("facing", Facing.ToName()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
     public enum Type {
         Single,
         Left,
@@ -156,6 +164,15 @@ public record ChestBlock(Identifier Identifier, ChestBlock.Type TypeValue, Direc
             "left" => Type.Left,
             "right" => Type.Right,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Type.")
+        };
+    }
+
+    public static string TypeToName(Type value) {
+        return value switch {
+            Type.Single => "single",
+            Type.Left => "left",
+            Type.Right => "right",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Type value.")
         };
     }
 }

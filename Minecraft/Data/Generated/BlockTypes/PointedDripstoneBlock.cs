@@ -138,6 +138,14 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("thickness", ThicknessToName(ThicknessValue)),
+            new StringTag("vertical_direction", VerticalDirectionToName(VerticalDirectionValue)),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
     public enum Thickness {
         TipMerge,
         Tip,
@@ -156,6 +164,17 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Thickness.")
         };
     }
+
+    public static string ThicknessToName(Thickness value) {
+        return value switch {
+            Thickness.TipMerge => "tip_merge",
+            Thickness.Tip => "tip",
+            Thickness.Frustum => "frustum",
+            Thickness.Middle => "middle",
+            Thickness.Base => "base",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Thickness value.")
+        };
+    }
     public enum VerticalDirection {
         Up,
         Down,
@@ -166,6 +185,14 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
             "up" => VerticalDirection.Up,
             "down" => VerticalDirection.Down,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for VerticalDirection.")
+        };
+    }
+
+    public static string VerticalDirectionToName(VerticalDirection value) {
+        return value switch {
+            VerticalDirection.Up => "up",
+            VerticalDirection.Down => "down",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown VerticalDirection value.")
         };
     }
 }

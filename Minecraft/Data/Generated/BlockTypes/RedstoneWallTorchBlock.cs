@@ -86,4 +86,11 @@ public record RedstoneWallTorchBlock(Identifier Identifier, Direction Facing, bo
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("lit", Lit.ToString().ToLower())
+        );
+    }
+    
 }

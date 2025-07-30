@@ -69,6 +69,12 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("mode", ModeToName(ModeValue))
+        );
+    }
+    
     public enum Mode {
         Save,
         Load,
@@ -83,6 +89,16 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
             "corner" => Mode.Corner,
             "data" => Mode.Data,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Mode.")
+        };
+    }
+
+    public static string ModeToName(Mode value) {
+        return value switch {
+            Mode.Save => "save",
+            Mode.Load => "load",
+            Mode.Corner => "corner",
+            Mode.Data => "data",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Mode value.")
         };
     }
 }

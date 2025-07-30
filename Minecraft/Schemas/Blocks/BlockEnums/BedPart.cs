@@ -13,4 +13,12 @@ public static class BedPartExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for BedPart.")
         };
     }
+    
+    public static string ToName(this BedPart part) {
+        return part switch {
+            BedPart.Head => "head",
+            BedPart.Foot => "foot",
+            _ => throw new ArgumentOutOfRangeException(nameof(part), part, "Unknown BedPart value.")
+        };
+    }
 }

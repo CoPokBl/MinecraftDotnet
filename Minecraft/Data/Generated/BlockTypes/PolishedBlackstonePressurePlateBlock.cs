@@ -64,4 +64,10 @@ public record PolishedBlackstonePressurePlateBlock(Identifier Identifier, bool P
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

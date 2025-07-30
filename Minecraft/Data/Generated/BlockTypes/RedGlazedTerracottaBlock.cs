@@ -69,4 +69,10 @@ public record RedGlazedTerracottaBlock(Identifier Identifier, Direction Facing) 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

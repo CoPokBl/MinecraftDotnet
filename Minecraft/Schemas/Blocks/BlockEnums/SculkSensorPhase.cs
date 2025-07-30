@@ -15,4 +15,13 @@ public static class SculkSensorPhaseExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for SculkSensorPhase.")
         };
     }
+    
+    public static string ToName(this SculkSensorPhase phase) {
+        return phase switch {
+            SculkSensorPhase.Inactive => "inactive",
+            SculkSensorPhase.Active => "active",
+            SculkSensorPhase.Cooldown => "cooldown",
+            _ => throw new ArgumentOutOfRangeException(nameof(phase), phase, "Unknown SculkSensorPhase value.")
+        };
+    }
 }

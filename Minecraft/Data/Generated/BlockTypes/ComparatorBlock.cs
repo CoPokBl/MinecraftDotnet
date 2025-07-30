@@ -123,6 +123,14 @@ public record ComparatorBlock(Identifier Identifier, Direction Facing, Comparato
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("mode", ModeToName(ModeValue)),
+            new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
     public enum Mode {
         Compare,
         Subtract,
@@ -133,6 +141,14 @@ public record ComparatorBlock(Identifier Identifier, Direction Facing, Comparato
             "compare" => Mode.Compare,
             "subtract" => Mode.Subtract,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Mode.")
+        };
+    }
+
+    public static string ModeToName(Mode value) {
+        return value switch {
+            Mode.Compare => "compare",
+            Mode.Subtract => "subtract",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Mode value.")
         };
     }
 }

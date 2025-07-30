@@ -87,6 +87,13 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("enabled", Enabled.ToString().ToLower()),
+            new StringTag("facing", FacingToName(FacingValue))
+        );
+    }
+    
     public enum Facing {
         Down,
         North,
@@ -103,6 +110,17 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
             "west" => Facing.West,
             "east" => Facing.East,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Facing.")
+        };
+    }
+
+    public static string FacingToName(Facing value) {
+        return value switch {
+            Facing.Down => "down",
+            Facing.North => "north",
+            Facing.South => "south",
+            Facing.West => "west",
+            Facing.East => "east",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Facing value.")
         };
     }
 }

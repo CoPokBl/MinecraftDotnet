@@ -122,4 +122,11 @@ public record BeehiveBlock(Identifier Identifier, Direction Facing, int HoneyLev
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("honey_level", HoneyLevel.ToString())
+        );
+    }
+    
 }

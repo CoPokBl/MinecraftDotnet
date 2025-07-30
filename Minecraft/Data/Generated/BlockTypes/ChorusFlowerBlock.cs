@@ -73,4 +73,10 @@ public record ChorusFlowerBlock(Identifier Identifier, int Age) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("age", Age.ToString())
+        );
+    }
+    
 }

@@ -64,4 +64,10 @@ public record TntBlock(Identifier Identifier, bool Unstable) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("unstable", Unstable.ToString().ToLower())
+        );
+    }
+    
 }

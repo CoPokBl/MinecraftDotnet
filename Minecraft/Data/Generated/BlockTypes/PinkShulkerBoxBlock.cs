@@ -73,4 +73,10 @@ public record PinkShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlo
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

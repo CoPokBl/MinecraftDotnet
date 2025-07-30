@@ -86,4 +86,11 @@ public record BrainCoralWallFanBlock(Identifier Identifier, Direction Facing, bo
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

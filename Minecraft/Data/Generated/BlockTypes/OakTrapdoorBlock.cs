@@ -317,6 +317,16 @@ public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, OakTrapd
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("half", HalfToName(HalfValue)),
+            new StringTag("open", Open.ToString().ToLower()),
+            new StringTag("powered", Powered.ToString().ToLower()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
     public enum Half {
         Top,
         Bottom,
@@ -327,6 +337,14 @@ public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, OakTrapd
             "top" => Half.Top,
             "bottom" => Half.Bottom,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Half.")
+        };
+    }
+
+    public static string HalfToName(Half value) {
+        return value switch {
+            Half.Top => "top",
+            Half.Bottom => "bottom",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Half value.")
         };
     }
 }

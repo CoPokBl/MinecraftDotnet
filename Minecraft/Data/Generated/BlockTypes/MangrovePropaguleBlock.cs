@@ -224,4 +224,13 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("age", Age.ToString()),
+            new StringTag("hanging", Hanging.ToString().ToLower()),
+            new StringTag("stage", Stage.ToString()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

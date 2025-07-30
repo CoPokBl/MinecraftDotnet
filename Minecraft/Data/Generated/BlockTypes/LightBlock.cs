@@ -158,4 +158,11 @@ public record LightBlock(Identifier Identifier, int Level, bool Waterlogged) : I
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("level", Level.ToString()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

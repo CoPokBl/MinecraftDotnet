@@ -171,6 +171,14 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("tilt", TiltToName(TiltValue)),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
     public enum Tilt {
         None,
         Unstable,
@@ -185,6 +193,16 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
             "partial" => Tilt.Partial,
             "full" => Tilt.Full,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Tilt.")
+        };
+    }
+
+    public static string TiltToName(Tilt value) {
+        return value switch {
+            Tilt.None => "none",
+            Tilt.Unstable => "unstable",
+            Tilt.Partial => "partial",
+            Tilt.Full => "full",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Tilt value.")
         };
     }
 }

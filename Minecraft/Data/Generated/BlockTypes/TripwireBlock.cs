@@ -574,4 +574,16 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("attached", Attached.ToString().ToLower()),
+            new StringTag("disarmed", Disarmed.ToString().ToLower()),
+            new StringTag("east", East.ToString().ToLower()),
+            new StringTag("north", North.ToString().ToLower()),
+            new StringTag("powered", Powered.ToString().ToLower()),
+            new StringTag("south", South.ToString().ToLower()),
+            new StringTag("west", West.ToString().ToLower())
+        );
+    }
+    
 }

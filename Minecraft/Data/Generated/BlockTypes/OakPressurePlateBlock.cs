@@ -64,4 +64,10 @@ public record OakPressurePlateBlock(Identifier Identifier, bool Powered) : IBloc
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

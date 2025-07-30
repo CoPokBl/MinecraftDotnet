@@ -86,4 +86,11 @@ public record BirchWallSignBlock(Identifier Identifier, Direction Facing, bool W
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName()),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
 }

@@ -13,4 +13,13 @@
       <ProjectReference Include="..\PolarWorlds\PolarWorlds.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Servers\SkyWarsLuckyBlock\Maps\lobby.polar">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Servers\SkyWarsLuckyBlock\Maps\ramen.polar">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

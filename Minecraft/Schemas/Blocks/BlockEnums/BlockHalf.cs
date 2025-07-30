@@ -13,4 +13,12 @@ public static class BlockHalfExtensions {
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for BlockHalf.")
         };
     }
+    
+    public static string ToName(this BlockHalf half) {
+        return half switch {
+            BlockHalf.Upper => "upper",
+            BlockHalf.Lower => "lower",
+            _ => throw new ArgumentOutOfRangeException(nameof(half), half, "Unknown BlockHalf value.")
+        };
+    }
 }

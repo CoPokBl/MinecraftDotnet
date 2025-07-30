@@ -111,6 +111,14 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("age", Age.ToString()),
+            new StringTag("leaves", LeavesToName(LeavesValue)),
+            new StringTag("stage", Stage.ToString())
+        );
+    }
+    
     public enum Leaves {
         None,
         Small,
@@ -123,6 +131,15 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
             "small" => Leaves.Small,
             "large" => Leaves.Large,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Leaves.")
+        };
+    }
+
+    public static string LeavesToName(Leaves value) {
+        return value switch {
+            Leaves.None => "none",
+            Leaves.Small => "small",
+            Leaves.Large => "large",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Leaves value.")
         };
     }
 }

@@ -69,4 +69,10 @@ public record ChippedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("facing", Facing.ToName())
+        );
+    }
+    
 }

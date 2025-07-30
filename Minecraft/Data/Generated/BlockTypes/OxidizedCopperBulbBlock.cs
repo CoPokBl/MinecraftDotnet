@@ -73,4 +73,11 @@ public record OxidizedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powe
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("lit", Lit.ToString().ToLower()),
+            new StringTag("powered", Powered.ToString().ToLower())
+        );
+    }
+    
 }

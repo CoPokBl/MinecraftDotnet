@@ -69,4 +69,10 @@ public record SuspiciousGravelBlock(Identifier Identifier, int Dusted) : IBlock 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("dusted", Dusted.ToString())
+        );
+    }
+    
 }

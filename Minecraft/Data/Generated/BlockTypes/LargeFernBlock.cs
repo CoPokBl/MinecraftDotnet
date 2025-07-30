@@ -65,4 +65,10 @@ public record LargeFernBlock(Identifier Identifier, BlockHalf Half) : IBlock {
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("half", Half.ToName())
+        );
+    }
+    
 }

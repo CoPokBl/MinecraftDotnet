@@ -33,4 +33,9 @@ public record WaterloggableBlock(Identifier Identifier, int ProtocolId, uint Sta
             Waterlogged = properties["waterlogged"].GetString() == "true"
         };
     }
+
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower()));
+    }
 }

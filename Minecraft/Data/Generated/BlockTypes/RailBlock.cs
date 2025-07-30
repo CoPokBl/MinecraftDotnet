@@ -122,6 +122,13 @@ public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool 
         };
     }
     
+    public CompoundTag ToStateNbt() {
+        return new CompoundTag(null, 
+                        new StringTag("shape", ShapeToName(ShapeValue)),
+            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        );
+    }
+    
     public enum Shape {
         NorthSouth,
         EastWest,
@@ -148,6 +155,22 @@ public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool 
             "north_west" => Shape.NorthWest,
             "north_east" => Shape.NorthEast,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Shape.")
+        };
+    }
+
+    public static string ShapeToName(Shape value) {
+        return value switch {
+            Shape.NorthSouth => "north_south",
+            Shape.EastWest => "east_west",
+            Shape.AscendingEast => "ascending_east",
+            Shape.AscendingWest => "ascending_west",
+            Shape.AscendingNorth => "ascending_north",
+            Shape.AscendingSouth => "ascending_south",
+            Shape.SouthEast => "south_east",
+            Shape.SouthWest => "south_west",
+            Shape.NorthWest => "north_west",
+            Shape.NorthEast => "north_east",
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Shape value.")
         };
     }
 }
