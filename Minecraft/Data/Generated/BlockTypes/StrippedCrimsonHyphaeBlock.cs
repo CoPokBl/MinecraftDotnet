@@ -69,7 +69,7 @@ public record StrippedCrimsonHyphaeBlock(Identifier Identifier, Axis Axis) : IBl
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("axis", Axis.ToName())
+            new StringTag("axis", Axis.ToName())
         );
     }
     

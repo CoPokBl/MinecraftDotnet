@@ -75,7 +75,7 @@ public record LanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("hanging", Hanging.ToString().ToLower()),
+            new StringTag("hanging", Hanging.ToString().ToLower()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );
     }

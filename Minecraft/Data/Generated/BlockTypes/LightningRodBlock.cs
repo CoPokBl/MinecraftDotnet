@@ -149,7 +149,7 @@ public record LightningRodBlock(Identifier Identifier, Cardinal Facing, bool Pow
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("powered", Powered.ToString().ToLower()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );

@@ -1238,7 +1238,7 @@ public record MossyStoneBrickWallBlock(Identifier Identifier, WallSide East, Wal
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("east", East.ToName()),
+            new StringTag("east", East.ToName()),
             new StringTag("north", North.ToName()),
             new StringTag("south", South.ToName()),
             new StringTag("up", Up.ToString().ToLower()),

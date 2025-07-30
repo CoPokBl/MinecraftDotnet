@@ -186,7 +186,7 @@ public record WarpedFenceGateBlock(Identifier Identifier, Direction Facing, bool
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("in_wall", InWall.ToString().ToLower()),
             new StringTag("open", Open.ToString().ToLower()),
             new StringTag("powered", Powered.ToString().ToLower())

@@ -342,7 +342,7 @@ public record PurpurStairsBlock(Identifier Identifier, Direction Facing, PurpurS
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("half", HalfToName(HalfValue)),
             new StringTag("shape", Shape.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())

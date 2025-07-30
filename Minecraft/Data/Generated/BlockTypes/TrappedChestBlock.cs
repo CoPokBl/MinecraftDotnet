@@ -146,7 +146,7 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("type", TypeToName(TypeValue)),
+            new StringTag("type", TypeToName(TypeValue)),
             new StringTag("facing", Facing.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );

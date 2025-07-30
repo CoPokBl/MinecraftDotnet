@@ -66,7 +66,7 @@ public record PodzolBlock(Identifier Identifier, bool Snowy) : IBlock {
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("snowy", Snowy.ToString().ToLower())
+            new StringTag("snowy", Snowy.ToString().ToLower())
         );
     }
     

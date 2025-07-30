@@ -140,7 +140,7 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("thickness", ThicknessToName(ThicknessValue)),
+            new StringTag("thickness", ThicknessToName(ThicknessValue)),
             new StringTag("vertical_direction", VerticalDirectionToName(VerticalDirectionValue)),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );

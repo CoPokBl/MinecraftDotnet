@@ -129,7 +129,7 @@ public record GreenBedBlock(Identifier Identifier, Direction Facing, bool Occupi
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("occupied", Occupied.ToString().ToLower()),
             new StringTag("part", Part.ToName())
         );

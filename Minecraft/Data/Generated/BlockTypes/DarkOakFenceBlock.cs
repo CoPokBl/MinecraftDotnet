@@ -190,7 +190,7 @@ public record DarkOakFenceBlock(Identifier Identifier, bool East, bool North, bo
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("east", East.ToString().ToLower()),
+            new StringTag("east", East.ToString().ToLower()),
             new StringTag("north", North.ToString().ToLower()),
             new StringTag("south", South.ToString().ToLower()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower()),

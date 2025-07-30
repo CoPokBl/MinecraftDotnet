@@ -163,7 +163,7 @@ public record DarkOakLeavesBlock(Identifier Identifier, int Distance, bool Persi
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("distance", Distance.ToString()),
+            new StringTag("distance", Distance.ToString()),
             new StringTag("persistent", Persistent.ToString().ToLower()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );

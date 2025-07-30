@@ -121,7 +121,7 @@ public record BlueCandleBlock(Identifier Identifier, int Candles, bool Lit, bool
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("candles", Candles.ToString()),
+            new StringTag("candles", Candles.ToString()),
             new StringTag("lit", Lit.ToString().ToLower()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );

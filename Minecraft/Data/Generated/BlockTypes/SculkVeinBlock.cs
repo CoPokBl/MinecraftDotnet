@@ -576,7 +576,7 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("down", Down.ToString().ToLower()),
+            new StringTag("down", Down.ToString().ToLower()),
             new StringTag("east", East.ToString().ToLower()),
             new StringTag("north", North.ToString().ToLower()),
             new StringTag("south", South.ToString().ToLower()),

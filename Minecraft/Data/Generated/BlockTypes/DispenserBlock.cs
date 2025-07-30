@@ -100,7 +100,7 @@ public record DispenserBlock(Identifier Identifier, Cardinal Facing, bool Trigge
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("triggered", Triggered.ToString().ToLower())
         );
     }

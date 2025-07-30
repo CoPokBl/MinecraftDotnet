@@ -71,7 +71,7 @@ public record PurpleGlazedTerracottaBlock(Identifier Identifier, Direction Facin
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName())
+            new StringTag("facing", Facing.ToName())
         );
     }
     

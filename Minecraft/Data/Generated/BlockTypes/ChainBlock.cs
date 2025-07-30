@@ -82,7 +82,7 @@ public record ChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : I
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("axis", Axis.ToName()),
+            new StringTag("axis", Axis.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );
     }

@@ -88,7 +88,7 @@ public record CherryWallSignBlock(Identifier Identifier, Direction Facing, bool 
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );
     }

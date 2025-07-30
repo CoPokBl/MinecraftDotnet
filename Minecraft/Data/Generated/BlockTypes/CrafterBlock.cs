@@ -214,7 +214,7 @@ public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Ori
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("crafting", Crafting.ToString().ToLower()),
+            new StringTag("crafting", Crafting.ToString().ToLower()),
             new StringTag("orientation", Orientation.ToName()),
             new StringTag("triggered", Triggered.ToString().ToLower())
         );

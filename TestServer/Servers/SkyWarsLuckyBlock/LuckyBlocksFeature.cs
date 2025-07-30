@@ -1,4 +1,3 @@
-using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
@@ -31,9 +30,12 @@ public class LuckyBlocksFeature : ScopedFeature {
             .With(DataComponent.ItemName, "Self Attacking Sword")
             .With(DataComponent.Lore,
                 [TextComponent.FromLegacyString("&7You didn't think we'd let you win that easily, did you?")]))),
-        (5, new ItemBlockResult(new ItemStack(Item.LeatherHelmet).WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
-            new AttributeModifiersFeature.Modifier(Attribute.Scale.Identifier, -0.5, "skywars:shrink_helmet", AttributeOperation.AddMultipliedTotal)
-        ]).With(DataComponent.ItemName, TextComponent.FromLegacyString("&bShrink Helmet")))),
+        (5, new ItemBlockResult(new ItemStack(Item.LeatherHelmet)
+            .WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
+                new AttributeModifiersFeature.Modifier(Attribute.Scale.Identifier, -0.5, "skywars:shrink_helmet", AttributeOperation.AddMultipliedTotal)
+            ])
+            .With(DataComponent.ItemName, TextComponent.FromLegacyString("&bShrink Helmet"))
+            .With(DataComponent.DyedColor, TextColor.Hex("21ed57#")))),
         (10, new ItemBlockResult(typeof(OneUpItem))),
         (5, new JacobBlockResult()),
         (1, new NukeBlockResult())

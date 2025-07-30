@@ -1404,6 +1404,7 @@ public static class VanillaRegistry {
         Data.DataComponents.Add(DataComponent.CustomModelData, 14);
         Data.DataComponents.Add(DataComponent.CustomName, 5);
         Data.DataComponents.Add(DataComponent.Damage, 3);
+        Data.DataComponents.Add(DataComponent.DyedColor, 35);
         Data.DataComponents.Add(DataComponent.EnchantmentGlintOverride, 18);
         Data.DataComponents.Add(DataComponent.Enchantments, 10);
         Data.DataComponents.Add(DataComponent.Equippable, 28);

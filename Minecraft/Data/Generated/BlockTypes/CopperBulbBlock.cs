@@ -75,7 +75,7 @@ public record CopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : I
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("lit", Lit.ToString().ToLower()),
+            new StringTag("lit", Lit.ToString().ToLower()),
             new StringTag("powered", Powered.ToString().ToLower())
         );
     }

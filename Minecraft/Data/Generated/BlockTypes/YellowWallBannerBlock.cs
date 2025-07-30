@@ -71,7 +71,7 @@ public record YellowWallBannerBlock(Identifier Identifier, Direction Facing) : I
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName())
+            new StringTag("facing", Facing.ToName())
         );
     }
     

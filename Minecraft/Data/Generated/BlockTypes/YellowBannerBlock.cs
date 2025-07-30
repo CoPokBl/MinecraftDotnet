@@ -95,7 +95,7 @@ public record YellowBannerBlock(Identifier Identifier, int Rotation) : IBlock {
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("rotation", Rotation.ToString())
+            new StringTag("rotation", Rotation.ToString())
         );
     }
     

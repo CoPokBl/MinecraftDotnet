@@ -88,7 +88,7 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("pickles", Pickles.ToString()),
+            new StringTag("pickles", Pickles.ToString()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );
     }

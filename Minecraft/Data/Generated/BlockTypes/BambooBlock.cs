@@ -113,7 +113,7 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("age", Age.ToString()),
+            new StringTag("age", Age.ToString()),
             new StringTag("leaves", LeavesToName(LeavesValue)),
             new StringTag("stage", Stage.ToString())
         );

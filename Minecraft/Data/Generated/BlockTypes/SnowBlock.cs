@@ -79,7 +79,7 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock {
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("layers", Layers.ToString())
+            new StringTag("layers", Layers.ToString())
         );
     }
     

@@ -173,7 +173,7 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("tilt", TiltToName(TiltValue)),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );

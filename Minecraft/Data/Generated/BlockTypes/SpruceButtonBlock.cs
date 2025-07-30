@@ -146,7 +146,7 @@ public record SpruceButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("face", Face.ToName()),
+            new StringTag("face", Face.ToName()),
             new StringTag("facing", Facing.ToName()),
             new StringTag("powered", Powered.ToString().ToLower())
         );

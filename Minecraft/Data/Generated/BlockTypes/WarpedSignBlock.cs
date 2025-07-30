@@ -160,7 +160,7 @@ public record WarpedSignBlock(Identifier Identifier, int Rotation, bool Waterlog
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("rotation", Rotation.ToString()),
+            new StringTag("rotation", Rotation.ToString()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );
     }

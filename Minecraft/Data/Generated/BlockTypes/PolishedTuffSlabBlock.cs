@@ -82,7 +82,7 @@ public record PolishedTuffSlabBlock(Identifier Identifier, SlabType Type, bool W
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("type", Type.ToName()),
+            new StringTag("type", Type.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );
     }

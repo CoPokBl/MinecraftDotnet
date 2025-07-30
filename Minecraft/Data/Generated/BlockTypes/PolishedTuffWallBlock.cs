@@ -1238,7 +1238,7 @@ public record PolishedTuffWallBlock(Identifier Identifier, WallSide East, WallSi
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("east", East.ToName()),
+            new StringTag("east", East.ToName()),
             new StringTag("north", North.ToName()),
             new StringTag("south", South.ToName()),
             new StringTag("up", Up.ToString().ToLower()),

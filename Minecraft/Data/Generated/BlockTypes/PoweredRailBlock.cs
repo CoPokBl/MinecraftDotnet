@@ -142,7 +142,7 @@ public record PoweredRailBlock(Identifier Identifier, bool Powered, RailDirectio
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("powered", Powered.ToString().ToLower()),
+            new StringTag("powered", Powered.ToString().ToLower()),
             new StringTag("shape", Shape.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );

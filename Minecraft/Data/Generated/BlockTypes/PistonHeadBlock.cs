@@ -143,7 +143,7 @@ public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeVa
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("type", TypeToName(TypeValue)),
+            new StringTag("type", TypeToName(TypeValue)),
             new StringTag("facing", Facing.ToName()),
             new StringTag("short", Short.ToString().ToLower())
         );

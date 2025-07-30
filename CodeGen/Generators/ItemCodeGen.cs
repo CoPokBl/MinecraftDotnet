@@ -238,6 +238,16 @@ public static class Item {
             string cooldownGroup = obj["cooldown_group"]?.ToObject<string>() ?? "null";
 
             return $"new UseCooldownComponent.Data({seconds}, {cooldownGroup})";
+        } },
+        { "TextColor", token => {
+            // integer with rgb bitshifted
+            if (token.Type == JTokenType.Integer) {
+                return $"TextColor.FromDecimal({token.ToObject<int>()})";
+            }
+
+            // array of 3 floats
+            JArray arr = token.ToObject<JArray>()!;
+            return $"TextColor.Rgb({arr[0].ToObject<float>()}f, {arr[1].ToObject<float>()}f, {arr[2].ToObject<float>()}f)";
         } }
     };
 

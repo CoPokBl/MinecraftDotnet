@@ -2084,7 +2084,7 @@ public record FireBlock(Identifier Identifier, int Age, bool East, bool North, b
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("age", Age.ToString()),
+            new StringTag("age", Age.ToString()),
             new StringTag("east", East.ToString().ToLower()),
             new StringTag("north", North.ToString().ToLower()),
             new StringTag("south", South.ToString().ToLower()),

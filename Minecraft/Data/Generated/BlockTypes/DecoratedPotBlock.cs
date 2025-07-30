@@ -118,7 +118,7 @@ public record DecoratedPotBlock(Identifier Identifier, bool Cracked, Direction F
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("cracked", Cracked.ToString().ToLower()),
+            new StringTag("cracked", Cracked.ToString().ToLower()),
             new StringTag("facing", Facing.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );

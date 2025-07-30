@@ -66,7 +66,7 @@ public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("has_record", HasRecord.ToString().ToLower())
+            new StringTag("has_record", HasRecord.ToString().ToLower())
         );
     }
     

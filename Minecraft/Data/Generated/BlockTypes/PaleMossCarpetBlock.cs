@@ -630,7 +630,7 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("bottom", Bottom.ToString().ToLower()),
+            new StringTag("bottom", Bottom.ToString().ToLower()),
             new StringTag("east", East.ToName()),
             new StringTag("north", North.ToName()),
             new StringTag("south", South.ToName()),

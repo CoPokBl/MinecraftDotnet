@@ -87,7 +87,7 @@ public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlo
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("orientation", Orientation.ToName())
+            new StringTag("orientation", Orientation.ToName())
         );
     }
     

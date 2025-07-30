@@ -128,7 +128,7 @@ public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeart
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("axis", Axis.ToName()),
+            new StringTag("axis", Axis.ToName()),
             new StringTag("creaking_heart_state", CreakingHeartStateToName(CreakingHeartStateValue)),
             new StringTag("natural", Natural.ToString().ToLower())
         );

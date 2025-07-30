@@ -71,7 +71,7 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("mode", ModeToName(ModeValue))
+            new StringTag("mode", ModeToName(ModeValue))
         );
     }
     

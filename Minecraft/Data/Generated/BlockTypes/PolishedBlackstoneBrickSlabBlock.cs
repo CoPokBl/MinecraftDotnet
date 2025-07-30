@@ -82,7 +82,7 @@ public record PolishedBlackstoneBrickSlabBlock(Identifier Identifier, SlabType T
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("type", Type.ToName()),
+            new StringTag("type", Type.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );
     }

@@ -75,7 +75,7 @@ public record WaxedOxidizedCopperBulbBlock(Identifier Identifier, bool Lit, bool
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("lit", Lit.ToString().ToLower()),
+            new StringTag("lit", Lit.ToString().ToLower()),
             new StringTag("powered", Powered.ToString().ToLower())
         );
     }

@@ -95,7 +95,7 @@ public record HeavyWeightedPressurePlateBlock(Identifier Identifier, int Power) 
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("power", Power.ToString())
+            new StringTag("power", Power.ToString())
         );
     }
     

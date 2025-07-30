@@ -1422,7 +1422,7 @@ public record CalibratedSculkSensorBlock(Identifier Identifier, Direction Facing
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("power", Power.ToString()),
             new StringTag("sculk_sensor_phase", SculkSensorPhase.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())

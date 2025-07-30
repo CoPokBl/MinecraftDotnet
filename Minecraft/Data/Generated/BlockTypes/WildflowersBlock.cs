@@ -108,7 +108,7 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("flower_amount", FlowerAmount.ToString())
         );
     }

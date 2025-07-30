@@ -77,7 +77,7 @@ public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("bites", Bites.ToString())
+            new StringTag("bites", Bites.ToString())
         );
     }
     

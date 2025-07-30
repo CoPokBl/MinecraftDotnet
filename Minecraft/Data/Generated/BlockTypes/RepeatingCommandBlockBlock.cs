@@ -93,7 +93,7 @@ public record RepeatingCommandBlockBlock(Identifier Identifier, bool Conditional
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("conditional", Conditional.ToString().ToLower()),
+            new StringTag("conditional", Conditional.ToString().ToLower()),
             new StringTag("facing", Facing.ToName())
         );
     }

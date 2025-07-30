@@ -8,7 +8,6 @@ using ManagedServer.Features.Impl;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
-using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Schemas;
@@ -22,7 +21,7 @@ namespace TestServer.Servers.SkyWarsLuckyBlock;
 
 public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, Action gameEndCallback) {
     private static readonly ITerrainProvider[] Maps = [
-        new PolarLoader("ramen.polar", VanillaRegistry.Data)
+        new PolarLoader(SkyWarsUtils.ReadPolarMap("ramen.polar"), VanillaRegistry.Data)
     ];
     
     private static readonly Vec3<double>[] MapSpawns = [

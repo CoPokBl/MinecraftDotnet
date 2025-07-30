@@ -319,7 +319,7 @@ public record SpruceTrapdoorBlock(Identifier Identifier, Direction Facing, Spruc
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("half", HalfToName(HalfValue)),
             new StringTag("open", Open.ToString().ToLower()),
             new StringTag("powered", Powered.ToString().ToLower()),

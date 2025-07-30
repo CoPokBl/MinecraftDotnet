@@ -220,7 +220,7 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("age", Age.ToString()),
+            new StringTag("age", Age.ToString()),
             new StringTag("berries", Berries.ToString().ToLower())
         );
     }

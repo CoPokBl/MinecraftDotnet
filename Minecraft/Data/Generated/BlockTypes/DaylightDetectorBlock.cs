@@ -133,7 +133,7 @@ public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Po
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("inverted", Inverted.ToString().ToLower()),
+            new StringTag("inverted", Inverted.ToString().ToLower()),
             new StringTag("power", Power.ToString())
         );
     }

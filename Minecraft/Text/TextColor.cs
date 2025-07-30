@@ -1,9 +1,9 @@
 namespace Minecraft.Text;
 
 public readonly struct TextColor : IEquatable<TextColor> {
-    public int R { get; }
-    public int G { get; }
-    public int B { get; }
+    public byte R { get; }
+    public byte G { get; }
+    public byte B { get; }
     
     public static readonly TextColor Black = Hex("#000000");
     public static readonly TextColor DarkBlue = Hex("#0000AA");
@@ -22,21 +22,21 @@ public readonly struct TextColor : IEquatable<TextColor> {
     public static readonly TextColor Yellow = Hex("#FFFF55");
     public static readonly TextColor White = Hex("#FFFFFF");
 
-    private TextColor(int r, int g, int b) {
+    private TextColor(byte r, byte g, byte b) {
         R = r;
         G = g;
         B = b;
     }
 
-    public static TextColor Rgb(int r, int g, int b) {
+    public static TextColor Rgb(byte r, byte g, byte b) {
         return new TextColor(r, g, b);
     }
     
     public static TextColor Rgb(float r, float g, float b) {
         return new TextColor(
-            (int)(r * 255),
-            (int)(g * 255),
-            (int)(b * 255)
+            (byte)(r * 255),
+            (byte)(g * 255),
+            (byte)(b * 255)
         );
     }
     
@@ -49,9 +49,9 @@ public readonly struct TextColor : IEquatable<TextColor> {
             hex = hex[1..];
         }
         
-        int r = Convert.ToInt32(hex.Substring(0, 2), 16);
-        int g = Convert.ToInt32(hex.Substring(2, 2), 16);
-        int b = Convert.ToInt32(hex.Substring(4, 2), 16);
+        byte r = Convert.ToByte(hex.Substring(0, 2), 16);
+        byte g = Convert.ToByte(hex.Substring(2, 2), 16);
+        byte b = Convert.ToByte(hex.Substring(4, 2), 16);
         
         return new TextColor(r, g, b);
     }
@@ -89,9 +89,9 @@ public readonly struct TextColor : IEquatable<TextColor> {
             throw new ArgumentOutOfRangeException(nameof(val), "Value must be between 0 and 0xFFFFFF.");
         }
         
-        int r = (val >> 16) & 0xFF;
-        int g = (val >> 8) & 0xFF;
-        int b = val & 0xFF;
+        byte r = (byte)((val >> 16) & 0xFF);
+        byte g = (byte)((val >> 8) & 0xFF);
+        byte b = (byte)(val & 0xFF);
         
         return new TextColor(r, g, b);
     }

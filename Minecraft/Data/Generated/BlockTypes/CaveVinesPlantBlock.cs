@@ -66,7 +66,7 @@ public record CaveVinesPlantBlock(Identifier Identifier, bool Berries) : IBlock 
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("berries", Berries.ToString().ToLower())
+            new StringTag("berries", Berries.ToString().ToLower())
         );
     }
     

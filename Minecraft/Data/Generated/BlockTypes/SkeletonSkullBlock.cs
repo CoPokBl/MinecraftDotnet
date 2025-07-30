@@ -133,7 +133,7 @@ public record SkeletonSkullBlock(Identifier Identifier, bool Powered, int Rotati
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("powered", Powered.ToString().ToLower()),
+            new StringTag("powered", Powered.ToString().ToLower()),
             new StringTag("rotation", Rotation.ToString())
         );
     }

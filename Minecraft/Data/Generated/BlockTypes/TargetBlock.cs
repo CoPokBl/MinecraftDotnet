@@ -95,7 +95,7 @@ public record TargetBlock(Identifier Identifier, int Power) : IBlock {
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("power", Power.ToString())
+            new StringTag("power", Power.ToString())
         );
     }
     

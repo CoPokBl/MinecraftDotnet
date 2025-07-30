@@ -124,7 +124,7 @@ public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool 
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("shape", ShapeToName(ShapeValue)),
+            new StringTag("shape", ShapeToName(ShapeValue)),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );
     }

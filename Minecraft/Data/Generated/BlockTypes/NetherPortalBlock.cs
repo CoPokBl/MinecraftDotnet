@@ -67,7 +67,7 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("axis", AxisToName(AxisValue))
+            new StringTag("axis", AxisToName(AxisValue))
         );
     }
     

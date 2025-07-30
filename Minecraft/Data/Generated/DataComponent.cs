@@ -14,6 +14,7 @@ public static class DataComponent {
     public static readonly CustomModelDataComponent CustomModelData = new(14);
     public static readonly CustomNameComponent CustomName = new(5);
     public static readonly DamageComponent Damage = new(3);
+    public static readonly DyedColorComponent DyedColor = new(35);
     public static readonly EnchantmentGlintOverrideComponent EnchantmentGlintOverride = new(18);
     public static readonly EnchantmentsComponent Enchantments = new(10);
     public static readonly EquippableComponent Equippable = new(28);

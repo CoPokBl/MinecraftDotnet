@@ -69,7 +69,7 @@ public record StrippedBambooBlockBlock(Identifier Identifier, Axis Axis) : IBloc
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("axis", Axis.ToName())
+            new StringTag("axis", Axis.ToName())
         );
     }
     

@@ -99,7 +99,7 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("age", Age.ToString()),
+            new StringTag("age", Age.ToString()),
             new StringTag("half", Half.ToName())
         );
     }

@@ -97,7 +97,7 @@ public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direc
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("face", Face.ToName()),
+            new StringTag("face", Face.ToName()),
             new StringTag("facing", Facing.ToName())
         );
     }

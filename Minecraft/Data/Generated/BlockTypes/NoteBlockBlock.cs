@@ -3584,7 +3584,7 @@ public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument In
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("instrument", InstrumentToName(InstrumentValue)),
+            new StringTag("instrument", InstrumentToName(InstrumentValue)),
             new StringTag("note", Note.ToString()),
             new StringTag("powered", Powered.ToString().ToLower())
         );

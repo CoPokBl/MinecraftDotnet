@@ -71,7 +71,7 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("mode", ModeToName(ModeValue))
+            new StringTag("mode", ModeToName(ModeValue))
         );
     }
     

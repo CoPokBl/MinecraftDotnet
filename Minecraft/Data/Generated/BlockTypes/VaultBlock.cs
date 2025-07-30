@@ -161,7 +161,7 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("ominous", Ominous.ToString().ToLower()),
             new StringTag("vault_state", VaultStateToName(VaultStateValue))
         );

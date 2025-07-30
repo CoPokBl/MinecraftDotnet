@@ -71,7 +71,7 @@ public record SoulWallTorchBlock(Identifier Identifier, Direction Facing) : IBlo
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName())
+            new StringTag("facing", Facing.ToName())
         );
     }
     

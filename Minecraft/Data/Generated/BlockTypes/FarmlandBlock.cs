@@ -79,7 +79,7 @@ public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("moisture", Moisture.ToString())
+            new StringTag("moisture", Moisture.ToString())
         );
     }
     

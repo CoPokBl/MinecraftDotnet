@@ -92,7 +92,7 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("has_bottle_0", HasBottle0.ToString().ToLower()),
+            new StringTag("has_bottle_0", HasBottle0.ToString().ToLower()),
             new StringTag("has_bottle_1", HasBottle1.ToString().ToLower()),
             new StringTag("has_bottle_2", HasBottle2.ToString().ToLower())
         );

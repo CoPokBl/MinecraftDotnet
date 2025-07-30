@@ -66,7 +66,7 @@ public record AcaciaPressurePlateBlock(Identifier Identifier, bool Powered) : IB
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("powered", Powered.ToString().ToLower())
+            new StringTag("powered", Powered.ToString().ToLower())
         );
     }
     

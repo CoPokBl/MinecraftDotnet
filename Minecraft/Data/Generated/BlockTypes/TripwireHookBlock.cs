@@ -118,7 +118,7 @@ public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction 
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("attached", Attached.ToString().ToLower()),
+            new StringTag("attached", Attached.ToString().ToLower()),
             new StringTag("facing", Facing.ToName()),
             new StringTag("powered", Powered.ToString().ToLower())
         );

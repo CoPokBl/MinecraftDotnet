@@ -73,7 +73,7 @@ public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("charges", Charges.ToString())
+            new StringTag("charges", Charges.ToString())
         );
     }
     

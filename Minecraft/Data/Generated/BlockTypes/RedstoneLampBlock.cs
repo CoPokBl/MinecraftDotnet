@@ -66,7 +66,7 @@ public record RedstoneLampBlock(Identifier Identifier, bool Lit) : IBlock {
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("lit", Lit.ToString().ToLower())
+            new StringTag("lit", Lit.ToString().ToLower())
         );
     }
     

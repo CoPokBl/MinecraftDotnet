@@ -125,7 +125,7 @@ public record ComparatorBlock(Identifier Identifier, Direction Facing, Comparato
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("mode", ModeToName(ModeValue)),
             new StringTag("powered", Powered.ToString().ToLower())
         );

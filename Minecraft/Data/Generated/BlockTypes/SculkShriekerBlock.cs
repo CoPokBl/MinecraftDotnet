@@ -92,7 +92,7 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("can_summon", CanSummon.ToString().ToLower()),
+            new StringTag("can_summon", CanSummon.ToString().ToLower()),
             new StringTag("shrieking", Shrieking.ToString().ToLower()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );

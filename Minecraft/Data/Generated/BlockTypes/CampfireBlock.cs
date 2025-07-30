@@ -186,7 +186,7 @@ public record CampfireBlock(Identifier Identifier, Direction Facing, bool Lit, b
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("lit", Lit.ToString().ToLower()),
             new StringTag("signal_fire", SignalFire.ToString().ToLower()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())

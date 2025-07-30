@@ -89,7 +89,7 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("enabled", Enabled.ToString().ToLower()),
+            new StringTag("enabled", Enabled.ToString().ToLower()),
             new StringTag("facing", FacingToName(FacingValue))
         );
     }

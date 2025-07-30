@@ -93,7 +93,7 @@ public record StickyPistonBlock(Identifier Identifier, bool Extended, Cardinal F
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("extended", Extended.ToString().ToLower()),
+            new StringTag("extended", Extended.ToString().ToLower()),
             new StringTag("facing", Facing.ToName())
         );
     }

@@ -88,7 +88,7 @@ public record MangroveWallSignBlock(Identifier Identifier, Direction Facing, boo
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("facing", Facing.ToName()),
+            new StringTag("facing", Facing.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );
     }

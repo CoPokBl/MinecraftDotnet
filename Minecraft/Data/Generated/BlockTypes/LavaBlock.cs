@@ -95,7 +95,7 @@ public record LavaBlock(Identifier Identifier, int Level) : IBlock {
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("level", Level.ToString())
+            new StringTag("level", Level.ToString())
         );
     }
     

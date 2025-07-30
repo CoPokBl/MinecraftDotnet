@@ -82,7 +82,7 @@ public record MossyCobblestoneSlabBlock(Identifier Identifier, SlabType Type, bo
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("type", Type.ToName()),
+            new StringTag("type", Type.ToName()),
             new StringTag("waterlogged", Waterlogged.ToString().ToLower())
         );
     }

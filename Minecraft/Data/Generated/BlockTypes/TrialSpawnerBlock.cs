@@ -93,7 +93,7 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(null, 
-                        new StringTag("ominous", Ominous.ToString().ToLower()),
+            new StringTag("ominous", Ominous.ToString().ToLower()),
             new StringTag("trial_spawner_state", TrialSpawnerStateToName(TrialSpawnerStateValue))
         );
     }
