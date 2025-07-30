@@ -19,7 +19,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
     public static readonly Tag<float> DamageTag = new("skywars:damage");
     public static readonly Tag<float> KnockbackTag = new("skywars:knockback");
     public static readonly Tag<bool> SelfAttackingTag = new("skywars:selfattacking");
-    public static readonly Tag<float> DamageMultiplierTag = new("skywars:damage_multiplier");
+    public static readonly Tag<float> DamageReductionTag = new("skywars:damage_multiplier");
     
     public override void Register() {
         AddEventListener<PlayerPacketHandleEvent>(e => {
@@ -73,10 +73,17 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
                 p.PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);
                 
                 // apply damage mods
-                damage *= p.Inventory.Helmet.GetTagOrDefault(DamageMultiplierTag, 1.0f);
-                damage *= p.Inventory.Chestplate.GetTagOrDefault(DamageMultiplierTag, 1.0f);
-                damage *= p.Inventory.Leggings.GetTagOrDefault(DamageMultiplierTag, 1.0f);
-                damage *= p.Inventory.Boots.GetTagOrDefault(DamageMultiplierTag, 1.0f);
+                float reduction = 
+                    p.Inventory.Helmet.GetTagOrDefault(DamageReductionTag, 0f) +
+                    p.Inventory.Chestplate.GetTagOrDefault(DamageReductionTag, 0f) +
+                    p.Inventory.Leggings.GetTagOrDefault(DamageReductionTag, 0f) +
+                    p.Inventory.Boots.GetTagOrDefault(DamageReductionTag, 0f);
+
+                if (reduction > 1f) {
+                    reduction = 1f;  // Cap reduction to 100%
+                }
+                
+                damage *= 1.0f - reduction;
             }
 
             if (entity is LivingEntity le) {

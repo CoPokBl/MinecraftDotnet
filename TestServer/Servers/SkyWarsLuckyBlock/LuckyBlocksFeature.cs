@@ -4,11 +4,13 @@ using ManagedServer.Events;
 using ManagedServer.Features;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
 using TestServer.Servers.SkyWarsLuckyBlock.BlockResults;
 using TestServer.Servers.SkyWarsLuckyBlock.Items;
+using Attribute = Minecraft.Data.Generated.Attribute;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
@@ -23,13 +25,15 @@ public class LuckyBlocksFeature : ScopedFeature {
         (10, new ItemBlockResult(new ItemStack(Item.Potato))),
         (10, new BuildUpBlockResult()),
         (10, new ItemBlockResult(typeof(InstaboomTntItem))),
-        (10, new ItemBlockResult(new ItemStack(Item.IronSword)
-            // .WithTag(SkyWarsCombatFeature.SelfAttackingTag, true)
-            .WithTag(SkyWarsCombatFeature.DamageTag, 2f)
-            .WithTag(SkyWarsCombatFeature.KnockbackTag, 20)
+        (10, new ItemBlockResult(new ItemStack(Item.DiamondSword)
+            .WithTag(SkyWarsCombatFeature.SelfAttackingTag, true)
+            .WithTag(SkyWarsCombatFeature.DamageTag, 10f)
             .With(DataComponent.ItemName, "Self Attacking Sword")
             .With(DataComponent.Lore,
                 [TextComponent.FromLegacyString("&7You didn't think we'd let you win that easily, did you?")]))),
+        (5, new ItemBlockResult(new ItemStack(Item.LeatherHelmet).WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
+            new AttributeModifiersFeature.Modifier(Attribute.Scale.Identifier, -0.5, "skywars:shrink_helmet", AttributeOperation.AddMultipliedTotal)
+        ]).With(DataComponent.ItemName, TextComponent.FromLegacyString("&bShrink Helmet")))),
         (10, new ItemBlockResult(typeof(OneUpItem))),
         (5, new JacobBlockResult()),
         (1, new NukeBlockResult())

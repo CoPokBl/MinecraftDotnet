@@ -25,28 +25,28 @@ public class SkyWarsChestsFeature : ScopedFeature {
         new(LuckyBlocksFeature.GetLuckyBlock(), 1f, 1, 32),
         
         // weapons
-        new(new ItemStack(Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 4f), 0.8f, 1, 1),
-        new(new ItemStack(Item.IronSword).WithTag(SkyWarsCombatFeature.DamageTag, 6f), 0.3f, 1, 1),
-        new(new ItemStack(Item.DiamondSword).WithTag(SkyWarsCombatFeature.DamageTag, 8f), 0.1f, 1, 1),
+        new(new ItemStack(Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 6f), 0.8f, 1, 1),
+        new(new ItemStack(Item.IronSword).WithTag(SkyWarsCombatFeature.DamageTag, 8f), 0.3f, 1, 1),
+        new(new ItemStack(Item.DiamondSword).WithTag(SkyWarsCombatFeature.DamageTag, 10f), 0.1f, 1, 1),
         
         // armour
-        new(new ItemStack(Item.IronChestplate).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.6f), 0.15f, 1, 1),
-        new(new ItemStack(Item.IronLeggings).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.6f), 0.15f, 1, 1),
-        new(new ItemStack(Item.IronHelmet).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.6f), 0.15f, 1, 1),
-        new(new ItemStack(Item.IronBoots).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.6f), 0.15f, 1, 1),
-        new(new ItemStack(Item.GoldenChestplate).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.8f), 0.2f, 1, 1),
-        new(new ItemStack(Item.GoldenLeggings).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.8f), 0.2f, 1, 1),
-        new(new ItemStack(Item.GoldenHelmet).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.8f), 0.2f, 1, 1),
-        new(new ItemStack(Item.GoldenBoots).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.8f), 0.2f, 1, 1),
-        new(new ItemStack(Item.DiamondChestplate).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.4f), 0.1f, 1, 1),
-        new(new ItemStack(Item.DiamondLeggings).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.4f), 0.1f, 1, 1),
-        new(new ItemStack(Item.DiamondHelmet).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.4f), 0.1f, 1, 1),
-        new(new ItemStack(Item.DiamondBoots).WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.4f), 0.1f, 1, 1),
+        new(new ItemStack(Item.GoldenChestplate).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f), 0.2f, 1, 1),
+        new(new ItemStack(Item.GoldenLeggings).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f), 0.2f, 1, 1),
+        new(new ItemStack(Item.GoldenHelmet).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f), 0.2f, 1, 1),
+        new(new ItemStack(Item.GoldenBoots).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f), 0.2f, 1, 1),
+        new(new ItemStack(Item.IronChestplate).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.1f), 0.15f, 1, 1),
+        new(new ItemStack(Item.IronLeggings).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.1f), 0.15f, 1, 1),
+        new(new ItemStack(Item.IronHelmet).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.1f), 0.15f, 1, 1),
+        new(new ItemStack(Item.IronBoots).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.1f), 0.15f, 1, 1),
+        new(new ItemStack(Item.DiamondChestplate).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.2f), 0.1f, 1, 1),
+        new(new ItemStack(Item.DiamondLeggings).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.2f), 0.07f, 1, 1),
+        new(new ItemStack(Item.DiamondHelmet).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.2f), 0.1f, 1, 1),
+        new(new ItemStack(Item.DiamondBoots).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.2f), 0.1f, 1, 1),
         new(new ItemStack(Item.TurtleHelmet)
-            .WithTag(SkyWarsCombatFeature.DamageMultiplierTag, 0.2f)
+            .WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.5f)
             .With(DataComponent.ItemName, TextComponent.FromLegacyString("&aHelmet of the no moving and no damage"))
             .WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
-                new AttributeModifiersFeature.Modifier(Attribute.MovementSpeed.Identifier, -0.5, 
+                new AttributeModifiersFeature.Modifier(Attribute.MovementSpeed.Identifier, -1, 
                     "skywars:nomovenodamagehelmet", AttributeOperation.AddMultipliedTotal)
             ]), 0.1f, 1, 1),
     ];

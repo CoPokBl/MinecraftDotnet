@@ -36,6 +36,7 @@ public class AttributeModifiersFeature : ScopedFeature {
             if (e.NewItem.HasTag(AttributeModifiersTag)) {
                 Modifier[] modifiers = e.NewItem.GetTag(AttributeModifiersTag);
                 foreach (Modifier modifier in modifiers) {
+                    inventory.Owner.RemoveAttributeModifier(Scope.Server.Registry.Attributes[modifier.Attribute], modifier.Id);
                     inventory.Owner.AddAttributeModifier(Scope.Server.Registry.Attributes[modifier.Attribute], modifier.ToAttributeModifier());
                 }
             }
