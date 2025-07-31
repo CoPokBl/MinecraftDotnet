@@ -4,6 +4,8 @@ using ManagedServer.Events.Attributes;
 using ManagedServer.Inventory;
 using ManagedServer.Viewables;
 using Minecraft;
+using Minecraft.Data.Components.Types;
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas.Items;
@@ -22,6 +24,14 @@ public class InventoryClickFeature : ScopedFeature {
     private static readonly Tag<DragType> DraggingTag = new("managedserver:inventoryclick:dragging");
     private static readonly Tag<List<int>> DragSlotsTag = new("managedserver:inventoryclick:drag_slots");
     private const int DefaultMaxStackSize = 64; // Default max stack size for items
+    
+    private static readonly int[] PlayerInvEquipmentSlots = [
+        PlayerInventory.HelmetSlot,
+        PlayerInventory.ChestplateSlot,
+        PlayerInventory.LeggingsSlot,
+        PlayerInventory.BootsSlot,
+        PlayerInventory.OffhandSlot
+    ];
     
     private enum DragType {
         None,
@@ -43,16 +53,37 @@ public class InventoryClickFeature : ScopedFeature {
         return SearchRangeForDestinationSlot(item, inv, 0, inv.Size-1);
     }
     
-    private static int SearchRangeForDestinationSlot(ItemStack item, Inventory.Inventory inv, int startIndex, int endIndex) {
+    private static int SearchRangeForDestinationSlot(ItemStack item, Inventory.Inventory inv, int startIndex, int endIndex, int[]? prefixedSlots = null) {
+        prefixedSlots ??= [];
+        
+        EquippableComponent.Data? equipData = item.GetOrNull(DataComponent.Equippable);
+        
+        int[] slots = new int[endIndex - startIndex + 1 + prefixedSlots.Length];
+        for (int i = 0; i < prefixedSlots.Length; i++) {
+            slots[i] = prefixedSlots[i];
+        }
         for (int i = startIndex; i < endIndex + 1; i++) {
+            slots[i - startIndex + prefixedSlots.Length] = i;
+        }
+
+        foreach (int i in slots) {
             int maxStackSize = inv[i].GetMaxStackSize(DefaultMaxStackSize);
             if (inv[i].CanStackWith(item) && inv[i].Count < maxStackSize) {
                 return i;
             }
         }
 
-        for (int i = startIndex; i < endIndex + 1; i++) {
-            if (inv[i].IsAir()) {
+        foreach (int i in slots) {
+            EquippableComponent.Slot? slot = inv is PlayerInventory ? i switch {
+                PlayerInventory.HelmetSlot => EquippableComponent.Slot.Head,
+                PlayerInventory.ChestplateSlot => EquippableComponent.Slot.Chest,
+                PlayerInventory.LeggingsSlot => EquippableComponent.Slot.Legs,
+                PlayerInventory.BootsSlot => EquippableComponent.Slot.Feet,
+                PlayerInventory.OffhandSlot => EquippableComponent.Slot.OffHand,
+                _ => null
+            } : null;
+            
+            if (inv[i].IsAir() && (slot == null || slot == equipData?.Slot)) {
                 return i;
             }
         }
@@ -280,11 +311,12 @@ public class InventoryClickFeature : ScopedFeature {
                         // in the remaining inventory, and vice versa.
                         
                         bool isHotbarItem = effectiveSlot is >= PlayerInventory.HotbarSlot1 and <= PlayerInventory.HotbarSlot9;
-                        Func<ItemStack, Inventory.Inventory, int> slotGetter = isHotbarItem
-                            ? (stack, inv) => SearchRangeForDestinationSlot(stack, inv,
-                                clickedInventory.PlayerInventoryStartIndex, PlayerInventory.HotbarSlot1 - 1)
-                            : (stack, inv) => SearchRangeForDestinationSlot(stack, inv,
-                                PlayerInventory.HotbarSlot1, PlayerInventory.HotbarSlot9);
+                        bool isEquipmentItem = PlayerInvEquipmentSlots.Contains(effectiveSlot);
+                        Func<ItemStack, Inventory.Inventory, int> slotGetter = isHotbarItem || isEquipmentItem
+                            ? (stack, inv) => SearchRangeForDestinationSlot(stack, inv,  // Search in upper inventory
+                                clickedInventory.PlayerInventoryStartIndex, PlayerInventory.HotbarSlot1 - 1, isEquipmentItem ? [] : PlayerInvEquipmentSlots)
+                            : (stack, inv) => SearchRangeForDestinationSlot(stack, inv,  // Search in hotbar + equipment
+                                PlayerInventory.HotbarSlot1, PlayerInventory.HotbarSlot9, PlayerInvEquipmentSlots);
 
                         // Move the item to the first available slot in the other section
                         TransferItemToInventorySection(itemToMove, effectiveSlot, clickedInventory, clickedInventory, slotGetter);
@@ -300,6 +332,11 @@ public class InventoryClickFeature : ScopedFeature {
                 // Hotkey it into a slot
                 case 2: {
                     int slotToSwapTo = packet.Button; // this is apparently a hotbar slot index
+                    if (slotToSwapTo == 40) {  // Magic number for offhand slot
+                        // TODO: Stop putting offhand into armour slot when it's not a valid armour piece
+                        (player.Inventory.Offhand, targetInventory[effectiveSlot]) = (targetInventory[effectiveSlot], player.Inventory.Offhand);
+                        break;
+                    }
 
                     ItemStack hotBarItem = player.Inventory.GetHotbarItem(slotToSwapTo);
                     player.Inventory.SetHotbarItem(slotToSwapTo, targetInventory[effectiveSlot]);

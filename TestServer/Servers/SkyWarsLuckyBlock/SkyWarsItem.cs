@@ -24,6 +24,10 @@ public abstract class SkyWarsItem {
         return true;
     }
 
+    public virtual void OnHitWhileWearing(PlayerEntity wearer, PlayerEntity attacker) {
+        
+    }
+
     public static void DoKaboom(World world, Vec3<int> position, int explodeRadius, int launchRadius, double launchPower) {
         IAudience audience = world.GetViewersOf(position);
         

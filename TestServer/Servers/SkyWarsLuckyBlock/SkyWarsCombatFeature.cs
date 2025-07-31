@@ -76,19 +76,27 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
             
             if (entity is PlayerEntity p) {
                 p.PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);
+
+                ItemStack[] armour = [
+                    p.Inventory.Helmet,
+                    p.Inventory.Chestplate,
+                    p.Inventory.Leggings,
+                    p.Inventory.Boots
+                ];
                 
                 // apply damage mods
-                float reduction = 
-                    p.Inventory.Helmet.GetTagOrDefault(DamageReductionTag, 0f) +
-                    p.Inventory.Chestplate.GetTagOrDefault(DamageReductionTag, 0f) +
-                    p.Inventory.Leggings.GetTagOrDefault(DamageReductionTag, 0f) +
-                    p.Inventory.Boots.GetTagOrDefault(DamageReductionTag, 0f);
+                float reduction = armour.Sum(v => v.GetTagOrDefault(DamageReductionTag, 0f));
 
                 if (reduction > 1f) {
                     reduction = 1f;  // Cap reduction to 100%
                 }
                 
                 damage *= 1.0f - reduction;
+                
+                foreach (ItemStack armourPiece in armour) {
+                    SkyWarsItem? swItem = SkyWarsItemsFeature.GetItem(armourPiece);
+                    swItem?.OnHitWhileWearing(p, attacker);
+                }
             }
 
             if (entity is LivingEntity le) {

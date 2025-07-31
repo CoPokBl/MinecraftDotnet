@@ -4,6 +4,7 @@ using ManagedServer.Events.Types;
 using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
 using Minecraft.Implementations.Events;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 
@@ -16,6 +17,7 @@ public class PlayerPlaceBlockEvent : ICancelableEvent, IPlayerEvent {
     public required IBlock Block { get; set; }
     public bool ConsumeItem { get; set; } = true;
     public required ItemStack UsedItem { get; init; }
+    public required Hand Hand { get; init; }
     public required World World { get; init; }
 
     /// <summary>

@@ -35,10 +35,24 @@ public class LuckyBlocksFeature : ScopedFeature {
                 new AttributeModifiersFeature.Modifier(Attribute.Scale.Identifier, -0.5, "skywars:shrink_helmet", AttributeOperation.AddMultipliedTotal)
             ])
             .With(DataComponent.ItemName, TextComponent.FromLegacyString("&bShrink Helmet"))
-            .With(DataComponent.DyedColor, TextColor.Hex("21ed57#")))),
+            .With(DataComponent.EnchantmentGlintOverride, true)
+            .With(DataComponent.DyedColor, TextColor.Hex("#21ed57")))),
         (10, new ItemBlockResult(typeof(OneUpItem))),
         (5, new JacobBlockResult()),
-        (1, new NukeBlockResult())
+        (1, new NukeBlockResult()),
+        (10, new ItemBlockResult(new ItemStack(Item.Shield).With(DataComponent.ItemName, "Cosmetic Shield")
+            .With(DataComponent.Lore, [TextComponent.FromLegacyString("&7A shield that does nothing, but looks cool!")]))),
+        (5, new ItemBlockResult(new ItemStack(Item.LeatherBoots).With(DataComponent.ItemName, "Boots of Jumping")
+            .With(DataComponent.Lore, [
+                TextComponent.FromLegacyString("&7These boots allow you to jump higher!"),
+                TextComponent.FromLegacyString("&7However, they will not protect you.")
+            ])
+            .With(DataComponent.DyedColor, TextColor.Hex("#78ff00"))
+            .With(DataComponent.EnchantmentGlintOverride, true)
+            .WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
+                new AttributeModifiersFeature.Modifier(Attribute.JumpStrength.Identifier, 1, "skywars:jumping_boots", AttributeOperation.AddMultipliedTotal)
+            ]))),
+        (500, new ItemBlockResult(typeof(ExplosiveChestplateItem)))
     ];
     
     private enum LuckyBlockType {

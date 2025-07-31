@@ -19,7 +19,8 @@ public class SkyWarsItemsFeature : ScopedFeature {
         new MagicToyStickItem(),
         new TeleportOrbItem(),
         new OneUpItem(),
-        new InstaboomTntItem()
+        new InstaboomTntItem(),
+        new ExplosiveChestplateItem()
     ];
     
     public override void Register() {
@@ -83,6 +84,15 @@ public class SkyWarsItemsFeature : ScopedFeature {
                 e.Cancelled = true;
             }
         });
+    }
+    
+    public static SkyWarsItem? GetItem(ItemStack stack) {
+        string? id = stack.GetTagOrNull(ItemTypeTag);
+        if (id == null) {
+            return null;
+        }
+        
+        return Items.FirstOrDefault(i => i.Id == id);
     }
 
     public static ItemStack CreateItem(Type itemType) {

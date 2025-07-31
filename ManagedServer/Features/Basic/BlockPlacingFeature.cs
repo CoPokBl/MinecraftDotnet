@@ -44,12 +44,27 @@ public class BlockPlacingFeature : ScopedFeature {
         }
         
         // let's get the block
-        ItemStack heldItem = player.HeldItem;
-        Identifier? blockId = heldItem.Type.CorrespondingBlock;
-        if (blockId == null) {
-            return;  // no block to place
+        Identifier blockId;
+        ItemStack usedItem;
+        Hand hand;
+
+        if (player.HeldItem.Type.CorrespondingBlock != null) {
+            blockId = player.HeldItem.Type.CorrespondingBlock.Value;
+            usedItem = player.HeldItem;
+            hand = Hand.MainHand;
         }
-        IBlock block = player.Server.Registry.Blocks[blockId.Value];
+        else if (player.Inventory.Offhand.Type.CorrespondingBlock != null) {
+            blockId = player.Inventory.Offhand.Type.CorrespondingBlock.Value;
+            usedItem = player.Inventory.Offhand;
+            hand = Hand.OffHand;
+        }
+        else {
+            // no block to place
+            return;
+        }
+        
+        
+        IBlock block = player.Server.Registry.Blocks[blockId];
         
         // is player inside that block?
         bool insideEntity = false;
@@ -81,7 +96,8 @@ public class BlockPlacingFeature : ScopedFeature {
             Block = block,
             Position = target,
             World = player.World!,
-            UsedItem = heldItem
+            UsedItem = usedItem,
+            Hand = hand
         };
         Scope.Events.CallEvent(placeEvent);
 
@@ -96,8 +112,8 @@ public class BlockPlacingFeature : ScopedFeature {
         player.SendPacket(ackPacket);
 
         if (placeEvent.ConsumeItem) {
-            ItemStack newItem = heldItem.Count > 1 ? heldItem.WithCount(heldItem.Count - 1) : ItemStack.Air;
-            player.Inventory.SetHotbarItem(player.ActiveHotbarSlot, newItem);
+            ItemStack newItem = usedItem.SubtractCount(1);
+            player.SetItemInHand(hand, newItem);
         }
     }
 }
