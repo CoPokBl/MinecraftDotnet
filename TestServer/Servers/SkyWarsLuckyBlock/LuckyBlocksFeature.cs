@@ -1,10 +1,13 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
+using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
+using Minecraft.Data.Sounds;
 using Minecraft.Implementations.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
+using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
 using TestServer.Servers.SkyWarsLuckyBlock.BlockResults;
@@ -52,7 +55,15 @@ public class LuckyBlocksFeature : ScopedFeature {
             .WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
                 new AttributeModifiersFeature.Modifier(Attribute.JumpStrength.Identifier, 1, "skywars:jumping_boots", AttributeOperation.AddMultipliedTotal)
             ]))),
-        (500, new ItemBlockResult(typeof(ExplosiveChestplateItem)))
+        (5, new ItemBlockResult(typeof(ExplosiveChestplateItem))),
+        (5, new ItemBlockResult(new ItemStack(Item.Apple)
+            .With(DataComponent.ItemName, "Newton's Apple")
+            // .With(DataComponent.Equippable, new EquippableComponent.Data(
+            //     EquippableComponent.Slot.Head, Or<ISoundType, SoundEvent>.FromValue1(SoundType.PlayerHurt), 
+            //     null, null, null, false, true, false))
+            .WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
+                new AttributeModifiersFeature.Modifier(Attribute.Gravity.Identifier, -0.5, "skywars:newtons_apple", AttributeOperation.AddMultipliedTotal)
+            ])))
     ];
     
     private enum LuckyBlockType {

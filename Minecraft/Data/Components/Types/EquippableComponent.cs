@@ -5,6 +5,7 @@ using Minecraft.Schemas.Sound;
 
 namespace Minecraft.Data.Components.Types;
 
+// TODO: Make this actually work without kicking the client
 public record EquippableComponent(int ProtocolId) : IDataComponent<EquippableComponent.Data> {
     public override Identifier Identifier => "minecraft:equippable";
     

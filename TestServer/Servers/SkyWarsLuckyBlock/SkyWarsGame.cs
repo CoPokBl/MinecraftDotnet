@@ -72,12 +72,12 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
         return spawns;
     }
     
-    private void Die(PlayerEntity player, string msg) {
+    private void Die(PlayerEntity player) {
         if (HasEnded) {
             return;
         }
         
-        player.SendMessage(TextComponent.FromLegacyString($"&c{msg}"));
+        World.SendMessage(TextComponent.FromLegacyString($"&6{player.Name} &chas been killed!"));
         player.GameMode = GameMode.Spectator;
 
         foreach (ItemStack item in player.Inventory.Items) {
@@ -130,7 +130,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
             });
         }
         
-        World.AddFeature(new SkyWarsCombatFeature(p => Die(p, "You were killed!")));
+        World.AddFeature(new SkyWarsCombatFeature(p => Die(p)));
         
         World.Events.AddListener<EntityMoveEvent>(e => {
             if (e.NewPos.Y > -10) {
@@ -142,11 +142,11 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
                 return;
             }
 
-            Die(player, "You fell out of the world!");
+            Die(player);
         });
 
         World.Events.AddListener<PlayerDisconnectEvent>(e => {
-            Die(e.Player, "You disconnected from the game!");
+            Die(e.Player);
         });
     }
 }
