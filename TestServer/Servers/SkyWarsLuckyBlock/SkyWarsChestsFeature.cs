@@ -31,15 +31,17 @@ public class SkyWarsChestsFeature : ScopedFeature {
         
         // armour
         new(new ItemStack(Item.GoldenChestplate).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f), 0.2f, 1, 1),
-        new(new ItemStack(Item.GoldenLeggings).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f), 0.2f, 1, 1),
+        new(new ItemStack(Item.GoldenLeggings).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f), 0.1f, 1, 1),
         new(new ItemStack(Item.GoldenHelmet).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f), 0.2f, 1, 1),
         new(new ItemStack(Item.GoldenBoots).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f), 0.2f, 1, 1),
+        
         new(new ItemStack(Item.IronChestplate).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.1f), 0.15f, 1, 1),
-        new(new ItemStack(Item.IronLeggings).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.1f), 0.15f, 1, 1),
+        new(new ItemStack(Item.IronLeggings).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.1f), 0.1f, 1, 1),
         new(new ItemStack(Item.IronHelmet).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.1f), 0.15f, 1, 1),
         new(new ItemStack(Item.IronBoots).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.1f), 0.15f, 1, 1),
+        
         new(new ItemStack(Item.DiamondChestplate).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.2f), 0.1f, 1, 1),
-        new(new ItemStack(Item.DiamondLeggings).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.2f), 0.07f, 1, 1),
+        new(new ItemStack(Item.DiamondLeggings).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.2f), 0.05f, 1, 1),
         new(new ItemStack(Item.DiamondHelmet).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.2f), 0.1f, 1, 1),
         new(new ItemStack(Item.DiamondBoots).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.2f), 0.1f, 1, 1),
         new(new ItemStack(Item.TurtleHelmet)

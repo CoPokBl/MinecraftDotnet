@@ -18,7 +18,10 @@ public record EquippableComponent(int ProtocolId) : IDataComponent<EquippableCom
             .WritePrefixedOptional(val.AllowedEntities, (set, w) => w.Write(set, registry))
             .WriteBoolean(val.Dispensable)
             .WriteBoolean(val.Swappable)
-            .WriteBoolean(val.DamageOnHurt);
+            .WriteBoolean(val.DamageOnHurt)
+            .WriteBoolean(val.EquipOnInteract)
+            .WriteBoolean(val.CanBeSheared)
+            .WriteIdOr(val.ShearSound, (sound, w) => w.Write(sound, registry));
     }
 
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
@@ -33,12 +36,20 @@ public record EquippableComponent(int ProtocolId) : IDataComponent<EquippableCom
         bool dispensable = reader.ReadBoolean();
         bool swappable = reader.ReadBoolean();
         bool damageOnHurt = reader.ReadBoolean();
+        bool equipOnInteract = reader.ReadBoolean();
+        bool canBeSheared = reader.ReadBoolean();
+        Or<ISoundType, SoundEvent> shearSound = reader.ReadIdOr(
+            id => registry.SoundTypes[id],
+            r => r.Read<SoundEvent>(registry)
+        );
 
-        return new Data(slot, equipSound, model, cameraOverlay, allowedEntities, dispensable, swappable, damageOnHurt);
+        return new Data(slot, equipSound, model, cameraOverlay, allowedEntities, dispensable, swappable, damageOnHurt, 
+            equipOnInteract, canBeSheared, shearSound);
     }
 
     public record Data(Slot Slot, Or<ISoundType, SoundEvent> EquipSound, Identifier? Model, Identifier? CameraOverlay, 
-        IdSet? AllowedEntities, bool Dispensable, bool Swappable, bool DamageOnHurt);
+        IdSet? AllowedEntities, bool Dispensable, bool Swappable, bool DamageOnHurt, bool EquipOnInteract, 
+        bool CanBeSheared, Or<ISoundType, SoundEvent> ShearSound);
     
     public enum Slot {
         MainHand = 0,

@@ -196,13 +196,15 @@ public static class Item {
             string dispensable = obj["dispensable"]?.ToObject<bool>().ToString().ToLower() ?? "true";
             string swappable = obj["swappable"]?.ToObject<bool>().ToString().ToLower() ?? "true";
             string damageOnHurt = obj["damage_on_hurt"]?.ToObject<bool>().ToString().ToLower() ?? "true";
+            string equipOnInteract = obj["equip_on_interact"]?.ToObject<bool>().ToString().ToLower() ?? "false";
 
             string allowedEntities = "null";
             if (obj.TryGetValue("allowed_entities", out JToken? allowedToken)) {
                 allowedEntities = GetIdSet(allowedToken, id => "EntityType." + CodeGenUtils.NamespacedIdToPascalName(id));
             }
 
-            return $"new EquippableComponent.Data({slot}, {sound}, {model}, {cameraOverlay}, {allowedEntities}, {dispensable}, {swappable}, {damageOnHurt})";
+            return $"new EquippableComponent.Data({slot}, {sound}, {model}, {cameraOverlay}, {allowedEntities}, " +
+                   $"{dispensable}, {swappable}, {damageOnHurt}, {equipOnInteract}, true, SoundType.ShearsSnip)";
         } },
         { "Tool", token => {
             JObject obj = token.ToObject<JObject>()!;

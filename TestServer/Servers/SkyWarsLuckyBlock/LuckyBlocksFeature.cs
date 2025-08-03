@@ -21,7 +21,7 @@ public class LuckyBlocksFeature : ScopedFeature {
     
     private static readonly (int weight, IBlockResult result)[] LuckyBlocks = [
         (10, new ItemBlockResult(typeof(KnockbackStickItem))),
-        (10, new ItemBlockResult(typeof(MagicToyStickItem))),
+        (3, new ItemBlockResult(typeof(MagicToyStickItem))),
         (10, new FullHealBlockResult()),
         (10, new ItemBlockResult(typeof(TeleportOrbItem))),
         (10, new ItemBlockResult(new ItemStack(Item.Potato))),
@@ -56,14 +56,22 @@ public class LuckyBlocksFeature : ScopedFeature {
                 new AttributeModifiersFeature.Modifier(Attribute.JumpStrength.Identifier, 1, "skywars:jumping_boots", AttributeOperation.AddMultipliedTotal)
             ]))),
         (5, new ItemBlockResult(typeof(ExplosiveChestplateItem))),
-        (5, new ItemBlockResult(new ItemStack(Item.Apple)
+        (500, new ItemBlockResult(new ItemStack(Item.Apple)
             .With(DataComponent.ItemName, "Newton's Apple")
-            // .With(DataComponent.Equippable, new EquippableComponent.Data(
-            //     EquippableComponent.Slot.Head, Or<ISoundType, SoundEvent>.FromValue1(SoundType.PlayerHurt), 
-            //     null, null, null, false, true, false))
+            .With(DataComponent.Equippable, new EquippableComponent.Data(EquippableComponent.Slot.Head, 
+                Or<ISoundType, SoundEvent>.FromValue2(new SoundEvent(SoundType.ArmorEquipDiamond, 1f)), 
+                null, null, null, true, true, true, 
+                true, false, Or<ISoundType, SoundEvent>.FromValue1(SoundType.AllayDeath)))
+            // .With(DataComponent.AttributeModifiers, [
+            //     new ItemAttributeModifier(Attribute.Gravity, "skywars:newtonsapple", -1.0, AttributeOperation.AddMultipliedTotal, AttributeActiveSlot.Body)
+            // ])
             .WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
                 new AttributeModifiersFeature.Modifier(Attribute.Gravity.Identifier, -0.5, "skywars:newtons_apple", AttributeOperation.AddMultipliedTotal)
-            ])))
+            ])
+        )),
+        (5, new ItemBlockResult(new ItemStack(Item.LeatherLeggings).With(DataComponent.Lore, [
+            TextComponent.FromLegacyString("&7Thought you might need these.")
+        ]).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f)))
     ];
     
     private enum LuckyBlockType {
