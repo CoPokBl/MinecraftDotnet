@@ -1,8 +1,6 @@
-using ManagedServer;
 using ManagedServer.Events;
 using ManagedServer.Features;
 using Minecraft.Implementations.Tags;
-using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using TestServer.Servers.SkyWarsLuckyBlock.Items;
@@ -20,7 +18,8 @@ public class SkyWarsItemsFeature : ScopedFeature {
         new TeleportOrbItem(),
         new OneUpItem(),
         new InstaboomTntItem(),
-        new ExplosiveChestplateItem()
+        new ExplosiveChestplateItem(),
+        new ChestplateOfNoMovingItem()
     ];
     
     public override void Register() {

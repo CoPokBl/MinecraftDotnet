@@ -1,4 +1,3 @@
-using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
@@ -21,6 +20,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
     public static readonly Tag<float> KnockbackTag = new("skywars:knockback");
     public static readonly Tag<bool> SelfAttackingTag = new("skywars:selfattacking");
     public static readonly Tag<float> DamageReductionTag = new("skywars:damage_multiplier");
+    public static readonly Tag<double> KnockbackReductionTag = new("skywars:knockback_multiplier");
     
     public override void Register() {
         AddEventHandler<PlayerPacketHandleEvent>(e => {
@@ -73,6 +73,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
             float knockback = (float?)weapon.GetTagOrNull(KnockbackTag) ?? 0.0f; // Default knockback if not specified
             
             float damage = weaponDamage ?? 1.0f;  // Default damage if not specified
+            double knockbackReduction = 0;
             
             if (entity is PlayerEntity p) {
                 p.PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);
@@ -96,6 +97,8 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
                 foreach (ItemStack armourPiece in armour) {
                     SkyWarsItem? swItem = SkyWarsItemsFeature.GetItem(armourPiece);
                     swItem?.OnHitWhileWearing(p, attacker);
+                    
+                    knockbackReduction += armourPiece.GetTagOrDefault(KnockbackReductionTag, 0.0);
                 }
             }
 
@@ -107,7 +110,10 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
                 }
             }
             
-            entity.Velocity = attacker.Direction.Multiply(0.90 + knockback * 0.3).WithY(0.4);  // Original 2.0 GOOD
+            entity.Velocity = attacker.Direction
+                .Multiply(0.90 + knockback * 0.3)
+                .WithY(0.4)
+                .Multiply(1 - knockbackReduction);  // Original 2.0 GOOD
             
             entity.GetAudience().PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);
             entity.Hurt();

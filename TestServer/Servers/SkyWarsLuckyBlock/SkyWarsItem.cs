@@ -57,9 +57,23 @@ public abstract class SkyWarsItem {
         Entity[] nearby = world.Entities.GetNearbyEntities(pos, explodeRadius);
         foreach (Entity entity in nearby) {
             if (!(entity.Position.DistanceTo(pos) <= launchRadius)) continue;
+
+            double kbReduction = 0.0;
+            if (entity is PlayerEntity p) {
+                ItemStack[] armour = [
+                    p.Inventory.Helmet,
+                    p.Inventory.Chestplate,
+                    p.Inventory.Leggings,
+                    p.Inventory.Boots
+                ];
+                
+                foreach (ItemStack armourPiece in armour) {
+                    kbReduction += armourPiece.GetTagOrDefault(SkyWarsCombatFeature.KnockbackReductionTag, 0.0);
+                }
+            }
             
             Vec3<double> normalizedDirection = (entity.Position - pos).Normalize();
-            entity.Velocity = normalizedDirection * (launchRadius - (entity.Position - pos).ComputeLength()) * launchPower;
+            entity.Velocity = normalizedDirection * (launchRadius - (entity.Position - pos).ComputeLength()) * launchPower * (1.0 - kbReduction);
         }
         
         audience.PlaySound(SoundType.GenericExplode, pos);

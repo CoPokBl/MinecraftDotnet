@@ -3,7 +3,6 @@ using ManagedServer.Features;
 using ManagedServer.Inventory;
 using Minecraft;
 using Minecraft.Data.Blocks;
-using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
