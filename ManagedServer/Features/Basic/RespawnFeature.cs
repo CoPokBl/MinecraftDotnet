@@ -7,7 +7,7 @@ namespace ManagedServer.Features.Basic;
 public class RespawnFeature : ScopedFeature {
     
     public override void Register() {
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundClientStatusPacket packet) {
                 return;
             }

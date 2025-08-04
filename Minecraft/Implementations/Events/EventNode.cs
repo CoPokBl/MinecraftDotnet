@@ -4,7 +4,8 @@ using Minecraft.Schemas.DataStructs;
 namespace Minecraft.Implementations.Events;
 
 public class EventNode<T> {
-    public event Action<T>? Callback;
+    public event Action<T>? HandleCallback;  // immutable
+    public event Action<T>? MutableCallback; 
     public event Action<Type>? OnListenerAdded;  // Ran before adding a listener, useful for debugging or validation
 
     public EventNode<T>? Parent;
@@ -36,7 +37,7 @@ public class EventNode<T> {
         Children.RemoveAll(c => c.Item1 == child);
     }
     
-    public Action AddListener<TL>(Action<TL> callback) where TL : T {
+    public Action AddListener<TL>(Action<TL> callback, bool mutable = false) where TL : T {
         OnListenerAdded?.Invoke(typeof(TL));
         
         Action<T> call = obj => {
@@ -46,14 +47,25 @@ public class EventNode<T> {
 
             callback(tl);
         };
-        Callback += call;
+
+        if (mutable) {
+            MutableCallback += call;
+        }
+        else {
+            HandleCallback += call;
+        }
 
         return () => {
-            Callback -= call;
+            if (mutable) {
+                MutableCallback -= call;
+            }
+            else {
+                HandleCallback -= call;
+            }
         };
     }
 
-    public Action AddListener(Type type, Action<T> callback) {
+    public Action AddListener(Type type, Action<T> callback, bool mutable = false) {
         OnListenerAdded?.Invoke(type);
         
         Action<T> call = obj => {
@@ -61,10 +73,21 @@ public class EventNode<T> {
                 callback((T)obj);
             }
         };
-        Callback += call;
+        
+        if (mutable) {
+            MutableCallback += call;
+        }
+        else {
+            HandleCallback += call;
+        }
 
         return () => {
-            Callback -= call;
+            if (mutable) {
+                MutableCallback -= call;
+            }
+            else {
+                HandleCallback -= call;
+            }
         };
     }
 
@@ -74,8 +97,9 @@ public class EventNode<T> {
     /// Disconnects the listener after getting triggered once.
     /// </summary>
     /// <param name="callback">The listener.</param>
+    /// <param name="mutable"></param>
     /// <typeparam name="TL">The event type to listen for.</typeparam>
-    public void OnFirst<TL>(Action<TL> callback) where TL : T {
+    public void OnFirst<TL>(Action<TL> callback, bool mutable = false) where TL : T {
         OnListenerAdded?.Invoke(typeof(TL));
         
         Action<T> actualListener = null!;
@@ -85,12 +109,23 @@ public class EventNode<T> {
             }
 
             callback(tl);
-            Callback -= actualListener;
+            if (mutable) {
+                MutableCallback -= actualListener;
+            }
+            else {
+                HandleCallback -= actualListener;
+            }
         };
-        Callback += actualListener;
+        
+        if (mutable) {
+            MutableCallback += actualListener;
+        }
+        else {
+            HandleCallback += actualListener;
+        }
     }
     
-    public void OnFirstWhere<TL>(Func<TL, bool> condition, Action<TL> callback) where TL : T {
+    public void OnFirstWhere<TL>(Func<TL, bool> condition, Action<TL> callback, bool mutable = false) where TL : T {
         OnListenerAdded?.Invoke(typeof(TL));
         
         Action<T> actualListener = null!;
@@ -100,9 +135,19 @@ public class EventNode<T> {
             }
 
             callback(tl);
-            Callback -= actualListener;
+            if (mutable) {
+                MutableCallback -= actualListener;
+            }
+            else {
+                HandleCallback -= actualListener;
+            }
         };
-        Callback += actualListener;
+        if (mutable) {
+            MutableCallback += actualListener;
+        }
+        else {
+            HandleCallback += actualListener;
+        }
     }
     
     public void CallEvent(T e) {
@@ -110,12 +155,13 @@ public class EventNode<T> {
             Parent.CallEvent(e);
             return;
         }
-        
-        ExecuteEventCallbacks(e);
+
+        ExecuteEventCallbacks(e, true);
+        ExecuteEventCallbacks(e, false);
     }
     
-    private void ExecuteEventCallbacks(T e) {
-        Callback?.Invoke(e);
+    private void ExecuteEventCallbacks(T e, bool mutable) {
+        (mutable ? MutableCallback : HandleCallback)?.Invoke(e);
         
         foreach ((EventNode<T> child, Func<T, bool> condition) in Children) {
             if (condition == null!) {
@@ -123,7 +169,7 @@ public class EventNode<T> {
                 continue;
             }
             if (condition(e)) {
-                child.ExecuteEventCallbacks(e);
+                child.ExecuteEventCallbacks(e, mutable);
             }
         }
     }

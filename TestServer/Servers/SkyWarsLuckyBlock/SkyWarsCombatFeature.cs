@@ -23,7 +23,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
     public static readonly Tag<float> DamageReductionTag = new("skywars:damage_multiplier");
     
     public override void Register() {
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundInteractPacket packet) {
                 return;
             }

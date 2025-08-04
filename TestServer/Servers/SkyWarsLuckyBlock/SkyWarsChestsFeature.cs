@@ -56,7 +56,7 @@ public class SkyWarsChestsFeature : ScopedFeature {
     private record LootTableEntry(ItemStack Item, float Chance, int MinCount, int MaxCount);
     
     public override void Register() {
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundUseItemOnPacket packet) {
                 return;
             }

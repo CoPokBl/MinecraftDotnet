@@ -1,4 +1,3 @@
-using System.Reflection;
 using ManagedServer.Entities.Types;
 using ManagedServer.Viewables;
 using Minecraft.Data.Blocks;
@@ -35,7 +34,6 @@ public static class SkyWarsUtils {
             return pos.ToBlockPos();
         }
         
-        player.SendMessage("No target found within range.");
         return null;
     }
     

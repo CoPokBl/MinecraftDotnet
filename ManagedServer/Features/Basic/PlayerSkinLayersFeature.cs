@@ -11,7 +11,7 @@ public class PlayerSkinLayersFeature : ScopedFeature {
     private static readonly Tag<SkinParts> PreLoginSkinPartsTag = new("minecraftdotnet:skinlayersfeat:skinparts");
     
     public override void Register() {
-        AddEventListener<PacketHandleEvent>(e => {
+        AddEventHandler<PacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundClientInformationPacket packet) {
                 return;
             }
@@ -19,7 +19,7 @@ public class PlayerSkinLayersFeature : ScopedFeature {
             e.Connection.SetTag(PreLoginSkinPartsTag, packet.DisplayedSkinParts);
         });
         
-        AddEventListener<PlayerLoginEvent>(e => {
+        AddEventHandler<PlayerLoginEvent>(e => {
             if (!e.Player.Connection.HasTag(PreLoginSkinPartsTag)) {
                 return;
             }
@@ -27,7 +27,7 @@ public class PlayerSkinLayersFeature : ScopedFeature {
             SetSkinParts(e.Player, e.Player.Connection.GetTag(PreLoginSkinPartsTag));
         });
         
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundClientInformationPacket packet) {
                 return;
             }

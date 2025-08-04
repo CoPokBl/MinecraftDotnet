@@ -23,7 +23,7 @@ public class LuckyBlocksFeature : ScopedFeature {
         (10, new ItemBlockResult(typeof(KnockbackStickItem))),
         (3, new ItemBlockResult(typeof(MagicToyStickItem))),
         (10, new FullHealBlockResult()),
-        (10, new ItemBlockResult(typeof(TeleportOrbItem))),
+        (1000, new ItemBlockResult(typeof(TeleportOrbItem))),
         (10, new ItemBlockResult(new ItemStack(Item.Potato))),
         (10, new BuildUpBlockResult()),
         (10, new ItemBlockResult(typeof(InstaboomTntItem))),
@@ -56,7 +56,7 @@ public class LuckyBlocksFeature : ScopedFeature {
                 new AttributeModifiersFeature.Modifier(Attribute.JumpStrength.Identifier, 1, "skywars:jumping_boots", AttributeOperation.AddMultipliedTotal)
             ]))),
         (5, new ItemBlockResult(typeof(ExplosiveChestplateItem))),
-        (500, new ItemBlockResult(new ItemStack(Item.Apple)
+        (5, new ItemBlockResult(new ItemStack(Item.Apple)
             .With(DataComponent.ItemName, "Newton's Apple")
             .With(DataComponent.Equippable, new EquippableComponent.Data(EquippableComponent.Slot.Head, 
                 Or<ISoundType, SoundEvent>.FromValue2(new SoundEvent(SoundType.ArmorEquipDiamond, 1f)), 
@@ -108,7 +108,7 @@ public class LuckyBlocksFeature : ScopedFeature {
     }
     
     public override void Register() {
-        AddEventListener<PlayerPlaceBlockEvent>(e => {
+        AddEventHandler<PlayerPlaceBlockEvent>(e => {
             if (!e.UsedItem.HasTag(LuckyBlockItemTag)) {
                 return;
             }
@@ -130,7 +130,7 @@ public class LuckyBlocksFeature : ScopedFeature {
             _placedBlocks.TryAdd(e.Position, new LuckyBlock(block, insideThing));
         });
         
-        AddEventListener<PlayerBreakBlockEvent>(e => {
+        AddEventHandler<PlayerBreakBlockEvent>(e => {
             if (!_placedBlocks.Remove(e.Position, out LuckyBlock? block)) {
                 return;
             }
@@ -140,7 +140,7 @@ public class LuckyBlocksFeature : ScopedFeature {
             block.PlacedEntity?.Despawn();
         });
         
-        AddEventListener<WorldChangeEvent>(e => {
+        AddEventHandler<WorldChangeEvent>(e => {
             if (e.NewState.Identifier == Block.YellowStainedGlass.Identifier) {
                 return;
             }

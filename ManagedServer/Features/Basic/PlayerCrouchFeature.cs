@@ -8,7 +8,7 @@ namespace ManagedServer.Features.Basic;
 public class PlayerCrouchFeature : ScopedFeature {
     
     public override void Register() {
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundPlayerInputPacket packet) {
                 return;
             }

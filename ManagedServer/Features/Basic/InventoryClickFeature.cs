@@ -40,7 +40,7 @@ public class InventoryClickFeature : ScopedFeature {
     }
     
     public override void Register() {
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundClickContainerPacket packet) {
                 return;
             }

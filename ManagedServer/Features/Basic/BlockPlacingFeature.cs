@@ -17,7 +17,7 @@ public class BlockPlacingFeature : ScopedFeature {
     private const double PlayerHeight = 1.8;
     
     public override void Register() {
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundUseItemOnPacket packet) {
                 return;
             }

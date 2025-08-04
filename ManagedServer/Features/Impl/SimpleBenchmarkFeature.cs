@@ -9,7 +9,7 @@ public class SimpleBenchmarkFeature : ScopedFeature {
     private int _packets;  // count packets per tick
     
     public override void Register() {
-        AddEventListener<ServerTickEvent>(e => {
+        AddEventHandler<ServerTickEvent>(e => {
             Console.WriteLine("Packets this tick: " + _packets);
             _packets = 0;  // reset packet count for the next tick
             
@@ -29,7 +29,7 @@ public class SimpleBenchmarkFeature : ScopedFeature {
             }
         });
         
-        AddEventListener<PlayerPacketOutEvent>(e => {
+        AddEventHandler<PlayerPacketOutEvent>(e => {
             _packets++;
         });
     }

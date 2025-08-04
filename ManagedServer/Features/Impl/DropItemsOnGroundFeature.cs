@@ -6,7 +6,7 @@ namespace ManagedServer.Features.Impl;
 public class DropItemsOnGroundFeature : ScopedFeature {
     
     public override void Register() {
-        AddEventListener<PlayerDropItemEvent>(e => {
+        AddEventHandler<PlayerDropItemEvent>(e => {
             if (e.Cancelled) {
                 return;
             }

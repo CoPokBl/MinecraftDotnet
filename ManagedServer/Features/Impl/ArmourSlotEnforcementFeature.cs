@@ -18,7 +18,7 @@ public class ArmourSlotEnforcementFeature : ScopedFeature {
     ];
     
     public override void Register() {
-        AddEventListener<InventoryClickEvent>(e => {
+        AddEventHandler<InventoryClickEvent>(e => {
             if (e.Inventory is not PlayerInventory) {
                 return;
             }

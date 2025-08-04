@@ -9,7 +9,7 @@ public class PongFeature : ScopedFeature {
             throw new InvalidOperationException("PongFeature can only be registered on a ManagedMinecraftServer.");
         }
         
-        AddEventListener<PacketHandleEvent>(e => {
+        AddEventHandler<PacketHandleEvent>(e => {
             if (e.Packet is ServerBoundPingRequestPacket ping) {
                 e.Connection.SendPacket(ping.CreateResponse());
             }

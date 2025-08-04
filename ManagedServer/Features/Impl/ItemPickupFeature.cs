@@ -15,7 +15,7 @@ public class ItemPickupFeature : ScopedFeature {
     private static readonly TimeSpan PickupDelay = TimeSpan.FromSeconds(1);
     
     public override void Register() {
-        AddEventListener<EntityMoveEvent>(e => {
+        AddEventHandler<EntityMoveEvent>(e => {
             if (e.Entity is not PlayerEntity player) {
                 return;
             }

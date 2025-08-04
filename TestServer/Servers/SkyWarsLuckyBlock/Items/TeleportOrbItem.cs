@@ -1,8 +1,10 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Viewables;
 using Minecraft;
+using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
+using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
@@ -16,13 +18,14 @@ public class TeleportOrbItem : SkyWarsItem {
     private static readonly Tag<DateTime> LastUsedTag = new("skywars:teleport_orb_last_used");
     
     public override ItemStack Item => new ItemStack(Minecraft.Data.Generated.Item.EnderEye, 3)
-        .With(DataComponent.ItemName, TextComponent.FromLegacyString("&bTeleport Orb &7(Right Click)"));
+        .With(DataComponent.ItemName, TextComponent.FromLegacyString("&bTeleport Orb &7(Right Click)"))
+        .With(DataComponent.UseCooldown, new UseCooldownComponent.Data(0.1f, "skywars:teleport_orb"));
     public override string Id => "teleport_orb";
 
     public override bool Use(PlayerEntity player) {
         Vec3<int>? targetBlock = SkyWarsUtils.GetTargetBlock(player);
         if (targetBlock == null) {
-            player.SendMessage("No target found within range.");
+            player.SendMessage(TextComponent.FromLegacyString("&cNo target found within range."));
             return false;
         }
         
@@ -46,6 +49,11 @@ public class TeleportOrbItem : SkyWarsItem {
         player.ShowParticle(Particle.Enchant, targetBlock.Value, maxSpeed: 0.1f);
         // Set the last used time
         player.SetTag(LastUsedTag, DateTime.Now);
+        // Send the cooldown packet
+        player.SendPacket(new ClientBoundSetCooldownPacket {
+            CooldownGroup = "skywars:teleport_orb",
+            Ticks = CooldownSeconds * 20
+        });
         return true;
     }
 }

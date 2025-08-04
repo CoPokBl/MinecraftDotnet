@@ -9,7 +9,7 @@ namespace ManagedServer.Features.Basic;
 public class BasicChatFeature : ScopedFeature {
     
     public override void Register() {
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundChatMessagePacket chatPacket) {
                 return;
             }

@@ -11,7 +11,7 @@ namespace ManagedServer.Features.Basic;
 public class PhysicsFeature : ScopedFeature {
     
     public override void Register() {
-        AddEventListener<ServerTickEvent>(e => {
+        AddEventHandler<ServerTickEvent>(e => {
             foreach (World world in e.Server.Worlds) {
                 foreach (Entity entity in world.Entities.Entities.ToArray()) {
                     if (entity is PlayerEntity) {

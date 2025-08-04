@@ -9,7 +9,7 @@ namespace ManagedServer.Features.Basic;
 public class RightClickToEquipArmourFeature : ScopedFeature {
     
     public override void Register() {
-        AddEventListener<PlayerUseItemEvent>(e => {
+        AddEventHandler<PlayerUseItemEvent>(e => {
             if (!e.Item.Has(DataComponent.Equippable)) {
                 return;
             }

@@ -18,7 +18,7 @@ public class ConsumablesFeature : ScopedFeature {
     private static readonly Tag<ScheduledTask> EatingTaskTag = new("consumables:eating_task");
     
     public override void Register() {
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Player.GameMode == GameMode.Spectator) {
                 return;
             }
@@ -78,11 +78,11 @@ public class ConsumablesFeature : ScopedFeature {
             }
         });
         
-        AddEventListener<PlayerSwitchHotbarSlotEvent>(e => {
+        AddEventHandler<PlayerSwitchHotbarSlotEvent>(e => {
             CancelEating(e.Player);
         });
         
-        AddEventListener<InventoryChangeEvent>(e => {
+        AddEventHandler<InventoryChangeEvent>(e => {
             if (e.Inventory is not PlayerInventory pi) {
                 return;
             }

@@ -18,7 +18,7 @@ public class AttributeModifiersFeature : ScopedFeature {
     }
     
     public override void Register() {
-        AddEventListener<InventoryChangeEvent>(e => {
+        AddEventHandler<InventoryChangeEvent>(e => {
             if (e.Inventory is not PlayerInventory inventory) {
                 return;
             }

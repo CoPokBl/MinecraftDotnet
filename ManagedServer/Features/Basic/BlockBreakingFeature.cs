@@ -21,7 +21,7 @@ public class BlockBreakingFeature : ScopedFeature {
     private static readonly Tag<Timer?> BlockBreakAnimationTimerTag = new("managedserver:blockbreakingfeat:block_break_animation_timer");
     
     public override void Register() {
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundPlayerActionPacket packet) {
                 return;
             }

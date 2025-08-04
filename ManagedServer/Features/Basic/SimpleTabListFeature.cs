@@ -18,7 +18,7 @@ public class SimpleTabListFeature : ScopedFeature {
                     p.Skin));
             }
         };
-        AddEventListener<PlayerLoginEvent>(e => {
+        AddEventHandler<PlayerLoginEvent>(e => {
             tabList.AddPlayer(e.Player);
         });
 

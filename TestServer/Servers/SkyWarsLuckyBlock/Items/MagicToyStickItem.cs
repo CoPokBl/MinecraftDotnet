@@ -23,7 +23,7 @@ public class MagicToyStickItem : SkyWarsItem {
     public override bool Use(PlayerEntity player) {
         Vec3<int>? targetBlock = SkyWarsUtils.GetTargetBlock(player, MaxDistance, true);
         if (targetBlock == null) {
-            player.SendMessage("No target found within range.");
+            player.SendMessage(TextComponent.FromLegacyString("&cNo target found within range."));
             return false;
         }
         

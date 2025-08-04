@@ -15,7 +15,7 @@ public class SimpleCombatFeature(int attackCooldown = -1, float damage = 0) : Sc
     private readonly Tag<long> _lastHitTag = new("minecraftdotnet:simplecombat:lasthit");
     
     public override void Register() {
-        AddEventListener<PlayerPacketHandleEvent>(e => {
+        AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundInteractPacket packet) {
                 return;
             }

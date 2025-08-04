@@ -24,7 +24,7 @@ public class SkyWarsItemsFeature : ScopedFeature {
     ];
     
     public override void Register() {
-        AddEventListener<PlayerConsumeItemEvent>(e => {
+        AddEventHandler<PlayerConsumeItemEvent>(e => {
             string? id = e.Item.GetTagOrNull(ItemTypeTag);
             
             if (id == null) {
@@ -39,12 +39,12 @@ public class SkyWarsItemsFeature : ScopedFeature {
             luckyItem.OnEat(e.Player);
         });
         
-        AddEventListener<PlayerPacketReceiveEvent>(e => {
-            if (e.Packet is not ServerBoundUseItemPacket && e.Packet is not ServerBoundUseItemOnPacket) {
+        AddEventHandler<PlayerUseItemEvent>(e => {
+            if (e.Cancelled) {
                 return;
             }
             
-            Hand hand = e.Packet is ServerBoundUseItemPacket packet ? packet.UsedHand : ((ServerBoundUseItemOnPacket)e.Packet).ActiveHand;
+            Hand hand = e.Hand;
             
             ItemStack item = hand == Hand.MainHand ? e.Player.HeldItem : e.Player.Inventory.Offhand;
             string? id = item.GetTagOrNull(ItemTypeTag);
@@ -66,7 +66,7 @@ public class SkyWarsItemsFeature : ScopedFeature {
             }
         });
         
-        AddEventListener<PlayerPlaceBlockEvent>(e => {
+        AddEventHandler<PlayerPlaceBlockEvent>(e => {
             string? id = e.UsedItem.GetTagOrNull(ItemTypeTag);
             
             if (id == null) {

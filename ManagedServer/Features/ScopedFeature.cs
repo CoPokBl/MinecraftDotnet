@@ -24,8 +24,12 @@ public abstract class ScopedFeature {
         }
     }
 
-    protected void AddEventListener<T>(Action<T> callback) where T : IServerEvent {
+    protected void AddEventHandler<T>(Action<T> callback) where T : IServerEvent {
         EventCancelers.Add(Scope.Events.AddListener(callback));
+    }
+    
+    protected void AddEventMutator<T>(Action<T> callback) where T : IServerEvent {
+        EventCancelers.Add(Scope.Events.AddListener(callback, true));
     }
 
     protected void CallEvent<T>(T e) where T : IServerEvent {
