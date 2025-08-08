@@ -6,6 +6,8 @@ using ManagedServer.Features.Impl;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
+using Minecraft.Commands;
+using Minecraft.Commands.NodeTypes;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
@@ -89,7 +91,7 @@ public static class BlockSumoFfa {
         world.Events.AddListener<PlayerPlaceBlockEvent>(e => {
             e.Cancelled = false;
             e.Block = blocks[Random.Shared.Next(blocks.Length)];
-            e.Player.HeldItem = blockItem;
+            e.ConsumeItem = false;
 
             if (e.Position.Y > 1) {
                 e.Cancelled = true;
@@ -117,15 +119,15 @@ public static class BlockSumoFfa {
                 });
                 return true;
             });
-        });
+        }, true);
 
         world.Events.AddListener<PlayerBreakBlockEvent>(e => {
             e.Cancelled = false;
-        });
+        }, true);
 
         world.Events.AddListener<PlayerStartBreakingBlockEvent>(e => {
             e.Cancelled = false;
-        });
+        }, true);
         
         server.Events.AddListener<PlayerPreLoginEvent>(e => {
             e.GameMode = GameMode.Survival;
@@ -138,7 +140,17 @@ public static class BlockSumoFfa {
                 ]
             };
             e.Connection.SendPacket(links);
-        });
+        }, true);
+        
+        ClientBoundCommandsPacket cmds = new() {
+            Nodes = [
+                new RootNode(CommandNodeFlag.RootType, [1], null, null),
+                // new LiteralNode(CommandNodeFlag.LiteralType | CommandNodeFlag.IsExecutable, [], null, "helloworld", null)
+                new LiteralNode(CommandNodeFlag.LiteralType | CommandNodeFlag.IsExecutable | CommandNodeFlag.HasRedirect, [], 0, "execute", null)
+            ],
+            RootIndex = 0
+        };
+        
         server.Events.AddListener<PlayerLoginEvent>(e => {
             e.Player.Teleport(spawn);
             e.Player.Inventory.SetHotbarItem(0, blockItem);
@@ -148,8 +160,9 @@ public static class BlockSumoFfa {
                 server.SendMessage(
                     TextComponent.FromLegacyString("&7[&c-&7] " + e.Player.Name + " &7left the game :("));
             };
+            
+            e.Player.SendPacket(cmds);
         });
-        
         
         TcpMinecraftListener listener = new(connection => {
             Console.WriteLine("Got new connection");
@@ -162,21 +175,23 @@ public static class BlockSumoFfa {
             
             // die
             e.Entity.Teleport(spawn);
-            if (e.Entity is PlayerEntity player) {
-                player.GameMode = GameMode.Spectator;
-                player.Connection.SendTitle(TextComponent.FromLegacyString("&c&lNoob"), TextComponent.Empty());
+            if (e.Entity is not PlayerEntity player) return;
+            player.GameMode = GameMode.Spectator;
+            player.Connection.SendTitle(TextComponent.FromLegacyString("&c&lNoob"), TextComponent.Empty());
 
-                server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(2), () => {
-                    player.GameMode = GameMode.Survival;
-                    player.Teleport(spawn);
-                });
-            }
-            ((PlayerEntity)e.Entity).Inventory.SetHotbarItem(0, blockItem);
-            
-            TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed";
+            server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(2), () => {
+                player.GameMode = GameMode.Survival;
+                player.Teleport(spawn);
+            });
+                
+            player.Inventory.SetHotbarItem(0, blockItem);
+                
+            TextComponent msg = $"{player.Name} was killed";
             world.StrikeLightning(e.NewPos);
             server.SendMessage(msg);
         });
+        
+        server.Start();
         
         Console.WriteLine("Server ready, listening...");
         await listener.Listen(Port);

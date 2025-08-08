@@ -183,6 +183,15 @@ public class EventNode<T> {
             return ex;
         }
     }
+    
+    public Exception? CallEventPrintErrors(T e) {
+        Exception? ex = CallEventCatchErrors(e);
+        if (ex != null) {
+            Console.WriteLine($"Error while calling event {typeof(T).FullName}: {ex}");
+        }
+        
+        return ex;
+    }
 
     public void WaitFor<TE>(CancellationToken cancellationToken = default) where TE : T {
         WaitFor<TE>(_ => true, cancellationToken);

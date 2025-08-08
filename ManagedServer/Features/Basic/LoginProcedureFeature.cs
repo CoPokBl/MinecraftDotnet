@@ -257,12 +257,12 @@ internal class LoginProcedureFeature : ScopedFeature {
                         };
                             
                         entity.SendPacket(entity.GetPlayerInfoPacket());
-                            
+                        
                         PlayerLoginEvent loginEvent = new() {
                             Player = entity,
                             World = preLoginEvent.World
                         };
-                        e.Connection.Events.CallEventCatchErrors(loginEvent);
+                        Scope.Server.HandleError(entity.Events.CallEventCatchErrors(loginEvent));
                         
                         // Load skin asynchronously
                         _ = SkinFetcher.GetPlayerSkin(loginInfo.Item1).ContinueWith(skin => {

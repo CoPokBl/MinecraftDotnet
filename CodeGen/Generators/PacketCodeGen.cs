@@ -33,14 +33,10 @@ public static class PacketCodeGen {
         LoadDoublePacketEntries("Status");
         
         // Cool, we have all our classes, let's see how many we can match up
-        foreach (KeyValuePair<bool, Dictionary<string, Dictionary<string, int>>> boundnessSet in packetIds) {
-            bool clientBound = boundnessSet.Key;
-            foreach (KeyValuePair<string, Dictionary<string, int>> stateSet in boundnessSet.Value) {
+        foreach ((bool clientBound, Dictionary<string, Dictionary<string, int>> value) in packetIds) {
+            foreach (KeyValuePair<string, Dictionary<string, int>> stateSet in value) {
                 string state = stateSet.Key;
-                foreach (KeyValuePair<string, int> packetEntry in stateSet.Value) {
-                    string identifier = packetEntry.Key;
-                    int protocolId = packetEntry.Value;
-
+                foreach ((string identifier, int protocolId) in stateSet.Value) {
                     if (!packetClasses[clientBound].TryGetValue(identifier, out string? className)) {
                         Console.WriteLine($"Warning: Class for packet: {identifier}, was not found");
                         continue;
