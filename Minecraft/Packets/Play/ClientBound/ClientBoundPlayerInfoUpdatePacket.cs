@@ -1,3 +1,4 @@
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Text;
 
@@ -46,33 +47,23 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         
         public interface IPlayerAction {
             PlayerActions Action { get; }
-            byte[] Serialise();
+            byte[] Serialise(MinecraftRegistry reg);
         }
         
         public class AddPlayer : IPlayerAction {
             public required string Name;
-            public Property[] Properties = [];
+            public ProfileProperty[] Properties = [];
 
             public PlayerActions Action => PlayerActions.AddPlayer;
-        
-            public class Property {
-                public required string Name;
-                public required string Value;
-                public string? Signature;
-            }
 
-            public byte[] Serialise() {
+            public byte[] Serialise(MinecraftRegistry reg) {
                 if (Name.Length > 16) {
                     throw new ArgumentException("Player name cannot be longer than 16 characters.");
                 }
                 
                 return new DataWriter()
                     .WriteString(Name)
-                    .WritePrefixedArray(Properties,
-                        (property, writer) => writer
-                            .WriteString(property.Name)
-                            .WriteString(property.Value)
-                            .WritePrefixedOptional(property.Signature, (s, dataWriter) => dataWriter.WriteString(s)))
+                    .WritePrefixedArray(Properties, (property, wr) => property.WriteData(wr, reg))
                     .ToArray();
             }
 
@@ -80,7 +71,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
                 return new AddPlayer {
                     Name = r.ReadString(),
                     Properties = r.ReadPrefixedArray(re => {
-                        return new Property {
+                        return new ProfileProperty {
                             Name = re.ReadString(),
                             Value = re.ReadString(),
                             Signature = re.ReadPrefixedOptional(red => red.ReadString())
@@ -98,7 +89,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
             public byte[]? PublicKeySignature;
             public PlayerActions Action => PlayerActions.InitializeChat;
             
-            public byte[] Serialise() {
+            public byte[] Serialise(MinecraftRegistry _) {
                 if (!HasData) {
                     return new DataWriter().WriteBoolean(false).ToArray();
                 }
@@ -137,7 +128,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
             public required GameMode GameMode;
             public PlayerActions Action => PlayerActions.UpdateGameMode;
             
-            public byte[] Serialise() {
+            public byte[] Serialise(MinecraftRegistry _) {
                 return new DataWriter()
                     .WriteVarInt((int)GameMode)
                     .ToArray();
@@ -154,7 +145,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
             public required bool Listed;
             public PlayerActions Action => PlayerActions.UpdateListed;
             
-            public byte[] Serialise() {
+            public byte[] Serialise(MinecraftRegistry _) {
                 return new DataWriter()
                     .WriteBoolean(Listed)
                     .ToArray();
@@ -171,7 +162,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
             public required int Latency;
             public PlayerActions Action => PlayerActions.UpdateLatency;
             
-            public byte[] Serialise() {
+            public byte[] Serialise(MinecraftRegistry _) {
                 return new DataWriter()
                     .WriteVarInt(Latency)
                     .ToArray();
@@ -188,7 +179,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
             public required TextComponent? DisplayName;
             public PlayerActions Action => PlayerActions.UpdateDisplayName;
             
-            public byte[] Serialise() {
+            public byte[] Serialise(MinecraftRegistry _) {
                 return new DataWriter()
                     .WritePrefixedOptional(DisplayName, (component, writer) => writer.WriteNbt(component))
                     .ToArray();
@@ -205,7 +196,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
             public required int Priority;
             public PlayerActions Action => PlayerActions.UpdateListPriority;
             
-            public byte[] Serialise() {
+            public byte[] Serialise(MinecraftRegistry _) {
                 return new DataWriter()
                     .WriteVarInt(Priority)
                     .ToArray();
@@ -222,7 +213,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
             public required bool Visible;
             public PlayerActions Action => PlayerActions.UpdateHat;
             
-            public byte[] Serialise() {
+            public byte[] Serialise(MinecraftRegistry _) {
                 return new DataWriter()
                     .WriteBoolean(Visible)
                     .ToArray();
@@ -236,12 +227,12 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
     }
 
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry reg) {
         return w
             .WriteUnsignedByte((byte)Data.Actions.CombineFlags())
             .WritePrefixedArray(Data.Data.ToArray(), (val, writer) => writer
                 .WriteUuid(val.Item1)
-                .WriteArray(val.Item2.OrderBy(e => e.Action), (action, dataWriter) => dataWriter.Write(action.Serialise())));
+                .WriteArray(val.Item2.OrderBy(e => e.Action), (action, dataWriter) => dataWriter.Write(action.Serialise(reg))));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {

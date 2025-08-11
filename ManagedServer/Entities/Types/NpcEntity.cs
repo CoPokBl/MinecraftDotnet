@@ -46,7 +46,7 @@ public class NpcEntity(PlayerMeta? meta = null) : LivingEntity(EntityType.Player
                     Properties = Skin == null
                         ? []
                         : [
-                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer.Property {
+                            new ProfileProperty {
                                 Name = "textures",
                                 Value = Skin.Textures,
                                 Signature = Skin.Signature

@@ -25,6 +25,7 @@ public static class DataComponent {
     public static readonly LoreComponent Lore = new(8);
     public static readonly MaxDamageComponent MaxDamage = new(2);
     public static readonly MaxStackSizeComponent MaxStackSize = new(1);
+    public static readonly ProfileComponent Profile = new(61);
     public static readonly RarityComponent Rarity = new(9);
     public static readonly RepairCostComponent RepairCost = new(16);
     public static readonly ToolComponent Tool = new(25);

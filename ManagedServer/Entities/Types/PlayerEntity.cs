@@ -462,7 +462,7 @@ public class PlayerEntity : LivingEntity, IAudience {
                     Properties = Skin == null
                         ? []
                         : [
-                            new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer.Property {
+                            new ProfileProperty {
                                 Name = "textures",
                                 Value = Skin.Textures,
                                 Signature = Skin.Signature
