@@ -61,6 +61,15 @@ public static class BlockSumoFfa {
                     player.SendMessage("Hello there, you entered the number: " + context.GetArgument<double>("numer"));
                 }
             })
+            .WithSubcommand(new CommandBuilder("alsosay")
+                .WithSyntax(new CommandSyntax {
+                    Arguments = [new Argument<double>("message", CommandArgumentType.Double)],
+                    Condition = _ => true,
+                    Executor = (player, context) => {
+                        player.SendMessage("You alsosayed said: " + context.GetArgument<double>("message"));
+                    }
+                })
+                .Build())
             .Build());
         
         CancellationTokenSource cts = new();

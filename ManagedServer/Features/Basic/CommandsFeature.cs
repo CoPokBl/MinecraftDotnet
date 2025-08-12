@@ -88,14 +88,24 @@ public class CommandsFeature : ScopedFeature {
         if (currentArg.Length > 0) {
             args.Add(currentArg.ToString());
         }
+
+        HandlePlayerCommand(player, command, args.ToArray(), rawCmd);
+    }
+
+    private bool HandlePlayerCommand(PlayerEntity player, Command command, string[] args, string rawCmd) {
+        foreach (Command subCmd in command.Subcommands) {
+            if (args.Length <= 0 || !args[0].Equals(subCmd.CommandName, StringComparison.InvariantCultureIgnoreCase)) continue;
+            return HandlePlayerCommand(player, subCmd, args[1..], rawCmd);
+        }
         
         IEnumerable<CommandSyntax> possibleSyntaxes = command.Syntax
-            .Where(s => s.Arguments.Length == args.Count);
+            .Where(s => s.Arguments.Length == args.Length);
 
+        bool handled = false;
         foreach (CommandSyntax syntax in possibleSyntaxes) {
             Dictionary<string, object> parsedArgs = [];
             bool valid = true;
-            for (int i = 0; i < args.Count; i++) {
+            for (int i = 0; i < args.Length; i++) {
                 object val;
                 try {
                     val = syntax.Arguments[i].Parser.GenericParse(args[i]);
@@ -117,8 +127,11 @@ public class CommandsFeature : ScopedFeature {
             CommandContext ctx = new(rawCmd, command.CommandName, parsedArgs);
             syntax.Executor(player, ctx);
             command.Executor(player, ctx);
+            handled = true;
             break;
         }
+
+        return handled;
     }
     
     public ClientBoundCommandsPacket GenerateCommandsPacket(PlayerEntity player) {
@@ -134,52 +147,7 @@ public class CommandsFeature : ScopedFeature {
                 continue;
             }
             
-            // Add the root literal node for the command
-            CommandNodeFlag flags = CommandNodeFlag.LiteralType;
-            if (command.Syntax.Any(s => s.Arguments.Length == 0)) {
-                flags |= CommandNodeFlag.IsExecutable;
-            }
-            LiteralNode rootCmd = new(flags, [], null, command.CommandName, null);
-            
-            // TODO: Subcommands (other literal nodes)
-            
-            List<(CommandSyntax syntax, ArgumentNode[] argNodes)> syntaxNodes = [];
-            foreach (CommandSyntax syntax in command.Syntax) {
-                if (syntax.Arguments.Length == 0) {
-                    // This syntax has already been added (because it was the root node)
-                    continue;
-                }
-                
-                syntaxNodes.Add(BuildSyntax(syntax, player));
-            }
-            
-            // Build the children, add them to the graph and make them children
-            int rootNodeIndex = graph.Count;
-            rootCmdIndexes.Add(rootNodeIndex);
-            graph.Add(null!);  // Add a placeholder for the root node
-            
-            List<int> childrenIndexes = [];
-
-            foreach ((CommandSyntax syntax, ArgumentNode[] argNodes) syntaxNode in syntaxNodes) {
-                int lastTreeIndex = graph.Count;
-                childrenIndexes.Add(lastTreeIndex);
-                graph.Add(syntaxNode.argNodes[0]);
-                
-                // Add the rest of that argument tree, but they're not children of the root node
-                for (int i = 1; i < syntaxNode.argNodes.Length; i++) {
-                    graph[lastTreeIndex] = (ArgumentNode)graph[lastTreeIndex] with {
-                        ChildrenIndexes = graph[lastTreeIndex].ChildrenIndexes.Append(graph.Count).ToArray()
-                    };
-                    lastTreeIndex = graph.Count;
-                    graph.Add(syntaxNode.argNodes[i]);
-                }
-            }
-
-            // Now set that slot we reserved for the root node
-            // and make sure all the children indexes are set
-            graph[rootNodeIndex] = rootCmd with {
-                ChildrenIndexes = childrenIndexes.ToArray()
-            };
+            rootCmdIndexes.Add(BuildCommand(command, player, graph));
         }
         
         // Set the root node's children indexes
@@ -191,6 +159,56 @@ public class CommandsFeature : ScopedFeature {
             Nodes = graph.ToArray(),
             RootIndex = 0
         };
+    }
+
+    // returns the index of the comamnd's root node in the graph
+    private int BuildCommand(Command command, PlayerEntity player, List<ICommandNode> graph) {
+        // Add the root literal node for the command
+        List<int> childrenIndexes = [];
+        
+        foreach (Command subCmd in command.Subcommands) {
+            int subCmdIndex = BuildCommand(subCmd, player, graph);
+            childrenIndexes.Add(subCmdIndex);
+        }
+        
+        List<(CommandSyntax syntax, ArgumentNode[] argNodes)> syntaxNodes = [];
+        foreach (CommandSyntax syntax in command.Syntax) {
+            if (syntax.Arguments.Length == 0) {
+                // This syntax has already been added (because it was the root node)
+                continue;
+            }
+            
+            syntaxNodes.Add(BuildSyntax(syntax, player));
+        }
+        
+        // Build the children, add them to the graph and make them children
+        int rootNodeIndex = graph.Count;
+        graph.Add(null!);  // Add a placeholder for the root node
+
+        foreach ((CommandSyntax syntax, ArgumentNode[] argNodes) syntaxNode in syntaxNodes) {
+            int lastTreeIndex = graph.Count;
+            childrenIndexes.Add(lastTreeIndex);
+            graph.Add(syntaxNode.argNodes[0]);
+            
+            // Add the rest of that argument tree, but they're not children of the root node
+            for (int i = 1; i < syntaxNode.argNodes.Length; i++) {
+                graph[lastTreeIndex] = (ArgumentNode)graph[lastTreeIndex] with {
+                    ChildrenIndexes = graph[lastTreeIndex].ChildrenIndexes.Append(graph.Count).ToArray()
+                };
+                lastTreeIndex = graph.Count;
+                graph.Add(syntaxNode.argNodes[i]);
+            }
+        }
+
+        // Now set that slot we reserved for the root node
+        // and make sure all the children indexes are set
+        CommandNodeFlag flags = CommandNodeFlag.LiteralType;
+        if (command.Syntax.Any(s => s.Arguments.Length == 0)) {
+            flags |= CommandNodeFlag.IsExecutable;
+        }
+        graph[rootNodeIndex] = new LiteralNode(flags, childrenIndexes.ToArray(), null, command.CommandName, null);
+
+        return rootNodeIndex;
     }
 
     private (CommandSyntax syntax, ArgumentNode[] argNodes) BuildSyntax(CommandSyntax syntax, PlayerEntity player) {
