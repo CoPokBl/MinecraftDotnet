@@ -1419,6 +1419,7 @@ public static class VanillaRegistry {
         Data.DataComponents.Add(DataComponent.Lore, 8);
         Data.DataComponents.Add(DataComponent.MaxDamage, 2);
         Data.DataComponents.Add(DataComponent.MaxStackSize, 1);
+        Data.DataComponents.Add(DataComponent.Profile, 61);
         Data.DataComponents.Add(DataComponent.Rarity, 9);
         Data.DataComponents.Add(DataComponent.RepairCost, 16);
         Data.DataComponents.Add(DataComponent.Tool, 25);

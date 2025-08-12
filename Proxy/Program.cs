@@ -1,4 +1,6 @@
 ﻿using Minecraft;
+using Minecraft.Data.Generated;
+using Minecraft.Data.Sounds;
 using Minecraft.Implementations.Client;
 using Minecraft.Implementations.Client.Tools;
 using Minecraft.Implementations.Tags;
@@ -29,6 +31,12 @@ ProxyServer server = new();
 Tag<List<int>> fakeTeleportsTag = new("minecraftdotnet:proxy:faketeleports");
 Tag<bool> antiKbTag = new("minecraftdotnet:proxy:antikb");
 Tag<bool> instaMineTag = new("minecraftdotnet:proxy:instamine");
+
+
+// Add stupid registry entries for resource packs
+// Emortal
+VanillaRegistry.Data.SoundTypes.Add(new SimpleSoundType("minecraft:random.cube.zap", 2000));
+VanillaRegistry.Data.SoundTypes.Add(new SimpleSoundType("minecraft:entity.roblox.reporter", 2001));
 
 
 // some fun stuff

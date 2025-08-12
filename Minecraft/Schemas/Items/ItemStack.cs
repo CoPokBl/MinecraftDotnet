@@ -124,7 +124,7 @@ public class ItemStack(
             .Write(wr => kvp.Key.WriteData(kvp.Value, wr, registry)));
         
         return writer.WriteArray(_removeComponents, (component, w) => w
-            .WriteVarInt(registry.DataComponents[component.Identifier]));
+            .WriteVarInt(component.ProtocolId));
     }
 
     public static ItemStack ReadData(DataReader reader, MinecraftRegistry registry) {

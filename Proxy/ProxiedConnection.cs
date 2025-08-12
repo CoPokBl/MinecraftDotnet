@@ -31,7 +31,7 @@ public class ProxiedConnection : MappedTaggable {
     private Action? _cancelServerPacketListener;
     
     // constants
-    private const string ProxiedServer = "michael-endy";
+    private const string ProxiedServer = "mc.emortal.dev";
     private const int ProxiedPort = 25565;  // default Minecraft port, can be changed if needed
     private const bool LogPackets = false;  // whether to log packets or not
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.7") ];
@@ -210,6 +210,15 @@ public class ProxiedConnection : MappedTaggable {
                 Server!.SendPacket(resp);
                 break;
             }
+
+            case ClientBoundLoginPluginRequestPacket lpr: {
+                Console.WriteLine("Login plugin request: " + lpr.Channel);
+                Server!.SendPacket(new ServerBoundLoginPluginResponsePacket {
+                    MessageId = lpr.MessageId,
+                    Data = null
+                });
+                break;
+            }
         }
     }
     
@@ -246,6 +255,10 @@ public class ProxiedConnection : MappedTaggable {
         switch (packet) {
             case ServerBoundAcknowledgeConfigurationPacket: {
                 Player.State = ConnectionState.Configuration;
+                if (Server != null) {
+                    Server.State = ConnectionState.Configuration;
+                }
+                Console.WriteLine("Switching player state to configuration");
                 break;
             }
 

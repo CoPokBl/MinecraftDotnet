@@ -14,4 +14,12 @@ public class DataComponentRegistry {
         _fromIdent.Add(comp.Identifier, netId);
         _fromId.Add(netId, comp);
     }
+    
+    public bool Contains(Identifier id) {
+        return _fromIdent.ContainsKey(id);
+    }
+    
+    public bool Contains(int netId) {
+        return _fromId.ContainsKey(netId);
+    }
 }

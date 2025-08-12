@@ -2,6 +2,7 @@ using ManagedServer.Entities.Types;
 using Minecraft;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Schemas;
 using Minecraft.Text;
 
 namespace ManagedServer.TabList;
@@ -59,7 +60,7 @@ public class CustomTabList {
                 new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer {
                     Name = entry.Username,
                     Properties = entry.Skin == null ? [] : [
-                        new ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer.Property {
+                        new ProfileProperty {
                             Name = "textures",
                             Signature = entry.Skin.Signature,
                             Value = entry.Skin.Textures

@@ -333,7 +333,7 @@ public class MinecraftClient : MappedTaggable, IFeatureScope {
                         switch (action) {
                             case ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer add: {
                                 Dictionary<string, (string Value, string? Signature)> props = [];
-                                foreach (ClientBoundPlayerInfoUpdatePacket.PlayerData.AddPlayer.Property prop in add.Properties) {
+                                foreach (ProfileProperty prop in add.Properties) {
                                     props.Add(prop.Name, (prop.Value, prop.Signature));
                                 }
                                 PlayerInfoEntries.Add(new PlayerInfoEntry(playerId, add.Name, props));
