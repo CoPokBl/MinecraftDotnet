@@ -48,8 +48,8 @@ public class CommandsFeature : ScopedFeature {
             return;
         }
 
-        string argsString = cmdAndArgs.Length > 1 ? cmdAndArgs[1] : string.Empty;
-        if (argsString.Trim().Length == 0) {
+        string argsString = cmdAndArgs.Length > 1 ? cmdAndArgs[1].Trim() : string.Empty;
+        if (argsString.Length == 0) {
             CommandSyntax? defaultSyntax = command.Syntax.FirstOrDefault(s => s.Arguments.Length == 0);
             if (defaultSyntax == null) {
                 return;  // Invalid
@@ -62,64 +62,41 @@ public class CommandsFeature : ScopedFeature {
             return;
         }
         
-        // Parse the arguments
-        // Args are separated by spaces, but we need to handle quoted strings
-        List<string> args = [];
-        bool inQuotes = false;
-        StringBuilder currentArg = new();
-        
-        foreach (char c in argsString) {
-            if (c == '"') {
-                inQuotes = !inQuotes;  // Toggle inQuotes
-                continue;
-            }
-            
-            if (char.IsWhiteSpace(c) && !inQuotes) {
-                if (currentArg.Length > 0) {
-                    args.Add(currentArg.ToString());
-                    currentArg.Clear();
-                }
-                continue;
-            }
-            
-            currentArg.Append(c);
-        }
-        
-        if (currentArg.Length > 0) {
-            args.Add(currentArg.ToString());
-        }
-
-        HandlePlayerCommand(player, command, args.ToArray(), rawCmd);
+        // Okay we have the arguments string.
+        HandlePlayerCommand(player, command, argsString, rawCmd);
     }
 
-    private bool HandlePlayerCommand(PlayerEntity player, Command command, string[] args, string rawCmd) {
+    private bool HandlePlayerCommand(PlayerEntity player, Command command, string argsStr, string rawCmd) {
+        string[] split = argsStr.Split(' ', 2);
+        string? subCmdStr = split.Length > 0 ? split[0] : null;
         foreach (Command subCmd in command.Subcommands) {
-            if (args.Length <= 0 || !args[0].Equals(subCmd.CommandName, StringComparison.InvariantCultureIgnoreCase)) continue;
-            return HandlePlayerCommand(player, subCmd, args[1..], rawCmd);
+            if (!subCmd.CommandName.Equals(subCmdStr, StringComparison.InvariantCultureIgnoreCase)) continue;
+            
+            string remainingArgs = split.Length > 1 ? split[1] : string.Empty;
+            return HandlePlayerCommand(player, subCmd, remainingArgs, rawCmd);
         }
-        
-        IEnumerable<CommandSyntax> possibleSyntaxes = command.Syntax
-            .Where(s => s.Arguments.Length == args.Length);
 
         bool handled = false;
-        foreach (CommandSyntax syntax in possibleSyntaxes) {
+        foreach (CommandSyntax syntax in command.Syntax) {
             Dictionary<string, object> parsedArgs = [];
             bool valid = true;
-            for (int i = 0; i < args.Length; i++) {
+            foreach (IArgument arg in syntax.Arguments) {
                 object val;
                 try {
-                    val = syntax.Arguments[i].Parser.GenericParse(args[i]);
+                    val = arg.Parser.GenericParse(ref argsStr, Scope.Server.Registry);
                 }
-                catch (Exception) {
+                catch (Exception e) {
+                    Console.WriteLine(e);
                     valid = false;
                     break;  // Invalid
                 }
                 
                 // okay that arg was valid
-                parsedArgs[syntax.Arguments[i].Name] = val;
+                parsedArgs[arg.Name] = val;
             }
 
-            if (!valid) {
+            // All the arguments must be valid and there must be no remaining args
+            if (!valid || argsStr.Length > 0) {
                 continue;
             }
             

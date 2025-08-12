@@ -1,5 +1,6 @@
 using Minecraft.Schemas;
 using Minecraft.Schemas.Shapes;
+using NBT;
 using NBT.Tags;
 
 namespace Minecraft.Data.Blocks;
@@ -53,5 +54,9 @@ public interface IBlock : IProtocolType {
         if (b1 is null && b2 is null) return true;
         if (b1 is null || b2 is null) return false;
         return b1.Identifier == b2.Identifier;
+    }
+
+    public string ToString() {
+        return $"{Identifier}[{ToStateNbt().ToJsonString()}]";
     }
 }

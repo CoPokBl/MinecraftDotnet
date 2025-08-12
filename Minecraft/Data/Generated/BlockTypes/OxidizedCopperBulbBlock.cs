@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record OxidizedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:weathering_copper_bulb";
     public int ProtocolId => 1036;
     public double Hardness => 3;
@@ -68,8 +67,8 @@ public record OxidizedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powe
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Lit = properties["lit"].GetString() == "true",
-            Powered = properties["powered"].GetString() == "true",
+            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     

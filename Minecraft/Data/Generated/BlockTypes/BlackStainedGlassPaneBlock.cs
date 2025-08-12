@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BlackStainedGlassPaneBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
-
     public Identifier Category => "minecraft:stained_glass_pane";
     public int ProtocolId => 483;
     public double Hardness => 0.3;
@@ -180,11 +179,11 @@ public record BlackStainedGlassPaneBlock(Identifier Identifier, bool East, bool 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            East = properties["east"].GetString() == "true",
-            North = properties["north"].GetString() == "true",
-            South = properties["south"].GetString() == "true",
-            Waterlogged = properties["waterlogged"].GetString() == "true",
-            West = properties["west"].GetString() == "true",
+            East = properties.ChildrenMap.ContainsKey("east") ? properties["east"].GetString() == "true" : East,
+            North = properties.ChildrenMap.ContainsKey("north") ? properties["north"].GetString() == "true" : North,
+            South = properties.ChildrenMap.ContainsKey("south") ? properties["south"].GetString() == "true" : South,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            West = properties.ChildrenMap.ContainsKey("west") ? properties["west"].GetString() == "true" : West,
         };
     }
     

@@ -23,6 +23,7 @@ using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
+using Minecraft.Schemas.Vec.Relative;
 using Minecraft.Text;
 
 namespace TestServer.Servers.BlockSumoFFA;
@@ -51,24 +52,27 @@ public static class BlockSumoFfa {
         server.Dimensions.Add("minecraft:potatoland", new Dimension());
         
         server.Commands.Add(new CommandBuilder("helloworld")
-            .WithDefaultSyntax((p, ctx) => {
-                p.SendMessage("Hello world!");
+            .WithDefaultSyntax((player, _) => {
+                player.SendMessage("Hello world!");
             }, _ => true)
-            .WithSyntax(new CommandSyntax {
-                Arguments = [new Argument<double>("numer", CommandArgumentType.Double)],
-                Condition = _ => true,
-                Executor = (player, context) => {
-                    player.SendMessage("Hello there, you entered the number: " + context.GetArgument<double>("numer"));
-                }
-            })
+            .WithSyntax(new CommandSyntax((player, context) => {
+                player.SendMessage("Hello there, you entered the number: " + context.GetArgument<double>("numer"));
+            }, new Argument<double>("numer", CommandArgumentType.Double)))
             .WithSubcommand(new CommandBuilder("alsosay")
-                .WithSyntax(new CommandSyntax {
-                    Arguments = [new Argument<double>("message", CommandArgumentType.Double)],
-                    Condition = _ => true,
-                    Executor = (player, context) => {
-                        player.SendMessage("You alsosayed said: " + context.GetArgument<double>("message"));
-                    }
-                })
+                .WithSyntax(new CommandSyntax((player, context) => {
+                    player.SendMessage("You alsosayed said: " + context.GetArgument<RelativeVec3<int>>("message")
+                        .GetValue(new Vec3<int>(1, 1, 1)));
+                    player.SendMessage("Your rancol is: " +
+                                       (context.GetArgument<NamedTextColor?>("rancol")?.GetName() ?? "none"));
+                    
+                    player.SendMessage("Swizzle: " + context.GetArgument<(bool X, bool Y, bool Z)>("swiz"));
+                    
+                    player.SendMessage("Block: " + CommandArgumentType.BlockState.Format(context.GetArgument<IBlock>("block")));
+                }, 
+                    new Argument<RelativeVec3<int>>("message", CommandArgumentType.BlockPos), 
+                    new Argument<NamedTextColor?>("rancol", CommandArgumentType.Color),
+                    new Argument<(bool X, bool Y, bool Z)>("swiz", CommandArgumentType.Swizzle),
+                    new Argument<IBlock>("block", CommandArgumentType.BlockState)))
                 .Build())
             .Build());
         

@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Lit, bool SignalFire, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:campfire";
     public int ProtocolId => 820;
     public double Hardness => 2;
@@ -177,10 +176,10 @@ public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Li
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Lit = properties["lit"].GetString() == "true",
-            SignalFire = properties["signal_fire"].GetString() == "true",
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
+            SignalFire = properties.ChildrenMap.ContainsKey("signal_fire") ? properties["signal_fire"].GetString() == "true" : SignalFire,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

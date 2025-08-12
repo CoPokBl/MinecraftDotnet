@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LightWeightedPressurePlateBlock(Identifier Identifier, int Power) : IBlock {
-
     public Identifier Category => "minecraft:weighted_pressure_plate";
     public int ProtocolId => 439;
     public double Hardness => 0.5;
@@ -89,7 +88,7 @@ public record LightWeightedPressurePlateBlock(Identifier Identifier, int Power) 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Power = int.Parse(properties["power"].GetString()),
+            Power = properties.ChildrenMap.ContainsKey("power") ? int.Parse(properties["power"].GetString()) : Power,
         };
     }
     

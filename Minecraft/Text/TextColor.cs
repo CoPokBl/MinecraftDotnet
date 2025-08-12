@@ -84,6 +84,26 @@ public readonly struct TextColor : IEquatable<TextColor> {
         return Hex(val);
     }
 
+    public static TextColor FromNamedTextColor(NamedTextColor color) => color switch {
+        NamedTextColor.Black => Black,
+        NamedTextColor.DarkBlue => DarkBlue,
+        NamedTextColor.DarkGreen => DarkGreen,
+        NamedTextColor.DarkAqua => DarkAqua,
+        NamedTextColor.DarkRed => DarkRed,
+        NamedTextColor.DarkPurple => DarkPurple,
+        NamedTextColor.Gold => Gold,
+        NamedTextColor.Gray => Gray,
+        NamedTextColor.DarkGray => DarkGray,
+        NamedTextColor.Blue => Blue,
+        NamedTextColor.Green => Green,
+        NamedTextColor.Aqua => Aqua,
+        NamedTextColor.Red => Red,
+        NamedTextColor.LightPurple => LightPurple,
+        NamedTextColor.Yellow => Yellow,
+        NamedTextColor.White => White,
+        _ => throw new ArgumentOutOfRangeException(nameof(color), color, null)
+    };
+
     public static TextColor FromDecimal(int val) {
         if (val is < 0 or > 0xFFFFFF) {
             throw new ArgumentOutOfRangeException(nameof(val), "Value must be between 0 and 0xFFFFFF.");

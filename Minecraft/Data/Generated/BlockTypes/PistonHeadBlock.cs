@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeValue, Cardinal Facing, bool Short) : IBlock {
-
     public Identifier Category => "minecraft:piston_head";
     public int ProtocolId => 139;
     public double Hardness => 1.5;
@@ -135,9 +134,9 @@ public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeVa
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            TypeValue = TypeFromString(properties["type"].GetString()),
-            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
-            Short = properties["short"].GetString() == "true",
+            TypeValue = properties.ChildrenMap.ContainsKey("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Short = properties.ChildrenMap.ContainsKey("short") ? properties["short"].GetString() == "true" : Short,
         };
     }
     

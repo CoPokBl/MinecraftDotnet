@@ -19,7 +19,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2025-08-08
+// Last updated: 2025-08-12
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -4881,7 +4881,21 @@ public static class VanillaRegistry {
         Data.Attributes.Add(Attribute.WaypointReceiveRange);
         Data.Attributes.Add(Attribute.WaypointTransmitRange);
 
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Bool);
         Data.CommandArgumentTypes.Add(CommandArgumentType.Double);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Float);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Integer);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Long);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.String);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.BlockPos);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.BlockState);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Color);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.ColumnPos);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Gamemode);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.HexColor);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Swizzle);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Vec2);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Vec3);
 
     }
 }

@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide East, WallSide North, WallSide South, WallSide West) : IBlock {
-
     public Identifier Category => "minecraft:mossy_carpet";
     public int ProtocolId => 1098;
     public double Hardness => 0.1;
@@ -620,11 +619,11 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Bottom = properties["bottom"].GetString() == "true",
-            East = WallSideExtensions.FromString(properties["east"].GetString()),
-            North = WallSideExtensions.FromString(properties["north"].GetString()),
-            South = WallSideExtensions.FromString(properties["south"].GetString()),
-            West = WallSideExtensions.FromString(properties["west"].GetString()),
+            Bottom = properties.ChildrenMap.ContainsKey("bottom") ? properties["bottom"].GetString() == "true" : Bottom,
+            East = properties.ChildrenMap.ContainsKey("east") ? WallSideExtensions.FromString(properties["east"].GetString()) : East,
+            North = properties.ChildrenMap.ContainsKey("north") ? WallSideExtensions.FromString(properties["north"].GetString()) : North,
+            South = properties.ChildrenMap.ContainsKey("south") ? WallSideExtensions.FromString(properties["south"].GetString()) : South,
+            West = properties.ChildrenMap.ContainsKey("west") ? WallSideExtensions.FromString(properties["west"].GetString()) : West,
         };
     }
     

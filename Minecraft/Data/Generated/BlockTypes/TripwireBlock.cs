@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed, bool East, bool North, bool Powered, bool South, bool West) : IBlock {
-
     public Identifier Category => "minecraft:tripwire";
     public int ProtocolId => 371;
     public double Hardness => 0;
@@ -564,13 +563,13 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Attached = properties["attached"].GetString() == "true",
-            Disarmed = properties["disarmed"].GetString() == "true",
-            East = properties["east"].GetString() == "true",
-            North = properties["north"].GetString() == "true",
-            Powered = properties["powered"].GetString() == "true",
-            South = properties["south"].GetString() == "true",
-            West = properties["west"].GetString() == "true",
+            Attached = properties.ChildrenMap.ContainsKey("attached") ? properties["attached"].GetString() == "true" : Attached,
+            Disarmed = properties.ChildrenMap.ContainsKey("disarmed") ? properties["disarmed"].GetString() == "true" : Disarmed,
+            East = properties.ChildrenMap.ContainsKey("east") ? properties["east"].GetString() == "true" : East,
+            North = properties.ChildrenMap.ContainsKey("north") ? properties["north"].GetString() == "true" : North,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            South = properties.ChildrenMap.ContainsKey("south") ? properties["south"].GetString() == "true" : South,
+            West = properties.ChildrenMap.ContainsKey("west") ? properties["west"].GetString() == "true" : West,
         };
     }
     

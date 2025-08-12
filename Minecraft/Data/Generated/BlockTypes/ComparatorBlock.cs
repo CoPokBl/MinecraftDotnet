@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ComparatorBlock(Identifier Identifier, Direction Facing, ComparatorBlock.Mode ModeValue, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:comparator";
     public int ProtocolId => 441;
     public double Hardness => 0;
@@ -117,9 +116,9 @@ public record ComparatorBlock(Identifier Identifier, Direction Facing, Comparato
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            ModeValue = ModeFromString(properties["mode"].GetString()),
-            Powered = properties["powered"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            ModeValue = properties.ChildrenMap.ContainsKey("mode") ? ModeFromString(properties["mode"].GetString()) : ModeValue,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     

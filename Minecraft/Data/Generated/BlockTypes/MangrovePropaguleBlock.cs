@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hanging, int Stage, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:mangrove_propagule";
     public int ProtocolId => 33;
     public double Hardness => 0;
@@ -217,10 +216,10 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = int.Parse(properties["age"].GetString()),
-            Hanging = properties["hanging"].GetString() == "true",
-            Stage = int.Parse(properties["stage"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
+            Hanging = properties.ChildrenMap.ContainsKey("hanging") ? properties["hanging"].GetString() == "true" : Hanging,
+            Stage = properties.ChildrenMap.ContainsKey("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripleafBlock.Tilt TiltValue, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:big_dripleaf";
     public int ProtocolId => 1054;
     public double Hardness => 0.1;
@@ -165,9 +164,9 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            TiltValue = TiltFromString(properties["tilt"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            TiltValue = properties.ChildrenMap.ContainsKey("tilt") ? TiltFromString(properties["tilt"].GetString()) : TiltValue,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

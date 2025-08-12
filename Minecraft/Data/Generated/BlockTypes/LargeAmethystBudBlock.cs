@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LargeAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:amethyst_cluster";
     public int ProtocolId => 941;
     public double Hardness => 1.5;
@@ -93,8 +92,8 @@ public record LargeAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

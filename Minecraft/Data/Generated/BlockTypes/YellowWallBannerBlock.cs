@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record YellowWallBannerBlock(Identifier Identifier, Direction Facing) : IBlock {
-
     public Identifier Category => "minecraft:wall_banner";
     public int ProtocolId => 551;
     public double Hardness => 1;
@@ -65,7 +64,7 @@ public record YellowWallBannerBlock(Identifier Identifier, Direction Facing) : I
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     

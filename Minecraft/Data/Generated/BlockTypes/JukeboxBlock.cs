@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
-
     public Identifier Category => "minecraft:jukebox";
     public int ProtocolId => 270;
     public double Hardness => 2;
@@ -60,7 +59,7 @@ public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            HasRecord = properties["has_record"].GetString() == "true",
+            HasRecord = properties.ChildrenMap.ContainsKey("has_record") ? properties["has_record"].GetString() == "true" : HasRecord,
         };
     }
     

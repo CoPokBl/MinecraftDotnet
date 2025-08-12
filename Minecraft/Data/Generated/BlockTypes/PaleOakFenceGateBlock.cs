@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PaleOakFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:fence_gate";
     public int ProtocolId => 602;
     public double Hardness => 2;
@@ -177,10 +176,10 @@ public record PaleOakFenceGateBlock(Identifier Identifier, Direction Facing, boo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            InWall = properties["in_wall"].GetString() == "true",
-            Open = properties["open"].GetString() == "true",
-            Powered = properties["powered"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            InWall = properties.ChildrenMap.ContainsKey("in_wall") ? properties["in_wall"].GetString() == "true" : InWall,
+            Open = properties.ChildrenMap.ContainsKey("open") ? properties["open"].GetString() == "true" : Open,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     

@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direction Facing) : IBlock {
-
     public Identifier Category => "minecraft:grindstone";
     public int ProtocolId => 812;
     public double Hardness => 2;
@@ -90,8 +89,8 @@ public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direc
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Face = AttachDirectionExtensions.FromString(properties["face"].GetString()),
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Face = properties.ChildrenMap.ContainsKey("face") ? AttachDirectionExtensions.FromString(properties["face"].GetString()) : Face,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     

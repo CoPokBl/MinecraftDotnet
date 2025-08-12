@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawnerBlock.TrialSpawnerState TrialSpawnerStateValue) : IBlock {
-
     public Identifier Category => "minecraft:trial_spawner";
     public int ProtocolId => 1094;
     public double Hardness => 50;
@@ -86,8 +85,8 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Ominous = properties["ominous"].GetString() == "true",
-            TrialSpawnerStateValue = TrialSpawnerStateFromString(properties["trial_spawner_state"].GetString()),
+            Ominous = properties.ChildrenMap.ContainsKey("ominous") ? properties["ominous"].GetString() == "true" : Ominous,
+            TrialSpawnerStateValue = properties.ChildrenMap.ContainsKey("trial_spawner_state") ? TrialSpawnerStateFromString(properties["trial_spawner_state"].GetString()) : TrialSpawnerStateValue,
         };
     }
     

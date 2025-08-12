@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SculkCatalystBlock(Identifier Identifier, bool Bloom) : IBlock {
-
     public Identifier Category => "minecraft:sculk_catalyst";
     public int ProtocolId => 965;
     public double Hardness => 3;
@@ -60,7 +59,7 @@ public record SculkCatalystBlock(Identifier Identifier, bool Bloom) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Bloom = properties["bloom"].GetString() == "true",
+            Bloom = properties.ChildrenMap.ContainsKey("bloom") ? properties["bloom"].GetString() == "true" : Bloom,
         };
     }
     

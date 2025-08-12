@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
-
     public Identifier Category => "minecraft:farm";
     public int ProtocolId => 195;
     public double Hardness => 0.6;
@@ -73,7 +72,7 @@ public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Moisture = int.Parse(properties["moisture"].GetString()),
+            Moisture = properties.ChildrenMap.ContainsKey("moisture") ? int.Parse(properties["moisture"].GetString()) : Moisture,
         };
     }
     

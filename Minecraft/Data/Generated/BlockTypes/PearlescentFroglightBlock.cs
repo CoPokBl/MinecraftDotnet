@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PearlescentFroglightBlock(Identifier Identifier, Axis Axis) : IBlock {
-
     public Identifier Category => "minecraft:rotated_pillar";
     public int ProtocolId => 1089;
     public double Hardness => 0.3;
@@ -63,7 +62,7 @@ public record PearlescentFroglightBlock(Identifier Identifier, Axis Axis) : IBlo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Axis = AxisExtensions.FromString(properties["axis"].GetString()),
+            Axis = properties.ChildrenMap.ContainsKey("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
         };
     }
     

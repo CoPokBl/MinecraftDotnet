@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) : IBlock {
-
     public Identifier Category => "minecraft:pitcher_crop";
     public int ProtocolId => 631;
     public double Hardness => 0;
@@ -92,8 +91,8 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = int.Parse(properties["age"].GetString()),
-            Half = BlockHalfExtensions.FromString(properties["half"].GetString()),
+            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
+            Half = properties.ChildrenMap.ContainsKey("half") ? BlockHalfExtensions.FromString(properties["half"].GetString()) : Half,
         };
     }
     

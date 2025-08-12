@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RedstoneTorchBlock(Identifier Identifier, bool Lit) : IBlock {
-
     public Identifier Category => "minecraft:redstone_torch";
     public int ProtocolId => 260;
     public double Hardness => 0;
@@ -60,7 +59,7 @@ public record RedstoneTorchBlock(Identifier Identifier, bool Lit) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Lit = properties["lit"].GetString() == "true",
+            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
         };
     }
     

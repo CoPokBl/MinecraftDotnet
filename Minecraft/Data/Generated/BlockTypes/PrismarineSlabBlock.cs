@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PrismarineSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:slab";
     public int ProtocolId => 501;
     public double Hardness => 1.5;
@@ -75,8 +74,8 @@ public record PrismarineSlabBlock(Identifier Identifier, SlabType Type, bool Wat
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Type = SlabTypeExtensions.FromString(properties["type"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Type = properties.ChildrenMap.ContainsKey("type") ? SlabTypeExtensions.FromString(properties["type"].GetString()) : Type,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type TypeValue, Direction Facing, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:trapped_chest";
     public int ProtocolId => 438;
     public double Hardness => 2.5;
@@ -138,9 +137,9 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            TypeValue = TypeFromString(properties["type"].GetString()),
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            TypeValue = properties.ChildrenMap.ContainsKey("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

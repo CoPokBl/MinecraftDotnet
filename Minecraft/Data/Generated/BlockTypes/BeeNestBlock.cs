@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BeeNestBlock(Identifier Identifier, Direction Facing, int HoneyLevel) : IBlock {
-
     public Identifier Category => "minecraft:beehive";
     public int ProtocolId => 871;
     public double Hardness => 0.3;
@@ -117,8 +116,8 @@ public record BeeNestBlock(Identifier Identifier, Direction Facing, int HoneyLev
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            HoneyLevel = int.Parse(properties["honey_level"].GetString()),
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            HoneyLevel = properties.ChildrenMap.ContainsKey("honey_level") ? int.Parse(properties["honey_level"].GetString()) : HoneyLevel,
         };
     }
     

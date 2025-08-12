@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Facing) : IBlock {
-
     public Identifier Category => "minecraft:end_portal_frame";
     public int ProtocolId => 361;
     public double Hardness => -1;
@@ -78,8 +77,8 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Eye = properties["eye"].GetString() == "true",
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Eye = properties.ChildrenMap.ContainsKey("eye") ? properties["eye"].GetString() == "true" : Eye,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     

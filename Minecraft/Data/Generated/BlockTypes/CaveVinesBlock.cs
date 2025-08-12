@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBlock {
-
     public Identifier Category => "minecraft:cave_vines";
     public int ProtocolId => 1044;
     public double Hardness => 0;
@@ -213,8 +212,8 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = int.Parse(properties["age"].GetString()),
-            Berries = properties["berries"].GetString() == "true",
+            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
+            Berries = properties.ChildrenMap.ContainsKey("berries") ? properties["berries"].GetString() == "true" : Berries,
         };
     }
     

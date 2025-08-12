@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SuspiciousGravelBlock(Identifier Identifier, int Dusted) : IBlock {
-
     public Identifier Category => "minecraft:brushable";
     public int ProtocolId => 41;
     public double Hardness => 0.25;
@@ -65,7 +64,7 @@ public record SuspiciousGravelBlock(Identifier Identifier, int Dusted) : IBlock 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Dusted = int.Parse(properties["dusted"].GetString()),
+            Dusted = properties.ChildrenMap.ContainsKey("dusted") ? int.Parse(properties["dusted"].GetString()) : Dusted,
         };
     }
     

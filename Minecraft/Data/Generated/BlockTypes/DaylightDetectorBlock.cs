@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Power) : IBlock {
-
     public Identifier Category => "minecraft:daylight_detector";
     public int ProtocolId => 442;
     public double Hardness => 0.2;
@@ -126,8 +125,8 @@ public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Po
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Inverted = properties["inverted"].GetString() == "true",
-            Power = int.Parse(properties["power"].GetString()),
+            Inverted = properties.ChildrenMap.ContainsKey("inverted") ? properties["inverted"].GetString() == "true" : Inverted,
+            Power = properties.ChildrenMap.ContainsKey("power") ? int.Parse(properties["power"].GetString()) : Power,
         };
     }
     

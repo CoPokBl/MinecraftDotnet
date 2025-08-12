@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhase SculkSensorPhase, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:sculk_sensor";
     public int ProtocolId => 961;
     public double Hardness => 1.5;
@@ -393,9 +392,9 @@ public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhas
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Power = int.Parse(properties["power"].GetString()),
-            SculkSensorPhase = SculkSensorPhaseExtensions.FromString(properties["sculk_sensor_phase"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Power = properties.ChildrenMap.ContainsKey("power") ? int.Parse(properties["power"].GetString()) : Power,
+            SculkSensorPhase = properties.ChildrenMap.ContainsKey("sculk_sensor_phase") ? SculkSensorPhaseExtensions.FromString(properties["sculk_sensor_phase"].GetString()) : SculkSensorPhase,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

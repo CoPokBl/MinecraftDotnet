@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBlock {
-
     public Identifier Category => "minecraft:turtle_egg";
     public int ProtocolId => 713;
     public double Hardness => 0.5;
@@ -93,8 +92,8 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Eggs = int.Parse(properties["eggs"].GetString()),
-            Hatch = int.Parse(properties["hatch"].GetString()),
+            Eggs = properties.ChildrenMap.ContainsKey("eggs") ? int.Parse(properties["eggs"].GetString()) : Eggs,
+            Hatch = properties.ChildrenMap.ContainsKey("hatch") ? int.Parse(properties["hatch"].GetString()) : Hatch,
         };
     }
     

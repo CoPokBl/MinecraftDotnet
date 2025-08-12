@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CyanBannerBlock(Identifier Identifier, int Rotation) : IBlock {
-
     public Identifier Category => "minecraft:banner";
     public int ProtocolId => 540;
     public double Hardness => 1;
@@ -89,7 +88,7 @@ public record CyanBannerBlock(Identifier Identifier, int Rotation) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Rotation = int.Parse(properties["rotation"].GetString()),
+            Rotation = properties.ChildrenMap.ContainsKey("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
         };
     }
     

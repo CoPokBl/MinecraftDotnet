@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SmokerBlock(Identifier Identifier, Direction Facing, bool Lit) : IBlock {
-
     public Identifier Category => "minecraft:smoker";
     public int ProtocolId => 808;
     public double Hardness => 3.5;
@@ -81,8 +80,8 @@ public record SmokerBlock(Identifier Identifier, Direction Facing, bool Lit) : I
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Lit = properties["lit"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
         };
     }
     

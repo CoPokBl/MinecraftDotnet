@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facing FacingValue) : IBlock {
-
     public Identifier Category => "minecraft:hopper";
     public int ProtocolId => 445;
     public double Hardness => 3;
@@ -82,8 +81,8 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Enabled = properties["enabled"].GetString() == "true",
-            FacingValue = FacingFromString(properties["facing"].GetString()),
+            Enabled = properties.ChildrenMap.ContainsKey("enabled") ? properties["enabled"].GetString() == "true" : Enabled,
+            FacingValue = properties.ChildrenMap.ContainsKey("facing") ? FacingFromString(properties["facing"].GetString()) : FacingValue,
         };
     }
     

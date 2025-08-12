@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBlock {
-
     public Identifier Category => "minecraft:cocoa";
     public int ProtocolId => 365;
     public double Hardness => 0.2;
@@ -90,8 +89,8 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = int.Parse(properties["age"].GetString()),
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     

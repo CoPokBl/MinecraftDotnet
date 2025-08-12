@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool HasBottle1, bool HasBottle2) : IBlock {
-
     public Identifier Category => "minecraft:brewing_stand";
     public int ProtocolId => 355;
     public double Hardness => 0.5;
@@ -84,9 +83,9 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            HasBottle0 = properties["has_bottle_0"].GetString() == "true",
-            HasBottle1 = properties["has_bottle_1"].GetString() == "true",
-            HasBottle2 = properties["has_bottle_2"].GetString() == "true",
+            HasBottle0 = properties.ChildrenMap.ContainsKey("has_bottle_0") ? properties["has_bottle_0"].GetString() == "true" : HasBottle0,
+            HasBottle1 = properties.ChildrenMap.ContainsKey("has_bottle_1") ? properties["has_bottle_1"].GetString() == "true" : HasBottle1,
+            HasBottle2 = properties.ChildrenMap.ContainsKey("has_bottle_2") ? properties["has_bottle_2"].GetString() == "true" : HasBottle2,
         };
     }
     

@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LightBlock(Identifier Identifier, int Level, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:light";
     public int ProtocolId => 493;
     public double Hardness => -1;
@@ -153,8 +152,8 @@ public record LightBlock(Identifier Identifier, int Level, bool Waterlogged) : I
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Level = int.Parse(properties["level"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Level = properties.ChildrenMap.ContainsKey("level") ? int.Parse(properties["level"].GetString()) : Level,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

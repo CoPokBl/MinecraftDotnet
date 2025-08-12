@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeartBlock.CreakingHeartState CreakingHeartStateValue, bool Natural) : IBlock {
-
     public Identifier Category => "minecraft:creaking_heart";
     public int ProtocolId => 186;
     public double Hardness => 10;
@@ -120,9 +119,9 @@ public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeart
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Axis = AxisExtensions.FromString(properties["axis"].GetString()),
-            CreakingHeartStateValue = CreakingHeartStateFromString(properties["creaking_heart_state"].GetString()),
-            Natural = properties["natural"].GetString() == "true",
+            Axis = properties.ChildrenMap.ContainsKey("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
+            CreakingHeartStateValue = properties.ChildrenMap.ContainsKey("creaking_heart_state") ? CreakingHeartStateFromString(properties["creaking_heart_state"].GetString()) : CreakingHeartStateValue,
+            Natural = properties.ChildrenMap.ContainsKey("natural") ? properties["natural"].GetString() == "true" : Natural,
         };
     }
     

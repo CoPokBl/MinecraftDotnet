@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SnowBlock(Identifier Identifier, int Layers) : IBlock {
-
     public Identifier Category => "minecraft:snow_layer";
     public int ProtocolId => 263;
     public double Hardness => 0.1;
@@ -73,7 +72,7 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Layers = int.Parse(properties["layers"].GetString()),
+            Layers = properties.ChildrenMap.ContainsKey("layers") ? int.Parse(properties["layers"].GetString()) : Layers,
         };
     }
     

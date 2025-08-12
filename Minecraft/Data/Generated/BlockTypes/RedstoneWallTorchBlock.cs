@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RedstoneWallTorchBlock(Identifier Identifier, Direction Facing, bool Lit) : IBlock {
-
     public Identifier Category => "minecraft:redstone_wall_torch";
     public int ProtocolId => 261;
     public double Hardness => 0;
@@ -81,8 +80,8 @@ public record RedstoneWallTorchBlock(Identifier Identifier, Direction Facing, bo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Lit = properties["lit"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
         };
     }
     

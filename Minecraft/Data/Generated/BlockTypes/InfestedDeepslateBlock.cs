@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record InfestedDeepslateBlock(Identifier Identifier, Axis Axis) : IBlock {
-
     public Identifier Category => "minecraft:infested_rotated_pillar";
     public int ProtocolId => 1080;
     public double Hardness => 1.5;
@@ -63,7 +62,7 @@ public record InfestedDeepslateBlock(Identifier Identifier, Axis Axis) : IBlock 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Axis = AxisExtensions.FromString(properties["axis"].GetString()),
+            Axis = properties.ChildrenMap.ContainsKey("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
         };
     }
     

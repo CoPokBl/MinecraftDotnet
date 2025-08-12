@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:detector_rail";
     public int ProtocolId => 127;
     public double Hardness => 0.7;
@@ -134,9 +133,9 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Powered = properties["powered"].GetString() == "true",
-            Shape = RailDirectionExtensions.FromString(properties["shape"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Shape = properties.ChildrenMap.ContainsKey("shape") ? RailDirectionExtensions.FromString(properties["shape"].GetString()) : Shape,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

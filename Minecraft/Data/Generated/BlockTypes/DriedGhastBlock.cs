@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DriedGhastBlock(Identifier Identifier, Direction Facing, int Hydration, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:dried_ghast";
     public int ProtocolId => 715;
     public double Hardness => 0;
@@ -165,9 +164,9 @@ public record DriedGhastBlock(Identifier Identifier, Direction Facing, int Hydra
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Hydration = int.Parse(properties["hydration"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Hydration = properties.ChildrenMap.ContainsKey("hydration") ? int.Parse(properties["hydration"].GetString()) : Hydration,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SkeletonSkullBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock {
-
     public Identifier Category => "minecraft:skull";
     public int ProtocolId => 421;
     public double Hardness => 1;
@@ -126,8 +125,8 @@ public record SkeletonSkullBlock(Identifier Identifier, bool Powered, int Rotati
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Powered = properties["powered"].GetString() == "true",
-            Rotation = int.Parse(properties["rotation"].GetString()),
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Rotation = properties.ChildrenMap.ContainsKey("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
         };
     }
     

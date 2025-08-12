@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CactusBlock(Identifier Identifier, int Age) : IBlock {
-
     public Identifier Category => "minecraft:cactus";
     public int ProtocolId => 266;
     public double Hardness => 0.4;
@@ -89,7 +88,7 @@ public record CactusBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = int.Parse(properties["age"].GetString()),
+            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
         };
     }
     

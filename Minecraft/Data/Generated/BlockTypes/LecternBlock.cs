@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:lectern";
     public int ProtocolId => 813;
     public double Hardness => 2.5;
@@ -113,9 +112,9 @@ public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            HasBook = properties["has_book"].GetString() == "true",
-            Powered = properties["powered"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            HasBook = properties.ChildrenMap.ContainsKey("has_book") ? properties["has_book"].GetString() == "true" : HasBook,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     

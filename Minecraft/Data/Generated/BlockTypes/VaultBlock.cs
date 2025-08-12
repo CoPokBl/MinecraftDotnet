@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, VaultBlock.VaultState VaultStateValue) : IBlock {
-
     public Identifier Category => "minecraft:vault";
     public int ProtocolId => 1095;
     public double Hardness => 50;
@@ -153,9 +152,9 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Ominous = properties["ominous"].GetString() == "true",
-            VaultStateValue = VaultStateFromString(properties["vault_state"].GetString()),
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Ominous = properties.ChildrenMap.ContainsKey("ominous") ? properties["ominous"].GetString() == "true" : Ominous,
+            VaultStateValue = properties.ChildrenMap.ContainsKey("vault_state") ? VaultStateFromString(properties["vault_state"].GetString()) : VaultStateValue,
         };
     }
     

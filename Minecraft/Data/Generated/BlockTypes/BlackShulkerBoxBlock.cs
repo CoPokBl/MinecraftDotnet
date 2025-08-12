@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BlackShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock {
-
     public Identifier Category => "minecraft:shulker_box";
     public int ProtocolId => 661;
     public double Hardness => 2;
@@ -69,7 +68,7 @@ public record BlackShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBl
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     

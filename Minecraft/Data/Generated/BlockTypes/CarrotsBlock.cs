@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CarrotsBlock(Identifier Identifier, int Age) : IBlock {
-
     public Identifier Category => "minecraft:carrot";
     public int ProtocolId => 409;
     public double Hardness => 0;
@@ -73,7 +72,7 @@ public record CarrotsBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = int.Parse(properties["age"].GetString()),
+            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
         };
     }
     

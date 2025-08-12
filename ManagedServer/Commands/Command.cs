@@ -42,11 +42,7 @@ public class CommandBuilder(string command) {
     }
 
     public CommandBuilder WithDefaultSyntax(Action<PlayerEntity, CommandContext> executor, Func<PlayerEntity, bool> condition) {
-        _syntax.Add(new CommandSyntax {
-            Arguments = [],
-            Condition = condition,
-            Executor = executor
-        });
+        _syntax.Add(new CommandSyntax(executor, condition));
         return this;
     }
     
