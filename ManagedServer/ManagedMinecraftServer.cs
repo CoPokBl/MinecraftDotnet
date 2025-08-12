@@ -82,10 +82,6 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
                                 " then please add the [CallsEvent()] attribute to the feature calling it or" +
                                 " add it to the CallableEventTypes property in the ManagedMinecraftServer object.");
         };
-
-        Events.AddListener<PlayerLoginEvent>(e => {
-            // e.Player.SendPacket(GenerateCommandsPacket());
-        });
     }
 
     protected void RegisterFeatIfNotPresent(IServerFeature feat) {
@@ -149,25 +145,6 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
             
             CurrentTick++;
         }
-    }
-
-    public ClientBoundCommandsPacket GenerateCommandsPacket() {
-        List<ICommandNode> graph = [
-            new RootNode(CommandNodeFlag.RootType, [], null, null)
-        ];
-        
-        // base commands
-        List<LiteralNode> commandLiterals = [];
-        foreach (Command command in Commands) {
-            List<ICommandNode> cmdNodes = [];
-            foreach (CommandSyntax syntax in command.Syntax) {
-                foreach (IArgument arg in syntax.Arguments) {
-                    
-                }
-            }
-        }
-
-        return null!;
     }
 
     public void HandleError(Exception? exception) {

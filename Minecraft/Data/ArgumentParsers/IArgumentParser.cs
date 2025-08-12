@@ -8,6 +8,9 @@ public interface IArgumentParser<T> : IArgumentParser {
 }
 
 public interface IArgumentParser : IProtocolType {
+    public object GenericParse(string str);
+    public string Format(object value);
+    
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry);
     public IArgumentParser ReadData(DataReader reader, MinecraftRegistry registry);
 }

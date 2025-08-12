@@ -1,4 +1,6 @@
 using ManagedServer;
+using ManagedServer.Commands;
+using ManagedServer.Commands.Arguments;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
@@ -47,6 +49,19 @@ public static class BlockSumoFfa {
             );
         
         server.Dimensions.Add("minecraft:potatoland", new Dimension());
+        
+        server.Commands.Add(new CommandBuilder("helloworld")
+            .WithDefaultSyntax((p, ctx) => {
+                p.SendMessage("Hello world!");
+            }, _ => true)
+            .WithSyntax(new CommandSyntax {
+                Arguments = [new Argument<double>("numer", CommandArgumentType.Double)],
+                Condition = _ => true,
+                Executor = (player, context) => {
+                    player.SendMessage("Hello there, you entered the number: " + context.GetArgument<double>("numer"));
+                }
+            })
+            .Build());
         
         CancellationTokenSource cts = new();
 
@@ -161,7 +176,7 @@ public static class BlockSumoFfa {
                     TextComponent.FromLegacyString("&7[&c-&7] " + e.Player.Name + " &7left the game :("));
             };
             
-            e.Player.SendPacket(cmds);
+            // e.Player.SendPacket(cmds);
         });
         
         TcpMinecraftListener listener = new(connection => {

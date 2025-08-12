@@ -53,11 +53,11 @@ public record LiteralNode : ICommandNode {
         return new LiteralNode(flags, childrenIndexes, redirectNode, name, suggestionsType);
     }
 
-    public CommandNodeFlag Flags { get; }
-    public int[] ChildrenIndexes { get; }
-    public int? RedirectNode { get; }
-    public string Name { get; }
-    public Identifier? SuggestionsType { get; }
+    public CommandNodeFlag Flags { get; init; }
+    public int[] ChildrenIndexes { get; init; }
+    public int? RedirectNode { get; init; }
+    public string Name { get; init; }
+    public Identifier? SuggestionsType { get; init; }
 
     public void Deconstruct(out CommandNodeFlag flags, out int[] childrenIndexes, out int? redirectNode, 
         out string name, out Identifier? suggestionsType) {

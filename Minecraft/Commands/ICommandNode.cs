@@ -4,9 +4,9 @@ using Minecraft.Registry;
 namespace Minecraft.Commands;
 
 public interface ICommandNode {
-    public CommandNodeFlag Flags { get; }
-    public int[] ChildrenIndexes { get; }
-    public int? RedirectNode { get; }
+    public CommandNodeFlag Flags { get; init; }
+    public int[] ChildrenIndexes { get; init; }
+    public int? RedirectNode { get; init; }
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry);
 

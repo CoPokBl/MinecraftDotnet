@@ -60,12 +60,12 @@ public record ArgumentNode : ICommandNode {
         return new ArgumentNode(flags, childrenIndexes, redirectNode, name, parser, suggestionsType);
     }
 
-    public CommandNodeFlag Flags { get; }
-    public int[] ChildrenIndexes { get; }
-    public int? RedirectNode { get; }
-    public string Name { get; }
-    public IArgumentParser Parser { get; }
-    public Identifier? SuggestionsType { get; }
+    public CommandNodeFlag Flags { get; init; }
+    public int[] ChildrenIndexes { get; init; }
+    public int? RedirectNode { get; init; }
+    public string Name { get; init; }
+    public IArgumentParser Parser { get; init; }
+    public Identifier? SuggestionsType { get; init; }
 
     public void Deconstruct(out CommandNodeFlag flags, out int[] childrenIndexes, out int? redirectNode, out string name, 
         out IArgumentParser parser, out Identifier? suggestionsType) {
