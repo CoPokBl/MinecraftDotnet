@@ -85,8 +85,7 @@ public class CommandsFeature : ScopedFeature {
                 try {
                     val = arg.Parser.GenericParse(ref argsStr, Scope.Server.Registry);
                 }
-                catch (Exception e) {
-                    Console.WriteLine(e);
+                catch (Exception) {
                     valid = false;
                     break;  // Invalid
                 }
@@ -190,10 +189,16 @@ public class CommandsFeature : ScopedFeature {
 
     private (CommandSyntax syntax, ArgumentNode[] argNodes) BuildSyntax(CommandSyntax syntax, PlayerEntity player) {
         List<ArgumentNode> argNodes = [];
-        foreach (IArgument arg in syntax.Arguments) {
-            argNodes.Add(new ArgumentNodeBuilder(arg.Name, arg.Parser).Build());
+        for (int i = 0; i < syntax.Arguments.Length; i++) {
+            IArgument arg = syntax.Arguments[i];
+            ArgumentNodeBuilder builder = new(arg.Name, arg.Parser);
+            if (i == syntax.Arguments.Length - 1) {
+                // This is the last argument, so it can be executable
+                builder.WithExecutable();
+            }
+            argNodes.Add(builder.Build());
         }
-        
+
         return (syntax, argNodes.ToArray());
     }
 }
