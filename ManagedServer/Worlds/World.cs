@@ -527,7 +527,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         return new Span<ChunkData>(chunks, 0, cChunksPos);
     }
 
-    private Task LoadChunks(Vec2<int>[] poses) {
+    public Task LoadChunks(Vec2<int>[] poses) {
         List<Task> tasks = [];
         foreach (Vec2<int> pos in poses) {
             if (_chunks.ContainsKey(pos)) continue;  // already loaded
@@ -546,7 +546,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         return Task.WhenAll(tasks);
     }
 
-    private Task LoadChunk(Vec2<int> pos) {
+    public Task LoadChunk(Vec2<int> pos) {
         if (_chunks.ContainsKey(pos)) return Task.CompletedTask;  // already loaded
 
         if (_chunkLoadingTasks.TryGetValue(pos, out Task? existingTask)) {
