@@ -189,6 +189,13 @@ public static class BlockSumoFfa {
                     TextComponent.FromLegacyString("&7[&c-&7] " + e.Player.Name + " &7left the game :("));
             };
             
+            e.Player.SendPacket(new ClientBoundEntityEffectPacket {
+                EntityId = e.Player.NetId,
+                Amplifier = 0,
+                Duration = -1,
+                Effect = PotionEffectType.Darkness,
+                EffectFlags = ClientBoundEntityEffectPacket.Flags.ShowIcon
+            });
             // e.Player.SendPacket(cmds);
         });
         
