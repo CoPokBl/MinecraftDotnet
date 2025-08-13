@@ -15,13 +15,22 @@ namespace Minecraft.Schemas.Chunks;
 /// </summary>
 public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     public const int Size = 16;  // the dimension of the cubic section (16x16x16)
+    public const int BiomeDimension = 4;  // the dimension of the biomes (4x4x4)
     
     // Params for IndirectPalette (Blocks)
-    public const int MaxBpe = 8;  // maximum bits per entry for blocks palette
-    public const int MinBpe = 4;  // minimum bits per entry for blocks palette
+    public const int BlocksMaxBpe = 8;  // maximum bits per entry for blocks palette
+    public const int BlocksMinBpe = 4;  // minimum bits per entry for blocks palette
     
-    private Palette? _palette = new SingleValuePalette(Size, MaxBpe, MinBpe, 0);  // initialise with memory-efficient single value palette
+    // Params for IndirectPalette (Biomes)
+    public const int BiomesMaxBpe = 3;  // maximum bits per entry
+    public const int BiomesMinBpe = 1;  // minimum bits per entry
+    
+    private Palette? _palette = new SingleValuePalette(Size, BlocksMaxBpe, BlocksMinBpe, 0);  // initialise with memory-efficient single value palette
     private uint[,,]? _blocks;  // Storing as block states directly, this is memory inefficient but allows for easy modification.
+
+    // in this situation '0' is the first entry in the biomes registry
+    private Palette? _biomesPalette = new SingleValuePalette(BiomeDimension, BiomesMaxBpe, BiomesMinBpe, 0);
+    private uint[,,]? _biomes;  // Storing as biome states directly, this is memory inefficient but allows for easy modification.
     
     /// <summary>
     /// The blocks in this section.
@@ -72,6 +81,36 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
             _palette = value;
         }
     }
+
+    public uint[,,] Biomes {
+        get {
+            if (_biomes != null) {
+                return _biomes;
+            }
+            
+            UnpackBiomes();
+            return _biomes!;
+        }
+        set {
+            _biomesPalette = null;
+            _biomes = value;
+        }
+    }
+    
+    public Palette BiomesPalette {
+        get {
+            if (_biomesPalette != null) {
+                return _biomesPalette;
+            }
+            
+            PackBiomes();
+            return _biomesPalette!;
+        }
+        set {
+            _biomes = null;
+            _biomesPalette = value;
+        }
+    }
     
     public ChunkSection Clone() {
         ChunkSection clone = new() {
@@ -92,7 +131,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         if (_blocks == null) {
             return;  // already packed
         }
-        _palette = Palette.CreateOptimisedPalette(Blocks, Size, MaxBpe, MinBpe);
+        _palette = Palette.CreateOptimisedPalette(Blocks, Size, BlocksMaxBpe, BlocksMinBpe);
         _blocks = null;  // clear the blocks, we are now using the palette
     }
 
@@ -104,13 +143,29 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         _palette = null;  // clear the palette, we are now using the blocks directly
     }
     
+    public void PackBiomes() {
+        if (_biomes == null) {
+            return;  // already packed
+        }
+        _biomesPalette = Palette.CreateOptimisedPalette(Biomes, BiomeDimension, BiomesMaxBpe, BiomesMinBpe);
+        _biomes = null;  // clear the biomes, we are now using the palette
+    }
+    
+    public void UnpackBiomes() {
+        if (_biomesPalette == null) {
+            return;  // already unpacked
+        }
+        _biomes = _biomesPalette.GetData();
+        _biomesPalette = null;  // clear the palette, we are now using the biomes directly
+    }
+    
     /// <summary>
     /// Highly fast and memory efficient way to fill the section with a single block state.
     /// </summary>
     /// <param name="state">The block state to fill with.</param>
     public void Fill(uint state) {
         _blocks = null;
-        _palette = new SingleValuePalette(Size, MaxBpe, MinBpe, state);
+        _palette = new SingleValuePalette(Size, BlocksMaxBpe, BlocksMinBpe, state);
     }
     
     /// <summary>
@@ -119,6 +174,11 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     /// <param name="block">The block state to fill with.</param>
     public void Fill(IBlock block) {
         Fill(block.StateId);
+    }
+    
+    public void FillBiomes(uint state) {
+        _biomes = null;
+        _biomesPalette = new SingleValuePalette(BiomeDimension, BiomesMaxBpe, BiomesMinBpe, state);
     }
 
     /// <summary>
@@ -167,6 +227,26 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         return (registry ?? VanillaRegistry.Data).Blocks.GetByStateId(GetBlock(pos));
     }
     
+    public void SetBiome(int x, int y, int z, uint state) {
+        if (_biomesPalette is SingleValuePalette svp && svp.Value == state) {
+            // If the palette is already a single value, we can just return
+            // this is a memory optimisation for setting an entire section to the same biome.
+            return;
+        }
+        Biomes[x, y, z] = state;
+    }
+    
+    public void SetBiome(Vec3<int> pos, uint state) {
+        SetBiome(pos.X, pos.Y, pos.Z, state);
+    }
+    
+    public uint GetBiome(int x, int y, int z) {
+        if (_biomesPalette != null) {
+            return _biomesPalette.GetBlock(x, y, z);
+        }
+        return Biomes[x, y, z];
+    }
+    
     public void Write(DataWriter w) {
         // BLOCK COUNT
         w.WriteShort((short)Palette.BlockCount());  // Number of non-air blocks in chunk section
@@ -175,14 +255,13 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         w.Write(Palette.Serialise());
         
         // BIOMES
-        w.WriteUnsignedByte(0x00);  // Bits per entry: Single valued (only one block type for the whole sec)
-        w.WriteVarInt(0);  // Our single value
+        w.Write(BiomesPalette.Serialise());
     }
 
     public ChunkSection Read(DataReader r) {
-        short blockCount = r.ReadShort();  // we don't need this
+        r.ReadShort();  // This is the number of non-air blocks in the chunk section, we don't need it
         _palette = Palette.Deserialise(Size, 8, 4, 8, r);
-        Palette biomesPalette = Palette.Deserialise(4, 3, 1, 3, r);  // not yet implemented
+        _biomesPalette = Palette.Deserialise(4, 3, 1, 3, r);  // not yet implemented
         
         if (!_palette.HasData) {
             throw new Exception("Empty chunk section");

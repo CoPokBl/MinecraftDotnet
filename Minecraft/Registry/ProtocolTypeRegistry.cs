@@ -16,4 +16,12 @@ public abstract class ProtocolTypeRegistry<T> where T : IProtocolType {
         _byId.Add(type.Identifier, type);
         _byProtocolId.Add(type.ProtocolId, type);
     }
+    
+    public bool Contains(Identifier id) {
+        return _byId.ContainsKey(id);
+    }
+    
+    public bool Contains(int protocolId) {
+        return _byProtocolId.ContainsKey(protocolId);
+    }
 }

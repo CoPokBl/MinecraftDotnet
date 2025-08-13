@@ -243,7 +243,7 @@ public class TextComponent : CompoundTagSerialisable {
         // alright, let's work out what content it has
         Dictionary<string, INbtTag> fields = compound.ChildrenMap;
 
-        if (fields.Count == 1 && fields[""] is StringTag strTag) {
+        if (fields.Count == 1 && fields.ContainsKey("") && fields[""] is StringTag strTag) {
             // special case, if the tag has only one field with an empty name, it's a string
             // I couldn't find any documentation on this, but it seems to be used by EmortalMC at least.
             // so by extension, Minestom and Adventure, so we support it.
@@ -298,7 +298,7 @@ public class TextComponent : CompoundTagSerialisable {
             throw new NotImplementedException("NBT content type not implemented");
         }
         else {
-            throw new Exception("Unknown content type");
+            throw new Exception("Unknown content type, data: " + compound.ToJsonString());
         }
         
         // okay, now we have done all the content we need to get all

@@ -11,4 +11,4 @@ create a new class for them in `/Data/Particles/Types/` and then specify them in
 
 ### 2. Check for Changes
 - New packets
-- New data components
+- Check code gen for warnings of missing types (data components, etc.)
