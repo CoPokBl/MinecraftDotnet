@@ -9,6 +9,7 @@ using ManagedServer.Features;
 using ManagedServer.Scheduling;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
+using ManagedServer.Worlds.Lighting;
 using Minecraft.Commands;
 using Minecraft.Commands.NodeTypes;
 using Minecraft.Data.Generated;
@@ -156,11 +157,12 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         LogAction(exception.ToString());
     }
 
-    public World CreateWorld(ITerrainProvider provider, string dimension = "minecraft:overworld") {
+    public World CreateWorld(ITerrainProvider provider, string dimension = "minecraft:overworld", ILightingProvider? lightingProvider = null) {
         if (!Dimensions.ContainsKey(dimension)) {
             throw new ArgumentException($"Dimension '{dimension}' does not exist. Please add it to the Dimensions dictionary.");
         }
-        World world = new(this, Events, provider, dimension, ViewDistance, WorldPacketsPerTick, WorldTickDelayMs) {
+        World world = new(this, Events, provider, dimension, lightingProvider, ViewDistance, 
+            WorldPacketsPerTick, WorldTickDelayMs) {
             Server = this
         };
         Worlds.Add(world);
