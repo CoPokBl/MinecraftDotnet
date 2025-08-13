@@ -3,10 +3,12 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
+using ManagedServer.Worlds.Lighting;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
@@ -35,10 +37,18 @@ public static class SkyWarsLuckyBlock {
         server.Dimensions.Add("skywars:game", new Dimension());
         
         Console.WriteLine("Loading maps...");
-        World lobby = server.CreateWorld(new PolarLoader(SkyWarsUtils.ReadPolarMap("lobby.polar"), VanillaRegistry.Data), "skywars:lobby");
+        World lobby = server.CreateWorld(new PolarLoader(SkyWarsUtils.ReadPolarMap("lobby.polar"), VanillaRegistry.Data), "skywars:lobby", new FullDarkLightingProvider());
         SkyWarsGame.LoadWorld();
         Console.WriteLine("Maps loaded successfully.");
 
+        lobby.Time = 18000;
+        // LivingEntity bob = new(EntityType.Creaking, new CreakingMeta(true, true, true) {
+        //     MobFlags = MobFlag.IsAggressive
+        // }) {
+        //     Position = LobbySpawn + new Vec3<double>(3, 0, 0)
+        // };
+        // bob.SetWorld(lobby);
+        
         NpcEntity billy = new(new PlayerMeta(SkinFlags:SkinParts.All)) {
             Position = LobbySpawn,
             Name = ChatUtils.FormatLegacy("&a&lBilly"),

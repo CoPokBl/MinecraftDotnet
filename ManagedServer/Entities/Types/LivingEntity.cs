@@ -5,6 +5,7 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Items;
+using Attribute = Minecraft.Data.Generated.Attribute;
 
 namespace ManagedServer.Entities.Types;
 
@@ -54,7 +55,7 @@ public class LivingEntity(IEntityType type, LivingEntityMeta? meta = null)
     }
 
     public void Heal(float amount = -1) {
-        const float maxHealth = 20f;  // TODO: Actually get this value
+        float maxHealth = (float)GetAttributeValue(Attribute.MaxHealth);
         if (Math.Abs(amount - -1) < 0.01) {
             amount = maxHealth;
         }

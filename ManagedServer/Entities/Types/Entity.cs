@@ -147,7 +147,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         }
     }
 
-    protected void Tick() {
+    protected virtual void Tick() {
         // Check for changed properties
         if (_lastVelocity != Velocity) {
             SendToViewers(new ClientBoundSetEntityVelocityPacket {  // protocol velocity is in 8000ths of a block per tick (50ms)
