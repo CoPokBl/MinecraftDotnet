@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bool Slot0Occupied, bool Slot1Occupied, bool Slot2Occupied, bool Slot3Occupied, bool Slot4Occupied, bool Slot5Occupied) : IBlock {
-
     public Identifier Category => "minecraft:chiseled_book_shelf";
     public int ProtocolId => 178;
     public double Hardness => 1.5;
@@ -1073,13 +1072,13 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Slot0Occupied = properties["slot_0_occupied"].GetString() == "true",
-            Slot1Occupied = properties["slot_1_occupied"].GetString() == "true",
-            Slot2Occupied = properties["slot_2_occupied"].GetString() == "true",
-            Slot3Occupied = properties["slot_3_occupied"].GetString() == "true",
-            Slot4Occupied = properties["slot_4_occupied"].GetString() == "true",
-            Slot5Occupied = properties["slot_5_occupied"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Slot0Occupied = properties.ChildrenMap.ContainsKey("slot_0_occupied") ? properties["slot_0_occupied"].GetString() == "true" : Slot0Occupied,
+            Slot1Occupied = properties.ChildrenMap.ContainsKey("slot_1_occupied") ? properties["slot_1_occupied"].GetString() == "true" : Slot1Occupied,
+            Slot2Occupied = properties.ChildrenMap.ContainsKey("slot_2_occupied") ? properties["slot_2_occupied"].GetString() == "true" : Slot2Occupied,
+            Slot3Occupied = properties.ChildrenMap.ContainsKey("slot_3_occupied") ? properties["slot_3_occupied"].GetString() == "true" : Slot3Occupied,
+            Slot4Occupied = properties.ChildrenMap.ContainsKey("slot_4_occupied") ? properties["slot_4_occupied"].GetString() == "true" : Slot4Occupied,
+            Slot5Occupied = properties.ChildrenMap.ContainsKey("slot_5_occupied") ? properties["slot_5_occupied"].GetString() == "true" : Slot5Occupied,
         };
     }
     

@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LightGrayCandleBlock(Identifier Identifier, int Candles, bool Lit, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:candle";
     public int ProtocolId => 913;
     public double Hardness => 0.1;
@@ -113,9 +112,9 @@ public record LightGrayCandleBlock(Identifier Identifier, int Candles, bool Lit,
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Candles = int.Parse(properties["candles"].GetString()),
-            Lit = properties["lit"].GetString() == "true",
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Candles = properties.ChildrenMap.ContainsKey("candles") ? int.Parse(properties["candles"].GetString()) : Candles,
+            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

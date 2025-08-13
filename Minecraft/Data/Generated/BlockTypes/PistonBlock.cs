@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing) : IBlock {
-
     public Identifier Category => "minecraft:piston_base";
     public int ProtocolId => 138;
     public double Hardness => 1.5;
@@ -86,8 +85,8 @@ public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing)
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Extended = properties["extended"].GetString() == "true",
-            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
+            Extended = properties.ChildrenMap.ContainsKey("extended") ? properties["extended"].GetString() == "true" : Extended,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     

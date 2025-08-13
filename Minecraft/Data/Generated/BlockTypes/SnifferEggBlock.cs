@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
-
     public Identifier Category => "minecraft:sniffer_egg";
     public int ProtocolId => 714;
     public double Hardness => 0.5;
@@ -63,7 +62,7 @@ public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Hatch = int.Parse(properties["hatch"].GetString()),
+            Hatch = properties.ChildrenMap.ContainsKey("hatch") ? int.Parse(properties["hatch"].GetString()) : Hatch,
         };
     }
     

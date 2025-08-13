@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction Facing, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:trip_wire_hook";
     public int ProtocolId => 370;
     public double Hardness => 0;
@@ -110,9 +109,9 @@ public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Attached = properties["attached"].GetString() == "true",
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Powered = properties["powered"].GetString() == "true",
+            Attached = properties.ChildrenMap.ContainsKey("attached") ? properties["attached"].GetString() == "true" : Attached,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     

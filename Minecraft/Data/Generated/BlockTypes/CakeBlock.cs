@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
-
     public Identifier Category => "minecraft:cake";
     public int ProtocolId => 283;
     public double Hardness => 0.5;
@@ -71,7 +70,7 @@ public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Bites = int.Parse(properties["bites"].GetString()),
+            Bites = properties.ChildrenMap.ContainsKey("bites") ? int.Parse(properties["bites"].GetString()) : Bites,
         };
     }
     

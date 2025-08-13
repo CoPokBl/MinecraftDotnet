@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BambooStairsBlock(Identifier Identifier, Direction Facing, BambooStairsBlock.Half HalfValue, StairShape Shape, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:stair";
     public int ProtocolId => 489;
     public double Hardness => 2;
@@ -333,10 +332,10 @@ public record BambooStairsBlock(Identifier Identifier, Direction Facing, BambooS
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            HalfValue = HalfFromString(properties["half"].GetString()),
-            Shape = StairShapeExtensions.FromString(properties["shape"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            HalfValue = properties.ChildrenMap.ContainsKey("half") ? HalfFromString(properties["half"].GetString()) : HalfValue,
+            Shape = properties.ChildrenMap.ContainsKey("shape") ? StairShapeExtensions.FromString(properties["shape"].GetString()) : Shape,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

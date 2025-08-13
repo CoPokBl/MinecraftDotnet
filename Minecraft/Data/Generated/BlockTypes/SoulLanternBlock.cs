@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SoulLanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:lantern";
     public int ProtocolId => 818;
     public double Hardness => 3.5;
@@ -68,8 +67,8 @@ public record SoulLanternBlock(Identifier Identifier, bool Hanging, bool Waterlo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Hanging = properties["hanging"].GetString() == "true",
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Hanging = properties.ChildrenMap.ContainsKey("hanging") ? properties["hanging"].GetString() == "true" : Hanging,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

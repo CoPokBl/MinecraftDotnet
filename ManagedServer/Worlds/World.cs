@@ -6,6 +6,7 @@ using ManagedServer.Events;
 using ManagedServer.Events.Types;
 using ManagedServer.Features;
 using ManagedServer.Viewables;
+using ManagedServer.Worlds.Lighting;
 using Minecraft;
 using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Data.Blocks;
@@ -60,6 +61,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     private readonly int _viewDistance;
     private readonly int _packetsPerTick;
     private readonly int _tickDelayMs;
+    private readonly ILightingProvider _lighting;
     
     // dimension will be set in constructor
     public Dimension Dimension => Server.Dimensions[DimensionId];
@@ -91,12 +93,13 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
     
     internal World(ManagedMinecraftServer server, EventNode<IServerEvent> baseEventNode, ITerrainProvider provider, 
-        Identifier dimensionId, int viewDistance = 8, int packetsPerTick = 10, int tickDelayMs = 100) {
+        Identifier dimensionId, ILightingProvider? lighting = null, int viewDistance = 8, int packetsPerTick = 10, int tickDelayMs = 100) {
         
         _provider = provider;
         _viewDistance = viewDistance;
         _packetsPerTick = packetsPerTick;
         _tickDelayMs = tickDelayMs;
+        _lighting = lighting ?? new FullBrightLightingProvider();
         Server = server;
         DimensionId = dimensionId;
         Events = baseEventNode.CreateChild<IWorldEvent>(e => e.World == this);
@@ -575,7 +578,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 ChunkX = chunkPos.X,
                 ChunkZ = chunkPos.Y,
                 Data = RetrieveChunk(chunkPos)!,
-                Light = LightData.FullBright
+                Light = _lighting.GenerateLighting(RetrieveChunk(chunkPos)!, this)
             });
         });
     }
@@ -643,7 +646,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             ChunkX = pos.X,
             ChunkZ = pos.Y,
             Data = data,
-            Light = LightData.FullBright
+            Light = _lighting.GenerateLighting(data, this)
         });
     }
 
@@ -657,7 +660,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 ChunkX = data.ChunkX,
                 ChunkZ = data.ChunkZ,
                 Data = data,
-                Light = LightData.FullBright
+                Light = _lighting.GenerateLighting(data, this)
             });
         }
     }

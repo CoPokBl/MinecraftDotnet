@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
-
     public Identifier Category => "minecraft:respawn_anchor";
     public int ProtocolId => 878;
     public double Hardness => 50;
@@ -67,7 +66,7 @@ public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Charges = int.Parse(properties["charges"].GetString()),
+            Charges = properties.ChildrenMap.ContainsKey("charges") ? int.Parse(properties["charges"].GetString()) : Charges,
         };
     }
     

@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DeepslateRedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock {
-
     public Identifier Category => "minecraft:redstone_ore";
     public int ProtocolId => 259;
     public double Hardness => 4.5;
@@ -60,7 +59,7 @@ public record DeepslateRedstoneOreBlock(Identifier Identifier, bool Lit) : IBloc
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Lit = properties["lit"].GetString() == "true",
+            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
         };
     }
     

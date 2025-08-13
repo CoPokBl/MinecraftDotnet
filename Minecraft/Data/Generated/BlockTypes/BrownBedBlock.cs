@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BrownBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock {
-
     public Identifier Category => "minecraft:bed";
     public int ProtocolId => 122;
     public double Hardness => 0.2;
@@ -121,9 +120,9 @@ public record BrownBedBlock(Identifier Identifier, Direction Facing, bool Occupi
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Occupied = properties["occupied"].GetString() == "true",
-            Part = BedPartExtensions.FromString(properties["part"].GetString()),
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Occupied = properties.ChildrenMap.ContainsKey("occupied") ? properties["occupied"].GetString() == "true" : Occupied,
+            Part = properties.ChildrenMap.ContainsKey("part") ? BedPartExtensions.FromString(properties["part"].GetString()) : Part,
         };
     }
     

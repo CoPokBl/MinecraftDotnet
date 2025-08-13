@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BirchPressurePlateBlock(Identifier Identifier, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:pressure_plate";
     public int ProtocolId => 250;
     public double Hardness => 0.5;
@@ -60,7 +59,7 @@ public record BirchPressurePlateBlock(Identifier Identifier, bool Powered) : IBl
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Powered = properties["powered"].GetString() == "true",
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     

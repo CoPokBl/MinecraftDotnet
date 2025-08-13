@@ -21,7 +21,8 @@ public partial class ManagedMinecraftServer {
         new SimpleTabListFeature(),
         new PlayerSkinLayersFeature(),
         new UseItemEventFeature(),
-        new RightClickToEquipArmourFeature()
+        new RightClickToEquipArmourFeature(),
+        new CommandsFeature()
     );
 
     public static ManagedMinecraftServer NewBasic() {

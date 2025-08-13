@@ -58,7 +58,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record {name}(Identifier Identifier, {args}) : IBlock {
-
 {reginfo}
 
     public uint StateId {
@@ -529,20 +528,22 @@ public static class Block {
             //               Load State Logic
             // =====================================================
             StringBuilder loadStateLogic = new("return this with {\n");
+            Func<string, string, string, string> withFormatter = (propName, fieldName, serialiser) => 
+                $"{CodeGenUtils.GetIndentation(3)}{fieldName} = properties.ChildrenMap.ContainsKey(\"{propName}\") ? {serialiser} : {fieldName},\n";
             foreach (IProperty prop in props) {
                 string pascalPropName = GetPascalPropName(prop);
                 switch (prop) {
                     case EnumProperty:
-                        loadStateLogic.Append($"{CodeGenUtils.GetIndentation(3)}{pascalPropName} = {CodeGenUtils.NamespacedIdToPascalName(prop.Name)}FromString(properties[\"{prop.Name}\"].GetString()),\n");
+                        loadStateLogic.Append(withFormatter(prop.Name, pascalPropName, $"{CodeGenUtils.NamespacedIdToPascalName(prop.Name)}FromString(properties[\"{prop.Name}\"].GetString())"));
                         break;
                     case BooleanProperty:
-                        loadStateLogic.Append($"{CodeGenUtils.GetIndentation(3)}{pascalPropName} = properties[\"{prop.Name}\"].GetString() == \"true\",\n");
+                        loadStateLogic.Append(withFormatter(prop.Name, pascalPropName, $"properties[\"{prop.Name}\"].GetString() == \"true\""));
                         break;
                     case IntegerProperty:
-                        loadStateLogic.Append($"{CodeGenUtils.GetIndentation(3)}{pascalPropName} = int.Parse(properties[\"{prop.Name}\"].GetString()),\n");
+                        loadStateLogic.Append(withFormatter(prop.Name, pascalPropName, $"int.Parse(properties[\"{prop.Name}\"].GetString())"));
                         break;
                     case ExistingEnumProperty ee: {
-                        loadStateLogic.Append($"{CodeGenUtils.GetIndentation(3)}{pascalPropName} = {ee.ExistingEnum}Extensions.FromString(properties[\"{ee.Name}\"].GetString()),\n");
+                        loadStateLogic.Append(withFormatter(prop.Name, pascalPropName, $"{ee.ExistingEnum}Extensions.FromString(properties[\"{ee.Name}\"].GetString())"));
                         break;
                     }
                 }

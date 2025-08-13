@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
-
     public Identifier Category => "minecraft:composter";
     public int ProtocolId => 869;
     public double Hardness => 0.6;
@@ -75,7 +74,7 @@ public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Level = int.Parse(properties["level"].GetString()),
+            Level = properties.ChildrenMap.ContainsKey("level") ? int.Parse(properties["level"].GetString()) : Level,
         };
     }
     

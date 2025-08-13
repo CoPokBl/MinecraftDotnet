@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shrieking, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:sculk_shrieker";
     public int ProtocolId => 966;
     public double Hardness => 3;
@@ -84,9 +83,9 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            CanSummon = properties["can_summon"].GetString() == "true",
-            Shrieking = properties["shrieking"].GetString() == "true",
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            CanSummon = properties.ChildrenMap.ContainsKey("can_summon") ? properties["can_summon"].GetString() == "true" : CanSummon,
+            Shrieking = properties.ChildrenMap.ContainsKey("shrieking") ? properties["shrieking"].GetString() == "true" : Shrieking,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

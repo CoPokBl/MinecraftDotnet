@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LeafLitterBlock(Identifier Identifier, Direction Facing, int SegmentAmount) : IBlock {
-
     public Identifier Category => "minecraft:leaf_litter";
     public int ProtocolId => 1052;
     public double Hardness => 0;
@@ -101,8 +100,8 @@ public record LeafLitterBlock(Identifier Identifier, Direction Facing, int Segme
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            SegmentAmount = int.Parse(properties["segment_amount"].GetString()),
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            SegmentAmount = properties.ChildrenMap.ContainsKey("segment_amount") ? int.Parse(properties["segment_amount"].GetString()) : SegmentAmount,
         };
     }
     

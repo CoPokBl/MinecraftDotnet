@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:sea_pickle";
     public int ProtocolId => 756;
     public double Hardness => 0;
@@ -81,8 +80,8 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Pickles = int.Parse(properties["pickles"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Pickles = properties.ChildrenMap.ContainsKey("pickles") ? int.Parse(properties["pickles"].GetString()) : Pickles,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

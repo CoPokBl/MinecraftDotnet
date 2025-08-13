@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentValue, Direction Facing, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:bell";
     public int ProtocolId => 816;
     public double Hardness => 5;
@@ -165,9 +164,9 @@ public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentVa
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            AttachmentValue = AttachmentFromString(properties["attachment"].GetString()),
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Powered = properties["powered"].GetString() == "true",
+            AttachmentValue = properties.ChildrenMap.ContainsKey("attachment") ? AttachmentFromString(properties["attachment"].GetString()) : AttachmentValue,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     

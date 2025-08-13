@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves LeavesValue, int Stage) : IBlock {
-
     public Identifier Category => "minecraft:bamboo_stalk";
     public int ProtocolId => 760;
     public double Hardness => 1;
@@ -105,9 +104,9 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = int.Parse(properties["age"].GetString()),
-            LeavesValue = LeavesFromString(properties["leaves"].GetString()),
-            Stage = int.Parse(properties["stage"].GetString()),
+            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
+            LeavesValue = properties.ChildrenMap.ContainsKey("leaves") ? LeavesFromString(properties["leaves"].GetString()) : LeavesValue,
+            Stage = properties.ChildrenMap.ContainsKey("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
         };
     }
     

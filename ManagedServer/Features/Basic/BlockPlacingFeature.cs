@@ -1,6 +1,7 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
+using ManagedServer.Inventory;
 using Minecraft.Data.Blocks;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
@@ -63,7 +64,6 @@ public class BlockPlacingFeature : ScopedFeature {
             return;
         }
         
-        
         IBlock block = player.Server.Registry.Blocks[blockId];
         
         // is player inside that block?
@@ -115,5 +115,10 @@ public class BlockPlacingFeature : ScopedFeature {
             ItemStack newItem = usedItem.SubtractCount(1);
             player.SetItemInHand(hand, newItem);
         }
+        
+        // prevent ghost items by sending the item update
+        player.Inventory.SendSlotUpdate(hand == Hand.MainHand 
+            ? PlayerInventory.HotbarSlot1 + player.ActiveHotbarSlot 
+            : PlayerInventory.OffhandSlot);
     }
 }

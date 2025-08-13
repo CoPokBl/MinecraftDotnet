@@ -19,7 +19,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2025-08-10
+// Last updated: 2025-08-12
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -1270,6 +1270,8 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Login, false, 0x03, typeof(ServerBoundLoginAcknowledgedPacket), ServerBoundLoginAcknowledgedPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x00, typeof(ServerBoundConfirmTeleportPacket), ServerBoundConfirmTeleportPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x08, typeof(ServerBoundChatMessagePacket), ServerBoundChatMessagePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x06, typeof(ServerBoundChatCommandPacket), ServerBoundChatCommandPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x07, typeof(ServerBoundSignedChatCommandPacket), ServerBoundSignedChatCommandPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x0A, typeof(ServerBoundChunkBatchReceivedPacket), ServerBoundChunkBatchReceivedPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x0B, typeof(ServerBoundClientStatusPacket), ServerBoundClientStatusPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x0D, typeof(ServerBoundClientInformationPacket), ServerBoundClientInformationPacket.Deserialiser);
@@ -1333,6 +1335,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, true, 0x0B, typeof(ClientBoundChunkBatchFinishedPacket), ClientBoundChunkBatchFinishedPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x0C, typeof(ClientBoundChunkBatchStartPacket), ClientBoundChunkBatchStartPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x0E, typeof(ClientBoundClearTitlesPacket), ClientBoundClearTitlesPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x10, typeof(ClientBoundCommandsPacket), ClientBoundCommandsPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x11, typeof(ClientBoundCloseContainerPacket), ClientBoundCloseContainerPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x12, typeof(ClientBoundSetContainerContentPacket), ClientBoundSetContainerContentPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x14, typeof(ClientBoundSetContainerSlotPacket), ClientBoundSetContainerSlotPacket.Deserialiser);
@@ -4878,6 +4881,22 @@ public static class VanillaRegistry {
         Data.Attributes.Add(Attribute.WaterMovementEfficiency);
         Data.Attributes.Add(Attribute.WaypointReceiveRange);
         Data.Attributes.Add(Attribute.WaypointTransmitRange);
+
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Bool);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Double);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Float);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Integer);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Long);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.String);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.BlockPos);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.BlockState);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Color);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.ColumnPos);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Gamemode);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.HexColor);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Swizzle);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Vec2);
+        Data.CommandArgumentTypes.Add(CommandArgumentType.Vec3);
 
     }
 }

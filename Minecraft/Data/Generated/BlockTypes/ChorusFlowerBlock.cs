@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ChorusFlowerBlock(Identifier Identifier, int Age) : IBlock {
-
     public Identifier Category => "minecraft:chorus_flower";
     public int ProtocolId => 625;
     public double Hardness => 0.4;
@@ -69,7 +68,7 @@ public record ChorusFlowerBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = int.Parse(properties["age"].GetString()),
+            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
         };
     }
     

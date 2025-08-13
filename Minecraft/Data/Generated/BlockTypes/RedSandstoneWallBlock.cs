@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RedSandstoneWallBlock(Identifier Identifier, WallSide East, WallSide North, WallSide South, bool Up, bool Waterlogged, WallSide West) : IBlock {
-
     public Identifier Category => "minecraft:wall";
     public int ProtocolId => 794;
     public double Hardness => 0.8;
@@ -1227,12 +1226,12 @@ public record RedSandstoneWallBlock(Identifier Identifier, WallSide East, WallSi
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            East = WallSideExtensions.FromString(properties["east"].GetString()),
-            North = WallSideExtensions.FromString(properties["north"].GetString()),
-            South = WallSideExtensions.FromString(properties["south"].GetString()),
-            Up = properties["up"].GetString() == "true",
-            Waterlogged = properties["waterlogged"].GetString() == "true",
-            West = WallSideExtensions.FromString(properties["west"].GetString()),
+            East = properties.ChildrenMap.ContainsKey("east") ? WallSideExtensions.FromString(properties["east"].GetString()) : East,
+            North = properties.ChildrenMap.ContainsKey("north") ? WallSideExtensions.FromString(properties["north"].GetString()) : North,
+            South = properties.ChildrenMap.ContainsKey("south") ? WallSideExtensions.FromString(properties["south"].GetString()) : South,
+            Up = properties.ChildrenMap.ContainsKey("up") ? properties["up"].GetString() == "true" : Up,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            West = properties.ChildrenMap.ContainsKey("west") ? WallSideExtensions.FromString(properties["west"].GetString()) : West,
         };
     }
     

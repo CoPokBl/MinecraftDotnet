@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record KelpBlock(Identifier Identifier, int Age) : IBlock {
-
     public Identifier Category => "minecraft:kelp";
     public int ProtocolId => 710;
     public double Hardness => 0;
@@ -109,7 +108,7 @@ public record KelpBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = int.Parse(properties["age"].GetString()),
+            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
         };
     }
     

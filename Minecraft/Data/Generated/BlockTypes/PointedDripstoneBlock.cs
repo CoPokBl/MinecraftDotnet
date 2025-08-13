@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock.Thickness ThicknessValue, PointedDripstoneBlock.VerticalDirection VerticalDirectionValue, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:pointed_dripstone";
     public int ProtocolId => 1042;
     public double Hardness => 1.5;
@@ -132,9 +131,9 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            ThicknessValue = ThicknessFromString(properties["thickness"].GetString()),
-            VerticalDirectionValue = VerticalDirectionFromString(properties["vertical_direction"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            ThicknessValue = properties.ChildrenMap.ContainsKey("thickness") ? ThicknessFromString(properties["thickness"].GetString()) : ThicknessValue,
+            VerticalDirectionValue = properties.ChildrenMap.ContainsKey("vertical_direction") ? VerticalDirectionFromString(properties["vertical_direction"].GetString()) : VerticalDirectionValue,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

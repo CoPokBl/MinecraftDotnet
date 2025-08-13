@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Orientation, bool Triggered) : IBlock {
-
     public Identifier Category => "minecraft:crafter";
     public int ProtocolId => 1093;
     public double Hardness => 1.5;
@@ -206,9 +205,9 @@ public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Ori
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Crafting = properties["crafting"].GetString() == "true",
-            Orientation = OrientationExtensions.FromString(properties["orientation"].GetString()),
-            Triggered = properties["triggered"].GetString() == "true",
+            Crafting = properties.ChildrenMap.ContainsKey("crafting") ? properties["crafting"].GetString() == "true" : Crafting,
+            Orientation = properties.ChildrenMap.ContainsKey("orientation") ? OrientationExtensions.FromString(properties["orientation"].GetString()) : Orientation,
+            Triggered = properties.ChildrenMap.ContainsKey("triggered") ? properties["triggered"].GetString() == "true" : Triggered,
         };
     }
     

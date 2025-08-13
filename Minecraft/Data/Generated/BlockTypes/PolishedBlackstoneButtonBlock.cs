@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PolishedBlackstoneButtonBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:button";
     public int ProtocolId => 899;
     public double Hardness => 0.5;
@@ -138,9 +137,9 @@ public record PolishedBlackstoneButtonBlock(Identifier Identifier, AttachDirecti
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Face = AttachDirectionExtensions.FromString(properties["face"].GetString()),
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Powered = properties["powered"].GetString() == "true",
+            Face = properties.ChildrenMap.ContainsKey("face") ? AttachDirectionExtensions.FromString(properties["face"].GetString()) : Face,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     

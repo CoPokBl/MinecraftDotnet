@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MovingPistonBlock(Identifier Identifier, MovingPistonBlock.Type TypeValue, Cardinal Facing) : IBlock {
-
     public Identifier Category => "minecraft:moving_piston";
     public int ProtocolId => 156;
     public double Hardness => -1;
@@ -87,8 +86,8 @@ public record MovingPistonBlock(Identifier Identifier, MovingPistonBlock.Type Ty
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            TypeValue = TypeFromString(properties["type"].GetString()),
-            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
+            TypeValue = properties.ChildrenMap.ContainsKey("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     

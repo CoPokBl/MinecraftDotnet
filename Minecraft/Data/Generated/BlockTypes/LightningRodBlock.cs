@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LightningRodBlock(Identifier Identifier, Cardinal Facing, bool Powered, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:lightning_rod";
     public int ProtocolId => 1041;
     public double Hardness => 3;
@@ -141,9 +140,9 @@ public record LightningRodBlock(Identifier Identifier, Cardinal Facing, bool Pow
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
-            Powered = properties["powered"].GetString() == "true",
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

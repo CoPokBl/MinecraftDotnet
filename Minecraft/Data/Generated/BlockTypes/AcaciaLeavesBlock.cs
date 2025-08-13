@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AcaciaLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:tinted_particle_leaves";
     public int ProtocolId => 92;
     public double Hardness => 0.2;
@@ -155,9 +154,9 @@ public record AcaciaLeavesBlock(Identifier Identifier, int Distance, bool Persis
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Distance = int.Parse(properties["distance"].GetString()),
-            Persistent = properties["persistent"].GetString() == "true",
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Distance = properties.ChildrenMap.ContainsKey("distance") ? int.Parse(properties["distance"].GetString()) : Distance,
+            Persistent = properties.ChildrenMap.ContainsKey("persistent") ? properties["persistent"].GetString() == "true" : Persistent,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

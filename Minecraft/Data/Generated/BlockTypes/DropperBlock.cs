@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggered) : IBlock {
-
     public Identifier Category => "minecraft:dropper";
     public int ProtocolId => 451;
     public double Hardness => 3.5;
@@ -93,8 +92,8 @@ public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggere
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
-            Triggered = properties["triggered"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Triggered = properties.ChildrenMap.ContainsKey("triggered") ? properties["triggered"].GetString() == "true" : Triggered,
         };
     }
     

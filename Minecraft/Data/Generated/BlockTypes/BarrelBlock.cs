@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : IBlock {
-
     public Identifier Category => "minecraft:barrel";
     public int ProtocolId => 807;
     public double Hardness => 2.5;
@@ -93,8 +92,8 @@ public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : I
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
-            Open = properties["open"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Open = properties.ChildrenMap.ContainsKey("open") ? properties["open"].GetString() == "true" : Open,
         };
     }
     

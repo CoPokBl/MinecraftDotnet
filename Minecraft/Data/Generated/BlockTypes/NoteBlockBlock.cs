@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument InstrumentValue, int Note, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:note";
     public int ProtocolId => 109;
     public double Hardness => 0.8;
@@ -3576,9 +3575,9 @@ public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument In
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            InstrumentValue = InstrumentFromString(properties["instrument"].GetString()),
-            Note = int.Parse(properties["note"].GetString()),
-            Powered = properties["powered"].GetString() == "true",
+            InstrumentValue = properties.ChildrenMap.ContainsKey("instrument") ? InstrumentFromString(properties["instrument"].GetString()) : InstrumentValue,
+            Note = properties.ChildrenMap.ContainsKey("note") ? int.Parse(properties["note"].GetString()) : Note,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     

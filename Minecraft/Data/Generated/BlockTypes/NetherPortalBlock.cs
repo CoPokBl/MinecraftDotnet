@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis AxisValue) : IBlock {
-
     public Identifier Category => "minecraft:nether_portal";
     public int ProtocolId => 280;
     public double Hardness => -1;
@@ -61,7 +60,7 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            AxisValue = AxisFromString(properties["axis"].GetString()),
+            AxisValue = properties.ChildrenMap.ContainsKey("axis") ? AxisFromString(properties["axis"].GetString()) : AxisValue,
         };
     }
     

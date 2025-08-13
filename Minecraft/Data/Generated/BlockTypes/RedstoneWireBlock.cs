@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection East, RedstoneWireConnection North, int Power, RedstoneWireConnection South, RedstoneWireConnection West) : IBlock {
-
     public Identifier Category => "minecraft:redstone_wire";
     public int ProtocolId => 189;
     public double Hardness => 0;
@@ -4413,11 +4412,11 @@ public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection Ea
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            East = RedstoneWireConnectionExtensions.FromString(properties["east"].GetString()),
-            North = RedstoneWireConnectionExtensions.FromString(properties["north"].GetString()),
-            Power = int.Parse(properties["power"].GetString()),
-            South = RedstoneWireConnectionExtensions.FromString(properties["south"].GetString()),
-            West = RedstoneWireConnectionExtensions.FromString(properties["west"].GetString()),
+            East = properties.ChildrenMap.ContainsKey("east") ? RedstoneWireConnectionExtensions.FromString(properties["east"].GetString()) : East,
+            North = properties.ChildrenMap.ContainsKey("north") ? RedstoneWireConnectionExtensions.FromString(properties["north"].GetString()) : North,
+            Power = properties.ChildrenMap.ContainsKey("power") ? int.Parse(properties["power"].GetString()) : Power,
+            South = properties.ChildrenMap.ContainsKey("south") ? RedstoneWireConnectionExtensions.FromString(properties["south"].GetString()) : South,
+            West = properties.ChildrenMap.ContainsKey("west") ? RedstoneWireConnectionExtensions.FromString(properties["west"].GetString()) : West,
         };
     }
     

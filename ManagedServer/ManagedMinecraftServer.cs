@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
+using ManagedServer.Commands;
+using ManagedServer.Commands.Arguments;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
@@ -7,6 +9,9 @@ using ManagedServer.Features;
 using ManagedServer.Scheduling;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
+using ManagedServer.Worlds.Lighting;
+using Minecraft.Commands;
+using Minecraft.Commands.NodeTypes;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
@@ -14,6 +19,7 @@ using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
+using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Registry;
 
 namespace ManagedServer;
@@ -24,24 +30,25 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public ManagedMinecraftServer Server => this;
     public FeatureHandler FeatureHandler { get; }
     public ServerScheduler Scheduler { get; }
-    public ulong CurrentTick { get; private set; } = 0;
+    public ulong CurrentTick { get; private set; }
     
     private Thread _ticker = null!;
     private bool _started;
     private readonly CancellationTokenSource _cts = new();
     
     // Configurable stuff
-    public int ViewDistance = 8;
-    public int WorldPacketsPerTick = 3000;
-    public int WorldTickDelayMs = 50;
-    public bool AllowListeningToUnCalledEvents = false;
-    public int TargetTicksPerSecond = 20;
-    public readonly Dictionary<string, Dimension> Dimensions = new() {
+    public List<Command> Commands { get; set; } = [];
+    public int ViewDistance { get; set; } = 8;
+    public int WorldPacketsPerTick { get; set; } = 3000;
+    public int WorldTickDelayMs { get; set; } = 50;
+    public bool AllowListeningToUnCalledEvents { get; set; } = false;
+    public int TargetTicksPerSecond { get; set; } = 20;
+    public Dictionary<string, Dimension> Dimensions { get; } = new() {
         { "minecraft:overworld", new Dimension() },
         { "minecraft:dummy_world", new Dimension() }  // Dummy world for respawning players
     };
-    public MinecraftRegistry Registry = VanillaRegistry.Data;
-    public Action<string> LogAction = Console.WriteLine;
+    public MinecraftRegistry Registry { get; set; } = VanillaRegistry.Data;
+    public Action<string> LogAction { get; set; } = Console.WriteLine;
     
     private TimeSpan TargetTickTime => TimeSpan.FromSeconds(1.0 / TargetTicksPerSecond);
 
@@ -141,16 +148,21 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         }
     }
 
-    public void HandleError(Exception exception) {
+    public void HandleError(Exception? exception) {
+        if (exception == null) {
+            return;
+        }
+        
         LogAction("An error occurred in the server:");
         LogAction(exception.ToString());
     }
 
-    public World CreateWorld(ITerrainProvider provider, string dimension = "minecraft:overworld") {
+    public World CreateWorld(ITerrainProvider provider, string dimension = "minecraft:overworld", ILightingProvider? lightingProvider = null) {
         if (!Dimensions.ContainsKey(dimension)) {
             throw new ArgumentException($"Dimension '{dimension}' does not exist. Please add it to the Dimensions dictionary.");
         }
-        World world = new(this, Events, provider, dimension, ViewDistance, WorldPacketsPerTick, WorldTickDelayMs) {
+        World world = new(this, Events, provider, dimension, lightingProvider, ViewDistance, 
+            WorldPacketsPerTick, WorldTickDelayMs) {
             Server = this
         };
         Worlds.Add(world);
@@ -176,6 +188,9 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     }
 
     public override void AddConnection(PlayerConnection connection) {
+        if (!_started) {
+            throw new InvalidOperationException("Server has not been started. Call Start() before adding connections.");
+        }
         connection.Registry = Registry;
         Connections.Add(connection);
         Events.AddChild<IPacketEvent>(connection.Events, pe => pe.Connection == connection);

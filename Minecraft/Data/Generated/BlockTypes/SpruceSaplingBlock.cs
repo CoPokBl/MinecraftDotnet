@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SpruceSaplingBlock(Identifier Identifier, int Stage) : IBlock {
-
     public Identifier Category => "minecraft:sapling";
     public int ProtocolId => 26;
     public double Hardness => 0;
@@ -61,7 +60,7 @@ public record SpruceSaplingBlock(Identifier Identifier, int Stage) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Stage = int.Parse(properties["stage"].GetString()),
+            Stage = properties.ChildrenMap.ContainsKey("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
         };
     }
     

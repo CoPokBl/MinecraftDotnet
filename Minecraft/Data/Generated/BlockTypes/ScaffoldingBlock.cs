@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:scaffolding";
     public int ProtocolId => 805;
     public double Hardness => 0;
@@ -158,9 +157,9 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Bottom = properties["bottom"].GetString() == "true",
-            Distance = int.Parse(properties["distance"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Bottom = properties.ChildrenMap.ContainsKey("bottom") ? properties["bottom"].GetString() == "true" : Bottom,
+            Distance = properties.ChildrenMap.ContainsKey("distance") ? int.Parse(properties["distance"].GetString()) : Distance,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

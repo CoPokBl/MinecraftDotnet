@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MyceliumBlock(Identifier Identifier, bool Snowy) : IBlock {
-
     public Identifier Category => "minecraft:mycelium";
     public int ProtocolId => 342;
     public double Hardness => 0.6;
@@ -60,7 +59,7 @@ public record MyceliumBlock(Identifier Identifier, bool Snowy) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Snowy = properties["snowy"].GetString() == "true",
+            Snowy = properties.ChildrenMap.ContainsKey("snowy") ? properties["snowy"].GetString() == "true" : Snowy,
         };
     }
     

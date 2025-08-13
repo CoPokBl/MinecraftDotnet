@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CommandBlockBlock(Identifier Identifier, bool Conditional, Cardinal Facing) : IBlock {
-
     public Identifier Category => "minecraft:command";
     public int ProtocolId => 376;
     public double Hardness => -1;
@@ -86,8 +85,8 @@ public record CommandBlockBlock(Identifier Identifier, bool Conditional, Cardina
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Conditional = properties["conditional"].GetString() == "true",
-            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
+            Conditional = properties.ChildrenMap.ContainsKey("conditional") ? properties["conditional"].GetString() == "true" : Conditional,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     

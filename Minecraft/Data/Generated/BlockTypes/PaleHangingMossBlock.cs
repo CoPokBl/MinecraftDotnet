@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
-
     public Identifier Category => "minecraft:hanging_moss";
     public int ProtocolId => 1099;
     public double Hardness => 0;
@@ -60,7 +59,7 @@ public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Tip = properties["tip"].GetString() == "true",
+            Tip = properties.ChildrenMap.ContainsKey("tip") ? properties["tip"].GetString() == "true" : Tip,
         };
     }
     

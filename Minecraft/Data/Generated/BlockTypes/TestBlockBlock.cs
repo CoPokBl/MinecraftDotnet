@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValue) : IBlock {
-
     public Identifier Category => "minecraft:test";
     public int ProtocolId => 867;
     public double Hardness => -1;
@@ -65,7 +64,7 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            ModeValue = ModeFromString(properties["mode"].GetString()),
+            ModeValue = properties.ChildrenMap.ContainsKey("mode") ? ModeFromString(properties["mode"].GetString()) : ModeValue,
         };
     }
     

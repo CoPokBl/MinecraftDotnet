@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PinkPetalsBlock(Identifier Identifier, Direction Facing, int FlowerAmount) : IBlock {
-
     public Identifier Category => "minecraft:flower_bed";
     public int ProtocolId => 1050;
     public double Hardness => 0;
@@ -101,8 +100,8 @@ public record PinkPetalsBlock(Identifier Identifier, Direction Facing, int Flowe
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            FlowerAmount = int.Parse(properties["flower_amount"].GetString()),
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            FlowerAmount = properties.ChildrenMap.ContainsKey("flower_amount") ? int.Parse(properties["flower_amount"].GetString()) : FlowerAmount,
         };
     }
     

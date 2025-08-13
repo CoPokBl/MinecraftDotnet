@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TntBlock(Identifier Identifier, bool Unstable) : IBlock {
-
     public Identifier Category => "minecraft:tnt";
     public int ProtocolId => 176;
     public double Hardness => 0;
@@ -60,7 +59,7 @@ public record TntBlock(Identifier Identifier, bool Unstable) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Unstable = properties["unstable"].GetString() == "true",
+            Unstable = properties.ChildrenMap.ContainsKey("unstable") ? properties["unstable"].GetString() == "true" : Unstable,
         };
     }
     

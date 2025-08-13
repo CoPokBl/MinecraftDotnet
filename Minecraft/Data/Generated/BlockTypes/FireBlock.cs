@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record FireBlock(Identifier Identifier, int Age, bool East, bool North, bool South, bool Up, bool West) : IBlock {
-
     public Identifier Category => "minecraft:fire";
     public int ProtocolId => 183;
     public double Hardness => 0;
@@ -2073,12 +2072,12 @@ public record FireBlock(Identifier Identifier, int Age, bool East, bool North, b
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = int.Parse(properties["age"].GetString()),
-            East = properties["east"].GetString() == "true",
-            North = properties["north"].GetString() == "true",
-            South = properties["south"].GetString() == "true",
-            Up = properties["up"].GetString() == "true",
-            West = properties["west"].GetString() == "true",
+            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
+            East = properties.ChildrenMap.ContainsKey("east") ? properties["east"].GetString() == "true" : East,
+            North = properties.ChildrenMap.ContainsKey("north") ? properties["north"].GetString() == "true" : North,
+            South = properties.ChildrenMap.ContainsKey("south") ? properties["south"].GetString() == "true" : South,
+            Up = properties.ChildrenMap.ContainsKey("up") ? properties["up"].GetString() == "true" : Up,
+            West = properties.ChildrenMap.ContainsKey("west") ? properties["west"].GetString() == "true" : West,
         };
     }
     

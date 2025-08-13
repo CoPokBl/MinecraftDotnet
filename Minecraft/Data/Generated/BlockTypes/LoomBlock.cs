@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock {
-
     public Identifier Category => "minecraft:loom";
     public int ProtocolId => 806;
     public double Hardness => 2.5;
@@ -65,7 +64,7 @@ public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     

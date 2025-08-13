@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MushroomStemBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool West) : IBlock {
-
     public Identifier Category => "minecraft:huge_mushroom";
     public int ProtocolId => 325;
     public double Hardness => 0.2;
@@ -308,12 +307,12 @@ public record MushroomStemBlock(Identifier Identifier, bool Down, bool East, boo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Down = properties["down"].GetString() == "true",
-            East = properties["east"].GetString() == "true",
-            North = properties["north"].GetString() == "true",
-            South = properties["south"].GetString() == "true",
-            Up = properties["up"].GetString() == "true",
-            West = properties["west"].GetString() == "true",
+            Down = properties.ChildrenMap.ContainsKey("down") ? properties["down"].GetString() == "true" : Down,
+            East = properties.ChildrenMap.ContainsKey("east") ? properties["east"].GetString() == "true" : East,
+            North = properties.ChildrenMap.ContainsKey("north") ? properties["north"].GetString() == "true" : North,
+            South = properties.ChildrenMap.ContainsKey("south") ? properties["south"].GetString() == "true" : South,
+            Up = properties.ChildrenMap.ContainsKey("up") ? properties["up"].GetString() == "true" : Up,
+            West = properties.ChildrenMap.ContainsKey("west") ? properties["west"].GetString() == "true" : West,
         };
     }
     

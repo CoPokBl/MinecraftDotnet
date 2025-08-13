@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LilacBlock(Identifier Identifier, BlockHalf Half) : IBlock {
-
     public Identifier Category => "minecraft:tall_flower";
     public int ProtocolId => 526;
     public double Hardness => 0;
@@ -61,7 +60,7 @@ public record LilacBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Half = BlockHalfExtensions.FromString(properties["half"].GetString()),
+            Half = properties.ChildrenMap.ContainsKey("half") ? BlockHalfExtensions.FromString(properties["half"].GetString()) : Half,
         };
     }
     

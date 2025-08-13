@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:chain";
     public int ProtocolId => 327;
     public double Hardness => 5;
@@ -75,8 +74,8 @@ public record ChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : I
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Axis = AxisExtensions.FromString(properties["axis"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Axis = properties.ChildrenMap.ContainsKey("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

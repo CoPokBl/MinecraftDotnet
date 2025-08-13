@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
-
     public Identifier Category => "minecraft:bubble_column";
     public int ProtocolId => 764;
     public double Hardness => 0;
@@ -60,7 +59,7 @@ public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Drag = properties["drag"].GetString() == "true",
+            Drag = properties.ChildrenMap.ContainsKey("drag") ? properties["drag"].GetString() == "true" : Drag,
         };
     }
     

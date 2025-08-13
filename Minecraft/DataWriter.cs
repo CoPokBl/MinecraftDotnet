@@ -459,6 +459,33 @@ public class DataWriter : Stream, IWritable {
         writer.Invoke(value.Value, this);
         return this;
     }
+    
+    public DataWriter WriteIfPresent<T>(Optional<T> value, Action<T, DataWriter> writer) {
+        if (!value.Present) {
+            return this; // Do nothing if not present
+        }
+
+        writer.Invoke(value.Value, this);
+        return this;
+    }
+
+    public DataWriter WriteIfPresent<T>(T? value, Action<T, DataWriter> writer) where T : class {
+        if (value == null) {
+            return this; // Do nothing if not present
+        }
+
+        writer.Invoke(value, this);
+        return this;
+    }
+    
+    public DataWriter WriteIfPresent<T>(T? value, Action<T, DataWriter> writer) where T : struct {
+        if (!value.HasValue) {
+            return this; // Do nothing if not present
+        }
+
+        writer.Invoke(value.Value, this);
+        return this;
+    }
 
     public DataWriter WriteNbt(INbtTag nbt) {
         byte[] dat = nbt.Serialise();

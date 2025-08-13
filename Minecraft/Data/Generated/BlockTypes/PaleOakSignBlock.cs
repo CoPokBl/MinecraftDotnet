@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PaleOakSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:standing_sign";
     public int ProtocolId => 204;
     public double Hardness => 1;
@@ -153,8 +152,8 @@ public record PaleOakSignBlock(Identifier Identifier, int Rotation, bool Waterlo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Rotation = int.Parse(properties["rotation"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Rotation = properties.ChildrenMap.ContainsKey("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

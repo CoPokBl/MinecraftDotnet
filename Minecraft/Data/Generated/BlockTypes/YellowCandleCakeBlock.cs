@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record YellowCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock {
-
     public Identifier Category => "minecraft:candle_cake";
     public int ProtocolId => 926;
     public double Hardness => 0.5;
@@ -60,7 +59,7 @@ public record YellowCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Lit = properties["lit"].GetString() == "true",
+            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
         };
     }
     

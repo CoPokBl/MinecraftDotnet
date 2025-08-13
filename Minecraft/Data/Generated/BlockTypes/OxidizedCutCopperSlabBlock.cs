@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record OxidizedCutCopperSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:weathering_copper_slab";
     public int ProtocolId => 989;
     public double Hardness => 3;
@@ -75,8 +74,8 @@ public record OxidizedCutCopperSlabBlock(Identifier Identifier, SlabType Type, b
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Type = SlabTypeExtensions.FromString(properties["type"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Type = properties.ChildrenMap.ContainsKey("type") ? SlabTypeExtensions.FromString(properties["type"].GetString()) : Type,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

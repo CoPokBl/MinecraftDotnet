@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlock {
-
     public Identifier Category => "minecraft:jigsaw";
     public int ProtocolId => 866;
     public double Hardness => -1;
@@ -81,7 +80,7 @@ public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Orientation = OrientationExtensions.FromString(properties["orientation"].GetString()),
+            Orientation = properties.ChildrenMap.ContainsKey("orientation") ? OrientationExtensions.FromString(properties["orientation"].GetString()) : Orientation,
         };
     }
     

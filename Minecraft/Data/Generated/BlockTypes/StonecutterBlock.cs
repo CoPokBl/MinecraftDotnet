@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock {
-
     public Identifier Category => "minecraft:stonecutter";
     public int ProtocolId => 815;
     public double Hardness => 3.5;
@@ -65,7 +64,7 @@ public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     

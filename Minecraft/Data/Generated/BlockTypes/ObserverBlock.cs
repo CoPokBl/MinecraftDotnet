@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:observer";
     public int ProtocolId => 644;
     public double Hardness => 3;
@@ -93,8 +92,8 @@ public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = CardinalExtensions.FromString(properties["facing"].GetString()),
-            Powered = properties["powered"].GetString() == "true",
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     

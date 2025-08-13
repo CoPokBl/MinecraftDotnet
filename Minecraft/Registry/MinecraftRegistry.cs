@@ -13,4 +13,5 @@ public class MinecraftRegistry {
     public ConsumeEffectRegistry ConsumeEffects { get; init; } = new();
     public BlockEntityTypeRegistry BlockEntityTypes { get; init; } = new();
     public AttributeRegistry Attributes { get; init; } = new();
+    public CommandArgumentTypeRegistry CommandArgumentTypes { get; init; } = new();
 }

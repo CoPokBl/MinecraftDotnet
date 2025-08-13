@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record JungleHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:ceiling_hanging_sign";
     public int ProtocolId => 226;
     public double Hardness => 1;
@@ -254,9 +253,9 @@ public record JungleHangingSignBlock(Identifier Identifier, bool Attached, int R
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Attached = properties["attached"].GetString() == "true",
-            Rotation = int.Parse(properties["rotation"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            Attached = properties.ChildrenMap.ContainsKey("attached") ? properties["attached"].GetString() == "true" : Attached,
+            Rotation = properties.ChildrenMap.ContainsKey("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

@@ -128,6 +128,7 @@ RunStep("Potion Effects", PotionEffectTypeGen.CreatePotionEffectTypes);
 RunStep("Consume Effects", ConsumeEffectGen.CreateConsumeEffects);
 RunStep("Block Entity Types", BlockEntityTypeCodeGen.CreateBlockEntityTypes);
 RunStep("Attributes", AttributeCodeGen.CreateAttributeEntries);
+RunStep("Argument Types", ArgumentTypeCodeGen.CreateArgumentTypeEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

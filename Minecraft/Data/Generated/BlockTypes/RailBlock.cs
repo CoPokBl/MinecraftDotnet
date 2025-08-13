@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool Waterlogged) : IBlock {
-
     public Identifier Category => "minecraft:rail";
     public int ProtocolId => 209;
     public double Hardness => 0.7;
@@ -117,8 +116,8 @@ public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            ShapeValue = ShapeFromString(properties["shape"].GetString()),
-            Waterlogged = properties["waterlogged"].GetString() == "true",
+            ShapeValue = properties.ChildrenMap.ContainsKey("shape") ? ShapeFromString(properties["shape"].GetString()) : ShapeValue,
+            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     

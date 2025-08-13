@@ -114,6 +114,66 @@ public static class CodeGenUtils {
         }
         return entries.ToArray();
     }
+
+    // maps Identifiers to class names
+    public static Dictionary<string, string> SearchForFilesWithIdentifiers(string path) {
+        Dictionary<string, string> data = [];
+        string[] files = Directory.GetFiles(path, "*.cs", SearchOption.AllDirectories);
+
+        foreach (string file in files) {
+            string fileContent = File.ReadAllText(file);
+            string className = Path.GetFileNameWithoutExtension(file);
+
+            string? identifier = GetIdentifier(fileContent);
+            if (identifier == null) {
+                Console.WriteLine("Skipping file without Identifier: " + file);
+                continue;
+            }
+
+            data.TryAdd(identifier, className);
+        }
+        
+        return data;
+    }
+
+    public static string CreateIdentifiedFilesRegistryEntries((string, int)[] entries, string className,
+        string regVar, string typeNamespace, Func<string, string>? variableNameGetter = null,
+        Func<string, string>? extraSimpleParams = null, string? simpleClassName = null) {
+        
+        variableNameGetter ??= NamespacedIdToPascalName;
+        
+        Dictionary<string, string> files = SearchForFilesWithIdentifiers(Path.Combine(
+            Directory.GetCurrentDirectory(), "..", "..", "Data", "ArgumentParsers"));
+
+        StringBuilder registryAdditions = new();
+        StringBuilder file = new(Header.Replace("{classname}", className).Replace("{typenamespace}", typeNamespace));
+        
+        foreach ((string key, int protocolId) in entries) {
+            if (!files.TryGetValue(key, out string? existingClassName) && simpleClassName == null) {
+                Console.WriteLine("WARNING: Argument type file not found for identifier: " + key);
+                continue;
+            }
+
+            if (key == "minecraft:intentionally_empty") {
+                continue;  // for some reason, this is in the registry
+            }
+
+            string pascalName = variableNameGetter(key);
+            
+            // Add to cs file
+            string identParam = existingClassName == null ? $"\"{key}\", " : "";
+            string extraParams = extraSimpleParams != null ? ", " + extraSimpleParams(key) : string.Empty;
+            file.Append($"{GetIndentation(1)}public static {existingClassName ?? simpleClassName} {pascalName} => " +
+                        $"new({identParam}{protocolId}{extraParams});\n");
+            registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({className}.{pascalName});");
+        }
+        
+        // Create the file content
+        file.Append(Footer);
+        File.WriteAllText(className + ".cs", file.ToString().Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
+
+        return registryAdditions.ToString();
+    }
     
     public static string CreateSimpleRegistryEntries((string, int)[] entries, string simpleClassName, string className, 
         string regVar, string typeNamespace, Func<string, string>? variableNameGetter = null, Func<string, string>? extraSimpleParams = null) {

@@ -10,7 +10,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, bool Locked, bool Powered) : IBlock {
-
     public Identifier Category => "minecraft:repeater";
     public int ProtocolId => 284;
     public double Hardness => 0;
@@ -293,10 +292,10 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Delay = int.Parse(properties["delay"].GetString()),
-            Facing = DirectionExtensions.FromString(properties["facing"].GetString()),
-            Locked = properties["locked"].GetString() == "true",
-            Powered = properties["powered"].GetString() == "true",
+            Delay = properties.ChildrenMap.ContainsKey("delay") ? int.Parse(properties["delay"].GetString()) : Delay,
+            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Locked = properties.ChildrenMap.ContainsKey("locked") ? properties["locked"].GetString() == "true" : Locked,
+            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     
