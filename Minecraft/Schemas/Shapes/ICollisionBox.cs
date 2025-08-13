@@ -14,12 +14,16 @@ public interface ICollisionBox {
         }
         str = str[1..^1]; // Remove "[" from start and "]" from end
         // split by comma, but not inside AABB[]
-        string[] parts = str.Split(new[] { "], " }, StringSplitOptions.RemoveEmptyEntries);
+        string[] parts = str.Split(["], "], StringSplitOptions.RemoveEmptyEntries);
         // parse each part with Aabb.FromString
         ICollisionBox[] boxes = new ICollisionBox[parts.Length];
         
         for (int i = 0; i < parts.Length; i++) {
-            boxes[i] = Aabb.FromString($"{parts[i]}]".Trim());
+            string part = parts[i].Trim();
+            if (part.EndsWith(']')) {
+                part = part[..^1]; // Remove trailing ']', should only exist for the last part
+            }
+            boxes[i] = Aabb.FromString($"{part}]".Trim());
         }
         if (boxes.Length == 1) {
             return boxes[0]; // If there's only one box, return it directly

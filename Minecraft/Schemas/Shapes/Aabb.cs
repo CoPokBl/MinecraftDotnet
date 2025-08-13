@@ -24,7 +24,7 @@ public record Aabb(Vec3<double> Position, Vec3<double> Size) : ICollisionBox {
             throw new FormatException($"Invalid AABB format: {str}");
         }
         float[] startValues = ParseAabbValues(parts[0]);
-        float[] endValues = ParseAabbValues(parts[1][..^1]);
+        float[] endValues = ParseAabbValues(parts[1]);
         if (startValues.Length != 3 || endValues.Length != 3) {
             throw new FormatException($"Invalid AABB values: {str}");
         }
