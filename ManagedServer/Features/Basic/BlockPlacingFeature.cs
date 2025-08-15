@@ -28,6 +28,8 @@ public class BlockPlacingFeature : ScopedFeature {
     }
     
     private void CheckBlockPlace(PlayerEntity player, ServerBoundUseItemOnPacket use) {
+        // TODO: Only allow whitelisted items in adventure
+        
         if (player.GameMode == GameMode.Spectator) {
             return;
         }

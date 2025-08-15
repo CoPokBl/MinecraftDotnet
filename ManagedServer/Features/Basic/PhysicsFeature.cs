@@ -8,13 +8,14 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Features.Basic;
 
-public class PhysicsFeature : ScopedFeature {
+public class PhysicsFeature(Func<Entity, bool>? entityFilter = null) : ScopedFeature {
+    private Func<Entity, bool> EntityFilter { get; } = entityFilter ?? (_ => true);
     
     public override void Register() {
         AddEventHandler<ServerTickEvent>(e => {
             foreach (World world in e.Server.Worlds) {
                 foreach (Entity entity in world.Entities.Entities.ToArray()) {
-                    if (entity is PlayerEntity) {
+                    if (entity is PlayerEntity || EntityFilter(entity)) {
                         continue;
                     }
                     
