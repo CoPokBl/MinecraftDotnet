@@ -120,4 +120,48 @@ public readonly struct Vec2<T>(T x, T y) : IEquatable<Vec2<T>> where T : INumber
     }
 
     #endregion
+
+    #region modifications
+
+    public Vec2<T> WithX(T x) {
+        return new Vec2<T>(x, Y);
+    }
+    
+    public Vec2<T> WithY(T y) {
+        return new Vec2<T>(X, y);
+    }
+    
+    public Vec2<T> AddX(T x) {
+        return new Vec2<T>(X + x, Y);
+    }
+    
+    public Vec2<T> AddY(T y) {
+        return new Vec2<T>(X, Y + y);
+    }
+    
+    public Vec2<T> SubtractX(T x) {
+        return new Vec2<T>(X - x, Y);
+    }
+    
+    public Vec2<T> SubtractY(T y) {
+        return new Vec2<T>(X, Y - y);
+    }
+    
+    public Vec2<T> MultiplyX(T x) {
+        return new Vec2<T>(X * x, Y);
+    }
+    
+    public Vec2<T> MultiplyY(T y) {
+        return new Vec2<T>(X, Y * y);
+    }
+    
+    public Vec2<T> DivideX(T x) {
+        return new Vec2<T>(X / x, Y);
+    }
+    
+    public Vec2<T> DivideY(T y) {
+        return new Vec2<T>(X, Y / y);
+    }
+
+    #endregion
 }

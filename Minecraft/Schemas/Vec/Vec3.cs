@@ -200,6 +200,63 @@ public readonly struct Vec3<T>(T x, T y, T z) : IEquatable<Vec3<T>> where T : IN
             _ => throw new IndexOutOfRangeException("Vec3 has 3 numbers")
         };
     }
+    
+    public Vec3<T> AddX(T x) {
+        return new Vec3<T>(X + x, Y, Z);
+    }
+    
+    public Vec3<T> AddY(T y) {
+        return new Vec3<T>(X, Y + y, Z);
+    }
+    
+    public Vec3<T> AddZ(T z) {
+        return new Vec3<T>(X, Y, Z + z);
+    }
+    
+    public Vec3<T> SubtractX(T x) {
+        return new Vec3<T>(X - x, Y, Z);
+    }
+    
+    public Vec3<T> SubtractY(T y) {
+        return new Vec3<T>(X, Y - y, Z);
+    }
+    
+    public Vec3<T> SubtractZ(T z) {
+        return new Vec3<T>(X, Y, Z - z);
+    }
+    
+    public Vec3<T> MultiplyX(T x) {
+        return new Vec3<T>(X * x, Y, Z);
+    }
+    
+    public Vec3<T> MultiplyY(T y) {
+        return new Vec3<T>(X, Y * y, Z);
+    }
+    
+    public Vec3<T> MultiplyZ(T z) {
+        return new Vec3<T>(X, Y, Z * z);
+    }
+    
+    public Vec3<T> DivideX(T x) {
+        if (x == T.Zero) {
+            throw new DivideByZeroException("Cannot divide by zero.");
+        }
+        return new Vec3<T>(X / x, Y, Z);
+    }
+    
+    public Vec3<T> DivideY(T y) {
+        if (y == T.Zero) {
+            throw new DivideByZeroException("Cannot divide by zero.");
+        }
+        return new Vec3<T>(X, Y / y, Z);
+    }
+    
+    public Vec3<T> DivideZ(T z) {
+        if (z == T.Zero) {
+            throw new DivideByZeroException("Cannot divide by zero.");
+        }
+        return new Vec3<T>(X, Y, Z / z);
+    }
 
     #endregion
 
