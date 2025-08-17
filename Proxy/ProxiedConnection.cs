@@ -17,6 +17,7 @@ using Minecraft.Packets.Status.ServerBound;
 using Minecraft.Schemas;
 using Minecraft.Text;
 using Newtonsoft.Json;
+using Proxy.Events;
 
 namespace Proxy;
 
@@ -104,6 +105,34 @@ public class ProxiedConnection : MappedTaggable {
         _cancelServerPacketListener?.Invoke();
     }
 
+    public async Task JoinServer(ServerConnection connection, string hostname = "127.0.0.1", int port = 25565, bool transfer = false) {
+        LeaveServer();
+        
+        PreServerJoinEvent preJoinEvent = new() {
+            Connection = this
+        };
+        Proxy.Events.CallEvent(preJoinEvent);
+
+        if (Player.State != ConnectionState.Configuration) {
+            Console.WriteLine("Reconfiguring player connection to join server...");
+            
+            // Wait for the player to acknowledge the configuration before continuing
+            Player.Events.OnFirstWhere<PacketHandleEvent>(e => 
+                e.Packet is ServerBoundAcknowledgeConfigurationPacket, e => {
+                Console.WriteLine("Player acknowledged configuration, continuing...");
+                _ = PerformServerConnection(connection, hostname, port, transfer);
+            });
+            
+            // We need to be in configuration state to join a server
+            Player.SendPacket(new ClientBoundStartConfigurationPacket());
+            
+            Console.WriteLine("Waiting for player to acknowledge configuration...");
+            return;
+        }
+
+        await PerformServerConnection(connection, hostname, port, transfer);
+    }
+
     public async Task JoinServer(string ip, int port = 25565, bool transfer = false) {
         LeaveServer();
         
@@ -133,9 +162,14 @@ public class ProxiedConnection : MappedTaggable {
     }
 
     private async Task PerformServerConnection(string ip, int port, bool transfer = false) {
-        Server = await MinecraftClientUtils.ConnectToServer(ip, port);
+        ServerConnection con = await MinecraftClientUtils.ConnectToServer(ip, port);
+        await PerformServerConnection(con, ip, port, transfer);
+    }
+
+    private async Task PerformServerConnection(ServerConnection connection, string hostname, int port, bool transfer = false) {
+        Server = connection;
         Server.SendPacket(new ServerBoundHandshakePacket {
-            Hostname = ip,
+            Hostname = hostname,
             Intent = transfer ? ServerBoundHandshakePacket.Intention.Transfer : ServerBoundHandshakePacket.Intention.Login,
             Port = (ushort)port,
             ProtocolVersion = Player.Handshake!.ProtocolVersion

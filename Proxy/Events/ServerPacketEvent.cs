@@ -1,7 +1,7 @@
 using Minecraft.Implementations.Events;
 using Minecraft.Packets;
 
-namespace Proxy;
+namespace Proxy.Events;
 
 public class ServerPacketEvent : ProxyEvent, ICancelableEvent {
     public required MinecraftPacket Packet;

@@ -26,6 +26,10 @@ public record FeatureBundle(params ScopedFeature[] Features) {
         return new FeatureBundle(Features.Where(f => !other.Features.Contains(f)).ToArray());
     }
     
+    public FeatureBundle Replace<T>(T newValue) where T : ScopedFeature {
+        return Without<T>().With(newValue);
+    }
+    
     public static FeatureBundle operator +(FeatureBundle bundle, ScopedFeature other) {
         return bundle.With(other);
     }

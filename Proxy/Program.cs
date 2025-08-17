@@ -12,6 +12,7 @@ using Minecraft.Schemas.Entities.Attributes;
 using Minecraft.Schemas.Vec;
 using Newtonsoft.Json;
 using Proxy;
+using Proxy.Events;
 using Attribute = Minecraft.Data.Generated.Attribute;
 
 MicrosoftAuthenticator.MinecraftProfile profile;

@@ -19,6 +19,9 @@ using Attribute = Minecraft.Data.Generated.Attribute;
 
 namespace ManagedServer.Entities.Types;
 
+/// <summary>
+/// Entity that represents a player and is controlled by a <see cref="PlayerConnection"/>.
+/// </summary>
 public class PlayerEntity : LivingEntity, IAudience {
     public readonly string Name;
     public readonly PlayerConnection Connection;
@@ -247,7 +250,9 @@ public class PlayerEntity : LivingEntity, IAudience {
             case ServerBoundSetPlayerRotationPacket sr: {
                 if (_waitingTeleport != -1) return;
                 OnGround = sr.Flags.HasFlag(MovePlayerFlags.OnGround);
-                Move(Position, Angle.FromDegrees(sr.Yaw), Angle.FromDegrees(sr.Pitch));
+                
+                // TODO: Why tf does this seem to need to be inverted???
+                Move(Position, Angle.FromDegrees(sr.Pitch), Angle.FromDegrees(sr.Yaw));
                 break;
             }
 
