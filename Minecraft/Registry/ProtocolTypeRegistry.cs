@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry;
 
-public abstract class ProtocolTypeRegistry<T> where T : IProtocolType {
+public abstract class ProtocolTypeRegistry<TSelf, T> : ISubRegistry<TSelf> where TSelf : ProtocolTypeRegistry<TSelf, T> where T : IProtocolType {
     private readonly Dictionary<int, T> _byProtocolId = new();
     private readonly Dictionary<Identifier, T> _byId = new();
     
@@ -23,5 +23,18 @@ public abstract class ProtocolTypeRegistry<T> where T : IProtocolType {
     
     public bool Contains(int protocolId) {
         return _byProtocolId.ContainsKey(protocolId);
+    }
+
+    public TSelf Clone() {
+        TSelf clone = (TSelf)Activator.CreateInstance(GetType())!;
+        foreach (KeyValuePair<Identifier, T> pair in _byId) {
+            clone.Add(pair.Value);
+        }
+        return clone;
+    }
+
+    public void Clear() {
+        _byId.Clear();
+        _byProtocolId.Clear();
     }
 }

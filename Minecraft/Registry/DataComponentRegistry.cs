@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry;
 
-public class DataComponentRegistry {
+public class DataComponentRegistry : ISubRegistry<DataComponentRegistry> {
     private readonly Dictionary<Identifier, int> _fromIdent = new();
     private readonly Dictionary<int, IDataComponent> _fromId = new();
     
@@ -21,5 +21,21 @@ public class DataComponentRegistry {
     
     public bool Contains(int netId) {
         return _fromId.ContainsKey(netId);
+    }
+
+    public DataComponentRegistry Clone() {
+        DataComponentRegistry clone = new();
+        foreach (KeyValuePair<Identifier, int> pair in _fromIdent) {
+            clone._fromIdent.Add(pair.Key, pair.Value);
+        }
+        foreach (KeyValuePair<int, IDataComponent> pair in _fromId) {
+            clone._fromId.Add(pair.Key, pair.Value);
+        }
+        return clone;
+    }
+
+    public void Clear() {
+        _fromIdent.Clear();
+        _fromId.Clear();
     }
 }

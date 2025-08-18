@@ -2,4 +2,4 @@ using Minecraft.Data.ConsumeEffects;
 
 namespace Minecraft.Registry;
 
-public class ConsumeEffectRegistry : ProtocolTypeRegistry<IConsumeEffect>;
+public class ConsumeEffectRegistry : ProtocolTypeRegistry<ConsumeEffectRegistry, IConsumeEffect>;

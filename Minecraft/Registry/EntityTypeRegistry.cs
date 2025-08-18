@@ -1,6 +1,5 @@
 using Minecraft.Data.Entities;
-using Minecraft.Schemas;
 
 namespace Minecraft.Registry;
 
-public class EntityTypeRegistry : ProtocolTypeRegistry<IEntityType>;
+public class EntityTypeRegistry : ProtocolTypeRegistry<EntityTypeRegistry, IEntityType>;

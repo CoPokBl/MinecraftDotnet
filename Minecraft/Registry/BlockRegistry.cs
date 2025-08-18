@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry;
 
-public class BlockRegistry {
+public class BlockRegistry : ISubRegistry<BlockRegistry> {
     private readonly Dictionary<uint, IBlock> _defaultByState = new();
     private readonly Dictionary<Identifier, IBlock> _defaultByName = new();
     private readonly Dictionary<int, IBlock> _defaultById = new();
@@ -28,5 +28,25 @@ public class BlockRegistry {
         }
         _defaultByName.Add(defaultBlock.Identifier, defaultBlock);
         _defaultById.Add(defaultBlock.ProtocolId, defaultBlock);
+    }
+
+    public BlockRegistry Clone() {
+        BlockRegistry clone = new();
+        foreach (KeyValuePair<uint, IBlock> pair in _defaultByState) {
+            clone._defaultByState.Add(pair.Key, pair.Value);
+        }
+        foreach (KeyValuePair<Identifier, IBlock> pair in _defaultByName) {
+            clone._defaultByName.Add(pair.Key, pair.Value);
+        }
+        foreach (KeyValuePair<int, IBlock> pair in _defaultById) {
+            clone._defaultById.Add(pair.Key, pair.Value);
+        }
+        return clone;
+    }
+
+    public void Clear() {
+        _defaultByState.Clear();
+        _defaultByName.Clear();
+        _defaultById.Clear();
     }
 }
