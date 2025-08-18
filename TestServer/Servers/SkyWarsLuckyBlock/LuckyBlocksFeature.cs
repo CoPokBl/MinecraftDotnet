@@ -26,7 +26,7 @@ public class LuckyBlocksFeature : ScopedFeature {
         (10, new ItemBlockResult(typeof(TeleportOrbItem))),
         (10, new ItemBlockResult(new ItemStack(Item.Potato))),
         (10, new BuildUpBlockResult()),
-        (10000, new ItemBlockResult(typeof(InstaboomTntItem))),
+        (10, new ItemBlockResult(typeof(InstaboomTntItem))),
         (10, new ItemBlockResult(new ItemStack(Item.DiamondSword)
             .WithTag(SkyWarsCombatFeature.SelfAttackingTag, true)
             .WithTag(SkyWarsCombatFeature.DamageTag, 10f)
@@ -72,7 +72,7 @@ public class LuckyBlocksFeature : ScopedFeature {
         (5, new ItemBlockResult(new ItemStack(Item.LeatherLeggings).With(DataComponent.Lore, [
             TextComponent.FromLegacyString("&7Thought you might need these.")
         ]).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f))),
-        (5000, new ItemBlockResult(typeof(ChestplateOfNoMovingItem)))
+        (5, new ItemBlockResult(typeof(ChestplateOfNoMovingItem)))
     ];
     
     private enum LuckyBlockType {
