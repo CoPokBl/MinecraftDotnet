@@ -62,6 +62,11 @@ public abstract class MinecraftConnection : MappedTaggable {
     public MinecraftRegistry Registry = VanillaRegistry.Data;
     
     /// <summary>
+    /// What to do with debug log messages.
+    /// </summary>
+    public Action<string> DebugLog = _ => { };
+    
+    /// <summary>
     /// Event that is invoked when the connection is disconnected.
     /// </summary>
     public event Action? Disconnected;
@@ -101,7 +106,8 @@ public abstract class MinecraftConnection : MappedTaggable {
     
 #region util_methods
     protected void Log(string s) {
-        Console.WriteLine($"[{GetType().FullName}] [{State}] {s}");
+        DebugLog($"[{GetType().FullName}] [{State}] {s}");
+        // Console.WriteLine($"[{GetType().FullName}] [{State}] {s}");
     }
 #endregion
 
