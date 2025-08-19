@@ -215,13 +215,13 @@ public static class TagExtensions {
             return i.Value != 0;  // treat non-zero integers as true
         }
 
-        if ((BooleanTag)tag! == null) {
+        if (tag is not BooleanTag booleanTag) {
             if (tag == null) {
                 throw new Exception("Tag is null.");
             }
             throw new InvalidCastException("Tag is not a BooleanTag. It's type is: " + tag.GetType().Name);
         }
-        return ((BooleanTag)tag).Value;
+        return booleanTag.Value;
     }
 
     public static int[] GetIntegers(this INbtTag? tag) {

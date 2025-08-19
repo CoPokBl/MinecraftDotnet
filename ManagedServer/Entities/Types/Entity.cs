@@ -9,7 +9,6 @@ using Minecraft.Data.Attributes;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Events;
-using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
@@ -19,7 +18,6 @@ using Minecraft.Schemas.Entities.Attributes;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Shapes;
 using Minecraft.Schemas.Vec;
-using Newtonsoft.Json;
 
 namespace ManagedServer.Entities.Types;
 

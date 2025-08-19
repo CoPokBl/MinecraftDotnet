@@ -1,6 +1,4 @@
-using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
-using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Implementations.Server.Terrain.Providers;
 

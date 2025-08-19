@@ -1,5 +1,3 @@
-using Minecraft.Schemas;
-
 namespace Minecraft.Implementations.Tags;
 
 public interface ITaggable {

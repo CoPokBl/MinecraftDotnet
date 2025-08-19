@@ -1,9 +1,7 @@
 using System.Diagnostics;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Implementations.Server.Terrain.Providers;
-using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
-using Minecraft.Schemas.Vec;
 
 namespace Tests;
 

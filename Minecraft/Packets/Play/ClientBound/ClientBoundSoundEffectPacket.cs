@@ -27,7 +27,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
     /// Initialise a new instance of the packet with a <see cref="SoundEvent"/>.
     /// <p/>
     /// To use a numerical ID instead of a <see cref="SoundEvent"/> see
-    /// <see cref="ClientBoundSoundEffectPacket(ISoundType, SoundCategory, Vec3, float, float, long)"/>.
+    /// <see cref="ClientBoundSoundEffectPacket(ISoundType, SoundCategory, Vec3{double}, float, float, long)"/>.
     /// </summary>
     /// <param name="soundEvent">The sound event.</param>
     /// <param name="category">The category.</param>
@@ -49,7 +49,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
     /// Initialise a new instance of the packet with a sound type.
     /// <p/>
     /// To use a <see cref="SoundEvent"/> instead of a numerical ID see
-    /// <see cref="ClientBoundSoundEffectPacket(SoundEvent, SoundCategory, Vec3, float, float, long)"/>.
+    /// <see cref="ClientBoundSoundEffectPacket(SoundEvent, SoundCategory, Vec3{double}, float, float, long)"/>.
     /// </summary>
     /// <param name="type">The type of the sound.</param>
     /// <param name="category">The category.</param>

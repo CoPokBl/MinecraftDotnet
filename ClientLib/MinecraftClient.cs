@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using ClientLib.Events;
 using ClientLib.Features;

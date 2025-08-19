@@ -80,8 +80,8 @@ public class EntityMetaContainer {
         { MetaFieldType.Direction, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<Cardinal>()) },
         { MetaFieldType.OptionalLivingEntityReference, (_, writer, field) => 
             writer.WritePrefixedOptional(field.GetValue<Optional<Guid>>(), (uuid, w) => w.WriteUuid(uuid)) },
-        { MetaFieldType.BlockState, (reg, writer, field) => writer.WriteVarInt((int)field.GetValue<IBlock>().StateId) },
-        { MetaFieldType.OptionalBlockState, (reg, writer, field) => 
+        { MetaFieldType.BlockState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<IBlock>().StateId) },
+        { MetaFieldType.OptionalBlockState, (_, writer, field) => 
             writer.WritePrefixedOptional(field.GetValue<Optional<IBlock>>(), (block, w) => w.WriteVarInt((int)block.StateId)) },
         { MetaFieldType.Nbt, (_, writer, field) => writer.WriteNbt(field.GetValue<INbtTag>()) },
         { MetaFieldType.Particle, (reg, writer, field) => 

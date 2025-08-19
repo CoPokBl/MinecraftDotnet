@@ -65,7 +65,6 @@ public abstract class MinecraftConnection : MappedTaggable {
     /// Event that is invoked when the connection is disconnected.
     /// </summary>
     public event Action? Disconnected;
-    private readonly Dictionary<string, object?> _data = new();  // tag data
     
     /// <summary>
     /// Invokes the <see cref="Disconnected"/> event.

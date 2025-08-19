@@ -1,6 +1,5 @@
 using System.Buffers.Binary;
 using System.Collections;
-using System.Reflection;
 using System.Text;
 using Minecraft.Data;
 using Minecraft.Registry;
@@ -314,7 +313,7 @@ public class DataReader(byte[] data) : Stream {
     }
     
     public T[] ReadPrefixedArray<T>(MinecraftRegistry reg) where T : INetworkType<T> {
-        return ReadArray(ReadVarInt(), (r, i) => T.ReadData(r, reg));
+        return ReadArray(ReadVarInt(), (r, _) => T.ReadData(r, reg));
     }
 
     public T[] ReadArray<T>(int length, Func<DataReader, T> readerAdapter) {

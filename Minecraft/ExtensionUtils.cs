@@ -2,9 +2,7 @@ using System.Collections;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ClientBound;
-using Minecraft.Schemas;
 using Minecraft.Text;
-using NBT;
 
 namespace Minecraft;
 

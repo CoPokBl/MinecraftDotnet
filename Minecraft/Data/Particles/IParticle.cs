@@ -1,5 +1,4 @@
 using Minecraft.Registry;
-using Minecraft.Schemas;
 
 namespace Minecraft.Data.Particles;
 

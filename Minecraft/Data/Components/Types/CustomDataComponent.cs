@@ -1,7 +1,6 @@
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using NBT;
-using NBT.Tags;
 
 namespace Minecraft.Data.Components.Types;
 

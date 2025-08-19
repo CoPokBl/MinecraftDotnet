@@ -6,7 +6,7 @@ public class EmptyTag : INbtTag {
         return NbtTagPrefix.End;
     }
 
-    public string? GetName() {
+    public string GetName() {
         throw new NotSupportedException("EmptyTag may only be used at the root level.");
     }
 

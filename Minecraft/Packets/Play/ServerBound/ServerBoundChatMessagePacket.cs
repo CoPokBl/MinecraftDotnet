@@ -21,7 +21,7 @@ public class ServerBoundChatMessagePacket : ServerBoundPacket {
             .WriteString(Message)
             .WriteLong(Timestamp)
             .WriteLong(Salt)
-            .WritePrefixedOptional(Signature, (v, w) => w.Write(v)) // must be 256
+            .WritePrefixedOptional(Signature, (v, wr) => wr.Write(v)) // must be 256
             .WriteVarInt(MessageCount)
             .Write(Acknowledged)  // BitSet of length 20, ceil(20/8)=3 bytes
             .WriteByte(Checksum);
