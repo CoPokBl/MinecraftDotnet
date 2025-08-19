@@ -45,8 +45,7 @@ public abstract class PlayerConnection : MinecraftConnection {
                 State = hs.Intent switch {
                     ServerBoundHandshakePacket.Intention.Status => ConnectionState.Status,
                     ServerBoundHandshakePacket.Intention.Login => ConnectionState.Login,
-                    ServerBoundHandshakePacket.Intention.Transfer => throw new NotImplementedException(
-                        "Transfer is not yet supported"),
+                    ServerBoundHandshakePacket.Intention.Transfer => ConnectionState.Login,  // transfer is the same as login
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 break;

@@ -2,6 +2,7 @@
 using TestServer.Servers.BlockSumoFFA;
 using TestServer.Servers.MlgRush;
 using TestServer.Servers.SkyWarsLuckyBlock;
+using TestServer.Servers.Transferer;
 
 if (args.Length == 0) {
     Console.WriteLine("Please specify a gamemode.");
@@ -27,6 +28,10 @@ switch (args[0]) {
     
     case "skywars":
         await SkyWarsLuckyBlock.Start();
+        break;
+    
+    case "transfer":
+        await TransferTest.Start();
         break;
     
     default:

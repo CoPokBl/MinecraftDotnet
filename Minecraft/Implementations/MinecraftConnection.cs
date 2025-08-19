@@ -101,7 +101,7 @@ public abstract class MinecraftConnection : MappedTaggable {
     
 #region util_methods
     protected void Log(string s) {
-        // Console.WriteLine($"[{GetType().FullName}] [{State}] {s}");
+        Console.WriteLine($"[{GetType().FullName}] [{State}] {s}");
     }
 #endregion
 

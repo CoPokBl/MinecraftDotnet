@@ -32,7 +32,7 @@ public class ProxiedConnection : MappedTaggable {
     private Action? _cancelServerPacketListener;
     
     // constants
-    private const string ProxiedServer = "mc.emortal.dev";
+    private const string ProxiedServer = "minehut.com";
     private const int ProxiedPort = 25565;  // default Minecraft port, can be changed if needed
     private const bool LogPackets = false;  // whether to log packets or not
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.7") ];
@@ -106,6 +106,7 @@ public class ProxiedConnection : MappedTaggable {
     }
 
     public async Task JoinServer(ServerConnection connection, string hostname = "127.0.0.1", int port = 25565, bool transfer = false) {
+        Console.WriteLine("Joining server from connection: " + hostname);
         LeaveServer();
         
         PreServerJoinEvent preJoinEvent = new() {
@@ -134,6 +135,7 @@ public class ProxiedConnection : MappedTaggable {
     }
 
     public async Task JoinServer(string ip, int port = 25565, bool transfer = false) {
+        Console.WriteLine("Joining server: " + ip + ":" + port);
         LeaveServer();
         
         PreServerJoinEvent preJoinEvent = new() {
@@ -162,11 +164,20 @@ public class ProxiedConnection : MappedTaggable {
     }
 
     private async Task PerformServerConnection(string ip, int port, bool transfer = false) {
-        ServerConnection con = await MinecraftClientUtils.ConnectToServer(ip, port);
-        await PerformServerConnection(con, ip, port, transfer);
+        Console.WriteLine("Connecting to server: " + ip + ":" + port);
+        try {
+            ServerConnection con = await MinecraftClientUtils.ConnectToServer(ip, port);
+            Console.WriteLine("Established connection to server: " + ip + ":" + port);
+            await PerformServerConnection(con, ip, port, transfer);
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     private async Task PerformServerConnection(ServerConnection connection, string hostname, int port, bool transfer = false) {
+        Console.WriteLine("Performing server login for: " + hostname + ":" + port);
         Server = connection;
         Server.SendPacket(new ServerBoundHandshakePacket {
             Hostname = hostname,
