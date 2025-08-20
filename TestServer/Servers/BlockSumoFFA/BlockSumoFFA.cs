@@ -5,12 +5,9 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
 using ManagedServer.Features.Impl;
-using ManagedServer.Login.Impl;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
-using Minecraft.Commands;
-using Minecraft.Commands.NodeTypes;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
@@ -26,7 +23,6 @@ using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Schemas.Vec.Relative;
 using Minecraft.Text;
-using TestServer.Servers.Transferer;
 
 namespace TestServer.Servers.BlockSumoFFA;
 
@@ -211,6 +207,20 @@ public static class BlockSumoFfa {
         server.Start();
         
         Console.WriteLine("Server ready, listening...");
+
+        Console.CancelKeyPress += (_, e) => {
+            e.Cancel = true;
+            if (cts.IsCancellationRequested) {
+                Console.WriteLine("Already attempting to stop...");
+                return;
+            }
+            
+            Console.WriteLine("Stopping...");
+            cts.Cancel();
+            server.Stop();
+        };
+        
         await listener.Listen(Port);
+        Console.WriteLine("Listener stopped");
     }
 }

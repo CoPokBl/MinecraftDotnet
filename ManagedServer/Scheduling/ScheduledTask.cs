@@ -6,7 +6,6 @@ public class ScheduledTask(Action action, Action? cancelAction = null) {
         private set => _cancelled = value;
     }
 
-    private readonly object _lock = new();
     private volatile bool _cancelled;
 
     public void Cancel() {

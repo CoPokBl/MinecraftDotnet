@@ -22,7 +22,7 @@ public class SimpleTabListFeature : ScopedFeature {
             tabList.AddPlayer(e.Player);
         });
 
-        Scope.Server.Scheduler.ScheduleRepeatingTask(TimeSpan.FromSeconds(2), () => {
+        Scope.Server.Scheduler.ScheduleRepeatingTask(2 * Scope.Server.TargetTicksPerSecond, () => {
             tabList.Refresh();
             return true;
         });

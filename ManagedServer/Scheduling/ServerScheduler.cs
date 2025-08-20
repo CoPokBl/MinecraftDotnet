@@ -82,6 +82,36 @@ public class ServerScheduler {
         return new ScheduledTask(() => action(), StopTask);
     }
     
+    /// <summary>
+    /// Schedule a task that repeats every <paramref name="tickDelay"/> ticks until
+    /// the provided function returns false.
+    /// </summary>
+    /// <param name="tickDelay">The ticks between each execution of the method.</param>
+    /// <param name="action">
+    /// The method to execute every <paramref name="tickDelay"/> ticks,
+    /// it should return true to continue running or false to stop repeating.</param>
+    /// <returns>An action that can be used</returns>
+    [SuppressMessage("ReSharper", "AccessToModifiedClosure")]
+    public ScheduledTask ScheduleRepeatingTask(int tickDelay, Func<bool> action) {
+        if (tickDelay < 0) {
+            throw new ArgumentOutOfRangeException(nameof(tickDelay), "Tick delay must be non-negative.");
+        }
+
+        ScheduledTask task = null!;
+        task = new ScheduledTask(() => {
+            if (action()) {
+                _tickTasks.Add((_server.CurrentTick + (ulong)tickDelay, task));
+            }
+        }, () => {
+            // Remove the task from the list of scheduled tasks
+            _tickTasks.RemoveAll(t => t.task == task);
+        });
+        
+        _tickTasks.Add((_server.CurrentTick + (ulong)tickDelay, task));
+        
+        return task;
+    }
+    
     public ScheduledTask ScheduleNextTick(Action action) {
         return ScheduleTask(1, action);
     }

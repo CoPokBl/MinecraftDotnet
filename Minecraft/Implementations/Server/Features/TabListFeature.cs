@@ -16,6 +16,7 @@ public class TabListFeature : IServerFeature {
     private readonly Func<PlayerConnection, TabListEntry[]> _entriesProvider;
     private Guid[] _lastEntries = [];
     private readonly List<PlayerConnection> _recipients = [];
+    private CancellationTokenSource _cts = new();
 
     public TabListFeature(
         Func<PlayerConnection, TabListEntry[]>? entriesProvider = null, 
@@ -64,9 +65,14 @@ public class TabListFeature : IServerFeature {
     }
 
     private async Task UpdateThread() {
-        while (true) {
-            Update();
-            await Task.Delay(_updatePeriod);
+        try {
+            while (!_cts.IsCancellationRequested) {
+                Update();
+                await Task.Delay(_updatePeriod, _cts.Token);
+            }
+        }
+        catch (OperationCanceledException) {
+            // It's done
         }
     }
 
@@ -144,7 +150,7 @@ public class TabListFeature : IServerFeature {
     }
     
     public void Unregister() {
-        
+        _cts.Cancel();
     }
 
     public Type[] GetDependencies() {

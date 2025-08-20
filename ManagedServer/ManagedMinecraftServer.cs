@@ -21,6 +21,7 @@ using Minecraft.Registry;
 
 namespace ManagedServer;
 
+// TODO: Remove MinecraftServer inheritance
 public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience, IFeatureScope {
     public List<World> Worlds { get; } = [];
     public List<PlayerEntity> Players { get; } = [];
@@ -57,6 +58,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     };
     public MinecraftRegistry Registry { get; set; } = VanillaRegistry.Data;
     public Action<string> LogAction { get; set; } = Console.WriteLine;
+    public event Action? ServerStopped;
     
     private TimeSpan TargetTickTime => TimeSpan.FromSeconds(1.0 / TargetTicksPerSecond);
 
@@ -103,6 +105,10 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     }
 
     public void Start() {
+        if (_cts.IsCancellationRequested) {
+            throw new InvalidOperationException("Server has already been started and stopped. Create a new instance to start again.");
+        }
+        
         _ticker = new Thread(Ticker) {
             Name = "ManagedMinecraftServer Ticker",
             IsBackground = false
@@ -120,9 +126,45 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         }
         _ticker.Join();
     }
+    
+    public Task WaitForExitAsync(CancellationToken cancellationToken = default) {
+        if (!_started) {
+            throw new InvalidOperationException("Server has not been started. Call Start() before WaitForExitAsync().");
+        }
+        if (_cts.IsCancellationRequested) {
+            return Task.CompletedTask;
+        }
+        
+        return Task.Run(() => _ticker.Join(), cancellationToken);
+    }
 
     public void Stop() {
         _cts.Cancel();
+
+        foreach (ScopedFeature feat in FeatureHandler.Features) {
+            feat.Unregister();
+        }
+        foreach (IServerFeature feat in Features) {
+            feat.Unregister();
+        }
+        
+        // TODO: Unregister other scope features (e.g. entities, worlds)
+        
+        ServerStopped?.Invoke();
+        LogAction("Server stopped.");
+    }
+    
+    public void StopAfterCancellation(CancellationToken token) {
+        token.Register(() => {
+            LogAction("Cancellation requested from dependent token, stopping server...");
+            Stop();
+        });
+    }
+
+    public void StopAfter(Task task) {
+        task.ContinueWith(_ => {
+            Stop();
+        });
     }
 
     private void Ticker() {
@@ -177,11 +219,11 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         return world;
     }
 
-    public Task ListenTcp(int port, CancellationToken cancel) {
+    public Task ListenTcp(int port, CancellationToken? cancel = null) {
         if (!_started) {
             throw new InvalidOperationException("Server has not been started. Call Start() before ListenTcp().");
         }
-        TcpMinecraftListener listener = new(AddConnection, cancel);
+        TcpMinecraftListener listener = new(AddConnection, cancel ?? _cts.Token);
         return listener.Listen(port);
     }
 

@@ -24,18 +24,23 @@ public class HeartbeatsFeature(int heartbeatDelay) : IServerFeature {
     }
 
     private async Task RunHeartbeats() {
-        while (!_cts.IsCancellationRequested) {
-            Stopwatch stopwatch = Stopwatch.StartNew();
+        try {
+            while (!_cts.IsCancellationRequested) {
+                Stopwatch stopwatch = Stopwatch.StartNew();
             
-            foreach (PlayerConnection connection in _server.Connections.Where(connection => connection.State == ConnectionState.Play)) {
-                connection.SendPacket(new ClientBoundKeepAlivePacket {
-                    Id = Random.Shared.Next()
-                });
-            }
+                foreach (PlayerConnection connection in _server.Connections.Where(connection => connection.State == ConnectionState.Play)) {
+                    connection.SendPacket(new ClientBoundKeepAlivePacket {
+                        Id = Random.Shared.Next()
+                    });
+                }
 
-            if (stopwatch.ElapsedMilliseconds < heartbeatDelay) {
-                await Task.Delay(heartbeatDelay - (int)stopwatch.ElapsedMilliseconds, _cts.Token);
+                if (stopwatch.ElapsedMilliseconds < heartbeatDelay) {
+                    await Task.Delay(heartbeatDelay - (int)stopwatch.ElapsedMilliseconds, _cts.Token);
+                }
             }
+        }
+        catch (OperationCanceledException) {
+            // This is expected when the cancellation token is triggered
         }
     }
 }

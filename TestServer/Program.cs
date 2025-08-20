@@ -1,8 +1,4 @@
-﻿using ManagedServer.Worlds;
-using Minecraft.Data.Generated;
-using Minecraft.Implementations.AnvilWorld;
-using PolarWorlds;
-using TestServer.Servers.AnvilTesting;
+﻿using TestServer.Servers.AnvilTesting;
 using TestServer.Servers.BlockSumoFFA;
 using TestServer.Servers.MlgRush;
 using TestServer.Servers.SkyWarsLuckyBlock;
@@ -43,5 +39,4 @@ switch (args[0]) {
         return 1;
 }
 
-await Task.Delay(-1);
 return 0;

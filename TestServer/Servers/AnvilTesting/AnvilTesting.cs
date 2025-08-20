@@ -64,6 +64,6 @@ public static class AnvilTesting {
             }
         });
 
-        await server.ListenTcp(25565, CancellationToken.None);
+        await server.ListenTcp(25565);
     }
 }
