@@ -7,7 +7,9 @@ using BlockBreakingFeature = ManagedServer.Features.Basic.BlockBreakingFeature;
 namespace ManagedServer;
 
 public partial class ManagedMinecraftServer {
-    public static readonly FeatureBundle BasicsBundle = new(
+    // Has to be a computed property so that each call to BasicsBundle returns a new instance.
+    // having the same feature instance in multiple servers can cause issues.
+    public static FeatureBundle BasicsBundle => new(
         new ArmSwingFeature(),
         new PongFeature(),
         new BasicChatFeature(),
