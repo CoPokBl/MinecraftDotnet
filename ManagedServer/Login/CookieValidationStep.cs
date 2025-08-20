@@ -18,13 +18,11 @@ public abstract class CookieValidationStep : LoginStepBase {
         if (packet is not ServerBoundCookieResponsePacket response) {
             return;
         }
-        Console.WriteLine($"cookie: {response.Key}");
 
         if (response.Key != CookieId) {
             return;  // Ignore responses for different cookies
         }
 
-        Console.WriteLine("Set logged in");
         ValidateCookieValue(connection, response.Data);
         connection.SetTag(LoggedInTag, true);  // If the check fails then the handler can kick them
     }

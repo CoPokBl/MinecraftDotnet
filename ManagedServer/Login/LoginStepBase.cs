@@ -20,8 +20,6 @@ public abstract class LoginStepBase : ILoginStep {
     }
     
     protected static void Kick(PlayerConnection connection, TextComponent reason) {
-        connection.SendPacket(new ClientBoundLoginDisconnectPacket {
-            Reason = reason
-        });
+        connection.Kick(reason);  // Use this method to ensure connection is terminated
     }
 }

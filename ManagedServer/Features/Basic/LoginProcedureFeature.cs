@@ -18,7 +18,7 @@ using NBT;
 namespace ManagedServer.Features.Basic;
 
 [CallsEvent(typeof(PlayerPreLoginEvent), typeof(PlayerLoginEvent))]
-internal class LoginProcedureFeature(bool encryption = true, bool requestAuthentication = false) : ScopedFeature {
+public class LoginProcedureFeature(bool encryption = true, bool requestAuthentication = false) : ScopedFeature {
     public static readonly Tag<(Guid, string)> LoginInfoTag = new("minecraftdotnet:loginprocfeat:logininfo");
     
     // this tag is used to mark that the player is ready to login once all login steps are done
