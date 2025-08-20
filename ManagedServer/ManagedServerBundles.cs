@@ -1,6 +1,7 @@
 using ManagedServer.Features;
 using ManagedServer.Features.Basic;
 using ManagedServer.Features.Bundles;
+using ManagedServer.Features.Impl;
 using BlockBreakingFeature = ManagedServer.Features.Basic.BlockBreakingFeature;
 
 namespace ManagedServer;
@@ -24,6 +25,10 @@ public partial class ManagedMinecraftServer {
         new RightClickToEquipArmourFeature(),
         new CommandsFeature()
     );
+
+    public static FeatureBundle BasicsWithMojangAuthBundle => BasicsBundle
+            .Replace(new LoginProcedureFeature(true, true))
+            .With(new MojangAuthenticationFeature());
 
     public static ManagedMinecraftServer NewBasic() {
         return New(BasicsBundle);

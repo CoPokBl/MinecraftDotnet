@@ -128,9 +128,10 @@ public abstract class PlayerConnection : MinecraftConnection {
     /// <summary>
     /// Generates the necessary keys and performs the encryption handshake with the client.
     /// </summary>
+    /// <param name="serverId">The ID of the server, used to calculate the serverId hash.</param>
     /// <param name="requestAuthentication">Whether to set <see cref="ClientBoundEncryptionRequestPacket.ShouldAuthenticate"/> to true.</param>
     /// <exception cref="ConnectionStateException">When <see cref="MinecraftConnection.State"/> is not <see cref="ConnectionState.Login"/>.</exception>
-    public void EnableEncryption(bool requestAuthentication = false) {
+    public void EnableEncryption(string serverId, bool requestAuthentication = false) {
         if (State != ConnectionState.Login) {
             throw new ConnectionStateException(ConnectionState.Login, State, "Connection must be in login state to enable encryption.");
         }
@@ -138,12 +139,12 @@ public abstract class PlayerConnection : MinecraftConnection {
         RSA rsa = RSA.Create(1024);
         
         // get public key encoded in ASN.1 DER format
-        byte[] publicKey = rsa.ExportSubjectPublicKeyInfo();
+        ServerPubKey = rsa.ExportSubjectPublicKeyInfo();
         byte[] verifyToken = RandomNumberGenerator.GetBytes(4);
         SendPacket(new ClientBoundEncryptionRequestPacket {
-            ServerId = "dotnet",
+            ServerId = serverId,
             ShouldAuthenticate = requestAuthentication,
-            PublicKey = publicKey,
+            PublicKey = ServerPubKey,
             VerifyToken = verifyToken
         });
         
@@ -183,6 +184,8 @@ public abstract class PlayerConnection : MinecraftConnection {
         if (e.Cancelled) {
             return;
         }
+        
+        Log("Sending packet " + packet.GetType().Name);
         
         // Send it
         SendPacketInternal(packet);

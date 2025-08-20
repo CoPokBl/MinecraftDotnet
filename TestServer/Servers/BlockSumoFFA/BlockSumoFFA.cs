@@ -5,6 +5,7 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
 using ManagedServer.Features.Impl;
+using ManagedServer.Login.Impl;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
@@ -25,6 +26,7 @@ using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Schemas.Vec.Relative;
 using Minecraft.Text;
+using TestServer.Servers.Transferer;
 
 namespace TestServer.Servers.BlockSumoFFA;
 
@@ -32,7 +34,7 @@ public static class BlockSumoFfa {
     private const int Port = 25565;
 
     public static async Task Start() {
-        ManagedMinecraftServer server = ManagedMinecraftServer.NewBasic();
+        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsWithMojangAuthBundle);
         server.AddFeatures(new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
                 VersionName = "dotnet",
                 VersionProtocol = connection.Handshake!.ProtocolVersion,
@@ -42,12 +44,9 @@ public static class BlockSumoFfa {
                 Description = TextComponent.FromLegacyString("&b&lBlock Sumo FFA"),
                 PreventsChatReports = true
             }),
-            new OpenToLanAdFeature("Block Sumo FFA over LAN", Port)
-            // new TabListFeature(
-            //     updatePeriod:1000, 
-            //     headerProvider:_ => TextComponent.Text("Block Sumo FFA").WithColor(TextColor.Hex("#EE7026")).WithBold(), 
-            //     footerProvider:_ => TextComponent.Text("play.a.game").WithColor(TextColor.Red).WithItalic())
-            );
+            new OpenToLanAdFeature("Block Sumo FFA over LAN", Port));
+        
+        // server.LoginSteps.Add(new HappyCookieLoginStep());  // This makes us have to use the transferer to join
         
         server.Dimensions.Add("minecraft:potatoland", new Dimension());
         
@@ -170,15 +169,6 @@ public static class BlockSumoFfa {
             e.Connection.SendPacket(links);
         }, true);
         
-        ClientBoundCommandsPacket cmds = new() {
-            Nodes = [
-                new RootNode(CommandNodeFlag.RootType, [1], null, null),
-                // new LiteralNode(CommandNodeFlag.LiteralType | CommandNodeFlag.IsExecutable, [], null, "helloworld", null)
-                new LiteralNode(CommandNodeFlag.LiteralType | CommandNodeFlag.IsExecutable | CommandNodeFlag.HasRedirect, [], 0, "execute", null)
-            ],
-            RootIndex = 0
-        };
-        
         server.Events.AddListener<PlayerLoginEvent>(e => {
             e.Player.Teleport(spawn);
             e.Player.Inventory.SetHotbarItem(0, blockItem);
@@ -188,19 +178,11 @@ public static class BlockSumoFfa {
                 server.SendMessage(
                     TextComponent.FromLegacyString("&7[&c-&7] " + e.Player.Name + " &7left the game :("));
             };
-            
-            e.Player.SendPacket(new ClientBoundEntityEffectPacket {
-                EntityId = e.Player.NetId,
-                Amplifier = 0,
-                Duration = -1,
-                Effect = PotionEffectType.Darkness,
-                EffectFlags = ClientBoundEntityEffectPacket.Flags.ShowIcon
-            });
-            // e.Player.SendPacket(cmds);
         });
         
         TcpMinecraftListener listener = new(connection => {
             Console.WriteLine("Got new connection");
+            // connection.DebugLog = Console.WriteLine;
             server.AddConnection(connection);
         }, cts.Token);
         

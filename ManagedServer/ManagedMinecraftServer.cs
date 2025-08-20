@@ -5,6 +5,7 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using ManagedServer.Features;
+using ManagedServer.Login;
 using ManagedServer.Scheduling;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
@@ -27,6 +28,17 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public FeatureHandler FeatureHandler { get; }
     public ServerScheduler Scheduler { get; }
     public ulong CurrentTick { get; private set; }
+    public string ServerId { get; set; } = Random.Shared.Next(int.MaxValue).ToString();  // must be <=20 chars
+    
+    /// <summary>
+    /// Lists of steps that must be completed before a player can log in.
+    /// <b>These do nothing by default without features.</b>
+    /// Please add <see cref="ManagedServer.Features.Basic.LoginProcedureFeature"/>
+    /// or implement your own logic to handle these steps.
+    /// The above-mentioned feature is available in the
+    /// <see cref="BasicsBundle"/>.
+    /// </summary>
+    public List<ILoginStep> LoginSteps { get; } = [];
     
     private Thread _ticker = null!;
     private bool _started;

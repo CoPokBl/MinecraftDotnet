@@ -49,6 +49,7 @@ public abstract class MinecraftConnection : MappedTaggable {
     public BufferedBlockCipher? Decryptor;
     public BufferedBlockCipher? Encryptor;
     public byte[]? SharedSecret;
+    public byte[]? ServerPubKey;  // The public key of the server, needed for authentication. Make sure this is set.
     
     /// <summary>
     /// Whether to allow unknown packets to be received without throwing an exception.

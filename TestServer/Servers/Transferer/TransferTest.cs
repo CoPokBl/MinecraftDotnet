@@ -64,6 +64,13 @@ public static class TransferTest {
         await GetPacket<ServerBoundLoginAcknowledgedPacket>(con);
         
         // We're in config now
+        
+        // give cookie
+        con.SendPacket(new ClientBoundStoreCookiePacket {
+            Key = "happy:happy",
+            Payload = []
+        });
+        
         // transfer them
         con.SendPacket(new ClientBoundTransferPacket {
             Host = "localhost",
