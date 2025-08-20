@@ -162,7 +162,7 @@ public class InventoryClickFeature : ScopedFeature {
             Player = player,
             Inventory = clickedInventory,
             Slot = effectiveSlot,
-            ClickedItem = effectiveSlot > 0 ? targetInventory[effectiveSlot] : null,
+            ClickedItem = effectiveSlot >= 0 ? targetInventory[effectiveSlot] : null,
             CursorItem = player.CursorItem,
             World = player.World!
         };

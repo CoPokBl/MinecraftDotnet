@@ -13,8 +13,8 @@ public class AnvilLoader : ITerrainProvider {
     private readonly MinecraftRegistry _registry;
     private readonly Dictionary<string, AnvilRegionFile> _regions = [];
     private readonly int _minY;
-    
-    public AnvilWorldInfo WorldInfo { get; private init; }
+
+    public AnvilWorldInfo? WorldInfo { get; private init; }
     
     public AnvilLoader(string path, MinecraftRegistry registry, int minY = -64) {
         if (minY % 16 != 0) {
@@ -24,33 +24,31 @@ public class AnvilLoader : ITerrainProvider {
         _registry = registry;
         _minY = minY;
         string levelDatPath = Path.Join(path, "level");
-        if (!File.Exists(levelDatPath)) {
-            throw new Exception("Invalid world: level not found in the specified path.");
-        }
-
-        byte[] data = File.ReadAllBytes(levelDatPath);
-        INbtTag levelDataGen = NbtReader.ReadNbt(data, true);
+        if (File.Exists(levelDatPath)) {
+            byte[] data = File.ReadAllBytes(levelDatPath);
+            INbtTag levelDataGen = NbtReader.ReadNbt(data, true);
         
-        if (levelDataGen is not CompoundTag levelDataRoot) {
-            throw new Exception("Invalid world: level.dat does not contain a valid CompoundTag.");
-        }
+            if (levelDataGen is not CompoundTag levelDataRoot) {
+                throw new Exception("Invalid world: level.dat does not contain a valid CompoundTag.");
+            }
         
-        CompoundTag levelData = levelDataRoot[""]!.GetCompound()["Data"].ThrowIfNull() as CompoundTag ?? throw new InvalidOperationException();
-        WorldInfo = new AnvilWorldInfo(
-            Hardcore: levelData["hardcore"].ThrowIfNull().GetBoolean(),
-            Raining: levelData["raining"].ThrowIfNull().GetBoolean(),
-            Thundering: levelData["thundering"].ThrowIfNull().GetBoolean(),
-            GameType: levelData["GameType"].ThrowIfNull().GetInteger(),
-            RainTicks: levelData["rainTime"].ThrowIfNull().GetInteger(),
-            Spawn: new Vec3<int>(levelData["SpawnX"].ThrowIfNull().GetInteger(),
-                levelData["SpawnY"].ThrowIfNull().GetInteger(), 
-                levelData["SpawnZ"].ThrowIfNull().GetInteger()),
-            ThunderTicks: levelData["thunderTime"].ThrowIfNull().GetInteger(),
-            Version: levelData["version"].ThrowIfNull().GetInteger(),
-            LastPlayed: levelData["LastPlayed"].ThrowIfNull().GetLong(),
-            Time: levelData["Time"].ThrowIfNull().GetLong(),
-            LevelName: levelData["LevelName"].ThrowIfNull().GetString()
-        );
+            CompoundTag levelData = levelDataRoot[""]!.GetCompound()["Data"].ThrowIfNull() as CompoundTag ?? throw new InvalidOperationException();
+            WorldInfo = new AnvilWorldInfo(
+                Hardcore: levelData["hardcore"].ThrowIfNull().GetBoolean(),
+                Raining: levelData["raining"].ThrowIfNull().GetBoolean(),
+                Thundering: levelData["thundering"].ThrowIfNull().GetBoolean(),
+                GameType: levelData["GameType"].ThrowIfNull().GetInteger(),
+                RainTicks: levelData["rainTime"].ThrowIfNull().GetInteger(),
+                Spawn: new Vec3<int>(levelData["SpawnX"].ThrowIfNull().GetInteger(),
+                    levelData["SpawnY"].ThrowIfNull().GetInteger(), 
+                    levelData["SpawnZ"].ThrowIfNull().GetInteger()),
+                ThunderTicks: levelData["thunderTime"].ThrowIfNull().GetInteger(),
+                Version: levelData["version"].ThrowIfNull().GetInteger(),
+                LastPlayed: levelData["LastPlayed"].ThrowIfNull().GetLong(),
+                Time: levelData["Time"].ThrowIfNull().GetLong(),
+                LevelName: levelData["LevelName"].ThrowIfNull().GetString()
+            );
+        }
         
         // get regions
         string regionPath = Path.Join(path, "region");
