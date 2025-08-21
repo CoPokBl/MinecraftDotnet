@@ -6,6 +6,8 @@ using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using ManagedServer.Features;
 using ManagedServer.Login;
+using ManagedServer.Permissions;
+using ManagedServer.Permissions.ContainerImpl;
 using ManagedServer.Scheduling;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
@@ -30,6 +32,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public ServerScheduler Scheduler { get; }
     public ulong CurrentTick { get; private set; }
     public string ServerId { get; set; } = Random.Shared.Next(int.MaxValue).ToString();  // must be <=20 chars
+    public Func<PlayerEntity, IPermissionContainer> PermissionsProvider { get; set; } = _ => new MapPermissionContainer();
     
     /// <summary>
     /// Lists of steps that must be completed before a player can log in.

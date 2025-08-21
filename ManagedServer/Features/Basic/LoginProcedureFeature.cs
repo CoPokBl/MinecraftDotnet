@@ -315,6 +315,7 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                     Uuid = loginInfo.Item1,
                     Skin = null
                 };
+                entity.PermissionContainer = Scope.Server.PermissionsProvider(entity);
                     
                 entity.SetWorld(preLoginEvent.World);
                 Scope.Server.Players.Add(entity);

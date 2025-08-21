@@ -2,6 +2,7 @@ using System.Diagnostics;
 using ManagedServer.Events;
 using ManagedServer.Events.Types;
 using ManagedServer.Features;
+using ManagedServer.Permissions;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
@@ -219,7 +220,13 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         World = world;
 
         Debug.Assert(Manager != null, nameof(Manager) + " != null");
-        Manager?.BaseEventNode.AddChild<IEntityEvent>(Events, ee => ee.Entity == this);
+        Manager?.BaseEventNode.AddChild(Events, serverEvent => {
+            return serverEvent switch {
+                IEntityEvent ev => ev.Entity == this,
+                IPermissionHolderEvent he => he.PermissionHolder == this,
+                _ => true
+            };
+        });
     }
 
     public void Despawn() {

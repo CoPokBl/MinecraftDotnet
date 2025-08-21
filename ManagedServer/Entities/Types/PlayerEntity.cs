@@ -1,10 +1,13 @@
 using System.Collections.Concurrent;
 using ManagedServer.Events;
 using ManagedServer.Inventory;
+using ManagedServer.Permissions;
+using ManagedServer.Permissions.ContainerImpl;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Generated;
+using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Packets;
@@ -22,12 +25,15 @@ namespace ManagedServer.Entities.Types;
 /// <summary>
 /// Entity that represents a player and is controlled by a <see cref="PlayerConnection"/>.
 /// </summary>
-public class PlayerEntity : LivingEntity, IAudience {
+public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
     public readonly string Name;
     public readonly PlayerConnection Connection;
     public readonly PlayerInventory Inventory;
 
     public override List<PlayerEntity> Players => [this];
+
+    public IPermissionContainer PermissionContainer { get; set; } = new DummyPermissionContainer();
+    public EventNode<IServerEvent> EventNode => Events;
     
     public new PlayerMeta Meta {
         get => (PlayerMeta)base.Meta;
