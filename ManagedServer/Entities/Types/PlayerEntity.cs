@@ -272,7 +272,7 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
 
             case ServerBoundInteractPacket ip: {
                 PlayerEntityInteractEvent interactEvent = new() {
-                    Target = Manager!.GetEntityById(ip.EntityId)!,
+                    Target = Manager!.GetEntity(ip.EntityId)!,
                     Player = this,
                     Type = ip.Type,
                     TargetLocation = ip.Target,

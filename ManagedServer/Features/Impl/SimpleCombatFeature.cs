@@ -27,7 +27,7 @@ public class SimpleCombatFeature(int attackCooldown = -1, float damage = 0) : Sc
             Entity? entity;
             PlayerEntity attacker;
             try {
-                entity = e.World.Entities.GetEntityById(packet.EntityId);
+                entity = e.World.Entities.GetEntity(packet.EntityId);
                 attacker = e.Player;
             
                 if (entity == null) {
@@ -78,7 +78,7 @@ public class SimpleCombatFeature(int attackCooldown = -1, float damage = 0) : Sc
                 e.Player.SendMessage("Entity is not player");
             }
             
-            e.World.Entities.SendPacketsFor(entity, soundPacket);
+            e.World.Entities.SendPacketsToViewers(entity, soundPacket);
             entity.Hurt();
         });
     }

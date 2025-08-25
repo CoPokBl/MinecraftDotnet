@@ -216,7 +216,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         Manager?.BaseEventNode.RemoveChild(Events);
 
         World?.Entities.Despawn(this);
-        world?.Entities.Spawn(this, NetId == -1 ? null : NetId);  // this ensures that Manager will not be null (it sets it)
+        world?.Entities.Register(this, NetId == -1 ? null : NetId);  // this ensures that Manager will not be null (it sets it)
         World = world;
 
         Debug.Assert(Manager != null, nameof(Manager) + " != null");
@@ -378,7 +378,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     }
 
     public void SendToViewers(params MinecraftPacket[] packets) {
-        Manager?.SendPacketsFor(this, packets);
+        Manager?.SendPacketsToViewers(this, packets);
     }
     
     public void UpdateViewers() {

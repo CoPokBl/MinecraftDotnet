@@ -25,7 +25,7 @@ public class SimpleBenchmarkFeature : ScopedFeature {
                 double max = _tickTimes.Max();
                 
                 Console.WriteLine("Average tick time: {0:F2} ms, Min: {1:F2} ms, Max: {2:F2} ms", average, min, max);
-                Console.WriteLine("Entities in all worlds: {0}", Scope.Server.Worlds.Sum(w => w.Entities.Entities.Count));
+                Console.WriteLine("Entities in all worlds: {0}", Scope.Server.Worlds.Sum(w => w.Entities.EntityCount));
             }
         });
         

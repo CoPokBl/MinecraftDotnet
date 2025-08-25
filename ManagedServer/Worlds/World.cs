@@ -425,7 +425,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     // non-static so that you can use it with the world instance
     // eg. world.GetChunkPos instead of World.GetChunkPos
     // I think it's nicer this way
-    public Vec2<int> GetChunkPos(Vec3<double> pos) {
+    public static Vec2<int> GetChunkPos(Vec3<double> pos) {
         return new Vec2<int>((int)Math.Floor(pos.X / 16), (int)Math.Floor(pos.Z / 16));
     }
     

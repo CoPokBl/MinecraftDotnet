@@ -70,8 +70,8 @@ public class BlockPlacingFeature : ScopedFeature {
         
         // is player inside that block?
         bool insideEntity = false;
-        foreach (Entity en in player.World!.Entities.Entities.Where(en => en is PlayerEntity)) {
-            Vec3<double> pos = ((PlayerEntity)en).Position;
+        foreach (PlayerEntity en in player.World!.Players) {
+            Vec3<double> pos = en.Position;
             Vec3<double> blockPos = new(target.X + 0.5, target.Y + 0.5, target.Z + 0.5);
             if (Math.Abs(pos.X - blockPos.X) < 0.5 + PlayerWidth/2 && 
                 Math.Abs(pos.Z - blockPos.Z) < 0.5 + PlayerWidth/2 && 

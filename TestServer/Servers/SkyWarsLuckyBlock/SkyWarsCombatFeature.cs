@@ -35,7 +35,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
             Entity? entity;
             PlayerEntity attacker;
             try {
-                entity = e.World.Entities.GetEntityById(packet.EntityId);
+                entity = e.World.Entities.GetEntity(packet.EntityId);
                 attacker = e.Player;
             
                 if (entity == null) {

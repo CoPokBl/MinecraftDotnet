@@ -1,5 +1,6 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Viewables;
+using ManagedServer.Worlds;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -12,17 +13,25 @@ using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Entities;
 
-public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistanceBlocks) {
+public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistanceBlocks) : IEntityManager {
     public EventNode<IServerEvent> BaseEventNode { get; set; } = baseEventNode;
+
+    private readonly Dictionary<Vec2<int>, List<Entity>> _entitiesByChunk = [];
+    private readonly Dictionary<int, Entity> _entitiesById = [];
     
-    public readonly List<Entity> Entities = [];
-    private int _currentId = 9;
-    public int NewNetId => Random.Shared.Next();//_currentId++;
+    private int _currentId;
+    public int NewNetId => _currentId++;
+
+    public int EntityCount => _entitiesById.Count;
 
     public void InformNewPlayer(PlayerEntity player) {
-        foreach (Entity entity in Entities) {
+        foreach (Entity entity in GetNearbyEntities(player.Position, viewDistanceBlocks)) {
             if (!entity.ViewableRule(player)) {
                 continue;
+            }
+            player.SendMessage("You can see entity " + entity.NetId);
+            if (entity is PlayerEntity) {
+                player.SendMessage("It's a player!");
             }
             player.SendPackets(entity.GenerateSpawnEntityPackets());
         }
@@ -34,38 +43,57 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     /// </summary>
     /// <param name="entity"></param>
     /// <param name="id"></param>
-    internal void Spawn(Entity entity, int? id = null) {
+    public void Register(Entity entity, int? id = null) {
         entity.NetId = id ?? NewNetId;
         entity.Manager = this;
-        Entities.Add(entity);
+
+        Vec2<int> chunk = World.GetChunkPos(entity.Position);
+        if (!_entitiesByChunk.TryGetValue(chunk, out List<Entity>? value)) {
+            value = [];
+            _entitiesByChunk[chunk] = value;
+        }
+        value.Add(entity);
+        _entitiesById[entity.NetId] = entity;
         
-        SendPacketsFor(entity, entity.GenerateSpawnEntityPackets());
+        SendPacketsToViewers(entity, entity.GenerateSpawnEntityPackets());
     }
 
     public void Despawn(Entity entity) {
-        SendPacketsFor(entity, new ClientBoundRemoveEntitiesPacket {
+        SendPacketsToViewers(entity, new ClientBoundRemoveEntitiesPacket {
             Entities = [entity.NetId]
         });
-        Entities.Remove(entity);
+
+        _entitiesById.Remove(entity.NetId);
+        Vec2<int> chunk = World.GetChunkPos(entity.Position);
+        if (_entitiesByChunk.TryGetValue(chunk, out List<Entity>? value)) {
+            value.Remove(entity);
+            if (value.Count == 0) {
+                _entitiesByChunk.Remove(chunk);
+            }
+        }
     }
 
     public void Respawn(Entity entity) {
-        SendPacketsFor(entity, new ClientBoundRemoveEntitiesPacket {
+        SendPacketsToViewers(entity, new ClientBoundRemoveEntitiesPacket {
             Entities = [entity.NetId]
         });
-        SendPacketsFor(entity, entity.GenerateSpawnEntityPackets());
+        SendPacketsToViewers(entity, entity.GenerateSpawnEntityPackets());
     }
 
-    public void SendPacketsFor(Entity entity, params MinecraftPacket[] packets) {
+    public void SendPacketsToViewers(Entity entity, params MinecraftPacket[] packets) {
         entity.SendPacketsToViewers(packets);
     }
 
-    public Entity? GetEntityById(int id) {
-        return Entities.Find(entity => entity.NetId == id);
+    public Entity? GetEntity(int id) {
+        return _entitiesById.GetValueOrDefault(id);
     }
-    
+
+    public Entity[] GetEntities() {
+        return _entitiesById.Values.ToArray();
+    }
+
     public PlayerEntity? GetPlayerByConnection(PlayerConnection connection) {
-        return Entities
+        return _entitiesById.Values
             .Where(e => e is PlayerEntity pe && pe.Connection == connection)
             .Cast<PlayerEntity>()
             .FirstOrDefault();
@@ -73,7 +101,7 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
 
     // this could use some optimising
     public PlayerEntity[] GetViewersOf(Entity entity) {
-        return Entities
+        return _entitiesById.Values
             .Where(e => e is PlayerEntity pe && 
                         pe.Position.DistanceTo2D(entity.Position) < viewDistanceBlocks &&
                         entity.ViewableRule(pe))
@@ -82,17 +110,25 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     }
 
     public PlayerEntity[] GetPlayers() {
-        return Entities
+        return _entitiesById.Values
             .Where(e => e is PlayerEntity)
             .Cast<PlayerEntity>()
             .ToArray();
     }
     
-    // TODO: this needs major optimising (perhaps store entities in a spatial partitioning structure, or per chunk)
     public Entity[] GetNearbyEntities(Vec3<double> pos, double distance) {
-        return Entities
-            .Where(e => e.Position.DistanceTo(pos) < distance)
-            .ToArray();
+        int chunkRadius = (int)Math.Ceiling(distance / 16) + 1;
+        Vec2<int>[] chunksToCheck = IEntityManager.GetChunksInRadius(chunkRadius);
+        
+        List<Entity> entities = [];
+        foreach (Vec2<int> chunk in chunksToCheck) {
+            List<Entity>? chunkEntities = _entitiesByChunk.GetValueOrDefault(chunk);
+            if (chunkEntities == null) continue;
+
+            entities.AddRange(chunkEntities.Where(entity => entity.Position.DistanceTo(pos) < distance));
+        }
+        
+        return entities.ToArray();
     }
 
     // uses the most appropriate packet type
@@ -133,11 +169,11 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
                 HeadRotPacket(entity.NetId, yaw.Value)
             ];
         
-        SendPacketsFor(entity, packets);
+        SendPacketsToViewers(entity, packets);
     }
 
     public void SetEntityCrouching(Entity entity, bool crouching) {
-        SendPacketsFor(entity, new ClientBoundSetEntityMetadataPacket {
+        SendPacketsToViewers(entity, new ClientBoundSetEntityMetadataPacket {
             EntityId = entity.NetId,
             Meta = new PlayerMeta {
                 Pose = crouching ? EntityPose.Sneaking : EntityPose.Standing,
@@ -157,10 +193,10 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
                 OnGround = true
             };
         
-        SendPacketsFor(entity, packet, HeadRotPacket(entity.NetId, yaw));
+        SendPacketsToViewers(entity, packet, HeadRotPacket(entity.NetId, yaw));
     }
-    
-    public void RotateEntity(Entity entity, Angle yaw, Angle pitch) {
+
+    private void RotateEntity(Entity entity, Angle yaw, Angle pitch) {
         // for some reason pitch and yaw seem reversed.
         MinecraftPacket packet = new ClientBoundUpdateEntityRotationPacket {
             EntityId = entity.NetId,
@@ -168,7 +204,7 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             Yaw = pitch,
             OnGround = true
         };
-        SendPacketsFor(entity, packet, HeadRotPacket(entity.NetId, pitch));
+        SendPacketsToViewers(entity, packet, HeadRotPacket(entity.NetId, pitch));
     }
 
     private static ClientBoundSetHeadRotationPacket HeadRotPacket(int id, Angle yaw) {
