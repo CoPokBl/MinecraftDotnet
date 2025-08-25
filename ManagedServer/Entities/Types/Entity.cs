@@ -78,7 +78,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     // these should be set by an entity tracker
     // not doing so is unsupported and will cause issues.
     public int NetId = -1;
-    public EntityManager? Manager;
+    public IEntityManager? Manager;
     public World? World;
     
     private EntityMeta _meta = null!;  // set by the constructor, so it is never null

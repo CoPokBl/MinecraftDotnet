@@ -37,7 +37,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     // Props
     public List<PlayerEntity> Players { get; } = [];
     public EventNode<IServerEvent> Events { get; }
-    public EntityManager Entities { get; }
+    public IEntityManager Entities { get; }
     public ManagedMinecraftServer Server { get; init; }
     public FeatureHandler FeatureHandler { get; }
     public Identifier DimensionId { get; }
@@ -461,12 +461,11 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         Entity lightning = new(EntityType.LightningBolt) {
             Position = pos,
             Yaw = Angle.Zero,
-            Pitch = Angle.Zero,
-            NetId = Entities.NewNetId
+            Pitch = Angle.Zero
         };
-        Spawn(lightning);
+        lightning.SetWorld(this);
         
-        Server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(2), () => {
+        Server.Scheduler.ScheduleTask(Server.TargetTicksPerSecond * 2, () => {
             lightning.Despawn();
         });
     }
