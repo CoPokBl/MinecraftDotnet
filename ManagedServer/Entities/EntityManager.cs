@@ -14,7 +14,7 @@ using Minecraft.Schemas.Vec;
 namespace ManagedServer.Entities;
 
 public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistanceBlocks) : IEntityManager {
-    public EventNode<IServerEvent> BaseEventNode { get; set; } = baseEventNode;
+    public EventNode<IServerEvent> BaseEventNode { get; } = baseEventNode;
 
     private readonly Dictionary<Vec2<int>, List<Entity>> _entitiesByChunk = [];
     private readonly Dictionary<int, Entity> _entitiesById = [];
@@ -170,16 +170,6 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             ];
         
         SendPacketsToViewers(entity, packets);
-    }
-
-    public void SetEntityCrouching(Entity entity, bool crouching) {
-        SendPacketsToViewers(entity, new ClientBoundSetEntityMetadataPacket {
-            EntityId = entity.NetId,
-            Meta = new PlayerMeta {
-                Pose = crouching ? EntityPose.Sneaking : EntityPose.Standing,
-                Status = crouching ? EntityStatus.Sneaking : EntityStatus.None
-            }
-        });
     }
 
     public void TeleportEntity(Entity entity, Vec3<double> newPos, Angle yaw, Angle pitch) {

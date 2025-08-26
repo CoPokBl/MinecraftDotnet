@@ -15,6 +15,7 @@ using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Entities.Attributes;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Shapes;
@@ -60,7 +61,10 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
                 return;
             }
             
-            Manager?.SetEntityCrouching(this, value);
+            Meta = Meta with {
+                Pose = value ? EntityPose.Sneaking : EntityPose.Standing,
+                Status = value ? EntityStatus.Sneaking : EntityStatus.None
+            };
             _crouching = value;
         }
     }

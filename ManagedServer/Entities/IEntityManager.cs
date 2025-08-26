@@ -1,5 +1,7 @@
 using ManagedServer.Entities.Types;
+using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
+using Minecraft.Implementations.Server.Events;
 using Minecraft.Packets;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
@@ -8,6 +10,7 @@ namespace ManagedServer.Entities;
 
 public interface IEntityManager {
     int EntityCount { get; }
+    EventNode<IServerEvent> BaseEventNode { get; }
     
     void InformNewPlayer(PlayerEntity player);
     void Respawn(Entity entity);
