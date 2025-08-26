@@ -25,4 +25,12 @@ public static class FeatureScopeExtensions {
     public static void AddFeature(this IFeatureScope scope, ScopedFeature feature) {
         scope.FeatureHandler.AddFeature(feature);
     }
+    
+    public static T Feature<T>(this IFeatureScope scope) where T : ScopedFeature {
+        return scope.FeatureHandler.Feature<T>();
+    }
+    
+    public static ScopedFeature Feature(this IFeatureScope scope, Type type) {
+        return scope.FeatureHandler.Feature(type);
+    }
 }
