@@ -6,11 +6,11 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundInteractPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:interact";
     
-    public required int EntityId;
-    public required InteractType Type;
+    public required int EntityId { get; init; }
+    public required InteractType Type { get; init; }
     public Vec3<float>? Target;
     public Hand? UsedHand;
-    public required bool SneakPressed;
+    public required bool SneakPressed { get; init; }
 
     public static ServerBoundInteractPacket Attack(int entityId, bool sneakPressed) {
         return new ServerBoundInteractPacket {

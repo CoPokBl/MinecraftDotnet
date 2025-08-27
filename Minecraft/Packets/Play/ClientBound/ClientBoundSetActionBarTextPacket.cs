@@ -6,7 +6,7 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundSetActionBarTextPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:set_action_bar_text";
     
-    public required TextComponent Text;
+    public required TextComponent Text { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

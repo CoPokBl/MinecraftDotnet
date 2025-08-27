@@ -6,7 +6,7 @@ public class ClientBoundCloseContainerPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:container_close";
 
     // disregarded by the client
-    public required int WindowId;
+    public required int WindowId { get; init; }
     
     protected override DataWriter WriteData(DataWriter w) {
         return w.WriteVarInt(WindowId);

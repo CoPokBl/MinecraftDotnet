@@ -7,10 +7,10 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundChunkDataAndUpdateLightPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:level_chunk_with_light";
     
-    public required int ChunkX;
-    public required int ChunkZ;
-    public required ChunkData Data;
-    public required LightData Light;
+    public required int ChunkX { get; init; }
+    public required int ChunkZ { get; init; }
+    public required ChunkData Data { get; init; }
+    public required LightData Light { get; init; }
 
     protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w

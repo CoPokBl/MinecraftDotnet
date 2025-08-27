@@ -5,9 +5,9 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundUpdateTimePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:set_time";
     
-    public required long WorldAge;
-    public required long TimeOfDay;
-    public required bool ClientAdvanceTime;  // whether the client should advance time automatically
+    public required long WorldAge { get; init; }
+    public required long TimeOfDay { get; init; }
+    public required bool ClientAdvanceTime { get; init; }  // whether the client should advance time automatically
     
     protected override DataWriter WriteData(DataWriter w) {
         return w

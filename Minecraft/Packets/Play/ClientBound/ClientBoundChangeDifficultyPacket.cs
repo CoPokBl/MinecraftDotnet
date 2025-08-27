@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundChangeDifficultyPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:change_difficulty";
     
-    public required DifficultySetting Difficulty;
-    public required bool Locked;
+    public required DifficultySetting Difficulty { get; init; }
+    public required bool Locked { get; init; }
     
     public enum DifficultySetting {
         Peaceful = 0,

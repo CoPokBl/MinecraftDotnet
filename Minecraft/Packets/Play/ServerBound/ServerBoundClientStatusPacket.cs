@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundClientStatusPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:client_command";
     
-    public required StatusAction Action;
+    public required StatusAction Action { get; init; }
 
     public enum StatusAction {
         Respawn = 0,

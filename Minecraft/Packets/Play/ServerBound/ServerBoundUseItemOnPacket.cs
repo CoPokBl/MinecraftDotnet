@@ -6,13 +6,13 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundUseItemOnPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:use_item_on";
     
-    public required Hand ActiveHand;
-    public required Vec3<int> Position;
-    public required BlockFace Face;
-    public required Vec3<float> CursorPosition;
-    public required bool InsideBlock;
-    public required bool WorldBorderHit;
-    public required int Sequence;
+    public required Hand ActiveHand { get; init; }
+    public required Vec3<int> Position { get; init; }
+    public required BlockFace Face { get; init; }
+    public required Vec3<float> CursorPosition { get; init; }
+    public required bool InsideBlock { get; init; }
+    public required bool WorldBorderHit { get; init; }
+    public required int Sequence { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

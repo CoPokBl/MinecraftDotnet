@@ -8,9 +8,9 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundBlockEntityDataPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:block_entity_data";
 
-    public required Vec3<int> Position;
-    public required IBlockEntityType Type;
-    public required INbtTag Data;
+    public required Vec3<int> Position { get; init; }
+    public required IBlockEntityType Type { get; init; }
+    public required INbtTag Data { get; init; }
     
     protected override DataWriter WriteData(DataWriter w) {
         return w

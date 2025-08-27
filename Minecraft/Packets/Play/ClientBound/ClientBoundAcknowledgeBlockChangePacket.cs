@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundAcknowledgeBlockChangePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:block_changed_ack";
     
-    public required int SequenceId;
+    public required int SequenceId { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

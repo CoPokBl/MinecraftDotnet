@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundEntityEventPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:entity_event";
     
-    public required int EntityId;
-    public required EntityEventType Status;
+    public required int EntityId { get; init; }
+    public required EntityEventType Status { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

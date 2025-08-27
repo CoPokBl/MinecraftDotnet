@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundGameEventPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:game_event";
     
-    public required GameEvent Event;
-    public required float Value;
+    public required GameEvent Event { get; init; }
+    public required float Value { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundChunkBatchReceivedPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:chunk_batch_received";
     
-    public required float ChunksPerTick;
+    public required float ChunksPerTick { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

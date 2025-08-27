@@ -7,8 +7,8 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundUpdateAttributesPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:update_attributes";
     
-    public required int EntityId;
-    public required AttributeValue[] Attributes;
+    public required int EntityId { get; init; }
+    public required AttributeValue[] Attributes { get; init; }
 
     protected override DataWriter WriteData(DataWriter w, MinecraftRegistry reg) {
         return w

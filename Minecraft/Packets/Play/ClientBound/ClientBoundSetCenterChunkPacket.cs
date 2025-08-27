@@ -7,8 +7,8 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundSetCenterChunkPacket() : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:set_chunk_cache_center";
     
-    public required int X;
-    public required int Z;
+    public required int X { get; init; }
+    public required int Z { get; init; }
 
     [SetsRequiredMembers]
     public ClientBoundSetCenterChunkPacket(Vec2<int> pos) : this() {

@@ -6,7 +6,7 @@ public class ServerBoundLoginPluginResponsePacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:custom_query_answer";
     
     public required int MessageId { get; init; }
-    public required byte[]? Data;  // only sent if the request was 'understood', null otherwise
+    public required byte[]? Data { get; init; }  // only sent if the request was 'understood', null otherwise
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

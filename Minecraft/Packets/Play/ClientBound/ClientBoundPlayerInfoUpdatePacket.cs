@@ -7,7 +7,7 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:player_info_update";
     
-    public required PlayerData Data;
+    public required PlayerData Data { get; init; }
     
     [Flags]
     public enum PlayerActions {
@@ -51,7 +51,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
         
         public class AddPlayer : IPlayerAction {
-            public required string Name;
+            public required string Name { get; init; }
             public ProfileProperty[] Properties = [];
 
             public PlayerActions Action => PlayerActions.AddPlayer;
@@ -82,7 +82,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
         
         public class InitializeChat : IPlayerAction {
-            public required bool HasData;
+            public required bool HasData { get; init; }
             public Guid? ChatSessionId;
             public long? PublicKeyExpiryTime;
             public byte[]? EncodedPublicKey;
@@ -125,7 +125,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
 
         public class UpdateGameMode : IPlayerAction {
-            public required GameMode GameMode;
+            public required GameMode GameMode { get; init; }
             public PlayerActions Action => PlayerActions.UpdateGameMode;
             
             public byte[] Serialise(MinecraftRegistry _) {
@@ -142,7 +142,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
         
         public class UpdateListed : IPlayerAction {
-            public required bool Listed;
+            public required bool Listed { get; init; }
             public PlayerActions Action => PlayerActions.UpdateListed;
             
             public byte[] Serialise(MinecraftRegistry _) {
@@ -159,7 +159,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
         
         public class UpdateLatency : IPlayerAction {
-            public required int Latency;
+            public required int Latency { get; init; }
             public PlayerActions Action => PlayerActions.UpdateLatency;
             
             public byte[] Serialise(MinecraftRegistry _) {
@@ -176,7 +176,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
         
         public class UpdateDisplayName : IPlayerAction {
-            public required TextComponent? DisplayName;
+            public required TextComponent? DisplayName { get; init; }
             public PlayerActions Action => PlayerActions.UpdateDisplayName;
             
             public byte[] Serialise(MinecraftRegistry _) {
@@ -193,7 +193,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
         
         public class UpdateListPriority : IPlayerAction {
-            public required int Priority;
+            public required int Priority { get; init; }
             public PlayerActions Action => PlayerActions.UpdateListPriority;
             
             public byte[] Serialise(MinecraftRegistry _) {
@@ -210,7 +210,7 @@ public class ClientBoundPlayerInfoUpdatePacket : ClientBoundPacket {
         }
         
         public class UpdateHat : IPlayerAction {
-            public required bool Visible;
+            public required bool Visible { get; init; }
             public PlayerActions Action => PlayerActions.UpdateHat;
             
             public byte[] Serialise(MinecraftRegistry _) {

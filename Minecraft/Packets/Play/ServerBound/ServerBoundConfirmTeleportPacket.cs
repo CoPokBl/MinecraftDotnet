@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundConfirmTeleportPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:accept_teleportation";
     
-    public required int TeleportId;
+    public required int TeleportId { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w.WriteVarInt(TeleportId);

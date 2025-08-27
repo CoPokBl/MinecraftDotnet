@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundSetHeldItemPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:set_carried_item";
     
-    public required short Slot;
+    public required short Slot { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

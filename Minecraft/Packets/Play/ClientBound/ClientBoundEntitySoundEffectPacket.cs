@@ -15,11 +15,11 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
     /// </summary>
     public ISoundType? Type;
     public SoundEvent? Event;
-    public required SoundCategory Category;
-    public required int EntityId;
-    public required float Volume;
-    public required float Pitch;
-    public required long Seed;
+    public required SoundCategory Category { get; init; }
+    public required int EntityId { get; init; }
+    public required float Volume { get; init; }
+    public required float Pitch { get; init; }
+    public required long Seed { get; init; }
 
     /// <summary>
     /// Initialise a new instance of the packet with a <see cref="SoundEvent"/>.
