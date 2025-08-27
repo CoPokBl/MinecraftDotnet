@@ -7,7 +7,7 @@ namespace Minecraft.Packets.Config.ClientBound;
 public class ClientBoundUpdateTagsPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:update_tags";
     
-    public required TagSet[] Tags;
+    public required TagSet[] Tags { get; init; }
 
     public record TagSet(string Registry, Tag[] Tags) : INetworkType<TagSet> {
         public DataWriter WriteData(DataWriter writer, MinecraftRegistry reg) {

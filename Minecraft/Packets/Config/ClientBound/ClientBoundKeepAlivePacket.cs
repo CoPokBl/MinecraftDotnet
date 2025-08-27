@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Config.ClientBound;
 public class ClientBoundKeepAlivePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:keep_alive";
     
-    public required long Id;
+    public required long Id { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

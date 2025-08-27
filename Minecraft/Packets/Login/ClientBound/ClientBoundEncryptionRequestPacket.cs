@@ -5,10 +5,10 @@ namespace Minecraft.Packets.Login.ClientBound;
 public class ClientBoundEncryptionRequestPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:hello";
     
-    public required string ServerId;
-    public required byte[] PublicKey;
-    public required byte[] VerifyToken;
-    public required bool ShouldAuthenticate;
+    public required string ServerId { get; init; }
+    public required byte[] PublicKey { get; init; }
+    public required byte[] VerifyToken { get; init; }
+    public required bool ShouldAuthenticate { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         Assert(ServerId.Length <= 20, "ServerId must be 20 characters or less.");

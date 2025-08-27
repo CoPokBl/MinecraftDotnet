@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Login.ServerBound;
 public class ServerBoundCookieResponsePacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:cookie_response";
     
-    public required Identifier Key;
-    public required byte[]? Data;
+    public required Identifier Key { get; init; }
+    public required byte[]? Data { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

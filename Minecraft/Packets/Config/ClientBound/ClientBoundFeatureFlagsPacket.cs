@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Config.ClientBound;
 public class ClientBoundFeatureFlagsPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:update_enabled_features";
     
-    public required Identifier[] Flags;
+    public required Identifier[] Flags { get; init; }
     
     protected override DataWriter WriteData(DataWriter w) {
         return w

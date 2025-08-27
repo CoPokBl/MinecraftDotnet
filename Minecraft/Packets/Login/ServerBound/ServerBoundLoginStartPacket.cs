@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Login.ServerBound;
 public class ServerBoundLoginStartPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:hello";
     
-    public required Guid Uuid;
-    public required string Name;
+    public required Guid Uuid { get; init; }
+    public required string Name { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         w.WriteString(Name);

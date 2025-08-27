@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Login.ServerBound;
 public class ServerBoundEncryptionResponsePacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:key";
     
-    public required byte[] SharedSecret;
-    public required byte[] VerifyToken;
+    public required byte[] SharedSecret { get; init; }
+    public required byte[] VerifyToken { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

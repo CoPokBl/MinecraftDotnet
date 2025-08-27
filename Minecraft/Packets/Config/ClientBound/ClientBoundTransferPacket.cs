@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Config.ClientBound;
 public class ClientBoundTransferPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:transfer";
     
-    public required string Host;
-    public required int Port;
+    public required string Host { get; init; }
+    public required int Port { get; init; }
     
     protected override DataWriter WriteData(DataWriter w) {
         return w

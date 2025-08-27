@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Config.ClientBound;
 public class ClientBoundKnownPacksPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:select_known_packs";
     
-    public required KnownDataPack[] Packs;
+    public required KnownDataPack[] Packs { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w.WritePrefixedArray(Packs, (pack, writer) => writer

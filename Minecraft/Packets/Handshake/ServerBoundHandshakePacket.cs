@@ -6,10 +6,10 @@ namespace Minecraft.Packets.Handshake;
 public class ServerBoundHandshakePacket() : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:intention";
 
-    public required string Hostname;
-    public required ushort Port;
-    public required int ProtocolVersion;
-    public required Intention Intent;
+    public required string Hostname { get; init; }
+    public required ushort Port { get; init; }
+    public required int ProtocolVersion { get; init; }
+    public required Intention Intent { get; init; }
     
     public enum Intention {
         Status = 1,

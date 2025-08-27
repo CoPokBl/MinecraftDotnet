@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Config.ServerBound;
 public class ServerBoundPongPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:pong";
     
-    public required int Id;
+    public required int Id { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

@@ -6,7 +6,7 @@ namespace Minecraft.Packets.Status.ServerBound;
 public class ServerBoundPingRequestPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:ping_request";
     
-    public required long Payload;
+    public required long Payload { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w.WriteLong(Payload);

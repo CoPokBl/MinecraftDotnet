@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Status.ClientBound;
 public class ClientBoundPingResponsePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:pong_response";
     
-    public required long Payload;
+    public required long Payload { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Config.ServerBound;
 public class ServerBoundPluginMessagePacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:custom_payload";
     
-    public required byte[] Data;
-    public required string Channel;
+    public required byte[] Data { get; init; }
+    public required string Channel { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w
