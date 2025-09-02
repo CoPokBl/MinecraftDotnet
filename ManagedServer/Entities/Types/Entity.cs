@@ -15,6 +15,7 @@ using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Entities.Attributes;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Shapes;
@@ -60,7 +61,10 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
                 return;
             }
             
-            Manager?.SetEntityCrouching(this, value);
+            Meta = Meta with {
+                Pose = value ? EntityPose.Sneaking : EntityPose.Standing,
+                Status = value ? EntityStatus.Sneaking : EntityStatus.None
+            };
             _crouching = value;
         }
     }
@@ -78,7 +82,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     // these should be set by an entity tracker
     // not doing so is unsupported and will cause issues.
     public int NetId = -1;
-    public EntityManager? Manager;
+    public IEntityManager? Manager;
     public World? World;
     
     private EntityMeta _meta = null!;  // set by the constructor, so it is never null
@@ -216,7 +220,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         Manager?.BaseEventNode.RemoveChild(Events);
 
         World?.Entities.Despawn(this);
-        world?.Entities.Spawn(this, NetId == -1 ? null : NetId);  // this ensures that Manager will not be null (it sets it)
+        world?.Entities.Register(this, NetId == -1 ? null : NetId);  // this ensures that Manager will not be null (it sets it)
         World = world;
 
         Debug.Assert(Manager != null, nameof(Manager) + " != null");
@@ -378,7 +382,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     }
 
     public void SendToViewers(params MinecraftPacket[] packets) {
-        Manager?.SendPacketsFor(this, packets);
+        Manager?.SendPacketsToViewers(this, packets);
     }
     
     public void UpdateViewers() {

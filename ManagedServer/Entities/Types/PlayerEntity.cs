@@ -272,7 +272,7 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
 
             case ServerBoundInteractPacket ip: {
                 PlayerEntityInteractEvent interactEvent = new() {
-                    Target = Manager!.GetEntityById(ip.EntityId)!,
+                    Target = Manager!.GetEntity(ip.EntityId)!,
                     Player = this,
                     Type = ip.Type,
                     TargetLocation = ip.Target,
@@ -457,6 +457,7 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
             Pitch = pitch ?? Angle.Zero,
             Flags = teleportFlags
         });
+        Position = pos;
         // base.Teleport(pos, yaw, pitch);   Don't tell everyone else
     }
 

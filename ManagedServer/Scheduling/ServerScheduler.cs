@@ -20,7 +20,12 @@ public class ServerScheduler {
             ulong tick = _server.CurrentTick;
             _tickTasks.RemoveAll(schedule => {
                 if (schedule.tick > tick) return false;
-                schedule.task.Run();
+                try {
+                    schedule.task.Run();
+                }
+                catch (Exception e) {
+                    _server.HandleError(e);
+                }
                 return true;
             });
         });
@@ -43,7 +48,7 @@ public class ServerScheduler {
                 _timers.Remove(timer);
             }
             catch (Exception e) {
-                Console.WriteLine(e);
+                _server.HandleError(e);
             }
         }, null, delay, Timeout.InfiniteTimeSpan);
         _timers.Add(timer);
@@ -74,7 +79,12 @@ public class ServerScheduler {
         }
 
         timer = new Timer(_ => {
-            if (action()) return;
+            try {
+                if (action()) return;
+            }
+            catch (Exception e) {
+                _server.HandleError(e);
+            }
             StopTask();
         }, null, delay, delay);
         _timers.Add(timer);

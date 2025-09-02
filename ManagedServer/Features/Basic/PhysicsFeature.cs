@@ -14,7 +14,7 @@ public class PhysicsFeature(Func<Entity, bool>? entityFilter = null) : ScopedFea
     public override void Register() {
         AddEventHandler<ServerTickEvent>(e => {
             foreach (World world in e.Server.Worlds) {
-                foreach (Entity entity in world.Entities.Entities.ToArray()) {
+                foreach (Entity entity in world.Entities.GetEntities()) {
                     if (entity is PlayerEntity || EntityFilter(entity)) {
                         continue;
                     }
@@ -26,7 +26,7 @@ public class PhysicsFeature(Func<Entity, bool>? entityFilter = null) : ScopedFea
     }
 
     private void MoveEntity(World world, Entity entity, double delta) {
-        if (!world.IsChunkLoaded(world.GetChunkPos(entity.Position))) {
+        if (!world.IsChunkLoaded(World.GetChunkPos(entity.Position))) {
             return;  // entity is in an unloaded chunk, skip physics
         }
         

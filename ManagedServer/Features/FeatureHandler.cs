@@ -26,4 +26,12 @@ public class FeatureHandler(IFeatureScope scope) {
         feature.Scope = scope;
         feature.Register();
     }
+    
+    public T Feature<T>() where T : ScopedFeature {
+        return (T)Features.First(f => f is T);
+    }
+    
+    public ScopedFeature Feature(Type type) {
+        return Features.First(f => f.GetType() == type);
+    }
 }

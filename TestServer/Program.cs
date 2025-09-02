@@ -1,8 +1,12 @@
 ﻿using TestServer.Servers.AnvilTesting;
 using TestServer.Servers.BlockSumoFFA;
+using TestServer.Servers.Everything;
 using TestServer.Servers.MlgRush;
 using TestServer.Servers.SkyWarsLuckyBlock;
 using TestServer.Servers.Transferer;
+
+// File.WriteAllBytes("anvilworld.polar", PolarLoader.CreateWorld(new AnvilLoader("anvilworld", VanillaRegistry.Data)));
+// return 0;
 
 if (args.Length == 0) {
     Console.WriteLine("Please specify a gamemode.");
@@ -15,7 +19,7 @@ switch (args[0]) {
         break;
     
     case "testing":
-        // await Everything.Start();
+        await Everything.Start();
         break;
     
     case "anvil":

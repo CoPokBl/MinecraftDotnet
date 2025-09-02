@@ -9,6 +9,14 @@ using NBT.Tags;
 
 namespace Minecraft.Implementations.AnvilWorld;
 
+/// <summary>
+/// Terrain provider for worlds stored in the Anvil format.
+/// </summary>
+/// <remarks>
+/// Keep in mind that worlds that are outdated may not load properly.
+/// If you are missing chunks then try loading the world in a newer version of Minecraft
+/// and trying again.
+/// </remarks>
 public class AnvilLoader : ITerrainProvider {
     private readonly MinecraftRegistry _registry;
     private readonly Dictionary<string, AnvilRegionFile> _regions = [];

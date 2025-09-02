@@ -37,7 +37,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     // Props
     public List<PlayerEntity> Players { get; } = [];
     public EventNode<IServerEvent> Events { get; }
-    public EntityManager Entities { get; }
+    public IEntityManager Entities { get; }
     public ManagedMinecraftServer Server { get; init; }
     public FeatureHandler FeatureHandler { get; }
     public Identifier DimensionId { get; }
@@ -136,7 +136,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             WorldAge = _time
         });
         
-        Entities.InformNewPlayer(player);
         SetPlayerLoadedChunks(player.Connection, []);  // reset, just in case they were in a different world
         player.SendPacket(new ClientBoundGameEventPacket {
             Event = GameEvent.StartWaitingForLevelChunks,
@@ -186,16 +185,18 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             }
             
             Vec2<int> chunkPos = new((int)Math.Floor(e.NewPos.X / 16), (int)Math.Floor(e.NewPos.Z / 16));
-            HandlePlayerMove(pe.Connection, chunkPos);
+            HandlePlayerMove(pe, chunkPos);
         });
         player.Connection.SetTag(CancelListenersActionTag, cancelAction);
         Players.Add(player);
         
         // Start sending chunks
-        HandlePlayerMove(player.Connection, GetChunkPos(player.Position));
+        HandlePlayerMove(player, GetChunkPos(player.Position));
     }
 
-    public void HandlePlayerMove(PlayerConnection connection, Vec2<int> chunkPos) {
+    public void HandlePlayerMove(PlayerEntity player, Vec2<int> chunkPos) {
+        PlayerConnection connection = player.Connection;
+        
         if (connection.HasTag(CurrentChunkTag) && connection.GetTagOrNull(CurrentChunkTag) == chunkPos) {
             // they haven't moved
             return;
@@ -210,7 +211,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         
         Log("Handling player move to chunk " + chunkPos);
         HashSet<Vec2<int>> loaded = GetPlayerLoadedChunks(connection);
-        // Console.WriteLine($"{loaded.Count} chunks are loaded");
+        Log($"{loaded.Count} chunks are loaded");
 
         List<MinecraftPacket> neededPackets = [];
         List<Vec2<int>> unloaded = [];
@@ -222,7 +223,11 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 Z = loadedChunk.Y
             });  // not within radius, unload it
             unloaded.Add(loadedChunk);
-            // Console.WriteLine($"Unloading {loadedChunk.X}, {loadedChunk.Z}");
+            
+            foreach (Entity entity in Entities.GetEntitiesInChunk(loadedChunk)) {
+                Entities.SendDespawnPackets(entity, player);
+            }
+            // Log($"Unloading {loadedChunk.X}, {loadedChunk.Y}");
         }
         foreach (Vec2<int> c in unloaded) {
             loaded.Remove(c);
@@ -240,23 +245,30 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 if (!loaded.Contains(chunk)) {
                     // okay, so we need to load chunk
                     toLoad[i++] = chunk;
+
+                    foreach (Entity newEntity in Entities.GetEntitiesInChunk(chunk)) {
+                        Entities.SendSpawnPackets(newEntity, player);
+                    }
                 }
             }
         }
 
         if (i != 0) AddChunkPackets(toLoad, i, neededPackets);
 
-        if (neededPackets.Count == 0) return;  // don't bother if nothing changed
-        
         neededPackets.Add(new ClientBoundSetCenterChunkPacket {
             X = chunkPos.X,
             Z = chunkPos.Y
         });
         
         IEnumerable<MinecraftPacket> orderedPackets = neededPackets.OrderBy(p => {
-            if (p is ClientBoundSetCenterChunkPacket) return 0;  // always do this first, otherwise we could get issues
-            if (p is not ClientBoundChunkDataAndUpdateLightPacket chunkP) return 100;  // do unload packets last (for faster load, client unloads anyway)
-            return new Vec2<int>(chunkP.ChunkX, chunkP.ChunkZ).DistanceTo(chunkPos);  // do closer chunks first for quicker load
+            // always do this first, otherwise the client might reject chunks
+            if (p is ClientBoundSetCenterChunkPacket) return -1;  // neg, avoid dist 0
+            
+            // do unload packets last (for faster load, client unloads anyway)
+            if (p is not ClientBoundChunkDataAndUpdateLightPacket chunkP) return 1000;
+            
+            // do closer chunks first for quicker load
+            return new Vec2<int>(chunkP.ChunkX, chunkP.ChunkZ).DistanceTo(chunkPos);
         });
         
         Queue<MinecraftPacket> waitingPackets = connection.GetTag(WaitingPacketsTag);
@@ -293,7 +305,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             Value = 0f
         });
         
-        HandlePlayerMove(player.Connection, GetChunkPos(player.Position));
+        HandlePlayerMove(player, GetChunkPos(player.Position));
     }
 
     private static HashSet<Vec2<int>> GetPlayerLoadedChunks(PlayerConnection connection) {
@@ -425,7 +437,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     // non-static so that you can use it with the world instance
     // eg. world.GetChunkPos instead of World.GetChunkPos
     // I think it's nicer this way
-    public Vec2<int> GetChunkPos(Vec3<double> pos) {
+    public static Vec2<int> GetChunkPos(Vec3<double> pos) {
         return new Vec2<int>((int)Math.Floor(pos.X / 16), (int)Math.Floor(pos.Z / 16));
     }
     
@@ -461,12 +473,11 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         Entity lightning = new(EntityType.LightningBolt) {
             Position = pos,
             Yaw = Angle.Zero,
-            Pitch = Angle.Zero,
-            NetId = Entities.NewNetId
+            Pitch = Angle.Zero
         };
-        Spawn(lightning);
+        lightning.SetWorld(this);
         
-        Server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(2), () => {
+        Server.Scheduler.ScheduleTask(Server.TargetTicksPerSecond * 2, () => {
             lightning.Despawn();
         });
     }
@@ -518,6 +529,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         for (int i = 0; i < count; i++) {
             ChunkData? data = RetrieveChunk(poses[i]);
             if (data == null) {
+                Log("Chunk at " + poses[i] + " is not loaded, loading now...");
                 LoadChunk(poses[i]);
                 continue;
             }
@@ -554,17 +566,38 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
         
         Task task = Task.Run(() => {
-            ChunkData data = new(Dimension.Height) {
-                ChunkX = pos.X,
-                ChunkZ = pos.Y
-            };
-            _provider.GetChunk(ref data);
-            if (data == null) {
-                throw new Exception($"Failed to load chunk at {pos}");
-            }
+            try {
+                ChunkData data = new(Dimension.Height) {
+                    ChunkX = pos.X,
+                    ChunkZ = pos.Y
+                };
+
+                Stopwatch sw;
+                if (Benchmark) {
+                    sw = Stopwatch.StartNew();
+                }
+                
+                _provider.GetChunk(ref data);
+                if (data == null!) {
+                    throw new Exception($"Failed to load chunk at {pos}");
+                }
         
-            data.PackData();
-            _chunks.TryAdd(pos, data);
+                data.PackData();
+                _chunks.TryAdd(pos, data);
+                
+                if (Benchmark && sw.ElapsedMilliseconds > 50) {
+                    Log($"[OUTLIER] Loaded chunk async at {pos} in {sw.ElapsedMilliseconds}ms");
+                }
+                if (Benchmark) {
+                    Log("Loaded chunk async at " + pos + " in " + sw.ElapsedMilliseconds + "ms");
+                }
+                
+                _chunkLoadingTasks.TryRemove(pos, out _);
+                Log("Removed chunk load task for " + pos);
+            }
+            catch (Exception e) {
+                Server.HandleError(e);
+            }
         });
         
         AddChunkLoadListener(pos, task);
@@ -574,11 +607,13 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     private void AddChunkLoadListener(Vec2<int> chunkPos, Task task) {
         _chunkLoadingTasks.TryAdd(chunkPos, task);
         task.ContinueWith(_ => {
+            ChunkData data = RetrieveChunk(chunkPos).ThrowIfNull();
+            // Log($"Sending loaded chunk ({chunkPos}) to {((AudiencesList)GetViewersOf(chunkPos)).Audiences.Length}");
             GetViewersOf(chunkPos).SendPacket(new ClientBoundChunkDataAndUpdateLightPacket {
                 ChunkX = chunkPos.X,
                 ChunkZ = chunkPos.Y,
-                Data = RetrieveChunk(chunkPos)!,
-                Light = _lighting.GenerateLighting(RetrieveChunk(chunkPos)!, this)
+                Data = data,
+                Light = _lighting.GenerateLighting(data, this)
             });
         });
     }
