@@ -63,6 +63,8 @@ public static class AnvilTesting {
                 }
             }
         });
+        
+        server.Start();
 
         await server.ListenTcp(25565);
     }
