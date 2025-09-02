@@ -320,7 +320,7 @@ public class PolarLoader : ITerrainProvider {
             }
         }
         else {
-            section.Fill(_registry.Blocks[blockPalette[0]]);
+            section.Fill(GetBlockFromString(blockPalette[0]));
         }
         
         string[] biomePalette = reader.ReadPrefixedArray(r => r.ReadString());
