@@ -24,17 +24,8 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
 
     public int EntityCount => _entitiesById.Count;
 
-    public void InformNewPlayer(PlayerEntity player) {
-        foreach (Entity entity in GetNearbyEntities(player.Position, viewDistanceBlocks)) {
-            if (!entity.ViewableRule(player)) {
-                continue;
-            }
-            player.SendMessage("You can see entity " + entity.NetId);
-            if (entity is PlayerEntity) {
-                player.SendMessage("It's a player!");
-            }
-            player.SendPackets(entity.GenerateSpawnEntityPackets());
-        }
+    public Entity[] GetEntitiesInChunk(Vec2<int> chunkPos) {
+        return _entitiesByChunk.GetValueOrDefault(chunkPos, []).ToArray();
     }
 
     /// <summary>
@@ -184,6 +175,22 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             };
         
         SendPacketsToViewers(entity, packet, HeadRotPacket(entity.NetId, yaw));
+    }
+
+    public void SendSpawnPackets(Entity entity, PlayerEntity player) {
+        if (!entity.ViewableRule(player)) {
+            return;
+        }
+        player.SendPackets(entity.GenerateSpawnEntityPackets());
+    }
+
+    public void SendDespawnPackets(Entity entity, PlayerEntity player) {
+        if (!entity.ViewableRule(player)) {
+            return;
+        }
+        player.SendPackets(new ClientBoundRemoveEntitiesPacket {
+            Entities = [entity.NetId]
+        });
     }
 
     private void RotateEntity(Entity entity, Angle yaw, Angle pitch) {

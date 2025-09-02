@@ -12,7 +12,6 @@ public interface IEntityManager {
     int EntityCount { get; }
     EventNode<IServerEvent> BaseEventNode { get; }
     
-    void InformNewPlayer(PlayerEntity player);
     void Respawn(Entity entity);
     void SendPacketsToViewers(Entity entity, params MinecraftPacket[] packets);
     Entity? GetEntity(int id);
@@ -21,11 +20,15 @@ public interface IEntityManager {
     PlayerEntity[] GetViewersOf(Entity entity);
     PlayerEntity[] GetPlayers();
     Entity[] GetNearbyEntities(Vec3<double> pos, double distance);
+    Entity[] GetEntitiesInChunk(Vec2<int> chunkPos);
 
     void Register(Entity entity, int? id = null);
     void Despawn(Entity entity);
     void MoveEntity(Entity entity, Vec3<double> newPos, Angle? yaw = null, Angle? pitch = null);
     void TeleportEntity(Entity entity, Vec3<double> newPos, Angle yaw, Angle pitch);
+
+    void SendSpawnPackets(Entity entity, PlayerEntity player);
+    void SendDespawnPackets(Entity entity, PlayerEntity player);
     
     public static Vec2<int>[] GetChunksInRadius(int chunkRadius) {
         int numberOfChunksInRadius = (chunkRadius * 2 + 1) * (chunkRadius * 2 + 1);
