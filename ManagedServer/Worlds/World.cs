@@ -609,7 +609,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         task.ContinueWith(_ => {
             ChunkData data = RetrieveChunk(chunkPos).ThrowIfNull();
             // Log($"Sending loaded chunk ({chunkPos}) to {((AudiencesList)GetViewersOf(chunkPos)).Audiences.Length}");
-            GetViewersOf(chunkPos).SendPacket(new ClientBoundChunkDataAndUpdateLightPacket {
+            GetAudienceOf(chunkPos).SendPacket(new ClientBoundChunkDataAndUpdateLightPacket {
                 ChunkX = chunkPos.X,
                 ChunkZ = chunkPos.Y,
                 Data = data,
@@ -627,21 +627,29 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
     #region viewers
 
-    public IAudience GetViewersOf(Vec2<int> chunkPos) {
-        int blockRange = _viewDistance * 16;
-        List<PlayerEntity> viewers = [];
-        viewers.AddRange(Players.Where(player => GetChunkPos(player.Position).IsWithinRadiusOf(chunkPos, blockRange)));
+    public IAudience GetAudienceOf(Vec2<int> chunkPos) {
         // ReSharper disable once CoVariantArrayConversion
-        return new AudiencesList(viewers.ToArray());
+        return new AudiencesList(GetViewersOf(chunkPos));
     }
     
     // get everyone who can see the block at the given position
-    public IAudience GetViewersOf(Vec3<int> pos) {
-        int blockRange = _viewDistance * 16;
-        List<PlayerEntity> viewers = [];
-        viewers.AddRange(Players.Where(player => player.Position.DistanceTo2D(pos) <= blockRange));
+    public IAudience GetAudienceOf(Vec3<int> pos) {
         // ReSharper disable once CoVariantArrayConversion
-        return new AudiencesList(viewers.ToArray());
+        return new AudiencesList(GetViewersOf(pos));
+    }
+    
+    public PlayerEntity[] GetViewersOf(Vec2<int> chunkPos) {
+        return Players
+            .Where(player => GetChunkPos(player.Position).IsWithinRadiusOf(chunkPos, _viewDistance))
+            .ToArray();
+    }
+    
+    public PlayerEntity[] GetViewersOf(Vec3<double> pos) {
+        return GetViewersOf(GetChunkPos(pos));
+    }
+    
+    public bool DoesPlayerHaveChunkLoaded(PlayerEntity player, Vec2<int> chunkPos) {
+        return GetPlayerLoadedChunks(player.Connection).Contains(chunkPos);
     }
 
     public void SendBlockUpdate(Vec3<int> pos, IAudience audience) {

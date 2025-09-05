@@ -29,7 +29,7 @@ public abstract class SkyWarsItem {
     }
 
     public static void DoKaboom(World world, Vec3<int> position, int explodeRadius, int launchRadius, double launchPower) {
-        IAudience audience = world.GetViewersOf(position);
+        IAudience audience = world.GetAudienceOf(position);
         
         // Destroy all blocks in a 5 block radius
         for (int x = -explodeRadius; x <= explodeRadius; x++) {

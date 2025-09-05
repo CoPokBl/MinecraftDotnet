@@ -457,7 +457,8 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
             Pitch = pitch ?? Angle.Zero,
             Flags = teleportFlags
         });
-        Position = pos;
+        
+        Move(pos, yaw, pitch);
         // base.Teleport(pos, yaw, pitch);   Don't tell everyone else
     }
 

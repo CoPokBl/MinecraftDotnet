@@ -7,8 +7,6 @@ using Minecraft.Implementations.Server.Events;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
-using Minecraft.Schemas.Entities;
-using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Entities;
@@ -38,12 +36,7 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         entity.NetId = id ?? NewNetId;
         entity.Manager = this;
 
-        Vec2<int> chunk = World.GetChunkPos(entity.Position);
-        if (!_entitiesByChunk.TryGetValue(chunk, out List<Entity>? value)) {
-            value = [];
-            _entitiesByChunk[chunk] = value;
-        }
-        value.Add(entity);
+        MoveEntityInStorage(entity, new Vec3<double>(int.MaxValue), entity.Position);
         _entitiesById[entity.NetId] = entity;
         
         SendPacketsToViewers(entity, entity.GenerateSpawnEntityPackets());
@@ -61,6 +54,44 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             if (value.Count == 0) {
                 _entitiesByChunk.Remove(chunk);
             }
+        }
+    }
+
+    private void MoveEntityInStorage(Entity entity, Vec3<double> from, Vec3<double> to) {
+        Vec2<int> fromChunk = World.GetChunkPos(from);
+        Vec2<int> toChunk = World.GetChunkPos(to);
+
+        if (fromChunk == toChunk) {
+            return;
+        }
+        
+        if (_entitiesByChunk.TryGetValue(fromChunk, out List<Entity>? fromList)) {
+            fromList.Remove(entity);
+            if (fromList.Count == 0) {
+                _entitiesByChunk.Remove(fromChunk);
+            }
+        }
+        
+        if (!_entitiesByChunk.TryGetValue(toChunk, out List<Entity>? toList)) {
+            toList = [];
+            _entitiesByChunk[toChunk] = toList;
+        }
+        toList.Add(entity);
+
+        if (entity.World == null) {
+            return;
+        }
+        
+        // Inform viewers of the chunk change
+        foreach (PlayerEntity player in entity.World.GetViewersOf(toChunk)) {
+            if (entity.World.DoesPlayerHaveChunkLoaded(player, fromChunk)) {
+                continue;  // they could already see it
+            }
+
+            // do it next tick so that the position is updated
+            entity.Server.Scheduler.ScheduleNextTick(() => {
+                SendSpawnPackets(entity, player);
+            });
         }
     }
 
@@ -138,6 +169,8 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             return;
         }
         
+        MoveEntityInStorage(entity, entity.Position, newPos);
+        
         Vec3<float> deltaPos = new(
             (float)newPos.X - (float)entity.Position.X, 
             (float)newPos.Y - (float)entity.Position.Y, 
@@ -164,6 +197,8 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     }
 
     public void TeleportEntity(Entity entity, Vec3<double> newPos, Angle yaw, Angle pitch) {
+        MoveEntityInStorage(entity, entity.Position, newPos);
+        
         MinecraftPacket packet =
             new ClientBoundTeleportEntityPacket {
                 EntityId = entity.NetId,
