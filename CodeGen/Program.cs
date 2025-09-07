@@ -129,6 +129,8 @@ RunStep("Consume Effects", ConsumeEffectGen.CreateConsumeEffects);
 RunStep("Block Entity Types", BlockEntityTypeCodeGen.CreateBlockEntityTypes);
 RunStep("Attributes", AttributeCodeGen.CreateAttributeEntries);
 RunStep("Argument Types", ArgumentTypeCodeGen.CreateArgumentTypeEntries);
+RunStep("Statistic Types", StatisticTypeCodeGen.CreateStatisticTypes);
+RunStep("Custom Statistics", CustomStatisticCodeGen.CreateCustomStatistics);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

@@ -19,7 +19,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2025-09-05
+// Last updated: 2025-09-07
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -1326,6 +1326,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Login, true, 0x02, typeof(ClientBoundLoginSuccessPacket), ClientBoundLoginSuccessPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x01, typeof(ClientBoundSpawnEntityPacket), ClientBoundSpawnEntityPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x02, typeof(ClientBoundEntityAnimationPacket), ClientBoundEntityAnimationPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x03, typeof(ClientBoundAwardStatisticsPacket), ClientBoundAwardStatisticsPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x04, typeof(ClientBoundAcknowledgeBlockChangePacket), ClientBoundAcknowledgeBlockChangePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x05, typeof(ClientBoundSetBlockDestroyStagePacket), ClientBoundSetBlockDestroyStagePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x06, typeof(ClientBoundBlockEntityDataPacket), ClientBoundBlockEntityDataPacket.Deserialiser);
@@ -4903,6 +4904,93 @@ public static class VanillaRegistry {
         Data.CommandArgumentTypes.Add(CommandArgumentType.Swizzle);
         Data.CommandArgumentTypes.Add(CommandArgumentType.Vec2);
         Data.CommandArgumentTypes.Add(CommandArgumentType.Vec3);
+
+        Data.StatisticTypes.Add(StatisticType.Broken);
+        Data.StatisticTypes.Add(StatisticType.Crafted);
+        Data.StatisticTypes.Add(StatisticType.Custom);
+        Data.StatisticTypes.Add(StatisticType.Dropped);
+        Data.StatisticTypes.Add(StatisticType.Killed);
+        Data.StatisticTypes.Add(StatisticType.KilledBy);
+        Data.StatisticTypes.Add(StatisticType.Mined);
+        Data.StatisticTypes.Add(StatisticType.PickedUp);
+        Data.StatisticTypes.Add(StatisticType.Used);
+
+        Data.CustomStatistics.Add(CustomStatistic.AnimalsBred);
+        Data.CustomStatistics.Add(CustomStatistic.AviateOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.BellRing);
+        Data.CustomStatistics.Add(CustomStatistic.BoatOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.CleanArmor);
+        Data.CustomStatistics.Add(CustomStatistic.CleanBanner);
+        Data.CustomStatistics.Add(CustomStatistic.CleanShulkerBox);
+        Data.CustomStatistics.Add(CustomStatistic.ClimbOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.CrouchOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.DamageAbsorbed);
+        Data.CustomStatistics.Add(CustomStatistic.DamageBlockedByShield);
+        Data.CustomStatistics.Add(CustomStatistic.DamageDealt);
+        Data.CustomStatistics.Add(CustomStatistic.DamageDealtAbsorbed);
+        Data.CustomStatistics.Add(CustomStatistic.DamageDealtResisted);
+        Data.CustomStatistics.Add(CustomStatistic.DamageResisted);
+        Data.CustomStatistics.Add(CustomStatistic.DamageTaken);
+        Data.CustomStatistics.Add(CustomStatistic.Deaths);
+        Data.CustomStatistics.Add(CustomStatistic.Drop);
+        Data.CustomStatistics.Add(CustomStatistic.EatCakeSlice);
+        Data.CustomStatistics.Add(CustomStatistic.EnchantItem);
+        Data.CustomStatistics.Add(CustomStatistic.FallOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.FillCauldron);
+        Data.CustomStatistics.Add(CustomStatistic.FishCaught);
+        Data.CustomStatistics.Add(CustomStatistic.FlyOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.HappyGhastOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.HorseOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.InspectDispenser);
+        Data.CustomStatistics.Add(CustomStatistic.InspectDropper);
+        Data.CustomStatistics.Add(CustomStatistic.InspectHopper);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithAnvil);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithBeacon);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithBlastFurnace);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithBrewingstand);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithCampfire);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithCartographyTable);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithCraftingTable);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithFurnace);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithGrindstone);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithLectern);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithLoom);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithSmithingTable);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithSmoker);
+        Data.CustomStatistics.Add(CustomStatistic.InteractWithStonecutter);
+        Data.CustomStatistics.Add(CustomStatistic.Jump);
+        Data.CustomStatistics.Add(CustomStatistic.LeaveGame);
+        Data.CustomStatistics.Add(CustomStatistic.MinecartOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.MobKills);
+        Data.CustomStatistics.Add(CustomStatistic.OpenBarrel);
+        Data.CustomStatistics.Add(CustomStatistic.OpenChest);
+        Data.CustomStatistics.Add(CustomStatistic.OpenEnderchest);
+        Data.CustomStatistics.Add(CustomStatistic.OpenShulkerBox);
+        Data.CustomStatistics.Add(CustomStatistic.PigOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.PlayNoteblock);
+        Data.CustomStatistics.Add(CustomStatistic.PlayRecord);
+        Data.CustomStatistics.Add(CustomStatistic.PlayTime);
+        Data.CustomStatistics.Add(CustomStatistic.PlayerKills);
+        Data.CustomStatistics.Add(CustomStatistic.PotFlower);
+        Data.CustomStatistics.Add(CustomStatistic.RaidTrigger);
+        Data.CustomStatistics.Add(CustomStatistic.RaidWin);
+        Data.CustomStatistics.Add(CustomStatistic.SleepInBed);
+        Data.CustomStatistics.Add(CustomStatistic.SneakTime);
+        Data.CustomStatistics.Add(CustomStatistic.SprintOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.StriderOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.SwimOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.TalkedToVillager);
+        Data.CustomStatistics.Add(CustomStatistic.TargetHit);
+        Data.CustomStatistics.Add(CustomStatistic.TimeSinceDeath);
+        Data.CustomStatistics.Add(CustomStatistic.TimeSinceRest);
+        Data.CustomStatistics.Add(CustomStatistic.TotalWorldTime);
+        Data.CustomStatistics.Add(CustomStatistic.TradedWithVillager);
+        Data.CustomStatistics.Add(CustomStatistic.TriggerTrappedChest);
+        Data.CustomStatistics.Add(CustomStatistic.TuneNoteblock);
+        Data.CustomStatistics.Add(CustomStatistic.UseCauldron);
+        Data.CustomStatistics.Add(CustomStatistic.WalkOnWaterOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.WalkOneCm);
+        Data.CustomStatistics.Add(CustomStatistic.WalkUnderWaterOneCm);
 
     }
 }
