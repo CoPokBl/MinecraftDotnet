@@ -6,12 +6,12 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundSynchronisePlayerPositionPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:player_position";
     
-    public required Angle Pitch;
-    public required Angle Yaw;
-    public required Vec3<double> Velocity;
-    public required Vec3<double> Position;
-    public required int TeleportId;
-    public required TeleportFlags Flags;
+    public required Angle Pitch { get; init; }
+    public required Angle Yaw { get; init; }
+    public required Vec3<double> Velocity { get; init; }
+    public required Vec3<double> Position { get; init; }
+    public required int TeleportId { get; init; }
+    public required TeleportFlags Flags { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

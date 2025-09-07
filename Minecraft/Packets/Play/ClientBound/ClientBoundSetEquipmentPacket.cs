@@ -9,8 +9,8 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundSetEquipmentPacket() : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:set_equipment";
 
-    public required int EntityId;
-    public required Dictionary<EquipmentSlot, ItemStack> Equipment;
+    public required int EntityId { get; init; }
+    public required Dictionary<EquipmentSlot, ItemStack> Equipment { get; init; }
 
     [SetsRequiredMembers]
     public ClientBoundSetEquipmentPacket(int entityId, Dictionary<EquipmentSlot, ItemStack> equipment) : this() {

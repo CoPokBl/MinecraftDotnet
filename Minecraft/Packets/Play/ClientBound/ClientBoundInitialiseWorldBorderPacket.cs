@@ -5,14 +5,14 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundInitialiseWorldBorderPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:initialize_border";
     
-    public required double X;
-    public required double Z;
-    public required double OldDiameter;
-    public required double NewDiameter;
-    public required long Speed;
-    public required int PortalTeleportBoundary;
-    public required int WarningBlocks;
-    public required int WarningTime;
+    public required double X { get; init; }
+    public required double Z { get; init; }
+    public required double OldDiameter { get; init; }
+    public required double NewDiameter { get; init; }
+    public required long Speed { get; init; }
+    public required int PortalTeleportBoundary { get; init; }
+    public required int WarningBlocks { get; init; }
+    public required int WarningTime { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

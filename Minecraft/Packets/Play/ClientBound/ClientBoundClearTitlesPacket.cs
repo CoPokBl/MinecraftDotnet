@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundClearTitlesPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:clear_titles";
     
-    public required bool Reset;
+    public required bool Reset { get; init; }
     
     protected override DataWriter WriteData(DataWriter w) {
         return w

@@ -7,13 +7,13 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundClickContainerPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:container_click";
 
-    public required int WindowId;
-    public required int StateId;
-    public required short Slot;
-    public required sbyte Button;
-    public required int Mode;
-    public required Dictionary<short, HashedSlot?> ChangedSlots;
-    public required HashedSlot? CursorItem;
+    public required int WindowId { get; init; }
+    public required int StateId { get; init; }
+    public required short Slot { get; init; }
+    public required sbyte Button { get; init; }
+    public required int Mode { get; init; }
+    public required Dictionary<short, HashedSlot?> ChangedSlots { get; init; }
+    public required HashedSlot? CursorItem { get; init; }
     
     protected override DataWriter WriteData(DataWriter w, MinecraftRegistry reg) {
         return

@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Login.ClientBound;
 public class ClientBoundLoginSuccessPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:login_finished";
     
-    public required string Username;
-    public required Guid Uuid;
+    public required string Username { get; init; }
+    public required Guid Uuid { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         w.WriteUuid(Uuid);

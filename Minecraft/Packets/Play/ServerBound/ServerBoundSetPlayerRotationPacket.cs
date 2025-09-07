@@ -5,9 +5,9 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundSetPlayerRotationPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:move_player_rot";
     
-    public required float Pitch;
-    public required float Yaw;
-    public required MovePlayerFlags Flags;
+    public required float Pitch { get; init; }
+    public required float Yaw { get; init; }
+    public required MovePlayerFlags Flags { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

@@ -5,9 +5,9 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundPickupItemPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:take_item_entity";
 
-    public required int CollectedEntityId;
-    public required int CollectorEntityId;
-    public required int PickupItemCount;
+    public required int CollectedEntityId { get; init; }
+    public required int CollectorEntityId { get; init; }
+    public required int PickupItemCount { get; init; }
     
     protected override DataWriter WriteData(DataWriter w) {
         return w

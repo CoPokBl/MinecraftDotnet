@@ -7,7 +7,7 @@ namespace Minecraft.Packets.Config.ClientBound;
 public class ClientBoundCustomReportDetailsPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:custom_report_details";
     
-    public required Detail[] Details;
+    public required Detail[] Details { get; init; }
 
     public record Detail(string Title, string Description) : INetworkType<Detail> {
         public DataWriter WriteData(DataWriter writer, MinecraftRegistry _) {

@@ -8,8 +8,8 @@ namespace Minecraft.Packets;
 public class UnknownPacket : MinecraftPacket {
     public override Identifier Identifier => "minecraftcs:unknown";
     
-    public required int Id;
-    public required byte[] Data;
+    public required int Id { get; init; }
+    public required byte[] Data { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w.Write(Data);

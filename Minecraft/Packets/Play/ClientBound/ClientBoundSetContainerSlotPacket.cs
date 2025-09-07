@@ -7,10 +7,10 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundSetContainerSlotPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:container_set_slot";
     
-    public required int WindowId;
-    public required int StateId;
-    public required short SlotId;
-    public required ItemStack Data;
+    public required int WindowId { get; init; }
+    public required int StateId { get; init; }
+    public required short SlotId { get; init; }
+    public required ItemStack Data { get; init; }
 
     protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w

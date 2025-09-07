@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Config.ServerBound;
 public class ServerBoundResourcePackResponsePacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:resource_pack";
     
-    public required Guid PackId;
-    public required PackResponse Result;
+    public required Guid PackId { get; init; }
+    public required PackResponse Result { get; init; }
     
     public enum PackResponse {
         SuccessfulDownload = 0,

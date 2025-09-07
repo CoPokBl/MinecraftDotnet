@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundChunkBatchFinishedPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:chunk_batch_finished";
     
-    public required int BatchSize;
+    public required int BatchSize { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

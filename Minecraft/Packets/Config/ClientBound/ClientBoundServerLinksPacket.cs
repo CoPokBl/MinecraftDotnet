@@ -9,7 +9,7 @@ namespace Minecraft.Packets.Config.ClientBound;
 public class ClientBoundServerLinksPacket() : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:server_links";
     
-    public required ServerLink[] Links;
+    public required ServerLink[] Links { get; init; }
 
     [SetsRequiredMembers]
     public ClientBoundServerLinksPacket(params ServerLink[] links) : this() {

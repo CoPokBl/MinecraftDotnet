@@ -6,10 +6,10 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundPlayerActionPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:player_action";
     
-    public required Status ActionStatus;
-    public required Vec3<int> Location;
-    public required BlockFace Face;
-    public required int Sequence;
+    public required Status ActionStatus { get; init; }
+    public required Vec3<int> Location { get; init; }
+    public required BlockFace Face { get; init; }
+    public required int Sequence { get; init; }
 
     public enum Status {
         StartedDigging,

@@ -5,7 +5,7 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundSwingArmPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:swing";
     
-    public required Hand UsedHand;
+    public required Hand UsedHand { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

@@ -6,9 +6,9 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundSetBlockDestroyStagePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:block_destruction";
     
-    public required int EntityId;
-    public required Vec3<int> Block;
-    public required byte Stage;
+    public required int EntityId { get; init; }
+    public required Vec3<int> Block { get; init; }
+    public required byte Stage { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

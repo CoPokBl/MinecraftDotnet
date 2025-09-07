@@ -260,7 +260,15 @@ server.Events.AddListener<ServerPacketEvent>(e => {
     switch (e.Packet) {
         case ClientBoundSynchronisePlayerPositionPacket sp: {
             if (antiKb) {
-                sp.Velocity = Vec3<double>.Zero;
+                // Create a new packet with modified velocity
+                e.Packet = new ClientBoundSynchronisePlayerPositionPacket {
+                    Position = sp.Position,
+                    Yaw = sp.Yaw,
+                    Pitch = sp.Pitch,
+                    Flags = sp.Flags,
+                    TeleportId = sp.TeleportId,
+                    Velocity = Vec3<double>.Zero
+                };
                 e.Connection.Player.SendSystemMessage("Anti-Knockback is enabled, velocity set to zero.");
             }
             break;

@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundEntityAnimationPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:animate";
     
-    public required int EntityId;
-    public required AnimationType Animation;
+    public required int EntityId { get; init; }
+    public required AnimationType Animation { get; init; }
 
     public enum AnimationType {
         SwingMainArm = 0,

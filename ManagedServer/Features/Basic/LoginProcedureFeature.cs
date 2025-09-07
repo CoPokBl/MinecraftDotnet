@@ -274,6 +274,8 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                     throw new Exception("You must specify a spawn world for joining players in the PlayerPreLoginEvent.");
                 }
 
+                int pEntityId = Random.Shared.Next();
+                
                 ClientBoundLoginPacket packet = new() {
                     DimensionName = preLoginEvent.World.DimensionId,
                     DimensionType = Scope.Server.Dimensions.Keys.ToList()
@@ -283,7 +285,7 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                     DoLimitedCrafting = false,
                     EnableRespawnScreen = true,
                     EnforcesSecureChat = false,
-                    EntityId = 0,
+                    EntityId = pEntityId,
                     GameMode = preLoginEvent.GameMode,
                     SeaLevel = 64,
                     PortalCooldown = 0,
@@ -298,10 +300,6 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                     IsHardcore = false
                 };
                 //_loginPacketProvider.Invoke(e.Connection);
-                packet.GameMode = preLoginEvent.GameMode;
-
-                int pEntityId = Random.Shared.Next();
-                packet.EntityId = pEntityId;
             
                 // send the play login packet
                 e.Connection.SendPacket(packet);

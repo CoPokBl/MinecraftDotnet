@@ -8,13 +8,13 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundParticlePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:level_particles";
     
-    public required bool LongDistance;
-    public required bool AlwaysVisible;
-    public required Vec3<double> Position;
-    public required Vec3<float> Offset;
-    public required float MaxSpeed;
-    public required int ParticleCount;
-    public required IParticle Particle;
+    public required bool LongDistance { get; init; }
+    public required bool AlwaysVisible { get; init; }
+    public required Vec3<double> Position { get; init; }
+    public required Vec3<float> Offset { get; init; }
+    public required float MaxSpeed { get; init; }
+    public required int ParticleCount { get; init; }
+    public required IParticle Particle { get; init; }
     
     protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w

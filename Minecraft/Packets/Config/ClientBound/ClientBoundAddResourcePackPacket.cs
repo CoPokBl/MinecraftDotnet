@@ -6,8 +6,8 @@ namespace Minecraft.Packets.Config.ClientBound;
 public class ClientBoundAddResourcePackPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:resource_pack_push";
     
-    public required Guid Uuid;
-    public required string Url;
+    public required Guid Uuid { get; init; }
+    public required string Url { get; init; }
     
     /// <summary>
     /// 40 character hexadecimal string representing the SHA-1 hash of the resource pack file.
@@ -15,7 +15,7 @@ public class ClientBoundAddResourcePackPacket : ClientBoundPacket {
     /// </summary>
     public string Hash = "";
 
-    public required bool Forced;
+    public required bool Forced { get; init; }
     public TextComponent? Prompt;
 
     protected override DataWriter WriteData(DataWriter w) {

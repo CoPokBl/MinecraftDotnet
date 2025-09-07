@@ -5,9 +5,9 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundSetHealthPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:set_health";
     
-    public required float Health;
-    public required int Food;
-    public required float Saturation;
+    public required float Health { get; init; }
+    public required int Food { get; init; }
+    public required float Saturation { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

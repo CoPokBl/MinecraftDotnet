@@ -6,8 +6,8 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundSystemChatMessagePacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:system_chat";
     
-    public required TextComponent Content;
-    public required bool ActionBar;
+    public required TextComponent Content { get; init; }
+    public required bool ActionBar { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

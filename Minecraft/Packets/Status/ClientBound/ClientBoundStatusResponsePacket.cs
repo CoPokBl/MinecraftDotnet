@@ -14,10 +14,10 @@ public class ClientBoundStatusResponsePacket : ClientBoundPacket {
     public string? FavIcon;
     public TextComponent? Description;
     public SamplePlayer[]? SamplePlayers;
-    public required int OnlinePlayers;
-    public required int MaxPlayers;
-    public required int VersionProtocol;
-    public required string VersionName;
+    public required int OnlinePlayers { get; init; }
+    public required int MaxPlayers { get; init; }
+    public required int VersionProtocol { get; init; }
+    public required string VersionName { get; init; }
 
     public string ToJson() {
         JObject data = new() {

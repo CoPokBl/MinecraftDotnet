@@ -5,9 +5,9 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundPlayerCommandPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:player_command";
     
-    public required int EntityId;
-    public required PlayerAction PlayAction;
-    public required int JumpBoost;
+    public required int EntityId { get; init; }
+    public required PlayerAction PlayAction { get; init; }
+    public required int JumpBoost { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

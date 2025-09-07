@@ -5,26 +5,26 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundLoginPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:login";
     
-    public required bool EnforcesSecureChat;
-    public required int SeaLevel;
-    public required int PortalCooldown;
+    public required bool EnforcesSecureChat { get; init; }
+    public required int SeaLevel { get; init; }
+    public required int PortalCooldown { get; init; }
     public DeathLocation? Location;
-    public required bool IsFlat;
-    public required bool IsDebug;
-    public required GameMode PreviousGameMode;
-    public required GameMode GameMode;
-    public required long HashedSeed;
-    public required Identifier DimensionName;
-    public required int DimensionType;
-    public required bool DoLimitedCrafting;
-    public required bool EnableRespawnScreen;
-    public required bool ReducedDebugInfo;
-    public required int SimulationDistance;
-    public required int ViewDistance;
-    public required int MaxPlayers;
-    public required Identifier[] Dimensions;
-    public required bool IsHardcore;
-    public required int EntityId;
+    public required bool IsFlat { get; init; }
+    public required bool IsDebug { get; init; }
+    public required GameMode PreviousGameMode { get; init; }
+    public required GameMode GameMode { get; init; }
+    public required long HashedSeed { get; init; }
+    public required Identifier DimensionName { get; init; }
+    public required int DimensionType { get; init; }
+    public required bool DoLimitedCrafting { get; init; }
+    public required bool EnableRespawnScreen { get; init; }
+    public required bool ReducedDebugInfo { get; init; }
+    public required int SimulationDistance { get; init; }
+    public required int ViewDistance { get; init; }
+    public required int MaxPlayers { get; init; }
+    public required Identifier[] Dimensions { get; init; }
+    public required bool IsHardcore { get; init; }
+    public required int EntityId { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

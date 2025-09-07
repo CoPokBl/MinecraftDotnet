@@ -11,7 +11,7 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundSetCameraPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:set_camera";
     
-    public required int EntityId;
+    public required int EntityId { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

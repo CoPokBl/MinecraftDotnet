@@ -86,9 +86,9 @@ public class DataTypesTest {
 
     [Test]
     public void TestBitArrayRange() {
-        BitArray arr = new([true, true, false, false, true, false, true]);
+        BitArray arr = new(new bool[] {true, true, false, false, true, false, true});
         BitArray range = arr.Range(1, 3);
-        Assert.That(range, Is.EqualTo([true, false, false]));
+        Assert.That(range, Is.EqualTo(new bool[] {true, false, false}));
     }
     
     [Test]

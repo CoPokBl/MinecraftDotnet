@@ -5,8 +5,8 @@ namespace Minecraft.Packets.Play.ServerBound;
 public class ServerBoundPickItemFromEntityPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:pick_item_from_entity";
     
-    public required int EntityId;
-    public required bool IncludeData;
+    public required int EntityId { get; init; }
+    public required bool IncludeData { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

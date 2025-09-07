@@ -5,17 +5,17 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundRespawnPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:respawn";
     
-    public required int DimensionType;
-    public required Identifier DimensionName;
-    public required long HashedSeed;
-    public required GameMode GameMode;
-    public required GameMode PreviousGameMode;
-    public required bool IsDebug;
-    public required bool IsFlat;
+    public required int DimensionType { get; init; }
+    public required Identifier DimensionName { get; init; }
+    public required long HashedSeed { get; init; }
+    public required GameMode GameMode { get; init; }
+    public required GameMode PreviousGameMode { get; init; }
+    public required bool IsDebug { get; init; }
+    public required bool IsFlat { get; init; }
     public DeathLocation? Location;
-    public required int PortalCooldown;
-    public required int SeaLevel;
-    public required DataKeptTypes DataKept;
+    public required int PortalCooldown { get; init; }
+    public required int SeaLevel { get; init; }
+    public required DataKeptTypes DataKept { get; init; }
 
     [Flags]
     public enum DataKeptTypes {

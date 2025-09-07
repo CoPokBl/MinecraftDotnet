@@ -7,15 +7,15 @@ namespace Minecraft.Packets.Play.ClientBound;
 public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:add_entity";
     
-    public required int Id;
-    public required Guid Uuid;
-    public required IEntityType EntityType;
-    public required Vec3<double> Position;
-    public required Angle Pitch;
-    public required Angle Yaw;
-    public required Angle HeadYaw;
-    public required int Data;
-    public required Vec3<short> Velocity;
+    public required int Id { get; init; }
+    public required Guid Uuid { get; init; }
+    public required IEntityType EntityType { get; init; }
+    public required Vec3<double> Position { get; init; }
+    public required Angle Pitch { get; init; }
+    public required Angle Yaw { get; init; }
+    public required Angle HeadYaw { get; init; }
+    public required int Data { get; init; }
+    public required Vec3<short> Velocity { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {
         return w

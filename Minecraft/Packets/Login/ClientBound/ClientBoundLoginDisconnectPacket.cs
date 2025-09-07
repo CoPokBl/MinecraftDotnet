@@ -7,7 +7,7 @@ namespace Minecraft.Packets.Login.ClientBound;
 public class ClientBoundLoginDisconnectPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:login_disconnect";
     
-    public required TextComponent Reason;  // in JSON for some stupid reason, not in NBT
+    public required TextComponent Reason { get; init; }  // in JSON for some stupid reason, not in NBT
 
     protected override DataWriter WriteData(DataWriter w) {
         return w
