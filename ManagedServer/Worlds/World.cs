@@ -235,6 +235,9 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             unloaded.Add(loadedChunk);
             
             foreach (Entity entity in Entities.GetEntitiesInChunk(loadedChunk)) {
+                if (entity == player) {
+                    continue;
+                }
                 Entities.SendDespawnPackets(entity, player);
             }
             // Log($"Unloading {loadedChunk.X}, {loadedChunk.Y}");
@@ -257,6 +260,9 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                     toLoad[i++] = chunk;
 
                     foreach (Entity newEntity in Entities.GetEntitiesInChunk(chunk)) {
+                        if (newEntity == player) {
+                            continue;
+                        }
                         Entities.SendSpawnPackets(newEntity, player);
                     }
                 }

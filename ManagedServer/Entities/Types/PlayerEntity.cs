@@ -82,14 +82,6 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
         }
     }
     
-    public Func<PlayerEntity, bool> PlayerViewableRule {
-        get => _playerViewableRule;
-        set {
-            _playerViewableRule = value;
-            UpdateViewers();
-        }
-    }
-    
     public int Level {
         get => _level;
         set {
@@ -157,7 +149,6 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
     private Inventory.Inventory? _openInventory;
     private int _activeHotbarSlot;
     private ItemStack _cursorItem = ItemStack.Air;
-    private Func<PlayerEntity, bool> _playerViewableRule = _ => true;
     private PlayerSkin? _skin;
     
     private readonly ConcurrentQueue<MinecraftPacket> _packetSendingQueue = new();
@@ -169,7 +160,6 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
         Server = server;
         Name = name;
         Connection = connection;
-        ViewableRule = p => p != this && PlayerViewableRule(p);
         Inventory = new PlayerInventory(server, this);
         
         // There doesn't seem to be a good way to get this default value

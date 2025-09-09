@@ -1,9 +1,11 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
+using Minecraft;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
+using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
@@ -12,6 +14,8 @@ using Minecraft.Schemas.Vec;
 namespace ManagedServer.Entities;
 
 public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistanceBlocks) : IEntityManager {
+    private static readonly Tag<HashSet<int>> VisibleEntitiesTag = new("managedserver:entitymanager:visible_entities");
+    
     public EventNode<IServerEvent> BaseEventNode { get; } = baseEventNode;
 
     private readonly Dictionary<Vec2<int>, List<Entity>> _entitiesByChunk = [];
@@ -37,8 +41,12 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
 
         MoveEntityInStorage(entity, new Vec3<double>(int.MaxValue), entity.Position);
         _entitiesById[entity.NetId] = entity;
-        
-        SendPacketsToViewers(entity, entity.GenerateSpawnEntityPackets());
+
+        MinecraftPacket[] spawnPackets = entity.GenerateSpawnEntityPackets();
+        foreach (PlayerEntity viewer in GetViewersOf(entity)) {
+            viewer.SendPackets(spawnPackets);
+            AddViewedEntity(viewer, entity.NetId);
+        }
     }
 
     public void Despawn(Entity entity) {
@@ -59,18 +67,36 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     public void RefreshViewers(Entity entity) {
         foreach (PlayerEntity player in GetViewersOf(entity, true)) {
             if (entity.ViewableRule(player)) {
+                if (player.GetTagOrDefault(VisibleEntitiesTag, []).Contains(entity.NetId)) {
+                    continue;  // already visible
+                }
                 SendSpawnPackets(entity, player);
             } else {
+                if (!player.GetTagOrDefault(VisibleEntitiesTag, []).Contains(entity.NetId)) {
+                    continue;  // already not visible
+                }
                 SendDespawnPackets(entity, player);
             }
         }
     }
     
     public void RefreshPlayerVisibleEntities(PlayerEntity player) {
+        HashSet<int> visibleEntities = player.GetTagOrDefault(VisibleEntitiesTag, []);
+        
         foreach (Entity entity in GetNearbyEntities(player.Position, viewDistanceBlocks)) {
+            if (entity == player) {
+                continue;
+            }
+            
             if (entity.ViewableRule(player)) {
+                if (visibleEntities.Contains(entity.NetId)) {
+                    continue;  // already visible
+                }
                 SendSpawnPackets(entity, player);
             } else {
+                if (!visibleEntities.Contains(entity.NetId)) {
+                    continue;  // already not visible
+                }
                 SendDespawnPackets(entity, player);
             }
         }
@@ -143,12 +169,15 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     // this could use some optimising
     public PlayerEntity[] GetViewersOf(Entity entity, bool ignoreViewableRule = false) {
         return GetNearbyEntities(entity.Position, viewDistanceBlocks)
-            .Where(e => e is PlayerEntity pe && 
-                        (ignoreViewableRule || entity.ViewableRule(pe)))
+            .Where(e => 
+                e is PlayerEntity pe &&  // Only find players nearby
+                (ignoreViewableRule || entity.ViewableRule(pe)) &&  // They can view the entity
+                pe != entity)  // Don't include the entity itself if it's a player
             .Select(e => (PlayerEntity)e)
             .ToArray();
     }
 
+    // this is very slow for large numbers of entities
     public PlayerEntity[] GetPlayers() {
         return _entitiesById.Values
             .Where(e => e is PlayerEntity)
@@ -235,12 +264,14 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             return;
         }
         player.SendPackets(entity.GenerateSpawnEntityPackets());
+        AddViewedEntity(player, entity.NetId);
     }
 
     public void SendDespawnPackets(Entity entity, PlayerEntity player) {
         player.SendPackets(new ClientBoundRemoveEntitiesPacket {
             Entities = [entity.NetId]
         });
+        RemoveViewedEntity(player, entity.NetId);
     }
 
     private void RotateEntity(Entity entity, Angle yaw, Angle pitch) {
@@ -259,5 +290,21 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             EntityId = id,
             Yaw = yaw
         };
+    }
+    
+    private static void AddViewedEntity(PlayerEntity player, int entityId) {
+        if (!player.HasTag(VisibleEntitiesTag)) {
+            player.SetTag(VisibleEntitiesTag, []);
+        }
+        
+        player.GetTag(VisibleEntitiesTag).Add(entityId);
+    }
+    
+    private static void RemoveViewedEntity(PlayerEntity player, int entityId) {
+        if (!player.HasTag(VisibleEntitiesTag)) {
+            return;
+        }
+        
+        player.GetTag(VisibleEntitiesTag).Remove(entityId);
     }
 }
