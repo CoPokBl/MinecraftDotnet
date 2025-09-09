@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>MinecraftDotnet.Protocol</PackageId>
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
         <Title>MinecraftDotnet Protocol</Title>
         <Authors>CoPokBl</Authors>
         <PackageProjectUrl>https://github.com/CoPokBl/MinecraftDotnet</PackageProjectUrl>

@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>MinecraftDotnet.ManagedServer</PackageId>
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
         <Title>Minecraft Server Library</Title>
         <Authors>CoPokBl</Authors>
         <Description>A library for easily creating Minecraft servers. Similar to Minestom.</Description>

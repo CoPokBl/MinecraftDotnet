@@ -7,7 +7,7 @@
         <RootNamespace>Nbt</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>MinecraftDotnet.NBT</PackageId>
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
         <Title>NBT</Title>
         <Authors>CoPokBl</Authors>
         <Description>An NBT library with full support for Minecraft structured NBT.</Description>
