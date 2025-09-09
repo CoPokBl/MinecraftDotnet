@@ -88,8 +88,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     private const int UnloadDistanceMod = 1;  // Used to reduce the number of packets needed when travelling back and forth
 
     // basic log method, can be replaced with something better later
-    private static void Log(string msg) {
-        if (Debug) Console.WriteLine("[WORLD] " + msg);
+    private void Log(string msg) {
+        if (Debug) Console.WriteLine($"[WORLD {GetHashCode()}] " + msg);
     }
     
     internal World(ManagedMinecraftServer server, EventNode<IServerEvent> baseEventNode, ITerrainProvider provider, 
@@ -136,11 +136,15 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             WorldAge = _time
         });
         
+        // Reset all tag data
         SetPlayerLoadedChunks(player.Connection, []);  // reset, just in case they were in a different world
+        player.RemoveTag(CurrentChunkTag);
+        
         player.SendPacket(new ClientBoundGameEventPacket {
             Event = GameEvent.StartWaitingForLevelChunks,
             Value = 0f
         });
+        Log("Sent StartWaitingForLevelChunks to " + player.Name);
         Queue<MinecraftPacket> waitingPackets = new();
         player.Connection.SetTag(WaitingPacketsTag, waitingPackets);
 
@@ -167,7 +171,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
                 // Console.WriteLine($"Sending {packets.Count} packets for terrain");
                 player.SendPackets(packets.ToArray());
-                Log("Waiting packets: " + waitingPackets.Count + $" (Did in {sw.ElapsedMilliseconds})");
+                Log("Waiting packets: " + waitingPackets.Count + $" (Did {packets.Count} in {sw.ElapsedMilliseconds})");
             }
         });
         Action cancelAction = null!;
@@ -191,23 +195,29 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         Players.Add(player);
         
         // Start sending chunks
+        Log("Handling initial player move for " + player.Name);
         HandlePlayerMove(player, GetChunkPos(player.Position));
     }
 
     public void HandlePlayerMove(PlayerEntity player, Vec2<int> chunkPos) {
         PlayerConnection connection = player.Connection;
         
-        if (connection.HasTag(CurrentChunkTag) && connection.GetTagOrNull(CurrentChunkTag) == chunkPos) {
+        if (player.HasTag(CurrentChunkTag) && player.GetTagOrNull(CurrentChunkTag) == chunkPos) {
             // they haven't moved
             return;
         }
-        connection.SetTag(CurrentChunkTag, chunkPos);
+        player.SetTag(CurrentChunkTag, chunkPos);
         
         Stopwatch sw;
         int unloadingBench;
         if (Benchmark) {
             sw = Stopwatch.StartNew();
         }
+        
+        player.SendPacket(new ClientBoundSetCenterChunkPacket {
+            X = chunkPos.X,
+            Z = chunkPos.Y
+        });
         
         Log("Handling player move to chunk " + chunkPos);
         HashSet<Vec2<int>> loaded = GetPlayerLoadedChunks(connection);
@@ -254,11 +264,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
 
         if (i != 0) AddChunkPackets(toLoad, i, neededPackets);
-
-        neededPackets.Add(new ClientBoundSetCenterChunkPacket {
-            X = chunkPos.X,
-            Z = chunkPos.Y
-        });
         
         IEnumerable<MinecraftPacket> orderedPackets = neededPackets.OrderBy(p => {
             // always do this first, otherwise the client might reject chunks
@@ -287,6 +292,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     public virtual void RemovePlayer(PlayerEntity player) {
+        Log("Removing player " + player.Name);
+        
         PlayerLeavingWorldEvent leaveEvent = new() {
             Player = player,
             World = this
@@ -295,6 +302,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         
         Players.Remove(player);
         player.Connection.GetTag(CancelListenersActionTag).Invoke();  // stop listening
+        
+        Log("Player is removed: " + player.Name);
     }
 
     public void ResetPlayer(PlayerEntity player) {

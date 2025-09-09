@@ -34,7 +34,6 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     /// <param name="id"></param>
     public void Register(Entity entity, int? id = null) {
         entity.NetId = id ?? NewNetId;
-        entity.Manager = this;
 
         MoveEntityInStorage(entity, new Vec3<double>(int.MaxValue), entity.Position);
         _entitiesById[entity.NetId] = entity;
@@ -53,6 +52,26 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             value.Remove(entity);
             if (value.Count == 0) {
                 _entitiesByChunk.Remove(chunk);
+            }
+        }
+    }
+
+    public void RefreshViewers(Entity entity) {
+        foreach (PlayerEntity player in GetViewersOf(entity, true)) {
+            if (entity.ViewableRule(player)) {
+                SendSpawnPackets(entity, player);
+            } else {
+                SendDespawnPackets(entity, player);
+            }
+        }
+    }
+    
+    public void RefreshPlayerVisibleEntities(PlayerEntity player) {
+        foreach (Entity entity in GetNearbyEntities(player.Position, viewDistanceBlocks)) {
+            if (entity.ViewableRule(player)) {
+                SendSpawnPackets(entity, player);
+            } else {
+                SendDespawnPackets(entity, player);
             }
         }
     }
@@ -122,11 +141,10 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     }
 
     // this could use some optimising
-    public PlayerEntity[] GetViewersOf(Entity entity) {
-        return _entitiesById.Values
+    public PlayerEntity[] GetViewersOf(Entity entity, bool ignoreViewableRule = false) {
+        return GetNearbyEntities(entity.Position, viewDistanceBlocks)
             .Where(e => e is PlayerEntity pe && 
-                        pe.Position.DistanceTo2D(entity.Position) < viewDistanceBlocks &&
-                        entity.ViewableRule(pe))
+                        (ignoreViewableRule || entity.ViewableRule(pe)))
             .Select(e => (PlayerEntity)e)
             .ToArray();
     }
@@ -220,9 +238,6 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     }
 
     public void SendDespawnPackets(Entity entity, PlayerEntity player) {
-        if (!entity.ViewableRule(player)) {
-            return;
-        }
         player.SendPackets(new ClientBoundRemoveEntitiesPacket {
             Entities = [entity.NetId]
         });

@@ -72,7 +72,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     private Vec3<double> _lastVelocity = Vec3<double>.Zero;
     public virtual Vec3<double> Velocity { get; set; } = Vec3<double>.Zero;  // units: m/(1/20)s
     
-    public bool OnGround { get; set; }
+    public virtual bool OnGround { get; set; }
 
     public virtual List<PlayerEntity> Players => [];  // for ScopedFeature
     public ManagedMinecraftServer Server => World.ThrowIfNull().Server;
@@ -81,13 +81,13 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     // these should be set by an entity tracker
     // not doing so is unsupported and will cause issues.
-    public int NetId = -1;
-    public IEntityManager? Manager;
-    public World? World;
+    public int NetId { get; internal set; } = -1;
+    public IEntityManager? Manager { get; private set; }
+    public World? World { get; private set; }
     
     private EntityMeta _meta = null!;  // set by the constructor, so it is never null
     private bool _crouching;
-    private Dictionary<IAttribute, (double Base, List<AttributeModifier> Modifiers)> _attributes = [];
+    private readonly Dictionary<IAttribute, (double Base, List<AttributeModifier> Modifiers)> _attributes = [];
 
     public Entity(IEntityType type, EntityMeta? meta = null) {
         Type = type;
@@ -97,6 +97,9 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
 
         if (meta == null) {
             // guess the meta type based on the entity type
+            // we set this so that you can do:
+            // entity.Meta = (MetaType)entity.Meta with { ... };
+            // otherwise the cast wouldn't work
             if (type.Identifier == EntityType.Player.Identifier) {
                 Meta = new PlayerMeta();
             } else if (type.Identifier == EntityType.Arrow.Identifier) {
@@ -222,6 +225,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         World?.Entities.Despawn(this);
         world?.Entities.Register(this, NetId == -1 ? null : NetId);  // this ensures that Manager will not be null (it sets it)
         World = world;
+        Manager = world?.Entities;
 
         Debug.Assert(Manager != null, nameof(Manager) + " != null");
         Manager?.BaseEventNode.AddChild(Events, serverEvent => {
@@ -386,11 +390,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     }
     
     public void UpdateViewers() {
-        if (Manager == null) {
-            return;
-        }
-        
-        
+        Manager?.RefreshViewers(this);
     }
 
     public PlayerEntity[] GetViewers() {

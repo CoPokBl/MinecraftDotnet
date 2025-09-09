@@ -17,13 +17,15 @@ public interface IEntityManager {
     Entity? GetEntity(int id);
     Entity[] GetEntities();
     PlayerEntity? GetPlayerByConnection(PlayerConnection connection);
-    PlayerEntity[] GetViewersOf(Entity entity);
+    PlayerEntity[] GetViewersOf(Entity entity, bool ignoreViewableRule = false);
     PlayerEntity[] GetPlayers();
     Entity[] GetNearbyEntities(Vec3<double> pos, double distance);
     Entity[] GetEntitiesInChunk(Vec2<int> chunkPos);
 
     void Register(Entity entity, int? id = null);
     void Despawn(Entity entity);
+    void RefreshViewers(Entity entity);
+    void RefreshPlayerVisibleEntities(PlayerEntity player);
     void MoveEntity(Entity entity, Vec3<double> newPos, Angle? yaw = null, Angle? pitch = null);
     void TeleportEntity(Entity entity, Vec3<double> newPos, Angle yaw, Angle pitch);
 

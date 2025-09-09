@@ -407,6 +407,10 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
         });
     }
 
+    public void RefreshVisibleEntities() {
+        Manager?.RefreshPlayerVisibleEntities(this);
+    }
+
     public void Respawn() {
         Respawn(World!);
     }
