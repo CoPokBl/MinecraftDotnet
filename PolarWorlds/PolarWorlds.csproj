@@ -17,6 +17,7 @@
         <Authors>CoPokBl</Authors>
         <PackageProjectUrl>https://github.com/CoPokBl/MinecraftDotnet</PackageProjectUrl>
         <RepositoryUrl>https://github.com/CoPokBl/MinecraftDotnet.git</RepositoryUrl>
+        <PackageLicenseUrl>https://github.com/CoPokBl/MinecraftDotnet/blob/main/LICENSE</PackageLicenseUrl>
     </PropertyGroup>
 
     <ItemGroup>
