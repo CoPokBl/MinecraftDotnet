@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using ManagedServer.Events;
-using ManagedServer.Inventory;
+using ManagedServer.Inventories;
 using ManagedServer.Permissions;
 using ManagedServer.Permissions.ContainerImpl;
 using ManagedServer.Viewables;
@@ -40,7 +40,7 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
         set => base.Meta = value;
     }
 
-    public Inventory.Inventory? OpenInventory {
+    public Inventory? OpenInventory {
         get => _openInventory;
         set {
             if (value == null) {
@@ -146,7 +146,7 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
     private Entity? _cameraEntity;
     private int _level;
     private GameMode _gameMode;
-    private Inventory.Inventory? _openInventory;
+    private Inventory? _openInventory;
     private int _activeHotbarSlot;
     private ItemStack _cursorItem = ItemStack.Air;
     private PlayerSkin? _skin;

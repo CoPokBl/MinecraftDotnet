@@ -1,7 +1,7 @@
 using Minecraft.Data.Generated;
 using Minecraft.Data.Inventories;
 
-namespace ManagedServer.Inventory;
+namespace ManagedServer.Inventories;
 
 public class ChestInventory(ManagedMinecraftServer server, IInventoryType type, int size) : Inventory(server, size, size) {
     public override IInventoryType Type { get; } = type;

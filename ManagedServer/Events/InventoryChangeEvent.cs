@@ -1,5 +1,6 @@
 using ManagedServer.Events.Attributes;
 using ManagedServer.Events.Types;
+using ManagedServer.Inventories;
 using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Events;
@@ -12,7 +13,7 @@ public class InventoryChangeEvent : IInventoryEvent {
     /// <summary>
     /// The inventory that changed.
     /// </summary>
-    public required Inventory.Inventory Inventory { get; init; }
+    public required Inventory Inventory { get; init; }
     
     /// <summary>
     /// The slot that changed.

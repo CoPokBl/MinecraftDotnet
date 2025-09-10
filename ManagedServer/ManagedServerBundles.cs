@@ -25,7 +25,8 @@ public partial class ManagedMinecraftServer {
         new PlayerSkinLayersFeature(),
         new UseItemEventFeature(),
         new RightClickToEquipArmourFeature(),
-        new CommandsFeature()
+        new CommandsFeature(),
+        new InventoryClosingFeature()
     );
 
     public static FeatureBundle BasicsWithMojangAuthBundle => BasicsBundle
@@ -34,6 +35,10 @@ public partial class ManagedMinecraftServer {
 
     public static ManagedMinecraftServer NewBasic() {
         return New(BasicsBundle);
+    }
+    
+    public static ManagedMinecraftServer NewBasicWithMojangAuth() {
+        return New(BasicsWithMojangAuthBundle);
     }
     
     public static ManagedMinecraftServer New(params FeatureBundle[] bundle) {

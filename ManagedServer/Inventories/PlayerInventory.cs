@@ -3,7 +3,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Data.Inventories;
 using Minecraft.Schemas.Items;
 
-namespace ManagedServer.Inventory;
+namespace ManagedServer.Inventories;
 
 public class PlayerInventory : Inventory {
     private const int InventorySize = 46;
@@ -19,6 +19,7 @@ public class PlayerInventory : Inventory {
             .ToArray();
 
     // Slot constants
+    public const int RegularInventoryStartIndex = 9;
     public const int CraftingInput1Slot = 1;
     public const int CraftingInput2Slot = 2;
     public const int CraftingInput3Slot = 3;
@@ -39,7 +40,8 @@ public class PlayerInventory : Inventory {
     public const int HotbarSlot8 = 43;
     public const int HotbarSlot9 = 44;
     
-    public PlayerInventory(ManagedMinecraftServer server, PlayerEntity owner) : base(server, InventorySize, 9) {
+    public PlayerInventory(ManagedMinecraftServer server, PlayerEntity owner) : 
+        base(server, InventorySize, RegularInventoryStartIndex) {
         Viewers.Add(owner);
         Title = owner.Name + "'s Inventory";
         Owner = owner;

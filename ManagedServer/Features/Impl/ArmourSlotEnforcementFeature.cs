@@ -1,5 +1,5 @@
 using ManagedServer.Events;
-using ManagedServer.Inventory;
+using ManagedServer.Inventories;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
 
@@ -18,7 +18,7 @@ public class ArmourSlotEnforcementFeature : ScopedFeature {
     ];
     
     public override void Register() {
-        AddEventHandler<InventoryClickEvent>(e => {
+        AddEventHandler<InventoryPreClickEvent>(e => {
             if (e.Inventory is not PlayerInventory) {
                 return;
             }

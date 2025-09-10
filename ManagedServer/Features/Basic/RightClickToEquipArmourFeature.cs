@@ -1,5 +1,5 @@
 using ManagedServer.Events;
-using ManagedServer.Inventory;
+using ManagedServer.Inventories;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas.Items;

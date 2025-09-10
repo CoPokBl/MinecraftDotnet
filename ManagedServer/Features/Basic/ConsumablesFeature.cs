@@ -1,7 +1,7 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
-using ManagedServer.Inventory;
+using ManagedServer.Inventories;
 using ManagedServer.Scheduling;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;

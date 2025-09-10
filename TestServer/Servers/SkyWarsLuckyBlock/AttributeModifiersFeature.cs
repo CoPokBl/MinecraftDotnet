@@ -1,6 +1,6 @@
 using ManagedServer.Events;
 using ManagedServer.Features;
-using ManagedServer.Inventory;
+using ManagedServer.Inventories;
 using Minecraft.Implementations.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities.Attributes;

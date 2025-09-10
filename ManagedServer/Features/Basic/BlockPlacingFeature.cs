@@ -1,7 +1,7 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
-using ManagedServer.Inventory;
+using ManagedServer.Inventories;
 using Minecraft.Data.Blocks;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;

@@ -5,7 +5,7 @@ using TestServer.Servers.MlgRush;
 using TestServer.Servers.SkyWarsLuckyBlock;
 using TestServer.Servers.Transferer;
 
-// File.WriteAllBytes("anvilworld.polar", PolarLoader.CreateWorld(new AnvilLoader("anvilworld", VanillaRegistry.Data)));
+// File.WriteAllBytes("polar.polar", PolarLoader.CreateWorld(new AnvilLoader("anvil", VanillaRegistry.Data)));
 // return 0;
 
 if (args.Length == 0) {

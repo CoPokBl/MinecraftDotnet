@@ -5,12 +5,13 @@ using ManagedServer.Viewables;
 using Minecraft.Data.Inventories;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;
+using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Text;
 
-namespace ManagedServer.Inventory;
+namespace ManagedServer.Inventories;
 
 public abstract class Inventory : IViewable {
     private const int DefaultMaxStackSize = 64;
@@ -90,9 +91,11 @@ public abstract class Inventory : IViewable {
         Refresh(); // Notify that the inventory has changed
     }
 
-    protected int GetBestSlotForItem(ItemStack item) {
+    protected int GetBestSlotForItem(ItemStack item, int[]? searchOrder = null) {
+        int[] order = searchOrder ?? AddItemSearchOrder;
+        
         // Check for a similar item first
-        foreach (int i in AddItemSearchOrder) {
+        foreach (int i in order) {
             if (!this[i].CanStackWith(item)) continue;
             int maxStackSize = this[i].GetMaxStackSize(DefaultMaxStackSize);
             if (this[i].Count < maxStackSize) {
@@ -101,7 +104,7 @@ public abstract class Inventory : IViewable {
         }
         
         // If no similar item found, return the first empty slot
-        foreach (int i in AddItemSearchOrder) {
+        foreach (int i in order) {
             if (this[i] == ItemStack.Air) {
                 return i; // Found an empty slot
             }
@@ -116,13 +119,14 @@ public abstract class Inventory : IViewable {
     /// </summary>
     /// <param name="item">The item to add.</param>
     /// <param name="allOrNothing">Whether to only make changes if the item can be fully added.</param>
+    /// <param name="searchOrder">Override search order for where to put the item.</param>
     /// <returns>The remainder of the item. If <see cref="allOrNothing"/> is true then this will either be null or <see cref="item"/></returns>
-    public virtual ItemStack? AddItem(ItemStack item, bool allOrNothing = false) {
+    public virtual ItemStack? AddItem(ItemStack item, bool allOrNothing = false, int[]? searchOrder = null) {
         ItemStack remainingItem = item;
         Dictionary<int, ItemStack> changedItems = new();
 
         while (true) {
-            int bestSlot = GetBestSlotForItem(remainingItem);
+            int bestSlot = GetBestSlotForItem(remainingItem, searchOrder);
             if (bestSlot == -1) {
                 // No suitable slot found, return the remaining item
                 if (allOrNothing) {
@@ -180,12 +184,12 @@ public abstract class Inventory : IViewable {
         });
     }
 
-    public ClientBoundOpenScreenPacket GenerateOpenPacket() {
-        return new ClientBoundOpenScreenPacket {
+    public virtual MinecraftPacket[] GenerateOpenPackets() {
+        return [new ClientBoundOpenScreenPacket {
             WindowId = WindowId,
             Type = Type,
             Title = Title
-        };
+        }];
     }
 
     /// <summary>
@@ -197,7 +201,7 @@ public abstract class Inventory : IViewable {
 
     public void AddViewer(PlayerEntity player) {
         Viewers.Add(player);
-        player.SendPacket(GenerateOpenPacket());
+        player.SendPackets(GenerateOpenPackets());
         SendUpdateTo(player);
     }
 

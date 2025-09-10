@@ -1,7 +1,8 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
-using ManagedServer.Inventory;
+using ManagedServer.Inventories;
+using ManagedServer.Schemas;
 using ManagedServer.Viewables;
 using Minecraft;
 using Minecraft.Data.Components.Types;
@@ -19,7 +20,7 @@ namespace ManagedServer.Features.Basic;
 /// and dropping items, and double-clicking to collect items.
 /// It also handles the drop key for dropping items from the inventory and fires the <see cref="PlayerDropItemEvent"/>.
 /// </summary>
-[CallsEvent(typeof(PlayerDropItemEvent), typeof(InventoryClickEvent))]
+[CallsEvent(typeof(PlayerDropItemEvent), typeof(InventoryClickEvent), typeof(InventoryPreClickEvent))]
 public class InventoryClickFeature : ScopedFeature {
     private static readonly Tag<DragType> DraggingTag = new("managedserver:inventoryclick:dragging");
     private static readonly Tag<List<int>> DragSlotsTag = new("managedserver:inventoryclick:drag_slots");
@@ -49,11 +50,11 @@ public class InventoryClickFeature : ScopedFeature {
         });
     }
     
-    private static int GetRegularInvDestinationSlot(ItemStack item, Inventory.Inventory inv) {
+    private static int GetRegularInvDestinationSlot(ItemStack item, Inventory inv) {
         return SearchRangeForDestinationSlot(item, inv, 0, inv.Size-1);
     }
     
-    private static int SearchRangeForDestinationSlot(ItemStack item, Inventory.Inventory inv, int startIndex, int endIndex, int[]? prefixedSlots = null) {
+    private static int SearchRangeForDestinationSlot(ItemStack item, Inventory inv, int startIndex, int endIndex, int[]? prefixedSlots = null) {
         prefixedSlots ??= [];
         
         EquippableComponent.Data? equipData = item.GetOrNull(DataComponent.Equippable);
@@ -91,7 +92,7 @@ public class InventoryClickFeature : ScopedFeature {
         return -1;  // No available slot found
     }
     
-    private static int GetPlayerInvDestinationSlot(ItemStack item, Inventory.Inventory inv) {
+    private static int GetPlayerInvDestinationSlot(ItemStack item, Inventory inv) {
         for (int i = inv.PlayerInventoryStartIndex; i < inv.Size; i++) {
             int maxStackSize = inv[i].GetMaxStackSize(DefaultMaxStackSize);
             if (inv[i].CanStackWith(item) && inv[i].Count < maxStackSize) {
@@ -112,8 +113,8 @@ public class InventoryClickFeature : ScopedFeature {
         return -1;  // No available slot found
     }
 
-    private static void TransferItemToInventorySection(ItemStack itemToMove, int originSlot, Inventory.Inventory originInventory, 
-        Inventory.Inventory destinationInventory, Func<ItemStack, Inventory.Inventory, int> destinationSlotGetter) {
+    private static void TransferItemToInventorySection(ItemStack itemToMove, int originSlot, Inventory originInventory, 
+        Inventory destinationInventory, Func<ItemStack, Inventory, int> destinationSlotGetter) {
         while (true) {
             int destinationSlot = destinationSlotGetter(itemToMove, destinationInventory);
             if (destinationSlot == -1) {
@@ -151,24 +152,36 @@ public class InventoryClickFeature : ScopedFeature {
     
     private void HandleInventoryClick(PlayerEntity player, ServerBoundClickContainerPacket packet) {
         // player.SendMessage($"Inventory Clicked: {packet.Slot}, Mode: {packet.Mode}");
-        Inventory.Inventory clickedInventory = packet.WindowId == 0 ? player.Inventory : player.OpenInventory!;
-        Inventory.Inventory targetInventory = packet.Slot == -999 ? clickedInventory :
+        Inventory clickedInventory = packet.WindowId == 0 ? player.Inventory : player.OpenInventory!;
+        Inventory targetInventory = packet.Slot == -999 ? clickedInventory :
             packet.Slot >= clickedInventory.PlayerInventoryStartIndex ? player.Inventory : clickedInventory;
         int effectiveSlot = targetInventory == clickedInventory
             ? packet.Slot
             : packet.Slot - clickedInventory.PlayerInventoryStartIndex + player.Inventory.PlayerInventoryStartIndex;
 
-        InventoryClickEvent clickEvent = new() {
+        ClickType type = packet.Mode switch {
+            0 => ClickType.Regular,
+            1 => ClickType.Shift,
+            2 => ClickType.HotkeyToSlot,
+            3 => ClickType.Middle,
+            4 => ClickType.Drop,
+            5 => ClickType.Drag,
+            6 => ClickType.Double,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        
+        InventoryPreClickEvent preClickEvent = new() {
             Player = player,
             Inventory = clickedInventory,
             Slot = effectiveSlot,
             ClickedItem = effectiveSlot >= 0 ? targetInventory[effectiveSlot] : null,
             CursorItem = player.CursorItem,
-            World = player.World!
+            World = player.World!,
+            Type = type
         };
-        CallEvent(clickEvent);
+        CallEvent(preClickEvent);
 
-        if (clickEvent.Cancelled) {
+        if (preClickEvent.Cancelled) {
             clickedInventory.SendUpdateTo(player);
             if (clickedInventory != player.Inventory) {
                 player.Inventory.SendUpdateTo(player);
@@ -294,9 +307,9 @@ public class InventoryClickFeature : ScopedFeature {
                         return;
                     }
 
-                    Inventory.Inventory destinationInventory =
+                    Inventory destinationInventory =
                         isFromPlayerInventory ? clickedInventory : player.Inventory;
-                    Func<ItemStack, Inventory.Inventory, int> destinationSlotGetter = isFromPlayerInventory
+                    Func<ItemStack, Inventory, int> destinationSlotGetter = isFromPlayerInventory
                         ? GetRegularInvDestinationSlot
                         : GetPlayerInvDestinationSlot;
 
@@ -312,7 +325,7 @@ public class InventoryClickFeature : ScopedFeature {
                         
                         bool isHotbarItem = effectiveSlot is >= PlayerInventory.HotbarSlot1 and <= PlayerInventory.HotbarSlot9;
                         bool isEquipmentItem = PlayerInvEquipmentSlots.Contains(effectiveSlot);
-                        Func<ItemStack, Inventory.Inventory, int> slotGetter = isHotbarItem || isEquipmentItem
+                        Func<ItemStack, Inventory, int> slotGetter = isHotbarItem || isEquipmentItem
                             ? (stack, inv) => SearchRangeForDestinationSlot(stack, inv,  // Search in upper inventory
                                 clickedInventory.PlayerInventoryStartIndex, PlayerInventory.HotbarSlot1 - 1, isEquipmentItem ? [] : PlayerInvEquipmentSlots)
                             : (stack, inv) => SearchRangeForDestinationSlot(stack, inv,  // Search in hotbar + equipment
@@ -427,7 +440,7 @@ public class InventoryClickFeature : ScopedFeature {
                                     //                    + itemsPerSplit + " per slot, with " + remainder + " remainder.");
 
                                     foreach (int slotIndex in slotsToUpdate) {
-                                        Inventory.Inventory slotInventory =
+                                        Inventory slotInventory =
                                             slotIndex >= clickedInventory.PlayerInventoryStartIndex
                                                 ? player.Inventory
                                                 : clickedInventory;
@@ -462,7 +475,7 @@ public class InventoryClickFeature : ScopedFeature {
 
                                 case DragType.RightClick: // One item per drag (max of the itemToSplit count)
                                     foreach (int slotIndex in slotsToUpdate) {
-                                        Inventory.Inventory slotInventory =
+                                        Inventory slotInventory =
                                             slotIndex >= clickedInventory.PlayerInventoryStartIndex
                                                 ? player.Inventory
                                                 : clickedInventory;
@@ -607,6 +620,17 @@ public class InventoryClickFeature : ScopedFeature {
         if (clickedInventory != player.Inventory) {
             player.Inventory.SendUpdateTo(player);
         }
+        
+        InventoryClickEvent clickEvent = new() {
+            Player = player,
+            Inventory = clickedInventory,
+            Slot = effectiveSlot,
+            ClickedItem = effectiveSlot >= 0 ? targetInventory[effectiveSlot] : null,
+            CursorItem = player.CursorItem,
+            World = player.World!,
+            Type = type
+        };
+        CallEvent(clickEvent);
     }
 
     /// <summary>

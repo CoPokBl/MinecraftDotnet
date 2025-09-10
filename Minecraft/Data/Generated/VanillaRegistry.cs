@@ -19,7 +19,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2025-09-09
+// Last updated: 2025-09-10
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -1278,6 +1278,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, false, 0x0C, typeof(ServerBoundClientTickEndPacket), ServerBoundClientTickEndPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x0F, typeof(ServerBoundAcknowledgeConfigurationPacket), ServerBoundAcknowledgeConfigurationPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x11, typeof(ServerBoundClickContainerPacket), ServerBoundClickContainerPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x12, typeof(ServerBoundCloseContainerPacket), ServerBoundCloseContainerPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x14, typeof(ServerBoundCookieResponsePacket), ServerBoundCookieResponsePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x15, typeof(ServerBoundPluginMessagePacket), ServerBoundPluginMessagePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x19, typeof(ServerBoundInteractPacket), ServerBoundInteractPacket.Deserialiser);
@@ -1295,6 +1296,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, false, 0x2B, typeof(ServerBoundPlayerLoadedPacket), ServerBoundPlayerLoadedPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x2C, typeof(ServerBoundPongPacket), ServerBoundPongPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x30, typeof(ServerBoundResourcePackResponsePacket), ServerBoundResourcePackResponsePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x32, typeof(ServerBoundSelectTradePacket), ServerBoundSelectTradePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x34, typeof(ServerBoundSetHeldItemPacket), ServerBoundSetHeldItemPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x3C, typeof(ServerBoundSwingArmPacket), ServerBoundSwingArmPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x40, typeof(ServerBoundUseItemPacket), ServerBoundUseItemPacket.Deserialiser);
@@ -1355,6 +1357,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, true, 0x27, typeof(ClientBoundChunkDataAndUpdateLightPacket), ClientBoundChunkDataAndUpdateLightPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x29, typeof(ClientBoundParticlePacket), ClientBoundParticlePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x2B, typeof(ClientBoundLoginPacket), ClientBoundLoginPacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, true, 0x2D, typeof(ClientBoundMerchantOffersPacket), ClientBoundMerchantOffersPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x2E, typeof(ClientBoundUpdateEntityPositionPacket), ClientBoundUpdateEntityPositionPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x2F, typeof(ClientBoundUpdateEntityPosAndRotPacket), ClientBoundUpdateEntityPosAndRotPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, true, 0x31, typeof(ClientBoundUpdateEntityRotationPacket), ClientBoundUpdateEntityRotationPacket.Deserialiser);

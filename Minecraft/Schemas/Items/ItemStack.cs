@@ -107,6 +107,10 @@ public class ItemStack(
     public T? GetStructOrNull<T>(IDataComponent<T> type) where T : struct {
         return Has(type) ? Get(type) : null;
     }
+
+    public TradeItem AsTradeItem() {
+        return new TradeItem(this);
+    }
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         if (Count == 0 || Type.Identifier == "minecraft:air") {

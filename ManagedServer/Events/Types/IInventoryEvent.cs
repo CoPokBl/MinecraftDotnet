@@ -1,3 +1,4 @@
+using ManagedServer.Inventories;
 using Minecraft.Implementations.Server.Events;
 
 namespace ManagedServer.Events.Types;
@@ -9,5 +10,5 @@ public interface IInventoryEvent : IServerEvent {
     /// <summary>
     /// The inventory that the event is related to.
     /// </summary>
-    public Inventory.Inventory Inventory { get; init; }
+    public Inventory Inventory { get; init; }
 }
