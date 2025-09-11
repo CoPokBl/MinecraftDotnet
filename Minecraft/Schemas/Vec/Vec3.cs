@@ -324,6 +324,14 @@ public readonly struct Vec3<T>(T x, T y, T z) : IEquatable<Vec3<T>> where T : IN
         return new Vec3<double>(val.X.ToDouble(), val.Y.ToDouble(), val.Z.ToDouble());
     }
 
+    public static implicit operator Vec3<T>((T x, T y, T z) tuple) {
+        return new Vec3<T>(tuple.x, tuple.y, tuple.z);
+    }
+    
+    public static implicit operator (T x, T y, T z)(Vec3<T> vec) {
+        return (vec.X, vec.Y, vec.Z);
+    }
+
     #endregion
 
     public void Deconstruct(out T x, out T y, out T z) {

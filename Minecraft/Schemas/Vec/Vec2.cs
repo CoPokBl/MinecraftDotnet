@@ -61,7 +61,7 @@ public readonly struct Vec2<T>(T x, T y) : IEquatable<Vec2<T>> where T : INumber
 
     #endregion
 
-    #region comparisons
+    #region operators
 
     public bool Equals(Vec2<T> other) {
         return EqualityComparer<T>.Default.Equals(X, other.X) && EqualityComparer<T>.Default.Equals(Y, other.Y);
@@ -117,6 +117,14 @@ public readonly struct Vec2<T>(T x, T y) : IEquatable<Vec2<T>> where T : INumber
     
     public override string ToString() {
         return $"{X}, {Y}";
+    }
+    
+    public static implicit operator Vec2<T>((T x, T y) tuple) {
+        return new Vec2<T>(tuple.x, tuple.y);
+    }
+    
+    public static implicit operator (T x, T y)(Vec2<T> vec) {
+        return (vec.X, vec.Y);
     }
 
     #endregion
