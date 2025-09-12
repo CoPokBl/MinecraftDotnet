@@ -54,11 +54,10 @@ public record Aabb(Vec3<double> Position, Vec3<double> Size) : ICollisionBox {
         double otherMinZ = Math.Min(other.Position.Z, other.Position.Z + other.Size.Z);
         double otherMaxZ = Math.Max(other.Position.Z, other.Position.Z + other.Size.Z);
 
-        bool overlapX = thisMinX < otherMaxX && thisMaxX > otherMinX;
-        bool overlapY = thisMinY < otherMaxY && thisMaxY > otherMinY;
-        bool overlapZ = thisMinZ < otherMaxZ && thisMaxZ > otherMinZ;
-
-        return overlapX && overlapY && overlapZ;
+        if (thisMaxX < otherMinX || thisMinX > otherMaxX) return false;
+        if (thisMaxY < otherMinY || thisMinY > otherMaxY) return false;
+        if (thisMaxZ < otherMinZ || thisMinZ > otherMaxZ) return false;
+        return true;
     }
 
     public Aabb? CollidesWhichAabb(Aabb other) {
