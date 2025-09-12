@@ -42,23 +42,22 @@ public record Aabb(Vec3<double> Position, Vec3<double> Size) : ICollisionBox {
     public bool CollidesWithAabb(Aabb other) {
         double thisMinX = Math.Min(Position.X, Position.X + Size.X);
         double thisMaxX = Math.Max(Position.X, Position.X + Size.X);
-        double thisMinY = Math.Min(Position.Y, Position.Y + Size.Y);
-        double thisMaxY = Math.Max(Position.Y, Position.Y + Size.Y);
-        double thisMinZ = Math.Min(Position.Z, Position.Z + Size.Z);
-        double thisMaxZ = Math.Max(Position.Z, Position.Z + Size.Z);
-
         double otherMinX = Math.Min(other.Position.X, other.Position.X + other.Size.X);
         double otherMaxX = Math.Max(other.Position.X, other.Position.X + other.Size.X);
+        if (thisMaxX < otherMinX || thisMinX > otherMaxX) return false;
+
+        double thisMinY = Math.Min(Position.Y, Position.Y + Size.Y);
+        double thisMaxY = Math.Max(Position.Y, Position.Y + Size.Y);
         double otherMinY = Math.Min(other.Position.Y, other.Position.Y + other.Size.Y);
         double otherMaxY = Math.Max(other.Position.Y, other.Position.Y + other.Size.Y);
+        if (thisMaxY < otherMinY || thisMinY > otherMaxY) return false;
+
+        double thisMinZ = Math.Min(Position.Z, Position.Z + Size.Z);
+        double thisMaxZ = Math.Max(Position.Z, Position.Z + Size.Z);
         double otherMinZ = Math.Min(other.Position.Z, other.Position.Z + other.Size.Z);
         double otherMaxZ = Math.Max(other.Position.Z, other.Position.Z + other.Size.Z);
-
-        bool overlapX = thisMinX < otherMaxX && thisMaxX > otherMinX;
-        bool overlapY = thisMinY < otherMaxY && thisMaxY > otherMinY;
-        bool overlapZ = thisMinZ < otherMaxZ && thisMaxZ > otherMinZ;
-
-        return overlapX && overlapY && overlapZ;
+        if (thisMaxZ < otherMinZ || thisMinZ > otherMaxZ) return false;
+        return true;
     }
 
     public Aabb? CollidesWhichAabb(Aabb other) {
