@@ -8,6 +8,7 @@ public static class CodeGenUtils {
     private const string IdentSearch = "Identifier Identifier => \"";
 
     public static string VanillaDataDir = "";
+    public static string MinestomDataDir = "";
 
     public static string NamespacedIdToPascalName(string namespacedId) {
         if (namespacedId.Contains(':')) {
@@ -27,6 +28,10 @@ public static class CodeGenUtils {
         using Stream stream = assembly.GetManifestResourceStream($"CodeGen.Data.{fileName}")!;
         using StreamReader reader = new(stream);
         return reader.ReadToEnd();
+    }
+    
+    public static string ReadMinestomDataFile(string fileName) {
+        return File.ReadAllText(Path.Combine(MinestomDataDir, fileName));
     }
     
     public static string ReadVanillaDataFile(params string[] path) {
@@ -99,7 +104,7 @@ public static class CodeGenUtils {
     }
 
     public static (string, int)[] GetFileRegEntries(string resFile) {
-        JObject obj = JObject.Parse(ReadEmbeddedFile(resFile));
+        JObject obj = JObject.Parse(ReadMinestomDataFile(resFile));
         List<(string, int)> entries = [];
         foreach (KeyValuePair<string, JToken?> entry in obj) {
             if (entry.Key == "minecraft:intentionally_empty") {

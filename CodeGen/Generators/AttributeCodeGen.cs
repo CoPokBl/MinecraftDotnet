@@ -5,7 +5,7 @@ namespace CodeGen.Generators;
 public static class AttributeCodeGen {
     
     public static string CreateAttributeEntries(JObject registriesJson) {
-        JObject attributeDataJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("attribute_data.json"));
+        JObject attributeDataJson = JObject.Parse(CodeGenUtils.ReadMinestomDataFile("attribute.json"));
         
         return CodeGenUtils.CreateSimpleRegistryEntries(
             registriesJson, 

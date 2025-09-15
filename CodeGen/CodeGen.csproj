@@ -12,23 +12,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Data\registries.json" />
       <None Remove="Data\complex_particles.json" />
       <EmbeddedResource Include="Data\complex_particles.json" />
-      <None Remove="Data\blocks.json" />
-      <None Remove="Data\packets.json" />
-      <None Remove="Data\blocks_data.json" />
-      <EmbeddedResource Include="Data\blocks_data.json" />
-      <None Remove="Data\item_data.json" />
-      <EmbeddedResource Include="Data\item_data.json" />
-      <None Remove="Data\potion_effect.json" />
-      <EmbeddedResource Include="Data\potion_effect.json" />
       <None Remove="Data\complex_consume_effects.json" />
       <EmbeddedResource Include="Data\complex_consume_effects.json" />
-      <None Remove="Data\entity_type.json" />
-      <EmbeddedResource Include="Data\entity_data.json" />
-      <None Remove="Data\attribute_data.json" />
-      <EmbeddedResource Include="Data\attribute_data.json" />
     </ItemGroup>
 
 </Project>

@@ -154,7 +154,7 @@ public static class Block {
         }
         
         JObject blocksJson = JObject.Parse(CodeGenUtils.ReadVanillaDataFile("reports", "blocks.json"));
-        JObject blocksDataJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("blocks_data.json"));
+        JObject blocksDataJson = JObject.Parse(CodeGenUtils.ReadMinestomDataFile("block.json"));
 
         StringBuilder registryData = new();
         StringBuilder blocksFileEntries = new();
@@ -165,7 +165,7 @@ public static class Block {
             
             // FETCH ADDITIONAL DATA
             JObject dataEntry = blocksDataJson[id]!.ToObject<JObject>()!;
-            int protocolId = dataEntry["id"].ToObject<int>();
+            int protocolId = dataEntry["id"]!.ToObject<int>();
             string category = blockData["definition"]!["type"]!.ToObject<string>()!;
             string translationKey = dataEntry["translationKey"]!.ToObject<string>()!;
             double explosionResistance = dataEntry["explosionResistance"]!.ToObject<double>();

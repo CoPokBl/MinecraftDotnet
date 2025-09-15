@@ -28,7 +28,7 @@ public static class Item {
         JObject itemsJson = registriesJson["minecraft:item"]!.ToObject<JObject>()!;
         JObject itemEntriesJson = itemsJson["entries"]!.ToObject<JObject>()!;
 
-        JObject itemData = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("item_data.json"));
+        JObject itemData = JObject.Parse(CodeGenUtils.ReadMinestomDataFile("item.json"));
         
         StringBuilder registryAdditions = new();
         StringBuilder file = new(Header);

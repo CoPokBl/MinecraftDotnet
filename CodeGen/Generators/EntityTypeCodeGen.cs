@@ -5,7 +5,7 @@ namespace CodeGen.Generators;
 public static class EntityTypeCodeGen {
 
     public static string CreateEntityTypeEntries(JObject registriesJson) {
-        JObject entityDataJson = JObject.Parse(CodeGenUtils.ReadEmbeddedFile("entity_data.json"));
+        JObject entityDataJson = JObject.Parse(CodeGenUtils.ReadMinestomDataFile("entity_type.json"));
         
         return CodeGenUtils.CreateSimpleRegistryEntries(
             registriesJson, 

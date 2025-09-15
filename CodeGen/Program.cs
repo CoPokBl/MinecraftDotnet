@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO.Compression;
 using System.Text;
 using CodeGen;
 using CodeGen.Generators;
@@ -42,13 +43,17 @@ public static class VanillaRegistry {
 
 """;
 
-// Download the vanilla jar
+// Get the target version
 if (args.Length == 0) {
     Console.WriteLine("Usage: ./CodeGen <mc_version>");
     Console.WriteLine("Example: ./CodeGen 1.21.5");
     return 1;
 }
 string mcVersion = args[0];
+
+// --------------------------------------------
+// |         Vanilla Report Files             |
+// --------------------------------------------
 
 if (!VanillaJarUrls.Urls.TryGetValue(mcVersion, out string? jarUrl)) {
     Console.WriteLine($"Unknown Minecraft version: {mcVersion}");
@@ -104,6 +109,87 @@ CodeGenUtils.VanillaDataDir = Path.Combine(Directory.GetCurrentDirectory(), vani
 Console.WriteLine("Loading registries.json...");
 JObject registriesJson = JObject.Parse(CodeGenUtils.ReadVanillaDataFile("reports", "registries.json"));
 
+// --------------------------------------------
+// |             Minestom Data                |
+// --------------------------------------------
+if (!Directory.Exists("MinestomDataGenerator")) {
+    // Don't use git, download the release zip from GitHub
+    // so we can choose a specific version
+    const string urlTemplate = "https://github.com/Minestom/MinestomDataGenerator/archive/refs/tags/{mcver}-rv1.zip";
+    string minestomUrl = urlTemplate.Replace("{mcver}", mcVersion);
+    Console.WriteLine("Downloading MinestomDataGenerator from " + minestomUrl);
+    using HttpClient client = new();
+    HttpResponseMessage response = client.GetAsync(minestomUrl).Result;
+    if (!response.IsSuccessStatusCode) {
+        Console.WriteLine($"Failed to download MinestomDataGenerator: {response.StatusCode}");
+        return 1;
+    }
+    Console.WriteLine("Extracting MinestomDataGenerator...");
+    using MemoryStream stream = new(response.Content.ReadAsByteArrayAsync().Result);
+    using ZipArchive archive = new(stream);
+    archive.ExtractToDirectory("MinestomDataGenerator");
+    
+    // It extracts to MinestomDataGenerator/MinestomDataGenerator-<version>
+    // so move it up one level
+    string extractedDir = Directory.GetDirectories("MinestomDataGenerator").First();
+    foreach (string dir in Directory.GetDirectories(extractedDir)) {
+        string dirName = Path.GetFileName(dir);
+        Directory.Move(dir, Path.Combine("MinestomDataGenerator", dirName));
+    }
+    foreach (string file in Directory.GetFiles(extractedDir)) {
+        string fileName = Path.GetFileName(file);
+        File.Move(file, Path.Combine("MinestomDataGenerator", fileName));
+    }
+    Directory.Delete(extractedDir);
+    
+    Console.WriteLine("Done!");
+}
+
+if (!Directory.Exists("MinestomData")) {
+    // We need to run the project
+    // to do that we need to run the gradle wrapper
+    // but that is platform specific
+    Console.WriteLine("Running MinestomDataGenerator...");
+    
+    string procName = Environment.OSVersion.Platform == PlatformID.Win32NT ? 
+        "gradlew.bat" : 
+        "./gradlew";
+    
+    Process process = new() {
+        StartInfo = new ProcessStartInfo {
+            Environment = { { "EULA", "true" } },
+            WorkingDirectory = "MinestomDataGenerator",
+            FileName = Path.Combine("MinestomDataGenerator", procName),
+            Arguments = "run",
+            RedirectStandardOutput = false,
+            RedirectStandardError = false,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        }
+    };
+    process.Start();
+    process.WaitForExit();
+    
+    if (process.ExitCode != 0) {
+        Console.WriteLine("Failed to run MinestomDataGenerator. Check the output above for errors.");
+        return 1;
+    }
+    
+    // Move all the files from MinestomDataGenerator/MinestomData to MinestomData
+    // for easier access
+    if (Directory.Exists("MinestomData")) {
+        Directory.Delete("MinestomData", true);
+        Console.WriteLine("Deleted existing MinestomData directory.");
+    }
+    Directory.Move(Path.Combine("MinestomDataGenerator", "MinestomData"), "MinestomData");
+    
+    Console.WriteLine("Done!");
+}
+CodeGenUtils.MinestomDataDir = Path.Combine(Directory.GetCurrentDirectory(), "MinestomData");
+
+// --------------------------------------------
+// |             Generate Code                |
+// --------------------------------------------
 string codeDir = Directory.GetCurrentDirectory();
 
 // go up until we are in the CodeGen directory
