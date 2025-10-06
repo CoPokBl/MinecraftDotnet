@@ -64,7 +64,7 @@ public static class DataComponentCodeGen {
             
             string varName = CodeGenUtils.NamespacedIdToPascalName(key);
             
-            registryAdditions.Append($"{CodeGenUtils.GetIndentation(2)}Data.DataComponents.Add(DataComponent.{varName}, {protocolId});\n");
+            registryAdditions.Append($"{CodeGenUtils.GetIndentation(2)}Data.DataComponents.Add(DataComponent.{varName});\n");
             fileContent.AppendLine($"{CodeGenUtils.GetIndentation(1)}public static readonly {ComponentClasses[key]} {varName} = new({protocolId});");
         }
         

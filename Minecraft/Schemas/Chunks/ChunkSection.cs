@@ -189,7 +189,7 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         for (int x = 0; x < Size; x++) {
             for (int y = 0; y < Size; y++) {
                 for (int z = 0; z < Size; z++) {
-                    Blocks[x, y, z] = (uint)Random.Shared.Next((int)(registry ?? VanillaRegistry.Data).Blocks.Count);
+                    Blocks[x, y, z] = (uint)Random.Shared.Next((int)(registry ?? VanillaRegistry.Data).Blocks.StatesCount);
                 }
             }
         }

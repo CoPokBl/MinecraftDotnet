@@ -13,7 +13,11 @@ Console.WriteLine();
 const string vanillaRegistryFile = 
 """
 using Minecraft.Schemas;
+using Minecraft.Schemas.Tags;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Items;
+using Minecraft.Data.Enchantments;
+using Minecraft.Data.Entities;
 using Minecraft.Registry;
 using Minecraft.Data.Components.Types;
 using Minecraft.Schemas.Blocks.BlockEnums;
@@ -209,7 +213,6 @@ RunStep("Items", ItemCodeGen.CreateItemEntries);
 RunStep("Entity Types", EntityTypeCodeGen.CreateEntityTypeEntries);
 RunStep("Sounds", SoundCodeGen.CreateSoundEntries);
 RunStep("Inventory Types", InventoryTypeCodeGen.CreateInventoryTypeEntries);
-RunStep("Tags", TagsCodeGen.CreateTagEntries);
 RunStep("Potion Effects", PotionEffectTypeGen.CreatePotionEffectTypes);
 RunStep("Consume Effects", ConsumeEffectGen.CreateConsumeEffects);
 RunStep("Block Entity Types", BlockEntityTypeCodeGen.CreateBlockEntityTypes);
@@ -217,6 +220,8 @@ RunStep("Attributes", AttributeCodeGen.CreateAttributeEntries);
 RunStep("Argument Types", ArgumentTypeCodeGen.CreateArgumentTypeEntries);
 RunStep("Statistic Types", StatisticTypeCodeGen.CreateStatisticTypes);
 RunStep("Custom Statistics", CustomStatisticCodeGen.CreateCustomStatistics);
+RunStep("Enchantments", EnchantmentCodeGen.CreateEnchantmentEntries);
+RunStep("Tags", TagsCodeGen.CreateTagEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

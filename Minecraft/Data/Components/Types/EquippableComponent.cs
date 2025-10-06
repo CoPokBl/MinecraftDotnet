@@ -2,6 +2,7 @@ using Minecraft.Data.Sounds;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
+using Minecraft.Schemas.Tags;
 
 namespace Minecraft.Data.Components.Types;
 

@@ -14,7 +14,7 @@ public class TestBot {
         ServerConnection con = await MinecraftClientUtils.ConnectToServer("localhost", 25565);
         MinecraftClient client = new(con);
         client.AddFeatures(MinecraftClient.BasicFeatures);
-        client.Login("potato", 25565, ProtocolVersionConstants.ProtocolVersion);
+        client.Login("potato", 25565, ProtocolConstants.ProtocolVersion);
         Console.WriteLine("Finished login");
         
         await Task.Delay(TimeSpan.FromSeconds(5));

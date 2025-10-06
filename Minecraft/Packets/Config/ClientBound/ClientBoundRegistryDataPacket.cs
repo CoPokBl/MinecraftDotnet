@@ -6,7 +6,7 @@ namespace Minecraft.Packets.Config.ClientBound;
 public class ClientBoundRegistryDataPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:registry_data";
 
-    public required string RegistryId { get; init; }
+    public required Identifier RegistryId { get; init; }
     public required Dictionary<string, INbtTag?> Entries { get; init; }
     
     protected override DataWriter WriteData(DataWriter w) {

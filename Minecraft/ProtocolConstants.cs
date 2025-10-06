@@ -7,4 +7,7 @@ namespace Minecraft;
 public static class ProtocolConstants {
     public const int SegmentBits = 0x7F;
     public const int ContinueBit = 0x80;
+    
+    public const string CurrentVersion = "1.21.8";
+    public const int ProtocolVersion = 771;
 }

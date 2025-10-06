@@ -1,6 +1,7 @@
 using Minecraft.Data;
 using Minecraft.Data.Attributes;
 using Minecraft.Registry;
+using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Entities.Attributes;
 
 namespace Minecraft.Schemas;
@@ -11,7 +12,7 @@ public record ItemAttributeModifier(
     Identifier Id,
     double Value,
     AttributeOperation Operation,
-    AttributeActiveSlot Slot) : INetworkType<ItemAttributeModifier> {
+    EquipmentSlotGroup Slot) : INetworkType<ItemAttributeModifier> {
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
@@ -19,7 +20,7 @@ public record ItemAttributeModifier(
             .WriteString(Id)
             .WriteDouble(Value)
             .WriteVarInt((int)Operation)
-            .WriteVarInt((int)Slot);
+            .WriteVarInt(Slot.ProtocolId);
     }
     
     public static ItemAttributeModifier ReadData(DataReader reader, MinecraftRegistry registry) {
@@ -28,7 +29,7 @@ public record ItemAttributeModifier(
             reader.ReadString(),
             reader.ReadDouble(),
             (AttributeOperation)reader.ReadVarInt(),
-            (AttributeActiveSlot)reader.ReadVarInt()
+            EquipmentSlotGroup.FromProtocolId(reader.ReadVarInt())
         );
     }
     

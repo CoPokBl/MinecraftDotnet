@@ -27,6 +27,8 @@ public class CompoundTag(string? name, params INbtTag?[] children) : INbtTag {
     }
     
     public INbtTag? this[string name] => ChildrenMap.GetValueOrDefault(name);
+    
+    public bool Contains(string name) => ChildrenMap.ContainsKey(name);
 
     public string? GetName() {
         return Name;

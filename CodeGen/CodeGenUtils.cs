@@ -185,8 +185,8 @@ public static class CodeGenUtils {
         variableNameGetter ??= NamespacedIdToPascalName;
         
         StringBuilder registryAdditions = new();
-        StringBuilder file = new(Header.Replace("{classname}", className).Replace("{typenamespace}", typeNamespace));
 
+        List<string> entryStrings = [];
         foreach ((string key, int protocolId) in entries) {
             if (key == "minecraft:intentionally_empty") {
                 continue;  // for some reason, this is in the registry
@@ -196,15 +196,26 @@ public static class CodeGenUtils {
             
             // Add to cs file
             string extraParams = extraSimpleParams != null ? ", " + extraSimpleParams(key) : string.Empty;
-            file.Append($"{GetIndentation(1)}public static {simpleClassName} {pascalName} => new(\"{key}\", {protocolId}{extraParams});\n");
+            entryStrings.Add($"public static {simpleClassName} {pascalName} => new(\"{key}\", {protocolId}{extraParams});");
             registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({className}.{pascalName});");
         }
         
         // Create the file content
-        file.Append(Footer);
-        File.WriteAllText(className + ".cs", file.ToString().Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
+        CreateVanillaEntriesFile(className, typeNamespace, entryStrings.ToArray());
 
         return registryAdditions.ToString();
+    }
+
+    public static void CreateVanillaEntriesFile(string className, string typeNamespace, string[] entries) {
+        StringBuilder file = new(Header.Replace("{classname}", className).Replace("{typenamespace}", typeNamespace));
+        foreach (string entry in entries) {
+            file
+                .Append(GetIndentation(1))
+                .Append(entry)
+                .Append('\n');
+        }
+        file.Append(Footer);
+        File.WriteAllText(className + ".cs", file.ToString().Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
     }
 
     public static string CreateSimpleAndComplexRegistryEntries((string, int)[] entries, string simpleClassName, 

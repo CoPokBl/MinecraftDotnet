@@ -12,6 +12,7 @@ using Minecraft.Data.Components;
 using Minecraft.Data.Components.Types;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
+using Minecraft.Schemas.Tags;
 using Minecraft.Schemas;
 using Minecraft.Text;
 

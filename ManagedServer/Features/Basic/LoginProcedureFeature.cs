@@ -3,6 +3,7 @@ using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using ManagedServer.Login;
 using Minecraft;
+using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Tags;
@@ -12,6 +13,8 @@ using Minecraft.Packets.Config.ServerBound;
 using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Registry;
+using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
 using NBT;
 
@@ -132,9 +135,36 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
             }
             
             case ServerBoundKnownPacksPacket: {
-                // for now just ignore their response, we can't handle other packs anyway
-                // in reality we don't use any packs at all this is just so that
-                // the client joins.
+                // compile all the registries that we actually have
+                // and then manually send the other required ones
+                // that aren't implemented yet
+                
+                // Turns out we have to send tags first
+                List<ClientBoundUpdateTagsPacket.TagSet> tags = [];
+                foreach (ISubRegistry subReg in Scope.Server.Registry.SubRegistries) {
+                    tags.Add(new ClientBoundUpdateTagsPacket.TagSet(subReg.RegistryId, subReg.Tags.Tags
+                        .Select(kvp => new ClientBoundUpdateTagsPacket.Tag(
+                            kvp.Key, 
+                            kvp.Value.GetValueRegistryIds(Scope.Server.Registry)))
+                        .ToArray()));
+                }
+                ClientBoundUpdateTagsPacket tagsPacket = new() {
+                    Tags = tags.ToArray()
+                };
+                e.Connection.SendPacket(tagsPacket);
+
+                List<ClientBoundRegistryDataPacket> registryPackets = [];
+                foreach (ISubRegistry reg in Scope.Server.Registry.SubRegistries) {
+                    if (reg is not INbtSerialisableRegistry nbtReg) {
+                        continue;
+                    }
+                    
+                    registryPackets.Add(new ClientBoundRegistryDataPacket {
+                        RegistryId = nbtReg.RegistryId,
+                        Entries = nbtReg.ToNbt()!
+                    });
+                }
+                e.Connection.SendPackets(registryPackets);
             
                 e.Connection.SendPackets(
                     new ClientBoundRegistryDataPacket {

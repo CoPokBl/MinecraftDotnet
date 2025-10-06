@@ -1,41 +1,60 @@
 using Minecraft.Data;
-using Minecraft.Data.ArgumentParsers;
-using Minecraft.Data.Attributes;
-using Minecraft.Data.BlockEntityTypes;
-using Minecraft.Data.Blocks;
-using Minecraft.Data.Components;
-using Minecraft.Data.ConsumeEffects;
-using Minecraft.Data.CustomStatistics;
-using Minecraft.Data.Entities;
-using Minecraft.Data.Inventories;
-using Minecraft.Data.Items;
-using Minecraft.Data.Particles;
-using Minecraft.Data.PotionEffectTypes;
-using Minecraft.Data.Sounds;
-using Minecraft.Data.StatisticTypes;
+using Minecraft.Registry.SubRegistries;
+using Minecraft.Registry.Templates;
+using Minecraft.Schemas;
 
 namespace Minecraft.Registry;
 
 public class MinecraftRegistry {
-    public ParticleRegistry Particles { get; init; } = new();
-    public BlockRegistry Blocks { get; init; } = new();
-    public PacketRegistry Packets { get; init; } = new();
-    public ItemRegistry Items { get; init; } = new();
-    public DataComponentRegistry DataComponents { get; init; } = new();
-    public EntityTypeRegistry EntityTypes { get; init; } = new();
-    public SoundTypeRegistry SoundTypes { get; init; } = new();
-    public InventoryTypeRegistry InventoryTypes { get; init; } = new();
-    public PotionEffectTypeRegistry PotionEffectTypes { get; init; } = new();
-    public ConsumeEffectRegistry ConsumeEffects { get; init; } = new();
-    public BlockEntityTypeRegistry BlockEntityTypes { get; init; } = new();
-    public AttributeRegistry Attributes { get; init; } = new();
-    public CommandArgumentTypeRegistry CommandArgumentTypes { get; init; } = new();
-    public StatisticTypeRegistry StatisticTypes { get; init; } = new();
-    public CustomStatisticRegistry CustomStatistics { get; init; } = new();
+    public ParticleRegistry Particles { get; set; } = new();
+    public BlockRegistry Blocks { get; set; } = new();
+    public PacketRegistry Packets { get; set; } = new();
+    public ItemRegistry Items { get; set; } = new();
+    public DataComponentRegistry DataComponents { get; set; } = new();
+    public EntityTypeRegistry EntityTypes { get; set; } = new();
+    public SoundTypeRegistry SoundTypes { get; set; } = new();
+    public InventoryTypeRegistry InventoryTypes { get; set; } = new();
+    public PotionEffectTypeRegistry PotionEffectTypes { get; set; } = new();
+    public ConsumeEffectRegistry ConsumeEffects { get; set; } = new();
+    public BlockEntityTypeRegistry BlockEntityTypes { get; set; } = new();
+    public AttributeRegistry Attributes { get; set; } = new();
+    public CommandArgumentTypeRegistry CommandArgumentTypes { get; set; } = new();
+    public StatisticTypeRegistry StatisticTypes { get; set; } = new();
+    public CustomStatisticRegistry CustomStatistics { get; set; } = new();
+    public EnchantmentRegistry Enchantments { get; set; } = new();
+
+    public ISubRegistry this[Identifier id] {
+        get {
+            foreach (ISubRegistry reg in SubRegistries) {
+                if (reg.RegistryId == id) {
+                    return reg;
+                }
+            }
+            
+            throw new KeyNotFoundException($"No registry found for ID {id}");
+        }
+    }
+
+    public ISubRegistry[] SubRegistries => [
+        Particles,
+        Blocks,
+        Packets,
+        Items,
+        DataComponents,
+        EntityTypes,
+        SoundTypes,
+        InventoryTypes,
+        PotionEffectTypes,
+        ConsumeEffects,
+        BlockEntityTypes,
+        Attributes,
+        CommandArgumentTypes,
+        StatisticTypes,
+        CustomStatistics,
+        Enchantments
+    ];
 
     public MinecraftRegistry Clone() {
-        Get<IBlock>(1);
-        
         return new MinecraftRegistry {
             Particles = Particles.Clone(),
             Blocks = Blocks.Clone(),
@@ -51,28 +70,22 @@ public class MinecraftRegistry {
             Attributes = Attributes.Clone(),
             CommandArgumentTypes = CommandArgumentTypes.Clone(),
             StatisticTypes = StatisticTypes.Clone(),
-            CustomStatistics = CustomStatistics.Clone()
+            CustomStatistics = CustomStatistics.Clone(),
+            Enchantments = Enchantments.Clone()
         };
+    }
+    
+    public MinecraftRegistry ShallowClone() {
+        return (MinecraftRegistry)MemberwiseClone();
     }
 
     public T Get<T>(int id) where T : IProtocolType {
-        return typeof(T) switch {
-            { } t when t == typeof(IParticle) => (T)Particles[id],
-            { } t when t == typeof(IBlock) => (T)Blocks[id],
-            { } t when t == typeof(IItem) => (T)Items[id],
-            { } t when t == typeof(IDataComponent) => (T)DataComponents[id],
-            { } t when t == typeof(IEntityType) => (T)EntityTypes[id],
-            { } t when t == typeof(ISoundType) => (T)SoundTypes[id],
-            { } t when t == typeof(IInventoryType) => (T)InventoryTypes[id],
-            { } t when t == typeof(IPotionEffectType) => (T)PotionEffectTypes[id],
-            { } t when t == typeof(IConsumeEffect) => (T)ConsumeEffects[id],
-            { } t when t == typeof(IBlockEntityType) => (T)BlockEntityTypes[id],
-            { } t when t == typeof(IAttribute) => (T)Attributes[id],
-            { } t when t == typeof(IArgumentParser) => (T)CommandArgumentTypes[id],
-            { } t when t == typeof(IStatisticType) => (T)StatisticTypes[id],
-            { } t when t == typeof(ICustomStatistic) => (T)CustomStatistics[id],
-            
-            _ => throw new ArgumentException($"Registry lookup for type {typeof(T)} is not implemented.")
-        };
+        foreach (ISubRegistry subReg in SubRegistries) {
+            if (subReg is ProtocolTypeRegistry<T> reg) {
+                return reg[id];
+            }
+        }
+        
+        throw new KeyNotFoundException($"No registry found for type {typeof(T).Name}");
     }
 }

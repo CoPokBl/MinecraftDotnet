@@ -1,15 +1,23 @@
+using Minecraft.Data.Blocks;
 using Minecraft.Packets;
+using Minecraft.Registry.Tags;
+using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
 
-namespace Minecraft.Registry;
+namespace Minecraft.Registry.SubRegistries;
 
-public class PacketRegistry : ISubRegistry<PacketRegistry> {
+public class PacketRegistry : ISubRegistry<PacketRegistry, MinecraftPacket> {
+    public Identifier RegistryId => "minecraft:packets";
+    
     private readonly Dictionary<ConnectionState, Dictionary<Type, int>> _packetTypes = new();
     private readonly Dictionary<ConnectionState, Dictionary<bool, Dictionary<int, PacketDataDeserialiser>>> _packetDeserialisers = new();
     private readonly Dictionary<bool, HashSet<Type>> _packetTypesByClientBound = new() {
         { true, [] },
         { false, [] }
     };
+    
+    public RegistryTagContainer<MinecraftPacket> Tags { get; } = new();
+    RegistryTagContainer ISubRegistry.Tags => Tags;
 
     public int this[ConnectionState state, Type type] => _packetTypes[state][type];
     public int this[ConnectionState state, MinecraftPacket packet] => GetPacketId(state, packet);
@@ -62,6 +70,10 @@ public class PacketRegistry : ISubRegistry<PacketRegistry> {
             clone._packetTypesByClientBound.Add(pair.Key, [..pair.Value]);
         }
         return clone;
+    }
+
+    ISubRegistry ISubRegistry.Clone() {
+        return Clone();
     }
 
     public void Clear() {

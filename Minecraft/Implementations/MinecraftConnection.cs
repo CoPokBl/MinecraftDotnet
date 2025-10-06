@@ -99,6 +99,12 @@ public abstract class MinecraftConnection : MappedTaggable {
             SendPacket(packet);
         }
     }
+    
+    public void SendPackets(IEnumerable<MinecraftPacket> packets) {
+        foreach (MinecraftPacket packet in packets) {
+            SendPacket(packet);
+        }
+    }
 
     public virtual void SendPacket(MinecraftPacket packet) {
         SendPacketInternal(packet);

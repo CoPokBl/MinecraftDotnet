@@ -53,7 +53,7 @@ public interface IBlock : IProtocolType {
     public static bool SimilarTo(IBlock? b1, IBlock? b2) {
         if (b1 is null && b2 is null) return true;
         if (b1 is null || b2 is null) return false;
-        return b1.Identifier == b2.Identifier;
+        return b1.ProtocolId == b2.ProtocolId;
     }
 
     public string ToString() {

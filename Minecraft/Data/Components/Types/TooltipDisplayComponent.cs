@@ -9,7 +9,7 @@ public record TooltipDisplayComponent(int ProtocolId) : IDataComponent<TooltipDi
     public override DataWriter WriteData(Info val, DataWriter writer, MinecraftRegistry registry) {
         writer.WriteBoolean(val.HideTooltip);
         writer.WritePrefixedArray(val.Hidden,
-            (component, w) => w.WriteVarInt(registry.DataComponents[component.Identifier]));
+            (component, w) => w.WriteVarInt(registry.DataComponents[component.Identifier].ProtocolId));
         return writer;
     }
 

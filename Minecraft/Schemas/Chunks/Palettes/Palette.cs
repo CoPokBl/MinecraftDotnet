@@ -4,10 +4,10 @@ public abstract class Palette(int dimension, int maxBitsPerEntry, int minBitsPer
     /// <summary>
     /// Length of the cube that this palette represents.
     /// </summary>
-    public int Dimension = dimension;
-    
-    public int MaxBitsPerEntry = maxBitsPerEntry;
-    public int MinBitsPerEntry = minBitsPerEntry;
+    public int Dimension { get; } = dimension;
+
+    public int MaxBitsPerEntry { get; } = maxBitsPerEntry;
+    public int MinBitsPerEntry { get; } = minBitsPerEntry;
 
     public abstract bool HasData { get; }
     public abstract byte[] Serialise();

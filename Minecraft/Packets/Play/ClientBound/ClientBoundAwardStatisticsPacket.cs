@@ -5,6 +5,7 @@ using Minecraft.Data.Entities;
 using Minecraft.Data.Items;
 using Minecraft.Data.StatisticTypes;
 using Minecraft.Registry;
+using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;

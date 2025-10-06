@@ -84,7 +84,8 @@ public static class BlockSumoFfa {
             .With(DataComponent.Damage, 10)
             .With(DataComponent.Rarity, ItemRarity.Epic)
             .With(DataComponent.MaxDamage, 100)
-            .With(DataComponent.TooltipDisplay, new TooltipDisplayComponent.Info(true));
+            // .With(DataComponent.TooltipDisplay, new TooltipDisplayComponent.Info(true))
+            .With(DataComponent.Enchantments, [(Enchantment.Breach, 10)]);
         
         PlayerPosition spawn = new(new Vec3<double>(0, 0, 0), Vec3<double>.Zero, Angle.FromDegrees(-90), Angle.Zero);
         ITerrainProvider terrain = new BlockSumoMapProvider(12);

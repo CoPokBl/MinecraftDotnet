@@ -1,5 +1,6 @@
 using Minecraft.Registry;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Tags;
 
 namespace Minecraft.Data.ConsumeEffects.Types;
 

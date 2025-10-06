@@ -1,12 +1,14 @@
 using System.Runtime.InteropServices;
+using Minecraft.Data;
 using Minecraft.Data.Generated;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Packets;
 
-public abstract class MinecraftPacket {
+public abstract class MinecraftPacket : IProtocolType {
     public abstract Identifier Identifier { get; }
+    public int ProtocolId => throw new Exception("Packets do not have a protocol ID");
 
     protected virtual DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w;

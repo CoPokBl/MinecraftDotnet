@@ -1,7 +1,7 @@
 using Minecraft.Data;
 using Minecraft.Registry;
 
-namespace Minecraft.Schemas;
+namespace Minecraft.Schemas.Tags;
 
 public abstract record IdSet : INetworkType<IdSet> {
     

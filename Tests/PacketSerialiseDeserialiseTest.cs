@@ -7,6 +7,7 @@ using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
+using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using NBT.Tags;
@@ -121,7 +122,7 @@ public class PacketSerialiseDeserialiseTest {
             SlotData = [
                 new ItemStack(Item.IronBoots)
                     .With(DataComponent.AttributeModifiers, [
-                        new ItemAttributeModifier(Attribute.Scale, "minecraft:thing", 0.5, AttributeOperation.Add, AttributeActiveSlot.Any)
+                        new ItemAttributeModifier(Attribute.Scale, "minecraft:thing", 0.5, AttributeOperation.Add, EquipmentSlotGroup.Any)
                     ])
             ],
             StateId = 5,

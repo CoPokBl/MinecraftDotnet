@@ -1,5 +1,6 @@
 using Minecraft.Data;
 using Minecraft.Registry;
+using Minecraft.Schemas.Tags;
 using NBT;
 
 namespace Minecraft.Schemas.Blocks;

@@ -18,11 +18,11 @@ public class HashedSlot(int count, IItem? type = null, (IDataComponent, int)[]? 
         writer.WriteVarInt(Count);
 
         writer.WritePrefixedArray(Components, (component, w) => w
-            .WriteVarInt(registry.DataComponents[component.Item1.Identifier])
+            .WriteVarInt(registry.DataComponents[component.Item1.Identifier].ProtocolId)
             .WriteInteger(component.Item2));
         
         return writer.WritePrefixedArray(RemoveComponents, (component, w) => w
-            .WriteVarInt(registry.DataComponents[component.Identifier]));
+            .WriteVarInt(registry.DataComponents[component.Identifier].ProtocolId));
     }
 
     public static HashedSlot ReadData(DataReader reader, MinecraftRegistry registry) {
