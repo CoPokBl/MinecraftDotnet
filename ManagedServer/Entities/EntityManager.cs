@@ -129,6 +129,10 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         
         // Inform viewers of the chunk change
         foreach (PlayerEntity player in entity.World.GetViewersOf(toChunk)) {
+            if (player == entity) {
+                continue;  // Don't send to self
+            }
+            
             if (entity.World.DoesPlayerHaveChunkLoaded(player, fromChunk)) {
                 continue;  // they could already see it
             }
