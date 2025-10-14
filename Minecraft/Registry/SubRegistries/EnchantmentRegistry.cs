@@ -9,14 +9,14 @@ namespace Minecraft.Registry.SubRegistries;
 public class EnchantmentRegistry : ProtocolTypeRegistry<EnchantmentRegistry, IEnchantment>, INbtSerialisableRegistry {
     public override Identifier RegistryId => "minecraft:enchantment";
     
-    public void LoadNbt(Dictionary<string, INbtTag> entries) {
+    public void LoadNbt(Dictionary<string, INbtTag> entries, MinecraftRegistry reg) {
         // Clear existing entries since it would break the protocol ID mapping
         Clear();
         
         int cId = 0;
         foreach (KeyValuePair<string, INbtTag> entry in entries) {
             if (entry.Value is CompoundTag compoundTag) {
-                IEnchantment enchantment = IEnchantment.FromNbt(entry.Key, cId++, compoundTag);
+                IEnchantment enchantment = IEnchantment.FromNbt(entry.Key, cId++, compoundTag, reg);
                 Add(enchantment);
             }
         }

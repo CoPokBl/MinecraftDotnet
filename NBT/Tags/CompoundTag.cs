@@ -5,10 +5,10 @@ namespace NBT.Tags;
 /// </summary>
 /// <param name="name">It's name if used as a child of another compound tag, otherwise it should be null.</param>
 /// <param name="children">Child properties, should all have names, null values are ignored.</param>
-public class CompoundTag(string? name, params INbtTag?[] children) : INbtTag {
+public class CompoundTag(string? name, params INbtTag?[] children) : INbtTag<CompoundTag> {
     /// <summary>Child properties, should all have names, null values are ignored.</summary>
     public INbtTag?[] Children { get; } = children;
-    public string? Name = name;
+    public string? Name { get; } = name;
 
     private Dictionary<string, INbtTag>? _childrenMap;
     public Dictionary<string, INbtTag> ChildrenMap {
@@ -33,11 +33,12 @@ public class CompoundTag(string? name, params INbtTag?[] children) : INbtTag {
     public string? GetName() {
         return Name;
     }
-
-    public CompoundTag WithName(string? n) {
-        Name = n;
-        return this;
+    
+    CompoundTag INbtTag<CompoundTag>.WithName(string? name) {
+        return new CompoundTag(name, Children);
     }
+
+    public INbtTag WithName(string? name) => ((INbtTag<CompoundTag>)this).WithName(name);
     
     public CompoundTag WithChild(INbtTag child) {
         if (child == null) {

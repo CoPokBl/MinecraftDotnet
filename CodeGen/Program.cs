@@ -220,8 +220,10 @@ RunStep("Attributes", AttributeCodeGen.CreateAttributeEntries);
 RunStep("Argument Types", ArgumentTypeCodeGen.CreateArgumentTypeEntries);
 RunStep("Statistic Types", StatisticTypeCodeGen.CreateStatisticTypes);
 RunStep("Custom Statistics", CustomStatisticCodeGen.CreateCustomStatistics);
-RunStep("Enchantments", EnchantmentCodeGen.CreateEnchantmentEntries);
 RunStep("Tags", TagsCodeGen.CreateTagEntries);
+
+// Do dynamic registries last because they might use other vanilla registries
+RunStep("Enchantments", EnchantmentCodeGen.CreateEnchantmentEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

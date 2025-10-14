@@ -5,7 +5,7 @@ namespace NBT.Tags;
 /// The type must be one of the supported types: int, long, or sbyte.
 /// </summary>
 /// <typeparam name="T">One of: int, long, or sbyte.</typeparam>
-public class ArrayTag<T> : INbtTag {
+public class ArrayTag<T> : INbtTag<ArrayTag<T>> {
     // ReSharper disable once StaticMemberInGenericType
     private static readonly Type[] SupportedTypes = [
         typeof(int), typeof(long), typeof(sbyte)
@@ -19,7 +19,7 @@ public class ArrayTag<T> : INbtTag {
         Values = values;
     }
 
-    public string? Name { get; private set; }
+    public string? Name { get; }
     public T[] Values { get; }
 
     public byte GetPrefix() {
@@ -35,10 +35,11 @@ public class ArrayTag<T> : INbtTag {
         return Name;
     }
     
-    public ArrayTag<T> WithName(string name) {
-        Name = name;
-        return this;
+    ArrayTag<T> INbtTag<ArrayTag<T>>.WithName(string? name) {
+        return new ArrayTag<T>(name, Values);
     }
+
+    public INbtTag WithName(string? name) => ((INbtTag<ArrayTag<T>>)this).WithName(name);
     
     public byte[] Serialise(bool noType = false) {
         NbtBuilder b = new NbtBuilder()

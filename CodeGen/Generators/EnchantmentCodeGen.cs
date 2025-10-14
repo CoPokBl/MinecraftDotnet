@@ -22,15 +22,9 @@ public static class EnchantmentCodeGen {
             }
             
             // description is always a translatable component
-            string descTransKey = obj["description"]!["translate"]!.Value<string>()!;
-            int weight = obj["weight"]!.Value<int>();
-            int maxLevel = obj["max_level"]!.Value<int>();
-
-            string val = """ {asd = "h"} """;
-            
             string objJsonStr = obj.ToString(Formatting.None);
             fileEntries.Add($"public static readonly IEnchantment {CodeGenUtils.NamespacedIdToPascalName(key)} = " +
-                            $"IEnchantment.FromNbt(\"{key}\", {cId++}, (CompoundTag)INbtTag.FromJson(\"\"\" {objJsonStr} \"\"\"));");
+                            $"IEnchantment.FromNbt(\"{key}\", {cId++}, (CompoundTag)INbtTag.FromJson(\"\"\" {objJsonStr} \"\"\"), VanillaRegistry.Data);");
             
             regEntries.Add($"{CodeGenUtils.GetIndentation(2)}Data.Enchantments.Add(Enchantment.{CodeGenUtils.NamespacedIdToPascalName(key)});");
         }

@@ -28,7 +28,7 @@ public static class BlockUtils {
 
         // This is hardcoded into the vanilla client.
         if (IBlock.SimilarTo(block, Block.Bamboo) || IBlock.SimilarTo(block, Block.BambooSapling)) {
-            if (VanillaTags.ItemSwords.Contains(tool.Type.Identifier)) {
+            if (VanillaRegistry.Data.Items.Tags["swords"].GetValueIds(VanillaRegistry.Data).Contains(tool.Type.Identifier)) {
                 return 0;  // swords break bamboo instantly
             }
         }

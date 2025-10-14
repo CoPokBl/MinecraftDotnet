@@ -8,16 +8,15 @@ public class ListTag<T> : ListTag where T : INbtTag {
             throw new ArgumentException("List must only be of one type.", nameof(T));
         }
     }
+    
+    public new ListTag<T> WithName(string name) {
+        return new ListTag<T>(Name, Tags);
+    }
 }
 
-public class ListTag(string? name, INbtTag[] tags) : INbtTag {
-    public string? Name { get; set; } = name;
+public class ListTag(string? name, INbtTag[] tags) : INbtTag<ListTag> {
+    public string? Name { get; } = name;
     public INbtTag[] Tags { get; } = tags;
-
-    public ListTag WithName(string name) {
-        Name = name;
-        return this;
-    }
 
     public byte GetPrefix() {
         return NbtTagPrefix.List;
@@ -26,6 +25,12 @@ public class ListTag(string? name, INbtTag[] tags) : INbtTag {
     public string? GetName() {
         return Name;
     }
+    
+    ListTag INbtTag<ListTag>.WithName(string? name) {
+        return new ListTag(name, Tags);
+    }
+
+    public INbtTag WithName(string? name) => ((INbtTag<ListTag>)this).WithName(name);
 
     public byte[] Serialise(bool noType = false) {
         byte type = Tags.Length == 0 ? NbtTagPrefix.End : Tags[0].GetPrefix();

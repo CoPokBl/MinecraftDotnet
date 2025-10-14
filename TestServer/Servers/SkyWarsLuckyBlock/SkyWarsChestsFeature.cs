@@ -23,6 +23,11 @@ public class SkyWarsChestsFeature : ScopedFeature {
         new(SkyWarsItemsFeature.CreateItem(typeof(GoldenAppleItem)), 0.5f, 1, 8),
         new(LuckyBlocksFeature.GetLuckyBlock(), 1f, 1, 32),
         
+        // tools
+        new(new ItemStack(Item.DiamondPickaxe).With(DataComponent.Enchantments, [
+            // (Enchantment.Efficiency, 10)
+        ]), 0.5f, 1, 1),
+        
         // weapons
         new(new ItemStack(Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 6f), 0.8f, 1, 1),
         new(new ItemStack(Item.IronSword).WithTag(SkyWarsCombatFeature.DamageTag, 8f), 0.3f, 1, 1),

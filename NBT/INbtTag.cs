@@ -4,6 +4,17 @@ using Newtonsoft.Json.Linq;
 
 namespace NBT;
 
+public interface INbtTag<out TSelf> : INbtTag where TSelf : INbtTag<TSelf> {
+    /// <summary>
+    /// Returns this NBT tag with the given name.
+    /// <p/>
+    /// See <see cref="INbtTag.GetName"/> for information about a tag's name.
+    /// </summary>
+    /// <param name="name">The name to give it.</param>
+    /// <returns>This tag with the given name.</returns>
+    new TSelf WithName(string? name);
+}
+
 public interface INbtTag {
     /// <summary>
     /// Get the NBT prefix of this tag.
@@ -17,6 +28,15 @@ public interface INbtTag {
     /// </summary>
     /// <returns>This tag's name or null.</returns>
     string? GetName();
+    
+    /// <summary>
+    /// Returns this NBT tag with the given name.
+    /// <p/>
+    /// See <see cref="GetName"/> for information about a tag's name.
+    /// </summary>
+    /// <param name="name">The name to give it.</param>
+    /// <returns>This tag with the given name.</returns>
+    INbtTag WithName(string? name);
     
     /// <summary>
     /// Serialise this NBT tag into a byte array.

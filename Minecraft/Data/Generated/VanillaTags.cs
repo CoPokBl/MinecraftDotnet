@@ -2,7 +2,8 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Generated;
 
-// Generated using the CodeGen project. Do not edit manually.
+// Old generated code, this file is no longer updated.
+[Obsolete("Use VanillaRegistry.Data.REGISTRY.Tags instead for a more dynamic approach. This will be removed.")]
 public static class VanillaTags {
     public static Identifier[] WorldgenStructureOceanRuin => ["minecraft:ocean_ruin_cold", "minecraft:ocean_ruin_warm"];
     public static Identifier[] WorldgenStructureOnWoodlandExplorerMaps => ["minecraft:mansion"];

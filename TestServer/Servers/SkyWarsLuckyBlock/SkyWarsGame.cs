@@ -117,17 +117,6 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
 
         foreach (PlayerEntity player in players) {
             player.GameMode = GameMode.Survival;
-            
-            player.SendPacket(new ClientBoundUpdateTagsPacket {
-                Tags = [
-                    new ClientBoundUpdateTagsPacket.TagSet("block", [
-                        new ClientBoundUpdateTagsPacket.Tag("climbable", [
-                            Block.Ladder.ProtocolId,
-                            Block.Potatoes.ProtocolId
-                        ])
-                    ])
-                ]
-            });
         }
         
         World.AddFeature(new SkyWarsCombatFeature(p => Die(p)));
