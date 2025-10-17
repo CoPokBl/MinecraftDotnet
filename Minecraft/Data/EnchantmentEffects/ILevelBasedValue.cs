@@ -53,11 +53,10 @@ public interface ILevelBasedValue {
         }
 
         public INbtTag ToNbt(string? name = null) {
-            return new CompoundTag(name, [
-                new StringTag("type", "linear"),
-                new FloatTag("base", Base),
-                new FloatTag("per_level_above_first", PerLevelAboveFirst)
-            ]);
+            return new CompoundTag(name, 
+                new StringTag("type", "minecraft:linear"), 
+                new FloatTag("base", Base), 
+                new FloatTag("per_level_above_first", PerLevelAboveFirst));
         }
     }
 
@@ -68,7 +67,7 @@ public interface ILevelBasedValue {
         
         public INbtTag ToNbt(string? name = null) {
             return new CompoundTag(name,
-                new StringTag("type", "clamped"),
+                new StringTag("type", "minecraft:clamped"),
                 Value.ToNbt("value"),
                 new FloatTag("min", Min),
                 new FloatTag("max", Max)
@@ -87,7 +86,7 @@ public interface ILevelBasedValue {
 
         public INbtTag ToNbt(string? name = null) {
             return new CompoundTag(name,
-                new StringTag("type", "fraction"),
+                new StringTag("type", "minecraft:fraction"),
                 Numerator.ToNbt("numerator"),
                 Denominator.ToNbt("denominator")
             );
@@ -101,7 +100,7 @@ public interface ILevelBasedValue {
 
         public INbtTag ToNbt(string? name = null) {
             return new CompoundTag(name,
-                new StringTag("type", "levels_squared"),
+                new StringTag("type", "minecraft:levels_squared"),
                 new FloatTag("added", Added)
             );
         }
@@ -117,7 +116,7 @@ public interface ILevelBasedValue {
 
         public INbtTag ToNbt(string? name = null) {
             return new CompoundTag(name,
-                new StringTag("type", "lookup"),
+                new StringTag("type", "minecraft:lookup"),
                 new ListTag("values", Values.Select(v => new FloatTag(null, v)).ToArray<INbtTag>()),
                 Fallback.ToNbt("fallback")
             );

@@ -25,12 +25,13 @@ public record AttributeEnchantmentEffect(AttributeEnchantmentEffect.Effect[] Eff
                 "add_multiplied_base" => AttributeOperation.AddMultipliedBase,
                 "add_multiplied_total" => AttributeOperation.AddMultipliedTotal,
                 _ => throw new ArgumentException("Unknown attribute operation: " + compound["operation"].GetString())
-            });
+            },
+            compound["id"].GetString());
     }
 
     public INbtTag SerialiseData() {
         return new ListTag(null, Effects.Select(INbtTag (e) => new CompoundTag(null, 
-            new StringTag("id", Id), 
+            new StringTag("id", e.ModifierId),
             new StringTag("attribute", e.Attribute.Identifier), 
             e.Amount.ToNbt("amount"), 
             new StringTag("operation", 
@@ -42,5 +43,5 @@ public record AttributeEnchantmentEffect(AttributeEnchantmentEffect.Effect[] Eff
         }))).ToArray());
     }
 
-    public record Effect(IAttribute Attribute, ILevelBasedValue Amount, AttributeOperation Operation);
+    public record Effect(IAttribute Attribute, ILevelBasedValue Amount, AttributeOperation Operation, string ModifierId);
 }

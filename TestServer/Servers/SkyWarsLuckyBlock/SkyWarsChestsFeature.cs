@@ -25,8 +25,12 @@ public class SkyWarsChestsFeature : ScopedFeature {
         
         // tools
         new(new ItemStack(Item.DiamondPickaxe).With(DataComponent.Enchantments, [
+            (Enchantment.Efficiency, 10)
+        ]), 1f, 1, 1),
+        
+        new(new ItemStack(Item.DiamondPickaxe).With(DataComponent.Enchantments, [
             // (Enchantment.Efficiency, 10)
-        ]), 0.5f, 1, 1),
+        ]), 1f, 1, 1),
         
         // weapons
         new(new ItemStack(Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 6f), 0.8f, 1, 1),
