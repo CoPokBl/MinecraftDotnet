@@ -26,7 +26,8 @@ public partial class ManagedMinecraftServer {
         new UseItemEventFeature(),
         new RightClickToEquipArmourFeature(),
         new CommandsFeature(),
-        new InventoryClosingFeature()
+        new InventoryClosingFeature(),
+        new AttributeModifiersFeature(true)
     );
 
     public static FeatureBundle BasicsWithMojangAuthBundle => BasicsBundle

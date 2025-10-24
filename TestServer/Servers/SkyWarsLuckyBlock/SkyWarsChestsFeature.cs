@@ -7,6 +7,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
@@ -55,10 +56,17 @@ public class SkyWarsChestsFeature : ScopedFeature {
         new(new ItemStack(Item.TurtleHelmet)
             .WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.5f)
             .With(DataComponent.ItemName, TextComponent.FromLegacyString("&aHelmet of the no moving and no damage"))
-            .WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
-                new AttributeModifiersFeature.Modifier(Attribute.MovementSpeed.Identifier, -1, 
-                    "skywars:nomovenodamagehelmet", AttributeOperation.AddMultipliedTotal)
-            ]), 0.1f, 1, 1),
+            // .WithTag(AttributeModifiersFeature.AttributeModifiersTag, [
+            //     new AttributeModifiersFeature.Modifier(Attribute.MovementSpeed.Identifier, -1, 
+            //         "skywars:nomovenodamagehelmet", AttributeOperation.AddMultipliedTotal)
+            // ])
+            .With(DataComponent.AttributeModifiers, [new ItemAttributeModifier(
+                Attribute.MovementSpeed, 
+                "skywars:nomovenodamagehelmet",
+                -1,
+                AttributeOperation.AddMultipliedTotal,
+                EquipmentSlotGroup.Head, ItemAttributeModifier.Display.DefaultMode())])
+            , 1f, 1, 1),
     ];
     
     private record LootTableEntry(ItemStack Item, float Chance, int MinCount, int MaxCount);

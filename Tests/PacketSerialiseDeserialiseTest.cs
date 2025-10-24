@@ -122,7 +122,7 @@ public class PacketSerialiseDeserialiseTest {
             SlotData = [
                 new ItemStack(Item.IronBoots)
                     .With(DataComponent.AttributeModifiers, [
-                        new ItemAttributeModifier(Attribute.Scale, "minecraft:thing", 0.5, AttributeOperation.Add, EquipmentSlotGroup.Any)
+                        new ItemAttributeModifier(Attribute.Scale, "minecraft:thing", 0.5, AttributeOperation.Add, EquipmentSlotGroup.Any, ItemAttributeModifier.Display.DefaultMode())
                     ])
             ],
             StateId = 5,

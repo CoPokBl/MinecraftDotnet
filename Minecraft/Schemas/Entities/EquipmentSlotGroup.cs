@@ -18,4 +18,6 @@ public record EquipmentSlotGroup(int ProtocolId, string Name, params EquipmentSl
     
     public static EquipmentSlotGroup FromName(string value) => Values.First(v => v.Name == value);
     public static EquipmentSlotGroup FromProtocolId(int id) => Values.First(v => v.ProtocolId == id);
+    
+    public bool ContainsSlot(EquipmentSlot slot) => Slots.Contains(slot);
 }
