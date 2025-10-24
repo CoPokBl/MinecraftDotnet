@@ -122,6 +122,10 @@ public class DataReader(byte[] data) : Stream {
         byte[] bytes = Read(4);
         return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
     }
+
+    public uint ReadUInteger() {
+        return BinaryPrimitives.ReadUInt32BigEndian(Read(4));
+    }
     
     public Vec3<double> ReadVec3() {
         double x = ReadDouble();

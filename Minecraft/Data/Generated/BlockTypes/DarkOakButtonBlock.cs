@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DarkOakButtonBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:button";
-    public int ProtocolId => 417;
+    public int ProtocolId => 447;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -45,58 +45,58 @@ public record DarkOakButtonBlock(Identifier Identifier, AttachDirection Face, Di
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9540,
-                        false => 9541,
+                        true => 10617,
+                        false => 10618,
                     },
                     Direction.South => Powered switch {
-                        true => 9542,
-                        false => 9543,
+                        true => 10619,
+                        false => 10620,
                     },
                     Direction.West => Powered switch {
-                        true => 9544,
-                        false => 9545,
+                        true => 10621,
+                        false => 10622,
                     },
                     Direction.East => Powered switch {
-                        true => 9546,
-                        false => 9547,
+                        true => 10623,
+                        false => 10624,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9548,
-                        false => 9549,
+                        true => 10625,
+                        false => 10626,
                     },
                     Direction.South => Powered switch {
-                        true => 9550,
-                        false => 9551,
+                        true => 10627,
+                        false => 10628,
                     },
                     Direction.West => Powered switch {
-                        true => 9552,
-                        false => 9553,
+                        true => 10629,
+                        false => 10630,
                     },
                     Direction.East => Powered switch {
-                        true => 9554,
-                        false => 9555,
+                        true => 10631,
+                        false => 10632,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9556,
-                        false => 9557,
+                        true => 10633,
+                        false => 10634,
                     },
                     Direction.South => Powered switch {
-                        true => 9558,
-                        false => 9559,
+                        true => 10635,
+                        false => 10636,
                     },
                     Direction.West => Powered switch {
-                        true => 9560,
-                        false => 9561,
+                        true => 10637,
+                        false => 10638,
                     },
                     Direction.East => Powered switch {
-                        true => 9562,
-                        false => 9563,
+                        true => 10639,
+                        false => 10640,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -107,30 +107,30 @@ public record DarkOakButtonBlock(Identifier Identifier, AttachDirection Face, Di
     
     public IBlock WithState(uint state) {
         return state switch {
-            9540 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            9541 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            9542 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            9543 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            9544 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            9545 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            9546 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            9547 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            9548 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            9549 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            9550 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            9551 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            9552 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            9553 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            9554 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            9555 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            9556 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            9557 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            9558 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            9559 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            9560 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            9561 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            9562 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            9563 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            10617 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            10618 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            10619 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            10620 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            10621 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            10622 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            10623 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            10624 => new DarkOakButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            10625 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            10626 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            10627 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            10628 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            10629 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            10630 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            10631 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            10632 => new DarkOakButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            10633 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            10634 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            10635 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            10636 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            10637 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            10638 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            10639 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            10640 => new DarkOakButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

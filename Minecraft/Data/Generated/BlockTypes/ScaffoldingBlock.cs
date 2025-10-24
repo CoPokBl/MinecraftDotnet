@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:scaffolding";
-    public int ProtocolId => 805;
+    public int ProtocolId => 835;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -45,71 +45,71 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
             return Bottom switch {
                 true => Distance switch {
                     0 => Waterlogged switch {
-                        true => 19427,
-                        false => 19428,
+                        true => 20504,
+                        false => 20505,
                     },
                     1 => Waterlogged switch {
-                        true => 19429,
-                        false => 19430,
+                        true => 20506,
+                        false => 20507,
                     },
                     2 => Waterlogged switch {
-                        true => 19431,
-                        false => 19432,
+                        true => 20508,
+                        false => 20509,
                     },
                     3 => Waterlogged switch {
-                        true => 19433,
-                        false => 19434,
+                        true => 20510,
+                        false => 20511,
                     },
                     4 => Waterlogged switch {
-                        true => 19435,
-                        false => 19436,
+                        true => 20512,
+                        false => 20513,
                     },
                     5 => Waterlogged switch {
-                        true => 19437,
-                        false => 19438,
+                        true => 20514,
+                        false => 20515,
                     },
                     6 => Waterlogged switch {
-                        true => 19439,
-                        false => 19440,
+                        true => 20516,
+                        false => 20517,
                     },
                     7 => Waterlogged switch {
-                        true => 19441,
-                        false => 19442,
+                        true => 20518,
+                        false => 20519,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
                 },
                 false => Distance switch {
                     0 => Waterlogged switch {
-                        true => 19443,
-                        false => 19444,
+                        true => 20520,
+                        false => 20521,
                     },
                     1 => Waterlogged switch {
-                        true => 19445,
-                        false => 19446,
+                        true => 20522,
+                        false => 20523,
                     },
                     2 => Waterlogged switch {
-                        true => 19447,
-                        false => 19448,
+                        true => 20524,
+                        false => 20525,
                     },
                     3 => Waterlogged switch {
-                        true => 19449,
-                        false => 19450,
+                        true => 20526,
+                        false => 20527,
                     },
                     4 => Waterlogged switch {
-                        true => 19451,
-                        false => 19452,
+                        true => 20528,
+                        false => 20529,
                     },
                     5 => Waterlogged switch {
-                        true => 19453,
-                        false => 19454,
+                        true => 20530,
+                        false => 20531,
                     },
                     6 => Waterlogged switch {
-                        true => 19455,
-                        false => 19456,
+                        true => 20532,
+                        false => 20533,
                     },
                     7 => Waterlogged switch {
-                        true => 19457,
-                        false => 19458,
+                        true => 20534,
+                        false => 20535,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
                 },
@@ -119,38 +119,38 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
     
     public IBlock WithState(uint state) {
         return state switch {
-            19427 => new ScaffoldingBlock(Identifier, true, 0, true),
-            19428 => new ScaffoldingBlock(Identifier, true, 0, false),
-            19429 => new ScaffoldingBlock(Identifier, true, 1, true),
-            19430 => new ScaffoldingBlock(Identifier, true, 1, false),
-            19431 => new ScaffoldingBlock(Identifier, true, 2, true),
-            19432 => new ScaffoldingBlock(Identifier, true, 2, false),
-            19433 => new ScaffoldingBlock(Identifier, true, 3, true),
-            19434 => new ScaffoldingBlock(Identifier, true, 3, false),
-            19435 => new ScaffoldingBlock(Identifier, true, 4, true),
-            19436 => new ScaffoldingBlock(Identifier, true, 4, false),
-            19437 => new ScaffoldingBlock(Identifier, true, 5, true),
-            19438 => new ScaffoldingBlock(Identifier, true, 5, false),
-            19439 => new ScaffoldingBlock(Identifier, true, 6, true),
-            19440 => new ScaffoldingBlock(Identifier, true, 6, false),
-            19441 => new ScaffoldingBlock(Identifier, true, 7, true),
-            19442 => new ScaffoldingBlock(Identifier, true, 7, false),
-            19443 => new ScaffoldingBlock(Identifier, false, 0, true),
-            19444 => new ScaffoldingBlock(Identifier, false, 0, false),
-            19445 => new ScaffoldingBlock(Identifier, false, 1, true),
-            19446 => new ScaffoldingBlock(Identifier, false, 1, false),
-            19447 => new ScaffoldingBlock(Identifier, false, 2, true),
-            19448 => new ScaffoldingBlock(Identifier, false, 2, false),
-            19449 => new ScaffoldingBlock(Identifier, false, 3, true),
-            19450 => new ScaffoldingBlock(Identifier, false, 3, false),
-            19451 => new ScaffoldingBlock(Identifier, false, 4, true),
-            19452 => new ScaffoldingBlock(Identifier, false, 4, false),
-            19453 => new ScaffoldingBlock(Identifier, false, 5, true),
-            19454 => new ScaffoldingBlock(Identifier, false, 5, false),
-            19455 => new ScaffoldingBlock(Identifier, false, 6, true),
-            19456 => new ScaffoldingBlock(Identifier, false, 6, false),
-            19457 => new ScaffoldingBlock(Identifier, false, 7, true),
-            19458 => new ScaffoldingBlock(Identifier, false, 7, false),
+            20504 => new ScaffoldingBlock(Identifier, true, 0, true),
+            20505 => new ScaffoldingBlock(Identifier, true, 0, false),
+            20506 => new ScaffoldingBlock(Identifier, true, 1, true),
+            20507 => new ScaffoldingBlock(Identifier, true, 1, false),
+            20508 => new ScaffoldingBlock(Identifier, true, 2, true),
+            20509 => new ScaffoldingBlock(Identifier, true, 2, false),
+            20510 => new ScaffoldingBlock(Identifier, true, 3, true),
+            20511 => new ScaffoldingBlock(Identifier, true, 3, false),
+            20512 => new ScaffoldingBlock(Identifier, true, 4, true),
+            20513 => new ScaffoldingBlock(Identifier, true, 4, false),
+            20514 => new ScaffoldingBlock(Identifier, true, 5, true),
+            20515 => new ScaffoldingBlock(Identifier, true, 5, false),
+            20516 => new ScaffoldingBlock(Identifier, true, 6, true),
+            20517 => new ScaffoldingBlock(Identifier, true, 6, false),
+            20518 => new ScaffoldingBlock(Identifier, true, 7, true),
+            20519 => new ScaffoldingBlock(Identifier, true, 7, false),
+            20520 => new ScaffoldingBlock(Identifier, false, 0, true),
+            20521 => new ScaffoldingBlock(Identifier, false, 0, false),
+            20522 => new ScaffoldingBlock(Identifier, false, 1, true),
+            20523 => new ScaffoldingBlock(Identifier, false, 1, false),
+            20524 => new ScaffoldingBlock(Identifier, false, 2, true),
+            20525 => new ScaffoldingBlock(Identifier, false, 2, false),
+            20526 => new ScaffoldingBlock(Identifier, false, 3, true),
+            20527 => new ScaffoldingBlock(Identifier, false, 3, false),
+            20528 => new ScaffoldingBlock(Identifier, false, 4, true),
+            20529 => new ScaffoldingBlock(Identifier, false, 4, false),
+            20530 => new ScaffoldingBlock(Identifier, false, 5, true),
+            20531 => new ScaffoldingBlock(Identifier, false, 5, false),
+            20532 => new ScaffoldingBlock(Identifier, false, 6, true),
+            20533 => new ScaffoldingBlock(Identifier, false, 6, false),
+            20534 => new ScaffoldingBlock(Identifier, false, 7, true),
+            20535 => new ScaffoldingBlock(Identifier, false, 7, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

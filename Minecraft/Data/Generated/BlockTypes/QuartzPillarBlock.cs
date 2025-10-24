@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record QuartzPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:rotated_pillar";
-    public int ProtocolId => 448;
+    public int ProtocolId => 478;
     public double Hardness => 0.8;
     public double ExplosionResistance => 0.8;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record QuartzPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 10046,
-                Axis.Y => 10047,
-                Axis.Z => 10048,
+                Axis.X => 11123,
+                Axis.Y => 11124,
+                Axis.Z => 11125,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record QuartzPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            10046 => new QuartzPillarBlock(Identifier, Axis.X),
-            10047 => new QuartzPillarBlock(Identifier, Axis.Y),
-            10048 => new QuartzPillarBlock(Identifier, Axis.Z),
+            11123 => new QuartzPillarBlock(Identifier, Axis.X),
+            11124 => new QuartzPillarBlock(Identifier, Axis.Y),
+            11125 => new QuartzPillarBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

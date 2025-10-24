@@ -48,7 +48,9 @@ public static class SkyWarsLuckyBlock {
         // };
         // bob.SetWorld(lobby);
 
-        NpcEntity billy = new(new PlayerMeta(SkinFlags:SkinParts.All)) {
+        NpcEntity billy = new(new PlayerMeta {
+            SkinFlags = SkinParts.All
+        }) {
             Position = LobbySpawn,
             Name = ChatUtils.FormatLegacy("&a&lBilly"),
             Skin = PlayerSkin.FromUuid(Guid.Parse("b876ec32e396476ba1158438d83c67d4")).Result

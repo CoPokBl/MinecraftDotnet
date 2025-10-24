@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BlackWallBannerBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:wall_banner";
-    public int ProtocolId => 562;
+    public int ProtocolId => 592;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record BlackWallBannerBlock(Identifier Identifier, Direction Facing) : IB
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 11964,
-                Direction.South => 11965,
-                Direction.West => 11966,
-                Direction.East => 11967,
+                Direction.North => 13041,
+                Direction.South => 13042,
+                Direction.West => 13043,
+                Direction.East => 13044,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record BlackWallBannerBlock(Identifier Identifier, Direction Facing) : IB
     
     public IBlock WithState(uint state) {
         return state switch {
-            11964 => new BlackWallBannerBlock(Identifier, Direction.North),
-            11965 => new BlackWallBannerBlock(Identifier, Direction.South),
-            11966 => new BlackWallBannerBlock(Identifier, Direction.West),
-            11967 => new BlackWallBannerBlock(Identifier, Direction.East),
+            13041 => new BlackWallBannerBlock(Identifier, Direction.North),
+            13042 => new BlackWallBannerBlock(Identifier, Direction.South),
+            13043 => new BlackWallBannerBlock(Identifier, Direction.West),
+            13044 => new BlackWallBannerBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record GlassPaneBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
     public Identifier Category => "minecraft:iron_bars";
-    public int ProtocolId => 328;
+    public int ProtocolId => 358;
     public double Hardness => 0.3;
     public double ExplosionResistance => 0.3;
     public double Friction => 0.6;
@@ -47,44 +47,44 @@ public record GlassPaneBlock(Identifier Identifier, bool East, bool North, bool 
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7022,
-                                false => 7023,
+                                true => 8099,
+                                false => 8100,
                             },
                             false => West switch {
-                                true => 7024,
-                                false => 7025,
+                                true => 8101,
+                                false => 8102,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7026,
-                                false => 7027,
+                                true => 8103,
+                                false => 8104,
                             },
                             false => West switch {
-                                true => 7028,
-                                false => 7029,
+                                true => 8105,
+                                false => 8106,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7030,
-                                false => 7031,
+                                true => 8107,
+                                false => 8108,
                             },
                             false => West switch {
-                                true => 7032,
-                                false => 7033,
+                                true => 8109,
+                                false => 8110,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7034,
-                                false => 7035,
+                                true => 8111,
+                                false => 8112,
                             },
                             false => West switch {
-                                true => 7036,
-                                false => 7037,
+                                true => 8113,
+                                false => 8114,
                             },
                         },
                     },
@@ -93,44 +93,44 @@ public record GlassPaneBlock(Identifier Identifier, bool East, bool North, bool 
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7038,
-                                false => 7039,
+                                true => 8115,
+                                false => 8116,
                             },
                             false => West switch {
-                                true => 7040,
-                                false => 7041,
+                                true => 8117,
+                                false => 8118,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7042,
-                                false => 7043,
+                                true => 8119,
+                                false => 8120,
                             },
                             false => West switch {
-                                true => 7044,
-                                false => 7045,
+                                true => 8121,
+                                false => 8122,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7046,
-                                false => 7047,
+                                true => 8123,
+                                false => 8124,
                             },
                             false => West switch {
-                                true => 7048,
-                                false => 7049,
+                                true => 8125,
+                                false => 8126,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7050,
-                                false => 7051,
+                                true => 8127,
+                                false => 8128,
                             },
                             false => West switch {
-                                true => 7052,
-                                false => 7053,
+                                true => 8129,
+                                false => 8130,
                             },
                         },
                     },
@@ -141,38 +141,38 @@ public record GlassPaneBlock(Identifier Identifier, bool East, bool North, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            7022 => new GlassPaneBlock(Identifier, true, true, true, true, true),
-            7023 => new GlassPaneBlock(Identifier, true, true, true, true, false),
-            7024 => new GlassPaneBlock(Identifier, true, true, true, false, true),
-            7025 => new GlassPaneBlock(Identifier, true, true, true, false, false),
-            7026 => new GlassPaneBlock(Identifier, true, true, false, true, true),
-            7027 => new GlassPaneBlock(Identifier, true, true, false, true, false),
-            7028 => new GlassPaneBlock(Identifier, true, true, false, false, true),
-            7029 => new GlassPaneBlock(Identifier, true, true, false, false, false),
-            7030 => new GlassPaneBlock(Identifier, true, false, true, true, true),
-            7031 => new GlassPaneBlock(Identifier, true, false, true, true, false),
-            7032 => new GlassPaneBlock(Identifier, true, false, true, false, true),
-            7033 => new GlassPaneBlock(Identifier, true, false, true, false, false),
-            7034 => new GlassPaneBlock(Identifier, true, false, false, true, true),
-            7035 => new GlassPaneBlock(Identifier, true, false, false, true, false),
-            7036 => new GlassPaneBlock(Identifier, true, false, false, false, true),
-            7037 => new GlassPaneBlock(Identifier, true, false, false, false, false),
-            7038 => new GlassPaneBlock(Identifier, false, true, true, true, true),
-            7039 => new GlassPaneBlock(Identifier, false, true, true, true, false),
-            7040 => new GlassPaneBlock(Identifier, false, true, true, false, true),
-            7041 => new GlassPaneBlock(Identifier, false, true, true, false, false),
-            7042 => new GlassPaneBlock(Identifier, false, true, false, true, true),
-            7043 => new GlassPaneBlock(Identifier, false, true, false, true, false),
-            7044 => new GlassPaneBlock(Identifier, false, true, false, false, true),
-            7045 => new GlassPaneBlock(Identifier, false, true, false, false, false),
-            7046 => new GlassPaneBlock(Identifier, false, false, true, true, true),
-            7047 => new GlassPaneBlock(Identifier, false, false, true, true, false),
-            7048 => new GlassPaneBlock(Identifier, false, false, true, false, true),
-            7049 => new GlassPaneBlock(Identifier, false, false, true, false, false),
-            7050 => new GlassPaneBlock(Identifier, false, false, false, true, true),
-            7051 => new GlassPaneBlock(Identifier, false, false, false, true, false),
-            7052 => new GlassPaneBlock(Identifier, false, false, false, false, true),
-            7053 => new GlassPaneBlock(Identifier, false, false, false, false, false),
+            8099 => new GlassPaneBlock(Identifier, true, true, true, true, true),
+            8100 => new GlassPaneBlock(Identifier, true, true, true, true, false),
+            8101 => new GlassPaneBlock(Identifier, true, true, true, false, true),
+            8102 => new GlassPaneBlock(Identifier, true, true, true, false, false),
+            8103 => new GlassPaneBlock(Identifier, true, true, false, true, true),
+            8104 => new GlassPaneBlock(Identifier, true, true, false, true, false),
+            8105 => new GlassPaneBlock(Identifier, true, true, false, false, true),
+            8106 => new GlassPaneBlock(Identifier, true, true, false, false, false),
+            8107 => new GlassPaneBlock(Identifier, true, false, true, true, true),
+            8108 => new GlassPaneBlock(Identifier, true, false, true, true, false),
+            8109 => new GlassPaneBlock(Identifier, true, false, true, false, true),
+            8110 => new GlassPaneBlock(Identifier, true, false, true, false, false),
+            8111 => new GlassPaneBlock(Identifier, true, false, false, true, true),
+            8112 => new GlassPaneBlock(Identifier, true, false, false, true, false),
+            8113 => new GlassPaneBlock(Identifier, true, false, false, false, true),
+            8114 => new GlassPaneBlock(Identifier, true, false, false, false, false),
+            8115 => new GlassPaneBlock(Identifier, false, true, true, true, true),
+            8116 => new GlassPaneBlock(Identifier, false, true, true, true, false),
+            8117 => new GlassPaneBlock(Identifier, false, true, true, false, true),
+            8118 => new GlassPaneBlock(Identifier, false, true, true, false, false),
+            8119 => new GlassPaneBlock(Identifier, false, true, false, true, true),
+            8120 => new GlassPaneBlock(Identifier, false, true, false, true, false),
+            8121 => new GlassPaneBlock(Identifier, false, true, false, false, true),
+            8122 => new GlassPaneBlock(Identifier, false, true, false, false, false),
+            8123 => new GlassPaneBlock(Identifier, false, false, true, true, true),
+            8124 => new GlassPaneBlock(Identifier, false, false, true, true, false),
+            8125 => new GlassPaneBlock(Identifier, false, false, true, false, true),
+            8126 => new GlassPaneBlock(Identifier, false, false, true, false, false),
+            8127 => new GlassPaneBlock(Identifier, false, false, false, true, true),
+            8128 => new GlassPaneBlock(Identifier, false, false, false, true, false),
+            8129 => new GlassPaneBlock(Identifier, false, false, false, false, true),
+            8130 => new GlassPaneBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

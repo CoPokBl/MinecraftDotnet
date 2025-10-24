@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:observer";
-    public int ProtocolId => 644;
+    public int ProtocolId => 674;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,28 +44,28 @@ public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered
         get {
             return Facing switch {
                 Cardinal.North => Powered switch {
-                    true => 13573,
-                    false => 13574,
+                    true => 14650,
+                    false => 14651,
                 },
                 Cardinal.East => Powered switch {
-                    true => 13575,
-                    false => 13576,
+                    true => 14652,
+                    false => 14653,
                 },
                 Cardinal.South => Powered switch {
-                    true => 13577,
-                    false => 13578,
+                    true => 14654,
+                    false => 14655,
                 },
                 Cardinal.West => Powered switch {
-                    true => 13579,
-                    false => 13580,
+                    true => 14656,
+                    false => 14657,
                 },
                 Cardinal.Up => Powered switch {
-                    true => 13581,
-                    false => 13582,
+                    true => 14658,
+                    false => 14659,
                 },
                 Cardinal.Down => Powered switch {
-                    true => 13583,
-                    false => 13584,
+                    true => 14660,
+                    false => 14661,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -74,18 +74,18 @@ public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered
     
     public IBlock WithState(uint state) {
         return state switch {
-            13573 => new ObserverBlock(Identifier, Cardinal.North, true),
-            13574 => new ObserverBlock(Identifier, Cardinal.North, false),
-            13575 => new ObserverBlock(Identifier, Cardinal.East, true),
-            13576 => new ObserverBlock(Identifier, Cardinal.East, false),
-            13577 => new ObserverBlock(Identifier, Cardinal.South, true),
-            13578 => new ObserverBlock(Identifier, Cardinal.South, false),
-            13579 => new ObserverBlock(Identifier, Cardinal.West, true),
-            13580 => new ObserverBlock(Identifier, Cardinal.West, false),
-            13581 => new ObserverBlock(Identifier, Cardinal.Up, true),
-            13582 => new ObserverBlock(Identifier, Cardinal.Up, false),
-            13583 => new ObserverBlock(Identifier, Cardinal.Down, true),
-            13584 => new ObserverBlock(Identifier, Cardinal.Down, false),
+            14650 => new ObserverBlock(Identifier, Cardinal.North, true),
+            14651 => new ObserverBlock(Identifier, Cardinal.North, false),
+            14652 => new ObserverBlock(Identifier, Cardinal.East, true),
+            14653 => new ObserverBlock(Identifier, Cardinal.East, false),
+            14654 => new ObserverBlock(Identifier, Cardinal.South, true),
+            14655 => new ObserverBlock(Identifier, Cardinal.South, false),
+            14656 => new ObserverBlock(Identifier, Cardinal.West, true),
+            14657 => new ObserverBlock(Identifier, Cardinal.West, false),
+            14658 => new ObserverBlock(Identifier, Cardinal.Up, true),
+            14659 => new ObserverBlock(Identifier, Cardinal.Up, false),
+            14660 => new ObserverBlock(Identifier, Cardinal.Down, true),
+            14661 => new ObserverBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

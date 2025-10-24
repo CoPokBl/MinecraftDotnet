@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PaleOakSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:standing_sign";
-    public int ProtocolId => 204;
+    public int ProtocolId => 216;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,68 +44,68 @@ public record PaleOakSignBlock(Identifier Identifier, int Rotation, bool Waterlo
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 4590,
-                    false => 4591,
+                    true => 5358,
+                    false => 5359,
                 },
                 1 => Waterlogged switch {
-                    true => 4592,
-                    false => 4593,
+                    true => 5360,
+                    false => 5361,
                 },
                 2 => Waterlogged switch {
-                    true => 4594,
-                    false => 4595,
+                    true => 5362,
+                    false => 5363,
                 },
                 3 => Waterlogged switch {
-                    true => 4596,
-                    false => 4597,
+                    true => 5364,
+                    false => 5365,
                 },
                 4 => Waterlogged switch {
-                    true => 4598,
-                    false => 4599,
+                    true => 5366,
+                    false => 5367,
                 },
                 5 => Waterlogged switch {
-                    true => 4600,
-                    false => 4601,
+                    true => 5368,
+                    false => 5369,
                 },
                 6 => Waterlogged switch {
-                    true => 4602,
-                    false => 4603,
+                    true => 5370,
+                    false => 5371,
                 },
                 7 => Waterlogged switch {
-                    true => 4604,
-                    false => 4605,
+                    true => 5372,
+                    false => 5373,
                 },
                 8 => Waterlogged switch {
-                    true => 4606,
-                    false => 4607,
+                    true => 5374,
+                    false => 5375,
                 },
                 9 => Waterlogged switch {
-                    true => 4608,
-                    false => 4609,
+                    true => 5376,
+                    false => 5377,
                 },
                 10 => Waterlogged switch {
-                    true => 4610,
-                    false => 4611,
+                    true => 5378,
+                    false => 5379,
                 },
                 11 => Waterlogged switch {
-                    true => 4612,
-                    false => 4613,
+                    true => 5380,
+                    false => 5381,
                 },
                 12 => Waterlogged switch {
-                    true => 4614,
-                    false => 4615,
+                    true => 5382,
+                    false => 5383,
                 },
                 13 => Waterlogged switch {
-                    true => 4616,
-                    false => 4617,
+                    true => 5384,
+                    false => 5385,
                 },
                 14 => Waterlogged switch {
-                    true => 4618,
-                    false => 4619,
+                    true => 5386,
+                    false => 5387,
                 },
                 15 => Waterlogged switch {
-                    true => 4620,
-                    false => 4621,
+                    true => 5388,
+                    false => 5389,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -114,38 +114,38 @@ public record PaleOakSignBlock(Identifier Identifier, int Rotation, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            4590 => new PaleOakSignBlock(Identifier, 0, true),
-            4591 => new PaleOakSignBlock(Identifier, 0, false),
-            4592 => new PaleOakSignBlock(Identifier, 1, true),
-            4593 => new PaleOakSignBlock(Identifier, 1, false),
-            4594 => new PaleOakSignBlock(Identifier, 2, true),
-            4595 => new PaleOakSignBlock(Identifier, 2, false),
-            4596 => new PaleOakSignBlock(Identifier, 3, true),
-            4597 => new PaleOakSignBlock(Identifier, 3, false),
-            4598 => new PaleOakSignBlock(Identifier, 4, true),
-            4599 => new PaleOakSignBlock(Identifier, 4, false),
-            4600 => new PaleOakSignBlock(Identifier, 5, true),
-            4601 => new PaleOakSignBlock(Identifier, 5, false),
-            4602 => new PaleOakSignBlock(Identifier, 6, true),
-            4603 => new PaleOakSignBlock(Identifier, 6, false),
-            4604 => new PaleOakSignBlock(Identifier, 7, true),
-            4605 => new PaleOakSignBlock(Identifier, 7, false),
-            4606 => new PaleOakSignBlock(Identifier, 8, true),
-            4607 => new PaleOakSignBlock(Identifier, 8, false),
-            4608 => new PaleOakSignBlock(Identifier, 9, true),
-            4609 => new PaleOakSignBlock(Identifier, 9, false),
-            4610 => new PaleOakSignBlock(Identifier, 10, true),
-            4611 => new PaleOakSignBlock(Identifier, 10, false),
-            4612 => new PaleOakSignBlock(Identifier, 11, true),
-            4613 => new PaleOakSignBlock(Identifier, 11, false),
-            4614 => new PaleOakSignBlock(Identifier, 12, true),
-            4615 => new PaleOakSignBlock(Identifier, 12, false),
-            4616 => new PaleOakSignBlock(Identifier, 13, true),
-            4617 => new PaleOakSignBlock(Identifier, 13, false),
-            4618 => new PaleOakSignBlock(Identifier, 14, true),
-            4619 => new PaleOakSignBlock(Identifier, 14, false),
-            4620 => new PaleOakSignBlock(Identifier, 15, true),
-            4621 => new PaleOakSignBlock(Identifier, 15, false),
+            5358 => new PaleOakSignBlock(Identifier, 0, true),
+            5359 => new PaleOakSignBlock(Identifier, 0, false),
+            5360 => new PaleOakSignBlock(Identifier, 1, true),
+            5361 => new PaleOakSignBlock(Identifier, 1, false),
+            5362 => new PaleOakSignBlock(Identifier, 2, true),
+            5363 => new PaleOakSignBlock(Identifier, 2, false),
+            5364 => new PaleOakSignBlock(Identifier, 3, true),
+            5365 => new PaleOakSignBlock(Identifier, 3, false),
+            5366 => new PaleOakSignBlock(Identifier, 4, true),
+            5367 => new PaleOakSignBlock(Identifier, 4, false),
+            5368 => new PaleOakSignBlock(Identifier, 5, true),
+            5369 => new PaleOakSignBlock(Identifier, 5, false),
+            5370 => new PaleOakSignBlock(Identifier, 6, true),
+            5371 => new PaleOakSignBlock(Identifier, 6, false),
+            5372 => new PaleOakSignBlock(Identifier, 7, true),
+            5373 => new PaleOakSignBlock(Identifier, 7, false),
+            5374 => new PaleOakSignBlock(Identifier, 8, true),
+            5375 => new PaleOakSignBlock(Identifier, 8, false),
+            5376 => new PaleOakSignBlock(Identifier, 9, true),
+            5377 => new PaleOakSignBlock(Identifier, 9, false),
+            5378 => new PaleOakSignBlock(Identifier, 10, true),
+            5379 => new PaleOakSignBlock(Identifier, 10, false),
+            5380 => new PaleOakSignBlock(Identifier, 11, true),
+            5381 => new PaleOakSignBlock(Identifier, 11, false),
+            5382 => new PaleOakSignBlock(Identifier, 12, true),
+            5383 => new PaleOakSignBlock(Identifier, 12, false),
+            5384 => new PaleOakSignBlock(Identifier, 13, true),
+            5385 => new PaleOakSignBlock(Identifier, 13, false),
+            5386 => new PaleOakSignBlock(Identifier, 14, true),
+            5387 => new PaleOakSignBlock(Identifier, 14, false),
+            5388 => new PaleOakSignBlock(Identifier, 15, true),
+            5389 => new PaleOakSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

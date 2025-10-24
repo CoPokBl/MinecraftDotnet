@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PaleOakFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
     public Identifier Category => "minecraft:fence";
-    public int ProtocolId => 611;
+    public int ProtocolId => 641;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -47,44 +47,44 @@ public record PaleOakFenceBlock(Identifier Identifier, bool East, bool North, bo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12685,
-                                false => 12686,
+                                true => 13762,
+                                false => 13763,
                             },
                             false => West switch {
-                                true => 12687,
-                                false => 12688,
+                                true => 13764,
+                                false => 13765,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12689,
-                                false => 12690,
+                                true => 13766,
+                                false => 13767,
                             },
                             false => West switch {
-                                true => 12691,
-                                false => 12692,
+                                true => 13768,
+                                false => 13769,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12693,
-                                false => 12694,
+                                true => 13770,
+                                false => 13771,
                             },
                             false => West switch {
-                                true => 12695,
-                                false => 12696,
+                                true => 13772,
+                                false => 13773,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12697,
-                                false => 12698,
+                                true => 13774,
+                                false => 13775,
                             },
                             false => West switch {
-                                true => 12699,
-                                false => 12700,
+                                true => 13776,
+                                false => 13777,
                             },
                         },
                     },
@@ -93,44 +93,44 @@ public record PaleOakFenceBlock(Identifier Identifier, bool East, bool North, bo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12701,
-                                false => 12702,
+                                true => 13778,
+                                false => 13779,
                             },
                             false => West switch {
-                                true => 12703,
-                                false => 12704,
+                                true => 13780,
+                                false => 13781,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12705,
-                                false => 12706,
+                                true => 13782,
+                                false => 13783,
                             },
                             false => West switch {
-                                true => 12707,
-                                false => 12708,
+                                true => 13784,
+                                false => 13785,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12709,
-                                false => 12710,
+                                true => 13786,
+                                false => 13787,
                             },
                             false => West switch {
-                                true => 12711,
-                                false => 12712,
+                                true => 13788,
+                                false => 13789,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12713,
-                                false => 12714,
+                                true => 13790,
+                                false => 13791,
                             },
                             false => West switch {
-                                true => 12715,
-                                false => 12716,
+                                true => 13792,
+                                false => 13793,
                             },
                         },
                     },
@@ -141,38 +141,38 @@ public record PaleOakFenceBlock(Identifier Identifier, bool East, bool North, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12685 => new PaleOakFenceBlock(Identifier, true, true, true, true, true),
-            12686 => new PaleOakFenceBlock(Identifier, true, true, true, true, false),
-            12687 => new PaleOakFenceBlock(Identifier, true, true, true, false, true),
-            12688 => new PaleOakFenceBlock(Identifier, true, true, true, false, false),
-            12689 => new PaleOakFenceBlock(Identifier, true, true, false, true, true),
-            12690 => new PaleOakFenceBlock(Identifier, true, true, false, true, false),
-            12691 => new PaleOakFenceBlock(Identifier, true, true, false, false, true),
-            12692 => new PaleOakFenceBlock(Identifier, true, true, false, false, false),
-            12693 => new PaleOakFenceBlock(Identifier, true, false, true, true, true),
-            12694 => new PaleOakFenceBlock(Identifier, true, false, true, true, false),
-            12695 => new PaleOakFenceBlock(Identifier, true, false, true, false, true),
-            12696 => new PaleOakFenceBlock(Identifier, true, false, true, false, false),
-            12697 => new PaleOakFenceBlock(Identifier, true, false, false, true, true),
-            12698 => new PaleOakFenceBlock(Identifier, true, false, false, true, false),
-            12699 => new PaleOakFenceBlock(Identifier, true, false, false, false, true),
-            12700 => new PaleOakFenceBlock(Identifier, true, false, false, false, false),
-            12701 => new PaleOakFenceBlock(Identifier, false, true, true, true, true),
-            12702 => new PaleOakFenceBlock(Identifier, false, true, true, true, false),
-            12703 => new PaleOakFenceBlock(Identifier, false, true, true, false, true),
-            12704 => new PaleOakFenceBlock(Identifier, false, true, true, false, false),
-            12705 => new PaleOakFenceBlock(Identifier, false, true, false, true, true),
-            12706 => new PaleOakFenceBlock(Identifier, false, true, false, true, false),
-            12707 => new PaleOakFenceBlock(Identifier, false, true, false, false, true),
-            12708 => new PaleOakFenceBlock(Identifier, false, true, false, false, false),
-            12709 => new PaleOakFenceBlock(Identifier, false, false, true, true, true),
-            12710 => new PaleOakFenceBlock(Identifier, false, false, true, true, false),
-            12711 => new PaleOakFenceBlock(Identifier, false, false, true, false, true),
-            12712 => new PaleOakFenceBlock(Identifier, false, false, true, false, false),
-            12713 => new PaleOakFenceBlock(Identifier, false, false, false, true, true),
-            12714 => new PaleOakFenceBlock(Identifier, false, false, false, true, false),
-            12715 => new PaleOakFenceBlock(Identifier, false, false, false, false, true),
-            12716 => new PaleOakFenceBlock(Identifier, false, false, false, false, false),
+            13762 => new PaleOakFenceBlock(Identifier, true, true, true, true, true),
+            13763 => new PaleOakFenceBlock(Identifier, true, true, true, true, false),
+            13764 => new PaleOakFenceBlock(Identifier, true, true, true, false, true),
+            13765 => new PaleOakFenceBlock(Identifier, true, true, true, false, false),
+            13766 => new PaleOakFenceBlock(Identifier, true, true, false, true, true),
+            13767 => new PaleOakFenceBlock(Identifier, true, true, false, true, false),
+            13768 => new PaleOakFenceBlock(Identifier, true, true, false, false, true),
+            13769 => new PaleOakFenceBlock(Identifier, true, true, false, false, false),
+            13770 => new PaleOakFenceBlock(Identifier, true, false, true, true, true),
+            13771 => new PaleOakFenceBlock(Identifier, true, false, true, true, false),
+            13772 => new PaleOakFenceBlock(Identifier, true, false, true, false, true),
+            13773 => new PaleOakFenceBlock(Identifier, true, false, true, false, false),
+            13774 => new PaleOakFenceBlock(Identifier, true, false, false, true, true),
+            13775 => new PaleOakFenceBlock(Identifier, true, false, false, true, false),
+            13776 => new PaleOakFenceBlock(Identifier, true, false, false, false, true),
+            13777 => new PaleOakFenceBlock(Identifier, true, false, false, false, false),
+            13778 => new PaleOakFenceBlock(Identifier, false, true, true, true, true),
+            13779 => new PaleOakFenceBlock(Identifier, false, true, true, true, false),
+            13780 => new PaleOakFenceBlock(Identifier, false, true, true, false, true),
+            13781 => new PaleOakFenceBlock(Identifier, false, true, true, false, false),
+            13782 => new PaleOakFenceBlock(Identifier, false, true, false, true, true),
+            13783 => new PaleOakFenceBlock(Identifier, false, true, false, true, false),
+            13784 => new PaleOakFenceBlock(Identifier, false, true, false, false, true),
+            13785 => new PaleOakFenceBlock(Identifier, false, true, false, false, false),
+            13786 => new PaleOakFenceBlock(Identifier, false, false, true, true, true),
+            13787 => new PaleOakFenceBlock(Identifier, false, false, true, true, false),
+            13788 => new PaleOakFenceBlock(Identifier, false, false, true, false, true),
+            13789 => new PaleOakFenceBlock(Identifier, false, false, true, false, false),
+            13790 => new PaleOakFenceBlock(Identifier, false, false, false, true, true),
+            13791 => new PaleOakFenceBlock(Identifier, false, false, false, true, false),
+            13792 => new PaleOakFenceBlock(Identifier, false, false, false, false, true),
+            13793 => new PaleOakFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

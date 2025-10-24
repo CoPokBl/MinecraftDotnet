@@ -116,7 +116,7 @@ JObject registriesJson = JObject.Parse(CodeGenUtils.ReadVanillaDataFile("reports
 // --------------------------------------------
 // |             Minestom Data                |
 // --------------------------------------------
-if (!Directory.Exists("MinestomDataGenerator")) {
+if (!Directory.Exists($"MinestomDataGenerator{mcVersion}")) {
     // Don't use git, download the release zip from GitHub
     // so we can choose a specific version
     const string urlTemplate = "https://github.com/Minestom/MinestomDataGenerator/archive/refs/tags/{mcver}-rv1.zip";
@@ -131,25 +131,25 @@ if (!Directory.Exists("MinestomDataGenerator")) {
     Console.WriteLine("Extracting MinestomDataGenerator...");
     using MemoryStream stream = new(response.Content.ReadAsByteArrayAsync().Result);
     using ZipArchive archive = new(stream);
-    archive.ExtractToDirectory("MinestomDataGenerator");
+    archive.ExtractToDirectory($"MinestomDataGenerator{mcVersion}");
     
     // It extracts to MinestomDataGenerator/MinestomDataGenerator-<version>
     // so move it up one level
-    string extractedDir = Directory.GetDirectories("MinestomDataGenerator").First();
+    string extractedDir = Directory.GetDirectories($"MinestomDataGenerator{mcVersion}").First();
     foreach (string dir in Directory.GetDirectories(extractedDir)) {
         string dirName = Path.GetFileName(dir);
-        Directory.Move(dir, Path.Combine("MinestomDataGenerator", dirName));
+        Directory.Move(dir, Path.Combine($"MinestomDataGenerator{mcVersion}", dirName));
     }
     foreach (string file in Directory.GetFiles(extractedDir)) {
         string fileName = Path.GetFileName(file);
-        File.Move(file, Path.Combine("MinestomDataGenerator", fileName));
+        File.Move(file, Path.Combine($"MinestomDataGenerator{mcVersion}", fileName));
     }
     Directory.Delete(extractedDir);
     
     Console.WriteLine("Done!");
 }
 
-if (!Directory.Exists("MinestomData")) {
+if (!Directory.Exists($"MinestomData{mcVersion}")) {
     // We need to run the project
     // to do that we need to run the gradle wrapper
     // but that is platform specific
@@ -162,8 +162,8 @@ if (!Directory.Exists("MinestomData")) {
     Process process = new() {
         StartInfo = new ProcessStartInfo {
             Environment = { { "EULA", "true" } },
-            WorkingDirectory = "MinestomDataGenerator",
-            FileName = Path.Combine("MinestomDataGenerator", procName),
+            WorkingDirectory = $"MinestomDataGenerator{mcVersion}",
+            FileName = Path.Combine($"MinestomDataGenerator{mcVersion}", procName),
             Arguments = "run",
             RedirectStandardOutput = false,
             RedirectStandardError = false,
@@ -181,15 +181,15 @@ if (!Directory.Exists("MinestomData")) {
     
     // Move all the files from MinestomDataGenerator/MinestomData to MinestomData
     // for easier access
-    if (Directory.Exists("MinestomData")) {
-        Directory.Delete("MinestomData", true);
+    if (Directory.Exists($"MinestomData{mcVersion}")) {
+        Directory.Delete($"MinestomData{mcVersion}", true);
         Console.WriteLine("Deleted existing MinestomData directory.");
     }
-    Directory.Move(Path.Combine("MinestomDataGenerator", "MinestomData"), "MinestomData");
+    Directory.Move(Path.Combine($"MinestomDataGenerator{mcVersion}", "MinestomData"), $"MinestomData{mcVersion}");
     
     Console.WriteLine("Done!");
 }
-CodeGenUtils.MinestomDataDir = Path.Combine(Directory.GetCurrentDirectory(), "MinestomData");
+CodeGenUtils.MinestomDataDir = Path.Combine(Directory.GetCurrentDirectory(), $"MinestomData{mcVersion}");
 
 // --------------------------------------------
 // |             Generate Code                |

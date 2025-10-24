@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:stonecutter";
-    public int ProtocolId => 815;
+    public int ProtocolId => 845;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 19522,
-                Direction.South => 19523,
-                Direction.West => 19524,
-                Direction.East => 19525,
+                Direction.North => 20599,
+                Direction.South => 20600,
+                Direction.West => 20601,
+                Direction.East => 20602,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock
     
     public IBlock WithState(uint state) {
         return state switch {
-            19522 => new StonecutterBlock(Identifier, Direction.North),
-            19523 => new StonecutterBlock(Identifier, Direction.South),
-            19524 => new StonecutterBlock(Identifier, Direction.West),
-            19525 => new StonecutterBlock(Identifier, Direction.East),
+            20599 => new StonecutterBlock(Identifier, Direction.North),
+            20600 => new StonecutterBlock(Identifier, Direction.South),
+            20601 => new StonecutterBlock(Identifier, Direction.West),
+            20602 => new StonecutterBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

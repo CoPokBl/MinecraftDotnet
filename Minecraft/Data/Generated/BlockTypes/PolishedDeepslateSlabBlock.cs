@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PolishedDeepslateSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 1067;
+    public int ProtocolId => 1128;
     public double Hardness => 3.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record PolishedDeepslateSlabBlock(Identifier Identifier, SlabType Type, b
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 26491,
-                    false => 26492,
+                    true => 28216,
+                    false => 28217,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 26493,
-                    false => 26494,
+                    true => 28218,
+                    false => 28219,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 26495,
-                    false => 26496,
+                    true => 28220,
+                    false => 28221,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record PolishedDeepslateSlabBlock(Identifier Identifier, SlabType Type, b
     
     public IBlock WithState(uint state) {
         return state switch {
-            26491 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Top, true),
-            26492 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Top, false),
-            26493 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Bottom, true),
-            26494 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Bottom, false),
-            26495 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Double, true),
-            26496 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Double, false),
+            28216 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Top, true),
+            28217 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Top, false),
+            28218 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Bottom, true),
+            28219 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Bottom, false),
+            28220 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Double, true),
+            28221 => new PolishedDeepslateSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

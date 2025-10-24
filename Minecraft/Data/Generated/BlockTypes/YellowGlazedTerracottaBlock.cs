@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record YellowGlazedTerracottaBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:glazed_terracotta";
-    public int ProtocolId => 666;
+    public int ProtocolId => 696;
     public double Hardness => 1.4;
     public double ExplosionResistance => 1.4;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record YellowGlazedTerracottaBlock(Identifier Identifier, Direction Facin
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 13703,
-                Direction.South => 13704,
-                Direction.West => 13705,
-                Direction.East => 13706,
+                Direction.North => 14780,
+                Direction.South => 14781,
+                Direction.West => 14782,
+                Direction.East => 14783,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record YellowGlazedTerracottaBlock(Identifier Identifier, Direction Facin
     
     public IBlock WithState(uint state) {
         return state switch {
-            13703 => new YellowGlazedTerracottaBlock(Identifier, Direction.North),
-            13704 => new YellowGlazedTerracottaBlock(Identifier, Direction.South),
-            13705 => new YellowGlazedTerracottaBlock(Identifier, Direction.West),
-            13706 => new YellowGlazedTerracottaBlock(Identifier, Direction.East),
+            14780 => new YellowGlazedTerracottaBlock(Identifier, Direction.North),
+            14781 => new YellowGlazedTerracottaBlock(Identifier, Direction.South),
+            14782 => new YellowGlazedTerracottaBlock(Identifier, Direction.West),
+            14783 => new YellowGlazedTerracottaBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

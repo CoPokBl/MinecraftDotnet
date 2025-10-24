@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LightBlock(Identifier Identifier, int Level, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:light";
-    public int ProtocolId => 493;
+    public int ProtocolId => 523;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000.8;
     public double Friction => 0.6;
@@ -44,68 +44,68 @@ public record LightBlock(Identifier Identifier, int Level, bool Waterlogged) : I
         get {
             return Level switch {
                 0 => Waterlogged switch {
-                    true => 11256,
-                    false => 11257,
+                    true => 12333,
+                    false => 12334,
                 },
                 1 => Waterlogged switch {
-                    true => 11258,
-                    false => 11259,
+                    true => 12335,
+                    false => 12336,
                 },
                 2 => Waterlogged switch {
-                    true => 11260,
-                    false => 11261,
+                    true => 12337,
+                    false => 12338,
                 },
                 3 => Waterlogged switch {
-                    true => 11262,
-                    false => 11263,
+                    true => 12339,
+                    false => 12340,
                 },
                 4 => Waterlogged switch {
-                    true => 11264,
-                    false => 11265,
+                    true => 12341,
+                    false => 12342,
                 },
                 5 => Waterlogged switch {
-                    true => 11266,
-                    false => 11267,
+                    true => 12343,
+                    false => 12344,
                 },
                 6 => Waterlogged switch {
-                    true => 11268,
-                    false => 11269,
+                    true => 12345,
+                    false => 12346,
                 },
                 7 => Waterlogged switch {
-                    true => 11270,
-                    false => 11271,
+                    true => 12347,
+                    false => 12348,
                 },
                 8 => Waterlogged switch {
-                    true => 11272,
-                    false => 11273,
+                    true => 12349,
+                    false => 12350,
                 },
                 9 => Waterlogged switch {
-                    true => 11274,
-                    false => 11275,
+                    true => 12351,
+                    false => 12352,
                 },
                 10 => Waterlogged switch {
-                    true => 11276,
-                    false => 11277,
+                    true => 12353,
+                    false => 12354,
                 },
                 11 => Waterlogged switch {
-                    true => 11278,
-                    false => 11279,
+                    true => 12355,
+                    false => 12356,
                 },
                 12 => Waterlogged switch {
-                    true => 11280,
-                    false => 11281,
+                    true => 12357,
+                    false => 12358,
                 },
                 13 => Waterlogged switch {
-                    true => 11282,
-                    false => 11283,
+                    true => 12359,
+                    false => 12360,
                 },
                 14 => Waterlogged switch {
-                    true => 11284,
-                    false => 11285,
+                    true => 12361,
+                    false => 12362,
                 },
                 15 => Waterlogged switch {
-                    true => 11286,
-                    false => 11287,
+                    true => 12363,
+                    false => 12364,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Level), Level, "Unknown value for property level.")
             };
@@ -114,38 +114,38 @@ public record LightBlock(Identifier Identifier, int Level, bool Waterlogged) : I
     
     public IBlock WithState(uint state) {
         return state switch {
-            11256 => new LightBlock(Identifier, 0, true),
-            11257 => new LightBlock(Identifier, 0, false),
-            11258 => new LightBlock(Identifier, 1, true),
-            11259 => new LightBlock(Identifier, 1, false),
-            11260 => new LightBlock(Identifier, 2, true),
-            11261 => new LightBlock(Identifier, 2, false),
-            11262 => new LightBlock(Identifier, 3, true),
-            11263 => new LightBlock(Identifier, 3, false),
-            11264 => new LightBlock(Identifier, 4, true),
-            11265 => new LightBlock(Identifier, 4, false),
-            11266 => new LightBlock(Identifier, 5, true),
-            11267 => new LightBlock(Identifier, 5, false),
-            11268 => new LightBlock(Identifier, 6, true),
-            11269 => new LightBlock(Identifier, 6, false),
-            11270 => new LightBlock(Identifier, 7, true),
-            11271 => new LightBlock(Identifier, 7, false),
-            11272 => new LightBlock(Identifier, 8, true),
-            11273 => new LightBlock(Identifier, 8, false),
-            11274 => new LightBlock(Identifier, 9, true),
-            11275 => new LightBlock(Identifier, 9, false),
-            11276 => new LightBlock(Identifier, 10, true),
-            11277 => new LightBlock(Identifier, 10, false),
-            11278 => new LightBlock(Identifier, 11, true),
-            11279 => new LightBlock(Identifier, 11, false),
-            11280 => new LightBlock(Identifier, 12, true),
-            11281 => new LightBlock(Identifier, 12, false),
-            11282 => new LightBlock(Identifier, 13, true),
-            11283 => new LightBlock(Identifier, 13, false),
-            11284 => new LightBlock(Identifier, 14, true),
-            11285 => new LightBlock(Identifier, 14, false),
-            11286 => new LightBlock(Identifier, 15, true),
-            11287 => new LightBlock(Identifier, 15, false),
+            12333 => new LightBlock(Identifier, 0, true),
+            12334 => new LightBlock(Identifier, 0, false),
+            12335 => new LightBlock(Identifier, 1, true),
+            12336 => new LightBlock(Identifier, 1, false),
+            12337 => new LightBlock(Identifier, 2, true),
+            12338 => new LightBlock(Identifier, 2, false),
+            12339 => new LightBlock(Identifier, 3, true),
+            12340 => new LightBlock(Identifier, 3, false),
+            12341 => new LightBlock(Identifier, 4, true),
+            12342 => new LightBlock(Identifier, 4, false),
+            12343 => new LightBlock(Identifier, 5, true),
+            12344 => new LightBlock(Identifier, 5, false),
+            12345 => new LightBlock(Identifier, 6, true),
+            12346 => new LightBlock(Identifier, 6, false),
+            12347 => new LightBlock(Identifier, 7, true),
+            12348 => new LightBlock(Identifier, 7, false),
+            12349 => new LightBlock(Identifier, 8, true),
+            12350 => new LightBlock(Identifier, 8, false),
+            12351 => new LightBlock(Identifier, 9, true),
+            12352 => new LightBlock(Identifier, 9, false),
+            12353 => new LightBlock(Identifier, 10, true),
+            12354 => new LightBlock(Identifier, 10, false),
+            12355 => new LightBlock(Identifier, 11, true),
+            12356 => new LightBlock(Identifier, 11, false),
+            12357 => new LightBlock(Identifier, 12, true),
+            12358 => new LightBlock(Identifier, 12, false),
+            12359 => new LightBlock(Identifier, 13, true),
+            12360 => new LightBlock(Identifier, 13, false),
+            12361 => new LightBlock(Identifier, 14, true),
+            12362 => new LightBlock(Identifier, 14, false),
+            12363 => new LightBlock(Identifier, 15, true),
+            12364 => new LightBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

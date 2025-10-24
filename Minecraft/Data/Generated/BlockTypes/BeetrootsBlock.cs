@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BeetrootsBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:beetroot";
-    public int ProtocolId => 633;
+    public int ProtocolId => 663;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record BeetrootsBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 13532,
-                1 => 13533,
-                2 => 13534,
-                3 => 13535,
+                0 => 14609,
+                1 => 14610,
+                2 => 14611,
+                3 => 14612,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -54,10 +54,10 @@ public record BeetrootsBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            13532 => new BeetrootsBlock(Identifier, 0),
-            13533 => new BeetrootsBlock(Identifier, 1),
-            13534 => new BeetrootsBlock(Identifier, 2),
-            13535 => new BeetrootsBlock(Identifier, 3),
+            14609 => new BeetrootsBlock(Identifier, 0),
+            14610 => new BeetrootsBlock(Identifier, 1),
+            14611 => new BeetrootsBlock(Identifier, 2),
+            14612 => new BeetrootsBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

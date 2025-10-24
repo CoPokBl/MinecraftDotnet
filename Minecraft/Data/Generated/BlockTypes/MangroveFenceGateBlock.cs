@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock {
     public Identifier Category => "minecraft:fence_gate";
-    public int ProtocolId => 603;
+    public int ProtocolId => 633;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -46,88 +46,88 @@ public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bo
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12429,
-                            false => 12430,
+                            true => 13506,
+                            false => 13507,
                         },
                         false => Powered switch {
-                            true => 12431,
-                            false => 12432,
+                            true => 13508,
+                            false => 13509,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12433,
-                            false => 12434,
+                            true => 13510,
+                            false => 13511,
                         },
                         false => Powered switch {
-                            true => 12435,
-                            false => 12436,
+                            true => 13512,
+                            false => 13513,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12437,
-                            false => 12438,
+                            true => 13514,
+                            false => 13515,
                         },
                         false => Powered switch {
-                            true => 12439,
-                            false => 12440,
+                            true => 13516,
+                            false => 13517,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12441,
-                            false => 12442,
+                            true => 13518,
+                            false => 13519,
                         },
                         false => Powered switch {
-                            true => 12443,
-                            false => 12444,
+                            true => 13520,
+                            false => 13521,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12445,
-                            false => 12446,
+                            true => 13522,
+                            false => 13523,
                         },
                         false => Powered switch {
-                            true => 12447,
-                            false => 12448,
+                            true => 13524,
+                            false => 13525,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12449,
-                            false => 12450,
+                            true => 13526,
+                            false => 13527,
                         },
                         false => Powered switch {
-                            true => 12451,
-                            false => 12452,
+                            true => 13528,
+                            false => 13529,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12453,
-                            false => 12454,
+                            true => 13530,
+                            false => 13531,
                         },
                         false => Powered switch {
-                            true => 12455,
-                            false => 12456,
+                            true => 13532,
+                            false => 13533,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12457,
-                            false => 12458,
+                            true => 13534,
+                            false => 13535,
                         },
                         false => Powered switch {
-                            true => 12459,
-                            false => 12460,
+                            true => 13536,
+                            false => 13537,
                         },
                     },
                 },
@@ -138,38 +138,38 @@ public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12429 => new MangroveFenceGateBlock(Identifier, Direction.North, true, true, true),
-            12430 => new MangroveFenceGateBlock(Identifier, Direction.North, true, true, false),
-            12431 => new MangroveFenceGateBlock(Identifier, Direction.North, true, false, true),
-            12432 => new MangroveFenceGateBlock(Identifier, Direction.North, true, false, false),
-            12433 => new MangroveFenceGateBlock(Identifier, Direction.North, false, true, true),
-            12434 => new MangroveFenceGateBlock(Identifier, Direction.North, false, true, false),
-            12435 => new MangroveFenceGateBlock(Identifier, Direction.North, false, false, true),
-            12436 => new MangroveFenceGateBlock(Identifier, Direction.North, false, false, false),
-            12437 => new MangroveFenceGateBlock(Identifier, Direction.South, true, true, true),
-            12438 => new MangroveFenceGateBlock(Identifier, Direction.South, true, true, false),
-            12439 => new MangroveFenceGateBlock(Identifier, Direction.South, true, false, true),
-            12440 => new MangroveFenceGateBlock(Identifier, Direction.South, true, false, false),
-            12441 => new MangroveFenceGateBlock(Identifier, Direction.South, false, true, true),
-            12442 => new MangroveFenceGateBlock(Identifier, Direction.South, false, true, false),
-            12443 => new MangroveFenceGateBlock(Identifier, Direction.South, false, false, true),
-            12444 => new MangroveFenceGateBlock(Identifier, Direction.South, false, false, false),
-            12445 => new MangroveFenceGateBlock(Identifier, Direction.West, true, true, true),
-            12446 => new MangroveFenceGateBlock(Identifier, Direction.West, true, true, false),
-            12447 => new MangroveFenceGateBlock(Identifier, Direction.West, true, false, true),
-            12448 => new MangroveFenceGateBlock(Identifier, Direction.West, true, false, false),
-            12449 => new MangroveFenceGateBlock(Identifier, Direction.West, false, true, true),
-            12450 => new MangroveFenceGateBlock(Identifier, Direction.West, false, true, false),
-            12451 => new MangroveFenceGateBlock(Identifier, Direction.West, false, false, true),
-            12452 => new MangroveFenceGateBlock(Identifier, Direction.West, false, false, false),
-            12453 => new MangroveFenceGateBlock(Identifier, Direction.East, true, true, true),
-            12454 => new MangroveFenceGateBlock(Identifier, Direction.East, true, true, false),
-            12455 => new MangroveFenceGateBlock(Identifier, Direction.East, true, false, true),
-            12456 => new MangroveFenceGateBlock(Identifier, Direction.East, true, false, false),
-            12457 => new MangroveFenceGateBlock(Identifier, Direction.East, false, true, true),
-            12458 => new MangroveFenceGateBlock(Identifier, Direction.East, false, true, false),
-            12459 => new MangroveFenceGateBlock(Identifier, Direction.East, false, false, true),
-            12460 => new MangroveFenceGateBlock(Identifier, Direction.East, false, false, false),
+            13506 => new MangroveFenceGateBlock(Identifier, Direction.North, true, true, true),
+            13507 => new MangroveFenceGateBlock(Identifier, Direction.North, true, true, false),
+            13508 => new MangroveFenceGateBlock(Identifier, Direction.North, true, false, true),
+            13509 => new MangroveFenceGateBlock(Identifier, Direction.North, true, false, false),
+            13510 => new MangroveFenceGateBlock(Identifier, Direction.North, false, true, true),
+            13511 => new MangroveFenceGateBlock(Identifier, Direction.North, false, true, false),
+            13512 => new MangroveFenceGateBlock(Identifier, Direction.North, false, false, true),
+            13513 => new MangroveFenceGateBlock(Identifier, Direction.North, false, false, false),
+            13514 => new MangroveFenceGateBlock(Identifier, Direction.South, true, true, true),
+            13515 => new MangroveFenceGateBlock(Identifier, Direction.South, true, true, false),
+            13516 => new MangroveFenceGateBlock(Identifier, Direction.South, true, false, true),
+            13517 => new MangroveFenceGateBlock(Identifier, Direction.South, true, false, false),
+            13518 => new MangroveFenceGateBlock(Identifier, Direction.South, false, true, true),
+            13519 => new MangroveFenceGateBlock(Identifier, Direction.South, false, true, false),
+            13520 => new MangroveFenceGateBlock(Identifier, Direction.South, false, false, true),
+            13521 => new MangroveFenceGateBlock(Identifier, Direction.South, false, false, false),
+            13522 => new MangroveFenceGateBlock(Identifier, Direction.West, true, true, true),
+            13523 => new MangroveFenceGateBlock(Identifier, Direction.West, true, true, false),
+            13524 => new MangroveFenceGateBlock(Identifier, Direction.West, true, false, true),
+            13525 => new MangroveFenceGateBlock(Identifier, Direction.West, true, false, false),
+            13526 => new MangroveFenceGateBlock(Identifier, Direction.West, false, true, true),
+            13527 => new MangroveFenceGateBlock(Identifier, Direction.West, false, true, false),
+            13528 => new MangroveFenceGateBlock(Identifier, Direction.West, false, false, true),
+            13529 => new MangroveFenceGateBlock(Identifier, Direction.West, false, false, false),
+            13530 => new MangroveFenceGateBlock(Identifier, Direction.East, true, true, true),
+            13531 => new MangroveFenceGateBlock(Identifier, Direction.East, true, true, false),
+            13532 => new MangroveFenceGateBlock(Identifier, Direction.East, true, false, true),
+            13533 => new MangroveFenceGateBlock(Identifier, Direction.East, true, false, false),
+            13534 => new MangroveFenceGateBlock(Identifier, Direction.East, false, true, true),
+            13535 => new MangroveFenceGateBlock(Identifier, Direction.East, false, true, false),
+            13536 => new MangroveFenceGateBlock(Identifier, Direction.East, false, false, true),
+            13537 => new MangroveFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

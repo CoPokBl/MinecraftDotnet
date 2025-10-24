@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TuffBrickSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 954;
+    public int ProtocolId => 992;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record TuffBrickSlabBlock(Identifier Identifier, SlabType Type, bool Wate
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 22965,
-                    false => 22966,
+                    true => 24074,
+                    false => 24075,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 22967,
-                    false => 22968,
+                    true => 24076,
+                    false => 24077,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 22969,
-                    false => 22970,
+                    true => 24078,
+                    false => 24079,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record TuffBrickSlabBlock(Identifier Identifier, SlabType Type, bool Wate
     
     public IBlock WithState(uint state) {
         return state switch {
-            22965 => new TuffBrickSlabBlock(Identifier, SlabType.Top, true),
-            22966 => new TuffBrickSlabBlock(Identifier, SlabType.Top, false),
-            22967 => new TuffBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            22968 => new TuffBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            22969 => new TuffBrickSlabBlock(Identifier, SlabType.Double, true),
-            22970 => new TuffBrickSlabBlock(Identifier, SlabType.Double, false),
+            24074 => new TuffBrickSlabBlock(Identifier, SlabType.Top, true),
+            24075 => new TuffBrickSlabBlock(Identifier, SlabType.Top, false),
+            24076 => new TuffBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            24077 => new TuffBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            24078 => new TuffBrickSlabBlock(Identifier, SlabType.Double, true),
+            24079 => new TuffBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

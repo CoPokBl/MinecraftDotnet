@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DeepslateBrickSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 1075;
+    public int ProtocolId => 1136;
     public double Hardness => 3.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record DeepslateBrickSlabBlock(Identifier Identifier, SlabType Type, bool
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 27313,
-                    false => 27314,
+                    true => 29038,
+                    false => 29039,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 27315,
-                    false => 27316,
+                    true => 29040,
+                    false => 29041,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 27317,
-                    false => 27318,
+                    true => 29042,
+                    false => 29043,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record DeepslateBrickSlabBlock(Identifier Identifier, SlabType Type, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            27313 => new DeepslateBrickSlabBlock(Identifier, SlabType.Top, true),
-            27314 => new DeepslateBrickSlabBlock(Identifier, SlabType.Top, false),
-            27315 => new DeepslateBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            27316 => new DeepslateBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            27317 => new DeepslateBrickSlabBlock(Identifier, SlabType.Double, true),
-            27318 => new DeepslateBrickSlabBlock(Identifier, SlabType.Double, false),
+            29038 => new DeepslateBrickSlabBlock(Identifier, SlabType.Top, true),
+            29039 => new DeepslateBrickSlabBlock(Identifier, SlabType.Top, false),
+            29040 => new DeepslateBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            29041 => new DeepslateBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            29042 => new DeepslateBrickSlabBlock(Identifier, SlabType.Double, true),
+            29043 => new DeepslateBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

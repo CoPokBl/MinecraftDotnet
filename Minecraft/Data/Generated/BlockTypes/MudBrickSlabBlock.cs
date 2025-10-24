@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record MudBrickSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 586;
+    public int ProtocolId => 616;
     public double Hardness => 1.5;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record MudBrickSlabBlock(Identifier Identifier, SlabType Type, bool Water
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12165,
-                    false => 12166,
+                    true => 13242,
+                    false => 13243,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12167,
-                    false => 12168,
+                    true => 13244,
+                    false => 13245,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12169,
-                    false => 12170,
+                    true => 13246,
+                    false => 13247,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record MudBrickSlabBlock(Identifier Identifier, SlabType Type, bool Water
     
     public IBlock WithState(uint state) {
         return state switch {
-            12165 => new MudBrickSlabBlock(Identifier, SlabType.Top, true),
-            12166 => new MudBrickSlabBlock(Identifier, SlabType.Top, false),
-            12167 => new MudBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            12168 => new MudBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            12169 => new MudBrickSlabBlock(Identifier, SlabType.Double, true),
-            12170 => new MudBrickSlabBlock(Identifier, SlabType.Double, false),
+            13242 => new MudBrickSlabBlock(Identifier, SlabType.Top, true),
+            13243 => new MudBrickSlabBlock(Identifier, SlabType.Top, false),
+            13244 => new MudBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            13245 => new MudBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            13246 => new MudBrickSlabBlock(Identifier, SlabType.Double, true),
+            13247 => new MudBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

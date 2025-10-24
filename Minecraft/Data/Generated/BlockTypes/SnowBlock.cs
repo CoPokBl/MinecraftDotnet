@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SnowBlock(Identifier Identifier, int Layers) : IBlock {
     public Identifier Category => "minecraft:snow_layer";
-    public int ProtocolId => 263;
+    public int ProtocolId => 275;
     public double Hardness => 0.1;
     public double ExplosionResistance => 0.1;
     public double Friction => 0.6;
@@ -43,14 +43,14 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock {
     public uint StateId {
         get {
             return Layers switch {
-                1 => 5950,
-                2 => 5951,
-                3 => 5952,
-                4 => 5953,
-                5 => 5954,
-                6 => 5955,
-                7 => 5956,
-                8 => 5957,
+                1 => 6718,
+                2 => 6719,
+                3 => 6720,
+                4 => 6721,
+                5 => 6722,
+                6 => 6723,
+                7 => 6724,
+                8 => 6725,
                 _ => throw new ArgumentOutOfRangeException(nameof(Layers), Layers, "Unknown value for property layers.")
             };
         }
@@ -58,14 +58,14 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            5950 => new SnowBlock(Identifier, 1),
-            5951 => new SnowBlock(Identifier, 2),
-            5952 => new SnowBlock(Identifier, 3),
-            5953 => new SnowBlock(Identifier, 4),
-            5954 => new SnowBlock(Identifier, 5),
-            5955 => new SnowBlock(Identifier, 6),
-            5956 => new SnowBlock(Identifier, 7),
-            5957 => new SnowBlock(Identifier, 8),
+            6718 => new SnowBlock(Identifier, 1),
+            6719 => new SnowBlock(Identifier, 2),
+            6720 => new SnowBlock(Identifier, 3),
+            6721 => new SnowBlock(Identifier, 4),
+            6722 => new SnowBlock(Identifier, 5),
+            6723 => new SnowBlock(Identifier, 6),
+            6724 => new SnowBlock(Identifier, 7),
+            6725 => new SnowBlock(Identifier, 8),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

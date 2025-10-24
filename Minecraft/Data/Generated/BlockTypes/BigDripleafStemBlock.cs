@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:big_dripleaf_stem";
-    public int ProtocolId => 1055;
+    public int ProtocolId => 1116;
     public double Hardness => 0.1;
     public double ExplosionResistance => 0.1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 25968,
-                    false => 25969,
+                    true => 27693,
+                    false => 27694,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 25970,
-                    false => 25971,
+                    true => 27695,
+                    false => 27696,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 25972,
-                    false => 25973,
+                    true => 27697,
+                    false => 27698,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 25974,
-                    false => 25975,
+                    true => 27699,
+                    false => 27700,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            25968 => new BigDripleafStemBlock(Identifier, Direction.North, true),
-            25969 => new BigDripleafStemBlock(Identifier, Direction.North, false),
-            25970 => new BigDripleafStemBlock(Identifier, Direction.South, true),
-            25971 => new BigDripleafStemBlock(Identifier, Direction.South, false),
-            25972 => new BigDripleafStemBlock(Identifier, Direction.West, true),
-            25973 => new BigDripleafStemBlock(Identifier, Direction.West, false),
-            25974 => new BigDripleafStemBlock(Identifier, Direction.East, true),
-            25975 => new BigDripleafStemBlock(Identifier, Direction.East, false),
+            27693 => new BigDripleafStemBlock(Identifier, Direction.North, true),
+            27694 => new BigDripleafStemBlock(Identifier, Direction.North, false),
+            27695 => new BigDripleafStemBlock(Identifier, Direction.South, true),
+            27696 => new BigDripleafStemBlock(Identifier, Direction.South, false),
+            27697 => new BigDripleafStemBlock(Identifier, Direction.West, true),
+            27698 => new BigDripleafStemBlock(Identifier, Direction.West, false),
+            27699 => new BigDripleafStemBlock(Identifier, Direction.East, true),
+            27700 => new BigDripleafStemBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

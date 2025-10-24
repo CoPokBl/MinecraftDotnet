@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     public Identifier Category => "minecraft:end_rod";
-    public int ProtocolId => 623;
+    public int ProtocolId => 653;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,12 +43,12 @@ public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     public uint StateId {
         get {
             return Facing switch {
-                Cardinal.North => 13357,
-                Cardinal.East => 13358,
-                Cardinal.South => 13359,
-                Cardinal.West => 13360,
-                Cardinal.Up => 13361,
-                Cardinal.Down => 13362,
+                Cardinal.North => 14434,
+                Cardinal.East => 14435,
+                Cardinal.South => 14436,
+                Cardinal.West => 14437,
+                Cardinal.Up => 14438,
+                Cardinal.Down => 14439,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -56,12 +56,12 @@ public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            13357 => new EndRodBlock(Identifier, Cardinal.North),
-            13358 => new EndRodBlock(Identifier, Cardinal.East),
-            13359 => new EndRodBlock(Identifier, Cardinal.South),
-            13360 => new EndRodBlock(Identifier, Cardinal.West),
-            13361 => new EndRodBlock(Identifier, Cardinal.Up),
-            13362 => new EndRodBlock(Identifier, Cardinal.Down),
+            14434 => new EndRodBlock(Identifier, Cardinal.North),
+            14435 => new EndRodBlock(Identifier, Cardinal.East),
+            14436 => new EndRodBlock(Identifier, Cardinal.South),
+            14437 => new EndRodBlock(Identifier, Cardinal.West),
+            14438 => new EndRodBlock(Identifier, Cardinal.Up),
+            14439 => new EndRodBlock(Identifier, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

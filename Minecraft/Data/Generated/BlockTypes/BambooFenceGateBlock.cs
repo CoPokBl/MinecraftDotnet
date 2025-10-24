@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BambooFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock {
     public Identifier Category => "minecraft:fence_gate";
-    public int ProtocolId => 604;
+    public int ProtocolId => 634;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -46,88 +46,88 @@ public record BambooFenceGateBlock(Identifier Identifier, Direction Facing, bool
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12461,
-                            false => 12462,
+                            true => 13538,
+                            false => 13539,
                         },
                         false => Powered switch {
-                            true => 12463,
-                            false => 12464,
+                            true => 13540,
+                            false => 13541,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12465,
-                            false => 12466,
+                            true => 13542,
+                            false => 13543,
                         },
                         false => Powered switch {
-                            true => 12467,
-                            false => 12468,
+                            true => 13544,
+                            false => 13545,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12469,
-                            false => 12470,
+                            true => 13546,
+                            false => 13547,
                         },
                         false => Powered switch {
-                            true => 12471,
-                            false => 12472,
+                            true => 13548,
+                            false => 13549,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12473,
-                            false => 12474,
+                            true => 13550,
+                            false => 13551,
                         },
                         false => Powered switch {
-                            true => 12475,
-                            false => 12476,
+                            true => 13552,
+                            false => 13553,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12477,
-                            false => 12478,
+                            true => 13554,
+                            false => 13555,
                         },
                         false => Powered switch {
-                            true => 12479,
-                            false => 12480,
+                            true => 13556,
+                            false => 13557,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12481,
-                            false => 12482,
+                            true => 13558,
+                            false => 13559,
                         },
                         false => Powered switch {
-                            true => 12483,
-                            false => 12484,
+                            true => 13560,
+                            false => 13561,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12485,
-                            false => 12486,
+                            true => 13562,
+                            false => 13563,
                         },
                         false => Powered switch {
-                            true => 12487,
-                            false => 12488,
+                            true => 13564,
+                            false => 13565,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12489,
-                            false => 12490,
+                            true => 13566,
+                            false => 13567,
                         },
                         false => Powered switch {
-                            true => 12491,
-                            false => 12492,
+                            true => 13568,
+                            false => 13569,
                         },
                     },
                 },
@@ -138,38 +138,38 @@ public record BambooFenceGateBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            12461 => new BambooFenceGateBlock(Identifier, Direction.North, true, true, true),
-            12462 => new BambooFenceGateBlock(Identifier, Direction.North, true, true, false),
-            12463 => new BambooFenceGateBlock(Identifier, Direction.North, true, false, true),
-            12464 => new BambooFenceGateBlock(Identifier, Direction.North, true, false, false),
-            12465 => new BambooFenceGateBlock(Identifier, Direction.North, false, true, true),
-            12466 => new BambooFenceGateBlock(Identifier, Direction.North, false, true, false),
-            12467 => new BambooFenceGateBlock(Identifier, Direction.North, false, false, true),
-            12468 => new BambooFenceGateBlock(Identifier, Direction.North, false, false, false),
-            12469 => new BambooFenceGateBlock(Identifier, Direction.South, true, true, true),
-            12470 => new BambooFenceGateBlock(Identifier, Direction.South, true, true, false),
-            12471 => new BambooFenceGateBlock(Identifier, Direction.South, true, false, true),
-            12472 => new BambooFenceGateBlock(Identifier, Direction.South, true, false, false),
-            12473 => new BambooFenceGateBlock(Identifier, Direction.South, false, true, true),
-            12474 => new BambooFenceGateBlock(Identifier, Direction.South, false, true, false),
-            12475 => new BambooFenceGateBlock(Identifier, Direction.South, false, false, true),
-            12476 => new BambooFenceGateBlock(Identifier, Direction.South, false, false, false),
-            12477 => new BambooFenceGateBlock(Identifier, Direction.West, true, true, true),
-            12478 => new BambooFenceGateBlock(Identifier, Direction.West, true, true, false),
-            12479 => new BambooFenceGateBlock(Identifier, Direction.West, true, false, true),
-            12480 => new BambooFenceGateBlock(Identifier, Direction.West, true, false, false),
-            12481 => new BambooFenceGateBlock(Identifier, Direction.West, false, true, true),
-            12482 => new BambooFenceGateBlock(Identifier, Direction.West, false, true, false),
-            12483 => new BambooFenceGateBlock(Identifier, Direction.West, false, false, true),
-            12484 => new BambooFenceGateBlock(Identifier, Direction.West, false, false, false),
-            12485 => new BambooFenceGateBlock(Identifier, Direction.East, true, true, true),
-            12486 => new BambooFenceGateBlock(Identifier, Direction.East, true, true, false),
-            12487 => new BambooFenceGateBlock(Identifier, Direction.East, true, false, true),
-            12488 => new BambooFenceGateBlock(Identifier, Direction.East, true, false, false),
-            12489 => new BambooFenceGateBlock(Identifier, Direction.East, false, true, true),
-            12490 => new BambooFenceGateBlock(Identifier, Direction.East, false, true, false),
-            12491 => new BambooFenceGateBlock(Identifier, Direction.East, false, false, true),
-            12492 => new BambooFenceGateBlock(Identifier, Direction.East, false, false, false),
+            13538 => new BambooFenceGateBlock(Identifier, Direction.North, true, true, true),
+            13539 => new BambooFenceGateBlock(Identifier, Direction.North, true, true, false),
+            13540 => new BambooFenceGateBlock(Identifier, Direction.North, true, false, true),
+            13541 => new BambooFenceGateBlock(Identifier, Direction.North, true, false, false),
+            13542 => new BambooFenceGateBlock(Identifier, Direction.North, false, true, true),
+            13543 => new BambooFenceGateBlock(Identifier, Direction.North, false, true, false),
+            13544 => new BambooFenceGateBlock(Identifier, Direction.North, false, false, true),
+            13545 => new BambooFenceGateBlock(Identifier, Direction.North, false, false, false),
+            13546 => new BambooFenceGateBlock(Identifier, Direction.South, true, true, true),
+            13547 => new BambooFenceGateBlock(Identifier, Direction.South, true, true, false),
+            13548 => new BambooFenceGateBlock(Identifier, Direction.South, true, false, true),
+            13549 => new BambooFenceGateBlock(Identifier, Direction.South, true, false, false),
+            13550 => new BambooFenceGateBlock(Identifier, Direction.South, false, true, true),
+            13551 => new BambooFenceGateBlock(Identifier, Direction.South, false, true, false),
+            13552 => new BambooFenceGateBlock(Identifier, Direction.South, false, false, true),
+            13553 => new BambooFenceGateBlock(Identifier, Direction.South, false, false, false),
+            13554 => new BambooFenceGateBlock(Identifier, Direction.West, true, true, true),
+            13555 => new BambooFenceGateBlock(Identifier, Direction.West, true, true, false),
+            13556 => new BambooFenceGateBlock(Identifier, Direction.West, true, false, true),
+            13557 => new BambooFenceGateBlock(Identifier, Direction.West, true, false, false),
+            13558 => new BambooFenceGateBlock(Identifier, Direction.West, false, true, true),
+            13559 => new BambooFenceGateBlock(Identifier, Direction.West, false, true, false),
+            13560 => new BambooFenceGateBlock(Identifier, Direction.West, false, false, true),
+            13561 => new BambooFenceGateBlock(Identifier, Direction.West, false, false, false),
+            13562 => new BambooFenceGateBlock(Identifier, Direction.East, true, true, true),
+            13563 => new BambooFenceGateBlock(Identifier, Direction.East, true, true, false),
+            13564 => new BambooFenceGateBlock(Identifier, Direction.East, true, false, true),
+            13565 => new BambooFenceGateBlock(Identifier, Direction.East, true, false, false),
+            13566 => new BambooFenceGateBlock(Identifier, Direction.East, false, true, true),
+            13567 => new BambooFenceGateBlock(Identifier, Direction.East, false, true, false),
+            13568 => new BambooFenceGateBlock(Identifier, Direction.East, false, false, true),
+            13569 => new BambooFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

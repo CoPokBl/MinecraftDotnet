@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:wall_skull";
-    public int ProtocolId => 426;
+    public int ProtocolId => 456;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 9748,
-                    false => 9749,
+                    true => 10825,
+                    false => 10826,
                 },
                 Direction.South => Powered switch {
-                    true => 9750,
-                    false => 9751,
+                    true => 10827,
+                    false => 10828,
                 },
                 Direction.West => Powered switch {
-                    true => 9752,
-                    false => 9753,
+                    true => 10829,
+                    false => 10830,
                 },
                 Direction.East => Powered switch {
-                    true => 9754,
-                    false => 9755,
+                    true => 10831,
+                    false => 10832,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            9748 => new ZombieWallHeadBlock(Identifier, Direction.North, true),
-            9749 => new ZombieWallHeadBlock(Identifier, Direction.North, false),
-            9750 => new ZombieWallHeadBlock(Identifier, Direction.South, true),
-            9751 => new ZombieWallHeadBlock(Identifier, Direction.South, false),
-            9752 => new ZombieWallHeadBlock(Identifier, Direction.West, true),
-            9753 => new ZombieWallHeadBlock(Identifier, Direction.West, false),
-            9754 => new ZombieWallHeadBlock(Identifier, Direction.East, true),
-            9755 => new ZombieWallHeadBlock(Identifier, Direction.East, false),
+            10825 => new ZombieWallHeadBlock(Identifier, Direction.North, true),
+            10826 => new ZombieWallHeadBlock(Identifier, Direction.North, false),
+            10827 => new ZombieWallHeadBlock(Identifier, Direction.South, true),
+            10828 => new ZombieWallHeadBlock(Identifier, Direction.South, false),
+            10829 => new ZombieWallHeadBlock(Identifier, Direction.West, true),
+            10830 => new ZombieWallHeadBlock(Identifier, Direction.West, false),
+            10831 => new ZombieWallHeadBlock(Identifier, Direction.East, true),
+            10832 => new ZombieWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

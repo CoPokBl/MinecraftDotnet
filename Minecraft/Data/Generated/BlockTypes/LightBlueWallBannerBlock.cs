@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LightBlueWallBannerBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:wall_banner";
-    public int ProtocolId => 550;
+    public int ProtocolId => 580;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record LightBlueWallBannerBlock(Identifier Identifier, Direction Facing) 
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 11916,
-                Direction.South => 11917,
-                Direction.West => 11918,
-                Direction.East => 11919,
+                Direction.North => 12993,
+                Direction.South => 12994,
+                Direction.West => 12995,
+                Direction.East => 12996,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record LightBlueWallBannerBlock(Identifier Identifier, Direction Facing) 
     
     public IBlock WithState(uint state) {
         return state switch {
-            11916 => new LightBlueWallBannerBlock(Identifier, Direction.North),
-            11917 => new LightBlueWallBannerBlock(Identifier, Direction.South),
-            11918 => new LightBlueWallBannerBlock(Identifier, Direction.West),
-            11919 => new LightBlueWallBannerBlock(Identifier, Direction.East),
+            12993 => new LightBlueWallBannerBlock(Identifier, Direction.North),
+            12994 => new LightBlueWallBannerBlock(Identifier, Direction.South),
+            12995 => new LightBlueWallBannerBlock(Identifier, Direction.West),
+            12996 => new LightBlueWallBannerBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record GreenGlazedTerracottaBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:glazed_terracotta";
-    public int ProtocolId => 675;
+    public int ProtocolId => 705;
     public double Hardness => 1.4;
     public double ExplosionResistance => 1.4;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record GreenGlazedTerracottaBlock(Identifier Identifier, Direction Facing
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 13739,
-                Direction.South => 13740,
-                Direction.West => 13741,
-                Direction.East => 13742,
+                Direction.North => 14816,
+                Direction.South => 14817,
+                Direction.West => 14818,
+                Direction.East => 14819,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record GreenGlazedTerracottaBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            13739 => new GreenGlazedTerracottaBlock(Identifier, Direction.North),
-            13740 => new GreenGlazedTerracottaBlock(Identifier, Direction.South),
-            13741 => new GreenGlazedTerracottaBlock(Identifier, Direction.West),
-            13742 => new GreenGlazedTerracottaBlock(Identifier, Direction.East),
+            14816 => new GreenGlazedTerracottaBlock(Identifier, Direction.North),
+            14817 => new GreenGlazedTerracottaBlock(Identifier, Direction.South),
+            14818 => new GreenGlazedTerracottaBlock(Identifier, Direction.West),
+            14819 => new GreenGlazedTerracottaBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

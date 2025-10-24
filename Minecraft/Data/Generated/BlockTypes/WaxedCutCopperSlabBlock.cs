@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WaxedCutCopperSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 1008;
+    public int ProtocolId => 1046;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record WaxedCutCopperSlabBlock(Identifier Identifier, SlabType Type, bool
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 24706,
-                    false => 24707,
+                    true => 25815,
+                    false => 25816,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 24708,
-                    false => 24709,
+                    true => 25817,
+                    false => 25818,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 24710,
-                    false => 24711,
+                    true => 25819,
+                    false => 25820,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record WaxedCutCopperSlabBlock(Identifier Identifier, SlabType Type, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            24706 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Top, true),
-            24707 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Top, false),
-            24708 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Bottom, true),
-            24709 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Bottom, false),
-            24710 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Double, true),
-            24711 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Double, false),
+            25815 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Top, true),
+            25816 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Top, false),
+            25817 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Bottom, true),
+            25818 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Bottom, false),
+            25819 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Double, true),
+            25820 => new WaxedCutCopperSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

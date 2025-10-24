@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SpruceWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:wall_sign";
-    public int ProtocolId => 212;
+    public int ProtocolId => 224;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record SpruceWallSignBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 4866,
-                    false => 4867,
+                    true => 5634,
+                    false => 5635,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 4868,
-                    false => 4869,
+                    true => 5636,
+                    false => 5637,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 4870,
-                    false => 4871,
+                    true => 5638,
+                    false => 5639,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 4872,
-                    false => 4873,
+                    true => 5640,
+                    false => 5641,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record SpruceWallSignBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            4866 => new SpruceWallSignBlock(Identifier, Direction.North, true),
-            4867 => new SpruceWallSignBlock(Identifier, Direction.North, false),
-            4868 => new SpruceWallSignBlock(Identifier, Direction.South, true),
-            4869 => new SpruceWallSignBlock(Identifier, Direction.South, false),
-            4870 => new SpruceWallSignBlock(Identifier, Direction.West, true),
-            4871 => new SpruceWallSignBlock(Identifier, Direction.West, false),
-            4872 => new SpruceWallSignBlock(Identifier, Direction.East, true),
-            4873 => new SpruceWallSignBlock(Identifier, Direction.East, false),
+            5634 => new SpruceWallSignBlock(Identifier, Direction.North, true),
+            5635 => new SpruceWallSignBlock(Identifier, Direction.North, false),
+            5636 => new SpruceWallSignBlock(Identifier, Direction.South, true),
+            5637 => new SpruceWallSignBlock(Identifier, Direction.South, false),
+            5638 => new SpruceWallSignBlock(Identifier, Direction.West, true),
+            5639 => new SpruceWallSignBlock(Identifier, Direction.West, false),
+            5640 => new SpruceWallSignBlock(Identifier, Direction.East, true),
+            5641 => new SpruceWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

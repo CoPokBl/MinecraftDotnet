@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record MyceliumBlock(Identifier Identifier, bool Snowy) : IBlock {
     public Identifier Category => "minecraft:mycelium";
-    public int ProtocolId => 342;
+    public int ProtocolId => 372;
     public double Hardness => 0.6;
     public double ExplosionResistance => 0.6;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record MyceliumBlock(Identifier Identifier, bool Snowy) : IBlock {
     public uint StateId {
         get {
             return Snowy switch {
-                true => 7640,
-                false => 7641,
+                true => 8717,
+                false => 8718,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            7640 => new MyceliumBlock(Identifier, true),
-            7641 => new MyceliumBlock(Identifier, false),
+            8717 => new MyceliumBlock(Identifier, true),
+            8718 => new MyceliumBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

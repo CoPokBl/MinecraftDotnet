@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CampfireBlock(Identifier Identifier, Direction Facing, bool Lit, bool SignalFire, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:campfire";
-    public int ProtocolId => 819;
+    public int ProtocolId => 857;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;
@@ -46,88 +46,88 @@ public record CampfireBlock(Identifier Identifier, Direction Facing, bool Lit, b
                 Direction.North => Lit switch {
                     true => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 19566,
-                            false => 19567,
+                            true => 20675,
+                            false => 20676,
                         },
                         false => Waterlogged switch {
-                            true => 19568,
-                            false => 19569,
+                            true => 20677,
+                            false => 20678,
                         },
                     },
                     false => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 19570,
-                            false => 19571,
+                            true => 20679,
+                            false => 20680,
                         },
                         false => Waterlogged switch {
-                            true => 19572,
-                            false => 19573,
+                            true => 20681,
+                            false => 20682,
                         },
                     },
                 },
                 Direction.South => Lit switch {
                     true => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 19574,
-                            false => 19575,
+                            true => 20683,
+                            false => 20684,
                         },
                         false => Waterlogged switch {
-                            true => 19576,
-                            false => 19577,
+                            true => 20685,
+                            false => 20686,
                         },
                     },
                     false => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 19578,
-                            false => 19579,
+                            true => 20687,
+                            false => 20688,
                         },
                         false => Waterlogged switch {
-                            true => 19580,
-                            false => 19581,
+                            true => 20689,
+                            false => 20690,
                         },
                     },
                 },
                 Direction.West => Lit switch {
                     true => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 19582,
-                            false => 19583,
+                            true => 20691,
+                            false => 20692,
                         },
                         false => Waterlogged switch {
-                            true => 19584,
-                            false => 19585,
+                            true => 20693,
+                            false => 20694,
                         },
                     },
                     false => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 19586,
-                            false => 19587,
+                            true => 20695,
+                            false => 20696,
                         },
                         false => Waterlogged switch {
-                            true => 19588,
-                            false => 19589,
+                            true => 20697,
+                            false => 20698,
                         },
                     },
                 },
                 Direction.East => Lit switch {
                     true => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 19590,
-                            false => 19591,
+                            true => 20699,
+                            false => 20700,
                         },
                         false => Waterlogged switch {
-                            true => 19592,
-                            false => 19593,
+                            true => 20701,
+                            false => 20702,
                         },
                     },
                     false => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 19594,
-                            false => 19595,
+                            true => 20703,
+                            false => 20704,
                         },
                         false => Waterlogged switch {
-                            true => 19596,
-                            false => 19597,
+                            true => 20705,
+                            false => 20706,
                         },
                     },
                 },
@@ -138,38 +138,38 @@ public record CampfireBlock(Identifier Identifier, Direction Facing, bool Lit, b
     
     public IBlock WithState(uint state) {
         return state switch {
-            19566 => new CampfireBlock(Identifier, Direction.North, true, true, true),
-            19567 => new CampfireBlock(Identifier, Direction.North, true, true, false),
-            19568 => new CampfireBlock(Identifier, Direction.North, true, false, true),
-            19569 => new CampfireBlock(Identifier, Direction.North, true, false, false),
-            19570 => new CampfireBlock(Identifier, Direction.North, false, true, true),
-            19571 => new CampfireBlock(Identifier, Direction.North, false, true, false),
-            19572 => new CampfireBlock(Identifier, Direction.North, false, false, true),
-            19573 => new CampfireBlock(Identifier, Direction.North, false, false, false),
-            19574 => new CampfireBlock(Identifier, Direction.South, true, true, true),
-            19575 => new CampfireBlock(Identifier, Direction.South, true, true, false),
-            19576 => new CampfireBlock(Identifier, Direction.South, true, false, true),
-            19577 => new CampfireBlock(Identifier, Direction.South, true, false, false),
-            19578 => new CampfireBlock(Identifier, Direction.South, false, true, true),
-            19579 => new CampfireBlock(Identifier, Direction.South, false, true, false),
-            19580 => new CampfireBlock(Identifier, Direction.South, false, false, true),
-            19581 => new CampfireBlock(Identifier, Direction.South, false, false, false),
-            19582 => new CampfireBlock(Identifier, Direction.West, true, true, true),
-            19583 => new CampfireBlock(Identifier, Direction.West, true, true, false),
-            19584 => new CampfireBlock(Identifier, Direction.West, true, false, true),
-            19585 => new CampfireBlock(Identifier, Direction.West, true, false, false),
-            19586 => new CampfireBlock(Identifier, Direction.West, false, true, true),
-            19587 => new CampfireBlock(Identifier, Direction.West, false, true, false),
-            19588 => new CampfireBlock(Identifier, Direction.West, false, false, true),
-            19589 => new CampfireBlock(Identifier, Direction.West, false, false, false),
-            19590 => new CampfireBlock(Identifier, Direction.East, true, true, true),
-            19591 => new CampfireBlock(Identifier, Direction.East, true, true, false),
-            19592 => new CampfireBlock(Identifier, Direction.East, true, false, true),
-            19593 => new CampfireBlock(Identifier, Direction.East, true, false, false),
-            19594 => new CampfireBlock(Identifier, Direction.East, false, true, true),
-            19595 => new CampfireBlock(Identifier, Direction.East, false, true, false),
-            19596 => new CampfireBlock(Identifier, Direction.East, false, false, true),
-            19597 => new CampfireBlock(Identifier, Direction.East, false, false, false),
+            20675 => new CampfireBlock(Identifier, Direction.North, true, true, true),
+            20676 => new CampfireBlock(Identifier, Direction.North, true, true, false),
+            20677 => new CampfireBlock(Identifier, Direction.North, true, false, true),
+            20678 => new CampfireBlock(Identifier, Direction.North, true, false, false),
+            20679 => new CampfireBlock(Identifier, Direction.North, false, true, true),
+            20680 => new CampfireBlock(Identifier, Direction.North, false, true, false),
+            20681 => new CampfireBlock(Identifier, Direction.North, false, false, true),
+            20682 => new CampfireBlock(Identifier, Direction.North, false, false, false),
+            20683 => new CampfireBlock(Identifier, Direction.South, true, true, true),
+            20684 => new CampfireBlock(Identifier, Direction.South, true, true, false),
+            20685 => new CampfireBlock(Identifier, Direction.South, true, false, true),
+            20686 => new CampfireBlock(Identifier, Direction.South, true, false, false),
+            20687 => new CampfireBlock(Identifier, Direction.South, false, true, true),
+            20688 => new CampfireBlock(Identifier, Direction.South, false, true, false),
+            20689 => new CampfireBlock(Identifier, Direction.South, false, false, true),
+            20690 => new CampfireBlock(Identifier, Direction.South, false, false, false),
+            20691 => new CampfireBlock(Identifier, Direction.West, true, true, true),
+            20692 => new CampfireBlock(Identifier, Direction.West, true, true, false),
+            20693 => new CampfireBlock(Identifier, Direction.West, true, false, true),
+            20694 => new CampfireBlock(Identifier, Direction.West, true, false, false),
+            20695 => new CampfireBlock(Identifier, Direction.West, false, true, true),
+            20696 => new CampfireBlock(Identifier, Direction.West, false, true, false),
+            20697 => new CampfireBlock(Identifier, Direction.West, false, false, true),
+            20698 => new CampfireBlock(Identifier, Direction.West, false, false, false),
+            20699 => new CampfireBlock(Identifier, Direction.East, true, true, true),
+            20700 => new CampfireBlock(Identifier, Direction.East, true, true, false),
+            20701 => new CampfireBlock(Identifier, Direction.East, true, false, true),
+            20702 => new CampfireBlock(Identifier, Direction.East, true, false, false),
+            20703 => new CampfireBlock(Identifier, Direction.East, false, true, true),
+            20704 => new CampfireBlock(Identifier, Direction.East, false, true, false),
+            20705 => new CampfireBlock(Identifier, Direction.East, false, false, true),
+            20706 => new CampfireBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

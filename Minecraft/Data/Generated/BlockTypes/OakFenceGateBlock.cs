@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OakFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock {
     public Identifier Category => "minecraft:fence_gate";
-    public int ProtocolId => 338;
+    public int ProtocolId => 368;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -46,88 +46,88 @@ public record OakFenceGateBlock(Identifier Identifier, Direction Facing, bool In
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 7368,
-                            false => 7369,
+                            true => 8445,
+                            false => 8446,
                         },
                         false => Powered switch {
-                            true => 7370,
-                            false => 7371,
+                            true => 8447,
+                            false => 8448,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 7372,
-                            false => 7373,
+                            true => 8449,
+                            false => 8450,
                         },
                         false => Powered switch {
-                            true => 7374,
-                            false => 7375,
+                            true => 8451,
+                            false => 8452,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 7376,
-                            false => 7377,
+                            true => 8453,
+                            false => 8454,
                         },
                         false => Powered switch {
-                            true => 7378,
-                            false => 7379,
+                            true => 8455,
+                            false => 8456,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 7380,
-                            false => 7381,
+                            true => 8457,
+                            false => 8458,
                         },
                         false => Powered switch {
-                            true => 7382,
-                            false => 7383,
+                            true => 8459,
+                            false => 8460,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 7384,
-                            false => 7385,
+                            true => 8461,
+                            false => 8462,
                         },
                         false => Powered switch {
-                            true => 7386,
-                            false => 7387,
+                            true => 8463,
+                            false => 8464,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 7388,
-                            false => 7389,
+                            true => 8465,
+                            false => 8466,
                         },
                         false => Powered switch {
-                            true => 7390,
-                            false => 7391,
+                            true => 8467,
+                            false => 8468,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 7392,
-                            false => 7393,
+                            true => 8469,
+                            false => 8470,
                         },
                         false => Powered switch {
-                            true => 7394,
-                            false => 7395,
+                            true => 8471,
+                            false => 8472,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 7396,
-                            false => 7397,
+                            true => 8473,
+                            false => 8474,
                         },
                         false => Powered switch {
-                            true => 7398,
-                            false => 7399,
+                            true => 8475,
+                            false => 8476,
                         },
                     },
                 },
@@ -138,38 +138,38 @@ public record OakFenceGateBlock(Identifier Identifier, Direction Facing, bool In
     
     public IBlock WithState(uint state) {
         return state switch {
-            7368 => new OakFenceGateBlock(Identifier, Direction.North, true, true, true),
-            7369 => new OakFenceGateBlock(Identifier, Direction.North, true, true, false),
-            7370 => new OakFenceGateBlock(Identifier, Direction.North, true, false, true),
-            7371 => new OakFenceGateBlock(Identifier, Direction.North, true, false, false),
-            7372 => new OakFenceGateBlock(Identifier, Direction.North, false, true, true),
-            7373 => new OakFenceGateBlock(Identifier, Direction.North, false, true, false),
-            7374 => new OakFenceGateBlock(Identifier, Direction.North, false, false, true),
-            7375 => new OakFenceGateBlock(Identifier, Direction.North, false, false, false),
-            7376 => new OakFenceGateBlock(Identifier, Direction.South, true, true, true),
-            7377 => new OakFenceGateBlock(Identifier, Direction.South, true, true, false),
-            7378 => new OakFenceGateBlock(Identifier, Direction.South, true, false, true),
-            7379 => new OakFenceGateBlock(Identifier, Direction.South, true, false, false),
-            7380 => new OakFenceGateBlock(Identifier, Direction.South, false, true, true),
-            7381 => new OakFenceGateBlock(Identifier, Direction.South, false, true, false),
-            7382 => new OakFenceGateBlock(Identifier, Direction.South, false, false, true),
-            7383 => new OakFenceGateBlock(Identifier, Direction.South, false, false, false),
-            7384 => new OakFenceGateBlock(Identifier, Direction.West, true, true, true),
-            7385 => new OakFenceGateBlock(Identifier, Direction.West, true, true, false),
-            7386 => new OakFenceGateBlock(Identifier, Direction.West, true, false, true),
-            7387 => new OakFenceGateBlock(Identifier, Direction.West, true, false, false),
-            7388 => new OakFenceGateBlock(Identifier, Direction.West, false, true, true),
-            7389 => new OakFenceGateBlock(Identifier, Direction.West, false, true, false),
-            7390 => new OakFenceGateBlock(Identifier, Direction.West, false, false, true),
-            7391 => new OakFenceGateBlock(Identifier, Direction.West, false, false, false),
-            7392 => new OakFenceGateBlock(Identifier, Direction.East, true, true, true),
-            7393 => new OakFenceGateBlock(Identifier, Direction.East, true, true, false),
-            7394 => new OakFenceGateBlock(Identifier, Direction.East, true, false, true),
-            7395 => new OakFenceGateBlock(Identifier, Direction.East, true, false, false),
-            7396 => new OakFenceGateBlock(Identifier, Direction.East, false, true, true),
-            7397 => new OakFenceGateBlock(Identifier, Direction.East, false, true, false),
-            7398 => new OakFenceGateBlock(Identifier, Direction.East, false, false, true),
-            7399 => new OakFenceGateBlock(Identifier, Direction.East, false, false, false),
+            8445 => new OakFenceGateBlock(Identifier, Direction.North, true, true, true),
+            8446 => new OakFenceGateBlock(Identifier, Direction.North, true, true, false),
+            8447 => new OakFenceGateBlock(Identifier, Direction.North, true, false, true),
+            8448 => new OakFenceGateBlock(Identifier, Direction.North, true, false, false),
+            8449 => new OakFenceGateBlock(Identifier, Direction.North, false, true, true),
+            8450 => new OakFenceGateBlock(Identifier, Direction.North, false, true, false),
+            8451 => new OakFenceGateBlock(Identifier, Direction.North, false, false, true),
+            8452 => new OakFenceGateBlock(Identifier, Direction.North, false, false, false),
+            8453 => new OakFenceGateBlock(Identifier, Direction.South, true, true, true),
+            8454 => new OakFenceGateBlock(Identifier, Direction.South, true, true, false),
+            8455 => new OakFenceGateBlock(Identifier, Direction.South, true, false, true),
+            8456 => new OakFenceGateBlock(Identifier, Direction.South, true, false, false),
+            8457 => new OakFenceGateBlock(Identifier, Direction.South, false, true, true),
+            8458 => new OakFenceGateBlock(Identifier, Direction.South, false, true, false),
+            8459 => new OakFenceGateBlock(Identifier, Direction.South, false, false, true),
+            8460 => new OakFenceGateBlock(Identifier, Direction.South, false, false, false),
+            8461 => new OakFenceGateBlock(Identifier, Direction.West, true, true, true),
+            8462 => new OakFenceGateBlock(Identifier, Direction.West, true, true, false),
+            8463 => new OakFenceGateBlock(Identifier, Direction.West, true, false, true),
+            8464 => new OakFenceGateBlock(Identifier, Direction.West, true, false, false),
+            8465 => new OakFenceGateBlock(Identifier, Direction.West, false, true, true),
+            8466 => new OakFenceGateBlock(Identifier, Direction.West, false, true, false),
+            8467 => new OakFenceGateBlock(Identifier, Direction.West, false, false, true),
+            8468 => new OakFenceGateBlock(Identifier, Direction.West, false, false, false),
+            8469 => new OakFenceGateBlock(Identifier, Direction.East, true, true, true),
+            8470 => new OakFenceGateBlock(Identifier, Direction.East, true, true, false),
+            8471 => new OakFenceGateBlock(Identifier, Direction.East, true, false, true),
+            8472 => new OakFenceGateBlock(Identifier, Direction.East, true, false, false),
+            8473 => new OakFenceGateBlock(Identifier, Direction.East, false, true, true),
+            8474 => new OakFenceGateBlock(Identifier, Direction.East, false, true, false),
+            8475 => new OakFenceGateBlock(Identifier, Direction.East, false, false, true),
+            8476 => new OakFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

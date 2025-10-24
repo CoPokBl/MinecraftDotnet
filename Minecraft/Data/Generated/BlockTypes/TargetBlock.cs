@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TargetBlock(Identifier Identifier, int Power) : IBlock {
     public Identifier Category => "minecraft:target";
-    public int ProtocolId => 870;
+    public int ProtocolId => 908;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -43,22 +43,22 @@ public record TargetBlock(Identifier Identifier, int Power) : IBlock {
     public uint StateId {
         get {
             return Power switch {
-                0 => 20441,
-                1 => 20442,
-                2 => 20443,
-                3 => 20444,
-                4 => 20445,
-                5 => 20446,
-                6 => 20447,
-                7 => 20448,
-                8 => 20449,
-                9 => 20450,
-                10 => 20451,
-                11 => 20452,
-                12 => 20453,
-                13 => 20454,
-                14 => 20455,
-                15 => 20456,
+                0 => 21550,
+                1 => 21551,
+                2 => 21552,
+                3 => 21553,
+                4 => 21554,
+                5 => 21555,
+                6 => 21556,
+                7 => 21557,
+                8 => 21558,
+                9 => 21559,
+                10 => 21560,
+                11 => 21561,
+                12 => 21562,
+                13 => 21563,
+                14 => 21564,
+                15 => 21565,
                 _ => throw new ArgumentOutOfRangeException(nameof(Power), Power, "Unknown value for property power.")
             };
         }
@@ -66,22 +66,22 @@ public record TargetBlock(Identifier Identifier, int Power) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            20441 => new TargetBlock(Identifier, 0),
-            20442 => new TargetBlock(Identifier, 1),
-            20443 => new TargetBlock(Identifier, 2),
-            20444 => new TargetBlock(Identifier, 3),
-            20445 => new TargetBlock(Identifier, 4),
-            20446 => new TargetBlock(Identifier, 5),
-            20447 => new TargetBlock(Identifier, 6),
-            20448 => new TargetBlock(Identifier, 7),
-            20449 => new TargetBlock(Identifier, 8),
-            20450 => new TargetBlock(Identifier, 9),
-            20451 => new TargetBlock(Identifier, 10),
-            20452 => new TargetBlock(Identifier, 11),
-            20453 => new TargetBlock(Identifier, 12),
-            20454 => new TargetBlock(Identifier, 13),
-            20455 => new TargetBlock(Identifier, 14),
-            20456 => new TargetBlock(Identifier, 15),
+            21550 => new TargetBlock(Identifier, 0),
+            21551 => new TargetBlock(Identifier, 1),
+            21552 => new TargetBlock(Identifier, 2),
+            21553 => new TargetBlock(Identifier, 3),
+            21554 => new TargetBlock(Identifier, 4),
+            21555 => new TargetBlock(Identifier, 5),
+            21556 => new TargetBlock(Identifier, 6),
+            21557 => new TargetBlock(Identifier, 7),
+            21558 => new TargetBlock(Identifier, 8),
+            21559 => new TargetBlock(Identifier, 9),
+            21560 => new TargetBlock(Identifier, 10),
+            21561 => new TargetBlock(Identifier, 11),
+            21562 => new TargetBlock(Identifier, 12),
+            21563 => new TargetBlock(Identifier, 13),
+            21564 => new TargetBlock(Identifier, 14),
+            21565 => new TargetBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

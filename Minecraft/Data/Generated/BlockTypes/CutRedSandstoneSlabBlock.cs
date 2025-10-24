@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CutRedSandstoneSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 590;
+    public int ProtocolId => 620;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record CutRedSandstoneSlabBlock(Identifier Identifier, SlabType Type, boo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12189,
-                    false => 12190,
+                    true => 13266,
+                    false => 13267,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12191,
-                    false => 12192,
+                    true => 13268,
+                    false => 13269,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12193,
-                    false => 12194,
+                    true => 13270,
+                    false => 13271,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record CutRedSandstoneSlabBlock(Identifier Identifier, SlabType Type, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12189 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Top, true),
-            12190 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Top, false),
-            12191 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Bottom, true),
-            12192 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Bottom, false),
-            12193 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Double, true),
-            12194 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Double, false),
+            13266 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Top, true),
+            13267 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Top, false),
+            13268 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Bottom, true),
+            13269 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Bottom, false),
+            13270 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Double, true),
+            13271 => new CutRedSandstoneSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

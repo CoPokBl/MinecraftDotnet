@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PotatoesBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:potato";
-    public int ProtocolId => 410;
+    public int ProtocolId => 440;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,14 +43,14 @@ public record PotatoesBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 9388,
-                1 => 9389,
-                2 => 9390,
-                3 => 9391,
-                4 => 9392,
-                5 => 9393,
-                6 => 9394,
-                7 => 9395,
+                0 => 10465,
+                1 => 10466,
+                2 => 10467,
+                3 => 10468,
+                4 => 10469,
+                5 => 10470,
+                6 => 10471,
+                7 => 10472,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -58,14 +58,14 @@ public record PotatoesBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            9388 => new PotatoesBlock(Identifier, 0),
-            9389 => new PotatoesBlock(Identifier, 1),
-            9390 => new PotatoesBlock(Identifier, 2),
-            9391 => new PotatoesBlock(Identifier, 3),
-            9392 => new PotatoesBlock(Identifier, 4),
-            9393 => new PotatoesBlock(Identifier, 5),
-            9394 => new PotatoesBlock(Identifier, 6),
-            9395 => new PotatoesBlock(Identifier, 7),
+            10465 => new PotatoesBlock(Identifier, 0),
+            10466 => new PotatoesBlock(Identifier, 1),
+            10467 => new PotatoesBlock(Identifier, 2),
+            10468 => new PotatoesBlock(Identifier, 3),
+            10469 => new PotatoesBlock(Identifier, 4),
+            10470 => new PotatoesBlock(Identifier, 5),
+            10471 => new PotatoesBlock(Identifier, 6),
+            10472 => new PotatoesBlock(Identifier, 7),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LightBlueGlazedTerracottaBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:glazed_terracotta";
-    public int ProtocolId => 665;
+    public int ProtocolId => 695;
     public double Hardness => 1.4;
     public double ExplosionResistance => 1.4;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record LightBlueGlazedTerracottaBlock(Identifier Identifier, Direction Fa
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 13699,
-                Direction.South => 13700,
-                Direction.West => 13701,
-                Direction.East => 13702,
+                Direction.North => 14776,
+                Direction.South => 14777,
+                Direction.West => 14778,
+                Direction.East => 14779,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record LightBlueGlazedTerracottaBlock(Identifier Identifier, Direction Fa
     
     public IBlock WithState(uint state) {
         return state switch {
-            13699 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.North),
-            13700 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.South),
-            13701 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.West),
-            13702 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.East),
+            14776 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.North),
+            14777 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.South),
+            14778 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.West),
+            14779 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

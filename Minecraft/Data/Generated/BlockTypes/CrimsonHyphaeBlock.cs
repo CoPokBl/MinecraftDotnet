@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CrimsonHyphaeBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:rotated_pillar";
-    public int ProtocolId => 833;
+    public int ProtocolId => 871;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record CrimsonHyphaeBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 19657,
-                Axis.Y => 19658,
-                Axis.Z => 19659,
+                Axis.X => 20766,
+                Axis.Y => 20767,
+                Axis.Z => 20768,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record CrimsonHyphaeBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            19657 => new CrimsonHyphaeBlock(Identifier, Axis.X),
-            19658 => new CrimsonHyphaeBlock(Identifier, Axis.Y),
-            19659 => new CrimsonHyphaeBlock(Identifier, Axis.Z),
+            20766 => new CrimsonHyphaeBlock(Identifier, Axis.X),
+            20767 => new CrimsonHyphaeBlock(Identifier, Axis.Y),
+            20768 => new CrimsonHyphaeBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

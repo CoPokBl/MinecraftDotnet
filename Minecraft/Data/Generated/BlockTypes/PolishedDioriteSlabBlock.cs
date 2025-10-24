@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PolishedDioriteSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 782;
+    public int ProtocolId => 812;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record PolishedDioriteSlabBlock(Identifier Identifier, SlabType Type, boo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15155,
-                    false => 15156,
+                    true => 16232,
+                    false => 16233,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15157,
-                    false => 15158,
+                    true => 16234,
+                    false => 16235,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15159,
-                    false => 15160,
+                    true => 16236,
+                    false => 16237,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record PolishedDioriteSlabBlock(Identifier Identifier, SlabType Type, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            15155 => new PolishedDioriteSlabBlock(Identifier, SlabType.Top, true),
-            15156 => new PolishedDioriteSlabBlock(Identifier, SlabType.Top, false),
-            15157 => new PolishedDioriteSlabBlock(Identifier, SlabType.Bottom, true),
-            15158 => new PolishedDioriteSlabBlock(Identifier, SlabType.Bottom, false),
-            15159 => new PolishedDioriteSlabBlock(Identifier, SlabType.Double, true),
-            15160 => new PolishedDioriteSlabBlock(Identifier, SlabType.Double, false),
+            16232 => new PolishedDioriteSlabBlock(Identifier, SlabType.Top, true),
+            16233 => new PolishedDioriteSlabBlock(Identifier, SlabType.Top, false),
+            16234 => new PolishedDioriteSlabBlock(Identifier, SlabType.Bottom, true),
+            16235 => new PolishedDioriteSlabBlock(Identifier, SlabType.Bottom, false),
+            16236 => new PolishedDioriteSlabBlock(Identifier, SlabType.Double, true),
+            16237 => new PolishedDioriteSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:piglinwallskull";
-    public int ProtocolId => 434;
+    public int ProtocolId => 464;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 9908,
-                    false => 9909,
+                    true => 10985,
+                    false => 10986,
                 },
                 Direction.South => Powered switch {
-                    true => 9910,
-                    false => 9911,
+                    true => 10987,
+                    false => 10988,
                 },
                 Direction.West => Powered switch {
-                    true => 9912,
-                    false => 9913,
+                    true => 10989,
+                    false => 10990,
                 },
                 Direction.East => Powered switch {
-                    true => 9914,
-                    false => 9915,
+                    true => 10991,
+                    false => 10992,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            9908 => new PiglinWallHeadBlock(Identifier, Direction.North, true),
-            9909 => new PiglinWallHeadBlock(Identifier, Direction.North, false),
-            9910 => new PiglinWallHeadBlock(Identifier, Direction.South, true),
-            9911 => new PiglinWallHeadBlock(Identifier, Direction.South, false),
-            9912 => new PiglinWallHeadBlock(Identifier, Direction.West, true),
-            9913 => new PiglinWallHeadBlock(Identifier, Direction.West, false),
-            9914 => new PiglinWallHeadBlock(Identifier, Direction.East, true),
-            9915 => new PiglinWallHeadBlock(Identifier, Direction.East, false),
+            10985 => new PiglinWallHeadBlock(Identifier, Direction.North, true),
+            10986 => new PiglinWallHeadBlock(Identifier, Direction.North, false),
+            10987 => new PiglinWallHeadBlock(Identifier, Direction.South, true),
+            10988 => new PiglinWallHeadBlock(Identifier, Direction.South, false),
+            10989 => new PiglinWallHeadBlock(Identifier, Direction.West, true),
+            10990 => new PiglinWallHeadBlock(Identifier, Direction.West, false),
+            10991 => new PiglinWallHeadBlock(Identifier, Direction.East, true),
+            10992 => new PiglinWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OakSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 567;
+    public int ProtocolId => 597;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record OakSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogge
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12051,
-                    false => 12052,
+                    true => 13128,
+                    false => 13129,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12053,
-                    false => 12054,
+                    true => 13130,
+                    false => 13131,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12055,
-                    false => 12056,
+                    true => 13132,
+                    false => 13133,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record OakSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogge
     
     public IBlock WithState(uint state) {
         return state switch {
-            12051 => new OakSlabBlock(Identifier, SlabType.Top, true),
-            12052 => new OakSlabBlock(Identifier, SlabType.Top, false),
-            12053 => new OakSlabBlock(Identifier, SlabType.Bottom, true),
-            12054 => new OakSlabBlock(Identifier, SlabType.Bottom, false),
-            12055 => new OakSlabBlock(Identifier, SlabType.Double, true),
-            12056 => new OakSlabBlock(Identifier, SlabType.Double, false),
+            13128 => new OakSlabBlock(Identifier, SlabType.Top, true),
+            13129 => new OakSlabBlock(Identifier, SlabType.Top, false),
+            13130 => new OakSlabBlock(Identifier, SlabType.Bottom, true),
+            13131 => new OakSlabBlock(Identifier, SlabType.Bottom, false),
+            13132 => new OakSlabBlock(Identifier, SlabType.Double, true),
+            13133 => new OakSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

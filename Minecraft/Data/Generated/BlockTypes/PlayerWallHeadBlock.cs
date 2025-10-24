@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PlayerWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:player_wall_head";
-    public int ProtocolId => 428;
+    public int ProtocolId => 458;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record PlayerWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 9788,
-                    false => 9789,
+                    true => 10865,
+                    false => 10866,
                 },
                 Direction.South => Powered switch {
-                    true => 9790,
-                    false => 9791,
+                    true => 10867,
+                    false => 10868,
                 },
                 Direction.West => Powered switch {
-                    true => 9792,
-                    false => 9793,
+                    true => 10869,
+                    false => 10870,
                 },
                 Direction.East => Powered switch {
-                    true => 9794,
-                    false => 9795,
+                    true => 10871,
+                    false => 10872,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record PlayerWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            9788 => new PlayerWallHeadBlock(Identifier, Direction.North, true),
-            9789 => new PlayerWallHeadBlock(Identifier, Direction.North, false),
-            9790 => new PlayerWallHeadBlock(Identifier, Direction.South, true),
-            9791 => new PlayerWallHeadBlock(Identifier, Direction.South, false),
-            9792 => new PlayerWallHeadBlock(Identifier, Direction.West, true),
-            9793 => new PlayerWallHeadBlock(Identifier, Direction.West, false),
-            9794 => new PlayerWallHeadBlock(Identifier, Direction.East, true),
-            9795 => new PlayerWallHeadBlock(Identifier, Direction.East, false),
+            10865 => new PlayerWallHeadBlock(Identifier, Direction.North, true),
+            10866 => new PlayerWallHeadBlock(Identifier, Direction.North, false),
+            10867 => new PlayerWallHeadBlock(Identifier, Direction.South, true),
+            10868 => new PlayerWallHeadBlock(Identifier, Direction.South, false),
+            10869 => new PlayerWallHeadBlock(Identifier, Direction.West, true),
+            10870 => new PlayerWallHeadBlock(Identifier, Direction.West, false),
+            10871 => new PlayerWallHeadBlock(Identifier, Direction.East, true),
+            10872 => new PlayerWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

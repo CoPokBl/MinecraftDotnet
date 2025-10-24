@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ChippedAnvilBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:anvil";
-    public int ProtocolId => 436;
+    public int ProtocolId => 466;
     public double Hardness => 5;
     public double ExplosionResistance => 1200;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record ChippedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 9920,
-                Direction.South => 9921,
-                Direction.West => 9922,
-                Direction.East => 9923,
+                Direction.North => 10997,
+                Direction.South => 10998,
+                Direction.West => 10999,
+                Direction.East => 11000,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record ChippedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
     
     public IBlock WithState(uint state) {
         return state switch {
-            9920 => new ChippedAnvilBlock(Identifier, Direction.North),
-            9921 => new ChippedAnvilBlock(Identifier, Direction.South),
-            9922 => new ChippedAnvilBlock(Identifier, Direction.West),
-            9923 => new ChippedAnvilBlock(Identifier, Direction.East),
+            10997 => new ChippedAnvilBlock(Identifier, Direction.North),
+            10998 => new ChippedAnvilBlock(Identifier, Direction.South),
+            10999 => new ChippedAnvilBlock(Identifier, Direction.West),
+            11000 => new ChippedAnvilBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

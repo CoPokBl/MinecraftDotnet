@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record StrippedWarpedStemBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:rotated_pillar";
-    public int ProtocolId => 823;
+    public int ProtocolId => 861;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record StrippedWarpedStemBlock(Identifier Identifier, Axis Axis) : IBlock
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 19637,
-                Axis.Y => 19638,
-                Axis.Z => 19639,
+                Axis.X => 20746,
+                Axis.Y => 20747,
+                Axis.Z => 20748,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record StrippedWarpedStemBlock(Identifier Identifier, Axis Axis) : IBlock
     
     public IBlock WithState(uint state) {
         return state switch {
-            19637 => new StrippedWarpedStemBlock(Identifier, Axis.X),
-            19638 => new StrippedWarpedStemBlock(Identifier, Axis.Y),
-            19639 => new StrippedWarpedStemBlock(Identifier, Axis.Z),
+            20746 => new StrippedWarpedStemBlock(Identifier, Axis.X),
+            20747 => new StrippedWarpedStemBlock(Identifier, Axis.Y),
+            20748 => new StrippedWarpedStemBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

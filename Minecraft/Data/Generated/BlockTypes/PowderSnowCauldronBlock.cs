@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PowderSnowCauldronBlock(Identifier Identifier, int Level) : IBlock {
     public Identifier Category => "minecraft:layered_cauldron";
-    public int ProtocolId => 359;
+    public int ProtocolId => 389;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record PowderSnowCauldronBlock(Identifier Identifier, int Level) : IBlock
     public uint StateId {
         get {
             return Level switch {
-                1 => 8187,
-                2 => 8188,
-                3 => 8189,
+                1 => 9264,
+                2 => 9265,
+                3 => 9266,
                 _ => throw new ArgumentOutOfRangeException(nameof(Level), Level, "Unknown value for property level.")
             };
         }
@@ -53,9 +53,9 @@ public record PowderSnowCauldronBlock(Identifier Identifier, int Level) : IBlock
     
     public IBlock WithState(uint state) {
         return state switch {
-            8187 => new PowderSnowCauldronBlock(Identifier, 1),
-            8188 => new PowderSnowCauldronBlock(Identifier, 2),
-            8189 => new PowderSnowCauldronBlock(Identifier, 3),
+            9264 => new PowderSnowCauldronBlock(Identifier, 1),
+            9265 => new PowderSnowCauldronBlock(Identifier, 2),
+            9266 => new PowderSnowCauldronBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

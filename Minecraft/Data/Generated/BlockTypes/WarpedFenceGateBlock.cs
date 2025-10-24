@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WarpedFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock {
     public Identifier Category => "minecraft:fence_gate";
-    public int ProtocolId => 854;
+    public int ProtocolId => 892;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -46,88 +46,88 @@ public record WarpedFenceGateBlock(Identifier Identifier, Direction Facing, bool
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 19963,
-                            false => 19964,
+                            true => 21072,
+                            false => 21073,
                         },
                         false => Powered switch {
-                            true => 19965,
-                            false => 19966,
+                            true => 21074,
+                            false => 21075,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 19967,
-                            false => 19968,
+                            true => 21076,
+                            false => 21077,
                         },
                         false => Powered switch {
-                            true => 19969,
-                            false => 19970,
+                            true => 21078,
+                            false => 21079,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 19971,
-                            false => 19972,
+                            true => 21080,
+                            false => 21081,
                         },
                         false => Powered switch {
-                            true => 19973,
-                            false => 19974,
+                            true => 21082,
+                            false => 21083,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 19975,
-                            false => 19976,
+                            true => 21084,
+                            false => 21085,
                         },
                         false => Powered switch {
-                            true => 19977,
-                            false => 19978,
+                            true => 21086,
+                            false => 21087,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 19979,
-                            false => 19980,
+                            true => 21088,
+                            false => 21089,
                         },
                         false => Powered switch {
-                            true => 19981,
-                            false => 19982,
+                            true => 21090,
+                            false => 21091,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 19983,
-                            false => 19984,
+                            true => 21092,
+                            false => 21093,
                         },
                         false => Powered switch {
-                            true => 19985,
-                            false => 19986,
+                            true => 21094,
+                            false => 21095,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 19987,
-                            false => 19988,
+                            true => 21096,
+                            false => 21097,
                         },
                         false => Powered switch {
-                            true => 19989,
-                            false => 19990,
+                            true => 21098,
+                            false => 21099,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 19991,
-                            false => 19992,
+                            true => 21100,
+                            false => 21101,
                         },
                         false => Powered switch {
-                            true => 19993,
-                            false => 19994,
+                            true => 21102,
+                            false => 21103,
                         },
                     },
                 },
@@ -138,38 +138,38 @@ public record WarpedFenceGateBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            19963 => new WarpedFenceGateBlock(Identifier, Direction.North, true, true, true),
-            19964 => new WarpedFenceGateBlock(Identifier, Direction.North, true, true, false),
-            19965 => new WarpedFenceGateBlock(Identifier, Direction.North, true, false, true),
-            19966 => new WarpedFenceGateBlock(Identifier, Direction.North, true, false, false),
-            19967 => new WarpedFenceGateBlock(Identifier, Direction.North, false, true, true),
-            19968 => new WarpedFenceGateBlock(Identifier, Direction.North, false, true, false),
-            19969 => new WarpedFenceGateBlock(Identifier, Direction.North, false, false, true),
-            19970 => new WarpedFenceGateBlock(Identifier, Direction.North, false, false, false),
-            19971 => new WarpedFenceGateBlock(Identifier, Direction.South, true, true, true),
-            19972 => new WarpedFenceGateBlock(Identifier, Direction.South, true, true, false),
-            19973 => new WarpedFenceGateBlock(Identifier, Direction.South, true, false, true),
-            19974 => new WarpedFenceGateBlock(Identifier, Direction.South, true, false, false),
-            19975 => new WarpedFenceGateBlock(Identifier, Direction.South, false, true, true),
-            19976 => new WarpedFenceGateBlock(Identifier, Direction.South, false, true, false),
-            19977 => new WarpedFenceGateBlock(Identifier, Direction.South, false, false, true),
-            19978 => new WarpedFenceGateBlock(Identifier, Direction.South, false, false, false),
-            19979 => new WarpedFenceGateBlock(Identifier, Direction.West, true, true, true),
-            19980 => new WarpedFenceGateBlock(Identifier, Direction.West, true, true, false),
-            19981 => new WarpedFenceGateBlock(Identifier, Direction.West, true, false, true),
-            19982 => new WarpedFenceGateBlock(Identifier, Direction.West, true, false, false),
-            19983 => new WarpedFenceGateBlock(Identifier, Direction.West, false, true, true),
-            19984 => new WarpedFenceGateBlock(Identifier, Direction.West, false, true, false),
-            19985 => new WarpedFenceGateBlock(Identifier, Direction.West, false, false, true),
-            19986 => new WarpedFenceGateBlock(Identifier, Direction.West, false, false, false),
-            19987 => new WarpedFenceGateBlock(Identifier, Direction.East, true, true, true),
-            19988 => new WarpedFenceGateBlock(Identifier, Direction.East, true, true, false),
-            19989 => new WarpedFenceGateBlock(Identifier, Direction.East, true, false, true),
-            19990 => new WarpedFenceGateBlock(Identifier, Direction.East, true, false, false),
-            19991 => new WarpedFenceGateBlock(Identifier, Direction.East, false, true, true),
-            19992 => new WarpedFenceGateBlock(Identifier, Direction.East, false, true, false),
-            19993 => new WarpedFenceGateBlock(Identifier, Direction.East, false, false, true),
-            19994 => new WarpedFenceGateBlock(Identifier, Direction.East, false, false, false),
+            21072 => new WarpedFenceGateBlock(Identifier, Direction.North, true, true, true),
+            21073 => new WarpedFenceGateBlock(Identifier, Direction.North, true, true, false),
+            21074 => new WarpedFenceGateBlock(Identifier, Direction.North, true, false, true),
+            21075 => new WarpedFenceGateBlock(Identifier, Direction.North, true, false, false),
+            21076 => new WarpedFenceGateBlock(Identifier, Direction.North, false, true, true),
+            21077 => new WarpedFenceGateBlock(Identifier, Direction.North, false, true, false),
+            21078 => new WarpedFenceGateBlock(Identifier, Direction.North, false, false, true),
+            21079 => new WarpedFenceGateBlock(Identifier, Direction.North, false, false, false),
+            21080 => new WarpedFenceGateBlock(Identifier, Direction.South, true, true, true),
+            21081 => new WarpedFenceGateBlock(Identifier, Direction.South, true, true, false),
+            21082 => new WarpedFenceGateBlock(Identifier, Direction.South, true, false, true),
+            21083 => new WarpedFenceGateBlock(Identifier, Direction.South, true, false, false),
+            21084 => new WarpedFenceGateBlock(Identifier, Direction.South, false, true, true),
+            21085 => new WarpedFenceGateBlock(Identifier, Direction.South, false, true, false),
+            21086 => new WarpedFenceGateBlock(Identifier, Direction.South, false, false, true),
+            21087 => new WarpedFenceGateBlock(Identifier, Direction.South, false, false, false),
+            21088 => new WarpedFenceGateBlock(Identifier, Direction.West, true, true, true),
+            21089 => new WarpedFenceGateBlock(Identifier, Direction.West, true, true, false),
+            21090 => new WarpedFenceGateBlock(Identifier, Direction.West, true, false, true),
+            21091 => new WarpedFenceGateBlock(Identifier, Direction.West, true, false, false),
+            21092 => new WarpedFenceGateBlock(Identifier, Direction.West, false, true, true),
+            21093 => new WarpedFenceGateBlock(Identifier, Direction.West, false, true, false),
+            21094 => new WarpedFenceGateBlock(Identifier, Direction.West, false, false, true),
+            21095 => new WarpedFenceGateBlock(Identifier, Direction.West, false, false, false),
+            21096 => new WarpedFenceGateBlock(Identifier, Direction.East, true, true, true),
+            21097 => new WarpedFenceGateBlock(Identifier, Direction.East, true, true, false),
+            21098 => new WarpedFenceGateBlock(Identifier, Direction.East, true, false, true),
+            21099 => new WarpedFenceGateBlock(Identifier, Direction.East, true, false, false),
+            21100 => new WarpedFenceGateBlock(Identifier, Direction.East, false, true, true),
+            21101 => new WarpedFenceGateBlock(Identifier, Direction.East, false, true, false),
+            21102 => new WarpedFenceGateBlock(Identifier, Direction.East, false, false, true),
+            21103 => new WarpedFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

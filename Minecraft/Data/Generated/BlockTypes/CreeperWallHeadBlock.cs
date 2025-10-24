@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CreeperWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:wall_skull";
-    public int ProtocolId => 430;
+    public int ProtocolId => 460;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record CreeperWallHeadBlock(Identifier Identifier, Direction Facing, bool
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 9828,
-                    false => 9829,
+                    true => 10905,
+                    false => 10906,
                 },
                 Direction.South => Powered switch {
-                    true => 9830,
-                    false => 9831,
+                    true => 10907,
+                    false => 10908,
                 },
                 Direction.West => Powered switch {
-                    true => 9832,
-                    false => 9833,
+                    true => 10909,
+                    false => 10910,
                 },
                 Direction.East => Powered switch {
-                    true => 9834,
-                    false => 9835,
+                    true => 10911,
+                    false => 10912,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record CreeperWallHeadBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            9828 => new CreeperWallHeadBlock(Identifier, Direction.North, true),
-            9829 => new CreeperWallHeadBlock(Identifier, Direction.North, false),
-            9830 => new CreeperWallHeadBlock(Identifier, Direction.South, true),
-            9831 => new CreeperWallHeadBlock(Identifier, Direction.South, false),
-            9832 => new CreeperWallHeadBlock(Identifier, Direction.West, true),
-            9833 => new CreeperWallHeadBlock(Identifier, Direction.West, false),
-            9834 => new CreeperWallHeadBlock(Identifier, Direction.East, true),
-            9835 => new CreeperWallHeadBlock(Identifier, Direction.East, false),
+            10905 => new CreeperWallHeadBlock(Identifier, Direction.North, true),
+            10906 => new CreeperWallHeadBlock(Identifier, Direction.North, false),
+            10907 => new CreeperWallHeadBlock(Identifier, Direction.South, true),
+            10908 => new CreeperWallHeadBlock(Identifier, Direction.South, false),
+            10909 => new CreeperWallHeadBlock(Identifier, Direction.West, true),
+            10910 => new CreeperWallHeadBlock(Identifier, Direction.West, false),
+            10911 => new CreeperWallHeadBlock(Identifier, Direction.East, true),
+            10912 => new CreeperWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

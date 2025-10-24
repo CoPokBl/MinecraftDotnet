@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CaveVinesPlantBlock(Identifier Identifier, bool Berries) : IBlock {
     public Identifier Category => "minecraft:cave_vines_plant";
-    public int ProtocolId => 1045;
+    public int ProtocolId => 1106;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record CaveVinesPlantBlock(Identifier Identifier, bool Berries) : IBlock 
     public uint StateId {
         get {
             return Berries switch {
-                true => 25881,
-                false => 25882,
+                true => 27606,
+                false => 27607,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            25881 => new CaveVinesPlantBlock(Identifier, true),
-            25882 => new CaveVinesPlantBlock(Identifier, false),
+            27606 => new CaveVinesPlantBlock(Identifier, true),
+            27607 => new CaveVinesPlantBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

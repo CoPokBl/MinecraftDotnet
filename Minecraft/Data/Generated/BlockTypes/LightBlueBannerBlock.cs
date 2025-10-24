@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LightBlueBannerBlock(Identifier Identifier, int Rotation) : IBlock {
     public Identifier Category => "minecraft:banner";
-    public int ProtocolId => 534;
+    public int ProtocolId => 564;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -43,22 +43,22 @@ public record LightBlueBannerBlock(Identifier Identifier, int Rotation) : IBlock
     public uint StateId {
         get {
             return Rotation switch {
-                0 => 11696,
-                1 => 11697,
-                2 => 11698,
-                3 => 11699,
-                4 => 11700,
-                5 => 11701,
-                6 => 11702,
-                7 => 11703,
-                8 => 11704,
-                9 => 11705,
-                10 => 11706,
-                11 => 11707,
-                12 => 11708,
-                13 => 11709,
-                14 => 11710,
-                15 => 11711,
+                0 => 12773,
+                1 => 12774,
+                2 => 12775,
+                3 => 12776,
+                4 => 12777,
+                5 => 12778,
+                6 => 12779,
+                7 => 12780,
+                8 => 12781,
+                9 => 12782,
+                10 => 12783,
+                11 => 12784,
+                12 => 12785,
+                13 => 12786,
+                14 => 12787,
+                15 => 12788,
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
         }
@@ -66,22 +66,22 @@ public record LightBlueBannerBlock(Identifier Identifier, int Rotation) : IBlock
     
     public IBlock WithState(uint state) {
         return state switch {
-            11696 => new LightBlueBannerBlock(Identifier, 0),
-            11697 => new LightBlueBannerBlock(Identifier, 1),
-            11698 => new LightBlueBannerBlock(Identifier, 2),
-            11699 => new LightBlueBannerBlock(Identifier, 3),
-            11700 => new LightBlueBannerBlock(Identifier, 4),
-            11701 => new LightBlueBannerBlock(Identifier, 5),
-            11702 => new LightBlueBannerBlock(Identifier, 6),
-            11703 => new LightBlueBannerBlock(Identifier, 7),
-            11704 => new LightBlueBannerBlock(Identifier, 8),
-            11705 => new LightBlueBannerBlock(Identifier, 9),
-            11706 => new LightBlueBannerBlock(Identifier, 10),
-            11707 => new LightBlueBannerBlock(Identifier, 11),
-            11708 => new LightBlueBannerBlock(Identifier, 12),
-            11709 => new LightBlueBannerBlock(Identifier, 13),
-            11710 => new LightBlueBannerBlock(Identifier, 14),
-            11711 => new LightBlueBannerBlock(Identifier, 15),
+            12773 => new LightBlueBannerBlock(Identifier, 0),
+            12774 => new LightBlueBannerBlock(Identifier, 1),
+            12775 => new LightBlueBannerBlock(Identifier, 2),
+            12776 => new LightBlueBannerBlock(Identifier, 3),
+            12777 => new LightBlueBannerBlock(Identifier, 4),
+            12778 => new LightBlueBannerBlock(Identifier, 5),
+            12779 => new LightBlueBannerBlock(Identifier, 6),
+            12780 => new LightBlueBannerBlock(Identifier, 7),
+            12781 => new LightBlueBannerBlock(Identifier, 8),
+            12782 => new LightBlueBannerBlock(Identifier, 9),
+            12783 => new LightBlueBannerBlock(Identifier, 10),
+            12784 => new LightBlueBannerBlock(Identifier, 11),
+            12785 => new LightBlueBannerBlock(Identifier, 12),
+            12786 => new LightBlueBannerBlock(Identifier, 13),
+            12787 => new LightBlueBannerBlock(Identifier, 14),
+            12788 => new LightBlueBannerBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

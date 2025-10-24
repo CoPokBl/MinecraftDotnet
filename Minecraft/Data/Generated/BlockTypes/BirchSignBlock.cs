@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BirchSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:standing_sign";
-    public int ProtocolId => 199;
+    public int ProtocolId => 211;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,68 +44,68 @@ public record BirchSignBlock(Identifier Identifier, int Rotation, bool Waterlogg
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 4430,
-                    false => 4431,
+                    true => 5198,
+                    false => 5199,
                 },
                 1 => Waterlogged switch {
-                    true => 4432,
-                    false => 4433,
+                    true => 5200,
+                    false => 5201,
                 },
                 2 => Waterlogged switch {
-                    true => 4434,
-                    false => 4435,
+                    true => 5202,
+                    false => 5203,
                 },
                 3 => Waterlogged switch {
-                    true => 4436,
-                    false => 4437,
+                    true => 5204,
+                    false => 5205,
                 },
                 4 => Waterlogged switch {
-                    true => 4438,
-                    false => 4439,
+                    true => 5206,
+                    false => 5207,
                 },
                 5 => Waterlogged switch {
-                    true => 4440,
-                    false => 4441,
+                    true => 5208,
+                    false => 5209,
                 },
                 6 => Waterlogged switch {
-                    true => 4442,
-                    false => 4443,
+                    true => 5210,
+                    false => 5211,
                 },
                 7 => Waterlogged switch {
-                    true => 4444,
-                    false => 4445,
+                    true => 5212,
+                    false => 5213,
                 },
                 8 => Waterlogged switch {
-                    true => 4446,
-                    false => 4447,
+                    true => 5214,
+                    false => 5215,
                 },
                 9 => Waterlogged switch {
-                    true => 4448,
-                    false => 4449,
+                    true => 5216,
+                    false => 5217,
                 },
                 10 => Waterlogged switch {
-                    true => 4450,
-                    false => 4451,
+                    true => 5218,
+                    false => 5219,
                 },
                 11 => Waterlogged switch {
-                    true => 4452,
-                    false => 4453,
+                    true => 5220,
+                    false => 5221,
                 },
                 12 => Waterlogged switch {
-                    true => 4454,
-                    false => 4455,
+                    true => 5222,
+                    false => 5223,
                 },
                 13 => Waterlogged switch {
-                    true => 4456,
-                    false => 4457,
+                    true => 5224,
+                    false => 5225,
                 },
                 14 => Waterlogged switch {
-                    true => 4458,
-                    false => 4459,
+                    true => 5226,
+                    false => 5227,
                 },
                 15 => Waterlogged switch {
-                    true => 4460,
-                    false => 4461,
+                    true => 5228,
+                    false => 5229,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -114,38 +114,38 @@ public record BirchSignBlock(Identifier Identifier, int Rotation, bool Waterlogg
     
     public IBlock WithState(uint state) {
         return state switch {
-            4430 => new BirchSignBlock(Identifier, 0, true),
-            4431 => new BirchSignBlock(Identifier, 0, false),
-            4432 => new BirchSignBlock(Identifier, 1, true),
-            4433 => new BirchSignBlock(Identifier, 1, false),
-            4434 => new BirchSignBlock(Identifier, 2, true),
-            4435 => new BirchSignBlock(Identifier, 2, false),
-            4436 => new BirchSignBlock(Identifier, 3, true),
-            4437 => new BirchSignBlock(Identifier, 3, false),
-            4438 => new BirchSignBlock(Identifier, 4, true),
-            4439 => new BirchSignBlock(Identifier, 4, false),
-            4440 => new BirchSignBlock(Identifier, 5, true),
-            4441 => new BirchSignBlock(Identifier, 5, false),
-            4442 => new BirchSignBlock(Identifier, 6, true),
-            4443 => new BirchSignBlock(Identifier, 6, false),
-            4444 => new BirchSignBlock(Identifier, 7, true),
-            4445 => new BirchSignBlock(Identifier, 7, false),
-            4446 => new BirchSignBlock(Identifier, 8, true),
-            4447 => new BirchSignBlock(Identifier, 8, false),
-            4448 => new BirchSignBlock(Identifier, 9, true),
-            4449 => new BirchSignBlock(Identifier, 9, false),
-            4450 => new BirchSignBlock(Identifier, 10, true),
-            4451 => new BirchSignBlock(Identifier, 10, false),
-            4452 => new BirchSignBlock(Identifier, 11, true),
-            4453 => new BirchSignBlock(Identifier, 11, false),
-            4454 => new BirchSignBlock(Identifier, 12, true),
-            4455 => new BirchSignBlock(Identifier, 12, false),
-            4456 => new BirchSignBlock(Identifier, 13, true),
-            4457 => new BirchSignBlock(Identifier, 13, false),
-            4458 => new BirchSignBlock(Identifier, 14, true),
-            4459 => new BirchSignBlock(Identifier, 14, false),
-            4460 => new BirchSignBlock(Identifier, 15, true),
-            4461 => new BirchSignBlock(Identifier, 15, false),
+            5198 => new BirchSignBlock(Identifier, 0, true),
+            5199 => new BirchSignBlock(Identifier, 0, false),
+            5200 => new BirchSignBlock(Identifier, 1, true),
+            5201 => new BirchSignBlock(Identifier, 1, false),
+            5202 => new BirchSignBlock(Identifier, 2, true),
+            5203 => new BirchSignBlock(Identifier, 2, false),
+            5204 => new BirchSignBlock(Identifier, 3, true),
+            5205 => new BirchSignBlock(Identifier, 3, false),
+            5206 => new BirchSignBlock(Identifier, 4, true),
+            5207 => new BirchSignBlock(Identifier, 4, false),
+            5208 => new BirchSignBlock(Identifier, 5, true),
+            5209 => new BirchSignBlock(Identifier, 5, false),
+            5210 => new BirchSignBlock(Identifier, 6, true),
+            5211 => new BirchSignBlock(Identifier, 6, false),
+            5212 => new BirchSignBlock(Identifier, 7, true),
+            5213 => new BirchSignBlock(Identifier, 7, false),
+            5214 => new BirchSignBlock(Identifier, 8, true),
+            5215 => new BirchSignBlock(Identifier, 8, false),
+            5216 => new BirchSignBlock(Identifier, 9, true),
+            5217 => new BirchSignBlock(Identifier, 9, false),
+            5218 => new BirchSignBlock(Identifier, 10, true),
+            5219 => new BirchSignBlock(Identifier, 10, false),
+            5220 => new BirchSignBlock(Identifier, 11, true),
+            5221 => new BirchSignBlock(Identifier, 11, false),
+            5222 => new BirchSignBlock(Identifier, 12, true),
+            5223 => new BirchSignBlock(Identifier, 12, false),
+            5224 => new BirchSignBlock(Identifier, 13, true),
+            5225 => new BirchSignBlock(Identifier, 13, false),
+            5226 => new BirchSignBlock(Identifier, 14, true),
+            5227 => new BirchSignBlock(Identifier, 14, false),
+            5228 => new BirchSignBlock(Identifier, 15, true),
+            5229 => new BirchSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

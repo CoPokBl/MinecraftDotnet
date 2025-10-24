@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggered) : IBlock {
     public Identifier Category => "minecraft:dropper";
-    public int ProtocolId => 451;
+    public int ProtocolId => 481;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;
@@ -44,28 +44,28 @@ public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggere
         get {
             return Facing switch {
                 Cardinal.North => Triggered switch {
-                    true => 10153,
-                    false => 10154,
+                    true => 11230,
+                    false => 11231,
                 },
                 Cardinal.East => Triggered switch {
-                    true => 10155,
-                    false => 10156,
+                    true => 11232,
+                    false => 11233,
                 },
                 Cardinal.South => Triggered switch {
-                    true => 10157,
-                    false => 10158,
+                    true => 11234,
+                    false => 11235,
                 },
                 Cardinal.West => Triggered switch {
-                    true => 10159,
-                    false => 10160,
+                    true => 11236,
+                    false => 11237,
                 },
                 Cardinal.Up => Triggered switch {
-                    true => 10161,
-                    false => 10162,
+                    true => 11238,
+                    false => 11239,
                 },
                 Cardinal.Down => Triggered switch {
-                    true => 10163,
-                    false => 10164,
+                    true => 11240,
+                    false => 11241,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -74,18 +74,18 @@ public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggere
     
     public IBlock WithState(uint state) {
         return state switch {
-            10153 => new DropperBlock(Identifier, Cardinal.North, true),
-            10154 => new DropperBlock(Identifier, Cardinal.North, false),
-            10155 => new DropperBlock(Identifier, Cardinal.East, true),
-            10156 => new DropperBlock(Identifier, Cardinal.East, false),
-            10157 => new DropperBlock(Identifier, Cardinal.South, true),
-            10158 => new DropperBlock(Identifier, Cardinal.South, false),
-            10159 => new DropperBlock(Identifier, Cardinal.West, true),
-            10160 => new DropperBlock(Identifier, Cardinal.West, false),
-            10161 => new DropperBlock(Identifier, Cardinal.Up, true),
-            10162 => new DropperBlock(Identifier, Cardinal.Up, false),
-            10163 => new DropperBlock(Identifier, Cardinal.Down, true),
-            10164 => new DropperBlock(Identifier, Cardinal.Down, false),
+            11230 => new DropperBlock(Identifier, Cardinal.North, true),
+            11231 => new DropperBlock(Identifier, Cardinal.North, false),
+            11232 => new DropperBlock(Identifier, Cardinal.East, true),
+            11233 => new DropperBlock(Identifier, Cardinal.East, false),
+            11234 => new DropperBlock(Identifier, Cardinal.South, true),
+            11235 => new DropperBlock(Identifier, Cardinal.South, false),
+            11236 => new DropperBlock(Identifier, Cardinal.West, true),
+            11237 => new DropperBlock(Identifier, Cardinal.West, false),
+            11238 => new DropperBlock(Identifier, Cardinal.Up, true),
+            11239 => new DropperBlock(Identifier, Cardinal.Up, false),
+            11240 => new DropperBlock(Identifier, Cardinal.Down, true),
+            11241 => new DropperBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

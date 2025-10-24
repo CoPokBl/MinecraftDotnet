@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record AttachedPumpkinStemBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:attached_stem";
-    public int ProtocolId => 331;
+    public int ProtocolId => 361;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record AttachedPumpkinStemBlock(Identifier Identifier, Direction Facing) 
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 7056,
-                Direction.South => 7057,
-                Direction.West => 7058,
-                Direction.East => 7059,
+                Direction.North => 8133,
+                Direction.South => 8134,
+                Direction.West => 8135,
+                Direction.East => 8136,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record AttachedPumpkinStemBlock(Identifier Identifier, Direction Facing) 
     
     public IBlock WithState(uint state) {
         return state switch {
-            7056 => new AttachedPumpkinStemBlock(Identifier, Direction.North),
-            7057 => new AttachedPumpkinStemBlock(Identifier, Direction.South),
-            7058 => new AttachedPumpkinStemBlock(Identifier, Direction.West),
-            7059 => new AttachedPumpkinStemBlock(Identifier, Direction.East),
+            8133 => new AttachedPumpkinStemBlock(Identifier, Direction.North),
+            8134 => new AttachedPumpkinStemBlock(Identifier, Direction.South),
+            8135 => new AttachedPumpkinStemBlock(Identifier, Direction.West),
+            8136 => new AttachedPumpkinStemBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

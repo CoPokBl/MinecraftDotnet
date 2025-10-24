@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mode ModeValue) : IBlock {
     public Identifier Category => "minecraft:structure";
-    public int ProtocolId => 865;
+    public int ProtocolId => 903;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
     public uint StateId {
         get {
             return ModeValue switch {
-                Mode.Save => 20411,
-                Mode.Load => 20412,
-                Mode.Corner => 20413,
-                Mode.Data => 20414,
+                Mode.Save => 21520,
+                Mode.Load => 21521,
+                Mode.Corner => 21522,
+                Mode.Data => 21523,
                 _ => throw new ArgumentOutOfRangeException(nameof(ModeValue), ModeValue, "Unknown value for property mode.")
             };
         }
@@ -54,10 +54,10 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
     
     public IBlock WithState(uint state) {
         return state switch {
-            20411 => new StructureBlockBlock(Identifier, Mode.Save),
-            20412 => new StructureBlockBlock(Identifier, Mode.Load),
-            20413 => new StructureBlockBlock(Identifier, Mode.Corner),
-            20414 => new StructureBlockBlock(Identifier, Mode.Data),
+            21520 => new StructureBlockBlock(Identifier, Mode.Save),
+            21521 => new StructureBlockBlock(Identifier, Mode.Load),
+            21522 => new StructureBlockBlock(Identifier, Mode.Corner),
+            21523 => new StructureBlockBlock(Identifier, Mode.Data),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LightWeightedPressurePlateBlock(Identifier Identifier, int Power) : IBlock {
     public Identifier Category => "minecraft:weighted_pressure_plate";
-    public int ProtocolId => 439;
+    public int ProtocolId => 469;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -43,22 +43,22 @@ public record LightWeightedPressurePlateBlock(Identifier Identifier, int Power) 
     public uint StateId {
         get {
             return Power switch {
-                0 => 9952,
-                1 => 9953,
-                2 => 9954,
-                3 => 9955,
-                4 => 9956,
-                5 => 9957,
-                6 => 9958,
-                7 => 9959,
-                8 => 9960,
-                9 => 9961,
-                10 => 9962,
-                11 => 9963,
-                12 => 9964,
-                13 => 9965,
-                14 => 9966,
-                15 => 9967,
+                0 => 11029,
+                1 => 11030,
+                2 => 11031,
+                3 => 11032,
+                4 => 11033,
+                5 => 11034,
+                6 => 11035,
+                7 => 11036,
+                8 => 11037,
+                9 => 11038,
+                10 => 11039,
+                11 => 11040,
+                12 => 11041,
+                13 => 11042,
+                14 => 11043,
+                15 => 11044,
                 _ => throw new ArgumentOutOfRangeException(nameof(Power), Power, "Unknown value for property power.")
             };
         }
@@ -66,22 +66,22 @@ public record LightWeightedPressurePlateBlock(Identifier Identifier, int Power) 
     
     public IBlock WithState(uint state) {
         return state switch {
-            9952 => new LightWeightedPressurePlateBlock(Identifier, 0),
-            9953 => new LightWeightedPressurePlateBlock(Identifier, 1),
-            9954 => new LightWeightedPressurePlateBlock(Identifier, 2),
-            9955 => new LightWeightedPressurePlateBlock(Identifier, 3),
-            9956 => new LightWeightedPressurePlateBlock(Identifier, 4),
-            9957 => new LightWeightedPressurePlateBlock(Identifier, 5),
-            9958 => new LightWeightedPressurePlateBlock(Identifier, 6),
-            9959 => new LightWeightedPressurePlateBlock(Identifier, 7),
-            9960 => new LightWeightedPressurePlateBlock(Identifier, 8),
-            9961 => new LightWeightedPressurePlateBlock(Identifier, 9),
-            9962 => new LightWeightedPressurePlateBlock(Identifier, 10),
-            9963 => new LightWeightedPressurePlateBlock(Identifier, 11),
-            9964 => new LightWeightedPressurePlateBlock(Identifier, 12),
-            9965 => new LightWeightedPressurePlateBlock(Identifier, 13),
-            9966 => new LightWeightedPressurePlateBlock(Identifier, 14),
-            9967 => new LightWeightedPressurePlateBlock(Identifier, 15),
+            11029 => new LightWeightedPressurePlateBlock(Identifier, 0),
+            11030 => new LightWeightedPressurePlateBlock(Identifier, 1),
+            11031 => new LightWeightedPressurePlateBlock(Identifier, 2),
+            11032 => new LightWeightedPressurePlateBlock(Identifier, 3),
+            11033 => new LightWeightedPressurePlateBlock(Identifier, 4),
+            11034 => new LightWeightedPressurePlateBlock(Identifier, 5),
+            11035 => new LightWeightedPressurePlateBlock(Identifier, 6),
+            11036 => new LightWeightedPressurePlateBlock(Identifier, 7),
+            11037 => new LightWeightedPressurePlateBlock(Identifier, 8),
+            11038 => new LightWeightedPressurePlateBlock(Identifier, 9),
+            11039 => new LightWeightedPressurePlateBlock(Identifier, 10),
+            11040 => new LightWeightedPressurePlateBlock(Identifier, 11),
+            11041 => new LightWeightedPressurePlateBlock(Identifier, 12),
+            11042 => new LightWeightedPressurePlateBlock(Identifier, 13),
+            11043 => new LightWeightedPressurePlateBlock(Identifier, 14),
+            11044 => new LightWeightedPressurePlateBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

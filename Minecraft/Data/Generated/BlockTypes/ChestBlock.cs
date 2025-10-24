@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ChestBlock(Identifier Identifier, ChestBlock.Type TypeValue, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:chest";
-    public int ProtocolId => 188;
+    public int ProtocolId => 200;
     public double Hardness => 2.5;
     public double ExplosionResistance => 2.5;
     public double Friction => 0.6;
@@ -45,58 +45,58 @@ public record ChestBlock(Identifier Identifier, ChestBlock.Type TypeValue, Direc
             return TypeValue switch {
                 Type.Single => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 3018,
-                        false => 3019,
+                        true => 3786,
+                        false => 3787,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 3024,
-                        false => 3025,
+                        true => 3792,
+                        false => 3793,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 3030,
-                        false => 3031,
+                        true => 3798,
+                        false => 3799,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 3036,
-                        false => 3037,
+                        true => 3804,
+                        false => 3805,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 Type.Left => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 3020,
-                        false => 3021,
+                        true => 3788,
+                        false => 3789,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 3026,
-                        false => 3027,
+                        true => 3794,
+                        false => 3795,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 3032,
-                        false => 3033,
+                        true => 3800,
+                        false => 3801,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 3038,
-                        false => 3039,
+                        true => 3806,
+                        false => 3807,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 Type.Right => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 3022,
-                        false => 3023,
+                        true => 3790,
+                        false => 3791,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 3028,
-                        false => 3029,
+                        true => 3796,
+                        false => 3797,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 3034,
-                        false => 3035,
+                        true => 3802,
+                        false => 3803,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 3040,
-                        false => 3041,
+                        true => 3808,
+                        false => 3809,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -107,30 +107,30 @@ public record ChestBlock(Identifier Identifier, ChestBlock.Type TypeValue, Direc
     
     public IBlock WithState(uint state) {
         return state switch {
-            3018 => new ChestBlock(Identifier, Type.Single, Direction.North, true),
-            3019 => new ChestBlock(Identifier, Type.Single, Direction.North, false),
-            3020 => new ChestBlock(Identifier, Type.Left, Direction.North, true),
-            3021 => new ChestBlock(Identifier, Type.Left, Direction.North, false),
-            3022 => new ChestBlock(Identifier, Type.Right, Direction.North, true),
-            3023 => new ChestBlock(Identifier, Type.Right, Direction.North, false),
-            3024 => new ChestBlock(Identifier, Type.Single, Direction.South, true),
-            3025 => new ChestBlock(Identifier, Type.Single, Direction.South, false),
-            3026 => new ChestBlock(Identifier, Type.Left, Direction.South, true),
-            3027 => new ChestBlock(Identifier, Type.Left, Direction.South, false),
-            3028 => new ChestBlock(Identifier, Type.Right, Direction.South, true),
-            3029 => new ChestBlock(Identifier, Type.Right, Direction.South, false),
-            3030 => new ChestBlock(Identifier, Type.Single, Direction.West, true),
-            3031 => new ChestBlock(Identifier, Type.Single, Direction.West, false),
-            3032 => new ChestBlock(Identifier, Type.Left, Direction.West, true),
-            3033 => new ChestBlock(Identifier, Type.Left, Direction.West, false),
-            3034 => new ChestBlock(Identifier, Type.Right, Direction.West, true),
-            3035 => new ChestBlock(Identifier, Type.Right, Direction.West, false),
-            3036 => new ChestBlock(Identifier, Type.Single, Direction.East, true),
-            3037 => new ChestBlock(Identifier, Type.Single, Direction.East, false),
-            3038 => new ChestBlock(Identifier, Type.Left, Direction.East, true),
-            3039 => new ChestBlock(Identifier, Type.Left, Direction.East, false),
-            3040 => new ChestBlock(Identifier, Type.Right, Direction.East, true),
-            3041 => new ChestBlock(Identifier, Type.Right, Direction.East, false),
+            3786 => new ChestBlock(Identifier, Type.Single, Direction.North, true),
+            3787 => new ChestBlock(Identifier, Type.Single, Direction.North, false),
+            3788 => new ChestBlock(Identifier, Type.Left, Direction.North, true),
+            3789 => new ChestBlock(Identifier, Type.Left, Direction.North, false),
+            3790 => new ChestBlock(Identifier, Type.Right, Direction.North, true),
+            3791 => new ChestBlock(Identifier, Type.Right, Direction.North, false),
+            3792 => new ChestBlock(Identifier, Type.Single, Direction.South, true),
+            3793 => new ChestBlock(Identifier, Type.Single, Direction.South, false),
+            3794 => new ChestBlock(Identifier, Type.Left, Direction.South, true),
+            3795 => new ChestBlock(Identifier, Type.Left, Direction.South, false),
+            3796 => new ChestBlock(Identifier, Type.Right, Direction.South, true),
+            3797 => new ChestBlock(Identifier, Type.Right, Direction.South, false),
+            3798 => new ChestBlock(Identifier, Type.Single, Direction.West, true),
+            3799 => new ChestBlock(Identifier, Type.Single, Direction.West, false),
+            3800 => new ChestBlock(Identifier, Type.Left, Direction.West, true),
+            3801 => new ChestBlock(Identifier, Type.Left, Direction.West, false),
+            3802 => new ChestBlock(Identifier, Type.Right, Direction.West, true),
+            3803 => new ChestBlock(Identifier, Type.Right, Direction.West, false),
+            3804 => new ChestBlock(Identifier, Type.Single, Direction.East, true),
+            3805 => new ChestBlock(Identifier, Type.Single, Direction.East, false),
+            3806 => new ChestBlock(Identifier, Type.Left, Direction.East, true),
+            3807 => new ChestBlock(Identifier, Type.Left, Direction.East, false),
+            3808 => new ChestBlock(Identifier, Type.Right, Direction.East, true),
+            3809 => new ChestBlock(Identifier, Type.Right, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

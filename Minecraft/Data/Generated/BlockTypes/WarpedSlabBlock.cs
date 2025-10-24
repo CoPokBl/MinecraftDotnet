@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WarpedSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 846;
+    public int ProtocolId => 884;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record WarpedSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 19729,
-                    false => 19730,
+                    true => 20838,
+                    false => 20839,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 19731,
-                    false => 19732,
+                    true => 20840,
+                    false => 20841,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 19733,
-                    false => 19734,
+                    true => 20842,
+                    false => 20843,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record WarpedSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            19729 => new WarpedSlabBlock(Identifier, SlabType.Top, true),
-            19730 => new WarpedSlabBlock(Identifier, SlabType.Top, false),
-            19731 => new WarpedSlabBlock(Identifier, SlabType.Bottom, true),
-            19732 => new WarpedSlabBlock(Identifier, SlabType.Bottom, false),
-            19733 => new WarpedSlabBlock(Identifier, SlabType.Double, true),
-            19734 => new WarpedSlabBlock(Identifier, SlabType.Double, false),
+            20838 => new WarpedSlabBlock(Identifier, SlabType.Top, true),
+            20839 => new WarpedSlabBlock(Identifier, SlabType.Top, false),
+            20840 => new WarpedSlabBlock(Identifier, SlabType.Bottom, true),
+            20841 => new WarpedSlabBlock(Identifier, SlabType.Bottom, false),
+            20842 => new WarpedSlabBlock(Identifier, SlabType.Double, true),
+            20843 => new WarpedSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

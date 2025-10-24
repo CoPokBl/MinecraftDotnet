@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BoneBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:rotated_pillar";
-    public int ProtocolId => 642;
+    public int ProtocolId => 672;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record BoneBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 13569,
-                Axis.Y => 13570,
-                Axis.Z => 13571,
+                Axis.X => 14646,
+                Axis.Y => 14647,
+                Axis.Z => 14648,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record BoneBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            13569 => new BoneBlockBlock(Identifier, Axis.X),
-            13570 => new BoneBlockBlock(Identifier, Axis.Y),
-            13571 => new BoneBlockBlock(Identifier, Axis.Z),
+            14646 => new BoneBlockBlock(Identifier, Axis.X),
+            14647 => new BoneBlockBlock(Identifier, Axis.Y),
+            14648 => new BoneBlockBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

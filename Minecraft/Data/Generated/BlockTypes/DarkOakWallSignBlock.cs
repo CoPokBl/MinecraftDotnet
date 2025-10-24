@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DarkOakWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:wall_sign";
-    public int ProtocolId => 217;
+    public int ProtocolId => 229;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record DarkOakWallSignBlock(Identifier Identifier, Direction Facing, bool
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 4906,
-                    false => 4907,
+                    true => 5674,
+                    false => 5675,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 4908,
-                    false => 4909,
+                    true => 5676,
+                    false => 5677,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 4910,
-                    false => 4911,
+                    true => 5678,
+                    false => 5679,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 4912,
-                    false => 4913,
+                    true => 5680,
+                    false => 5681,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record DarkOakWallSignBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            4906 => new DarkOakWallSignBlock(Identifier, Direction.North, true),
-            4907 => new DarkOakWallSignBlock(Identifier, Direction.North, false),
-            4908 => new DarkOakWallSignBlock(Identifier, Direction.South, true),
-            4909 => new DarkOakWallSignBlock(Identifier, Direction.South, false),
-            4910 => new DarkOakWallSignBlock(Identifier, Direction.West, true),
-            4911 => new DarkOakWallSignBlock(Identifier, Direction.West, false),
-            4912 => new DarkOakWallSignBlock(Identifier, Direction.East, true),
-            4913 => new DarkOakWallSignBlock(Identifier, Direction.East, false),
+            5674 => new DarkOakWallSignBlock(Identifier, Direction.North, true),
+            5675 => new DarkOakWallSignBlock(Identifier, Direction.North, false),
+            5676 => new DarkOakWallSignBlock(Identifier, Direction.South, true),
+            5677 => new DarkOakWallSignBlock(Identifier, Direction.South, false),
+            5678 => new DarkOakWallSignBlock(Identifier, Direction.West, true),
+            5679 => new DarkOakWallSignBlock(Identifier, Direction.West, false),
+            5680 => new DarkOakWallSignBlock(Identifier, Direction.East, true),
+            5681 => new DarkOakWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

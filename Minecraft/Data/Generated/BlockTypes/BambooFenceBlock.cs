@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BambooFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
     public Identifier Category => "minecraft:fence";
-    public int ProtocolId => 613;
+    public int ProtocolId => 643;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -47,44 +47,44 @@ public record BambooFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12749,
-                                false => 12750,
+                                true => 13826,
+                                false => 13827,
                             },
                             false => West switch {
-                                true => 12751,
-                                false => 12752,
+                                true => 13828,
+                                false => 13829,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12753,
-                                false => 12754,
+                                true => 13830,
+                                false => 13831,
                             },
                             false => West switch {
-                                true => 12755,
-                                false => 12756,
+                                true => 13832,
+                                false => 13833,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12757,
-                                false => 12758,
+                                true => 13834,
+                                false => 13835,
                             },
                             false => West switch {
-                                true => 12759,
-                                false => 12760,
+                                true => 13836,
+                                false => 13837,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12761,
-                                false => 12762,
+                                true => 13838,
+                                false => 13839,
                             },
                             false => West switch {
-                                true => 12763,
-                                false => 12764,
+                                true => 13840,
+                                false => 13841,
                             },
                         },
                     },
@@ -93,44 +93,44 @@ public record BambooFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12765,
-                                false => 12766,
+                                true => 13842,
+                                false => 13843,
                             },
                             false => West switch {
-                                true => 12767,
-                                false => 12768,
+                                true => 13844,
+                                false => 13845,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12769,
-                                false => 12770,
+                                true => 13846,
+                                false => 13847,
                             },
                             false => West switch {
-                                true => 12771,
-                                false => 12772,
+                                true => 13848,
+                                false => 13849,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12773,
-                                false => 12774,
+                                true => 13850,
+                                false => 13851,
                             },
                             false => West switch {
-                                true => 12775,
-                                false => 12776,
+                                true => 13852,
+                                false => 13853,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12777,
-                                false => 12778,
+                                true => 13854,
+                                false => 13855,
                             },
                             false => West switch {
-                                true => 12779,
-                                false => 12780,
+                                true => 13856,
+                                false => 13857,
                             },
                         },
                     },
@@ -141,38 +141,38 @@ public record BambooFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12749 => new BambooFenceBlock(Identifier, true, true, true, true, true),
-            12750 => new BambooFenceBlock(Identifier, true, true, true, true, false),
-            12751 => new BambooFenceBlock(Identifier, true, true, true, false, true),
-            12752 => new BambooFenceBlock(Identifier, true, true, true, false, false),
-            12753 => new BambooFenceBlock(Identifier, true, true, false, true, true),
-            12754 => new BambooFenceBlock(Identifier, true, true, false, true, false),
-            12755 => new BambooFenceBlock(Identifier, true, true, false, false, true),
-            12756 => new BambooFenceBlock(Identifier, true, true, false, false, false),
-            12757 => new BambooFenceBlock(Identifier, true, false, true, true, true),
-            12758 => new BambooFenceBlock(Identifier, true, false, true, true, false),
-            12759 => new BambooFenceBlock(Identifier, true, false, true, false, true),
-            12760 => new BambooFenceBlock(Identifier, true, false, true, false, false),
-            12761 => new BambooFenceBlock(Identifier, true, false, false, true, true),
-            12762 => new BambooFenceBlock(Identifier, true, false, false, true, false),
-            12763 => new BambooFenceBlock(Identifier, true, false, false, false, true),
-            12764 => new BambooFenceBlock(Identifier, true, false, false, false, false),
-            12765 => new BambooFenceBlock(Identifier, false, true, true, true, true),
-            12766 => new BambooFenceBlock(Identifier, false, true, true, true, false),
-            12767 => new BambooFenceBlock(Identifier, false, true, true, false, true),
-            12768 => new BambooFenceBlock(Identifier, false, true, true, false, false),
-            12769 => new BambooFenceBlock(Identifier, false, true, false, true, true),
-            12770 => new BambooFenceBlock(Identifier, false, true, false, true, false),
-            12771 => new BambooFenceBlock(Identifier, false, true, false, false, true),
-            12772 => new BambooFenceBlock(Identifier, false, true, false, false, false),
-            12773 => new BambooFenceBlock(Identifier, false, false, true, true, true),
-            12774 => new BambooFenceBlock(Identifier, false, false, true, true, false),
-            12775 => new BambooFenceBlock(Identifier, false, false, true, false, true),
-            12776 => new BambooFenceBlock(Identifier, false, false, true, false, false),
-            12777 => new BambooFenceBlock(Identifier, false, false, false, true, true),
-            12778 => new BambooFenceBlock(Identifier, false, false, false, true, false),
-            12779 => new BambooFenceBlock(Identifier, false, false, false, false, true),
-            12780 => new BambooFenceBlock(Identifier, false, false, false, false, false),
+            13826 => new BambooFenceBlock(Identifier, true, true, true, true, true),
+            13827 => new BambooFenceBlock(Identifier, true, true, true, true, false),
+            13828 => new BambooFenceBlock(Identifier, true, true, true, false, true),
+            13829 => new BambooFenceBlock(Identifier, true, true, true, false, false),
+            13830 => new BambooFenceBlock(Identifier, true, true, false, true, true),
+            13831 => new BambooFenceBlock(Identifier, true, true, false, true, false),
+            13832 => new BambooFenceBlock(Identifier, true, true, false, false, true),
+            13833 => new BambooFenceBlock(Identifier, true, true, false, false, false),
+            13834 => new BambooFenceBlock(Identifier, true, false, true, true, true),
+            13835 => new BambooFenceBlock(Identifier, true, false, true, true, false),
+            13836 => new BambooFenceBlock(Identifier, true, false, true, false, true),
+            13837 => new BambooFenceBlock(Identifier, true, false, true, false, false),
+            13838 => new BambooFenceBlock(Identifier, true, false, false, true, true),
+            13839 => new BambooFenceBlock(Identifier, true, false, false, true, false),
+            13840 => new BambooFenceBlock(Identifier, true, false, false, false, true),
+            13841 => new BambooFenceBlock(Identifier, true, false, false, false, false),
+            13842 => new BambooFenceBlock(Identifier, false, true, true, true, true),
+            13843 => new BambooFenceBlock(Identifier, false, true, true, true, false),
+            13844 => new BambooFenceBlock(Identifier, false, true, true, false, true),
+            13845 => new BambooFenceBlock(Identifier, false, true, true, false, false),
+            13846 => new BambooFenceBlock(Identifier, false, true, false, true, true),
+            13847 => new BambooFenceBlock(Identifier, false, true, false, true, false),
+            13848 => new BambooFenceBlock(Identifier, false, true, false, false, true),
+            13849 => new BambooFenceBlock(Identifier, false, true, false, false, false),
+            13850 => new BambooFenceBlock(Identifier, false, false, true, true, true),
+            13851 => new BambooFenceBlock(Identifier, false, false, true, true, false),
+            13852 => new BambooFenceBlock(Identifier, false, false, true, false, true),
+            13853 => new BambooFenceBlock(Identifier, false, false, true, false, false),
+            13854 => new BambooFenceBlock(Identifier, false, false, false, true, true),
+            13855 => new BambooFenceBlock(Identifier, false, false, false, true, false),
+            13856 => new BambooFenceBlock(Identifier, false, false, false, false, true),
+            13857 => new BambooFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

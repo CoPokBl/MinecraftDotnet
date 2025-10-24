@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record MossyStoneBrickSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 781;
+    public int ProtocolId => 811;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record MossyStoneBrickSlabBlock(Identifier Identifier, SlabType Type, boo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15149,
-                    false => 15150,
+                    true => 16226,
+                    false => 16227,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15151,
-                    false => 15152,
+                    true => 16228,
+                    false => 16229,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15153,
-                    false => 15154,
+                    true => 16230,
+                    false => 16231,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record MossyStoneBrickSlabBlock(Identifier Identifier, SlabType Type, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            15149 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Top, true),
-            15150 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Top, false),
-            15151 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            15152 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            15153 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Double, true),
-            15154 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Double, false),
+            16226 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Top, true),
+            16227 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Top, false),
+            16228 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            16229 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            16230 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Double, true),
+            16231 => new MossyStoneBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

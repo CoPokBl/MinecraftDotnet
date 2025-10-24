@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SmoothRedSandstoneSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 780;
+    public int ProtocolId => 810;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record SmoothRedSandstoneSlabBlock(Identifier Identifier, SlabType Type, 
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15143,
-                    false => 15144,
+                    true => 16220,
+                    false => 16221,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15145,
-                    false => 15146,
+                    true => 16222,
+                    false => 16223,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15147,
-                    false => 15148,
+                    true => 16224,
+                    false => 16225,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record SmoothRedSandstoneSlabBlock(Identifier Identifier, SlabType Type, 
     
     public IBlock WithState(uint state) {
         return state switch {
-            15143 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Top, true),
-            15144 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Top, false),
-            15145 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Bottom, true),
-            15146 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Bottom, false),
-            15147 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Double, true),
-            15148 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Double, false),
+            16220 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Top, true),
+            16221 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Top, false),
+            16222 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Bottom, true),
+            16223 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Bottom, false),
+            16224 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Double, true),
+            16225 => new SmoothRedSandstoneSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

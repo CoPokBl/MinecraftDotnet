@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
     public Identifier Category => "minecraft:respawn_anchor";
-    public int ProtocolId => 878;
+    public int ProtocolId => 916;
     public double Hardness => 50;
     public double ExplosionResistance => 1200;
     public double Friction => 0.6;
@@ -43,11 +43,11 @@ public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
     public uint StateId {
         get {
             return Charges switch {
-                0 => 20510,
-                1 => 20511,
-                2 => 20512,
-                3 => 20513,
-                4 => 20514,
+                0 => 21619,
+                1 => 21620,
+                2 => 21621,
+                3 => 21622,
+                4 => 21623,
                 _ => throw new ArgumentOutOfRangeException(nameof(Charges), Charges, "Unknown value for property charges.")
             };
         }
@@ -55,11 +55,11 @@ public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            20510 => new RespawnAnchorBlock(Identifier, 0),
-            20511 => new RespawnAnchorBlock(Identifier, 1),
-            20512 => new RespawnAnchorBlock(Identifier, 2),
-            20513 => new RespawnAnchorBlock(Identifier, 3),
-            20514 => new RespawnAnchorBlock(Identifier, 4),
+            21619 => new RespawnAnchorBlock(Identifier, 0),
+            21620 => new RespawnAnchorBlock(Identifier, 1),
+            21621 => new RespawnAnchorBlock(Identifier, 2),
+            21622 => new RespawnAnchorBlock(Identifier, 3),
+            21623 => new RespawnAnchorBlock(Identifier, 4),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

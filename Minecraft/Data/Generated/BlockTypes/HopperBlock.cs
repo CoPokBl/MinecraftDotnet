@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facing FacingValue) : IBlock {
     public Identifier Category => "minecraft:hopper";
-    public int ProtocolId => 445;
+    public int ProtocolId => 475;
     public double Hardness => 3;
     public double ExplosionResistance => 4.8;
     public double Friction => 0.6;
@@ -44,19 +44,19 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
         get {
             return Enabled switch {
                 true => FacingValue switch {
-                    Facing.Down => 10034,
-                    Facing.North => 10035,
-                    Facing.South => 10036,
-                    Facing.West => 10037,
-                    Facing.East => 10038,
+                    Facing.Down => 11111,
+                    Facing.North => 11112,
+                    Facing.South => 11113,
+                    Facing.West => 11114,
+                    Facing.East => 11115,
                     _ => throw new ArgumentOutOfRangeException(nameof(FacingValue), FacingValue, "Unknown value for property facing.")
                 },
                 false => FacingValue switch {
-                    Facing.Down => 10039,
-                    Facing.North => 10040,
-                    Facing.South => 10041,
-                    Facing.West => 10042,
-                    Facing.East => 10043,
+                    Facing.Down => 11116,
+                    Facing.North => 11117,
+                    Facing.South => 11118,
+                    Facing.West => 11119,
+                    Facing.East => 11120,
                     _ => throw new ArgumentOutOfRangeException(nameof(FacingValue), FacingValue, "Unknown value for property facing.")
                 },
             };
@@ -65,16 +65,16 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     
     public IBlock WithState(uint state) {
         return state switch {
-            10034 => new HopperBlock(Identifier, true, Facing.Down),
-            10035 => new HopperBlock(Identifier, true, Facing.North),
-            10036 => new HopperBlock(Identifier, true, Facing.South),
-            10037 => new HopperBlock(Identifier, true, Facing.West),
-            10038 => new HopperBlock(Identifier, true, Facing.East),
-            10039 => new HopperBlock(Identifier, false, Facing.Down),
-            10040 => new HopperBlock(Identifier, false, Facing.North),
-            10041 => new HopperBlock(Identifier, false, Facing.South),
-            10042 => new HopperBlock(Identifier, false, Facing.West),
-            10043 => new HopperBlock(Identifier, false, Facing.East),
+            11111 => new HopperBlock(Identifier, true, Facing.Down),
+            11112 => new HopperBlock(Identifier, true, Facing.North),
+            11113 => new HopperBlock(Identifier, true, Facing.South),
+            11114 => new HopperBlock(Identifier, true, Facing.West),
+            11115 => new HopperBlock(Identifier, true, Facing.East),
+            11116 => new HopperBlock(Identifier, false, Facing.Down),
+            11117 => new HopperBlock(Identifier, false, Facing.North),
+            11118 => new HopperBlock(Identifier, false, Facing.South),
+            11119 => new HopperBlock(Identifier, false, Facing.West),
+            11120 => new HopperBlock(Identifier, false, Facing.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

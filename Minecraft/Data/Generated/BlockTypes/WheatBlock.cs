@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WheatBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:crop";
-    public int ProtocolId => 194;
+    public int ProtocolId => 206;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,14 +43,14 @@ public record WheatBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 4342,
-                1 => 4343,
-                2 => 4344,
-                3 => 4345,
-                4 => 4346,
-                5 => 4347,
-                6 => 4348,
-                7 => 4349,
+                0 => 5110,
+                1 => 5111,
+                2 => 5112,
+                3 => 5113,
+                4 => 5114,
+                5 => 5115,
+                6 => 5116,
+                7 => 5117,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -58,14 +58,14 @@ public record WheatBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            4342 => new WheatBlock(Identifier, 0),
-            4343 => new WheatBlock(Identifier, 1),
-            4344 => new WheatBlock(Identifier, 2),
-            4345 => new WheatBlock(Identifier, 3),
-            4346 => new WheatBlock(Identifier, 4),
-            4347 => new WheatBlock(Identifier, 5),
-            4348 => new WheatBlock(Identifier, 6),
-            4349 => new WheatBlock(Identifier, 7),
+            5110 => new WheatBlock(Identifier, 0),
+            5111 => new WheatBlock(Identifier, 1),
+            5112 => new WheatBlock(Identifier, 2),
+            5113 => new WheatBlock(Identifier, 3),
+            5114 => new WheatBlock(Identifier, 4),
+            5115 => new WheatBlock(Identifier, 5),
+            5116 => new WheatBlock(Identifier, 6),
+            5117 => new WheatBlock(Identifier, 7),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

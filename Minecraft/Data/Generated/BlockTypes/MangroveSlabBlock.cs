@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record MangroveSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 575;
+    public int ProtocolId => 605;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record MangroveSlabBlock(Identifier Identifier, SlabType Type, bool Water
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12099,
-                    false => 12100,
+                    true => 13176,
+                    false => 13177,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12101,
-                    false => 12102,
+                    true => 13178,
+                    false => 13179,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12103,
-                    false => 12104,
+                    true => 13180,
+                    false => 13181,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record MangroveSlabBlock(Identifier Identifier, SlabType Type, bool Water
     
     public IBlock WithState(uint state) {
         return state switch {
-            12099 => new MangroveSlabBlock(Identifier, SlabType.Top, true),
-            12100 => new MangroveSlabBlock(Identifier, SlabType.Top, false),
-            12101 => new MangroveSlabBlock(Identifier, SlabType.Bottom, true),
-            12102 => new MangroveSlabBlock(Identifier, SlabType.Bottom, false),
-            12103 => new MangroveSlabBlock(Identifier, SlabType.Double, true),
-            12104 => new MangroveSlabBlock(Identifier, SlabType.Double, false),
+            13176 => new MangroveSlabBlock(Identifier, SlabType.Top, true),
+            13177 => new MangroveSlabBlock(Identifier, SlabType.Top, false),
+            13178 => new MangroveSlabBlock(Identifier, SlabType.Bottom, true),
+            13179 => new MangroveSlabBlock(Identifier, SlabType.Bottom, false),
+            13180 => new MangroveSlabBlock(Identifier, SlabType.Double, true),
+            13181 => new MangroveSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

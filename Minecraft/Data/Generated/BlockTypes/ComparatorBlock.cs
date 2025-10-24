@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ComparatorBlock(Identifier Identifier, Direction Facing, ComparatorBlock.Mode ModeValue, bool Powered) : IBlock {
     public Identifier Category => "minecraft:comparator";
-    public int ProtocolId => 441;
+    public int ProtocolId => 471;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -45,45 +45,45 @@ public record ComparatorBlock(Identifier Identifier, Direction Facing, Comparato
             return Facing switch {
                 Direction.North => ModeValue switch {
                     Mode.Compare => Powered switch {
-                        true => 9984,
-                        false => 9985,
+                        true => 11061,
+                        false => 11062,
                     },
                     Mode.Subtract => Powered switch {
-                        true => 9986,
-                        false => 9987,
+                        true => 11063,
+                        false => 11064,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(ModeValue), ModeValue, "Unknown value for property mode.")
                 },
                 Direction.South => ModeValue switch {
                     Mode.Compare => Powered switch {
-                        true => 9988,
-                        false => 9989,
+                        true => 11065,
+                        false => 11066,
                     },
                     Mode.Subtract => Powered switch {
-                        true => 9990,
-                        false => 9991,
+                        true => 11067,
+                        false => 11068,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(ModeValue), ModeValue, "Unknown value for property mode.")
                 },
                 Direction.West => ModeValue switch {
                     Mode.Compare => Powered switch {
-                        true => 9992,
-                        false => 9993,
+                        true => 11069,
+                        false => 11070,
                     },
                     Mode.Subtract => Powered switch {
-                        true => 9994,
-                        false => 9995,
+                        true => 11071,
+                        false => 11072,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(ModeValue), ModeValue, "Unknown value for property mode.")
                 },
                 Direction.East => ModeValue switch {
                     Mode.Compare => Powered switch {
-                        true => 9996,
-                        false => 9997,
+                        true => 11073,
+                        false => 11074,
                     },
                     Mode.Subtract => Powered switch {
-                        true => 9998,
-                        false => 9999,
+                        true => 11075,
+                        false => 11076,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(ModeValue), ModeValue, "Unknown value for property mode.")
                 },
@@ -94,22 +94,22 @@ public record ComparatorBlock(Identifier Identifier, Direction Facing, Comparato
     
     public IBlock WithState(uint state) {
         return state switch {
-            9984 => new ComparatorBlock(Identifier, Direction.North, Mode.Compare, true),
-            9985 => new ComparatorBlock(Identifier, Direction.North, Mode.Compare, false),
-            9986 => new ComparatorBlock(Identifier, Direction.North, Mode.Subtract, true),
-            9987 => new ComparatorBlock(Identifier, Direction.North, Mode.Subtract, false),
-            9988 => new ComparatorBlock(Identifier, Direction.South, Mode.Compare, true),
-            9989 => new ComparatorBlock(Identifier, Direction.South, Mode.Compare, false),
-            9990 => new ComparatorBlock(Identifier, Direction.South, Mode.Subtract, true),
-            9991 => new ComparatorBlock(Identifier, Direction.South, Mode.Subtract, false),
-            9992 => new ComparatorBlock(Identifier, Direction.West, Mode.Compare, true),
-            9993 => new ComparatorBlock(Identifier, Direction.West, Mode.Compare, false),
-            9994 => new ComparatorBlock(Identifier, Direction.West, Mode.Subtract, true),
-            9995 => new ComparatorBlock(Identifier, Direction.West, Mode.Subtract, false),
-            9996 => new ComparatorBlock(Identifier, Direction.East, Mode.Compare, true),
-            9997 => new ComparatorBlock(Identifier, Direction.East, Mode.Compare, false),
-            9998 => new ComparatorBlock(Identifier, Direction.East, Mode.Subtract, true),
-            9999 => new ComparatorBlock(Identifier, Direction.East, Mode.Subtract, false),
+            11061 => new ComparatorBlock(Identifier, Direction.North, Mode.Compare, true),
+            11062 => new ComparatorBlock(Identifier, Direction.North, Mode.Compare, false),
+            11063 => new ComparatorBlock(Identifier, Direction.North, Mode.Subtract, true),
+            11064 => new ComparatorBlock(Identifier, Direction.North, Mode.Subtract, false),
+            11065 => new ComparatorBlock(Identifier, Direction.South, Mode.Compare, true),
+            11066 => new ComparatorBlock(Identifier, Direction.South, Mode.Compare, false),
+            11067 => new ComparatorBlock(Identifier, Direction.South, Mode.Subtract, true),
+            11068 => new ComparatorBlock(Identifier, Direction.South, Mode.Subtract, false),
+            11069 => new ComparatorBlock(Identifier, Direction.West, Mode.Compare, true),
+            11070 => new ComparatorBlock(Identifier, Direction.West, Mode.Compare, false),
+            11071 => new ComparatorBlock(Identifier, Direction.West, Mode.Subtract, true),
+            11072 => new ComparatorBlock(Identifier, Direction.West, Mode.Subtract, false),
+            11073 => new ComparatorBlock(Identifier, Direction.East, Mode.Compare, true),
+            11074 => new ComparatorBlock(Identifier, Direction.East, Mode.Compare, false),
+            11075 => new ComparatorBlock(Identifier, Direction.East, Mode.Subtract, true),
+            11076 => new ComparatorBlock(Identifier, Direction.East, Mode.Subtract, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

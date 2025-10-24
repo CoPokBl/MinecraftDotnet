@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CrimsonSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 845;
+    public int ProtocolId => 883;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record CrimsonSlabBlock(Identifier Identifier, SlabType Type, bool Waterl
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 19723,
-                    false => 19724,
+                    true => 20832,
+                    false => 20833,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 19725,
-                    false => 19726,
+                    true => 20834,
+                    false => 20835,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 19727,
-                    false => 19728,
+                    true => 20836,
+                    false => 20837,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record CrimsonSlabBlock(Identifier Identifier, SlabType Type, bool Waterl
     
     public IBlock WithState(uint state) {
         return state switch {
-            19723 => new CrimsonSlabBlock(Identifier, SlabType.Top, true),
-            19724 => new CrimsonSlabBlock(Identifier, SlabType.Top, false),
-            19725 => new CrimsonSlabBlock(Identifier, SlabType.Bottom, true),
-            19726 => new CrimsonSlabBlock(Identifier, SlabType.Bottom, false),
-            19727 => new CrimsonSlabBlock(Identifier, SlabType.Double, true),
-            19728 => new CrimsonSlabBlock(Identifier, SlabType.Double, false),
+            20832 => new CrimsonSlabBlock(Identifier, SlabType.Top, true),
+            20833 => new CrimsonSlabBlock(Identifier, SlabType.Top, false),
+            20834 => new CrimsonSlabBlock(Identifier, SlabType.Bottom, true),
+            20835 => new CrimsonSlabBlock(Identifier, SlabType.Bottom, false),
+            20836 => new CrimsonSlabBlock(Identifier, SlabType.Double, true),
+            20837 => new CrimsonSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

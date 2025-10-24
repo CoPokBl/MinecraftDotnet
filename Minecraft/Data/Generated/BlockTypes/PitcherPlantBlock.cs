@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PitcherPlantBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     public Identifier Category => "minecraft:double_plant";
-    public int ProtocolId => 632;
+    public int ProtocolId => 662;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,8 +43,8 @@ public record PitcherPlantBlock(Identifier Identifier, BlockHalf Half) : IBlock 
     public uint StateId {
         get {
             return Half switch {
-                BlockHalf.Upper => 13530,
-                BlockHalf.Lower => 13531,
+                BlockHalf.Upper => 14607,
+                BlockHalf.Lower => 14608,
                 _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
             };
         }
@@ -52,8 +52,8 @@ public record PitcherPlantBlock(Identifier Identifier, BlockHalf Half) : IBlock 
     
     public IBlock WithState(uint state) {
         return state switch {
-            13530 => new PitcherPlantBlock(Identifier, BlockHalf.Upper),
-            13531 => new PitcherPlantBlock(Identifier, BlockHalf.Lower),
+            14607 => new PitcherPlantBlock(Identifier, BlockHalf.Upper),
+            14608 => new PitcherPlantBlock(Identifier, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

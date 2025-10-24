@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OakSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:standing_sign";
-    public int ProtocolId => 197;
+    public int ProtocolId => 209;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,68 +44,68 @@ public record OakSignBlock(Identifier Identifier, int Rotation, bool Waterlogged
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 4366,
-                    false => 4367,
+                    true => 5134,
+                    false => 5135,
                 },
                 1 => Waterlogged switch {
-                    true => 4368,
-                    false => 4369,
+                    true => 5136,
+                    false => 5137,
                 },
                 2 => Waterlogged switch {
-                    true => 4370,
-                    false => 4371,
+                    true => 5138,
+                    false => 5139,
                 },
                 3 => Waterlogged switch {
-                    true => 4372,
-                    false => 4373,
+                    true => 5140,
+                    false => 5141,
                 },
                 4 => Waterlogged switch {
-                    true => 4374,
-                    false => 4375,
+                    true => 5142,
+                    false => 5143,
                 },
                 5 => Waterlogged switch {
-                    true => 4376,
-                    false => 4377,
+                    true => 5144,
+                    false => 5145,
                 },
                 6 => Waterlogged switch {
-                    true => 4378,
-                    false => 4379,
+                    true => 5146,
+                    false => 5147,
                 },
                 7 => Waterlogged switch {
-                    true => 4380,
-                    false => 4381,
+                    true => 5148,
+                    false => 5149,
                 },
                 8 => Waterlogged switch {
-                    true => 4382,
-                    false => 4383,
+                    true => 5150,
+                    false => 5151,
                 },
                 9 => Waterlogged switch {
-                    true => 4384,
-                    false => 4385,
+                    true => 5152,
+                    false => 5153,
                 },
                 10 => Waterlogged switch {
-                    true => 4386,
-                    false => 4387,
+                    true => 5154,
+                    false => 5155,
                 },
                 11 => Waterlogged switch {
-                    true => 4388,
-                    false => 4389,
+                    true => 5156,
+                    false => 5157,
                 },
                 12 => Waterlogged switch {
-                    true => 4390,
-                    false => 4391,
+                    true => 5158,
+                    false => 5159,
                 },
                 13 => Waterlogged switch {
-                    true => 4392,
-                    false => 4393,
+                    true => 5160,
+                    false => 5161,
                 },
                 14 => Waterlogged switch {
-                    true => 4394,
-                    false => 4395,
+                    true => 5162,
+                    false => 5163,
                 },
                 15 => Waterlogged switch {
-                    true => 4396,
-                    false => 4397,
+                    true => 5164,
+                    false => 5165,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -114,38 +114,38 @@ public record OakSignBlock(Identifier Identifier, int Rotation, bool Waterlogged
     
     public IBlock WithState(uint state) {
         return state switch {
-            4366 => new OakSignBlock(Identifier, 0, true),
-            4367 => new OakSignBlock(Identifier, 0, false),
-            4368 => new OakSignBlock(Identifier, 1, true),
-            4369 => new OakSignBlock(Identifier, 1, false),
-            4370 => new OakSignBlock(Identifier, 2, true),
-            4371 => new OakSignBlock(Identifier, 2, false),
-            4372 => new OakSignBlock(Identifier, 3, true),
-            4373 => new OakSignBlock(Identifier, 3, false),
-            4374 => new OakSignBlock(Identifier, 4, true),
-            4375 => new OakSignBlock(Identifier, 4, false),
-            4376 => new OakSignBlock(Identifier, 5, true),
-            4377 => new OakSignBlock(Identifier, 5, false),
-            4378 => new OakSignBlock(Identifier, 6, true),
-            4379 => new OakSignBlock(Identifier, 6, false),
-            4380 => new OakSignBlock(Identifier, 7, true),
-            4381 => new OakSignBlock(Identifier, 7, false),
-            4382 => new OakSignBlock(Identifier, 8, true),
-            4383 => new OakSignBlock(Identifier, 8, false),
-            4384 => new OakSignBlock(Identifier, 9, true),
-            4385 => new OakSignBlock(Identifier, 9, false),
-            4386 => new OakSignBlock(Identifier, 10, true),
-            4387 => new OakSignBlock(Identifier, 10, false),
-            4388 => new OakSignBlock(Identifier, 11, true),
-            4389 => new OakSignBlock(Identifier, 11, false),
-            4390 => new OakSignBlock(Identifier, 12, true),
-            4391 => new OakSignBlock(Identifier, 12, false),
-            4392 => new OakSignBlock(Identifier, 13, true),
-            4393 => new OakSignBlock(Identifier, 13, false),
-            4394 => new OakSignBlock(Identifier, 14, true),
-            4395 => new OakSignBlock(Identifier, 14, false),
-            4396 => new OakSignBlock(Identifier, 15, true),
-            4397 => new OakSignBlock(Identifier, 15, false),
+            5134 => new OakSignBlock(Identifier, 0, true),
+            5135 => new OakSignBlock(Identifier, 0, false),
+            5136 => new OakSignBlock(Identifier, 1, true),
+            5137 => new OakSignBlock(Identifier, 1, false),
+            5138 => new OakSignBlock(Identifier, 2, true),
+            5139 => new OakSignBlock(Identifier, 2, false),
+            5140 => new OakSignBlock(Identifier, 3, true),
+            5141 => new OakSignBlock(Identifier, 3, false),
+            5142 => new OakSignBlock(Identifier, 4, true),
+            5143 => new OakSignBlock(Identifier, 4, false),
+            5144 => new OakSignBlock(Identifier, 5, true),
+            5145 => new OakSignBlock(Identifier, 5, false),
+            5146 => new OakSignBlock(Identifier, 6, true),
+            5147 => new OakSignBlock(Identifier, 6, false),
+            5148 => new OakSignBlock(Identifier, 7, true),
+            5149 => new OakSignBlock(Identifier, 7, false),
+            5150 => new OakSignBlock(Identifier, 8, true),
+            5151 => new OakSignBlock(Identifier, 8, false),
+            5152 => new OakSignBlock(Identifier, 9, true),
+            5153 => new OakSignBlock(Identifier, 9, false),
+            5154 => new OakSignBlock(Identifier, 10, true),
+            5155 => new OakSignBlock(Identifier, 10, false),
+            5156 => new OakSignBlock(Identifier, 11, true),
+            5157 => new OakSignBlock(Identifier, 11, false),
+            5158 => new OakSignBlock(Identifier, 12, true),
+            5159 => new OakSignBlock(Identifier, 12, false),
+            5160 => new OakSignBlock(Identifier, 13, true),
+            5161 => new OakSignBlock(Identifier, 13, false),
+            5162 => new OakSignBlock(Identifier, 14, true),
+            5163 => new OakSignBlock(Identifier, 14, false),
+            5164 => new OakSignBlock(Identifier, 15, true),
+            5165 => new OakSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

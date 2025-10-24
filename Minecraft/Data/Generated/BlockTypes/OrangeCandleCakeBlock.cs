@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OrangeCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock {
     public Identifier Category => "minecraft:candle_cake";
-    public int ProtocolId => 923;
+    public int ProtocolId => 961;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record OrangeCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock {
     public uint StateId {
         get {
             return Lit switch {
-                true => 22061,
-                false => 22062,
+                true => 23170,
+                false => 23171,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            22061 => new OrangeCandleCakeBlock(Identifier, true),
-            22062 => new OrangeCandleCakeBlock(Identifier, false),
+            23170 => new OrangeCandleCakeBlock(Identifier, true),
+            23171 => new OrangeCandleCakeBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

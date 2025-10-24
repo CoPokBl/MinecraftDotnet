@@ -159,6 +159,25 @@ public class PacketSerialiseDeserialiseTest {
         };
         UnknownPacket upDe = SerialiseAndDeserialise(up, true, ConnectionState.Play);
         Assert.That(upDe.Id, Is.EqualTo(123));
+
+        ClientBoundSpawnEntityPacket spawnEntityPacket = new() {
+            Data = 0,
+            EntityType = EntityType.Allay,
+            HeadYaw = 93,
+            Id = 53,
+            Pitch = 0,
+            Position = (0, 5, 123),
+            Uuid = Guid.NewGuid(),
+            Velocity = (10, 0, -13),
+            Yaw = 180
+        };
+        ClientBoundSpawnEntityPacket spawnEntityDe = SerialiseAndDeserialise(spawnEntityPacket, true, ConnectionState.Play);
+        Assert.That(spawnEntityDe.Id, Is.EqualTo(spawnEntityPacket.Id));
+        Assert.That(spawnEntityDe.EntityType, Is.EqualTo(spawnEntityPacket.EntityType));
+        Assert.That(spawnEntityDe.Position, Is.EqualTo(spawnEntityPacket.Position));
+        Assert.That(spawnEntityDe.Uuid, Is.EqualTo(spawnEntityPacket.Uuid));
+        Assert.That((spawnEntityPacket.Velocity - spawnEntityDe.Velocity).ComputeLength(), Is.LessThan(0.01));
+        Assert.That(spawnEntityDe.Yaw.ByteValue, Is.EqualTo(spawnEntityPacket.Yaw.ByteValue));
     }
 
     private static T SerialiseAndDeserialise<T>(T packet, bool clientBound, ConnectionState state) where T : MinecraftPacket {

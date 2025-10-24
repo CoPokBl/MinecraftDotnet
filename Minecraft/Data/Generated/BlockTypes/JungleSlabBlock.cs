@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JungleSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 570;
+    public int ProtocolId => 600;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record JungleSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12069,
-                    false => 12070,
+                    true => 13146,
+                    false => 13147,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12071,
-                    false => 12072,
+                    true => 13148,
+                    false => 13149,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12073,
-                    false => 12074,
+                    true => 13150,
+                    false => 13151,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record JungleSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12069 => new JungleSlabBlock(Identifier, SlabType.Top, true),
-            12070 => new JungleSlabBlock(Identifier, SlabType.Top, false),
-            12071 => new JungleSlabBlock(Identifier, SlabType.Bottom, true),
-            12072 => new JungleSlabBlock(Identifier, SlabType.Bottom, false),
-            12073 => new JungleSlabBlock(Identifier, SlabType.Double, true),
-            12074 => new JungleSlabBlock(Identifier, SlabType.Double, false),
+            13146 => new JungleSlabBlock(Identifier, SlabType.Top, true),
+            13147 => new JungleSlabBlock(Identifier, SlabType.Top, false),
+            13148 => new JungleSlabBlock(Identifier, SlabType.Bottom, true),
+            13149 => new JungleSlabBlock(Identifier, SlabType.Bottom, false),
+            13150 => new JungleSlabBlock(Identifier, SlabType.Double, true),
+            13151 => new JungleSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

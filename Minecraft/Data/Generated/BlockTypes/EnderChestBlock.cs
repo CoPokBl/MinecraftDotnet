@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:ender_chest";
-    public int ProtocolId => 369;
+    public int ProtocolId => 399;
     public double Hardness => 22.5;
     public double ExplosionResistance => 600;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Wate
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 8297,
-                    false => 8298,
+                    true => 9374,
+                    false => 9375,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 8299,
-                    false => 8300,
+                    true => 9376,
+                    false => 9377,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 8301,
-                    false => 8302,
+                    true => 9378,
+                    false => 9379,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 8303,
-                    false => 8304,
+                    true => 9380,
+                    false => 9381,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Wate
     
     public IBlock WithState(uint state) {
         return state switch {
-            8297 => new EnderChestBlock(Identifier, Direction.North, true),
-            8298 => new EnderChestBlock(Identifier, Direction.North, false),
-            8299 => new EnderChestBlock(Identifier, Direction.South, true),
-            8300 => new EnderChestBlock(Identifier, Direction.South, false),
-            8301 => new EnderChestBlock(Identifier, Direction.West, true),
-            8302 => new EnderChestBlock(Identifier, Direction.West, false),
-            8303 => new EnderChestBlock(Identifier, Direction.East, true),
-            8304 => new EnderChestBlock(Identifier, Direction.East, false),
+            9374 => new EnderChestBlock(Identifier, Direction.North, true),
+            9375 => new EnderChestBlock(Identifier, Direction.North, false),
+            9376 => new EnderChestBlock(Identifier, Direction.South, true),
+            9377 => new EnderChestBlock(Identifier, Direction.South, false),
+            9378 => new EnderChestBlock(Identifier, Direction.West, true),
+            9379 => new EnderChestBlock(Identifier, Direction.West, false),
+            9380 => new EnderChestBlock(Identifier, Direction.East, true),
+            9381 => new EnderChestBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

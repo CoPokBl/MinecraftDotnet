@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RedstoneTorchBlock(Identifier Identifier, bool Lit) : IBlock {
     public Identifier Category => "minecraft:redstone_torch";
-    public int ProtocolId => 260;
+    public int ProtocolId => 272;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record RedstoneTorchBlock(Identifier Identifier, bool Lit) : IBlock {
     public uint StateId {
         get {
             return Lit switch {
-                true => 5916,
-                false => 5917,
+                true => 6684,
+                false => 6685,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            5916 => new RedstoneTorchBlock(Identifier, true),
-            5917 => new RedstoneTorchBlock(Identifier, false),
+            6684 => new RedstoneTorchBlock(Identifier, true),
+            6685 => new RedstoneTorchBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

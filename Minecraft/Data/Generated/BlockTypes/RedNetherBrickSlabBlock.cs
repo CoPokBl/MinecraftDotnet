@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RedNetherBrickSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 789;
+    public int ProtocolId => 819;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record RedNetherBrickSlabBlock(Identifier Identifier, SlabType Type, bool
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15197,
-                    false => 15198,
+                    true => 16274,
+                    false => 16275,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15199,
-                    false => 15200,
+                    true => 16276,
+                    false => 16277,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15201,
-                    false => 15202,
+                    true => 16278,
+                    false => 16279,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record RedNetherBrickSlabBlock(Identifier Identifier, SlabType Type, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            15197 => new RedNetherBrickSlabBlock(Identifier, SlabType.Top, true),
-            15198 => new RedNetherBrickSlabBlock(Identifier, SlabType.Top, false),
-            15199 => new RedNetherBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            15200 => new RedNetherBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            15201 => new RedNetherBrickSlabBlock(Identifier, SlabType.Double, true),
-            15202 => new RedNetherBrickSlabBlock(Identifier, SlabType.Double, false),
+            16274 => new RedNetherBrickSlabBlock(Identifier, SlabType.Top, true),
+            16275 => new RedNetherBrickSlabBlock(Identifier, SlabType.Top, false),
+            16276 => new RedNetherBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            16277 => new RedNetherBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            16278 => new RedNetherBrickSlabBlock(Identifier, SlabType.Double, true),
+            16279 => new RedNetherBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

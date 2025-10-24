@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DragonWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:wall_skull";
-    public int ProtocolId => 432;
+    public int ProtocolId => 462;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record DragonWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 9868,
-                    false => 9869,
+                    true => 10945,
+                    false => 10946,
                 },
                 Direction.South => Powered switch {
-                    true => 9870,
-                    false => 9871,
+                    true => 10947,
+                    false => 10948,
                 },
                 Direction.West => Powered switch {
-                    true => 9872,
-                    false => 9873,
+                    true => 10949,
+                    false => 10950,
                 },
                 Direction.East => Powered switch {
-                    true => 9874,
-                    false => 9875,
+                    true => 10951,
+                    false => 10952,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record DragonWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            9868 => new DragonWallHeadBlock(Identifier, Direction.North, true),
-            9869 => new DragonWallHeadBlock(Identifier, Direction.North, false),
-            9870 => new DragonWallHeadBlock(Identifier, Direction.South, true),
-            9871 => new DragonWallHeadBlock(Identifier, Direction.South, false),
-            9872 => new DragonWallHeadBlock(Identifier, Direction.West, true),
-            9873 => new DragonWallHeadBlock(Identifier, Direction.West, false),
-            9874 => new DragonWallHeadBlock(Identifier, Direction.East, true),
-            9875 => new DragonWallHeadBlock(Identifier, Direction.East, false),
+            10945 => new DragonWallHeadBlock(Identifier, Direction.North, true),
+            10946 => new DragonWallHeadBlock(Identifier, Direction.North, false),
+            10947 => new DragonWallHeadBlock(Identifier, Direction.South, true),
+            10948 => new DragonWallHeadBlock(Identifier, Direction.South, false),
+            10949 => new DragonWallHeadBlock(Identifier, Direction.West, true),
+            10950 => new DragonWallHeadBlock(Identifier, Direction.West, false),
+            10951 => new DragonWallHeadBlock(Identifier, Direction.East, true),
+            10952 => new DragonWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record AmethystClusterBlock(Identifier Identifier, Cardinal Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:amethyst_cluster";
-    public int ProtocolId => 940;
+    public int ProtocolId => 978;
     public double Hardness => 1.5;
     public double ExplosionResistance => 1.5;
     public double Friction => 0.6;
@@ -44,28 +44,28 @@ public record AmethystClusterBlock(Identifier Identifier, Cardinal Facing, bool 
         get {
             return Facing switch {
                 Cardinal.North => Waterlogged switch {
-                    true => 22093,
-                    false => 22094,
+                    true => 23202,
+                    false => 23203,
                 },
                 Cardinal.East => Waterlogged switch {
-                    true => 22095,
-                    false => 22096,
+                    true => 23204,
+                    false => 23205,
                 },
                 Cardinal.South => Waterlogged switch {
-                    true => 22097,
-                    false => 22098,
+                    true => 23206,
+                    false => 23207,
                 },
                 Cardinal.West => Waterlogged switch {
-                    true => 22099,
-                    false => 22100,
+                    true => 23208,
+                    false => 23209,
                 },
                 Cardinal.Up => Waterlogged switch {
-                    true => 22101,
-                    false => 22102,
+                    true => 23210,
+                    false => 23211,
                 },
                 Cardinal.Down => Waterlogged switch {
-                    true => 22103,
-                    false => 22104,
+                    true => 23212,
+                    false => 23213,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -74,18 +74,18 @@ public record AmethystClusterBlock(Identifier Identifier, Cardinal Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            22093 => new AmethystClusterBlock(Identifier, Cardinal.North, true),
-            22094 => new AmethystClusterBlock(Identifier, Cardinal.North, false),
-            22095 => new AmethystClusterBlock(Identifier, Cardinal.East, true),
-            22096 => new AmethystClusterBlock(Identifier, Cardinal.East, false),
-            22097 => new AmethystClusterBlock(Identifier, Cardinal.South, true),
-            22098 => new AmethystClusterBlock(Identifier, Cardinal.South, false),
-            22099 => new AmethystClusterBlock(Identifier, Cardinal.West, true),
-            22100 => new AmethystClusterBlock(Identifier, Cardinal.West, false),
-            22101 => new AmethystClusterBlock(Identifier, Cardinal.Up, true),
-            22102 => new AmethystClusterBlock(Identifier, Cardinal.Up, false),
-            22103 => new AmethystClusterBlock(Identifier, Cardinal.Down, true),
-            22104 => new AmethystClusterBlock(Identifier, Cardinal.Down, false),
+            23202 => new AmethystClusterBlock(Identifier, Cardinal.North, true),
+            23203 => new AmethystClusterBlock(Identifier, Cardinal.North, false),
+            23204 => new AmethystClusterBlock(Identifier, Cardinal.East, true),
+            23205 => new AmethystClusterBlock(Identifier, Cardinal.East, false),
+            23206 => new AmethystClusterBlock(Identifier, Cardinal.South, true),
+            23207 => new AmethystClusterBlock(Identifier, Cardinal.South, false),
+            23208 => new AmethystClusterBlock(Identifier, Cardinal.West, true),
+            23209 => new AmethystClusterBlock(Identifier, Cardinal.West, false),
+            23210 => new AmethystClusterBlock(Identifier, Cardinal.Up, true),
+            23211 => new AmethystClusterBlock(Identifier, Cardinal.Up, false),
+            23212 => new AmethystClusterBlock(Identifier, Cardinal.Down, true),
+            23213 => new AmethystClusterBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

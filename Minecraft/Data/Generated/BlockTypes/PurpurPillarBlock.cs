@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PurpurPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:rotated_pillar";
-    public int ProtocolId => 627;
+    public int ProtocolId => 657;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record PurpurPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 13434,
-                Axis.Y => 13435,
-                Axis.Z => 13436,
+                Axis.X => 14511,
+                Axis.Y => 14512,
+                Axis.Z => 14513,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record PurpurPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            13434 => new PurpurPillarBlock(Identifier, Axis.X),
-            13435 => new PurpurPillarBlock(Identifier, Axis.Y),
-            13436 => new PurpurPillarBlock(Identifier, Axis.Z),
+            14511 => new PurpurPillarBlock(Identifier, Axis.X),
+            14512 => new PurpurPillarBlock(Identifier, Axis.Y),
+            14513 => new PurpurPillarBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

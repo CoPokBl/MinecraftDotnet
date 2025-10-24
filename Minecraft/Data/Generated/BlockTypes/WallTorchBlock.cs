@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WallTorchBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:wall_torch";
-    public int ProtocolId => 182;
+    public int ProtocolId => 194;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record WallTorchBlock(Identifier Identifier, Direction Facing) : IBlock {
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 2402,
-                Direction.South => 2403,
-                Direction.West => 2404,
-                Direction.East => 2405,
+                Direction.North => 3170,
+                Direction.South => 3171,
+                Direction.West => 3172,
+                Direction.East => 3173,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record WallTorchBlock(Identifier Identifier, Direction Facing) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            2402 => new WallTorchBlock(Identifier, Direction.North),
-            2403 => new WallTorchBlock(Identifier, Direction.South),
-            2404 => new WallTorchBlock(Identifier, Direction.West),
-            2405 => new WallTorchBlock(Identifier, Direction.East),
+            3170 => new WallTorchBlock(Identifier, Direction.North),
+            3171 => new WallTorchBlock(Identifier, Direction.South),
+            3172 => new WallTorchBlock(Identifier, Direction.West),
+            3173 => new WallTorchBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:end_portal_frame";
-    public int ProtocolId => 361;
+    public int ProtocolId => 391;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;
@@ -44,17 +44,17 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
         get {
             return Eye switch {
                 true => Facing switch {
-                    Direction.North => 8191,
-                    Direction.South => 8192,
-                    Direction.West => 8193,
-                    Direction.East => 8194,
+                    Direction.North => 9268,
+                    Direction.South => 9269,
+                    Direction.West => 9270,
+                    Direction.East => 9271,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
-                    Direction.North => 8195,
-                    Direction.South => 8196,
-                    Direction.West => 8197,
-                    Direction.East => 8198,
+                    Direction.North => 9272,
+                    Direction.South => 9273,
+                    Direction.West => 9274,
+                    Direction.East => 9275,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
             };
@@ -63,14 +63,14 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
     
     public IBlock WithState(uint state) {
         return state switch {
-            8191 => new EndPortalFrameBlock(Identifier, true, Direction.North),
-            8192 => new EndPortalFrameBlock(Identifier, true, Direction.South),
-            8193 => new EndPortalFrameBlock(Identifier, true, Direction.West),
-            8194 => new EndPortalFrameBlock(Identifier, true, Direction.East),
-            8195 => new EndPortalFrameBlock(Identifier, false, Direction.North),
-            8196 => new EndPortalFrameBlock(Identifier, false, Direction.South),
-            8197 => new EndPortalFrameBlock(Identifier, false, Direction.West),
-            8198 => new EndPortalFrameBlock(Identifier, false, Direction.East),
+            9268 => new EndPortalFrameBlock(Identifier, true, Direction.North),
+            9269 => new EndPortalFrameBlock(Identifier, true, Direction.South),
+            9270 => new EndPortalFrameBlock(Identifier, true, Direction.West),
+            9271 => new EndPortalFrameBlock(Identifier, true, Direction.East),
+            9272 => new EndPortalFrameBlock(Identifier, false, Direction.North),
+            9273 => new EndPortalFrameBlock(Identifier, false, Direction.South),
+            9274 => new EndPortalFrameBlock(Identifier, false, Direction.West),
+            9275 => new EndPortalFrameBlock(Identifier, false, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

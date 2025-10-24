@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CommandBlockBlock(Identifier Identifier, bool Conditional, Cardinal Facing) : IBlock {
     public Identifier Category => "minecraft:command";
-    public int ProtocolId => 376;
+    public int ProtocolId => 406;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;
@@ -44,21 +44,21 @@ public record CommandBlockBlock(Identifier Identifier, bool Conditional, Cardina
         get {
             return Conditional switch {
                 true => Facing switch {
-                    Cardinal.North => 8690,
-                    Cardinal.East => 8691,
-                    Cardinal.South => 8692,
-                    Cardinal.West => 8693,
-                    Cardinal.Up => 8694,
-                    Cardinal.Down => 8695,
+                    Cardinal.North => 9767,
+                    Cardinal.East => 9768,
+                    Cardinal.South => 9769,
+                    Cardinal.West => 9770,
+                    Cardinal.Up => 9771,
+                    Cardinal.Down => 9772,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
-                    Cardinal.North => 8696,
-                    Cardinal.East => 8697,
-                    Cardinal.South => 8698,
-                    Cardinal.West => 8699,
-                    Cardinal.Up => 8700,
-                    Cardinal.Down => 8701,
+                    Cardinal.North => 9773,
+                    Cardinal.East => 9774,
+                    Cardinal.South => 9775,
+                    Cardinal.West => 9776,
+                    Cardinal.Up => 9777,
+                    Cardinal.Down => 9778,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
             };
@@ -67,18 +67,18 @@ public record CommandBlockBlock(Identifier Identifier, bool Conditional, Cardina
     
     public IBlock WithState(uint state) {
         return state switch {
-            8690 => new CommandBlockBlock(Identifier, true, Cardinal.North),
-            8691 => new CommandBlockBlock(Identifier, true, Cardinal.East),
-            8692 => new CommandBlockBlock(Identifier, true, Cardinal.South),
-            8693 => new CommandBlockBlock(Identifier, true, Cardinal.West),
-            8694 => new CommandBlockBlock(Identifier, true, Cardinal.Up),
-            8695 => new CommandBlockBlock(Identifier, true, Cardinal.Down),
-            8696 => new CommandBlockBlock(Identifier, false, Cardinal.North),
-            8697 => new CommandBlockBlock(Identifier, false, Cardinal.East),
-            8698 => new CommandBlockBlock(Identifier, false, Cardinal.South),
-            8699 => new CommandBlockBlock(Identifier, false, Cardinal.West),
-            8700 => new CommandBlockBlock(Identifier, false, Cardinal.Up),
-            8701 => new CommandBlockBlock(Identifier, false, Cardinal.Down),
+            9767 => new CommandBlockBlock(Identifier, true, Cardinal.North),
+            9768 => new CommandBlockBlock(Identifier, true, Cardinal.East),
+            9769 => new CommandBlockBlock(Identifier, true, Cardinal.South),
+            9770 => new CommandBlockBlock(Identifier, true, Cardinal.West),
+            9771 => new CommandBlockBlock(Identifier, true, Cardinal.Up),
+            9772 => new CommandBlockBlock(Identifier, true, Cardinal.Down),
+            9773 => new CommandBlockBlock(Identifier, false, Cardinal.North),
+            9774 => new CommandBlockBlock(Identifier, false, Cardinal.East),
+            9775 => new CommandBlockBlock(Identifier, false, Cardinal.South),
+            9776 => new CommandBlockBlock(Identifier, false, Cardinal.West),
+            9777 => new CommandBlockBlock(Identifier, false, Cardinal.Up),
+            9778 => new CommandBlockBlock(Identifier, false, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

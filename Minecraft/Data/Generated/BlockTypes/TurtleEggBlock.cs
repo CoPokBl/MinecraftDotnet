@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBlock {
     public Identifier Category => "minecraft:turtle_egg";
-    public int ProtocolId => 713;
+    public int ProtocolId => 743;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -44,27 +44,27 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
         get {
             return Eggs switch {
                 1 => Hatch switch {
-                    0 => 13811,
-                    1 => 13812,
-                    2 => 13813,
+                    0 => 14888,
+                    1 => 14889,
+                    2 => 14890,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 2 => Hatch switch {
-                    0 => 13814,
-                    1 => 13815,
-                    2 => 13816,
+                    0 => 14891,
+                    1 => 14892,
+                    2 => 14893,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 3 => Hatch switch {
-                    0 => 13817,
-                    1 => 13818,
-                    2 => 13819,
+                    0 => 14894,
+                    1 => 14895,
+                    2 => 14896,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 4 => Hatch switch {
-                    0 => 13820,
-                    1 => 13821,
-                    2 => 13822,
+                    0 => 14897,
+                    1 => 14898,
+                    2 => 14899,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Eggs), Eggs, "Unknown value for property eggs.")
@@ -74,18 +74,18 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
     
     public IBlock WithState(uint state) {
         return state switch {
-            13811 => new TurtleEggBlock(Identifier, 1, 0),
-            13812 => new TurtleEggBlock(Identifier, 1, 1),
-            13813 => new TurtleEggBlock(Identifier, 1, 2),
-            13814 => new TurtleEggBlock(Identifier, 2, 0),
-            13815 => new TurtleEggBlock(Identifier, 2, 1),
-            13816 => new TurtleEggBlock(Identifier, 2, 2),
-            13817 => new TurtleEggBlock(Identifier, 3, 0),
-            13818 => new TurtleEggBlock(Identifier, 3, 1),
-            13819 => new TurtleEggBlock(Identifier, 3, 2),
-            13820 => new TurtleEggBlock(Identifier, 4, 0),
-            13821 => new TurtleEggBlock(Identifier, 4, 1),
-            13822 => new TurtleEggBlock(Identifier, 4, 2),
+            14888 => new TurtleEggBlock(Identifier, 1, 0),
+            14889 => new TurtleEggBlock(Identifier, 1, 1),
+            14890 => new TurtleEggBlock(Identifier, 1, 2),
+            14891 => new TurtleEggBlock(Identifier, 2, 0),
+            14892 => new TurtleEggBlock(Identifier, 2, 1),
+            14893 => new TurtleEggBlock(Identifier, 2, 2),
+            14894 => new TurtleEggBlock(Identifier, 3, 0),
+            14895 => new TurtleEggBlock(Identifier, 3, 1),
+            14896 => new TurtleEggBlock(Identifier, 3, 2),
+            14897 => new TurtleEggBlock(Identifier, 4, 0),
+            14898 => new TurtleEggBlock(Identifier, 4, 1),
+            14899 => new TurtleEggBlock(Identifier, 4, 2),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

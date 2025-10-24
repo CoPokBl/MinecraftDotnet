@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : IBlock {
     public Identifier Category => "minecraft:weathering_copper_bulb";
-    public int ProtocolId => 1034;
+    public int ProtocolId => 1072;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,12 +44,12 @@ public record ExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool Power
         get {
             return Lit switch {
                 true => Powered switch {
-                    true => 25756,
-                    false => 25757,
+                    true => 26865,
+                    false => 26866,
                 },
                 false => Powered switch {
-                    true => 25758,
-                    false => 25759,
+                    true => 26867,
+                    false => 26868,
                 },
             };
         }
@@ -57,10 +57,10 @@ public record ExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool Power
     
     public IBlock WithState(uint state) {
         return state switch {
-            25756 => new ExposedCopperBulbBlock(Identifier, true, true),
-            25757 => new ExposedCopperBulbBlock(Identifier, true, false),
-            25758 => new ExposedCopperBulbBlock(Identifier, false, true),
-            25759 => new ExposedCopperBulbBlock(Identifier, false, false),
+            26865 => new ExposedCopperBulbBlock(Identifier, true, true),
+            26866 => new ExposedCopperBulbBlock(Identifier, true, false),
+            26867 => new ExposedCopperBulbBlock(Identifier, false, true),
+            26868 => new ExposedCopperBulbBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

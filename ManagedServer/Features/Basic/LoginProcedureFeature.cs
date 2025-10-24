@@ -28,7 +28,7 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
     private static readonly Tag<bool> BasicLoggedInTag = new("minecraftdotnet:loginprocfeat:basicloggedin");
     
     // We'll just say we know vanilla for now
-    private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", "1.21.7") ];
+    private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", ProtocolConstants.CurrentVersionString) ];
 
     public override void Register() {
         if (Scope is not ManagedMinecraftServer) {

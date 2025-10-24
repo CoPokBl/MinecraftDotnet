@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CarrotsBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:carrot";
-    public int ProtocolId => 409;
+    public int ProtocolId => 439;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,14 +43,14 @@ public record CarrotsBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 9380,
-                1 => 9381,
-                2 => 9382,
-                3 => 9383,
-                4 => 9384,
-                5 => 9385,
-                6 => 9386,
-                7 => 9387,
+                0 => 10457,
+                1 => 10458,
+                2 => 10459,
+                3 => 10460,
+                4 => 10461,
+                5 => 10462,
+                6 => 10463,
+                7 => 10464,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -58,14 +58,14 @@ public record CarrotsBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            9380 => new CarrotsBlock(Identifier, 0),
-            9381 => new CarrotsBlock(Identifier, 1),
-            9382 => new CarrotsBlock(Identifier, 2),
-            9383 => new CarrotsBlock(Identifier, 3),
-            9384 => new CarrotsBlock(Identifier, 4),
-            9385 => new CarrotsBlock(Identifier, 5),
-            9386 => new CarrotsBlock(Identifier, 6),
-            9387 => new CarrotsBlock(Identifier, 7),
+            10457 => new CarrotsBlock(Identifier, 0),
+            10458 => new CarrotsBlock(Identifier, 1),
+            10459 => new CarrotsBlock(Identifier, 2),
+            10460 => new CarrotsBlock(Identifier, 3),
+            10461 => new CarrotsBlock(Identifier, 4),
+            10462 => new CarrotsBlock(Identifier, 5),
+            10463 => new CarrotsBlock(Identifier, 6),
+            10464 => new CarrotsBlock(Identifier, 7),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

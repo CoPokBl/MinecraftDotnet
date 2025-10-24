@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlock {
     public Identifier Category => "minecraft:jigsaw";
-    public int ProtocolId => 866;
+    public int ProtocolId => 904;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;
@@ -43,18 +43,18 @@ public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlo
     public uint StateId {
         get {
             return Orientation switch {
-                Orientation.DownEast => 20415,
-                Orientation.DownNorth => 20416,
-                Orientation.DownSouth => 20417,
-                Orientation.DownWest => 20418,
-                Orientation.UpEast => 20419,
-                Orientation.UpNorth => 20420,
-                Orientation.UpSouth => 20421,
-                Orientation.UpWest => 20422,
-                Orientation.WestUp => 20423,
-                Orientation.EastUp => 20424,
-                Orientation.NorthUp => 20425,
-                Orientation.SouthUp => 20426,
+                Orientation.DownEast => 21524,
+                Orientation.DownNorth => 21525,
+                Orientation.DownSouth => 21526,
+                Orientation.DownWest => 21527,
+                Orientation.UpEast => 21528,
+                Orientation.UpNorth => 21529,
+                Orientation.UpSouth => 21530,
+                Orientation.UpWest => 21531,
+                Orientation.WestUp => 21532,
+                Orientation.EastUp => 21533,
+                Orientation.NorthUp => 21534,
+                Orientation.SouthUp => 21535,
                 _ => throw new ArgumentOutOfRangeException(nameof(Orientation), Orientation, "Unknown value for property orientation.")
             };
         }
@@ -62,18 +62,18 @@ public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            20415 => new JigsawBlock(Identifier, Orientation.DownEast),
-            20416 => new JigsawBlock(Identifier, Orientation.DownNorth),
-            20417 => new JigsawBlock(Identifier, Orientation.DownSouth),
-            20418 => new JigsawBlock(Identifier, Orientation.DownWest),
-            20419 => new JigsawBlock(Identifier, Orientation.UpEast),
-            20420 => new JigsawBlock(Identifier, Orientation.UpNorth),
-            20421 => new JigsawBlock(Identifier, Orientation.UpSouth),
-            20422 => new JigsawBlock(Identifier, Orientation.UpWest),
-            20423 => new JigsawBlock(Identifier, Orientation.WestUp),
-            20424 => new JigsawBlock(Identifier, Orientation.EastUp),
-            20425 => new JigsawBlock(Identifier, Orientation.NorthUp),
-            20426 => new JigsawBlock(Identifier, Orientation.SouthUp),
+            21524 => new JigsawBlock(Identifier, Orientation.DownEast),
+            21525 => new JigsawBlock(Identifier, Orientation.DownNorth),
+            21526 => new JigsawBlock(Identifier, Orientation.DownSouth),
+            21527 => new JigsawBlock(Identifier, Orientation.DownWest),
+            21528 => new JigsawBlock(Identifier, Orientation.UpEast),
+            21529 => new JigsawBlock(Identifier, Orientation.UpNorth),
+            21530 => new JigsawBlock(Identifier, Orientation.UpSouth),
+            21531 => new JigsawBlock(Identifier, Orientation.UpWest),
+            21532 => new JigsawBlock(Identifier, Orientation.WestUp),
+            21533 => new JigsawBlock(Identifier, Orientation.EastUp),
+            21534 => new JigsawBlock(Identifier, Orientation.NorthUp),
+            21535 => new JigsawBlock(Identifier, Orientation.SouthUp),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
