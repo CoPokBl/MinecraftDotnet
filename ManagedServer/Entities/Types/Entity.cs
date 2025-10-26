@@ -156,10 +156,9 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     protected virtual void Tick() {
         // Check for changed properties
         if (_lastVelocity != Velocity) {
-            // TODO: Velocity unit might have changed?
-            SendToViewers(new ClientBoundSetEntityVelocityPacket {  // protocol velocity is in 8000ths of a block per tick (50ms)
+            SendToViewers(new ClientBoundSetEntityVelocityPacket {
                 EntityId = NetId,
-                Velocity = new Vec3<short>((short)(Velocity.X * 8000), (short)(Velocity.Y * 8000), (short)(Velocity.Z * 8000)),
+                Velocity = Velocity
             });
             _lastVelocity = Velocity;
         }
