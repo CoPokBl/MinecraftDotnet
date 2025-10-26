@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record GraniteSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 787;
+    public int ProtocolId => 817;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record GraniteSlabBlock(Identifier Identifier, SlabType Type, bool Waterl
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15185,
-                    false => 15186,
+                    true => 16262,
+                    false => 16263,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15187,
-                    false => 15188,
+                    true => 16264,
+                    false => 16265,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15189,
-                    false => 15190,
+                    true => 16266,
+                    false => 16267,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record GraniteSlabBlock(Identifier Identifier, SlabType Type, bool Waterl
     
     public IBlock WithState(uint state) {
         return state switch {
-            15185 => new GraniteSlabBlock(Identifier, SlabType.Top, true),
-            15186 => new GraniteSlabBlock(Identifier, SlabType.Top, false),
-            15187 => new GraniteSlabBlock(Identifier, SlabType.Bottom, true),
-            15188 => new GraniteSlabBlock(Identifier, SlabType.Bottom, false),
-            15189 => new GraniteSlabBlock(Identifier, SlabType.Double, true),
-            15190 => new GraniteSlabBlock(Identifier, SlabType.Double, false),
+            16262 => new GraniteSlabBlock(Identifier, SlabType.Top, true),
+            16263 => new GraniteSlabBlock(Identifier, SlabType.Top, false),
+            16264 => new GraniteSlabBlock(Identifier, SlabType.Bottom, true),
+            16265 => new GraniteSlabBlock(Identifier, SlabType.Bottom, false),
+            16266 => new GraniteSlabBlock(Identifier, SlabType.Double, true),
+            16267 => new GraniteSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

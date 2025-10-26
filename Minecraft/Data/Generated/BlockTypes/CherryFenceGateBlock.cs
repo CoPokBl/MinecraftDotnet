@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CherryFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock {
     public Identifier Category => "minecraft:fence_gate";
-    public int ProtocolId => 600;
+    public int ProtocolId => 630;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -46,88 +46,88 @@ public record CherryFenceGateBlock(Identifier Identifier, Direction Facing, bool
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12333,
-                            false => 12334,
+                            true => 13410,
+                            false => 13411,
                         },
                         false => Powered switch {
-                            true => 12335,
-                            false => 12336,
+                            true => 13412,
+                            false => 13413,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12337,
-                            false => 12338,
+                            true => 13414,
+                            false => 13415,
                         },
                         false => Powered switch {
-                            true => 12339,
-                            false => 12340,
+                            true => 13416,
+                            false => 13417,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12341,
-                            false => 12342,
+                            true => 13418,
+                            false => 13419,
                         },
                         false => Powered switch {
-                            true => 12343,
-                            false => 12344,
+                            true => 13420,
+                            false => 13421,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12345,
-                            false => 12346,
+                            true => 13422,
+                            false => 13423,
                         },
                         false => Powered switch {
-                            true => 12347,
-                            false => 12348,
+                            true => 13424,
+                            false => 13425,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12349,
-                            false => 12350,
+                            true => 13426,
+                            false => 13427,
                         },
                         false => Powered switch {
-                            true => 12351,
-                            false => 12352,
+                            true => 13428,
+                            false => 13429,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12353,
-                            false => 12354,
+                            true => 13430,
+                            false => 13431,
                         },
                         false => Powered switch {
-                            true => 12355,
-                            false => 12356,
+                            true => 13432,
+                            false => 13433,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 12357,
-                            false => 12358,
+                            true => 13434,
+                            false => 13435,
                         },
                         false => Powered switch {
-                            true => 12359,
-                            false => 12360,
+                            true => 13436,
+                            false => 13437,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 12361,
-                            false => 12362,
+                            true => 13438,
+                            false => 13439,
                         },
                         false => Powered switch {
-                            true => 12363,
-                            false => 12364,
+                            true => 13440,
+                            false => 13441,
                         },
                     },
                 },
@@ -138,38 +138,38 @@ public record CherryFenceGateBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            12333 => new CherryFenceGateBlock(Identifier, Direction.North, true, true, true),
-            12334 => new CherryFenceGateBlock(Identifier, Direction.North, true, true, false),
-            12335 => new CherryFenceGateBlock(Identifier, Direction.North, true, false, true),
-            12336 => new CherryFenceGateBlock(Identifier, Direction.North, true, false, false),
-            12337 => new CherryFenceGateBlock(Identifier, Direction.North, false, true, true),
-            12338 => new CherryFenceGateBlock(Identifier, Direction.North, false, true, false),
-            12339 => new CherryFenceGateBlock(Identifier, Direction.North, false, false, true),
-            12340 => new CherryFenceGateBlock(Identifier, Direction.North, false, false, false),
-            12341 => new CherryFenceGateBlock(Identifier, Direction.South, true, true, true),
-            12342 => new CherryFenceGateBlock(Identifier, Direction.South, true, true, false),
-            12343 => new CherryFenceGateBlock(Identifier, Direction.South, true, false, true),
-            12344 => new CherryFenceGateBlock(Identifier, Direction.South, true, false, false),
-            12345 => new CherryFenceGateBlock(Identifier, Direction.South, false, true, true),
-            12346 => new CherryFenceGateBlock(Identifier, Direction.South, false, true, false),
-            12347 => new CherryFenceGateBlock(Identifier, Direction.South, false, false, true),
-            12348 => new CherryFenceGateBlock(Identifier, Direction.South, false, false, false),
-            12349 => new CherryFenceGateBlock(Identifier, Direction.West, true, true, true),
-            12350 => new CherryFenceGateBlock(Identifier, Direction.West, true, true, false),
-            12351 => new CherryFenceGateBlock(Identifier, Direction.West, true, false, true),
-            12352 => new CherryFenceGateBlock(Identifier, Direction.West, true, false, false),
-            12353 => new CherryFenceGateBlock(Identifier, Direction.West, false, true, true),
-            12354 => new CherryFenceGateBlock(Identifier, Direction.West, false, true, false),
-            12355 => new CherryFenceGateBlock(Identifier, Direction.West, false, false, true),
-            12356 => new CherryFenceGateBlock(Identifier, Direction.West, false, false, false),
-            12357 => new CherryFenceGateBlock(Identifier, Direction.East, true, true, true),
-            12358 => new CherryFenceGateBlock(Identifier, Direction.East, true, true, false),
-            12359 => new CherryFenceGateBlock(Identifier, Direction.East, true, false, true),
-            12360 => new CherryFenceGateBlock(Identifier, Direction.East, true, false, false),
-            12361 => new CherryFenceGateBlock(Identifier, Direction.East, false, true, true),
-            12362 => new CherryFenceGateBlock(Identifier, Direction.East, false, true, false),
-            12363 => new CherryFenceGateBlock(Identifier, Direction.East, false, false, true),
-            12364 => new CherryFenceGateBlock(Identifier, Direction.East, false, false, false),
+            13410 => new CherryFenceGateBlock(Identifier, Direction.North, true, true, true),
+            13411 => new CherryFenceGateBlock(Identifier, Direction.North, true, true, false),
+            13412 => new CherryFenceGateBlock(Identifier, Direction.North, true, false, true),
+            13413 => new CherryFenceGateBlock(Identifier, Direction.North, true, false, false),
+            13414 => new CherryFenceGateBlock(Identifier, Direction.North, false, true, true),
+            13415 => new CherryFenceGateBlock(Identifier, Direction.North, false, true, false),
+            13416 => new CherryFenceGateBlock(Identifier, Direction.North, false, false, true),
+            13417 => new CherryFenceGateBlock(Identifier, Direction.North, false, false, false),
+            13418 => new CherryFenceGateBlock(Identifier, Direction.South, true, true, true),
+            13419 => new CherryFenceGateBlock(Identifier, Direction.South, true, true, false),
+            13420 => new CherryFenceGateBlock(Identifier, Direction.South, true, false, true),
+            13421 => new CherryFenceGateBlock(Identifier, Direction.South, true, false, false),
+            13422 => new CherryFenceGateBlock(Identifier, Direction.South, false, true, true),
+            13423 => new CherryFenceGateBlock(Identifier, Direction.South, false, true, false),
+            13424 => new CherryFenceGateBlock(Identifier, Direction.South, false, false, true),
+            13425 => new CherryFenceGateBlock(Identifier, Direction.South, false, false, false),
+            13426 => new CherryFenceGateBlock(Identifier, Direction.West, true, true, true),
+            13427 => new CherryFenceGateBlock(Identifier, Direction.West, true, true, false),
+            13428 => new CherryFenceGateBlock(Identifier, Direction.West, true, false, true),
+            13429 => new CherryFenceGateBlock(Identifier, Direction.West, true, false, false),
+            13430 => new CherryFenceGateBlock(Identifier, Direction.West, false, true, true),
+            13431 => new CherryFenceGateBlock(Identifier, Direction.West, false, true, false),
+            13432 => new CherryFenceGateBlock(Identifier, Direction.West, false, false, true),
+            13433 => new CherryFenceGateBlock(Identifier, Direction.West, false, false, false),
+            13434 => new CherryFenceGateBlock(Identifier, Direction.East, true, true, true),
+            13435 => new CherryFenceGateBlock(Identifier, Direction.East, true, true, false),
+            13436 => new CherryFenceGateBlock(Identifier, Direction.East, true, false, true),
+            13437 => new CherryFenceGateBlock(Identifier, Direction.East, true, false, false),
+            13438 => new CherryFenceGateBlock(Identifier, Direction.East, false, true, true),
+            13439 => new CherryFenceGateBlock(Identifier, Direction.East, false, true, false),
+            13440 => new CherryFenceGateBlock(Identifier, Direction.East, false, false, true),
+            13441 => new CherryFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

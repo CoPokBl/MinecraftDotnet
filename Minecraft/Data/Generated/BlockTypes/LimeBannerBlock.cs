@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LimeBannerBlock(Identifier Identifier, int Rotation) : IBlock {
     public Identifier Category => "minecraft:banner";
-    public int ProtocolId => 536;
+    public int ProtocolId => 566;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -43,22 +43,22 @@ public record LimeBannerBlock(Identifier Identifier, int Rotation) : IBlock {
     public uint StateId {
         get {
             return Rotation switch {
-                0 => 11728,
-                1 => 11729,
-                2 => 11730,
-                3 => 11731,
-                4 => 11732,
-                5 => 11733,
-                6 => 11734,
-                7 => 11735,
-                8 => 11736,
-                9 => 11737,
-                10 => 11738,
-                11 => 11739,
-                12 => 11740,
-                13 => 11741,
-                14 => 11742,
-                15 => 11743,
+                0 => 12805,
+                1 => 12806,
+                2 => 12807,
+                3 => 12808,
+                4 => 12809,
+                5 => 12810,
+                6 => 12811,
+                7 => 12812,
+                8 => 12813,
+                9 => 12814,
+                10 => 12815,
+                11 => 12816,
+                12 => 12817,
+                13 => 12818,
+                14 => 12819,
+                15 => 12820,
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
         }
@@ -66,22 +66,22 @@ public record LimeBannerBlock(Identifier Identifier, int Rotation) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            11728 => new LimeBannerBlock(Identifier, 0),
-            11729 => new LimeBannerBlock(Identifier, 1),
-            11730 => new LimeBannerBlock(Identifier, 2),
-            11731 => new LimeBannerBlock(Identifier, 3),
-            11732 => new LimeBannerBlock(Identifier, 4),
-            11733 => new LimeBannerBlock(Identifier, 5),
-            11734 => new LimeBannerBlock(Identifier, 6),
-            11735 => new LimeBannerBlock(Identifier, 7),
-            11736 => new LimeBannerBlock(Identifier, 8),
-            11737 => new LimeBannerBlock(Identifier, 9),
-            11738 => new LimeBannerBlock(Identifier, 10),
-            11739 => new LimeBannerBlock(Identifier, 11),
-            11740 => new LimeBannerBlock(Identifier, 12),
-            11741 => new LimeBannerBlock(Identifier, 13),
-            11742 => new LimeBannerBlock(Identifier, 14),
-            11743 => new LimeBannerBlock(Identifier, 15),
+            12805 => new LimeBannerBlock(Identifier, 0),
+            12806 => new LimeBannerBlock(Identifier, 1),
+            12807 => new LimeBannerBlock(Identifier, 2),
+            12808 => new LimeBannerBlock(Identifier, 3),
+            12809 => new LimeBannerBlock(Identifier, 4),
+            12810 => new LimeBannerBlock(Identifier, 5),
+            12811 => new LimeBannerBlock(Identifier, 6),
+            12812 => new LimeBannerBlock(Identifier, 7),
+            12813 => new LimeBannerBlock(Identifier, 8),
+            12814 => new LimeBannerBlock(Identifier, 9),
+            12815 => new LimeBannerBlock(Identifier, 10),
+            12816 => new LimeBannerBlock(Identifier, 11),
+            12817 => new LimeBannerBlock(Identifier, 12),
+            12818 => new LimeBannerBlock(Identifier, 13),
+            12819 => new LimeBannerBlock(Identifier, 14),
+            12820 => new LimeBannerBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PolishedBlackstoneBrickSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 892;
+    public int ProtocolId => 930;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record PolishedBlackstoneBrickSlabBlock(Identifier Identifier, SlabType T
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 20935,
-                    false => 20936,
+                    true => 22044,
+                    false => 22045,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 20937,
-                    false => 20938,
+                    true => 22046,
+                    false => 22047,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 20939,
-                    false => 20940,
+                    true => 22048,
+                    false => 22049,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record PolishedBlackstoneBrickSlabBlock(Identifier Identifier, SlabType T
     
     public IBlock WithState(uint state) {
         return state switch {
-            20935 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Top, true),
-            20936 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Top, false),
-            20937 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            20938 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            20939 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Double, true),
-            20940 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Double, false),
+            22044 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Top, true),
+            22045 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Top, false),
+            22046 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            22047 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            22048 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Double, true),
+            22049 => new PolishedBlackstoneBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

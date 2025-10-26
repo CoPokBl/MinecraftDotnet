@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PaleOakSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 574;
+    public int ProtocolId => 604;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record PaleOakSlabBlock(Identifier Identifier, SlabType Type, bool Waterl
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12093,
-                    false => 12094,
+                    true => 13170,
+                    false => 13171,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12095,
-                    false => 12096,
+                    true => 13172,
+                    false => 13173,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12097,
-                    false => 12098,
+                    true => 13174,
+                    false => 13175,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record PaleOakSlabBlock(Identifier Identifier, SlabType Type, bool Waterl
     
     public IBlock WithState(uint state) {
         return state switch {
-            12093 => new PaleOakSlabBlock(Identifier, SlabType.Top, true),
-            12094 => new PaleOakSlabBlock(Identifier, SlabType.Top, false),
-            12095 => new PaleOakSlabBlock(Identifier, SlabType.Bottom, true),
-            12096 => new PaleOakSlabBlock(Identifier, SlabType.Bottom, false),
-            12097 => new PaleOakSlabBlock(Identifier, SlabType.Double, true),
-            12098 => new PaleOakSlabBlock(Identifier, SlabType.Double, false),
+            13170 => new PaleOakSlabBlock(Identifier, SlabType.Top, true),
+            13171 => new PaleOakSlabBlock(Identifier, SlabType.Top, false),
+            13172 => new PaleOakSlabBlock(Identifier, SlabType.Bottom, true),
+            13173 => new PaleOakSlabBlock(Identifier, SlabType.Bottom, false),
+            13174 => new PaleOakSlabBlock(Identifier, SlabType.Double, true),
+            13175 => new PaleOakSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

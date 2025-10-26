@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:loom";
-    public int ProtocolId => 806;
+    public int ProtocolId => 836;
     public double Hardness => 2.5;
     public double ExplosionResistance => 2.5;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock {
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 19459,
-                Direction.South => 19460,
-                Direction.West => 19461,
-                Direction.East => 19462,
+                Direction.North => 20536,
+                Direction.South => 20537,
+                Direction.West => 20538,
+                Direction.East => 20539,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            19459 => new LoomBlock(Identifier, Direction.North),
-            19460 => new LoomBlock(Identifier, Direction.South),
-            19461 => new LoomBlock(Identifier, Direction.West),
-            19462 => new LoomBlock(Identifier, Direction.East),
+            20536 => new LoomBlock(Identifier, Direction.North),
+            20537 => new LoomBlock(Identifier, Direction.South),
+            20538 => new LoomBlock(Identifier, Direction.West),
+            20539 => new LoomBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock {
     public Identifier Category => "minecraft:redstone_ore";
-    public int ProtocolId => 258;
+    public int ProtocolId => 270;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record RedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock {
     public uint StateId {
         get {
             return Lit switch {
-                true => 5912,
-                false => 5913,
+                true => 6680,
+                false => 6681,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            5912 => new RedstoneOreBlock(Identifier, true),
-            5913 => new RedstoneOreBlock(Identifier, false),
+            6680 => new RedstoneOreBlock(Identifier, true),
+            6681 => new RedstoneOreBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

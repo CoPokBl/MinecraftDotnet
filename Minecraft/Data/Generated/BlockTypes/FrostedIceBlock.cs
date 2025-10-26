@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record FrostedIceBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:frosted_ice";
-    public int ProtocolId => 638;
+    public int ProtocolId => 668;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.98;
@@ -43,10 +43,10 @@ public record FrostedIceBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 13562,
-                1 => 13563,
-                2 => 13564,
-                3 => 13565,
+                0 => 14639,
+                1 => 14640,
+                2 => 14641,
+                3 => 14642,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -54,10 +54,10 @@ public record FrostedIceBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            13562 => new FrostedIceBlock(Identifier, 0),
-            13563 => new FrostedIceBlock(Identifier, 1),
-            13564 => new FrostedIceBlock(Identifier, 2),
-            13565 => new FrostedIceBlock(Identifier, 3),
+            14639 => new FrostedIceBlock(Identifier, 0),
+            14640 => new FrostedIceBlock(Identifier, 1),
+            14641 => new FrostedIceBlock(Identifier, 2),
+            14642 => new FrostedIceBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

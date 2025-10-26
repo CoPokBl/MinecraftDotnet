@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record AttachedMelonStemBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:attached_stem";
-    public int ProtocolId => 332;
+    public int ProtocolId => 362;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record AttachedMelonStemBlock(Identifier Identifier, Direction Facing) : 
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 7060,
-                Direction.South => 7061,
-                Direction.West => 7062,
-                Direction.East => 7063,
+                Direction.North => 8137,
+                Direction.South => 8138,
+                Direction.West => 8139,
+                Direction.East => 8140,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record AttachedMelonStemBlock(Identifier Identifier, Direction Facing) : 
     
     public IBlock WithState(uint state) {
         return state switch {
-            7060 => new AttachedMelonStemBlock(Identifier, Direction.North),
-            7061 => new AttachedMelonStemBlock(Identifier, Direction.South),
-            7062 => new AttachedMelonStemBlock(Identifier, Direction.West),
-            7063 => new AttachedMelonStemBlock(Identifier, Direction.East),
+            8137 => new AttachedMelonStemBlock(Identifier, Direction.North),
+            8138 => new AttachedMelonStemBlock(Identifier, Direction.South),
+            8139 => new AttachedMelonStemBlock(Identifier, Direction.West),
+            8140 => new AttachedMelonStemBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

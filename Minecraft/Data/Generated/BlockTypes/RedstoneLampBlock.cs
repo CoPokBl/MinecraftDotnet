@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RedstoneLampBlock(Identifier Identifier, bool Lit) : IBlock {
     public Identifier Category => "minecraft:redstone_lamp";
-    public int ProtocolId => 364;
+    public int ProtocolId => 394;
     public double Hardness => 0.3;
     public double ExplosionResistance => 0.3;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record RedstoneLampBlock(Identifier Identifier, bool Lit) : IBlock {
     public uint StateId {
         get {
             return Lit switch {
-                true => 8201,
-                false => 8202,
+                true => 9278,
+                false => 9279,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            8201 => new RedstoneLampBlock(Identifier, true),
-            8202 => new RedstoneLampBlock(Identifier, false),
+            9278 => new RedstoneLampBlock(Identifier, true),
+            9279 => new RedstoneLampBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
     public Identifier Category => "minecraft:fence";
-    public int ProtocolId => 849;
+    public int ProtocolId => 887;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -47,44 +47,44 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 19739,
-                                false => 19740,
+                                true => 20848,
+                                false => 20849,
                             },
                             false => West switch {
-                                true => 19741,
-                                false => 19742,
+                                true => 20850,
+                                false => 20851,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 19743,
-                                false => 19744,
+                                true => 20852,
+                                false => 20853,
                             },
                             false => West switch {
-                                true => 19745,
-                                false => 19746,
+                                true => 20854,
+                                false => 20855,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 19747,
-                                false => 19748,
+                                true => 20856,
+                                false => 20857,
                             },
                             false => West switch {
-                                true => 19749,
-                                false => 19750,
+                                true => 20858,
+                                false => 20859,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 19751,
-                                false => 19752,
+                                true => 20860,
+                                false => 20861,
                             },
                             false => West switch {
-                                true => 19753,
-                                false => 19754,
+                                true => 20862,
+                                false => 20863,
                             },
                         },
                     },
@@ -93,44 +93,44 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 19755,
-                                false => 19756,
+                                true => 20864,
+                                false => 20865,
                             },
                             false => West switch {
-                                true => 19757,
-                                false => 19758,
+                                true => 20866,
+                                false => 20867,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 19759,
-                                false => 19760,
+                                true => 20868,
+                                false => 20869,
                             },
                             false => West switch {
-                                true => 19761,
-                                false => 19762,
+                                true => 20870,
+                                false => 20871,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 19763,
-                                false => 19764,
+                                true => 20872,
+                                false => 20873,
                             },
                             false => West switch {
-                                true => 19765,
-                                false => 19766,
+                                true => 20874,
+                                false => 20875,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 19767,
-                                false => 19768,
+                                true => 20876,
+                                false => 20877,
                             },
                             false => West switch {
-                                true => 19769,
-                                false => 19770,
+                                true => 20878,
+                                false => 20879,
                             },
                         },
                     },
@@ -141,38 +141,38 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            19739 => new CrimsonFenceBlock(Identifier, true, true, true, true, true),
-            19740 => new CrimsonFenceBlock(Identifier, true, true, true, true, false),
-            19741 => new CrimsonFenceBlock(Identifier, true, true, true, false, true),
-            19742 => new CrimsonFenceBlock(Identifier, true, true, true, false, false),
-            19743 => new CrimsonFenceBlock(Identifier, true, true, false, true, true),
-            19744 => new CrimsonFenceBlock(Identifier, true, true, false, true, false),
-            19745 => new CrimsonFenceBlock(Identifier, true, true, false, false, true),
-            19746 => new CrimsonFenceBlock(Identifier, true, true, false, false, false),
-            19747 => new CrimsonFenceBlock(Identifier, true, false, true, true, true),
-            19748 => new CrimsonFenceBlock(Identifier, true, false, true, true, false),
-            19749 => new CrimsonFenceBlock(Identifier, true, false, true, false, true),
-            19750 => new CrimsonFenceBlock(Identifier, true, false, true, false, false),
-            19751 => new CrimsonFenceBlock(Identifier, true, false, false, true, true),
-            19752 => new CrimsonFenceBlock(Identifier, true, false, false, true, false),
-            19753 => new CrimsonFenceBlock(Identifier, true, false, false, false, true),
-            19754 => new CrimsonFenceBlock(Identifier, true, false, false, false, false),
-            19755 => new CrimsonFenceBlock(Identifier, false, true, true, true, true),
-            19756 => new CrimsonFenceBlock(Identifier, false, true, true, true, false),
-            19757 => new CrimsonFenceBlock(Identifier, false, true, true, false, true),
-            19758 => new CrimsonFenceBlock(Identifier, false, true, true, false, false),
-            19759 => new CrimsonFenceBlock(Identifier, false, true, false, true, true),
-            19760 => new CrimsonFenceBlock(Identifier, false, true, false, true, false),
-            19761 => new CrimsonFenceBlock(Identifier, false, true, false, false, true),
-            19762 => new CrimsonFenceBlock(Identifier, false, true, false, false, false),
-            19763 => new CrimsonFenceBlock(Identifier, false, false, true, true, true),
-            19764 => new CrimsonFenceBlock(Identifier, false, false, true, true, false),
-            19765 => new CrimsonFenceBlock(Identifier, false, false, true, false, true),
-            19766 => new CrimsonFenceBlock(Identifier, false, false, true, false, false),
-            19767 => new CrimsonFenceBlock(Identifier, false, false, false, true, true),
-            19768 => new CrimsonFenceBlock(Identifier, false, false, false, true, false),
-            19769 => new CrimsonFenceBlock(Identifier, false, false, false, false, true),
-            19770 => new CrimsonFenceBlock(Identifier, false, false, false, false, false),
+            20848 => new CrimsonFenceBlock(Identifier, true, true, true, true, true),
+            20849 => new CrimsonFenceBlock(Identifier, true, true, true, true, false),
+            20850 => new CrimsonFenceBlock(Identifier, true, true, true, false, true),
+            20851 => new CrimsonFenceBlock(Identifier, true, true, true, false, false),
+            20852 => new CrimsonFenceBlock(Identifier, true, true, false, true, true),
+            20853 => new CrimsonFenceBlock(Identifier, true, true, false, true, false),
+            20854 => new CrimsonFenceBlock(Identifier, true, true, false, false, true),
+            20855 => new CrimsonFenceBlock(Identifier, true, true, false, false, false),
+            20856 => new CrimsonFenceBlock(Identifier, true, false, true, true, true),
+            20857 => new CrimsonFenceBlock(Identifier, true, false, true, true, false),
+            20858 => new CrimsonFenceBlock(Identifier, true, false, true, false, true),
+            20859 => new CrimsonFenceBlock(Identifier, true, false, true, false, false),
+            20860 => new CrimsonFenceBlock(Identifier, true, false, false, true, true),
+            20861 => new CrimsonFenceBlock(Identifier, true, false, false, true, false),
+            20862 => new CrimsonFenceBlock(Identifier, true, false, false, false, true),
+            20863 => new CrimsonFenceBlock(Identifier, true, false, false, false, false),
+            20864 => new CrimsonFenceBlock(Identifier, false, true, true, true, true),
+            20865 => new CrimsonFenceBlock(Identifier, false, true, true, true, false),
+            20866 => new CrimsonFenceBlock(Identifier, false, true, true, false, true),
+            20867 => new CrimsonFenceBlock(Identifier, false, true, true, false, false),
+            20868 => new CrimsonFenceBlock(Identifier, false, true, false, true, true),
+            20869 => new CrimsonFenceBlock(Identifier, false, true, false, true, false),
+            20870 => new CrimsonFenceBlock(Identifier, false, true, false, false, true),
+            20871 => new CrimsonFenceBlock(Identifier, false, true, false, false, false),
+            20872 => new CrimsonFenceBlock(Identifier, false, false, true, true, true),
+            20873 => new CrimsonFenceBlock(Identifier, false, false, true, true, false),
+            20874 => new CrimsonFenceBlock(Identifier, false, false, true, false, true),
+            20875 => new CrimsonFenceBlock(Identifier, false, false, true, false, false),
+            20876 => new CrimsonFenceBlock(Identifier, false, false, false, true, true),
+            20877 => new CrimsonFenceBlock(Identifier, false, false, false, true, false),
+            20878 => new CrimsonFenceBlock(Identifier, false, false, false, false, true),
+            20879 => new CrimsonFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

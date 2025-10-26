@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
     public Identifier Category => "minecraft:door";
-    public int ProtocolId => 860;
+    public int ProtocolId => 898;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -47,22 +47,22 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 20267,
-                                false => 20268,
+                                true => 21376,
+                                false => 21377,
                             },
                             false => Powered switch {
-                                true => 20269,
-                                false => 20270,
+                                true => 21378,
+                                false => 21379,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 20271,
-                                false => 20272,
+                                true => 21380,
+                                false => 21381,
                             },
                             false => Powered switch {
-                                true => 20273,
-                                false => 20274,
+                                true => 21382,
+                                false => 21383,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -70,22 +70,22 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 20275,
-                                false => 20276,
+                                true => 21384,
+                                false => 21385,
                             },
                             false => Powered switch {
-                                true => 20277,
-                                false => 20278,
+                                true => 21386,
+                                false => 21387,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 20279,
-                                false => 20280,
+                                true => 21388,
+                                false => 21389,
                             },
                             false => Powered switch {
-                                true => 20281,
-                                false => 20282,
+                                true => 21390,
+                                false => 21391,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -96,22 +96,22 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 20283,
-                                false => 20284,
+                                true => 21392,
+                                false => 21393,
                             },
                             false => Powered switch {
-                                true => 20285,
-                                false => 20286,
+                                true => 21394,
+                                false => 21395,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 20287,
-                                false => 20288,
+                                true => 21396,
+                                false => 21397,
                             },
                             false => Powered switch {
-                                true => 20289,
-                                false => 20290,
+                                true => 21398,
+                                false => 21399,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -119,22 +119,22 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 20291,
-                                false => 20292,
+                                true => 21400,
+                                false => 21401,
                             },
                             false => Powered switch {
-                                true => 20293,
-                                false => 20294,
+                                true => 21402,
+                                false => 21403,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 20295,
-                                false => 20296,
+                                true => 21404,
+                                false => 21405,
                             },
                             false => Powered switch {
-                                true => 20297,
-                                false => 20298,
+                                true => 21406,
+                                false => 21407,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -145,22 +145,22 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 20299,
-                                false => 20300,
+                                true => 21408,
+                                false => 21409,
                             },
                             false => Powered switch {
-                                true => 20301,
-                                false => 20302,
+                                true => 21410,
+                                false => 21411,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 20303,
-                                false => 20304,
+                                true => 21412,
+                                false => 21413,
                             },
                             false => Powered switch {
-                                true => 20305,
-                                false => 20306,
+                                true => 21414,
+                                false => 21415,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -168,22 +168,22 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 20307,
-                                false => 20308,
+                                true => 21416,
+                                false => 21417,
                             },
                             false => Powered switch {
-                                true => 20309,
-                                false => 20310,
+                                true => 21418,
+                                false => 21419,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 20311,
-                                false => 20312,
+                                true => 21420,
+                                false => 21421,
                             },
                             false => Powered switch {
-                                true => 20313,
-                                false => 20314,
+                                true => 21422,
+                                false => 21423,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -194,22 +194,22 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 20315,
-                                false => 20316,
+                                true => 21424,
+                                false => 21425,
                             },
                             false => Powered switch {
-                                true => 20317,
-                                false => 20318,
+                                true => 21426,
+                                false => 21427,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 20319,
-                                false => 20320,
+                                true => 21428,
+                                false => 21429,
                             },
                             false => Powered switch {
-                                true => 20321,
-                                false => 20322,
+                                true => 21430,
+                                false => 21431,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -217,22 +217,22 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 20323,
-                                false => 20324,
+                                true => 21432,
+                                false => 21433,
                             },
                             false => Powered switch {
-                                true => 20325,
-                                false => 20326,
+                                true => 21434,
+                                false => 21435,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 20327,
-                                false => 20328,
+                                true => 21436,
+                                false => 21437,
                             },
                             false => Powered switch {
-                                true => 20329,
-                                false => 20330,
+                                true => 21438,
+                                false => 21439,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -246,70 +246,70 @@ public record WarpedDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
     
     public IBlock WithState(uint state) {
         return state switch {
-            20267 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
-            20268 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
-            20269 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, true),
-            20270 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, false),
-            20271 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, true),
-            20272 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, false),
-            20273 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, true),
-            20274 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, false),
-            20275 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, true),
-            20276 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, false),
-            20277 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, true),
-            20278 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, false),
-            20279 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, true),
-            20280 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, false),
-            20281 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, true),
-            20282 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, false),
-            20283 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, true),
-            20284 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, false),
-            20285 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, true),
-            20286 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, false),
-            20287 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, true),
-            20288 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, false),
-            20289 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, true),
-            20290 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, false),
-            20291 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, true),
-            20292 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, false),
-            20293 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, true),
-            20294 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, false),
-            20295 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, true),
-            20296 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, false),
-            20297 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, true),
-            20298 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, false),
-            20299 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, true),
-            20300 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, false),
-            20301 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, true),
-            20302 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, false),
-            20303 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, true),
-            20304 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, false),
-            20305 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, true),
-            20306 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, false),
-            20307 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, true),
-            20308 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, false),
-            20309 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, true),
-            20310 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, false),
-            20311 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, true),
-            20312 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, false),
-            20313 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, true),
-            20314 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, false),
-            20315 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, true),
-            20316 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, false),
-            20317 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, true),
-            20318 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, false),
-            20319 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, true),
-            20320 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, false),
-            20321 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, true),
-            20322 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, false),
-            20323 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, true),
-            20324 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, false),
-            20325 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, true),
-            20326 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, false),
-            20327 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, true),
-            20328 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, false),
-            20329 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
-            20330 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
+            21376 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
+            21377 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
+            21378 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, true),
+            21379 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, false),
+            21380 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, true),
+            21381 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, false),
+            21382 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, true),
+            21383 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, false),
+            21384 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, true),
+            21385 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, false),
+            21386 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, true),
+            21387 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, false),
+            21388 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, true),
+            21389 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, false),
+            21390 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, true),
+            21391 => new WarpedDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, false),
+            21392 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, true),
+            21393 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, false),
+            21394 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, true),
+            21395 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, false),
+            21396 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, true),
+            21397 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, false),
+            21398 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, true),
+            21399 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, false),
+            21400 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, true),
+            21401 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, false),
+            21402 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, true),
+            21403 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, false),
+            21404 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, true),
+            21405 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, false),
+            21406 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, true),
+            21407 => new WarpedDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, false),
+            21408 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, true),
+            21409 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, false),
+            21410 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, true),
+            21411 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, false),
+            21412 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, true),
+            21413 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, false),
+            21414 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, true),
+            21415 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, false),
+            21416 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, true),
+            21417 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, false),
+            21418 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, true),
+            21419 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, false),
+            21420 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, true),
+            21421 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, false),
+            21422 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, true),
+            21423 => new WarpedDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, false),
+            21424 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, true),
+            21425 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, false),
+            21426 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, true),
+            21427 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, false),
+            21428 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, true),
+            21429 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, false),
+            21430 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, true),
+            21431 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, false),
+            21432 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, true),
+            21433 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, false),
+            21434 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, true),
+            21435 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, false),
+            21436 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, true),
+            21437 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, false),
+            21438 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
+            21439 => new WarpedDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

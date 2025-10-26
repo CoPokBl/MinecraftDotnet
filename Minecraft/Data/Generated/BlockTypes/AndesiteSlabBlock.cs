@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record AndesiteSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 788;
+    public int ProtocolId => 818;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record AndesiteSlabBlock(Identifier Identifier, SlabType Type, bool Water
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15191,
-                    false => 15192,
+                    true => 16268,
+                    false => 16269,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15193,
-                    false => 15194,
+                    true => 16270,
+                    false => 16271,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15195,
-                    false => 15196,
+                    true => 16272,
+                    false => 16273,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record AndesiteSlabBlock(Identifier Identifier, SlabType Type, bool Water
     
     public IBlock WithState(uint state) {
         return state switch {
-            15191 => new AndesiteSlabBlock(Identifier, SlabType.Top, true),
-            15192 => new AndesiteSlabBlock(Identifier, SlabType.Top, false),
-            15193 => new AndesiteSlabBlock(Identifier, SlabType.Bottom, true),
-            15194 => new AndesiteSlabBlock(Identifier, SlabType.Bottom, false),
-            15195 => new AndesiteSlabBlock(Identifier, SlabType.Double, true),
-            15196 => new AndesiteSlabBlock(Identifier, SlabType.Double, false),
+            16268 => new AndesiteSlabBlock(Identifier, SlabType.Top, true),
+            16269 => new AndesiteSlabBlock(Identifier, SlabType.Top, false),
+            16270 => new AndesiteSlabBlock(Identifier, SlabType.Bottom, true),
+            16271 => new AndesiteSlabBlock(Identifier, SlabType.Bottom, false),
+            16272 => new AndesiteSlabBlock(Identifier, SlabType.Double, true),
+            16273 => new AndesiteSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

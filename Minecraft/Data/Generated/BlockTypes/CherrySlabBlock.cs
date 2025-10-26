@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CherrySlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 572;
+    public int ProtocolId => 602;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record CherrySlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12081,
-                    false => 12082,
+                    true => 13158,
+                    false => 13159,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12083,
-                    false => 12084,
+                    true => 13160,
+                    false => 13161,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12085,
-                    false => 12086,
+                    true => 13162,
+                    false => 13163,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record CherrySlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12081 => new CherrySlabBlock(Identifier, SlabType.Top, true),
-            12082 => new CherrySlabBlock(Identifier, SlabType.Top, false),
-            12083 => new CherrySlabBlock(Identifier, SlabType.Bottom, true),
-            12084 => new CherrySlabBlock(Identifier, SlabType.Bottom, false),
-            12085 => new CherrySlabBlock(Identifier, SlabType.Double, true),
-            12086 => new CherrySlabBlock(Identifier, SlabType.Double, false),
+            13158 => new CherrySlabBlock(Identifier, SlabType.Top, true),
+            13159 => new CherrySlabBlock(Identifier, SlabType.Top, false),
+            13160 => new CherrySlabBlock(Identifier, SlabType.Bottom, true),
+            13161 => new CherrySlabBlock(Identifier, SlabType.Bottom, false),
+            13162 => new CherrySlabBlock(Identifier, SlabType.Double, true),
+            13163 => new CherrySlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

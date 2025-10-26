@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     public Identifier Category => "minecraft:cake";
-    public int ProtocolId => 283;
+    public int ProtocolId => 297;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -43,13 +43,13 @@ public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     public uint StateId {
         get {
             return Bites switch {
-                0 => 6053,
-                1 => 6054,
-                2 => 6055,
-                3 => 6056,
-                4 => 6057,
-                5 => 6058,
-                6 => 6059,
+                0 => 6826,
+                1 => 6827,
+                2 => 6828,
+                3 => 6829,
+                4 => 6830,
+                5 => 6831,
+                6 => 6832,
                 _ => throw new ArgumentOutOfRangeException(nameof(Bites), Bites, "Unknown value for property bites.")
             };
         }
@@ -57,13 +57,13 @@ public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            6053 => new CakeBlock(Identifier, 0),
-            6054 => new CakeBlock(Identifier, 1),
-            6055 => new CakeBlock(Identifier, 2),
-            6056 => new CakeBlock(Identifier, 3),
-            6057 => new CakeBlock(Identifier, 4),
-            6058 => new CakeBlock(Identifier, 5),
-            6059 => new CakeBlock(Identifier, 6),
+            6826 => new CakeBlock(Identifier, 0),
+            6827 => new CakeBlock(Identifier, 1),
+            6828 => new CakeBlock(Identifier, 2),
+            6829 => new CakeBlock(Identifier, 3),
+            6830 => new CakeBlock(Identifier, 4),
+            6831 => new CakeBlock(Identifier, 5),
+            6832 => new CakeBlock(Identifier, 6),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

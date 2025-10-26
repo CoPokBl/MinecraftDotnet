@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ExposedCutCopperSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:weathering_copper_slab";
-    public int ProtocolId => 991;
+    public int ProtocolId => 1029;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record ExposedCutCopperSlabBlock(Identifier Identifier, SlabType Type, bo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 24348,
-                    false => 24349,
+                    true => 25457,
+                    false => 25458,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 24350,
-                    false => 24351,
+                    true => 25459,
+                    false => 25460,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 24352,
-                    false => 24353,
+                    true => 25461,
+                    false => 25462,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record ExposedCutCopperSlabBlock(Identifier Identifier, SlabType Type, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            24348 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Top, true),
-            24349 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Top, false),
-            24350 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Bottom, true),
-            24351 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Bottom, false),
-            24352 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Double, true),
-            24353 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Double, false),
+            25457 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Top, true),
+            25458 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Top, false),
+            25459 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Bottom, true),
+            25460 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Bottom, false),
+            25461 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Double, true),
+            25462 => new ExposedCutCopperSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

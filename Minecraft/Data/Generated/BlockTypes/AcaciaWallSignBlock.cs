@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record AcaciaWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:wall_sign";
-    public int ProtocolId => 214;
+    public int ProtocolId => 226;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record AcaciaWallSignBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 4882,
-                    false => 4883,
+                    true => 5650,
+                    false => 5651,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 4884,
-                    false => 4885,
+                    true => 5652,
+                    false => 5653,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 4886,
-                    false => 4887,
+                    true => 5654,
+                    false => 5655,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 4888,
-                    false => 4889,
+                    true => 5656,
+                    false => 5657,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record AcaciaWallSignBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            4882 => new AcaciaWallSignBlock(Identifier, Direction.North, true),
-            4883 => new AcaciaWallSignBlock(Identifier, Direction.North, false),
-            4884 => new AcaciaWallSignBlock(Identifier, Direction.South, true),
-            4885 => new AcaciaWallSignBlock(Identifier, Direction.South, false),
-            4886 => new AcaciaWallSignBlock(Identifier, Direction.West, true),
-            4887 => new AcaciaWallSignBlock(Identifier, Direction.West, false),
-            4888 => new AcaciaWallSignBlock(Identifier, Direction.East, true),
-            4889 => new AcaciaWallSignBlock(Identifier, Direction.East, false),
+            5650 => new AcaciaWallSignBlock(Identifier, Direction.North, true),
+            5651 => new AcaciaWallSignBlock(Identifier, Direction.North, false),
+            5652 => new AcaciaWallSignBlock(Identifier, Direction.South, true),
+            5653 => new AcaciaWallSignBlock(Identifier, Direction.South, false),
+            5654 => new AcaciaWallSignBlock(Identifier, Direction.West, true),
+            5655 => new AcaciaWallSignBlock(Identifier, Direction.West, false),
+            5656 => new AcaciaWallSignBlock(Identifier, Direction.East, true),
+            5657 => new AcaciaWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

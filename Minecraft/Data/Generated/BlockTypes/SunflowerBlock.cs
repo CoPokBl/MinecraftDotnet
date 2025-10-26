@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SunflowerBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     public Identifier Category => "minecraft:tall_flower";
-    public int ProtocolId => 525;
+    public int ProtocolId => 555;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,8 +43,8 @@ public record SunflowerBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     public uint StateId {
         get {
             return Half switch {
-                BlockHalf.Upper => 11636,
-                BlockHalf.Lower => 11637,
+                BlockHalf.Upper => 12713,
+                BlockHalf.Lower => 12714,
                 _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
             };
         }
@@ -52,8 +52,8 @@ public record SunflowerBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            11636 => new SunflowerBlock(Identifier, BlockHalf.Upper),
-            11637 => new SunflowerBlock(Identifier, BlockHalf.Lower),
+            12713 => new SunflowerBlock(Identifier, BlockHalf.Upper),
+            12714 => new SunflowerBlock(Identifier, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

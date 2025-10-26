@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BambooDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
     public Identifier Category => "minecraft:door";
-    public int ProtocolId => 622;
+    public int ProtocolId => 652;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -47,22 +47,22 @@ public record BambooDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 13293,
-                                false => 13294,
+                                true => 14370,
+                                false => 14371,
                             },
                             false => Powered switch {
-                                true => 13295,
-                                false => 13296,
+                                true => 14372,
+                                false => 14373,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 13297,
-                                false => 13298,
+                                true => 14374,
+                                false => 14375,
                             },
                             false => Powered switch {
-                                true => 13299,
-                                false => 13300,
+                                true => 14376,
+                                false => 14377,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -70,22 +70,22 @@ public record BambooDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 13301,
-                                false => 13302,
+                                true => 14378,
+                                false => 14379,
                             },
                             false => Powered switch {
-                                true => 13303,
-                                false => 13304,
+                                true => 14380,
+                                false => 14381,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 13305,
-                                false => 13306,
+                                true => 14382,
+                                false => 14383,
                             },
                             false => Powered switch {
-                                true => 13307,
-                                false => 13308,
+                                true => 14384,
+                                false => 14385,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -96,22 +96,22 @@ public record BambooDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 13309,
-                                false => 13310,
+                                true => 14386,
+                                false => 14387,
                             },
                             false => Powered switch {
-                                true => 13311,
-                                false => 13312,
+                                true => 14388,
+                                false => 14389,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 13313,
-                                false => 13314,
+                                true => 14390,
+                                false => 14391,
                             },
                             false => Powered switch {
-                                true => 13315,
-                                false => 13316,
+                                true => 14392,
+                                false => 14393,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -119,22 +119,22 @@ public record BambooDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 13317,
-                                false => 13318,
+                                true => 14394,
+                                false => 14395,
                             },
                             false => Powered switch {
-                                true => 13319,
-                                false => 13320,
+                                true => 14396,
+                                false => 14397,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 13321,
-                                false => 13322,
+                                true => 14398,
+                                false => 14399,
                             },
                             false => Powered switch {
-                                true => 13323,
-                                false => 13324,
+                                true => 14400,
+                                false => 14401,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -145,22 +145,22 @@ public record BambooDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 13325,
-                                false => 13326,
+                                true => 14402,
+                                false => 14403,
                             },
                             false => Powered switch {
-                                true => 13327,
-                                false => 13328,
+                                true => 14404,
+                                false => 14405,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 13329,
-                                false => 13330,
+                                true => 14406,
+                                false => 14407,
                             },
                             false => Powered switch {
-                                true => 13331,
-                                false => 13332,
+                                true => 14408,
+                                false => 14409,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -168,22 +168,22 @@ public record BambooDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 13333,
-                                false => 13334,
+                                true => 14410,
+                                false => 14411,
                             },
                             false => Powered switch {
-                                true => 13335,
-                                false => 13336,
+                                true => 14412,
+                                false => 14413,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 13337,
-                                false => 13338,
+                                true => 14414,
+                                false => 14415,
                             },
                             false => Powered switch {
-                                true => 13339,
-                                false => 13340,
+                                true => 14416,
+                                false => 14417,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -194,22 +194,22 @@ public record BambooDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 13341,
-                                false => 13342,
+                                true => 14418,
+                                false => 14419,
                             },
                             false => Powered switch {
-                                true => 13343,
-                                false => 13344,
+                                true => 14420,
+                                false => 14421,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 13345,
-                                false => 13346,
+                                true => 14422,
+                                false => 14423,
                             },
                             false => Powered switch {
-                                true => 13347,
-                                false => 13348,
+                                true => 14424,
+                                false => 14425,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -217,22 +217,22 @@ public record BambooDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 13349,
-                                false => 13350,
+                                true => 14426,
+                                false => 14427,
                             },
                             false => Powered switch {
-                                true => 13351,
-                                false => 13352,
+                                true => 14428,
+                                false => 14429,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 13353,
-                                false => 13354,
+                                true => 14430,
+                                false => 14431,
                             },
                             false => Powered switch {
-                                true => 13355,
-                                false => 13356,
+                                true => 14432,
+                                false => 14433,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -246,70 +246,70 @@ public record BambooDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
     
     public IBlock WithState(uint state) {
         return state switch {
-            13293 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
-            13294 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
-            13295 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, true),
-            13296 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, false),
-            13297 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, true),
-            13298 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, false),
-            13299 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, true),
-            13300 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, false),
-            13301 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, true),
-            13302 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, false),
-            13303 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, true),
-            13304 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, false),
-            13305 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, true),
-            13306 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, false),
-            13307 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, true),
-            13308 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, false),
-            13309 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, true),
-            13310 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, false),
-            13311 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, true),
-            13312 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, false),
-            13313 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, true),
-            13314 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, false),
-            13315 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, true),
-            13316 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, false),
-            13317 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, true),
-            13318 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, false),
-            13319 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, true),
-            13320 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, false),
-            13321 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, true),
-            13322 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, false),
-            13323 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, true),
-            13324 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, false),
-            13325 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, true),
-            13326 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, false),
-            13327 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, true),
-            13328 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, false),
-            13329 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, true),
-            13330 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, false),
-            13331 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, true),
-            13332 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, false),
-            13333 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, true),
-            13334 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, false),
-            13335 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, true),
-            13336 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, false),
-            13337 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, true),
-            13338 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, false),
-            13339 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, true),
-            13340 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, false),
-            13341 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, true),
-            13342 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, false),
-            13343 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, true),
-            13344 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, false),
-            13345 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, true),
-            13346 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, false),
-            13347 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, true),
-            13348 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, false),
-            13349 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, true),
-            13350 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, false),
-            13351 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, true),
-            13352 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, false),
-            13353 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, true),
-            13354 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, false),
-            13355 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
-            13356 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
+            14370 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
+            14371 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
+            14372 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, true),
+            14373 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, false),
+            14374 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, true),
+            14375 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, false),
+            14376 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, true),
+            14377 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, false),
+            14378 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, true),
+            14379 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, false),
+            14380 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, true),
+            14381 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, false),
+            14382 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, true),
+            14383 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, false),
+            14384 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, true),
+            14385 => new BambooDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, false),
+            14386 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, true),
+            14387 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, false),
+            14388 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, true),
+            14389 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, false),
+            14390 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, true),
+            14391 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, false),
+            14392 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, true),
+            14393 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, false),
+            14394 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, true),
+            14395 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, false),
+            14396 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, true),
+            14397 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, false),
+            14398 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, true),
+            14399 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, false),
+            14400 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, true),
+            14401 => new BambooDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, false),
+            14402 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, true),
+            14403 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, false),
+            14404 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, true),
+            14405 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, false),
+            14406 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, true),
+            14407 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, false),
+            14408 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, true),
+            14409 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, false),
+            14410 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, true),
+            14411 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, false),
+            14412 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, true),
+            14413 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, false),
+            14414 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, true),
+            14415 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, false),
+            14416 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, true),
+            14417 => new BambooDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, false),
+            14418 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, true),
+            14419 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, false),
+            14420 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, true),
+            14421 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, false),
+            14422 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, true),
+            14423 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, false),
+            14424 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, true),
+            14425 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, false),
+            14426 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, true),
+            14427 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, false),
+            14428 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, true),
+            14429 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, false),
+            14430 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, true),
+            14431 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, false),
+            14432 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
+            14433 => new BambooDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

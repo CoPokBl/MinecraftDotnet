@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CherryWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:wall_sign";
-    public int ProtocolId => 215;
+    public int ProtocolId => 227;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record CherryWallSignBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 4890,
-                    false => 4891,
+                    true => 5658,
+                    false => 5659,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 4892,
-                    false => 4893,
+                    true => 5660,
+                    false => 5661,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 4894,
-                    false => 4895,
+                    true => 5662,
+                    false => 5663,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 4896,
-                    false => 4897,
+                    true => 5664,
+                    false => 5665,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record CherryWallSignBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            4890 => new CherryWallSignBlock(Identifier, Direction.North, true),
-            4891 => new CherryWallSignBlock(Identifier, Direction.North, false),
-            4892 => new CherryWallSignBlock(Identifier, Direction.South, true),
-            4893 => new CherryWallSignBlock(Identifier, Direction.South, false),
-            4894 => new CherryWallSignBlock(Identifier, Direction.West, true),
-            4895 => new CherryWallSignBlock(Identifier, Direction.West, false),
-            4896 => new CherryWallSignBlock(Identifier, Direction.East, true),
-            4897 => new CherryWallSignBlock(Identifier, Direction.East, false),
+            5658 => new CherryWallSignBlock(Identifier, Direction.North, true),
+            5659 => new CherryWallSignBlock(Identifier, Direction.North, false),
+            5660 => new CherryWallSignBlock(Identifier, Direction.South, true),
+            5661 => new CherryWallSignBlock(Identifier, Direction.South, false),
+            5662 => new CherryWallSignBlock(Identifier, Direction.West, true),
+            5663 => new CherryWallSignBlock(Identifier, Direction.West, false),
+            5664 => new CherryWallSignBlock(Identifier, Direction.East, true),
+            5665 => new CherryWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

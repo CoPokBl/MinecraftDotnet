@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BlastFurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : IBlock {
     public Identifier Category => "minecraft:blast_furnace";
-    public int ProtocolId => 809;
+    public int ProtocolId => 839;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record BlastFurnaceBlock(Identifier Identifier, Direction Facing, bool Li
         get {
             return Facing switch {
                 Direction.North => Lit switch {
-                    true => 19483,
-                    false => 19484,
+                    true => 20560,
+                    false => 20561,
                 },
                 Direction.South => Lit switch {
-                    true => 19485,
-                    false => 19486,
+                    true => 20562,
+                    false => 20563,
                 },
                 Direction.West => Lit switch {
-                    true => 19487,
-                    false => 19488,
+                    true => 20564,
+                    false => 20565,
                 },
                 Direction.East => Lit switch {
-                    true => 19489,
-                    false => 19490,
+                    true => 20566,
+                    false => 20567,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record BlastFurnaceBlock(Identifier Identifier, Direction Facing, bool Li
     
     public IBlock WithState(uint state) {
         return state switch {
-            19483 => new BlastFurnaceBlock(Identifier, Direction.North, true),
-            19484 => new BlastFurnaceBlock(Identifier, Direction.North, false),
-            19485 => new BlastFurnaceBlock(Identifier, Direction.South, true),
-            19486 => new BlastFurnaceBlock(Identifier, Direction.South, false),
-            19487 => new BlastFurnaceBlock(Identifier, Direction.West, true),
-            19488 => new BlastFurnaceBlock(Identifier, Direction.West, false),
-            19489 => new BlastFurnaceBlock(Identifier, Direction.East, true),
-            19490 => new BlastFurnaceBlock(Identifier, Direction.East, false),
+            20560 => new BlastFurnaceBlock(Identifier, Direction.North, true),
+            20561 => new BlastFurnaceBlock(Identifier, Direction.North, false),
+            20562 => new BlastFurnaceBlock(Identifier, Direction.South, true),
+            20563 => new BlastFurnaceBlock(Identifier, Direction.South, false),
+            20564 => new BlastFurnaceBlock(Identifier, Direction.West, true),
+            20565 => new BlastFurnaceBlock(Identifier, Direction.West, false),
+            20566 => new BlastFurnaceBlock(Identifier, Direction.East, true),
+            20567 => new BlastFurnaceBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

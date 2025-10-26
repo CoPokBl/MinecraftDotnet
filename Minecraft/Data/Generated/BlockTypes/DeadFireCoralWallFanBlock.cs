@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DeadFireCoralWallFanBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:base_coral_wall_fan";
-    public int ProtocolId => 749;
+    public int ProtocolId => 779;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record DeadFireCoralWallFanBlock(Identifier Identifier, Direction Facing,
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 13932,
-                    false => 13933,
+                    true => 15009,
+                    false => 15010,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 13934,
-                    false => 13935,
+                    true => 15011,
+                    false => 15012,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 13936,
-                    false => 13937,
+                    true => 15013,
+                    false => 15014,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 13938,
-                    false => 13939,
+                    true => 15015,
+                    false => 15016,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record DeadFireCoralWallFanBlock(Identifier Identifier, Direction Facing,
     
     public IBlock WithState(uint state) {
         return state switch {
-            13932 => new DeadFireCoralWallFanBlock(Identifier, Direction.North, true),
-            13933 => new DeadFireCoralWallFanBlock(Identifier, Direction.North, false),
-            13934 => new DeadFireCoralWallFanBlock(Identifier, Direction.South, true),
-            13935 => new DeadFireCoralWallFanBlock(Identifier, Direction.South, false),
-            13936 => new DeadFireCoralWallFanBlock(Identifier, Direction.West, true),
-            13937 => new DeadFireCoralWallFanBlock(Identifier, Direction.West, false),
-            13938 => new DeadFireCoralWallFanBlock(Identifier, Direction.East, true),
-            13939 => new DeadFireCoralWallFanBlock(Identifier, Direction.East, false),
+            15009 => new DeadFireCoralWallFanBlock(Identifier, Direction.North, true),
+            15010 => new DeadFireCoralWallFanBlock(Identifier, Direction.North, false),
+            15011 => new DeadFireCoralWallFanBlock(Identifier, Direction.South, true),
+            15012 => new DeadFireCoralWallFanBlock(Identifier, Direction.South, false),
+            15013 => new DeadFireCoralWallFanBlock(Identifier, Direction.West, true),
+            15014 => new DeadFireCoralWallFanBlock(Identifier, Direction.West, false),
+            15015 => new DeadFireCoralWallFanBlock(Identifier, Direction.East, true),
+            15016 => new DeadFireCoralWallFanBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -40,4 +40,8 @@ public readonly struct Angle {
     /// <param name="val">The degree value.</param>
     /// <returns>The equivalent Angle.</returns>
     public static implicit operator Angle(float val) => FromDegrees(val);
+
+    public override string ToString() {
+        return $"{Degrees:F3}\u00B0";
+    }
 }

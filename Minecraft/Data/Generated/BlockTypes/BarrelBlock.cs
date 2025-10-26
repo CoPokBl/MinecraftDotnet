@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : IBlock {
     public Identifier Category => "minecraft:barrel";
-    public int ProtocolId => 807;
+    public int ProtocolId => 837;
     public double Hardness => 2.5;
     public double ExplosionResistance => 2.5;
     public double Friction => 0.6;
@@ -44,28 +44,28 @@ public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : I
         get {
             return Facing switch {
                 Cardinal.North => Open switch {
-                    true => 19463,
-                    false => 19464,
+                    true => 20540,
+                    false => 20541,
                 },
                 Cardinal.East => Open switch {
-                    true => 19465,
-                    false => 19466,
+                    true => 20542,
+                    false => 20543,
                 },
                 Cardinal.South => Open switch {
-                    true => 19467,
-                    false => 19468,
+                    true => 20544,
+                    false => 20545,
                 },
                 Cardinal.West => Open switch {
-                    true => 19469,
-                    false => 19470,
+                    true => 20546,
+                    false => 20547,
                 },
                 Cardinal.Up => Open switch {
-                    true => 19471,
-                    false => 19472,
+                    true => 20548,
+                    false => 20549,
                 },
                 Cardinal.Down => Open switch {
-                    true => 19473,
-                    false => 19474,
+                    true => 20550,
+                    false => 20551,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -74,18 +74,18 @@ public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : I
     
     public IBlock WithState(uint state) {
         return state switch {
-            19463 => new BarrelBlock(Identifier, Cardinal.North, true),
-            19464 => new BarrelBlock(Identifier, Cardinal.North, false),
-            19465 => new BarrelBlock(Identifier, Cardinal.East, true),
-            19466 => new BarrelBlock(Identifier, Cardinal.East, false),
-            19467 => new BarrelBlock(Identifier, Cardinal.South, true),
-            19468 => new BarrelBlock(Identifier, Cardinal.South, false),
-            19469 => new BarrelBlock(Identifier, Cardinal.West, true),
-            19470 => new BarrelBlock(Identifier, Cardinal.West, false),
-            19471 => new BarrelBlock(Identifier, Cardinal.Up, true),
-            19472 => new BarrelBlock(Identifier, Cardinal.Up, false),
-            19473 => new BarrelBlock(Identifier, Cardinal.Down, true),
-            19474 => new BarrelBlock(Identifier, Cardinal.Down, false),
+            20540 => new BarrelBlock(Identifier, Cardinal.North, true),
+            20541 => new BarrelBlock(Identifier, Cardinal.North, false),
+            20542 => new BarrelBlock(Identifier, Cardinal.East, true),
+            20543 => new BarrelBlock(Identifier, Cardinal.East, false),
+            20544 => new BarrelBlock(Identifier, Cardinal.South, true),
+            20545 => new BarrelBlock(Identifier, Cardinal.South, false),
+            20546 => new BarrelBlock(Identifier, Cardinal.West, true),
+            20547 => new BarrelBlock(Identifier, Cardinal.West, false),
+            20548 => new BarrelBlock(Identifier, Cardinal.Up, true),
+            20549 => new BarrelBlock(Identifier, Cardinal.Up, false),
+            20550 => new BarrelBlock(Identifier, Cardinal.Down, true),
+            20551 => new BarrelBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

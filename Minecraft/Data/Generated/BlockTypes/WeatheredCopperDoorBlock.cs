@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
     public Identifier Category => "minecraft:weathering_copper_door";
-    public int ProtocolId => 1012;
+    public int ProtocolId => 1050;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -47,22 +47,22 @@ public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, 
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24904,
-                                false => 24905,
+                                true => 26013,
+                                false => 26014,
                             },
                             false => Powered switch {
-                                true => 24906,
-                                false => 24907,
+                                true => 26015,
+                                false => 26016,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24908,
-                                false => 24909,
+                                true => 26017,
+                                false => 26018,
                             },
                             false => Powered switch {
-                                true => 24910,
-                                false => 24911,
+                                true => 26019,
+                                false => 26020,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -70,22 +70,22 @@ public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, 
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24912,
-                                false => 24913,
+                                true => 26021,
+                                false => 26022,
                             },
                             false => Powered switch {
-                                true => 24914,
-                                false => 24915,
+                                true => 26023,
+                                false => 26024,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24916,
-                                false => 24917,
+                                true => 26025,
+                                false => 26026,
                             },
                             false => Powered switch {
-                                true => 24918,
-                                false => 24919,
+                                true => 26027,
+                                false => 26028,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -96,22 +96,22 @@ public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, 
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24920,
-                                false => 24921,
+                                true => 26029,
+                                false => 26030,
                             },
                             false => Powered switch {
-                                true => 24922,
-                                false => 24923,
+                                true => 26031,
+                                false => 26032,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24924,
-                                false => 24925,
+                                true => 26033,
+                                false => 26034,
                             },
                             false => Powered switch {
-                                true => 24926,
-                                false => 24927,
+                                true => 26035,
+                                false => 26036,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -119,22 +119,22 @@ public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, 
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24928,
-                                false => 24929,
+                                true => 26037,
+                                false => 26038,
                             },
                             false => Powered switch {
-                                true => 24930,
-                                false => 24931,
+                                true => 26039,
+                                false => 26040,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24932,
-                                false => 24933,
+                                true => 26041,
+                                false => 26042,
                             },
                             false => Powered switch {
-                                true => 24934,
-                                false => 24935,
+                                true => 26043,
+                                false => 26044,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -145,22 +145,22 @@ public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, 
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24936,
-                                false => 24937,
+                                true => 26045,
+                                false => 26046,
                             },
                             false => Powered switch {
-                                true => 24938,
-                                false => 24939,
+                                true => 26047,
+                                false => 26048,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24940,
-                                false => 24941,
+                                true => 26049,
+                                false => 26050,
                             },
                             false => Powered switch {
-                                true => 24942,
-                                false => 24943,
+                                true => 26051,
+                                false => 26052,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -168,22 +168,22 @@ public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, 
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24944,
-                                false => 24945,
+                                true => 26053,
+                                false => 26054,
                             },
                             false => Powered switch {
-                                true => 24946,
-                                false => 24947,
+                                true => 26055,
+                                false => 26056,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24948,
-                                false => 24949,
+                                true => 26057,
+                                false => 26058,
                             },
                             false => Powered switch {
-                                true => 24950,
-                                false => 24951,
+                                true => 26059,
+                                false => 26060,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -194,22 +194,22 @@ public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, 
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24952,
-                                false => 24953,
+                                true => 26061,
+                                false => 26062,
                             },
                             false => Powered switch {
-                                true => 24954,
-                                false => 24955,
+                                true => 26063,
+                                false => 26064,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24956,
-                                false => 24957,
+                                true => 26065,
+                                false => 26066,
                             },
                             false => Powered switch {
-                                true => 24958,
-                                false => 24959,
+                                true => 26067,
+                                false => 26068,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -217,22 +217,22 @@ public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, 
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24960,
-                                false => 24961,
+                                true => 26069,
+                                false => 26070,
                             },
                             false => Powered switch {
-                                true => 24962,
-                                false => 24963,
+                                true => 26071,
+                                false => 26072,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24964,
-                                false => 24965,
+                                true => 26073,
+                                false => 26074,
                             },
                             false => Powered switch {
-                                true => 24966,
-                                false => 24967,
+                                true => 26075,
+                                false => 26076,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -246,70 +246,70 @@ public record WeatheredCopperDoorBlock(Identifier Identifier, Direction Facing, 
     
     public IBlock WithState(uint state) {
         return state switch {
-            24904 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
-            24905 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
-            24906 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, true),
-            24907 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, false),
-            24908 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, true),
-            24909 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, false),
-            24910 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, true),
-            24911 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, false),
-            24912 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, true),
-            24913 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, false),
-            24914 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, true),
-            24915 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, false),
-            24916 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, true),
-            24917 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, false),
-            24918 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, true),
-            24919 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, false),
-            24920 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, true),
-            24921 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, false),
-            24922 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, true),
-            24923 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, false),
-            24924 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, true),
-            24925 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, false),
-            24926 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, true),
-            24927 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, false),
-            24928 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, true),
-            24929 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, false),
-            24930 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, true),
-            24931 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, false),
-            24932 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, true),
-            24933 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, false),
-            24934 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, true),
-            24935 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, false),
-            24936 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, true),
-            24937 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, false),
-            24938 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, true),
-            24939 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, false),
-            24940 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, true),
-            24941 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, false),
-            24942 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, true),
-            24943 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, false),
-            24944 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, true),
-            24945 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, false),
-            24946 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, true),
-            24947 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, false),
-            24948 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, true),
-            24949 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, false),
-            24950 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, true),
-            24951 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, false),
-            24952 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, true),
-            24953 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, false),
-            24954 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, true),
-            24955 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, false),
-            24956 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, true),
-            24957 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, false),
-            24958 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, true),
-            24959 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, false),
-            24960 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, true),
-            24961 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, false),
-            24962 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, true),
-            24963 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, false),
-            24964 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, true),
-            24965 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, false),
-            24966 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
-            24967 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
+            26013 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
+            26014 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
+            26015 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, true),
+            26016 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, false),
+            26017 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, true),
+            26018 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, false),
+            26019 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, true),
+            26020 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, false),
+            26021 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, true),
+            26022 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, false),
+            26023 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, true),
+            26024 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, false),
+            26025 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, true),
+            26026 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, false),
+            26027 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, true),
+            26028 => new WeatheredCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, false),
+            26029 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, true),
+            26030 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, false),
+            26031 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, true),
+            26032 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, false),
+            26033 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, true),
+            26034 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, false),
+            26035 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, true),
+            26036 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, false),
+            26037 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, true),
+            26038 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, false),
+            26039 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, true),
+            26040 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, false),
+            26041 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, true),
+            26042 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, false),
+            26043 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, true),
+            26044 => new WeatheredCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, false),
+            26045 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, true),
+            26046 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, false),
+            26047 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, true),
+            26048 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, false),
+            26049 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, true),
+            26050 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, false),
+            26051 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, true),
+            26052 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, false),
+            26053 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, true),
+            26054 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, false),
+            26055 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, true),
+            26056 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, false),
+            26057 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, true),
+            26058 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, false),
+            26059 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, true),
+            26060 => new WeatheredCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, false),
+            26061 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, true),
+            26062 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, false),
+            26063 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, true),
+            26064 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, false),
+            26065 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, true),
+            26066 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, false),
+            26067 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, true),
+            26068 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, false),
+            26069 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, true),
+            26070 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, false),
+            26071 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, true),
+            26072 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, false),
+            26073 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, true),
+            26074 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, false),
+            26075 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
+            26076 => new WeatheredCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

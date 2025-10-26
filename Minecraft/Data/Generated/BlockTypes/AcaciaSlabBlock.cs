@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record AcaciaSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 571;
+    public int ProtocolId => 601;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record AcaciaSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12075,
-                    false => 12076,
+                    true => 13152,
+                    false => 13153,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12077,
-                    false => 12078,
+                    true => 13154,
+                    false => 13155,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12079,
-                    false => 12080,
+                    true => 13156,
+                    false => 13157,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record AcaciaSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12075 => new AcaciaSlabBlock(Identifier, SlabType.Top, true),
-            12076 => new AcaciaSlabBlock(Identifier, SlabType.Top, false),
-            12077 => new AcaciaSlabBlock(Identifier, SlabType.Bottom, true),
-            12078 => new AcaciaSlabBlock(Identifier, SlabType.Bottom, false),
-            12079 => new AcaciaSlabBlock(Identifier, SlabType.Double, true),
-            12080 => new AcaciaSlabBlock(Identifier, SlabType.Double, false),
+            13152 => new AcaciaSlabBlock(Identifier, SlabType.Top, true),
+            13153 => new AcaciaSlabBlock(Identifier, SlabType.Top, false),
+            13154 => new AcaciaSlabBlock(Identifier, SlabType.Bottom, true),
+            13155 => new AcaciaSlabBlock(Identifier, SlabType.Bottom, false),
+            13156 => new AcaciaSlabBlock(Identifier, SlabType.Double, true),
+            13157 => new AcaciaSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

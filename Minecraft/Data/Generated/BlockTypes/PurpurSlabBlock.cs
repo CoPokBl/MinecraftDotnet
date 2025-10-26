@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PurpurSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 591;
+    public int ProtocolId => 621;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record PurpurSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12195,
-                    false => 12196,
+                    true => 13272,
+                    false => 13273,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12197,
-                    false => 12198,
+                    true => 13274,
+                    false => 13275,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12199,
-                    false => 12200,
+                    true => 13276,
+                    false => 13277,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record PurpurSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12195 => new PurpurSlabBlock(Identifier, SlabType.Top, true),
-            12196 => new PurpurSlabBlock(Identifier, SlabType.Top, false),
-            12197 => new PurpurSlabBlock(Identifier, SlabType.Bottom, true),
-            12198 => new PurpurSlabBlock(Identifier, SlabType.Bottom, false),
-            12199 => new PurpurSlabBlock(Identifier, SlabType.Double, true),
-            12200 => new PurpurSlabBlock(Identifier, SlabType.Double, false),
+            13272 => new PurpurSlabBlock(Identifier, SlabType.Top, true),
+            13273 => new PurpurSlabBlock(Identifier, SlabType.Top, false),
+            13274 => new PurpurSlabBlock(Identifier, SlabType.Bottom, true),
+            13275 => new PurpurSlabBlock(Identifier, SlabType.Bottom, false),
+            13276 => new PurpurSlabBlock(Identifier, SlabType.Double, true),
+            13277 => new PurpurSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

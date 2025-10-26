@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
     public Identifier Category => "minecraft:sniffer_egg";
-    public int ProtocolId => 714;
+    public int ProtocolId => 744;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
     public uint StateId {
         get {
             return Hatch switch {
-                0 => 13823,
-                1 => 13824,
-                2 => 13825,
+                0 => 14900,
+                1 => 14901,
+                2 => 14902,
                 _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
             };
         }
@@ -53,9 +53,9 @@ public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            13823 => new SnifferEggBlock(Identifier, 0),
-            13824 => new SnifferEggBlock(Identifier, 1),
-            13825 => new SnifferEggBlock(Identifier, 2),
+            14900 => new SnifferEggBlock(Identifier, 0),
+            14901 => new SnifferEggBlock(Identifier, 1),
+            14902 => new SnifferEggBlock(Identifier, 2),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

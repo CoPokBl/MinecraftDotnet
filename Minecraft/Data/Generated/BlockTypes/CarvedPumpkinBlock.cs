@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CarvedPumpkinBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:jack_o_lantern";
-    public int ProtocolId => 281;
+    public int ProtocolId => 295;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record CarvedPumpkinBlock(Identifier Identifier, Direction Facing) : IBlo
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 6045,
-                Direction.South => 6046,
-                Direction.West => 6047,
-                Direction.East => 6048,
+                Direction.North => 6818,
+                Direction.South => 6819,
+                Direction.West => 6820,
+                Direction.East => 6821,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record CarvedPumpkinBlock(Identifier Identifier, Direction Facing) : IBlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            6045 => new CarvedPumpkinBlock(Identifier, Direction.North),
-            6046 => new CarvedPumpkinBlock(Identifier, Direction.South),
-            6047 => new CarvedPumpkinBlock(Identifier, Direction.West),
-            6048 => new CarvedPumpkinBlock(Identifier, Direction.East),
+            6818 => new CarvedPumpkinBlock(Identifier, Direction.North),
+            6819 => new CarvedPumpkinBlock(Identifier, Direction.South),
+            6820 => new CarvedPumpkinBlock(Identifier, Direction.West),
+            6821 => new CarvedPumpkinBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

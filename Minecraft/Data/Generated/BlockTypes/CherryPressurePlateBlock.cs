@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CherryPressurePlateBlock(Identifier Identifier, bool Powered) : IBlock {
     public Identifier Category => "minecraft:pressure_plate";
-    public int ProtocolId => 253;
+    public int ProtocolId => 265;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record CherryPressurePlateBlock(Identifier Identifier, bool Powered) : IB
     public uint StateId {
         get {
             return Powered switch {
-                true => 5902,
-                false => 5903,
+                true => 6670,
+                false => 6671,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            5902 => new CherryPressurePlateBlock(Identifier, true),
-            5903 => new CherryPressurePlateBlock(Identifier, false),
+            6670 => new CherryPressurePlateBlock(Identifier, true),
+            6671 => new CherryPressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

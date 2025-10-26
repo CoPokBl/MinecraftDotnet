@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TorchflowerCropBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:torchflower_crop";
-    public int ProtocolId => 630;
+    public int ProtocolId => 660;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,8 +43,8 @@ public record TorchflowerCropBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 13518,
-                1 => 13519,
+                0 => 14595,
+                1 => 14596,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -52,8 +52,8 @@ public record TorchflowerCropBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            13518 => new TorchflowerCropBlock(Identifier, 0),
-            13519 => new TorchflowerCropBlock(Identifier, 1),
+            14595 => new TorchflowerCropBlock(Identifier, 0),
+            14596 => new TorchflowerCropBlock(Identifier, 1),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

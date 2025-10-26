@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:grindstone";
-    public int ProtocolId => 812;
+    public int ProtocolId => 842;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,24 +44,24 @@ public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direc
         get {
             return Face switch {
                 AttachDirection.Floor => Facing switch {
-                    Direction.North => 19493,
-                    Direction.South => 19494,
-                    Direction.West => 19495,
-                    Direction.East => 19496,
+                    Direction.North => 20570,
+                    Direction.South => 20571,
+                    Direction.West => 20572,
+                    Direction.East => 20573,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
-                    Direction.North => 19497,
-                    Direction.South => 19498,
-                    Direction.West => 19499,
-                    Direction.East => 19500,
+                    Direction.North => 20574,
+                    Direction.South => 20575,
+                    Direction.West => 20576,
+                    Direction.East => 20577,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
-                    Direction.North => 19501,
-                    Direction.South => 19502,
-                    Direction.West => 19503,
-                    Direction.East => 19504,
+                    Direction.North => 20578,
+                    Direction.South => 20579,
+                    Direction.West => 20580,
+                    Direction.East => 20581,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Face), Face, "Unknown value for property face.")
@@ -71,18 +71,18 @@ public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direc
     
     public IBlock WithState(uint state) {
         return state switch {
-            19493 => new GrindstoneBlock(Identifier, AttachDirection.Floor, Direction.North),
-            19494 => new GrindstoneBlock(Identifier, AttachDirection.Floor, Direction.South),
-            19495 => new GrindstoneBlock(Identifier, AttachDirection.Floor, Direction.West),
-            19496 => new GrindstoneBlock(Identifier, AttachDirection.Floor, Direction.East),
-            19497 => new GrindstoneBlock(Identifier, AttachDirection.Wall, Direction.North),
-            19498 => new GrindstoneBlock(Identifier, AttachDirection.Wall, Direction.South),
-            19499 => new GrindstoneBlock(Identifier, AttachDirection.Wall, Direction.West),
-            19500 => new GrindstoneBlock(Identifier, AttachDirection.Wall, Direction.East),
-            19501 => new GrindstoneBlock(Identifier, AttachDirection.Ceiling, Direction.North),
-            19502 => new GrindstoneBlock(Identifier, AttachDirection.Ceiling, Direction.South),
-            19503 => new GrindstoneBlock(Identifier, AttachDirection.Ceiling, Direction.West),
-            19504 => new GrindstoneBlock(Identifier, AttachDirection.Ceiling, Direction.East),
+            20570 => new GrindstoneBlock(Identifier, AttachDirection.Floor, Direction.North),
+            20571 => new GrindstoneBlock(Identifier, AttachDirection.Floor, Direction.South),
+            20572 => new GrindstoneBlock(Identifier, AttachDirection.Floor, Direction.West),
+            20573 => new GrindstoneBlock(Identifier, AttachDirection.Floor, Direction.East),
+            20574 => new GrindstoneBlock(Identifier, AttachDirection.Wall, Direction.North),
+            20575 => new GrindstoneBlock(Identifier, AttachDirection.Wall, Direction.South),
+            20576 => new GrindstoneBlock(Identifier, AttachDirection.Wall, Direction.West),
+            20577 => new GrindstoneBlock(Identifier, AttachDirection.Wall, Direction.East),
+            20578 => new GrindstoneBlock(Identifier, AttachDirection.Ceiling, Direction.North),
+            20579 => new GrindstoneBlock(Identifier, AttachDirection.Ceiling, Direction.South),
+            20580 => new GrindstoneBlock(Identifier, AttachDirection.Ceiling, Direction.West),
+            20581 => new GrindstoneBlock(Identifier, AttachDirection.Ceiling, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

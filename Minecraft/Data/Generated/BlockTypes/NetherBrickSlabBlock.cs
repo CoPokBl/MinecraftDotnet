@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record NetherBrickSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 587;
+    public int ProtocolId => 617;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record NetherBrickSlabBlock(Identifier Identifier, SlabType Type, bool Wa
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12171,
-                    false => 12172,
+                    true => 13248,
+                    false => 13249,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12173,
-                    false => 12174,
+                    true => 13250,
+                    false => 13251,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12175,
-                    false => 12176,
+                    true => 13252,
+                    false => 13253,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record NetherBrickSlabBlock(Identifier Identifier, SlabType Type, bool Wa
     
     public IBlock WithState(uint state) {
         return state switch {
-            12171 => new NetherBrickSlabBlock(Identifier, SlabType.Top, true),
-            12172 => new NetherBrickSlabBlock(Identifier, SlabType.Top, false),
-            12173 => new NetherBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            12174 => new NetherBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            12175 => new NetherBrickSlabBlock(Identifier, SlabType.Double, true),
-            12176 => new NetherBrickSlabBlock(Identifier, SlabType.Double, false),
+            13248 => new NetherBrickSlabBlock(Identifier, SlabType.Top, true),
+            13249 => new NetherBrickSlabBlock(Identifier, SlabType.Top, false),
+            13250 => new NetherBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            13251 => new NetherBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            13252 => new NetherBrickSlabBlock(Identifier, SlabType.Double, true),
+            13253 => new NetherBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

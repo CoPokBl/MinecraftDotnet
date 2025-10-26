@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OxidizedCopperDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
     public Identifier Category => "minecraft:weathering_copper_door";
-    public int ProtocolId => 1011;
+    public int ProtocolId => 1049;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -47,22 +47,22 @@ public record OxidizedCopperDoorBlock(Identifier Identifier, Direction Facing, B
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24840,
-                                false => 24841,
+                                true => 25949,
+                                false => 25950,
                             },
                             false => Powered switch {
-                                true => 24842,
-                                false => 24843,
+                                true => 25951,
+                                false => 25952,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24844,
-                                false => 24845,
+                                true => 25953,
+                                false => 25954,
                             },
                             false => Powered switch {
-                                true => 24846,
-                                false => 24847,
+                                true => 25955,
+                                false => 25956,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -70,22 +70,22 @@ public record OxidizedCopperDoorBlock(Identifier Identifier, Direction Facing, B
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24848,
-                                false => 24849,
+                                true => 25957,
+                                false => 25958,
                             },
                             false => Powered switch {
-                                true => 24850,
-                                false => 24851,
+                                true => 25959,
+                                false => 25960,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24852,
-                                false => 24853,
+                                true => 25961,
+                                false => 25962,
                             },
                             false => Powered switch {
-                                true => 24854,
-                                false => 24855,
+                                true => 25963,
+                                false => 25964,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -96,22 +96,22 @@ public record OxidizedCopperDoorBlock(Identifier Identifier, Direction Facing, B
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24856,
-                                false => 24857,
+                                true => 25965,
+                                false => 25966,
                             },
                             false => Powered switch {
-                                true => 24858,
-                                false => 24859,
+                                true => 25967,
+                                false => 25968,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24860,
-                                false => 24861,
+                                true => 25969,
+                                false => 25970,
                             },
                             false => Powered switch {
-                                true => 24862,
-                                false => 24863,
+                                true => 25971,
+                                false => 25972,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -119,22 +119,22 @@ public record OxidizedCopperDoorBlock(Identifier Identifier, Direction Facing, B
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24864,
-                                false => 24865,
+                                true => 25973,
+                                false => 25974,
                             },
                             false => Powered switch {
-                                true => 24866,
-                                false => 24867,
+                                true => 25975,
+                                false => 25976,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24868,
-                                false => 24869,
+                                true => 25977,
+                                false => 25978,
                             },
                             false => Powered switch {
-                                true => 24870,
-                                false => 24871,
+                                true => 25979,
+                                false => 25980,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -145,22 +145,22 @@ public record OxidizedCopperDoorBlock(Identifier Identifier, Direction Facing, B
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24872,
-                                false => 24873,
+                                true => 25981,
+                                false => 25982,
                             },
                             false => Powered switch {
-                                true => 24874,
-                                false => 24875,
+                                true => 25983,
+                                false => 25984,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24876,
-                                false => 24877,
+                                true => 25985,
+                                false => 25986,
                             },
                             false => Powered switch {
-                                true => 24878,
-                                false => 24879,
+                                true => 25987,
+                                false => 25988,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -168,22 +168,22 @@ public record OxidizedCopperDoorBlock(Identifier Identifier, Direction Facing, B
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24880,
-                                false => 24881,
+                                true => 25989,
+                                false => 25990,
                             },
                             false => Powered switch {
-                                true => 24882,
-                                false => 24883,
+                                true => 25991,
+                                false => 25992,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24884,
-                                false => 24885,
+                                true => 25993,
+                                false => 25994,
                             },
                             false => Powered switch {
-                                true => 24886,
-                                false => 24887,
+                                true => 25995,
+                                false => 25996,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -194,22 +194,22 @@ public record OxidizedCopperDoorBlock(Identifier Identifier, Direction Facing, B
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24888,
-                                false => 24889,
+                                true => 25997,
+                                false => 25998,
                             },
                             false => Powered switch {
-                                true => 24890,
-                                false => 24891,
+                                true => 25999,
+                                false => 26000,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24892,
-                                false => 24893,
+                                true => 26001,
+                                false => 26002,
                             },
                             false => Powered switch {
-                                true => 24894,
-                                false => 24895,
+                                true => 26003,
+                                false => 26004,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -217,22 +217,22 @@ public record OxidizedCopperDoorBlock(Identifier Identifier, Direction Facing, B
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 24896,
-                                false => 24897,
+                                true => 26005,
+                                false => 26006,
                             },
                             false => Powered switch {
-                                true => 24898,
-                                false => 24899,
+                                true => 26007,
+                                false => 26008,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 24900,
-                                false => 24901,
+                                true => 26009,
+                                false => 26010,
                             },
                             false => Powered switch {
-                                true => 24902,
-                                false => 24903,
+                                true => 26011,
+                                false => 26012,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -246,70 +246,70 @@ public record OxidizedCopperDoorBlock(Identifier Identifier, Direction Facing, B
     
     public IBlock WithState(uint state) {
         return state switch {
-            24840 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
-            24841 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
-            24842 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, true),
-            24843 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, false),
-            24844 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, true),
-            24845 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, false),
-            24846 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, true),
-            24847 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, false),
-            24848 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, true),
-            24849 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, false),
-            24850 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, true),
-            24851 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, false),
-            24852 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, true),
-            24853 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, false),
-            24854 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, true),
-            24855 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, false),
-            24856 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, true),
-            24857 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, false),
-            24858 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, true),
-            24859 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, false),
-            24860 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, true),
-            24861 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, false),
-            24862 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, true),
-            24863 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, false),
-            24864 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, true),
-            24865 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, false),
-            24866 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, true),
-            24867 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, false),
-            24868 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, true),
-            24869 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, false),
-            24870 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, true),
-            24871 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, false),
-            24872 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, true),
-            24873 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, false),
-            24874 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, true),
-            24875 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, false),
-            24876 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, true),
-            24877 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, false),
-            24878 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, true),
-            24879 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, false),
-            24880 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, true),
-            24881 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, false),
-            24882 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, true),
-            24883 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, false),
-            24884 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, true),
-            24885 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, false),
-            24886 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, true),
-            24887 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, false),
-            24888 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, true),
-            24889 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, false),
-            24890 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, true),
-            24891 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, false),
-            24892 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, true),
-            24893 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, false),
-            24894 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, true),
-            24895 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, false),
-            24896 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, true),
-            24897 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, false),
-            24898 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, true),
-            24899 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, false),
-            24900 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, true),
-            24901 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, false),
-            24902 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
-            24903 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
+            25949 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
+            25950 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
+            25951 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, true),
+            25952 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, false),
+            25953 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, true),
+            25954 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, false),
+            25955 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, true),
+            25956 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, false),
+            25957 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, true),
+            25958 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, false),
+            25959 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, true),
+            25960 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, false),
+            25961 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, true),
+            25962 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, false),
+            25963 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, true),
+            25964 => new OxidizedCopperDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, false),
+            25965 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, true),
+            25966 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, false),
+            25967 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, true),
+            25968 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, false),
+            25969 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, true),
+            25970 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, false),
+            25971 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, true),
+            25972 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, false),
+            25973 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, true),
+            25974 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, false),
+            25975 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, true),
+            25976 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, false),
+            25977 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, true),
+            25978 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, false),
+            25979 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, true),
+            25980 => new OxidizedCopperDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, false),
+            25981 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, true),
+            25982 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, false),
+            25983 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, true),
+            25984 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, false),
+            25985 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, true),
+            25986 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, false),
+            25987 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, true),
+            25988 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, false),
+            25989 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, true),
+            25990 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, false),
+            25991 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, true),
+            25992 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, false),
+            25993 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, true),
+            25994 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, false),
+            25995 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, true),
+            25996 => new OxidizedCopperDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, false),
+            25997 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, true),
+            25998 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, false),
+            25999 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, true),
+            26000 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, false),
+            26001 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, true),
+            26002 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, false),
+            26003 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, true),
+            26004 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, false),
+            26005 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, true),
+            26006 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, false),
+            26007 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, true),
+            26008 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, false),
+            26009 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, true),
+            26010 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, false),
+            26011 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
+            26012 => new OxidizedCopperDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JungleFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
     public Identifier Category => "minecraft:fence";
-    public int ProtocolId => 607;
+    public int ProtocolId => 637;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -47,44 +47,44 @@ public record JungleFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12557,
-                                false => 12558,
+                                true => 13634,
+                                false => 13635,
                             },
                             false => West switch {
-                                true => 12559,
-                                false => 12560,
+                                true => 13636,
+                                false => 13637,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12561,
-                                false => 12562,
+                                true => 13638,
+                                false => 13639,
                             },
                             false => West switch {
-                                true => 12563,
-                                false => 12564,
+                                true => 13640,
+                                false => 13641,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12565,
-                                false => 12566,
+                                true => 13642,
+                                false => 13643,
                             },
                             false => West switch {
-                                true => 12567,
-                                false => 12568,
+                                true => 13644,
+                                false => 13645,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12569,
-                                false => 12570,
+                                true => 13646,
+                                false => 13647,
                             },
                             false => West switch {
-                                true => 12571,
-                                false => 12572,
+                                true => 13648,
+                                false => 13649,
                             },
                         },
                     },
@@ -93,44 +93,44 @@ public record JungleFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12573,
-                                false => 12574,
+                                true => 13650,
+                                false => 13651,
                             },
                             false => West switch {
-                                true => 12575,
-                                false => 12576,
+                                true => 13652,
+                                false => 13653,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12577,
-                                false => 12578,
+                                true => 13654,
+                                false => 13655,
                             },
                             false => West switch {
-                                true => 12579,
-                                false => 12580,
+                                true => 13656,
+                                false => 13657,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12581,
-                                false => 12582,
+                                true => 13658,
+                                false => 13659,
                             },
                             false => West switch {
-                                true => 12583,
-                                false => 12584,
+                                true => 13660,
+                                false => 13661,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12585,
-                                false => 12586,
+                                true => 13662,
+                                false => 13663,
                             },
                             false => West switch {
-                                true => 12587,
-                                false => 12588,
+                                true => 13664,
+                                false => 13665,
                             },
                         },
                     },
@@ -141,38 +141,38 @@ public record JungleFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12557 => new JungleFenceBlock(Identifier, true, true, true, true, true),
-            12558 => new JungleFenceBlock(Identifier, true, true, true, true, false),
-            12559 => new JungleFenceBlock(Identifier, true, true, true, false, true),
-            12560 => new JungleFenceBlock(Identifier, true, true, true, false, false),
-            12561 => new JungleFenceBlock(Identifier, true, true, false, true, true),
-            12562 => new JungleFenceBlock(Identifier, true, true, false, true, false),
-            12563 => new JungleFenceBlock(Identifier, true, true, false, false, true),
-            12564 => new JungleFenceBlock(Identifier, true, true, false, false, false),
-            12565 => new JungleFenceBlock(Identifier, true, false, true, true, true),
-            12566 => new JungleFenceBlock(Identifier, true, false, true, true, false),
-            12567 => new JungleFenceBlock(Identifier, true, false, true, false, true),
-            12568 => new JungleFenceBlock(Identifier, true, false, true, false, false),
-            12569 => new JungleFenceBlock(Identifier, true, false, false, true, true),
-            12570 => new JungleFenceBlock(Identifier, true, false, false, true, false),
-            12571 => new JungleFenceBlock(Identifier, true, false, false, false, true),
-            12572 => new JungleFenceBlock(Identifier, true, false, false, false, false),
-            12573 => new JungleFenceBlock(Identifier, false, true, true, true, true),
-            12574 => new JungleFenceBlock(Identifier, false, true, true, true, false),
-            12575 => new JungleFenceBlock(Identifier, false, true, true, false, true),
-            12576 => new JungleFenceBlock(Identifier, false, true, true, false, false),
-            12577 => new JungleFenceBlock(Identifier, false, true, false, true, true),
-            12578 => new JungleFenceBlock(Identifier, false, true, false, true, false),
-            12579 => new JungleFenceBlock(Identifier, false, true, false, false, true),
-            12580 => new JungleFenceBlock(Identifier, false, true, false, false, false),
-            12581 => new JungleFenceBlock(Identifier, false, false, true, true, true),
-            12582 => new JungleFenceBlock(Identifier, false, false, true, true, false),
-            12583 => new JungleFenceBlock(Identifier, false, false, true, false, true),
-            12584 => new JungleFenceBlock(Identifier, false, false, true, false, false),
-            12585 => new JungleFenceBlock(Identifier, false, false, false, true, true),
-            12586 => new JungleFenceBlock(Identifier, false, false, false, true, false),
-            12587 => new JungleFenceBlock(Identifier, false, false, false, false, true),
-            12588 => new JungleFenceBlock(Identifier, false, false, false, false, false),
+            13634 => new JungleFenceBlock(Identifier, true, true, true, true, true),
+            13635 => new JungleFenceBlock(Identifier, true, true, true, true, false),
+            13636 => new JungleFenceBlock(Identifier, true, true, true, false, true),
+            13637 => new JungleFenceBlock(Identifier, true, true, true, false, false),
+            13638 => new JungleFenceBlock(Identifier, true, true, false, true, true),
+            13639 => new JungleFenceBlock(Identifier, true, true, false, true, false),
+            13640 => new JungleFenceBlock(Identifier, true, true, false, false, true),
+            13641 => new JungleFenceBlock(Identifier, true, true, false, false, false),
+            13642 => new JungleFenceBlock(Identifier, true, false, true, true, true),
+            13643 => new JungleFenceBlock(Identifier, true, false, true, true, false),
+            13644 => new JungleFenceBlock(Identifier, true, false, true, false, true),
+            13645 => new JungleFenceBlock(Identifier, true, false, true, false, false),
+            13646 => new JungleFenceBlock(Identifier, true, false, false, true, true),
+            13647 => new JungleFenceBlock(Identifier, true, false, false, true, false),
+            13648 => new JungleFenceBlock(Identifier, true, false, false, false, true),
+            13649 => new JungleFenceBlock(Identifier, true, false, false, false, false),
+            13650 => new JungleFenceBlock(Identifier, false, true, true, true, true),
+            13651 => new JungleFenceBlock(Identifier, false, true, true, true, false),
+            13652 => new JungleFenceBlock(Identifier, false, true, true, false, true),
+            13653 => new JungleFenceBlock(Identifier, false, true, true, false, false),
+            13654 => new JungleFenceBlock(Identifier, false, true, false, true, true),
+            13655 => new JungleFenceBlock(Identifier, false, true, false, true, false),
+            13656 => new JungleFenceBlock(Identifier, false, true, false, false, true),
+            13657 => new JungleFenceBlock(Identifier, false, true, false, false, false),
+            13658 => new JungleFenceBlock(Identifier, false, false, true, true, true),
+            13659 => new JungleFenceBlock(Identifier, false, false, true, true, false),
+            13660 => new JungleFenceBlock(Identifier, false, false, true, false, true),
+            13661 => new JungleFenceBlock(Identifier, false, false, true, false, false),
+            13662 => new JungleFenceBlock(Identifier, false, false, false, true, true),
+            13663 => new JungleFenceBlock(Identifier, false, false, false, true, false),
+            13664 => new JungleFenceBlock(Identifier, false, false, false, false, true),
+            13665 => new JungleFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

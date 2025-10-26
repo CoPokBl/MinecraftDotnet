@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JungleSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:standing_sign";
-    public int ProtocolId => 202;
+    public int ProtocolId => 214;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,68 +44,68 @@ public record JungleSignBlock(Identifier Identifier, int Rotation, bool Waterlog
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 4526,
-                    false => 4527,
+                    true => 5294,
+                    false => 5295,
                 },
                 1 => Waterlogged switch {
-                    true => 4528,
-                    false => 4529,
+                    true => 5296,
+                    false => 5297,
                 },
                 2 => Waterlogged switch {
-                    true => 4530,
-                    false => 4531,
+                    true => 5298,
+                    false => 5299,
                 },
                 3 => Waterlogged switch {
-                    true => 4532,
-                    false => 4533,
+                    true => 5300,
+                    false => 5301,
                 },
                 4 => Waterlogged switch {
-                    true => 4534,
-                    false => 4535,
+                    true => 5302,
+                    false => 5303,
                 },
                 5 => Waterlogged switch {
-                    true => 4536,
-                    false => 4537,
+                    true => 5304,
+                    false => 5305,
                 },
                 6 => Waterlogged switch {
-                    true => 4538,
-                    false => 4539,
+                    true => 5306,
+                    false => 5307,
                 },
                 7 => Waterlogged switch {
-                    true => 4540,
-                    false => 4541,
+                    true => 5308,
+                    false => 5309,
                 },
                 8 => Waterlogged switch {
-                    true => 4542,
-                    false => 4543,
+                    true => 5310,
+                    false => 5311,
                 },
                 9 => Waterlogged switch {
-                    true => 4544,
-                    false => 4545,
+                    true => 5312,
+                    false => 5313,
                 },
                 10 => Waterlogged switch {
-                    true => 4546,
-                    false => 4547,
+                    true => 5314,
+                    false => 5315,
                 },
                 11 => Waterlogged switch {
-                    true => 4548,
-                    false => 4549,
+                    true => 5316,
+                    false => 5317,
                 },
                 12 => Waterlogged switch {
-                    true => 4550,
-                    false => 4551,
+                    true => 5318,
+                    false => 5319,
                 },
                 13 => Waterlogged switch {
-                    true => 4552,
-                    false => 4553,
+                    true => 5320,
+                    false => 5321,
                 },
                 14 => Waterlogged switch {
-                    true => 4554,
-                    false => 4555,
+                    true => 5322,
+                    false => 5323,
                 },
                 15 => Waterlogged switch {
-                    true => 4556,
-                    false => 4557,
+                    true => 5324,
+                    false => 5325,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -114,38 +114,38 @@ public record JungleSignBlock(Identifier Identifier, int Rotation, bool Waterlog
     
     public IBlock WithState(uint state) {
         return state switch {
-            4526 => new JungleSignBlock(Identifier, 0, true),
-            4527 => new JungleSignBlock(Identifier, 0, false),
-            4528 => new JungleSignBlock(Identifier, 1, true),
-            4529 => new JungleSignBlock(Identifier, 1, false),
-            4530 => new JungleSignBlock(Identifier, 2, true),
-            4531 => new JungleSignBlock(Identifier, 2, false),
-            4532 => new JungleSignBlock(Identifier, 3, true),
-            4533 => new JungleSignBlock(Identifier, 3, false),
-            4534 => new JungleSignBlock(Identifier, 4, true),
-            4535 => new JungleSignBlock(Identifier, 4, false),
-            4536 => new JungleSignBlock(Identifier, 5, true),
-            4537 => new JungleSignBlock(Identifier, 5, false),
-            4538 => new JungleSignBlock(Identifier, 6, true),
-            4539 => new JungleSignBlock(Identifier, 6, false),
-            4540 => new JungleSignBlock(Identifier, 7, true),
-            4541 => new JungleSignBlock(Identifier, 7, false),
-            4542 => new JungleSignBlock(Identifier, 8, true),
-            4543 => new JungleSignBlock(Identifier, 8, false),
-            4544 => new JungleSignBlock(Identifier, 9, true),
-            4545 => new JungleSignBlock(Identifier, 9, false),
-            4546 => new JungleSignBlock(Identifier, 10, true),
-            4547 => new JungleSignBlock(Identifier, 10, false),
-            4548 => new JungleSignBlock(Identifier, 11, true),
-            4549 => new JungleSignBlock(Identifier, 11, false),
-            4550 => new JungleSignBlock(Identifier, 12, true),
-            4551 => new JungleSignBlock(Identifier, 12, false),
-            4552 => new JungleSignBlock(Identifier, 13, true),
-            4553 => new JungleSignBlock(Identifier, 13, false),
-            4554 => new JungleSignBlock(Identifier, 14, true),
-            4555 => new JungleSignBlock(Identifier, 14, false),
-            4556 => new JungleSignBlock(Identifier, 15, true),
-            4557 => new JungleSignBlock(Identifier, 15, false),
+            5294 => new JungleSignBlock(Identifier, 0, true),
+            5295 => new JungleSignBlock(Identifier, 0, false),
+            5296 => new JungleSignBlock(Identifier, 1, true),
+            5297 => new JungleSignBlock(Identifier, 1, false),
+            5298 => new JungleSignBlock(Identifier, 2, true),
+            5299 => new JungleSignBlock(Identifier, 2, false),
+            5300 => new JungleSignBlock(Identifier, 3, true),
+            5301 => new JungleSignBlock(Identifier, 3, false),
+            5302 => new JungleSignBlock(Identifier, 4, true),
+            5303 => new JungleSignBlock(Identifier, 4, false),
+            5304 => new JungleSignBlock(Identifier, 5, true),
+            5305 => new JungleSignBlock(Identifier, 5, false),
+            5306 => new JungleSignBlock(Identifier, 6, true),
+            5307 => new JungleSignBlock(Identifier, 6, false),
+            5308 => new JungleSignBlock(Identifier, 7, true),
+            5309 => new JungleSignBlock(Identifier, 7, false),
+            5310 => new JungleSignBlock(Identifier, 8, true),
+            5311 => new JungleSignBlock(Identifier, 8, false),
+            5312 => new JungleSignBlock(Identifier, 9, true),
+            5313 => new JungleSignBlock(Identifier, 9, false),
+            5314 => new JungleSignBlock(Identifier, 10, true),
+            5315 => new JungleSignBlock(Identifier, 10, false),
+            5316 => new JungleSignBlock(Identifier, 11, true),
+            5317 => new JungleSignBlock(Identifier, 11, false),
+            5318 => new JungleSignBlock(Identifier, 12, true),
+            5319 => new JungleSignBlock(Identifier, 12, false),
+            5320 => new JungleSignBlock(Identifier, 13, true),
+            5321 => new JungleSignBlock(Identifier, 13, false),
+            5322 => new JungleSignBlock(Identifier, 14, true),
+            5323 => new JungleSignBlock(Identifier, 14, false),
+            5324 => new JungleSignBlock(Identifier, 15, true),
+            5325 => new JungleSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

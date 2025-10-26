@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OchreFroglightBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:rotated_pillar";
-    public int ProtocolId => 1087;
+    public int ProtocolId => 1148;
     public double Hardness => 0.3;
     public double ExplosionResistance => 0.3;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record OchreFroglightBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 27655,
-                Axis.Y => 27656,
-                Axis.Z => 27657,
+                Axis.X => 29380,
+                Axis.Y => 29381,
+                Axis.Z => 29382,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record OchreFroglightBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            27655 => new OchreFroglightBlock(Identifier, Axis.X),
-            27656 => new OchreFroglightBlock(Identifier, Axis.Y),
-            27657 => new OchreFroglightBlock(Identifier, Axis.Z),
+            29380 => new OchreFroglightBlock(Identifier, Axis.X),
+            29381 => new OchreFroglightBlock(Identifier, Axis.Y),
+            29382 => new OchreFroglightBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record EndStoneBrickSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 784;
+    public int ProtocolId => 814;
     public double Hardness => 3;
     public double ExplosionResistance => 9;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record EndStoneBrickSlabBlock(Identifier Identifier, SlabType Type, bool 
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15167,
-                    false => 15168,
+                    true => 16244,
+                    false => 16245,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15169,
-                    false => 15170,
+                    true => 16246,
+                    false => 16247,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15171,
-                    false => 15172,
+                    true => 16248,
+                    false => 16249,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record EndStoneBrickSlabBlock(Identifier Identifier, SlabType Type, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            15167 => new EndStoneBrickSlabBlock(Identifier, SlabType.Top, true),
-            15168 => new EndStoneBrickSlabBlock(Identifier, SlabType.Top, false),
-            15169 => new EndStoneBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            15170 => new EndStoneBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            15171 => new EndStoneBrickSlabBlock(Identifier, SlabType.Double, true),
-            15172 => new EndStoneBrickSlabBlock(Identifier, SlabType.Double, false),
+            16244 => new EndStoneBrickSlabBlock(Identifier, SlabType.Top, true),
+            16245 => new EndStoneBrickSlabBlock(Identifier, SlabType.Top, false),
+            16246 => new EndStoneBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            16247 => new EndStoneBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            16248 => new EndStoneBrickSlabBlock(Identifier, SlabType.Double, true),
+            16249 => new EndStoneBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

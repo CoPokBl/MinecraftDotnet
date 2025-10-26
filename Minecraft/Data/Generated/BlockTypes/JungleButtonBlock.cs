@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JungleButtonBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:button";
-    public int ProtocolId => 414;
+    public int ProtocolId => 444;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -45,58 +45,58 @@ public record JungleButtonBlock(Identifier Identifier, AttachDirection Face, Dir
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9468,
-                        false => 9469,
+                        true => 10545,
+                        false => 10546,
                     },
                     Direction.South => Powered switch {
-                        true => 9470,
-                        false => 9471,
+                        true => 10547,
+                        false => 10548,
                     },
                     Direction.West => Powered switch {
-                        true => 9472,
-                        false => 9473,
+                        true => 10549,
+                        false => 10550,
                     },
                     Direction.East => Powered switch {
-                        true => 9474,
-                        false => 9475,
+                        true => 10551,
+                        false => 10552,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9476,
-                        false => 9477,
+                        true => 10553,
+                        false => 10554,
                     },
                     Direction.South => Powered switch {
-                        true => 9478,
-                        false => 9479,
+                        true => 10555,
+                        false => 10556,
                     },
                     Direction.West => Powered switch {
-                        true => 9480,
-                        false => 9481,
+                        true => 10557,
+                        false => 10558,
                     },
                     Direction.East => Powered switch {
-                        true => 9482,
-                        false => 9483,
+                        true => 10559,
+                        false => 10560,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9484,
-                        false => 9485,
+                        true => 10561,
+                        false => 10562,
                     },
                     Direction.South => Powered switch {
-                        true => 9486,
-                        false => 9487,
+                        true => 10563,
+                        false => 10564,
                     },
                     Direction.West => Powered switch {
-                        true => 9488,
-                        false => 9489,
+                        true => 10565,
+                        false => 10566,
                     },
                     Direction.East => Powered switch {
-                        true => 9490,
-                        false => 9491,
+                        true => 10567,
+                        false => 10568,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -107,30 +107,30 @@ public record JungleButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     
     public IBlock WithState(uint state) {
         return state switch {
-            9468 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            9469 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            9470 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            9471 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            9472 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            9473 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            9474 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            9475 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            9476 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            9477 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            9478 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            9479 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            9480 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            9481 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            9482 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            9483 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            9484 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            9485 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            9486 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            9487 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            9488 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            9489 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            9490 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            9491 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            10545 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            10546 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            10547 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            10548 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            10549 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            10550 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            10551 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            10552 => new JungleButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            10553 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            10554 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            10555 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            10556 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            10557 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            10558 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            10559 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            10560 => new JungleButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            10561 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            10562 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            10563 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            10564 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            10565 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            10566 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            10567 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            10568 => new JungleButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DioriteSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 791;
+    public int ProtocolId => 821;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record DioriteSlabBlock(Identifier Identifier, SlabType Type, bool Waterl
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 15209,
-                    false => 15210,
+                    true => 16286,
+                    false => 16287,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 15211,
-                    false => 15212,
+                    true => 16288,
+                    false => 16289,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 15213,
-                    false => 15214,
+                    true => 16290,
+                    false => 16291,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record DioriteSlabBlock(Identifier Identifier, SlabType Type, bool Waterl
     
     public IBlock WithState(uint state) {
         return state switch {
-            15209 => new DioriteSlabBlock(Identifier, SlabType.Top, true),
-            15210 => new DioriteSlabBlock(Identifier, SlabType.Top, false),
-            15211 => new DioriteSlabBlock(Identifier, SlabType.Bottom, true),
-            15212 => new DioriteSlabBlock(Identifier, SlabType.Bottom, false),
-            15213 => new DioriteSlabBlock(Identifier, SlabType.Double, true),
-            15214 => new DioriteSlabBlock(Identifier, SlabType.Double, false),
+            16286 => new DioriteSlabBlock(Identifier, SlabType.Top, true),
+            16287 => new DioriteSlabBlock(Identifier, SlabType.Top, false),
+            16288 => new DioriteSlabBlock(Identifier, SlabType.Bottom, true),
+            16289 => new DioriteSlabBlock(Identifier, SlabType.Bottom, false),
+            16290 => new DioriteSlabBlock(Identifier, SlabType.Double, true),
+            16291 => new DioriteSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

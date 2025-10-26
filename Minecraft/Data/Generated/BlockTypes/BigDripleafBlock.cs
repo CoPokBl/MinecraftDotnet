@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripleafBlock.Tilt TiltValue, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:big_dripleaf";
-    public int ProtocolId => 1054;
+    public int ProtocolId => 1115;
     public double Hardness => 0.1;
     public double ExplosionResistance => 0.1;
     public double Friction => 0.6;
@@ -45,77 +45,77 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
             return Facing switch {
                 Direction.North => TiltValue switch {
                     Tilt.None => Waterlogged switch {
-                        true => 25936,
-                        false => 25937,
+                        true => 27661,
+                        false => 27662,
                     },
                     Tilt.Unstable => Waterlogged switch {
-                        true => 25938,
-                        false => 25939,
+                        true => 27663,
+                        false => 27664,
                     },
                     Tilt.Partial => Waterlogged switch {
-                        true => 25940,
-                        false => 25941,
+                        true => 27665,
+                        false => 27666,
                     },
                     Tilt.Full => Waterlogged switch {
-                        true => 25942,
-                        false => 25943,
+                        true => 27667,
+                        false => 27668,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(TiltValue), TiltValue, "Unknown value for property tilt.")
                 },
                 Direction.South => TiltValue switch {
                     Tilt.None => Waterlogged switch {
-                        true => 25944,
-                        false => 25945,
+                        true => 27669,
+                        false => 27670,
                     },
                     Tilt.Unstable => Waterlogged switch {
-                        true => 25946,
-                        false => 25947,
+                        true => 27671,
+                        false => 27672,
                     },
                     Tilt.Partial => Waterlogged switch {
-                        true => 25948,
-                        false => 25949,
+                        true => 27673,
+                        false => 27674,
                     },
                     Tilt.Full => Waterlogged switch {
-                        true => 25950,
-                        false => 25951,
+                        true => 27675,
+                        false => 27676,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(TiltValue), TiltValue, "Unknown value for property tilt.")
                 },
                 Direction.West => TiltValue switch {
                     Tilt.None => Waterlogged switch {
-                        true => 25952,
-                        false => 25953,
+                        true => 27677,
+                        false => 27678,
                     },
                     Tilt.Unstable => Waterlogged switch {
-                        true => 25954,
-                        false => 25955,
+                        true => 27679,
+                        false => 27680,
                     },
                     Tilt.Partial => Waterlogged switch {
-                        true => 25956,
-                        false => 25957,
+                        true => 27681,
+                        false => 27682,
                     },
                     Tilt.Full => Waterlogged switch {
-                        true => 25958,
-                        false => 25959,
+                        true => 27683,
+                        false => 27684,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(TiltValue), TiltValue, "Unknown value for property tilt.")
                 },
                 Direction.East => TiltValue switch {
                     Tilt.None => Waterlogged switch {
-                        true => 25960,
-                        false => 25961,
+                        true => 27685,
+                        false => 27686,
                     },
                     Tilt.Unstable => Waterlogged switch {
-                        true => 25962,
-                        false => 25963,
+                        true => 27687,
+                        false => 27688,
                     },
                     Tilt.Partial => Waterlogged switch {
-                        true => 25964,
-                        false => 25965,
+                        true => 27689,
+                        false => 27690,
                     },
                     Tilt.Full => Waterlogged switch {
-                        true => 25966,
-                        false => 25967,
+                        true => 27691,
+                        false => 27692,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(TiltValue), TiltValue, "Unknown value for property tilt.")
                 },
@@ -126,38 +126,38 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
     
     public IBlock WithState(uint state) {
         return state switch {
-            25936 => new BigDripleafBlock(Identifier, Direction.North, Tilt.None, true),
-            25937 => new BigDripleafBlock(Identifier, Direction.North, Tilt.None, false),
-            25938 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Unstable, true),
-            25939 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Unstable, false),
-            25940 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Partial, true),
-            25941 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Partial, false),
-            25942 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Full, true),
-            25943 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Full, false),
-            25944 => new BigDripleafBlock(Identifier, Direction.South, Tilt.None, true),
-            25945 => new BigDripleafBlock(Identifier, Direction.South, Tilt.None, false),
-            25946 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Unstable, true),
-            25947 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Unstable, false),
-            25948 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Partial, true),
-            25949 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Partial, false),
-            25950 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Full, true),
-            25951 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Full, false),
-            25952 => new BigDripleafBlock(Identifier, Direction.West, Tilt.None, true),
-            25953 => new BigDripleafBlock(Identifier, Direction.West, Tilt.None, false),
-            25954 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Unstable, true),
-            25955 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Unstable, false),
-            25956 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Partial, true),
-            25957 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Partial, false),
-            25958 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Full, true),
-            25959 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Full, false),
-            25960 => new BigDripleafBlock(Identifier, Direction.East, Tilt.None, true),
-            25961 => new BigDripleafBlock(Identifier, Direction.East, Tilt.None, false),
-            25962 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Unstable, true),
-            25963 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Unstable, false),
-            25964 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Partial, true),
-            25965 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Partial, false),
-            25966 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Full, true),
-            25967 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Full, false),
+            27661 => new BigDripleafBlock(Identifier, Direction.North, Tilt.None, true),
+            27662 => new BigDripleafBlock(Identifier, Direction.North, Tilt.None, false),
+            27663 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Unstable, true),
+            27664 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Unstable, false),
+            27665 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Partial, true),
+            27666 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Partial, false),
+            27667 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Full, true),
+            27668 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Full, false),
+            27669 => new BigDripleafBlock(Identifier, Direction.South, Tilt.None, true),
+            27670 => new BigDripleafBlock(Identifier, Direction.South, Tilt.None, false),
+            27671 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Unstable, true),
+            27672 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Unstable, false),
+            27673 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Partial, true),
+            27674 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Partial, false),
+            27675 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Full, true),
+            27676 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Full, false),
+            27677 => new BigDripleafBlock(Identifier, Direction.West, Tilt.None, true),
+            27678 => new BigDripleafBlock(Identifier, Direction.West, Tilt.None, false),
+            27679 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Unstable, true),
+            27680 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Unstable, false),
+            27681 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Partial, true),
+            27682 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Partial, false),
+            27683 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Full, true),
+            27684 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Full, false),
+            27685 => new BigDripleafBlock(Identifier, Direction.East, Tilt.None, true),
+            27686 => new BigDripleafBlock(Identifier, Direction.East, Tilt.None, false),
+            27687 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Unstable, true),
+            27688 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Unstable, false),
+            27689 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Partial, true),
+            27690 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Partial, false),
+            27691 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Full, true),
+            27692 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Full, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

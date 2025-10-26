@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
     public Identifier Category => "minecraft:composter";
-    public int ProtocolId => 869;
+    public int ProtocolId => 907;
     public double Hardness => 0.6;
     public double ExplosionResistance => 0.6;
     public double Friction => 0.6;
@@ -43,15 +43,15 @@ public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
     public uint StateId {
         get {
             return Level switch {
-                0 => 20432,
-                1 => 20433,
-                2 => 20434,
-                3 => 20435,
-                4 => 20436,
-                5 => 20437,
-                6 => 20438,
-                7 => 20439,
-                8 => 20440,
+                0 => 21541,
+                1 => 21542,
+                2 => 21543,
+                3 => 21544,
+                4 => 21545,
+                5 => 21546,
+                6 => 21547,
+                7 => 21548,
+                8 => 21549,
                 _ => throw new ArgumentOutOfRangeException(nameof(Level), Level, "Unknown value for property level.")
             };
         }
@@ -59,15 +59,15 @@ public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            20432 => new ComposterBlock(Identifier, 0),
-            20433 => new ComposterBlock(Identifier, 1),
-            20434 => new ComposterBlock(Identifier, 2),
-            20435 => new ComposterBlock(Identifier, 3),
-            20436 => new ComposterBlock(Identifier, 4),
-            20437 => new ComposterBlock(Identifier, 5),
-            20438 => new ComposterBlock(Identifier, 6),
-            20439 => new ComposterBlock(Identifier, 7),
-            20440 => new ComposterBlock(Identifier, 8),
+            21541 => new ComposterBlock(Identifier, 0),
+            21542 => new ComposterBlock(Identifier, 1),
+            21543 => new ComposterBlock(Identifier, 2),
+            21544 => new ComposterBlock(Identifier, 3),
+            21545 => new ComposterBlock(Identifier, 4),
+            21546 => new ComposterBlock(Identifier, 5),
+            21547 => new ComposterBlock(Identifier, 6),
+            21548 => new ComposterBlock(Identifier, 7),
+            21549 => new ComposterBlock(Identifier, 8),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

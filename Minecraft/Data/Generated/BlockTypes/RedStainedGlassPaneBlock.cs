@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RedStainedGlassPaneBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
     public Identifier Category => "minecraft:stained_glass_pane";
-    public int ProtocolId => 482;
+    public int ProtocolId => 512;
     public double Hardness => 0.3;
     public double ExplosionResistance => 0.3;
     public double Friction => 0.6;
@@ -47,44 +47,44 @@ public record RedStainedGlassPaneBlock(Identifier Identifier, bool East, bool No
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 10629,
-                                false => 10630,
+                                true => 11706,
+                                false => 11707,
                             },
                             false => West switch {
-                                true => 10631,
-                                false => 10632,
+                                true => 11708,
+                                false => 11709,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 10633,
-                                false => 10634,
+                                true => 11710,
+                                false => 11711,
                             },
                             false => West switch {
-                                true => 10635,
-                                false => 10636,
+                                true => 11712,
+                                false => 11713,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 10637,
-                                false => 10638,
+                                true => 11714,
+                                false => 11715,
                             },
                             false => West switch {
-                                true => 10639,
-                                false => 10640,
+                                true => 11716,
+                                false => 11717,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 10641,
-                                false => 10642,
+                                true => 11718,
+                                false => 11719,
                             },
                             false => West switch {
-                                true => 10643,
-                                false => 10644,
+                                true => 11720,
+                                false => 11721,
                             },
                         },
                     },
@@ -93,44 +93,44 @@ public record RedStainedGlassPaneBlock(Identifier Identifier, bool East, bool No
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 10645,
-                                false => 10646,
+                                true => 11722,
+                                false => 11723,
                             },
                             false => West switch {
-                                true => 10647,
-                                false => 10648,
+                                true => 11724,
+                                false => 11725,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 10649,
-                                false => 10650,
+                                true => 11726,
+                                false => 11727,
                             },
                             false => West switch {
-                                true => 10651,
-                                false => 10652,
+                                true => 11728,
+                                false => 11729,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 10653,
-                                false => 10654,
+                                true => 11730,
+                                false => 11731,
                             },
                             false => West switch {
-                                true => 10655,
-                                false => 10656,
+                                true => 11732,
+                                false => 11733,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 10657,
-                                false => 10658,
+                                true => 11734,
+                                false => 11735,
                             },
                             false => West switch {
-                                true => 10659,
-                                false => 10660,
+                                true => 11736,
+                                false => 11737,
                             },
                         },
                     },
@@ -141,38 +141,38 @@ public record RedStainedGlassPaneBlock(Identifier Identifier, bool East, bool No
     
     public IBlock WithState(uint state) {
         return state switch {
-            10629 => new RedStainedGlassPaneBlock(Identifier, true, true, true, true, true),
-            10630 => new RedStainedGlassPaneBlock(Identifier, true, true, true, true, false),
-            10631 => new RedStainedGlassPaneBlock(Identifier, true, true, true, false, true),
-            10632 => new RedStainedGlassPaneBlock(Identifier, true, true, true, false, false),
-            10633 => new RedStainedGlassPaneBlock(Identifier, true, true, false, true, true),
-            10634 => new RedStainedGlassPaneBlock(Identifier, true, true, false, true, false),
-            10635 => new RedStainedGlassPaneBlock(Identifier, true, true, false, false, true),
-            10636 => new RedStainedGlassPaneBlock(Identifier, true, true, false, false, false),
-            10637 => new RedStainedGlassPaneBlock(Identifier, true, false, true, true, true),
-            10638 => new RedStainedGlassPaneBlock(Identifier, true, false, true, true, false),
-            10639 => new RedStainedGlassPaneBlock(Identifier, true, false, true, false, true),
-            10640 => new RedStainedGlassPaneBlock(Identifier, true, false, true, false, false),
-            10641 => new RedStainedGlassPaneBlock(Identifier, true, false, false, true, true),
-            10642 => new RedStainedGlassPaneBlock(Identifier, true, false, false, true, false),
-            10643 => new RedStainedGlassPaneBlock(Identifier, true, false, false, false, true),
-            10644 => new RedStainedGlassPaneBlock(Identifier, true, false, false, false, false),
-            10645 => new RedStainedGlassPaneBlock(Identifier, false, true, true, true, true),
-            10646 => new RedStainedGlassPaneBlock(Identifier, false, true, true, true, false),
-            10647 => new RedStainedGlassPaneBlock(Identifier, false, true, true, false, true),
-            10648 => new RedStainedGlassPaneBlock(Identifier, false, true, true, false, false),
-            10649 => new RedStainedGlassPaneBlock(Identifier, false, true, false, true, true),
-            10650 => new RedStainedGlassPaneBlock(Identifier, false, true, false, true, false),
-            10651 => new RedStainedGlassPaneBlock(Identifier, false, true, false, false, true),
-            10652 => new RedStainedGlassPaneBlock(Identifier, false, true, false, false, false),
-            10653 => new RedStainedGlassPaneBlock(Identifier, false, false, true, true, true),
-            10654 => new RedStainedGlassPaneBlock(Identifier, false, false, true, true, false),
-            10655 => new RedStainedGlassPaneBlock(Identifier, false, false, true, false, true),
-            10656 => new RedStainedGlassPaneBlock(Identifier, false, false, true, false, false),
-            10657 => new RedStainedGlassPaneBlock(Identifier, false, false, false, true, true),
-            10658 => new RedStainedGlassPaneBlock(Identifier, false, false, false, true, false),
-            10659 => new RedStainedGlassPaneBlock(Identifier, false, false, false, false, true),
-            10660 => new RedStainedGlassPaneBlock(Identifier, false, false, false, false, false),
+            11706 => new RedStainedGlassPaneBlock(Identifier, true, true, true, true, true),
+            11707 => new RedStainedGlassPaneBlock(Identifier, true, true, true, true, false),
+            11708 => new RedStainedGlassPaneBlock(Identifier, true, true, true, false, true),
+            11709 => new RedStainedGlassPaneBlock(Identifier, true, true, true, false, false),
+            11710 => new RedStainedGlassPaneBlock(Identifier, true, true, false, true, true),
+            11711 => new RedStainedGlassPaneBlock(Identifier, true, true, false, true, false),
+            11712 => new RedStainedGlassPaneBlock(Identifier, true, true, false, false, true),
+            11713 => new RedStainedGlassPaneBlock(Identifier, true, true, false, false, false),
+            11714 => new RedStainedGlassPaneBlock(Identifier, true, false, true, true, true),
+            11715 => new RedStainedGlassPaneBlock(Identifier, true, false, true, true, false),
+            11716 => new RedStainedGlassPaneBlock(Identifier, true, false, true, false, true),
+            11717 => new RedStainedGlassPaneBlock(Identifier, true, false, true, false, false),
+            11718 => new RedStainedGlassPaneBlock(Identifier, true, false, false, true, true),
+            11719 => new RedStainedGlassPaneBlock(Identifier, true, false, false, true, false),
+            11720 => new RedStainedGlassPaneBlock(Identifier, true, false, false, false, true),
+            11721 => new RedStainedGlassPaneBlock(Identifier, true, false, false, false, false),
+            11722 => new RedStainedGlassPaneBlock(Identifier, false, true, true, true, true),
+            11723 => new RedStainedGlassPaneBlock(Identifier, false, true, true, true, false),
+            11724 => new RedStainedGlassPaneBlock(Identifier, false, true, true, false, true),
+            11725 => new RedStainedGlassPaneBlock(Identifier, false, true, true, false, false),
+            11726 => new RedStainedGlassPaneBlock(Identifier, false, true, false, true, true),
+            11727 => new RedStainedGlassPaneBlock(Identifier, false, true, false, true, false),
+            11728 => new RedStainedGlassPaneBlock(Identifier, false, true, false, false, true),
+            11729 => new RedStainedGlassPaneBlock(Identifier, false, true, false, false, false),
+            11730 => new RedStainedGlassPaneBlock(Identifier, false, false, true, true, true),
+            11731 => new RedStainedGlassPaneBlock(Identifier, false, false, true, true, false),
+            11732 => new RedStainedGlassPaneBlock(Identifier, false, false, true, false, true),
+            11733 => new RedStainedGlassPaneBlock(Identifier, false, false, true, false, false),
+            11734 => new RedStainedGlassPaneBlock(Identifier, false, false, false, true, true),
+            11735 => new RedStainedGlassPaneBlock(Identifier, false, false, false, true, false),
+            11736 => new RedStainedGlassPaneBlock(Identifier, false, false, false, false, true),
+            11737 => new RedStainedGlassPaneBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

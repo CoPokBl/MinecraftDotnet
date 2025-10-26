@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LightBlueCandleBlock(Identifier Identifier, int Candles, bool Lit, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:candle";
-    public int ProtocolId => 908;
+    public int ProtocolId => 946;
     public double Hardness => 0.1;
     public double ExplosionResistance => 0.1;
     public double Friction => 0.6;
@@ -45,42 +45,42 @@ public record LightBlueCandleBlock(Identifier Identifier, int Candles, bool Lit,
             return Candles switch {
                 1 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21849,
-                        false => 21850,
+                        true => 22958,
+                        false => 22959,
                     },
                     false => Waterlogged switch {
-                        true => 21851,
-                        false => 21852,
+                        true => 22960,
+                        false => 22961,
                     },
                 },
                 2 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21853,
-                        false => 21854,
+                        true => 22962,
+                        false => 22963,
                     },
                     false => Waterlogged switch {
-                        true => 21855,
-                        false => 21856,
+                        true => 22964,
+                        false => 22965,
                     },
                 },
                 3 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21857,
-                        false => 21858,
+                        true => 22966,
+                        false => 22967,
                     },
                     false => Waterlogged switch {
-                        true => 21859,
-                        false => 21860,
+                        true => 22968,
+                        false => 22969,
                     },
                 },
                 4 => Lit switch {
                     true => Waterlogged switch {
-                        true => 21861,
-                        false => 21862,
+                        true => 22970,
+                        false => 22971,
                     },
                     false => Waterlogged switch {
-                        true => 21863,
-                        false => 21864,
+                        true => 22972,
+                        false => 22973,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Candles), Candles, "Unknown value for property candles.")
@@ -90,22 +90,22 @@ public record LightBlueCandleBlock(Identifier Identifier, int Candles, bool Lit,
     
     public IBlock WithState(uint state) {
         return state switch {
-            21849 => new LightBlueCandleBlock(Identifier, 1, true, true),
-            21850 => new LightBlueCandleBlock(Identifier, 1, true, false),
-            21851 => new LightBlueCandleBlock(Identifier, 1, false, true),
-            21852 => new LightBlueCandleBlock(Identifier, 1, false, false),
-            21853 => new LightBlueCandleBlock(Identifier, 2, true, true),
-            21854 => new LightBlueCandleBlock(Identifier, 2, true, false),
-            21855 => new LightBlueCandleBlock(Identifier, 2, false, true),
-            21856 => new LightBlueCandleBlock(Identifier, 2, false, false),
-            21857 => new LightBlueCandleBlock(Identifier, 3, true, true),
-            21858 => new LightBlueCandleBlock(Identifier, 3, true, false),
-            21859 => new LightBlueCandleBlock(Identifier, 3, false, true),
-            21860 => new LightBlueCandleBlock(Identifier, 3, false, false),
-            21861 => new LightBlueCandleBlock(Identifier, 4, true, true),
-            21862 => new LightBlueCandleBlock(Identifier, 4, true, false),
-            21863 => new LightBlueCandleBlock(Identifier, 4, false, true),
-            21864 => new LightBlueCandleBlock(Identifier, 4, false, false),
+            22958 => new LightBlueCandleBlock(Identifier, 1, true, true),
+            22959 => new LightBlueCandleBlock(Identifier, 1, true, false),
+            22960 => new LightBlueCandleBlock(Identifier, 1, false, true),
+            22961 => new LightBlueCandleBlock(Identifier, 1, false, false),
+            22962 => new LightBlueCandleBlock(Identifier, 2, true, true),
+            22963 => new LightBlueCandleBlock(Identifier, 2, true, false),
+            22964 => new LightBlueCandleBlock(Identifier, 2, false, true),
+            22965 => new LightBlueCandleBlock(Identifier, 2, false, false),
+            22966 => new LightBlueCandleBlock(Identifier, 3, true, true),
+            22967 => new LightBlueCandleBlock(Identifier, 3, true, false),
+            22968 => new LightBlueCandleBlock(Identifier, 3, false, true),
+            22969 => new LightBlueCandleBlock(Identifier, 3, false, false),
+            22970 => new LightBlueCandleBlock(Identifier, 4, true, true),
+            22971 => new LightBlueCandleBlock(Identifier, 4, true, false),
+            22972 => new LightBlueCandleBlock(Identifier, 4, false, true),
+            22973 => new LightBlueCandleBlock(Identifier, 4, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

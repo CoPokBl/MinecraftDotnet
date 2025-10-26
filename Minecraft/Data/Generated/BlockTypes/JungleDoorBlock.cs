@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JungleDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
     public Identifier Category => "minecraft:door";
-    public int ProtocolId => 616;
+    public int ProtocolId => 646;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -47,22 +47,22 @@ public record JungleDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 12909,
-                                false => 12910,
+                                true => 13986,
+                                false => 13987,
                             },
                             false => Powered switch {
-                                true => 12911,
-                                false => 12912,
+                                true => 13988,
+                                false => 13989,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 12913,
-                                false => 12914,
+                                true => 13990,
+                                false => 13991,
                             },
                             false => Powered switch {
-                                true => 12915,
-                                false => 12916,
+                                true => 13992,
+                                false => 13993,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -70,22 +70,22 @@ public record JungleDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 12917,
-                                false => 12918,
+                                true => 13994,
+                                false => 13995,
                             },
                             false => Powered switch {
-                                true => 12919,
-                                false => 12920,
+                                true => 13996,
+                                false => 13997,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 12921,
-                                false => 12922,
+                                true => 13998,
+                                false => 13999,
                             },
                             false => Powered switch {
-                                true => 12923,
-                                false => 12924,
+                                true => 14000,
+                                false => 14001,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -96,22 +96,22 @@ public record JungleDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 12925,
-                                false => 12926,
+                                true => 14002,
+                                false => 14003,
                             },
                             false => Powered switch {
-                                true => 12927,
-                                false => 12928,
+                                true => 14004,
+                                false => 14005,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 12929,
-                                false => 12930,
+                                true => 14006,
+                                false => 14007,
                             },
                             false => Powered switch {
-                                true => 12931,
-                                false => 12932,
+                                true => 14008,
+                                false => 14009,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -119,22 +119,22 @@ public record JungleDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 12933,
-                                false => 12934,
+                                true => 14010,
+                                false => 14011,
                             },
                             false => Powered switch {
-                                true => 12935,
-                                false => 12936,
+                                true => 14012,
+                                false => 14013,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 12937,
-                                false => 12938,
+                                true => 14014,
+                                false => 14015,
                             },
                             false => Powered switch {
-                                true => 12939,
-                                false => 12940,
+                                true => 14016,
+                                false => 14017,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -145,22 +145,22 @@ public record JungleDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 12941,
-                                false => 12942,
+                                true => 14018,
+                                false => 14019,
                             },
                             false => Powered switch {
-                                true => 12943,
-                                false => 12944,
+                                true => 14020,
+                                false => 14021,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 12945,
-                                false => 12946,
+                                true => 14022,
+                                false => 14023,
                             },
                             false => Powered switch {
-                                true => 12947,
-                                false => 12948,
+                                true => 14024,
+                                false => 14025,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -168,22 +168,22 @@ public record JungleDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 12949,
-                                false => 12950,
+                                true => 14026,
+                                false => 14027,
                             },
                             false => Powered switch {
-                                true => 12951,
-                                false => 12952,
+                                true => 14028,
+                                false => 14029,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 12953,
-                                false => 12954,
+                                true => 14030,
+                                false => 14031,
                             },
                             false => Powered switch {
-                                true => 12955,
-                                false => 12956,
+                                true => 14032,
+                                false => 14033,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -194,22 +194,22 @@ public record JungleDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Upper => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 12957,
-                                false => 12958,
+                                true => 14034,
+                                false => 14035,
                             },
                             false => Powered switch {
-                                true => 12959,
-                                false => 12960,
+                                true => 14036,
+                                false => 14037,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 12961,
-                                false => 12962,
+                                true => 14038,
+                                false => 14039,
                             },
                             false => Powered switch {
-                                true => 12963,
-                                false => 12964,
+                                true => 14040,
+                                false => 14041,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -217,22 +217,22 @@ public record JungleDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
                     BlockHalf.Lower => Hinge switch {
                         LeftRight.Left => Open switch {
                             true => Powered switch {
-                                true => 12965,
-                                false => 12966,
+                                true => 14042,
+                                false => 14043,
                             },
                             false => Powered switch {
-                                true => 12967,
-                                false => 12968,
+                                true => 14044,
+                                false => 14045,
                             },
                         },
                         LeftRight.Right => Open switch {
                             true => Powered switch {
-                                true => 12969,
-                                false => 12970,
+                                true => 14046,
+                                false => 14047,
                             },
                             false => Powered switch {
-                                true => 12971,
-                                false => 12972,
+                                true => 14048,
+                                false => 14049,
                             },
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Hinge), Hinge, "Unknown value for property hinge.")
@@ -246,70 +246,70 @@ public record JungleDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
     
     public IBlock WithState(uint state) {
         return state switch {
-            12909 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
-            12910 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
-            12911 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, true),
-            12912 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, false),
-            12913 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, true),
-            12914 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, false),
-            12915 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, true),
-            12916 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, false),
-            12917 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, true),
-            12918 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, false),
-            12919 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, true),
-            12920 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, false),
-            12921 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, true),
-            12922 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, false),
-            12923 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, true),
-            12924 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, false),
-            12925 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, true),
-            12926 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, false),
-            12927 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, true),
-            12928 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, false),
-            12929 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, true),
-            12930 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, false),
-            12931 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, true),
-            12932 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, false),
-            12933 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, true),
-            12934 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, false),
-            12935 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, true),
-            12936 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, false),
-            12937 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, true),
-            12938 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, false),
-            12939 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, true),
-            12940 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, false),
-            12941 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, true),
-            12942 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, false),
-            12943 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, true),
-            12944 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, false),
-            12945 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, true),
-            12946 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, false),
-            12947 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, true),
-            12948 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, false),
-            12949 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, true),
-            12950 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, false),
-            12951 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, true),
-            12952 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, false),
-            12953 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, true),
-            12954 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, false),
-            12955 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, true),
-            12956 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, false),
-            12957 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, true),
-            12958 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, false),
-            12959 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, true),
-            12960 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, false),
-            12961 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, true),
-            12962 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, false),
-            12963 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, true),
-            12964 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, false),
-            12965 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, true),
-            12966 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, false),
-            12967 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, true),
-            12968 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, false),
-            12969 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, true),
-            12970 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, false),
-            12971 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
-            12972 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
+            13986 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, true),
+            13987 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, true, false),
+            13988 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, true),
+            13989 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Left, false, false),
+            13990 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, true),
+            13991 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, true, false),
+            13992 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, true),
+            13993 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Upper, LeftRight.Right, false, false),
+            13994 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, true),
+            13995 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, true, false),
+            13996 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, true),
+            13997 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Left, false, false),
+            13998 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, true),
+            13999 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, true, false),
+            14000 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, true),
+            14001 => new JungleDoorBlock(Identifier, Direction.North, BlockHalf.Lower, LeftRight.Right, false, false),
+            14002 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, true),
+            14003 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, true, false),
+            14004 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, true),
+            14005 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Left, false, false),
+            14006 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, true),
+            14007 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, true, false),
+            14008 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, true),
+            14009 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Upper, LeftRight.Right, false, false),
+            14010 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, true),
+            14011 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, true, false),
+            14012 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, true),
+            14013 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Left, false, false),
+            14014 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, true),
+            14015 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, true, false),
+            14016 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, true),
+            14017 => new JungleDoorBlock(Identifier, Direction.South, BlockHalf.Lower, LeftRight.Right, false, false),
+            14018 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, true),
+            14019 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, true, false),
+            14020 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, true),
+            14021 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Left, false, false),
+            14022 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, true),
+            14023 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, true, false),
+            14024 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, true),
+            14025 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Upper, LeftRight.Right, false, false),
+            14026 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, true),
+            14027 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, true, false),
+            14028 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, true),
+            14029 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Left, false, false),
+            14030 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, true),
+            14031 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, true, false),
+            14032 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, true),
+            14033 => new JungleDoorBlock(Identifier, Direction.West, BlockHalf.Lower, LeftRight.Right, false, false),
+            14034 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, true),
+            14035 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, true, false),
+            14036 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, true),
+            14037 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Left, false, false),
+            14038 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, true),
+            14039 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, true, false),
+            14040 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, true),
+            14041 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Upper, LeftRight.Right, false, false),
+            14042 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, true),
+            14043 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, true, false),
+            14044 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, true),
+            14045 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Left, false, false),
+            14046 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, true),
+            14047 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, true, false),
+            14048 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, true),
+            14049 => new JungleDoorBlock(Identifier, Direction.East, BlockHalf.Lower, LeftRight.Right, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

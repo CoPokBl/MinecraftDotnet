@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CyanGlazedTerracottaBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:glazed_terracotta";
-    public int ProtocolId => 671;
+    public int ProtocolId => 701;
     public double Hardness => 1.4;
     public double ExplosionResistance => 1.4;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record CyanGlazedTerracottaBlock(Identifier Identifier, Direction Facing)
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 13723,
-                Direction.South => 13724,
-                Direction.West => 13725,
-                Direction.East => 13726,
+                Direction.North => 14800,
+                Direction.South => 14801,
+                Direction.West => 14802,
+                Direction.East => 14803,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -54,10 +54,10 @@ public record CyanGlazedTerracottaBlock(Identifier Identifier, Direction Facing)
     
     public IBlock WithState(uint state) {
         return state switch {
-            13723 => new CyanGlazedTerracottaBlock(Identifier, Direction.North),
-            13724 => new CyanGlazedTerracottaBlock(Identifier, Direction.South),
-            13725 => new CyanGlazedTerracottaBlock(Identifier, Direction.West),
-            13726 => new CyanGlazedTerracottaBlock(Identifier, Direction.East),
+            14800 => new CyanGlazedTerracottaBlock(Identifier, Direction.North),
+            14801 => new CyanGlazedTerracottaBlock(Identifier, Direction.South),
+            14802 => new CyanGlazedTerracottaBlock(Identifier, Direction.West),
+            14803 => new CyanGlazedTerracottaBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

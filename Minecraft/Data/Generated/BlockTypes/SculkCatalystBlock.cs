@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SculkCatalystBlock(Identifier Identifier, bool Bloom) : IBlock {
     public Identifier Category => "minecraft:sculk_catalyst";
-    public int ProtocolId => 965;
+    public int ProtocolId => 1003;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record SculkCatalystBlock(Identifier Identifier, bool Bloom) : IBlock {
     public uint StateId {
         get {
             return Bloom switch {
-                true => 23988,
-                false => 23989,
+                true => 25097,
+                false => 25098,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            23988 => new SculkCatalystBlock(Identifier, true),
-            23989 => new SculkCatalystBlock(Identifier, false),
+            25097 => new SculkCatalystBlock(Identifier, true),
+            25098 => new SculkCatalystBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

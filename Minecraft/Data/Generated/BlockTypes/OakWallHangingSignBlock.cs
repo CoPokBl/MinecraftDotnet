@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:wall_hanging_sign";
-    public int ProtocolId => 233;
+    public int ProtocolId => 245;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, b
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5706,
-                    false => 5707,
+                    true => 6474,
+                    false => 6475,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5708,
-                    false => 5709,
+                    true => 6476,
+                    false => 6477,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5710,
-                    false => 5711,
+                    true => 6478,
+                    false => 6479,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5712,
-                    false => 5713,
+                    true => 6480,
+                    false => 6481,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, b
     
     public IBlock WithState(uint state) {
         return state switch {
-            5706 => new OakWallHangingSignBlock(Identifier, Direction.North, true),
-            5707 => new OakWallHangingSignBlock(Identifier, Direction.North, false),
-            5708 => new OakWallHangingSignBlock(Identifier, Direction.South, true),
-            5709 => new OakWallHangingSignBlock(Identifier, Direction.South, false),
-            5710 => new OakWallHangingSignBlock(Identifier, Direction.West, true),
-            5711 => new OakWallHangingSignBlock(Identifier, Direction.West, false),
-            5712 => new OakWallHangingSignBlock(Identifier, Direction.East, true),
-            5713 => new OakWallHangingSignBlock(Identifier, Direction.East, false),
+            6474 => new OakWallHangingSignBlock(Identifier, Direction.North, true),
+            6475 => new OakWallHangingSignBlock(Identifier, Direction.North, false),
+            6476 => new OakWallHangingSignBlock(Identifier, Direction.South, true),
+            6477 => new OakWallHangingSignBlock(Identifier, Direction.South, false),
+            6478 => new OakWallHangingSignBlock(Identifier, Direction.West, true),
+            6479 => new OakWallHangingSignBlock(Identifier, Direction.West, false),
+            6480 => new OakWallHangingSignBlock(Identifier, Direction.East, true),
+            6481 => new OakWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

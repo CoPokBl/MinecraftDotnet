@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BambooSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:standing_sign";
-    public int ProtocolId => 206;
+    public int ProtocolId => 218;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,68 +44,68 @@ public record BambooSignBlock(Identifier Identifier, int Rotation, bool Waterlog
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 4654,
-                    false => 4655,
+                    true => 5422,
+                    false => 5423,
                 },
                 1 => Waterlogged switch {
-                    true => 4656,
-                    false => 4657,
+                    true => 5424,
+                    false => 5425,
                 },
                 2 => Waterlogged switch {
-                    true => 4658,
-                    false => 4659,
+                    true => 5426,
+                    false => 5427,
                 },
                 3 => Waterlogged switch {
-                    true => 4660,
-                    false => 4661,
+                    true => 5428,
+                    false => 5429,
                 },
                 4 => Waterlogged switch {
-                    true => 4662,
-                    false => 4663,
+                    true => 5430,
+                    false => 5431,
                 },
                 5 => Waterlogged switch {
-                    true => 4664,
-                    false => 4665,
+                    true => 5432,
+                    false => 5433,
                 },
                 6 => Waterlogged switch {
-                    true => 4666,
-                    false => 4667,
+                    true => 5434,
+                    false => 5435,
                 },
                 7 => Waterlogged switch {
-                    true => 4668,
-                    false => 4669,
+                    true => 5436,
+                    false => 5437,
                 },
                 8 => Waterlogged switch {
-                    true => 4670,
-                    false => 4671,
+                    true => 5438,
+                    false => 5439,
                 },
                 9 => Waterlogged switch {
-                    true => 4672,
-                    false => 4673,
+                    true => 5440,
+                    false => 5441,
                 },
                 10 => Waterlogged switch {
-                    true => 4674,
-                    false => 4675,
+                    true => 5442,
+                    false => 5443,
                 },
                 11 => Waterlogged switch {
-                    true => 4676,
-                    false => 4677,
+                    true => 5444,
+                    false => 5445,
                 },
                 12 => Waterlogged switch {
-                    true => 4678,
-                    false => 4679,
+                    true => 5446,
+                    false => 5447,
                 },
                 13 => Waterlogged switch {
-                    true => 4680,
-                    false => 4681,
+                    true => 5448,
+                    false => 5449,
                 },
                 14 => Waterlogged switch {
-                    true => 4682,
-                    false => 4683,
+                    true => 5450,
+                    false => 5451,
                 },
                 15 => Waterlogged switch {
-                    true => 4684,
-                    false => 4685,
+                    true => 5452,
+                    false => 5453,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -114,38 +114,38 @@ public record BambooSignBlock(Identifier Identifier, int Rotation, bool Waterlog
     
     public IBlock WithState(uint state) {
         return state switch {
-            4654 => new BambooSignBlock(Identifier, 0, true),
-            4655 => new BambooSignBlock(Identifier, 0, false),
-            4656 => new BambooSignBlock(Identifier, 1, true),
-            4657 => new BambooSignBlock(Identifier, 1, false),
-            4658 => new BambooSignBlock(Identifier, 2, true),
-            4659 => new BambooSignBlock(Identifier, 2, false),
-            4660 => new BambooSignBlock(Identifier, 3, true),
-            4661 => new BambooSignBlock(Identifier, 3, false),
-            4662 => new BambooSignBlock(Identifier, 4, true),
-            4663 => new BambooSignBlock(Identifier, 4, false),
-            4664 => new BambooSignBlock(Identifier, 5, true),
-            4665 => new BambooSignBlock(Identifier, 5, false),
-            4666 => new BambooSignBlock(Identifier, 6, true),
-            4667 => new BambooSignBlock(Identifier, 6, false),
-            4668 => new BambooSignBlock(Identifier, 7, true),
-            4669 => new BambooSignBlock(Identifier, 7, false),
-            4670 => new BambooSignBlock(Identifier, 8, true),
-            4671 => new BambooSignBlock(Identifier, 8, false),
-            4672 => new BambooSignBlock(Identifier, 9, true),
-            4673 => new BambooSignBlock(Identifier, 9, false),
-            4674 => new BambooSignBlock(Identifier, 10, true),
-            4675 => new BambooSignBlock(Identifier, 10, false),
-            4676 => new BambooSignBlock(Identifier, 11, true),
-            4677 => new BambooSignBlock(Identifier, 11, false),
-            4678 => new BambooSignBlock(Identifier, 12, true),
-            4679 => new BambooSignBlock(Identifier, 12, false),
-            4680 => new BambooSignBlock(Identifier, 13, true),
-            4681 => new BambooSignBlock(Identifier, 13, false),
-            4682 => new BambooSignBlock(Identifier, 14, true),
-            4683 => new BambooSignBlock(Identifier, 14, false),
-            4684 => new BambooSignBlock(Identifier, 15, true),
-            4685 => new BambooSignBlock(Identifier, 15, false),
+            5422 => new BambooSignBlock(Identifier, 0, true),
+            5423 => new BambooSignBlock(Identifier, 0, false),
+            5424 => new BambooSignBlock(Identifier, 1, true),
+            5425 => new BambooSignBlock(Identifier, 1, false),
+            5426 => new BambooSignBlock(Identifier, 2, true),
+            5427 => new BambooSignBlock(Identifier, 2, false),
+            5428 => new BambooSignBlock(Identifier, 3, true),
+            5429 => new BambooSignBlock(Identifier, 3, false),
+            5430 => new BambooSignBlock(Identifier, 4, true),
+            5431 => new BambooSignBlock(Identifier, 4, false),
+            5432 => new BambooSignBlock(Identifier, 5, true),
+            5433 => new BambooSignBlock(Identifier, 5, false),
+            5434 => new BambooSignBlock(Identifier, 6, true),
+            5435 => new BambooSignBlock(Identifier, 6, false),
+            5436 => new BambooSignBlock(Identifier, 7, true),
+            5437 => new BambooSignBlock(Identifier, 7, false),
+            5438 => new BambooSignBlock(Identifier, 8, true),
+            5439 => new BambooSignBlock(Identifier, 8, false),
+            5440 => new BambooSignBlock(Identifier, 9, true),
+            5441 => new BambooSignBlock(Identifier, 9, false),
+            5442 => new BambooSignBlock(Identifier, 10, true),
+            5443 => new BambooSignBlock(Identifier, 10, false),
+            5444 => new BambooSignBlock(Identifier, 11, true),
+            5445 => new BambooSignBlock(Identifier, 11, false),
+            5446 => new BambooSignBlock(Identifier, 12, true),
+            5447 => new BambooSignBlock(Identifier, 12, false),
+            5448 => new BambooSignBlock(Identifier, 13, true),
+            5449 => new BambooSignBlock(Identifier, 13, false),
+            5450 => new BambooSignBlock(Identifier, 14, true),
+            5451 => new BambooSignBlock(Identifier, 14, false),
+            5452 => new BambooSignBlock(Identifier, 15, true),
+            5453 => new BambooSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BambooWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:wall_sign";
-    public int ProtocolId => 220;
+    public int ProtocolId => 232;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record BambooWallSignBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 4930,
-                    false => 4931,
+                    true => 5698,
+                    false => 5699,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 4932,
-                    false => 4933,
+                    true => 5700,
+                    false => 5701,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 4934,
-                    false => 4935,
+                    true => 5702,
+                    false => 5703,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 4936,
-                    false => 4937,
+                    true => 5704,
+                    false => 5705,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record BambooWallSignBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            4930 => new BambooWallSignBlock(Identifier, Direction.North, true),
-            4931 => new BambooWallSignBlock(Identifier, Direction.North, false),
-            4932 => new BambooWallSignBlock(Identifier, Direction.South, true),
-            4933 => new BambooWallSignBlock(Identifier, Direction.South, false),
-            4934 => new BambooWallSignBlock(Identifier, Direction.West, true),
-            4935 => new BambooWallSignBlock(Identifier, Direction.West, false),
-            4936 => new BambooWallSignBlock(Identifier, Direction.East, true),
-            4937 => new BambooWallSignBlock(Identifier, Direction.East, false),
+            5698 => new BambooWallSignBlock(Identifier, Direction.North, true),
+            5699 => new BambooWallSignBlock(Identifier, Direction.North, false),
+            5700 => new BambooWallSignBlock(Identifier, Direction.South, true),
+            5701 => new BambooWallSignBlock(Identifier, Direction.South, false),
+            5702 => new BambooWallSignBlock(Identifier, Direction.West, true),
+            5703 => new BambooWallSignBlock(Identifier, Direction.West, false),
+            5704 => new BambooWallSignBlock(Identifier, Direction.East, true),
+            5705 => new BambooWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

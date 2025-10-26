@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BasaltBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:rotated_pillar";
-    public int ProtocolId => 275;
+    public int ProtocolId => 287;
     public double Hardness => 1.25;
     public double ExplosionResistance => 4.2;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record BasaltBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 6031,
-                Axis.Y => 6032,
-                Axis.Z => 6033,
+                Axis.X => 6799,
+                Axis.Y => 6800,
+                Axis.Z => 6801,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record BasaltBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            6031 => new BasaltBlock(Identifier, Axis.X),
-            6032 => new BasaltBlock(Identifier, Axis.Y),
-            6033 => new BasaltBlock(Identifier, Axis.Z),
+            6799 => new BasaltBlock(Identifier, Axis.X),
+            6800 => new BasaltBlock(Identifier, Axis.Y),
+            6801 => new BasaltBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

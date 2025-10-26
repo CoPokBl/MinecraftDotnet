@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OakFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
     public Identifier Category => "minecraft:fence";
-    public int ProtocolId => 271;
+    public int ProtocolId => 283;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -47,44 +47,44 @@ public record OakFenceBlock(Identifier Identifier, bool East, bool North, bool S
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 5996,
-                                false => 5997,
+                                true => 6764,
+                                false => 6765,
                             },
                             false => West switch {
-                                true => 5998,
-                                false => 5999,
+                                true => 6766,
+                                false => 6767,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 6000,
-                                false => 6001,
+                                true => 6768,
+                                false => 6769,
                             },
                             false => West switch {
-                                true => 6002,
-                                false => 6003,
+                                true => 6770,
+                                false => 6771,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 6004,
-                                false => 6005,
+                                true => 6772,
+                                false => 6773,
                             },
                             false => West switch {
-                                true => 6006,
-                                false => 6007,
+                                true => 6774,
+                                false => 6775,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 6008,
-                                false => 6009,
+                                true => 6776,
+                                false => 6777,
                             },
                             false => West switch {
-                                true => 6010,
-                                false => 6011,
+                                true => 6778,
+                                false => 6779,
                             },
                         },
                     },
@@ -93,44 +93,44 @@ public record OakFenceBlock(Identifier Identifier, bool East, bool North, bool S
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 6012,
-                                false => 6013,
+                                true => 6780,
+                                false => 6781,
                             },
                             false => West switch {
-                                true => 6014,
-                                false => 6015,
+                                true => 6782,
+                                false => 6783,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 6016,
-                                false => 6017,
+                                true => 6784,
+                                false => 6785,
                             },
                             false => West switch {
-                                true => 6018,
-                                false => 6019,
+                                true => 6786,
+                                false => 6787,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 6020,
-                                false => 6021,
+                                true => 6788,
+                                false => 6789,
                             },
                             false => West switch {
-                                true => 6022,
-                                false => 6023,
+                                true => 6790,
+                                false => 6791,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 6024,
-                                false => 6025,
+                                true => 6792,
+                                false => 6793,
                             },
                             false => West switch {
-                                true => 6026,
-                                false => 6027,
+                                true => 6794,
+                                false => 6795,
                             },
                         },
                     },
@@ -141,38 +141,38 @@ public record OakFenceBlock(Identifier Identifier, bool East, bool North, bool S
     
     public IBlock WithState(uint state) {
         return state switch {
-            5996 => new OakFenceBlock(Identifier, true, true, true, true, true),
-            5997 => new OakFenceBlock(Identifier, true, true, true, true, false),
-            5998 => new OakFenceBlock(Identifier, true, true, true, false, true),
-            5999 => new OakFenceBlock(Identifier, true, true, true, false, false),
-            6000 => new OakFenceBlock(Identifier, true, true, false, true, true),
-            6001 => new OakFenceBlock(Identifier, true, true, false, true, false),
-            6002 => new OakFenceBlock(Identifier, true, true, false, false, true),
-            6003 => new OakFenceBlock(Identifier, true, true, false, false, false),
-            6004 => new OakFenceBlock(Identifier, true, false, true, true, true),
-            6005 => new OakFenceBlock(Identifier, true, false, true, true, false),
-            6006 => new OakFenceBlock(Identifier, true, false, true, false, true),
-            6007 => new OakFenceBlock(Identifier, true, false, true, false, false),
-            6008 => new OakFenceBlock(Identifier, true, false, false, true, true),
-            6009 => new OakFenceBlock(Identifier, true, false, false, true, false),
-            6010 => new OakFenceBlock(Identifier, true, false, false, false, true),
-            6011 => new OakFenceBlock(Identifier, true, false, false, false, false),
-            6012 => new OakFenceBlock(Identifier, false, true, true, true, true),
-            6013 => new OakFenceBlock(Identifier, false, true, true, true, false),
-            6014 => new OakFenceBlock(Identifier, false, true, true, false, true),
-            6015 => new OakFenceBlock(Identifier, false, true, true, false, false),
-            6016 => new OakFenceBlock(Identifier, false, true, false, true, true),
-            6017 => new OakFenceBlock(Identifier, false, true, false, true, false),
-            6018 => new OakFenceBlock(Identifier, false, true, false, false, true),
-            6019 => new OakFenceBlock(Identifier, false, true, false, false, false),
-            6020 => new OakFenceBlock(Identifier, false, false, true, true, true),
-            6021 => new OakFenceBlock(Identifier, false, false, true, true, false),
-            6022 => new OakFenceBlock(Identifier, false, false, true, false, true),
-            6023 => new OakFenceBlock(Identifier, false, false, true, false, false),
-            6024 => new OakFenceBlock(Identifier, false, false, false, true, true),
-            6025 => new OakFenceBlock(Identifier, false, false, false, true, false),
-            6026 => new OakFenceBlock(Identifier, false, false, false, false, true),
-            6027 => new OakFenceBlock(Identifier, false, false, false, false, false),
+            6764 => new OakFenceBlock(Identifier, true, true, true, true, true),
+            6765 => new OakFenceBlock(Identifier, true, true, true, true, false),
+            6766 => new OakFenceBlock(Identifier, true, true, true, false, true),
+            6767 => new OakFenceBlock(Identifier, true, true, true, false, false),
+            6768 => new OakFenceBlock(Identifier, true, true, false, true, true),
+            6769 => new OakFenceBlock(Identifier, true, true, false, true, false),
+            6770 => new OakFenceBlock(Identifier, true, true, false, false, true),
+            6771 => new OakFenceBlock(Identifier, true, true, false, false, false),
+            6772 => new OakFenceBlock(Identifier, true, false, true, true, true),
+            6773 => new OakFenceBlock(Identifier, true, false, true, true, false),
+            6774 => new OakFenceBlock(Identifier, true, false, true, false, true),
+            6775 => new OakFenceBlock(Identifier, true, false, true, false, false),
+            6776 => new OakFenceBlock(Identifier, true, false, false, true, true),
+            6777 => new OakFenceBlock(Identifier, true, false, false, true, false),
+            6778 => new OakFenceBlock(Identifier, true, false, false, false, true),
+            6779 => new OakFenceBlock(Identifier, true, false, false, false, false),
+            6780 => new OakFenceBlock(Identifier, false, true, true, true, true),
+            6781 => new OakFenceBlock(Identifier, false, true, true, true, false),
+            6782 => new OakFenceBlock(Identifier, false, true, true, false, true),
+            6783 => new OakFenceBlock(Identifier, false, true, true, false, false),
+            6784 => new OakFenceBlock(Identifier, false, true, false, true, true),
+            6785 => new OakFenceBlock(Identifier, false, true, false, true, false),
+            6786 => new OakFenceBlock(Identifier, false, true, false, false, true),
+            6787 => new OakFenceBlock(Identifier, false, true, false, false, false),
+            6788 => new OakFenceBlock(Identifier, false, false, true, true, true),
+            6789 => new OakFenceBlock(Identifier, false, false, true, true, false),
+            6790 => new OakFenceBlock(Identifier, false, false, true, false, true),
+            6791 => new OakFenceBlock(Identifier, false, false, true, false, false),
+            6792 => new OakFenceBlock(Identifier, false, false, false, true, true),
+            6793 => new OakFenceBlock(Identifier, false, false, false, true, false),
+            6794 => new OakFenceBlock(Identifier, false, false, false, false, true),
+            6795 => new OakFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LimeShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     public Identifier Category => "minecraft:shulker_box";
-    public int ProtocolId => 651;
+    public int ProtocolId => 681;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;
@@ -43,12 +43,12 @@ public record LimeShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlo
     public uint StateId {
         get {
             return Facing switch {
-                Cardinal.North => 13621,
-                Cardinal.East => 13622,
-                Cardinal.South => 13623,
-                Cardinal.West => 13624,
-                Cardinal.Up => 13625,
-                Cardinal.Down => 13626,
+                Cardinal.North => 14698,
+                Cardinal.East => 14699,
+                Cardinal.South => 14700,
+                Cardinal.West => 14701,
+                Cardinal.Up => 14702,
+                Cardinal.Down => 14703,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -56,12 +56,12 @@ public record LimeShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            13621 => new LimeShulkerBoxBlock(Identifier, Cardinal.North),
-            13622 => new LimeShulkerBoxBlock(Identifier, Cardinal.East),
-            13623 => new LimeShulkerBoxBlock(Identifier, Cardinal.South),
-            13624 => new LimeShulkerBoxBlock(Identifier, Cardinal.West),
-            13625 => new LimeShulkerBoxBlock(Identifier, Cardinal.Up),
-            13626 => new LimeShulkerBoxBlock(Identifier, Cardinal.Down),
+            14698 => new LimeShulkerBoxBlock(Identifier, Cardinal.North),
+            14699 => new LimeShulkerBoxBlock(Identifier, Cardinal.East),
+            14700 => new LimeShulkerBoxBlock(Identifier, Cardinal.South),
+            14701 => new LimeShulkerBoxBlock(Identifier, Cardinal.West),
+            14702 => new LimeShulkerBoxBlock(Identifier, Cardinal.Up),
+            14703 => new LimeShulkerBoxBlock(Identifier, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

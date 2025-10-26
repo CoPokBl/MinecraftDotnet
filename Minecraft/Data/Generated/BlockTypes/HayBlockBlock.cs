@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record HayBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:hay";
-    public int ProtocolId => 505;
+    public int ProtocolId => 535;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record HayBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 11614,
-                Axis.Y => 11615,
-                Axis.Z => 11616,
+                Axis.X => 12691,
+                Axis.Y => 12692,
+                Axis.Z => 12693,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record HayBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            11614 => new HayBlockBlock(Identifier, Axis.X),
-            11615 => new HayBlockBlock(Identifier, Axis.Y),
-            11616 => new HayBlockBlock(Identifier, Axis.Z),
+            12691 => new HayBlockBlock(Identifier, Axis.X),
+            12692 => new HayBlockBlock(Identifier, Axis.Y),
+            12693 => new HayBlockBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) : IBlock {
     public Identifier Category => "minecraft:pitcher_crop";
-    public int ProtocolId => 631;
+    public int ProtocolId => 661;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -44,28 +44,28 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
         get {
             return Age switch {
                 0 => Half switch {
-                    BlockHalf.Upper => 13520,
-                    BlockHalf.Lower => 13521,
+                    BlockHalf.Upper => 14597,
+                    BlockHalf.Lower => 14598,
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 1 => Half switch {
-                    BlockHalf.Upper => 13522,
-                    BlockHalf.Lower => 13523,
+                    BlockHalf.Upper => 14599,
+                    BlockHalf.Lower => 14600,
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 2 => Half switch {
-                    BlockHalf.Upper => 13524,
-                    BlockHalf.Lower => 13525,
+                    BlockHalf.Upper => 14601,
+                    BlockHalf.Lower => 14602,
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 3 => Half switch {
-                    BlockHalf.Upper => 13526,
-                    BlockHalf.Lower => 13527,
+                    BlockHalf.Upper => 14603,
+                    BlockHalf.Lower => 14604,
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 4 => Half switch {
-                    BlockHalf.Upper => 13528,
-                    BlockHalf.Lower => 13529,
+                    BlockHalf.Upper => 14605,
+                    BlockHalf.Lower => 14606,
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
@@ -75,16 +75,16 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     
     public IBlock WithState(uint state) {
         return state switch {
-            13520 => new PitcherCropBlock(Identifier, 0, BlockHalf.Upper),
-            13521 => new PitcherCropBlock(Identifier, 0, BlockHalf.Lower),
-            13522 => new PitcherCropBlock(Identifier, 1, BlockHalf.Upper),
-            13523 => new PitcherCropBlock(Identifier, 1, BlockHalf.Lower),
-            13524 => new PitcherCropBlock(Identifier, 2, BlockHalf.Upper),
-            13525 => new PitcherCropBlock(Identifier, 2, BlockHalf.Lower),
-            13526 => new PitcherCropBlock(Identifier, 3, BlockHalf.Upper),
-            13527 => new PitcherCropBlock(Identifier, 3, BlockHalf.Lower),
-            13528 => new PitcherCropBlock(Identifier, 4, BlockHalf.Upper),
-            13529 => new PitcherCropBlock(Identifier, 4, BlockHalf.Lower),
+            14597 => new PitcherCropBlock(Identifier, 0, BlockHalf.Upper),
+            14598 => new PitcherCropBlock(Identifier, 0, BlockHalf.Lower),
+            14599 => new PitcherCropBlock(Identifier, 1, BlockHalf.Upper),
+            14600 => new PitcherCropBlock(Identifier, 1, BlockHalf.Lower),
+            14601 => new PitcherCropBlock(Identifier, 2, BlockHalf.Upper),
+            14602 => new PitcherCropBlock(Identifier, 2, BlockHalf.Lower),
+            14603 => new PitcherCropBlock(Identifier, 3, BlockHalf.Upper),
+            14604 => new PitcherCropBlock(Identifier, 3, BlockHalf.Lower),
+            14605 => new PitcherCropBlock(Identifier, 4, BlockHalf.Upper),
+            14606 => new PitcherCropBlock(Identifier, 4, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

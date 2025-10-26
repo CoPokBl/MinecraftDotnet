@@ -33,7 +33,6 @@ public class EntityMetaContainer {
         { MetaFieldType.BlockState, (reg, reader) => new MetaField<IBlock>(MetaFieldType.BlockState, reg.Blocks.GetByStateId((uint)reader.ReadVarInt())) },
         { MetaFieldType.OptionalBlockState, (reg, reader) => new MetaField<Optional<IBlock>>(MetaFieldType.OptionalBlockState, 
             Optional<IBlock>.FromNullable(reader.ReadPrefixedOptional(r => reg.Blocks.GetByStateId((uint)r.ReadVarInt())))) },
-        { MetaFieldType.Nbt, (_, reader) => new MetaField<INbtTag>(MetaFieldType.Nbt, reader.ReadNbt()) },
         { MetaFieldType.Particle, (reg, reader) => new MetaField<IParticle>(MetaFieldType.Particle, 
             reg.Particles[reader.ReadVarInt()].ReadData(reader, reg)) },
         { MetaFieldType.Particles, (reg, reader) => new MetaField<IParticle[]>(MetaFieldType.Particles, 
@@ -83,7 +82,6 @@ public class EntityMetaContainer {
         { MetaFieldType.BlockState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<IBlock>().StateId) },
         { MetaFieldType.OptionalBlockState, (_, writer, field) => 
             writer.WritePrefixedOptional(field.GetValue<Optional<IBlock>>(), (block, w) => w.WriteVarInt((int)block.StateId)) },
-        { MetaFieldType.Nbt, (_, writer, field) => writer.WriteNbt(field.GetValue<INbtTag>()) },
         { MetaFieldType.Particle, (reg, writer, field) => 
             writer.WriteVarInt(field.GetValue<IParticle>().ProtocolId).Write(wr => field.GetValue<IParticle>().WriteData(wr, reg)) },
         { MetaFieldType.Particles, (reg, writer, field) => 
@@ -111,7 +109,10 @@ public class EntityMetaContainer {
         { MetaFieldType.SnifferState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<SnifferState>()) },
         { MetaFieldType.ArmadilloState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<ArmadilloState>()) },
         { MetaFieldType.Vector3, (_, writer, field) => writer.WriteVec3(field.GetValue<Vec3<float>>()) },
-        { MetaFieldType.Quaternion, (_, writer, field) => writer.WriteQuaternion(field.GetValue<Quaternion>()) }
+        { MetaFieldType.Quaternion, (_, writer, field) => writer.WriteQuaternion(field.GetValue<Quaternion>()) },
+        // { MetaFieldType.ResolvableProfile, (_, writer, field) =>  }
+        
+        // TODO: The 1.21.10 ones
     };
 
     public EntityMetaContainer ReadData(MinecraftRegistry reg, DataReader reader) {

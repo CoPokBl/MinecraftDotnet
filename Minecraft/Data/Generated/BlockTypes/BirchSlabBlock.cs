@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BirchSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 569;
+    public int ProtocolId => 599;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record BirchSlabBlock(Identifier Identifier, SlabType Type, bool Waterlog
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12063,
-                    false => 12064,
+                    true => 13140,
+                    false => 13141,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12065,
-                    false => 12066,
+                    true => 13142,
+                    false => 13143,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12067,
-                    false => 12068,
+                    true => 13144,
+                    false => 13145,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record BirchSlabBlock(Identifier Identifier, SlabType Type, bool Waterlog
     
     public IBlock WithState(uint state) {
         return state switch {
-            12063 => new BirchSlabBlock(Identifier, SlabType.Top, true),
-            12064 => new BirchSlabBlock(Identifier, SlabType.Top, false),
-            12065 => new BirchSlabBlock(Identifier, SlabType.Bottom, true),
-            12066 => new BirchSlabBlock(Identifier, SlabType.Bottom, false),
-            12067 => new BirchSlabBlock(Identifier, SlabType.Double, true),
-            12068 => new BirchSlabBlock(Identifier, SlabType.Double, false),
+            13140 => new BirchSlabBlock(Identifier, SlabType.Top, true),
+            13141 => new BirchSlabBlock(Identifier, SlabType.Top, false),
+            13142 => new BirchSlabBlock(Identifier, SlabType.Bottom, true),
+            13143 => new BirchSlabBlock(Identifier, SlabType.Bottom, false),
+            13144 => new BirchSlabBlock(Identifier, SlabType.Double, true),
+            13145 => new BirchSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

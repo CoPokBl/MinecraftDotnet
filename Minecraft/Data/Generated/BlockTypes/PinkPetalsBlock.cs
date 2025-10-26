@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PinkPetalsBlock(Identifier Identifier, Direction Facing, int FlowerAmount) : IBlock {
     public Identifier Category => "minecraft:flower_bed";
-    public int ProtocolId => 1050;
+    public int ProtocolId => 1111;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -44,31 +44,31 @@ public record PinkPetalsBlock(Identifier Identifier, Direction Facing, int Flowe
         get {
             return Facing switch {
                 Direction.North => FlowerAmount switch {
-                    1 => 25887,
-                    2 => 25888,
-                    3 => 25889,
-                    4 => 25890,
+                    1 => 27612,
+                    2 => 27613,
+                    3 => 27614,
+                    4 => 27615,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 Direction.South => FlowerAmount switch {
-                    1 => 25891,
-                    2 => 25892,
-                    3 => 25893,
-                    4 => 25894,
+                    1 => 27616,
+                    2 => 27617,
+                    3 => 27618,
+                    4 => 27619,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 Direction.West => FlowerAmount switch {
-                    1 => 25895,
-                    2 => 25896,
-                    3 => 25897,
-                    4 => 25898,
+                    1 => 27620,
+                    2 => 27621,
+                    3 => 27622,
+                    4 => 27623,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 Direction.East => FlowerAmount switch {
-                    1 => 25899,
-                    2 => 25900,
-                    3 => 25901,
-                    4 => 25902,
+                    1 => 27624,
+                    2 => 27625,
+                    3 => 27626,
+                    4 => 27627,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -78,22 +78,22 @@ public record PinkPetalsBlock(Identifier Identifier, Direction Facing, int Flowe
     
     public IBlock WithState(uint state) {
         return state switch {
-            25887 => new PinkPetalsBlock(Identifier, Direction.North, 1),
-            25888 => new PinkPetalsBlock(Identifier, Direction.North, 2),
-            25889 => new PinkPetalsBlock(Identifier, Direction.North, 3),
-            25890 => new PinkPetalsBlock(Identifier, Direction.North, 4),
-            25891 => new PinkPetalsBlock(Identifier, Direction.South, 1),
-            25892 => new PinkPetalsBlock(Identifier, Direction.South, 2),
-            25893 => new PinkPetalsBlock(Identifier, Direction.South, 3),
-            25894 => new PinkPetalsBlock(Identifier, Direction.South, 4),
-            25895 => new PinkPetalsBlock(Identifier, Direction.West, 1),
-            25896 => new PinkPetalsBlock(Identifier, Direction.West, 2),
-            25897 => new PinkPetalsBlock(Identifier, Direction.West, 3),
-            25898 => new PinkPetalsBlock(Identifier, Direction.West, 4),
-            25899 => new PinkPetalsBlock(Identifier, Direction.East, 1),
-            25900 => new PinkPetalsBlock(Identifier, Direction.East, 2),
-            25901 => new PinkPetalsBlock(Identifier, Direction.East, 3),
-            25902 => new PinkPetalsBlock(Identifier, Direction.East, 4),
+            27612 => new PinkPetalsBlock(Identifier, Direction.North, 1),
+            27613 => new PinkPetalsBlock(Identifier, Direction.North, 2),
+            27614 => new PinkPetalsBlock(Identifier, Direction.North, 3),
+            27615 => new PinkPetalsBlock(Identifier, Direction.North, 4),
+            27616 => new PinkPetalsBlock(Identifier, Direction.South, 1),
+            27617 => new PinkPetalsBlock(Identifier, Direction.South, 2),
+            27618 => new PinkPetalsBlock(Identifier, Direction.South, 3),
+            27619 => new PinkPetalsBlock(Identifier, Direction.South, 4),
+            27620 => new PinkPetalsBlock(Identifier, Direction.West, 1),
+            27621 => new PinkPetalsBlock(Identifier, Direction.West, 2),
+            27622 => new PinkPetalsBlock(Identifier, Direction.West, 3),
+            27623 => new PinkPetalsBlock(Identifier, Direction.West, 4),
+            27624 => new PinkPetalsBlock(Identifier, Direction.East, 1),
+            27625 => new PinkPetalsBlock(Identifier, Direction.East, 2),
+            27626 => new PinkPetalsBlock(Identifier, Direction.East, 3),
+            27627 => new PinkPetalsBlock(Identifier, Direction.East, 4),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

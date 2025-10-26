@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DriedGhastBlock(Identifier Identifier, Direction Facing, int Hydration, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:dried_ghast";
-    public int ProtocolId => 715;
+    public int ProtocolId => 745;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -45,77 +45,77 @@ public record DriedGhastBlock(Identifier Identifier, Direction Facing, int Hydra
             return Facing switch {
                 Direction.North => Hydration switch {
                     0 => Waterlogged switch {
-                        true => 13826,
-                        false => 13827,
+                        true => 14903,
+                        false => 14904,
                     },
                     1 => Waterlogged switch {
-                        true => 13828,
-                        false => 13829,
+                        true => 14905,
+                        false => 14906,
                     },
                     2 => Waterlogged switch {
-                        true => 13830,
-                        false => 13831,
+                        true => 14907,
+                        false => 14908,
                     },
                     3 => Waterlogged switch {
-                        true => 13832,
-                        false => 13833,
+                        true => 14909,
+                        false => 14910,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Hydration), Hydration, "Unknown value for property hydration.")
                 },
                 Direction.South => Hydration switch {
                     0 => Waterlogged switch {
-                        true => 13834,
-                        false => 13835,
+                        true => 14911,
+                        false => 14912,
                     },
                     1 => Waterlogged switch {
-                        true => 13836,
-                        false => 13837,
+                        true => 14913,
+                        false => 14914,
                     },
                     2 => Waterlogged switch {
-                        true => 13838,
-                        false => 13839,
+                        true => 14915,
+                        false => 14916,
                     },
                     3 => Waterlogged switch {
-                        true => 13840,
-                        false => 13841,
+                        true => 14917,
+                        false => 14918,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Hydration), Hydration, "Unknown value for property hydration.")
                 },
                 Direction.West => Hydration switch {
                     0 => Waterlogged switch {
-                        true => 13842,
-                        false => 13843,
+                        true => 14919,
+                        false => 14920,
                     },
                     1 => Waterlogged switch {
-                        true => 13844,
-                        false => 13845,
+                        true => 14921,
+                        false => 14922,
                     },
                     2 => Waterlogged switch {
-                        true => 13846,
-                        false => 13847,
+                        true => 14923,
+                        false => 14924,
                     },
                     3 => Waterlogged switch {
-                        true => 13848,
-                        false => 13849,
+                        true => 14925,
+                        false => 14926,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Hydration), Hydration, "Unknown value for property hydration.")
                 },
                 Direction.East => Hydration switch {
                     0 => Waterlogged switch {
-                        true => 13850,
-                        false => 13851,
+                        true => 14927,
+                        false => 14928,
                     },
                     1 => Waterlogged switch {
-                        true => 13852,
-                        false => 13853,
+                        true => 14929,
+                        false => 14930,
                     },
                     2 => Waterlogged switch {
-                        true => 13854,
-                        false => 13855,
+                        true => 14931,
+                        false => 14932,
                     },
                     3 => Waterlogged switch {
-                        true => 13856,
-                        false => 13857,
+                        true => 14933,
+                        false => 14934,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Hydration), Hydration, "Unknown value for property hydration.")
                 },
@@ -126,38 +126,38 @@ public record DriedGhastBlock(Identifier Identifier, Direction Facing, int Hydra
     
     public IBlock WithState(uint state) {
         return state switch {
-            13826 => new DriedGhastBlock(Identifier, Direction.North, 0, true),
-            13827 => new DriedGhastBlock(Identifier, Direction.North, 0, false),
-            13828 => new DriedGhastBlock(Identifier, Direction.North, 1, true),
-            13829 => new DriedGhastBlock(Identifier, Direction.North, 1, false),
-            13830 => new DriedGhastBlock(Identifier, Direction.North, 2, true),
-            13831 => new DriedGhastBlock(Identifier, Direction.North, 2, false),
-            13832 => new DriedGhastBlock(Identifier, Direction.North, 3, true),
-            13833 => new DriedGhastBlock(Identifier, Direction.North, 3, false),
-            13834 => new DriedGhastBlock(Identifier, Direction.South, 0, true),
-            13835 => new DriedGhastBlock(Identifier, Direction.South, 0, false),
-            13836 => new DriedGhastBlock(Identifier, Direction.South, 1, true),
-            13837 => new DriedGhastBlock(Identifier, Direction.South, 1, false),
-            13838 => new DriedGhastBlock(Identifier, Direction.South, 2, true),
-            13839 => new DriedGhastBlock(Identifier, Direction.South, 2, false),
-            13840 => new DriedGhastBlock(Identifier, Direction.South, 3, true),
-            13841 => new DriedGhastBlock(Identifier, Direction.South, 3, false),
-            13842 => new DriedGhastBlock(Identifier, Direction.West, 0, true),
-            13843 => new DriedGhastBlock(Identifier, Direction.West, 0, false),
-            13844 => new DriedGhastBlock(Identifier, Direction.West, 1, true),
-            13845 => new DriedGhastBlock(Identifier, Direction.West, 1, false),
-            13846 => new DriedGhastBlock(Identifier, Direction.West, 2, true),
-            13847 => new DriedGhastBlock(Identifier, Direction.West, 2, false),
-            13848 => new DriedGhastBlock(Identifier, Direction.West, 3, true),
-            13849 => new DriedGhastBlock(Identifier, Direction.West, 3, false),
-            13850 => new DriedGhastBlock(Identifier, Direction.East, 0, true),
-            13851 => new DriedGhastBlock(Identifier, Direction.East, 0, false),
-            13852 => new DriedGhastBlock(Identifier, Direction.East, 1, true),
-            13853 => new DriedGhastBlock(Identifier, Direction.East, 1, false),
-            13854 => new DriedGhastBlock(Identifier, Direction.East, 2, true),
-            13855 => new DriedGhastBlock(Identifier, Direction.East, 2, false),
-            13856 => new DriedGhastBlock(Identifier, Direction.East, 3, true),
-            13857 => new DriedGhastBlock(Identifier, Direction.East, 3, false),
+            14903 => new DriedGhastBlock(Identifier, Direction.North, 0, true),
+            14904 => new DriedGhastBlock(Identifier, Direction.North, 0, false),
+            14905 => new DriedGhastBlock(Identifier, Direction.North, 1, true),
+            14906 => new DriedGhastBlock(Identifier, Direction.North, 1, false),
+            14907 => new DriedGhastBlock(Identifier, Direction.North, 2, true),
+            14908 => new DriedGhastBlock(Identifier, Direction.North, 2, false),
+            14909 => new DriedGhastBlock(Identifier, Direction.North, 3, true),
+            14910 => new DriedGhastBlock(Identifier, Direction.North, 3, false),
+            14911 => new DriedGhastBlock(Identifier, Direction.South, 0, true),
+            14912 => new DriedGhastBlock(Identifier, Direction.South, 0, false),
+            14913 => new DriedGhastBlock(Identifier, Direction.South, 1, true),
+            14914 => new DriedGhastBlock(Identifier, Direction.South, 1, false),
+            14915 => new DriedGhastBlock(Identifier, Direction.South, 2, true),
+            14916 => new DriedGhastBlock(Identifier, Direction.South, 2, false),
+            14917 => new DriedGhastBlock(Identifier, Direction.South, 3, true),
+            14918 => new DriedGhastBlock(Identifier, Direction.South, 3, false),
+            14919 => new DriedGhastBlock(Identifier, Direction.West, 0, true),
+            14920 => new DriedGhastBlock(Identifier, Direction.West, 0, false),
+            14921 => new DriedGhastBlock(Identifier, Direction.West, 1, true),
+            14922 => new DriedGhastBlock(Identifier, Direction.West, 1, false),
+            14923 => new DriedGhastBlock(Identifier, Direction.West, 2, true),
+            14924 => new DriedGhastBlock(Identifier, Direction.West, 2, false),
+            14925 => new DriedGhastBlock(Identifier, Direction.West, 3, true),
+            14926 => new DriedGhastBlock(Identifier, Direction.West, 3, false),
+            14927 => new DriedGhastBlock(Identifier, Direction.East, 0, true),
+            14928 => new DriedGhastBlock(Identifier, Direction.East, 0, false),
+            14929 => new DriedGhastBlock(Identifier, Direction.East, 1, true),
+            14930 => new DriedGhastBlock(Identifier, Direction.East, 1, false),
+            14931 => new DriedGhastBlock(Identifier, Direction.East, 2, true),
+            14932 => new DriedGhastBlock(Identifier, Direction.East, 2, false),
+            14933 => new DriedGhastBlock(Identifier, Direction.East, 3, true),
+            14934 => new DriedGhastBlock(Identifier, Direction.East, 3, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

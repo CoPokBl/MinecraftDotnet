@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BirchButtonBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:button";
-    public int ProtocolId => 413;
+    public int ProtocolId => 443;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -45,58 +45,58 @@ public record BirchButtonBlock(Identifier Identifier, AttachDirection Face, Dire
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9444,
-                        false => 9445,
+                        true => 10521,
+                        false => 10522,
                     },
                     Direction.South => Powered switch {
-                        true => 9446,
-                        false => 9447,
+                        true => 10523,
+                        false => 10524,
                     },
                     Direction.West => Powered switch {
-                        true => 9448,
-                        false => 9449,
+                        true => 10525,
+                        false => 10526,
                     },
                     Direction.East => Powered switch {
-                        true => 9450,
-                        false => 9451,
+                        true => 10527,
+                        false => 10528,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9452,
-                        false => 9453,
+                        true => 10529,
+                        false => 10530,
                     },
                     Direction.South => Powered switch {
-                        true => 9454,
-                        false => 9455,
+                        true => 10531,
+                        false => 10532,
                     },
                     Direction.West => Powered switch {
-                        true => 9456,
-                        false => 9457,
+                        true => 10533,
+                        false => 10534,
                     },
                     Direction.East => Powered switch {
-                        true => 9458,
-                        false => 9459,
+                        true => 10535,
+                        false => 10536,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9460,
-                        false => 9461,
+                        true => 10537,
+                        false => 10538,
                     },
                     Direction.South => Powered switch {
-                        true => 9462,
-                        false => 9463,
+                        true => 10539,
+                        false => 10540,
                     },
                     Direction.West => Powered switch {
-                        true => 9464,
-                        false => 9465,
+                        true => 10541,
+                        false => 10542,
                     },
                     Direction.East => Powered switch {
-                        true => 9466,
-                        false => 9467,
+                        true => 10543,
+                        false => 10544,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -107,30 +107,30 @@ public record BirchButtonBlock(Identifier Identifier, AttachDirection Face, Dire
     
     public IBlock WithState(uint state) {
         return state switch {
-            9444 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            9445 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            9446 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            9447 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            9448 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            9449 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            9450 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            9451 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            9452 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            9453 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            9454 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            9455 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            9456 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            9457 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            9458 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            9459 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            9460 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            9461 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            9462 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            9463 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            9464 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            9465 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            9466 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            9467 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            10521 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            10522 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            10523 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            10524 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            10525 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            10526 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            10527 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            10528 => new BirchButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            10529 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            10530 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            10531 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            10532 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            10533 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            10534 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            10535 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            10536 => new BirchButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            10537 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            10538 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            10539 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            10540 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            10541 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            10542 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            10543 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            10544 => new BirchButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

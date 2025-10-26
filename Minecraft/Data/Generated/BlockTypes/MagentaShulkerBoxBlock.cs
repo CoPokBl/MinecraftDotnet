@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record MagentaShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     public Identifier Category => "minecraft:shulker_box";
-    public int ProtocolId => 648;
+    public int ProtocolId => 678;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;
@@ -43,12 +43,12 @@ public record MagentaShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : I
     public uint StateId {
         get {
             return Facing switch {
-                Cardinal.North => 13603,
-                Cardinal.East => 13604,
-                Cardinal.South => 13605,
-                Cardinal.West => 13606,
-                Cardinal.Up => 13607,
-                Cardinal.Down => 13608,
+                Cardinal.North => 14680,
+                Cardinal.East => 14681,
+                Cardinal.South => 14682,
+                Cardinal.West => 14683,
+                Cardinal.Up => 14684,
+                Cardinal.Down => 14685,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -56,12 +56,12 @@ public record MagentaShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : I
     
     public IBlock WithState(uint state) {
         return state switch {
-            13603 => new MagentaShulkerBoxBlock(Identifier, Cardinal.North),
-            13604 => new MagentaShulkerBoxBlock(Identifier, Cardinal.East),
-            13605 => new MagentaShulkerBoxBlock(Identifier, Cardinal.South),
-            13606 => new MagentaShulkerBoxBlock(Identifier, Cardinal.West),
-            13607 => new MagentaShulkerBoxBlock(Identifier, Cardinal.Up),
-            13608 => new MagentaShulkerBoxBlock(Identifier, Cardinal.Down),
+            14680 => new MagentaShulkerBoxBlock(Identifier, Cardinal.North),
+            14681 => new MagentaShulkerBoxBlock(Identifier, Cardinal.East),
+            14682 => new MagentaShulkerBoxBlock(Identifier, Cardinal.South),
+            14683 => new MagentaShulkerBoxBlock(Identifier, Cardinal.West),
+            14684 => new MagentaShulkerBoxBlock(Identifier, Cardinal.Up),
+            14685 => new MagentaShulkerBoxBlock(Identifier, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

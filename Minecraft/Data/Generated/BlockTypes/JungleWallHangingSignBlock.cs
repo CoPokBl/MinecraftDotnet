@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JungleWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:wall_hanging_sign";
-    public int ProtocolId => 238;
+    public int ProtocolId => 250;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record JungleWallHangingSignBlock(Identifier Identifier, Direction Facing
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5746,
-                    false => 5747,
+                    true => 6514,
+                    false => 6515,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5748,
-                    false => 5749,
+                    true => 6516,
+                    false => 6517,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5750,
-                    false => 5751,
+                    true => 6518,
+                    false => 6519,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5752,
-                    false => 5753,
+                    true => 6520,
+                    false => 6521,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record JungleWallHangingSignBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            5746 => new JungleWallHangingSignBlock(Identifier, Direction.North, true),
-            5747 => new JungleWallHangingSignBlock(Identifier, Direction.North, false),
-            5748 => new JungleWallHangingSignBlock(Identifier, Direction.South, true),
-            5749 => new JungleWallHangingSignBlock(Identifier, Direction.South, false),
-            5750 => new JungleWallHangingSignBlock(Identifier, Direction.West, true),
-            5751 => new JungleWallHangingSignBlock(Identifier, Direction.West, false),
-            5752 => new JungleWallHangingSignBlock(Identifier, Direction.East, true),
-            5753 => new JungleWallHangingSignBlock(Identifier, Direction.East, false),
+            6514 => new JungleWallHangingSignBlock(Identifier, Direction.North, true),
+            6515 => new JungleWallHangingSignBlock(Identifier, Direction.North, false),
+            6516 => new JungleWallHangingSignBlock(Identifier, Direction.South, true),
+            6517 => new JungleWallHangingSignBlock(Identifier, Direction.South, false),
+            6518 => new JungleWallHangingSignBlock(Identifier, Direction.West, true),
+            6519 => new JungleWallHangingSignBlock(Identifier, Direction.West, false),
+            6520 => new JungleWallHangingSignBlock(Identifier, Direction.East, true),
+            6521 => new JungleWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

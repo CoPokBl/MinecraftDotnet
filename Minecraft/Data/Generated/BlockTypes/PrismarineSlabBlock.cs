@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PrismarineSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 501;
+    public int ProtocolId => 531;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record PrismarineSlabBlock(Identifier Identifier, SlabType Type, bool Wat
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 11595,
-                    false => 11596,
+                    true => 12672,
+                    false => 12673,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 11597,
-                    false => 11598,
+                    true => 12674,
+                    false => 12675,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 11599,
-                    false => 11600,
+                    true => 12676,
+                    false => 12677,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record PrismarineSlabBlock(Identifier Identifier, SlabType Type, bool Wat
     
     public IBlock WithState(uint state) {
         return state switch {
-            11595 => new PrismarineSlabBlock(Identifier, SlabType.Top, true),
-            11596 => new PrismarineSlabBlock(Identifier, SlabType.Top, false),
-            11597 => new PrismarineSlabBlock(Identifier, SlabType.Bottom, true),
-            11598 => new PrismarineSlabBlock(Identifier, SlabType.Bottom, false),
-            11599 => new PrismarineSlabBlock(Identifier, SlabType.Double, true),
-            11600 => new PrismarineSlabBlock(Identifier, SlabType.Double, false),
+            12672 => new PrismarineSlabBlock(Identifier, SlabType.Top, true),
+            12673 => new PrismarineSlabBlock(Identifier, SlabType.Top, false),
+            12674 => new PrismarineSlabBlock(Identifier, SlabType.Bottom, true),
+            12675 => new PrismarineSlabBlock(Identifier, SlabType.Bottom, false),
+            12676 => new PrismarineSlabBlock(Identifier, SlabType.Double, true),
+            12677 => new PrismarineSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

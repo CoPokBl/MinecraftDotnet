@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WarpedWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:wall_hanging_sign";
-    public int ProtocolId => 243;
+    public int ProtocolId => 255;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record WarpedWallHangingSignBlock(Identifier Identifier, Direction Facing
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5786,
-                    false => 5787,
+                    true => 6554,
+                    false => 6555,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5788,
-                    false => 5789,
+                    true => 6556,
+                    false => 6557,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5790,
-                    false => 5791,
+                    true => 6558,
+                    false => 6559,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5792,
-                    false => 5793,
+                    true => 6560,
+                    false => 6561,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record WarpedWallHangingSignBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            5786 => new WarpedWallHangingSignBlock(Identifier, Direction.North, true),
-            5787 => new WarpedWallHangingSignBlock(Identifier, Direction.North, false),
-            5788 => new WarpedWallHangingSignBlock(Identifier, Direction.South, true),
-            5789 => new WarpedWallHangingSignBlock(Identifier, Direction.South, false),
-            5790 => new WarpedWallHangingSignBlock(Identifier, Direction.West, true),
-            5791 => new WarpedWallHangingSignBlock(Identifier, Direction.West, false),
-            5792 => new WarpedWallHangingSignBlock(Identifier, Direction.East, true),
-            5793 => new WarpedWallHangingSignBlock(Identifier, Direction.East, false),
+            6554 => new WarpedWallHangingSignBlock(Identifier, Direction.North, true),
+            6555 => new WarpedWallHangingSignBlock(Identifier, Direction.North, false),
+            6556 => new WarpedWallHangingSignBlock(Identifier, Direction.South, true),
+            6557 => new WarpedWallHangingSignBlock(Identifier, Direction.South, false),
+            6558 => new WarpedWallHangingSignBlock(Identifier, Direction.West, true),
+            6559 => new WarpedWallHangingSignBlock(Identifier, Direction.West, false),
+            6560 => new WarpedWallHangingSignBlock(Identifier, Direction.East, true),
+            6561 => new WarpedWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

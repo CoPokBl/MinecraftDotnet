@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record MelonStemBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:stem";
-    public int ProtocolId => 334;
+    public int ProtocolId => 364;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,14 +43,14 @@ public record MelonStemBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 7072,
-                1 => 7073,
-                2 => 7074,
-                3 => 7075,
-                4 => 7076,
-                5 => 7077,
-                6 => 7078,
-                7 => 7079,
+                0 => 8149,
+                1 => 8150,
+                2 => 8151,
+                3 => 8152,
+                4 => 8153,
+                5 => 8154,
+                6 => 8155,
+                7 => 8156,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -58,14 +58,14 @@ public record MelonStemBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            7072 => new MelonStemBlock(Identifier, 0),
-            7073 => new MelonStemBlock(Identifier, 1),
-            7074 => new MelonStemBlock(Identifier, 2),
-            7075 => new MelonStemBlock(Identifier, 3),
-            7076 => new MelonStemBlock(Identifier, 4),
-            7077 => new MelonStemBlock(Identifier, 5),
-            7078 => new MelonStemBlock(Identifier, 6),
-            7079 => new MelonStemBlock(Identifier, 7),
+            8149 => new MelonStemBlock(Identifier, 0),
+            8150 => new MelonStemBlock(Identifier, 1),
+            8151 => new MelonStemBlock(Identifier, 2),
+            8152 => new MelonStemBlock(Identifier, 3),
+            8153 => new MelonStemBlock(Identifier, 4),
+            8154 => new MelonStemBlock(Identifier, 5),
+            8155 => new MelonStemBlock(Identifier, 6),
+            8156 => new MelonStemBlock(Identifier, 7),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

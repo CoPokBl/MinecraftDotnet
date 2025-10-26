@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:sweet_berry_bush";
-    public int ProtocolId => 821;
+    public int ProtocolId => 859;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 19630,
-                1 => 19631,
-                2 => 19632,
-                3 => 19633,
+                0 => 20739,
+                1 => 20740,
+                2 => 20741,
+                3 => 20742,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -54,10 +54,10 @@ public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            19630 => new SweetBerryBushBlock(Identifier, 0),
-            19631 => new SweetBerryBushBlock(Identifier, 1),
-            19632 => new SweetBerryBushBlock(Identifier, 2),
-            19633 => new SweetBerryBushBlock(Identifier, 3),
+            20739 => new SweetBerryBushBlock(Identifier, 0),
+            20740 => new SweetBerryBushBlock(Identifier, 1),
+            20741 => new SweetBerryBushBlock(Identifier, 2),
+            20742 => new SweetBerryBushBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

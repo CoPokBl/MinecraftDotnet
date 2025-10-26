@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LargeFernBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     public Identifier Category => "minecraft:double_plant";
-    public int ProtocolId => 530;
+    public int ProtocolId => 560;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,8 +43,8 @@ public record LargeFernBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     public uint StateId {
         get {
             return Half switch {
-                BlockHalf.Upper => 11646,
-                BlockHalf.Lower => 11647,
+                BlockHalf.Upper => 12723,
+                BlockHalf.Lower => 12724,
                 _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
             };
         }
@@ -52,8 +52,8 @@ public record LargeFernBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            11646 => new LargeFernBlock(Identifier, BlockHalf.Upper),
-            11647 => new LargeFernBlock(Identifier, BlockHalf.Lower),
+            12723 => new LargeFernBlock(Identifier, BlockHalf.Upper),
+            12724 => new LargeFernBlock(Identifier, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

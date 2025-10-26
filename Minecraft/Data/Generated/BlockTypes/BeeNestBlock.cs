@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BeeNestBlock(Identifier Identifier, Direction Facing, int HoneyLevel) : IBlock {
     public Identifier Category => "minecraft:beehive";
-    public int ProtocolId => 871;
+    public int ProtocolId => 909;
     public double Hardness => 0.3;
     public double ExplosionResistance => 0.3;
     public double Friction => 0.6;
@@ -44,39 +44,39 @@ public record BeeNestBlock(Identifier Identifier, Direction Facing, int HoneyLev
         get {
             return Facing switch {
                 Direction.North => HoneyLevel switch {
-                    0 => 20457,
-                    1 => 20458,
-                    2 => 20459,
-                    3 => 20460,
-                    4 => 20461,
-                    5 => 20462,
+                    0 => 21566,
+                    1 => 21567,
+                    2 => 21568,
+                    3 => 21569,
+                    4 => 21570,
+                    5 => 21571,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 Direction.South => HoneyLevel switch {
-                    0 => 20463,
-                    1 => 20464,
-                    2 => 20465,
-                    3 => 20466,
-                    4 => 20467,
-                    5 => 20468,
+                    0 => 21572,
+                    1 => 21573,
+                    2 => 21574,
+                    3 => 21575,
+                    4 => 21576,
+                    5 => 21577,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 Direction.West => HoneyLevel switch {
-                    0 => 20469,
-                    1 => 20470,
-                    2 => 20471,
-                    3 => 20472,
-                    4 => 20473,
-                    5 => 20474,
+                    0 => 21578,
+                    1 => 21579,
+                    2 => 21580,
+                    3 => 21581,
+                    4 => 21582,
+                    5 => 21583,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 Direction.East => HoneyLevel switch {
-                    0 => 20475,
-                    1 => 20476,
-                    2 => 20477,
-                    3 => 20478,
-                    4 => 20479,
-                    5 => 20480,
+                    0 => 21584,
+                    1 => 21585,
+                    2 => 21586,
+                    3 => 21587,
+                    4 => 21588,
+                    5 => 21589,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -86,30 +86,30 @@ public record BeeNestBlock(Identifier Identifier, Direction Facing, int HoneyLev
     
     public IBlock WithState(uint state) {
         return state switch {
-            20457 => new BeeNestBlock(Identifier, Direction.North, 0),
-            20458 => new BeeNestBlock(Identifier, Direction.North, 1),
-            20459 => new BeeNestBlock(Identifier, Direction.North, 2),
-            20460 => new BeeNestBlock(Identifier, Direction.North, 3),
-            20461 => new BeeNestBlock(Identifier, Direction.North, 4),
-            20462 => new BeeNestBlock(Identifier, Direction.North, 5),
-            20463 => new BeeNestBlock(Identifier, Direction.South, 0),
-            20464 => new BeeNestBlock(Identifier, Direction.South, 1),
-            20465 => new BeeNestBlock(Identifier, Direction.South, 2),
-            20466 => new BeeNestBlock(Identifier, Direction.South, 3),
-            20467 => new BeeNestBlock(Identifier, Direction.South, 4),
-            20468 => new BeeNestBlock(Identifier, Direction.South, 5),
-            20469 => new BeeNestBlock(Identifier, Direction.West, 0),
-            20470 => new BeeNestBlock(Identifier, Direction.West, 1),
-            20471 => new BeeNestBlock(Identifier, Direction.West, 2),
-            20472 => new BeeNestBlock(Identifier, Direction.West, 3),
-            20473 => new BeeNestBlock(Identifier, Direction.West, 4),
-            20474 => new BeeNestBlock(Identifier, Direction.West, 5),
-            20475 => new BeeNestBlock(Identifier, Direction.East, 0),
-            20476 => new BeeNestBlock(Identifier, Direction.East, 1),
-            20477 => new BeeNestBlock(Identifier, Direction.East, 2),
-            20478 => new BeeNestBlock(Identifier, Direction.East, 3),
-            20479 => new BeeNestBlock(Identifier, Direction.East, 4),
-            20480 => new BeeNestBlock(Identifier, Direction.East, 5),
+            21566 => new BeeNestBlock(Identifier, Direction.North, 0),
+            21567 => new BeeNestBlock(Identifier, Direction.North, 1),
+            21568 => new BeeNestBlock(Identifier, Direction.North, 2),
+            21569 => new BeeNestBlock(Identifier, Direction.North, 3),
+            21570 => new BeeNestBlock(Identifier, Direction.North, 4),
+            21571 => new BeeNestBlock(Identifier, Direction.North, 5),
+            21572 => new BeeNestBlock(Identifier, Direction.South, 0),
+            21573 => new BeeNestBlock(Identifier, Direction.South, 1),
+            21574 => new BeeNestBlock(Identifier, Direction.South, 2),
+            21575 => new BeeNestBlock(Identifier, Direction.South, 3),
+            21576 => new BeeNestBlock(Identifier, Direction.South, 4),
+            21577 => new BeeNestBlock(Identifier, Direction.South, 5),
+            21578 => new BeeNestBlock(Identifier, Direction.West, 0),
+            21579 => new BeeNestBlock(Identifier, Direction.West, 1),
+            21580 => new BeeNestBlock(Identifier, Direction.West, 2),
+            21581 => new BeeNestBlock(Identifier, Direction.West, 3),
+            21582 => new BeeNestBlock(Identifier, Direction.West, 4),
+            21583 => new BeeNestBlock(Identifier, Direction.West, 5),
+            21584 => new BeeNestBlock(Identifier, Direction.East, 0),
+            21585 => new BeeNestBlock(Identifier, Direction.East, 1),
+            21586 => new BeeNestBlock(Identifier, Direction.East, 2),
+            21587 => new BeeNestBlock(Identifier, Direction.East, 3),
+            21588 => new BeeNestBlock(Identifier, Direction.East, 4),
+            21589 => new BeeNestBlock(Identifier, Direction.East, 5),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

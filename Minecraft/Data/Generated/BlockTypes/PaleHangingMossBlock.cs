@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
     public Identifier Category => "minecraft:hanging_moss";
-    public int ProtocolId => 1099;
+    public int ProtocolId => 1160;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
     public uint StateId {
         get {
             return Tip switch {
-                true => 27939,
-                false => 27940,
+                true => 29664,
+                false => 29665,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            27939 => new PaleHangingMossBlock(Identifier, true),
-            27940 => new PaleHangingMossBlock(Identifier, false),
+            29664 => new PaleHangingMossBlock(Identifier, true),
+            29665 => new PaleHangingMossBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

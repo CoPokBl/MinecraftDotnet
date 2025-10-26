@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SpruceSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:standing_sign";
-    public int ProtocolId => 198;
+    public int ProtocolId => 210;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,68 +44,68 @@ public record SpruceSignBlock(Identifier Identifier, int Rotation, bool Waterlog
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 4398,
-                    false => 4399,
+                    true => 5166,
+                    false => 5167,
                 },
                 1 => Waterlogged switch {
-                    true => 4400,
-                    false => 4401,
+                    true => 5168,
+                    false => 5169,
                 },
                 2 => Waterlogged switch {
-                    true => 4402,
-                    false => 4403,
+                    true => 5170,
+                    false => 5171,
                 },
                 3 => Waterlogged switch {
-                    true => 4404,
-                    false => 4405,
+                    true => 5172,
+                    false => 5173,
                 },
                 4 => Waterlogged switch {
-                    true => 4406,
-                    false => 4407,
+                    true => 5174,
+                    false => 5175,
                 },
                 5 => Waterlogged switch {
-                    true => 4408,
-                    false => 4409,
+                    true => 5176,
+                    false => 5177,
                 },
                 6 => Waterlogged switch {
-                    true => 4410,
-                    false => 4411,
+                    true => 5178,
+                    false => 5179,
                 },
                 7 => Waterlogged switch {
-                    true => 4412,
-                    false => 4413,
+                    true => 5180,
+                    false => 5181,
                 },
                 8 => Waterlogged switch {
-                    true => 4414,
-                    false => 4415,
+                    true => 5182,
+                    false => 5183,
                 },
                 9 => Waterlogged switch {
-                    true => 4416,
-                    false => 4417,
+                    true => 5184,
+                    false => 5185,
                 },
                 10 => Waterlogged switch {
-                    true => 4418,
-                    false => 4419,
+                    true => 5186,
+                    false => 5187,
                 },
                 11 => Waterlogged switch {
-                    true => 4420,
-                    false => 4421,
+                    true => 5188,
+                    false => 5189,
                 },
                 12 => Waterlogged switch {
-                    true => 4422,
-                    false => 4423,
+                    true => 5190,
+                    false => 5191,
                 },
                 13 => Waterlogged switch {
-                    true => 4424,
-                    false => 4425,
+                    true => 5192,
+                    false => 5193,
                 },
                 14 => Waterlogged switch {
-                    true => 4426,
-                    false => 4427,
+                    true => 5194,
+                    false => 5195,
                 },
                 15 => Waterlogged switch {
-                    true => 4428,
-                    false => 4429,
+                    true => 5196,
+                    false => 5197,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -114,38 +114,38 @@ public record SpruceSignBlock(Identifier Identifier, int Rotation, bool Waterlog
     
     public IBlock WithState(uint state) {
         return state switch {
-            4398 => new SpruceSignBlock(Identifier, 0, true),
-            4399 => new SpruceSignBlock(Identifier, 0, false),
-            4400 => new SpruceSignBlock(Identifier, 1, true),
-            4401 => new SpruceSignBlock(Identifier, 1, false),
-            4402 => new SpruceSignBlock(Identifier, 2, true),
-            4403 => new SpruceSignBlock(Identifier, 2, false),
-            4404 => new SpruceSignBlock(Identifier, 3, true),
-            4405 => new SpruceSignBlock(Identifier, 3, false),
-            4406 => new SpruceSignBlock(Identifier, 4, true),
-            4407 => new SpruceSignBlock(Identifier, 4, false),
-            4408 => new SpruceSignBlock(Identifier, 5, true),
-            4409 => new SpruceSignBlock(Identifier, 5, false),
-            4410 => new SpruceSignBlock(Identifier, 6, true),
-            4411 => new SpruceSignBlock(Identifier, 6, false),
-            4412 => new SpruceSignBlock(Identifier, 7, true),
-            4413 => new SpruceSignBlock(Identifier, 7, false),
-            4414 => new SpruceSignBlock(Identifier, 8, true),
-            4415 => new SpruceSignBlock(Identifier, 8, false),
-            4416 => new SpruceSignBlock(Identifier, 9, true),
-            4417 => new SpruceSignBlock(Identifier, 9, false),
-            4418 => new SpruceSignBlock(Identifier, 10, true),
-            4419 => new SpruceSignBlock(Identifier, 10, false),
-            4420 => new SpruceSignBlock(Identifier, 11, true),
-            4421 => new SpruceSignBlock(Identifier, 11, false),
-            4422 => new SpruceSignBlock(Identifier, 12, true),
-            4423 => new SpruceSignBlock(Identifier, 12, false),
-            4424 => new SpruceSignBlock(Identifier, 13, true),
-            4425 => new SpruceSignBlock(Identifier, 13, false),
-            4426 => new SpruceSignBlock(Identifier, 14, true),
-            4427 => new SpruceSignBlock(Identifier, 14, false),
-            4428 => new SpruceSignBlock(Identifier, 15, true),
-            4429 => new SpruceSignBlock(Identifier, 15, false),
+            5166 => new SpruceSignBlock(Identifier, 0, true),
+            5167 => new SpruceSignBlock(Identifier, 0, false),
+            5168 => new SpruceSignBlock(Identifier, 1, true),
+            5169 => new SpruceSignBlock(Identifier, 1, false),
+            5170 => new SpruceSignBlock(Identifier, 2, true),
+            5171 => new SpruceSignBlock(Identifier, 2, false),
+            5172 => new SpruceSignBlock(Identifier, 3, true),
+            5173 => new SpruceSignBlock(Identifier, 3, false),
+            5174 => new SpruceSignBlock(Identifier, 4, true),
+            5175 => new SpruceSignBlock(Identifier, 4, false),
+            5176 => new SpruceSignBlock(Identifier, 5, true),
+            5177 => new SpruceSignBlock(Identifier, 5, false),
+            5178 => new SpruceSignBlock(Identifier, 6, true),
+            5179 => new SpruceSignBlock(Identifier, 6, false),
+            5180 => new SpruceSignBlock(Identifier, 7, true),
+            5181 => new SpruceSignBlock(Identifier, 7, false),
+            5182 => new SpruceSignBlock(Identifier, 8, true),
+            5183 => new SpruceSignBlock(Identifier, 8, false),
+            5184 => new SpruceSignBlock(Identifier, 9, true),
+            5185 => new SpruceSignBlock(Identifier, 9, false),
+            5186 => new SpruceSignBlock(Identifier, 10, true),
+            5187 => new SpruceSignBlock(Identifier, 10, false),
+            5188 => new SpruceSignBlock(Identifier, 11, true),
+            5189 => new SpruceSignBlock(Identifier, 11, false),
+            5190 => new SpruceSignBlock(Identifier, 12, true),
+            5191 => new SpruceSignBlock(Identifier, 12, false),
+            5192 => new SpruceSignBlock(Identifier, 13, true),
+            5193 => new SpruceSignBlock(Identifier, 13, false),
+            5194 => new SpruceSignBlock(Identifier, 14, true),
+            5195 => new SpruceSignBlock(Identifier, 14, false),
+            5196 => new SpruceSignBlock(Identifier, 15, true),
+            5197 => new SpruceSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

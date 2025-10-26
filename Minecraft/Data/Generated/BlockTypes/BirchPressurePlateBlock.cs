@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BirchPressurePlateBlock(Identifier Identifier, bool Powered) : IBlock {
     public Identifier Category => "minecraft:pressure_plate";
-    public int ProtocolId => 250;
+    public int ProtocolId => 262;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record BirchPressurePlateBlock(Identifier Identifier, bool Powered) : IBl
     public uint StateId {
         get {
             return Powered switch {
-                true => 5896,
-                false => 5897,
+                true => 6664,
+                false => 6665,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            5896 => new BirchPressurePlateBlock(Identifier, true),
-            5897 => new BirchPressurePlateBlock(Identifier, false),
+            6664 => new BirchPressurePlateBlock(Identifier, true),
+            6665 => new BirchPressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

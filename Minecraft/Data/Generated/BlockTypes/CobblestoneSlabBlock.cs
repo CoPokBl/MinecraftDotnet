@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CobblestoneSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 583;
+    public int ProtocolId => 613;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record CobblestoneSlabBlock(Identifier Identifier, SlabType Type, bool Wa
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12147,
-                    false => 12148,
+                    true => 13224,
+                    false => 13225,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12149,
-                    false => 12150,
+                    true => 13226,
+                    false => 13227,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12151,
-                    false => 12152,
+                    true => 13228,
+                    false => 13229,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record CobblestoneSlabBlock(Identifier Identifier, SlabType Type, bool Wa
     
     public IBlock WithState(uint state) {
         return state switch {
-            12147 => new CobblestoneSlabBlock(Identifier, SlabType.Top, true),
-            12148 => new CobblestoneSlabBlock(Identifier, SlabType.Top, false),
-            12149 => new CobblestoneSlabBlock(Identifier, SlabType.Bottom, true),
-            12150 => new CobblestoneSlabBlock(Identifier, SlabType.Bottom, false),
-            12151 => new CobblestoneSlabBlock(Identifier, SlabType.Double, true),
-            12152 => new CobblestoneSlabBlock(Identifier, SlabType.Double, false),
+            13224 => new CobblestoneSlabBlock(Identifier, SlabType.Top, true),
+            13225 => new CobblestoneSlabBlock(Identifier, SlabType.Top, false),
+            13226 => new CobblestoneSlabBlock(Identifier, SlabType.Bottom, true),
+            13227 => new CobblestoneSlabBlock(Identifier, SlabType.Bottom, false),
+            13228 => new CobblestoneSlabBlock(Identifier, SlabType.Double, true),
+            13229 => new CobblestoneSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

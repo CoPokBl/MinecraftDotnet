@@ -1,4 +1,5 @@
 using Minecraft.Data.Entities;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 
@@ -15,19 +16,19 @@ public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
     public required Angle Yaw { get; init; }
     public required Angle HeadYaw { get; init; }
     public required int Data { get; init; }
-    public required Vec3<short> Velocity { get; init; }
+    public required Vec3<double> Velocity { get; init; }
 
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry reg) {
         return w
             .WriteVarInt(Id)
             .WriteUuid(Uuid)
             .WriteVarInt(EntityType.ProtocolId)
             .WriteVec3(Position)
+            .Write(new VelocityVecNetworkType(Velocity), reg)
             .WriteAngle(Pitch)
             .WriteAngle(Yaw)
             .WriteAngle(HeadYaw)
-            .WriteVarInt(Data)
-            .WriteVec3(Velocity);
+            .WriteVarInt(Data);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundSpawnEntityPacket {
@@ -35,10 +36,10 @@ public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
         Uuid = r.ReadUuid(),
         EntityType = reg.EntityTypes[r.ReadVarInt()],
         Position = r.ReadVec3(),
+        Velocity = r.Read<VelocityVecNetworkType>(reg).Value,
         Pitch = r.ReadAngle(),
         Yaw = r.ReadAngle(),
         HeadYaw = r.ReadAngle(),
-        Data = r.ReadVarInt(),
-        Velocity = r.ReadSVec3()
+        Data = r.ReadVarInt()
     };
 }

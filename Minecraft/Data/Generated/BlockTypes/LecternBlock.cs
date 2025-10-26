@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook, bool Powered) : IBlock {
     public Identifier Category => "minecraft:lectern";
-    public int ProtocolId => 813;
+    public int ProtocolId => 843;
     public double Hardness => 2.5;
     public double ExplosionResistance => 2.5;
     public double Friction => 0.6;
@@ -45,42 +45,42 @@ public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook
             return Facing switch {
                 Direction.North => HasBook switch {
                     true => Powered switch {
-                        true => 19505,
-                        false => 19506,
+                        true => 20582,
+                        false => 20583,
                     },
                     false => Powered switch {
-                        true => 19507,
-                        false => 19508,
+                        true => 20584,
+                        false => 20585,
                     },
                 },
                 Direction.South => HasBook switch {
                     true => Powered switch {
-                        true => 19509,
-                        false => 19510,
+                        true => 20586,
+                        false => 20587,
                     },
                     false => Powered switch {
-                        true => 19511,
-                        false => 19512,
+                        true => 20588,
+                        false => 20589,
                     },
                 },
                 Direction.West => HasBook switch {
                     true => Powered switch {
-                        true => 19513,
-                        false => 19514,
+                        true => 20590,
+                        false => 20591,
                     },
                     false => Powered switch {
-                        true => 19515,
-                        false => 19516,
+                        true => 20592,
+                        false => 20593,
                     },
                 },
                 Direction.East => HasBook switch {
                     true => Powered switch {
-                        true => 19517,
-                        false => 19518,
+                        true => 20594,
+                        false => 20595,
                     },
                     false => Powered switch {
-                        true => 19519,
-                        false => 19520,
+                        true => 20596,
+                        false => 20597,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -90,22 +90,22 @@ public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook
     
     public IBlock WithState(uint state) {
         return state switch {
-            19505 => new LecternBlock(Identifier, Direction.North, true, true),
-            19506 => new LecternBlock(Identifier, Direction.North, true, false),
-            19507 => new LecternBlock(Identifier, Direction.North, false, true),
-            19508 => new LecternBlock(Identifier, Direction.North, false, false),
-            19509 => new LecternBlock(Identifier, Direction.South, true, true),
-            19510 => new LecternBlock(Identifier, Direction.South, true, false),
-            19511 => new LecternBlock(Identifier, Direction.South, false, true),
-            19512 => new LecternBlock(Identifier, Direction.South, false, false),
-            19513 => new LecternBlock(Identifier, Direction.West, true, true),
-            19514 => new LecternBlock(Identifier, Direction.West, true, false),
-            19515 => new LecternBlock(Identifier, Direction.West, false, true),
-            19516 => new LecternBlock(Identifier, Direction.West, false, false),
-            19517 => new LecternBlock(Identifier, Direction.East, true, true),
-            19518 => new LecternBlock(Identifier, Direction.East, true, false),
-            19519 => new LecternBlock(Identifier, Direction.East, false, true),
-            19520 => new LecternBlock(Identifier, Direction.East, false, false),
+            20582 => new LecternBlock(Identifier, Direction.North, true, true),
+            20583 => new LecternBlock(Identifier, Direction.North, true, false),
+            20584 => new LecternBlock(Identifier, Direction.North, false, true),
+            20585 => new LecternBlock(Identifier, Direction.North, false, false),
+            20586 => new LecternBlock(Identifier, Direction.South, true, true),
+            20587 => new LecternBlock(Identifier, Direction.South, true, false),
+            20588 => new LecternBlock(Identifier, Direction.South, false, true),
+            20589 => new LecternBlock(Identifier, Direction.South, false, false),
+            20590 => new LecternBlock(Identifier, Direction.West, true, true),
+            20591 => new LecternBlock(Identifier, Direction.West, true, false),
+            20592 => new LecternBlock(Identifier, Direction.West, false, true),
+            20593 => new LecternBlock(Identifier, Direction.West, false, false),
+            20594 => new LecternBlock(Identifier, Direction.East, true, true),
+            20595 => new LecternBlock(Identifier, Direction.East, true, false),
+            20596 => new LecternBlock(Identifier, Direction.East, false, true),
+            20597 => new LecternBlock(Identifier, Direction.East, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

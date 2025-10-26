@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record VineBlock(Identifier Identifier, bool East, bool North, bool South, bool Up, bool West) : IBlock {
     public Identifier Category => "minecraft:vine";
-    public int ProtocolId => 335;
+    public int ProtocolId => 365;
     public double Hardness => 0.2;
     public double ExplosionResistance => 0.2;
     public double Friction => 0.6;
@@ -47,44 +47,44 @@ public record VineBlock(Identifier Identifier, bool East, bool North, bool South
                     true => South switch {
                         true => Up switch {
                             true => West switch {
-                                true => 7080,
-                                false => 7081,
+                                true => 8157,
+                                false => 8158,
                             },
                             false => West switch {
-                                true => 7082,
-                                false => 7083,
+                                true => 8159,
+                                false => 8160,
                             },
                         },
                         false => Up switch {
                             true => West switch {
-                                true => 7084,
-                                false => 7085,
+                                true => 8161,
+                                false => 8162,
                             },
                             false => West switch {
-                                true => 7086,
-                                false => 7087,
+                                true => 8163,
+                                false => 8164,
                             },
                         },
                     },
                     false => South switch {
                         true => Up switch {
                             true => West switch {
-                                true => 7088,
-                                false => 7089,
+                                true => 8165,
+                                false => 8166,
                             },
                             false => West switch {
-                                true => 7090,
-                                false => 7091,
+                                true => 8167,
+                                false => 8168,
                             },
                         },
                         false => Up switch {
                             true => West switch {
-                                true => 7092,
-                                false => 7093,
+                                true => 8169,
+                                false => 8170,
                             },
                             false => West switch {
-                                true => 7094,
-                                false => 7095,
+                                true => 8171,
+                                false => 8172,
                             },
                         },
                     },
@@ -93,44 +93,44 @@ public record VineBlock(Identifier Identifier, bool East, bool North, bool South
                     true => South switch {
                         true => Up switch {
                             true => West switch {
-                                true => 7096,
-                                false => 7097,
+                                true => 8173,
+                                false => 8174,
                             },
                             false => West switch {
-                                true => 7098,
-                                false => 7099,
+                                true => 8175,
+                                false => 8176,
                             },
                         },
                         false => Up switch {
                             true => West switch {
-                                true => 7100,
-                                false => 7101,
+                                true => 8177,
+                                false => 8178,
                             },
                             false => West switch {
-                                true => 7102,
-                                false => 7103,
+                                true => 8179,
+                                false => 8180,
                             },
                         },
                     },
                     false => South switch {
                         true => Up switch {
                             true => West switch {
-                                true => 7104,
-                                false => 7105,
+                                true => 8181,
+                                false => 8182,
                             },
                             false => West switch {
-                                true => 7106,
-                                false => 7107,
+                                true => 8183,
+                                false => 8184,
                             },
                         },
                         false => Up switch {
                             true => West switch {
-                                true => 7108,
-                                false => 7109,
+                                true => 8185,
+                                false => 8186,
                             },
                             false => West switch {
-                                true => 7110,
-                                false => 7111,
+                                true => 8187,
+                                false => 8188,
                             },
                         },
                     },
@@ -141,38 +141,38 @@ public record VineBlock(Identifier Identifier, bool East, bool North, bool South
     
     public IBlock WithState(uint state) {
         return state switch {
-            7080 => new VineBlock(Identifier, true, true, true, true, true),
-            7081 => new VineBlock(Identifier, true, true, true, true, false),
-            7082 => new VineBlock(Identifier, true, true, true, false, true),
-            7083 => new VineBlock(Identifier, true, true, true, false, false),
-            7084 => new VineBlock(Identifier, true, true, false, true, true),
-            7085 => new VineBlock(Identifier, true, true, false, true, false),
-            7086 => new VineBlock(Identifier, true, true, false, false, true),
-            7087 => new VineBlock(Identifier, true, true, false, false, false),
-            7088 => new VineBlock(Identifier, true, false, true, true, true),
-            7089 => new VineBlock(Identifier, true, false, true, true, false),
-            7090 => new VineBlock(Identifier, true, false, true, false, true),
-            7091 => new VineBlock(Identifier, true, false, true, false, false),
-            7092 => new VineBlock(Identifier, true, false, false, true, true),
-            7093 => new VineBlock(Identifier, true, false, false, true, false),
-            7094 => new VineBlock(Identifier, true, false, false, false, true),
-            7095 => new VineBlock(Identifier, true, false, false, false, false),
-            7096 => new VineBlock(Identifier, false, true, true, true, true),
-            7097 => new VineBlock(Identifier, false, true, true, true, false),
-            7098 => new VineBlock(Identifier, false, true, true, false, true),
-            7099 => new VineBlock(Identifier, false, true, true, false, false),
-            7100 => new VineBlock(Identifier, false, true, false, true, true),
-            7101 => new VineBlock(Identifier, false, true, false, true, false),
-            7102 => new VineBlock(Identifier, false, true, false, false, true),
-            7103 => new VineBlock(Identifier, false, true, false, false, false),
-            7104 => new VineBlock(Identifier, false, false, true, true, true),
-            7105 => new VineBlock(Identifier, false, false, true, true, false),
-            7106 => new VineBlock(Identifier, false, false, true, false, true),
-            7107 => new VineBlock(Identifier, false, false, true, false, false),
-            7108 => new VineBlock(Identifier, false, false, false, true, true),
-            7109 => new VineBlock(Identifier, false, false, false, true, false),
-            7110 => new VineBlock(Identifier, false, false, false, false, true),
-            7111 => new VineBlock(Identifier, false, false, false, false, false),
+            8157 => new VineBlock(Identifier, true, true, true, true, true),
+            8158 => new VineBlock(Identifier, true, true, true, true, false),
+            8159 => new VineBlock(Identifier, true, true, true, false, true),
+            8160 => new VineBlock(Identifier, true, true, true, false, false),
+            8161 => new VineBlock(Identifier, true, true, false, true, true),
+            8162 => new VineBlock(Identifier, true, true, false, true, false),
+            8163 => new VineBlock(Identifier, true, true, false, false, true),
+            8164 => new VineBlock(Identifier, true, true, false, false, false),
+            8165 => new VineBlock(Identifier, true, false, true, true, true),
+            8166 => new VineBlock(Identifier, true, false, true, true, false),
+            8167 => new VineBlock(Identifier, true, false, true, false, true),
+            8168 => new VineBlock(Identifier, true, false, true, false, false),
+            8169 => new VineBlock(Identifier, true, false, false, true, true),
+            8170 => new VineBlock(Identifier, true, false, false, true, false),
+            8171 => new VineBlock(Identifier, true, false, false, false, true),
+            8172 => new VineBlock(Identifier, true, false, false, false, false),
+            8173 => new VineBlock(Identifier, false, true, true, true, true),
+            8174 => new VineBlock(Identifier, false, true, true, true, false),
+            8175 => new VineBlock(Identifier, false, true, true, false, true),
+            8176 => new VineBlock(Identifier, false, true, true, false, false),
+            8177 => new VineBlock(Identifier, false, true, false, true, true),
+            8178 => new VineBlock(Identifier, false, true, false, true, false),
+            8179 => new VineBlock(Identifier, false, true, false, false, true),
+            8180 => new VineBlock(Identifier, false, true, false, false, false),
+            8181 => new VineBlock(Identifier, false, false, true, true, true),
+            8182 => new VineBlock(Identifier, false, false, true, true, false),
+            8183 => new VineBlock(Identifier, false, false, true, false, true),
+            8184 => new VineBlock(Identifier, false, false, true, false, false),
+            8185 => new VineBlock(Identifier, false, false, false, true, true),
+            8186 => new VineBlock(Identifier, false, false, false, true, false),
+            8187 => new VineBlock(Identifier, false, false, false, false, true),
+            8188 => new VineBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

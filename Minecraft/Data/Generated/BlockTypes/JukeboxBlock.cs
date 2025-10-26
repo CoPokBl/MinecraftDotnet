@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     public Identifier Category => "minecraft:jukebox";
-    public int ProtocolId => 270;
+    public int ProtocolId => 282;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     public uint StateId {
         get {
             return HasRecord switch {
-                true => 5994,
-                false => 5995,
+                true => 6762,
+                false => 6763,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            5994 => new JukeboxBlock(Identifier, true),
-            5995 => new JukeboxBlock(Identifier, false),
+            6762 => new JukeboxBlock(Identifier, true),
+            6763 => new JukeboxBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

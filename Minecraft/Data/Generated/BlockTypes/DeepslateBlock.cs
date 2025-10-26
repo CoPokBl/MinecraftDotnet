@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DeepslateBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:rotated_pillar";
-    public int ProtocolId => 1060;
+    public int ProtocolId => 1121;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record DeepslateBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 25996,
-                Axis.Y => 25997,
-                Axis.Z => 25998,
+                Axis.X => 27721,
+                Axis.Y => 27722,
+                Axis.Z => 27723,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record DeepslateBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            25996 => new DeepslateBlock(Identifier, Axis.X),
-            25997 => new DeepslateBlock(Identifier, Axis.Y),
-            25998 => new DeepslateBlock(Identifier, Axis.Z),
+            27721 => new DeepslateBlock(Identifier, Axis.X),
+            27722 => new DeepslateBlock(Identifier, Axis.Y),
+            27723 => new DeepslateBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WarpedFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
     public Identifier Category => "minecraft:fence";
-    public int ProtocolId => 850;
+    public int ProtocolId => 888;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -47,44 +47,44 @@ public record WarpedFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 19771,
-                                false => 19772,
+                                true => 20880,
+                                false => 20881,
                             },
                             false => West switch {
-                                true => 19773,
-                                false => 19774,
+                                true => 20882,
+                                false => 20883,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 19775,
-                                false => 19776,
+                                true => 20884,
+                                false => 20885,
                             },
                             false => West switch {
-                                true => 19777,
-                                false => 19778,
+                                true => 20886,
+                                false => 20887,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 19779,
-                                false => 19780,
+                                true => 20888,
+                                false => 20889,
                             },
                             false => West switch {
-                                true => 19781,
-                                false => 19782,
+                                true => 20890,
+                                false => 20891,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 19783,
-                                false => 19784,
+                                true => 20892,
+                                false => 20893,
                             },
                             false => West switch {
-                                true => 19785,
-                                false => 19786,
+                                true => 20894,
+                                false => 20895,
                             },
                         },
                     },
@@ -93,44 +93,44 @@ public record WarpedFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 19787,
-                                false => 19788,
+                                true => 20896,
+                                false => 20897,
                             },
                             false => West switch {
-                                true => 19789,
-                                false => 19790,
+                                true => 20898,
+                                false => 20899,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 19791,
-                                false => 19792,
+                                true => 20900,
+                                false => 20901,
                             },
                             false => West switch {
-                                true => 19793,
-                                false => 19794,
+                                true => 20902,
+                                false => 20903,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 19795,
-                                false => 19796,
+                                true => 20904,
+                                false => 20905,
                             },
                             false => West switch {
-                                true => 19797,
-                                false => 19798,
+                                true => 20906,
+                                false => 20907,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 19799,
-                                false => 19800,
+                                true => 20908,
+                                false => 20909,
                             },
                             false => West switch {
-                                true => 19801,
-                                false => 19802,
+                                true => 20910,
+                                false => 20911,
                             },
                         },
                     },
@@ -141,38 +141,38 @@ public record WarpedFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            19771 => new WarpedFenceBlock(Identifier, true, true, true, true, true),
-            19772 => new WarpedFenceBlock(Identifier, true, true, true, true, false),
-            19773 => new WarpedFenceBlock(Identifier, true, true, true, false, true),
-            19774 => new WarpedFenceBlock(Identifier, true, true, true, false, false),
-            19775 => new WarpedFenceBlock(Identifier, true, true, false, true, true),
-            19776 => new WarpedFenceBlock(Identifier, true, true, false, true, false),
-            19777 => new WarpedFenceBlock(Identifier, true, true, false, false, true),
-            19778 => new WarpedFenceBlock(Identifier, true, true, false, false, false),
-            19779 => new WarpedFenceBlock(Identifier, true, false, true, true, true),
-            19780 => new WarpedFenceBlock(Identifier, true, false, true, true, false),
-            19781 => new WarpedFenceBlock(Identifier, true, false, true, false, true),
-            19782 => new WarpedFenceBlock(Identifier, true, false, true, false, false),
-            19783 => new WarpedFenceBlock(Identifier, true, false, false, true, true),
-            19784 => new WarpedFenceBlock(Identifier, true, false, false, true, false),
-            19785 => new WarpedFenceBlock(Identifier, true, false, false, false, true),
-            19786 => new WarpedFenceBlock(Identifier, true, false, false, false, false),
-            19787 => new WarpedFenceBlock(Identifier, false, true, true, true, true),
-            19788 => new WarpedFenceBlock(Identifier, false, true, true, true, false),
-            19789 => new WarpedFenceBlock(Identifier, false, true, true, false, true),
-            19790 => new WarpedFenceBlock(Identifier, false, true, true, false, false),
-            19791 => new WarpedFenceBlock(Identifier, false, true, false, true, true),
-            19792 => new WarpedFenceBlock(Identifier, false, true, false, true, false),
-            19793 => new WarpedFenceBlock(Identifier, false, true, false, false, true),
-            19794 => new WarpedFenceBlock(Identifier, false, true, false, false, false),
-            19795 => new WarpedFenceBlock(Identifier, false, false, true, true, true),
-            19796 => new WarpedFenceBlock(Identifier, false, false, true, true, false),
-            19797 => new WarpedFenceBlock(Identifier, false, false, true, false, true),
-            19798 => new WarpedFenceBlock(Identifier, false, false, true, false, false),
-            19799 => new WarpedFenceBlock(Identifier, false, false, false, true, true),
-            19800 => new WarpedFenceBlock(Identifier, false, false, false, true, false),
-            19801 => new WarpedFenceBlock(Identifier, false, false, false, false, true),
-            19802 => new WarpedFenceBlock(Identifier, false, false, false, false, false),
+            20880 => new WarpedFenceBlock(Identifier, true, true, true, true, true),
+            20881 => new WarpedFenceBlock(Identifier, true, true, true, true, false),
+            20882 => new WarpedFenceBlock(Identifier, true, true, true, false, true),
+            20883 => new WarpedFenceBlock(Identifier, true, true, true, false, false),
+            20884 => new WarpedFenceBlock(Identifier, true, true, false, true, true),
+            20885 => new WarpedFenceBlock(Identifier, true, true, false, true, false),
+            20886 => new WarpedFenceBlock(Identifier, true, true, false, false, true),
+            20887 => new WarpedFenceBlock(Identifier, true, true, false, false, false),
+            20888 => new WarpedFenceBlock(Identifier, true, false, true, true, true),
+            20889 => new WarpedFenceBlock(Identifier, true, false, true, true, false),
+            20890 => new WarpedFenceBlock(Identifier, true, false, true, false, true),
+            20891 => new WarpedFenceBlock(Identifier, true, false, true, false, false),
+            20892 => new WarpedFenceBlock(Identifier, true, false, false, true, true),
+            20893 => new WarpedFenceBlock(Identifier, true, false, false, true, false),
+            20894 => new WarpedFenceBlock(Identifier, true, false, false, false, true),
+            20895 => new WarpedFenceBlock(Identifier, true, false, false, false, false),
+            20896 => new WarpedFenceBlock(Identifier, false, true, true, true, true),
+            20897 => new WarpedFenceBlock(Identifier, false, true, true, true, false),
+            20898 => new WarpedFenceBlock(Identifier, false, true, true, false, true),
+            20899 => new WarpedFenceBlock(Identifier, false, true, true, false, false),
+            20900 => new WarpedFenceBlock(Identifier, false, true, false, true, true),
+            20901 => new WarpedFenceBlock(Identifier, false, true, false, true, false),
+            20902 => new WarpedFenceBlock(Identifier, false, true, false, false, true),
+            20903 => new WarpedFenceBlock(Identifier, false, true, false, false, false),
+            20904 => new WarpedFenceBlock(Identifier, false, false, true, true, true),
+            20905 => new WarpedFenceBlock(Identifier, false, false, true, true, false),
+            20906 => new WarpedFenceBlock(Identifier, false, false, true, false, true),
+            20907 => new WarpedFenceBlock(Identifier, false, false, true, false, false),
+            20908 => new WarpedFenceBlock(Identifier, false, false, false, true, true),
+            20909 => new WarpedFenceBlock(Identifier, false, false, false, true, false),
+            20910 => new WarpedFenceBlock(Identifier, false, false, false, false, true),
+            20911 => new WarpedFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

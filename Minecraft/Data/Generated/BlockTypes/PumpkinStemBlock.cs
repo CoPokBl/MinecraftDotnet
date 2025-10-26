@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PumpkinStemBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:stem";
-    public int ProtocolId => 333;
+    public int ProtocolId => 363;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,14 +43,14 @@ public record PumpkinStemBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 7064,
-                1 => 7065,
-                2 => 7066,
-                3 => 7067,
-                4 => 7068,
-                5 => 7069,
-                6 => 7070,
-                7 => 7071,
+                0 => 8141,
+                1 => 8142,
+                2 => 8143,
+                3 => 8144,
+                4 => 8145,
+                5 => 8146,
+                6 => 8147,
+                7 => 8148,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -58,14 +58,14 @@ public record PumpkinStemBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            7064 => new PumpkinStemBlock(Identifier, 0),
-            7065 => new PumpkinStemBlock(Identifier, 1),
-            7066 => new PumpkinStemBlock(Identifier, 2),
-            7067 => new PumpkinStemBlock(Identifier, 3),
-            7068 => new PumpkinStemBlock(Identifier, 4),
-            7069 => new PumpkinStemBlock(Identifier, 5),
-            7070 => new PumpkinStemBlock(Identifier, 6),
-            7071 => new PumpkinStemBlock(Identifier, 7),
+            8141 => new PumpkinStemBlock(Identifier, 0),
+            8142 => new PumpkinStemBlock(Identifier, 1),
+            8143 => new PumpkinStemBlock(Identifier, 2),
+            8144 => new PumpkinStemBlock(Identifier, 3),
+            8145 => new PumpkinStemBlock(Identifier, 4),
+            8146 => new PumpkinStemBlock(Identifier, 5),
+            8147 => new PumpkinStemBlock(Identifier, 6),
+            8148 => new PumpkinStemBlock(Identifier, 7),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

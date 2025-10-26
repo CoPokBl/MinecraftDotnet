@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WeatheredCutCopperSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:weathering_copper_slab";
-    public int ProtocolId => 990;
+    public int ProtocolId => 1028;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record WeatheredCutCopperSlabBlock(Identifier Identifier, SlabType Type, 
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 24342,
-                    false => 24343,
+                    true => 25451,
+                    false => 25452,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 24344,
-                    false => 24345,
+                    true => 25453,
+                    false => 25454,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 24346,
-                    false => 24347,
+                    true => 25455,
+                    false => 25456,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record WeatheredCutCopperSlabBlock(Identifier Identifier, SlabType Type, 
     
     public IBlock WithState(uint state) {
         return state switch {
-            24342 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Top, true),
-            24343 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Top, false),
-            24344 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Bottom, true),
-            24345 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Bottom, false),
-            24346 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Double, true),
-            24347 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Double, false),
+            25451 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Top, true),
+            25452 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Top, false),
+            25453 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Bottom, true),
+            25454 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Bottom, false),
+            25455 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Double, true),
+            25456 => new WeatheredCutCopperSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

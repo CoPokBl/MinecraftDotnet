@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ChorusFlowerBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:chorus_flower";
-    public int ProtocolId => 625;
+    public int ProtocolId => 655;
     public double Hardness => 0.4;
     public double ExplosionResistance => 0.4;
     public double Friction => 0.6;
@@ -43,12 +43,12 @@ public record ChorusFlowerBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 13427,
-                1 => 13428,
-                2 => 13429,
-                3 => 13430,
-                4 => 13431,
-                5 => 13432,
+                0 => 14504,
+                1 => 14505,
+                2 => 14506,
+                3 => 14507,
+                4 => 14508,
+                5 => 14509,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -56,12 +56,12 @@ public record ChorusFlowerBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            13427 => new ChorusFlowerBlock(Identifier, 0),
-            13428 => new ChorusFlowerBlock(Identifier, 1),
-            13429 => new ChorusFlowerBlock(Identifier, 2),
-            13430 => new ChorusFlowerBlock(Identifier, 3),
-            13431 => new ChorusFlowerBlock(Identifier, 4),
-            13432 => new ChorusFlowerBlock(Identifier, 5),
+            14504 => new ChorusFlowerBlock(Identifier, 0),
+            14505 => new ChorusFlowerBlock(Identifier, 1),
+            14506 => new ChorusFlowerBlock(Identifier, 2),
+            14507 => new ChorusFlowerBlock(Identifier, 3),
+            14508 => new ChorusFlowerBlock(Identifier, 4),
+            14509 => new ChorusFlowerBlock(Identifier, 5),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

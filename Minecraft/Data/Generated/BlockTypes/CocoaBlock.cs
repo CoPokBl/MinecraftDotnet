@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:cocoa";
-    public int ProtocolId => 365;
+    public int ProtocolId => 395;
     public double Hardness => 0.2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -44,24 +44,24 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
         get {
             return Age switch {
                 0 => Facing switch {
-                    Direction.North => 8203,
-                    Direction.South => 8204,
-                    Direction.West => 8205,
-                    Direction.East => 8206,
+                    Direction.North => 9280,
+                    Direction.South => 9281,
+                    Direction.West => 9282,
+                    Direction.East => 9283,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 1 => Facing switch {
-                    Direction.North => 8207,
-                    Direction.South => 8208,
-                    Direction.West => 8209,
-                    Direction.East => 8210,
+                    Direction.North => 9284,
+                    Direction.South => 9285,
+                    Direction.West => 9286,
+                    Direction.East => 9287,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 2 => Facing switch {
-                    Direction.North => 8211,
-                    Direction.South => 8212,
-                    Direction.West => 8213,
-                    Direction.East => 8214,
+                    Direction.North => 9288,
+                    Direction.South => 9289,
+                    Direction.West => 9290,
+                    Direction.East => 9291,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
@@ -71,18 +71,18 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
     
     public IBlock WithState(uint state) {
         return state switch {
-            8203 => new CocoaBlock(Identifier, 0, Direction.North),
-            8204 => new CocoaBlock(Identifier, 0, Direction.South),
-            8205 => new CocoaBlock(Identifier, 0, Direction.West),
-            8206 => new CocoaBlock(Identifier, 0, Direction.East),
-            8207 => new CocoaBlock(Identifier, 1, Direction.North),
-            8208 => new CocoaBlock(Identifier, 1, Direction.South),
-            8209 => new CocoaBlock(Identifier, 1, Direction.West),
-            8210 => new CocoaBlock(Identifier, 1, Direction.East),
-            8211 => new CocoaBlock(Identifier, 2, Direction.North),
-            8212 => new CocoaBlock(Identifier, 2, Direction.South),
-            8213 => new CocoaBlock(Identifier, 2, Direction.West),
-            8214 => new CocoaBlock(Identifier, 2, Direction.East),
+            9280 => new CocoaBlock(Identifier, 0, Direction.North),
+            9281 => new CocoaBlock(Identifier, 0, Direction.South),
+            9282 => new CocoaBlock(Identifier, 0, Direction.West),
+            9283 => new CocoaBlock(Identifier, 0, Direction.East),
+            9284 => new CocoaBlock(Identifier, 1, Direction.North),
+            9285 => new CocoaBlock(Identifier, 1, Direction.South),
+            9286 => new CocoaBlock(Identifier, 1, Direction.West),
+            9287 => new CocoaBlock(Identifier, 1, Direction.East),
+            9288 => new CocoaBlock(Identifier, 2, Direction.North),
+            9289 => new CocoaBlock(Identifier, 2, Direction.South),
+            9290 => new CocoaBlock(Identifier, 2, Direction.West),
+            9291 => new CocoaBlock(Identifier, 2, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

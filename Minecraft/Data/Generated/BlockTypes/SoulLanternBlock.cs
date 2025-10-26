@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SoulLanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:lantern";
-    public int ProtocolId => 818;
+    public int ProtocolId => 848;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;
@@ -44,12 +44,12 @@ public record SoulLanternBlock(Identifier Identifier, bool Hanging, bool Waterlo
         get {
             return Hanging switch {
                 true => Waterlogged switch {
-                    true => 19562,
-                    false => 19563,
+                    true => 20639,
+                    false => 20640,
                 },
                 false => Waterlogged switch {
-                    true => 19564,
-                    false => 19565,
+                    true => 20641,
+                    false => 20642,
                 },
             };
         }
@@ -57,10 +57,10 @@ public record SoulLanternBlock(Identifier Identifier, bool Hanging, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            19562 => new SoulLanternBlock(Identifier, true, true),
-            19563 => new SoulLanternBlock(Identifier, true, false),
-            19564 => new SoulLanternBlock(Identifier, false, true),
-            19565 => new SoulLanternBlock(Identifier, false, false),
+            20639 => new SoulLanternBlock(Identifier, true, true),
+            20640 => new SoulLanternBlock(Identifier, true, false),
+            20641 => new SoulLanternBlock(Identifier, false, true),
+            20642 => new SoulLanternBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

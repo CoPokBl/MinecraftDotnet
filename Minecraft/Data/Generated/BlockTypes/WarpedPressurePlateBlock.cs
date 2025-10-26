@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WarpedPressurePlateBlock(Identifier Identifier, bool Powered) : IBlock {
     public Identifier Category => "minecraft:pressure_plate";
-    public int ProtocolId => 848;
+    public int ProtocolId => 886;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record WarpedPressurePlateBlock(Identifier Identifier, bool Powered) : IB
     public uint StateId {
         get {
             return Powered switch {
-                true => 19737,
-                false => 19738,
+                true => 20846,
+                false => 20847,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            19737 => new WarpedPressurePlateBlock(Identifier, true),
-            19738 => new WarpedPressurePlateBlock(Identifier, false),
+            20846 => new WarpedPressurePlateBlock(Identifier, true),
+            20847 => new WarpedPressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

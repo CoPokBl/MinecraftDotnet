@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record MangroveWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:wall_sign";
-    public int ProtocolId => 219;
+    public int ProtocolId => 231;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,20 +44,20 @@ public record MangroveWallSignBlock(Identifier Identifier, Direction Facing, boo
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 4922,
-                    false => 4923,
+                    true => 5690,
+                    false => 5691,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 4924,
-                    false => 4925,
+                    true => 5692,
+                    false => 5693,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 4926,
-                    false => 4927,
+                    true => 5694,
+                    false => 5695,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 4928,
-                    false => 4929,
+                    true => 5696,
+                    false => 5697,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -66,14 +66,14 @@ public record MangroveWallSignBlock(Identifier Identifier, Direction Facing, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            4922 => new MangroveWallSignBlock(Identifier, Direction.North, true),
-            4923 => new MangroveWallSignBlock(Identifier, Direction.North, false),
-            4924 => new MangroveWallSignBlock(Identifier, Direction.South, true),
-            4925 => new MangroveWallSignBlock(Identifier, Direction.South, false),
-            4926 => new MangroveWallSignBlock(Identifier, Direction.West, true),
-            4927 => new MangroveWallSignBlock(Identifier, Direction.West, false),
-            4928 => new MangroveWallSignBlock(Identifier, Direction.East, true),
-            4929 => new MangroveWallSignBlock(Identifier, Direction.East, false),
+            5690 => new MangroveWallSignBlock(Identifier, Direction.North, true),
+            5691 => new MangroveWallSignBlock(Identifier, Direction.North, false),
+            5692 => new MangroveWallSignBlock(Identifier, Direction.South, true),
+            5693 => new MangroveWallSignBlock(Identifier, Direction.South, false),
+            5694 => new MangroveWallSignBlock(Identifier, Direction.West, true),
+            5695 => new MangroveWallSignBlock(Identifier, Direction.West, false),
+            5696 => new MangroveWallSignBlock(Identifier, Direction.East, true),
+            5697 => new MangroveWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

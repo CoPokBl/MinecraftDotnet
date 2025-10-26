@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record InfestedDeepslateBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:infested_rotated_pillar";
-    public int ProtocolId => 1080;
+    public int ProtocolId => 1141;
     public double Hardness => 1.5;
     public double ExplosionResistance => 0.75;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record InfestedDeepslateBlock(Identifier Identifier, Axis Axis) : IBlock 
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 27646,
-                Axis.Y => 27647,
-                Axis.Z => 27648,
+                Axis.X => 29371,
+                Axis.Y => 29372,
+                Axis.Z => 29373,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -53,9 +53,9 @@ public record InfestedDeepslateBlock(Identifier Identifier, Axis Axis) : IBlock 
     
     public IBlock WithState(uint state) {
         return state switch {
-            27646 => new InfestedDeepslateBlock(Identifier, Axis.X),
-            27647 => new InfestedDeepslateBlock(Identifier, Axis.Y),
-            27648 => new InfestedDeepslateBlock(Identifier, Axis.Z),
+            29371 => new InfestedDeepslateBlock(Identifier, Axis.X),
+            29372 => new InfestedDeepslateBlock(Identifier, Axis.Y),
+            29373 => new InfestedDeepslateBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

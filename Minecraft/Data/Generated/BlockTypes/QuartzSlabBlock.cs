@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record QuartzSlabBlock(Identifier Identifier, SlabType Type, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:slab";
-    public int ProtocolId => 588;
+    public int ProtocolId => 618;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -44,16 +44,16 @@ public record QuartzSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12177,
-                    false => 12178,
+                    true => 13254,
+                    false => 13255,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12179,
-                    false => 12180,
+                    true => 13256,
+                    false => 13257,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12181,
-                    false => 12182,
+                    true => 13258,
+                    false => 13259,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -62,12 +62,12 @@ public record QuartzSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12177 => new QuartzSlabBlock(Identifier, SlabType.Top, true),
-            12178 => new QuartzSlabBlock(Identifier, SlabType.Top, false),
-            12179 => new QuartzSlabBlock(Identifier, SlabType.Bottom, true),
-            12180 => new QuartzSlabBlock(Identifier, SlabType.Bottom, false),
-            12181 => new QuartzSlabBlock(Identifier, SlabType.Double, true),
-            12182 => new QuartzSlabBlock(Identifier, SlabType.Double, false),
+            13254 => new QuartzSlabBlock(Identifier, SlabType.Top, true),
+            13255 => new QuartzSlabBlock(Identifier, SlabType.Top, false),
+            13256 => new QuartzSlabBlock(Identifier, SlabType.Bottom, true),
+            13257 => new QuartzSlabBlock(Identifier, SlabType.Bottom, false),
+            13258 => new QuartzSlabBlock(Identifier, SlabType.Double, true),
+            13259 => new QuartzSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

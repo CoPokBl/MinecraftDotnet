@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
     public Identifier Category => "minecraft:bubble_column";
-    public int ProtocolId => 764;
+    public int ProtocolId => 794;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,16 +43,16 @@ public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
     public uint StateId {
         get {
             return Drag switch {
-                true => 14015,
-                false => 14016,
+                true => 15092,
+                false => 15093,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            14015 => new BubbleColumnBlock(Identifier, true),
-            14016 => new BubbleColumnBlock(Identifier, false),
+            15092 => new BubbleColumnBlock(Identifier, true),
+            15093 => new BubbleColumnBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

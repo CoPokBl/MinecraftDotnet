@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
     public Identifier Category => "minecraft:layered_cauldron";
-    public int ProtocolId => 357;
+    public int ProtocolId => 387;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;
@@ -43,9 +43,9 @@ public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
     public uint StateId {
         get {
             return Level switch {
-                1 => 8183,
-                2 => 8184,
-                3 => 8185,
+                1 => 9260,
+                2 => 9261,
+                3 => 9262,
                 _ => throw new ArgumentOutOfRangeException(nameof(Level), Level, "Unknown value for property level.")
             };
         }
@@ -53,9 +53,9 @@ public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            8183 => new WaterCauldronBlock(Identifier, 1),
-            8184 => new WaterCauldronBlock(Identifier, 2),
-            8185 => new WaterCauldronBlock(Identifier, 3),
+            9260 => new WaterCauldronBlock(Identifier, 1),
+            9261 => new WaterCauldronBlock(Identifier, 2),
+            9262 => new WaterCauldronBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

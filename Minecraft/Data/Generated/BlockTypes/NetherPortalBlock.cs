@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis AxisValue) : IBlock {
     public Identifier Category => "minecraft:nether_portal";
-    public int ProtocolId => 280;
+    public int ProtocolId => 294;
     public double Hardness => -1;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,8 +43,8 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
     public uint StateId {
         get {
             return AxisValue switch {
-                Axis.X => 6043,
-                Axis.Z => 6044,
+                Axis.X => 6816,
+                Axis.Z => 6817,
                 _ => throw new ArgumentOutOfRangeException(nameof(AxisValue), AxisValue, "Unknown value for property axis.")
             };
         }
@@ -52,8 +52,8 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
     
     public IBlock WithState(uint state) {
         return state switch {
-            6043 => new NetherPortalBlock(Identifier, Axis.X),
-            6044 => new NetherPortalBlock(Identifier, Axis.Z),
+            6816 => new NetherPortalBlock(Identifier, Axis.X),
+            6817 => new NetherPortalBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

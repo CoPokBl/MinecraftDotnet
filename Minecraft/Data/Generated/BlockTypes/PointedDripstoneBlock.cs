@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock.Thickness ThicknessValue, PointedDripstoneBlock.VerticalDirection VerticalDirectionValue, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:pointed_dripstone";
-    public int ProtocolId => 1042;
+    public int ProtocolId => 1103;
     public double Hardness => 1.5;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -45,56 +45,56 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
             return ThicknessValue switch {
                 Thickness.TipMerge => VerticalDirectionValue switch {
                     VerticalDirection.Up => Waterlogged switch {
-                        true => 25808,
-                        false => 25809,
+                        true => 27533,
+                        false => 27534,
                     },
                     VerticalDirection.Down => Waterlogged switch {
-                        true => 25810,
-                        false => 25811,
+                        true => 27535,
+                        false => 27536,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(VerticalDirectionValue), VerticalDirectionValue, "Unknown value for property vertical_direction.")
                 },
                 Thickness.Tip => VerticalDirectionValue switch {
                     VerticalDirection.Up => Waterlogged switch {
-                        true => 25812,
-                        false => 25813,
+                        true => 27537,
+                        false => 27538,
                     },
                     VerticalDirection.Down => Waterlogged switch {
-                        true => 25814,
-                        false => 25815,
+                        true => 27539,
+                        false => 27540,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(VerticalDirectionValue), VerticalDirectionValue, "Unknown value for property vertical_direction.")
                 },
                 Thickness.Frustum => VerticalDirectionValue switch {
                     VerticalDirection.Up => Waterlogged switch {
-                        true => 25816,
-                        false => 25817,
+                        true => 27541,
+                        false => 27542,
                     },
                     VerticalDirection.Down => Waterlogged switch {
-                        true => 25818,
-                        false => 25819,
+                        true => 27543,
+                        false => 27544,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(VerticalDirectionValue), VerticalDirectionValue, "Unknown value for property vertical_direction.")
                 },
                 Thickness.Middle => VerticalDirectionValue switch {
                     VerticalDirection.Up => Waterlogged switch {
-                        true => 25820,
-                        false => 25821,
+                        true => 27545,
+                        false => 27546,
                     },
                     VerticalDirection.Down => Waterlogged switch {
-                        true => 25822,
-                        false => 25823,
+                        true => 27547,
+                        false => 27548,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(VerticalDirectionValue), VerticalDirectionValue, "Unknown value for property vertical_direction.")
                 },
                 Thickness.Base => VerticalDirectionValue switch {
                     VerticalDirection.Up => Waterlogged switch {
-                        true => 25824,
-                        false => 25825,
+                        true => 27549,
+                        false => 27550,
                     },
                     VerticalDirection.Down => Waterlogged switch {
-                        true => 25826,
-                        false => 25827,
+                        true => 27551,
+                        false => 27552,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(VerticalDirectionValue), VerticalDirectionValue, "Unknown value for property vertical_direction.")
                 },
@@ -105,26 +105,26 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
     
     public IBlock WithState(uint state) {
         return state switch {
-            25808 => new PointedDripstoneBlock(Identifier, Thickness.TipMerge, VerticalDirection.Up, true),
-            25809 => new PointedDripstoneBlock(Identifier, Thickness.TipMerge, VerticalDirection.Up, false),
-            25810 => new PointedDripstoneBlock(Identifier, Thickness.TipMerge, VerticalDirection.Down, true),
-            25811 => new PointedDripstoneBlock(Identifier, Thickness.TipMerge, VerticalDirection.Down, false),
-            25812 => new PointedDripstoneBlock(Identifier, Thickness.Tip, VerticalDirection.Up, true),
-            25813 => new PointedDripstoneBlock(Identifier, Thickness.Tip, VerticalDirection.Up, false),
-            25814 => new PointedDripstoneBlock(Identifier, Thickness.Tip, VerticalDirection.Down, true),
-            25815 => new PointedDripstoneBlock(Identifier, Thickness.Tip, VerticalDirection.Down, false),
-            25816 => new PointedDripstoneBlock(Identifier, Thickness.Frustum, VerticalDirection.Up, true),
-            25817 => new PointedDripstoneBlock(Identifier, Thickness.Frustum, VerticalDirection.Up, false),
-            25818 => new PointedDripstoneBlock(Identifier, Thickness.Frustum, VerticalDirection.Down, true),
-            25819 => new PointedDripstoneBlock(Identifier, Thickness.Frustum, VerticalDirection.Down, false),
-            25820 => new PointedDripstoneBlock(Identifier, Thickness.Middle, VerticalDirection.Up, true),
-            25821 => new PointedDripstoneBlock(Identifier, Thickness.Middle, VerticalDirection.Up, false),
-            25822 => new PointedDripstoneBlock(Identifier, Thickness.Middle, VerticalDirection.Down, true),
-            25823 => new PointedDripstoneBlock(Identifier, Thickness.Middle, VerticalDirection.Down, false),
-            25824 => new PointedDripstoneBlock(Identifier, Thickness.Base, VerticalDirection.Up, true),
-            25825 => new PointedDripstoneBlock(Identifier, Thickness.Base, VerticalDirection.Up, false),
-            25826 => new PointedDripstoneBlock(Identifier, Thickness.Base, VerticalDirection.Down, true),
-            25827 => new PointedDripstoneBlock(Identifier, Thickness.Base, VerticalDirection.Down, false),
+            27533 => new PointedDripstoneBlock(Identifier, Thickness.TipMerge, VerticalDirection.Up, true),
+            27534 => new PointedDripstoneBlock(Identifier, Thickness.TipMerge, VerticalDirection.Up, false),
+            27535 => new PointedDripstoneBlock(Identifier, Thickness.TipMerge, VerticalDirection.Down, true),
+            27536 => new PointedDripstoneBlock(Identifier, Thickness.TipMerge, VerticalDirection.Down, false),
+            27537 => new PointedDripstoneBlock(Identifier, Thickness.Tip, VerticalDirection.Up, true),
+            27538 => new PointedDripstoneBlock(Identifier, Thickness.Tip, VerticalDirection.Up, false),
+            27539 => new PointedDripstoneBlock(Identifier, Thickness.Tip, VerticalDirection.Down, true),
+            27540 => new PointedDripstoneBlock(Identifier, Thickness.Tip, VerticalDirection.Down, false),
+            27541 => new PointedDripstoneBlock(Identifier, Thickness.Frustum, VerticalDirection.Up, true),
+            27542 => new PointedDripstoneBlock(Identifier, Thickness.Frustum, VerticalDirection.Up, false),
+            27543 => new PointedDripstoneBlock(Identifier, Thickness.Frustum, VerticalDirection.Down, true),
+            27544 => new PointedDripstoneBlock(Identifier, Thickness.Frustum, VerticalDirection.Down, false),
+            27545 => new PointedDripstoneBlock(Identifier, Thickness.Middle, VerticalDirection.Up, true),
+            27546 => new PointedDripstoneBlock(Identifier, Thickness.Middle, VerticalDirection.Up, false),
+            27547 => new PointedDripstoneBlock(Identifier, Thickness.Middle, VerticalDirection.Down, true),
+            27548 => new PointedDripstoneBlock(Identifier, Thickness.Middle, VerticalDirection.Down, false),
+            27549 => new PointedDripstoneBlock(Identifier, Thickness.Base, VerticalDirection.Up, true),
+            27550 => new PointedDripstoneBlock(Identifier, Thickness.Base, VerticalDirection.Up, false),
+            27551 => new PointedDripstoneBlock(Identifier, Thickness.Base, VerticalDirection.Down, true),
+            27552 => new PointedDripstoneBlock(Identifier, Thickness.Base, VerticalDirection.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

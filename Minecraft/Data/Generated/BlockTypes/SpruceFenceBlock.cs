@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SpruceFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
     public Identifier Category => "minecraft:fence";
-    public int ProtocolId => 605;
+    public int ProtocolId => 635;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -47,44 +47,44 @@ public record SpruceFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12493,
-                                false => 12494,
+                                true => 13570,
+                                false => 13571,
                             },
                             false => West switch {
-                                true => 12495,
-                                false => 12496,
+                                true => 13572,
+                                false => 13573,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12497,
-                                false => 12498,
+                                true => 13574,
+                                false => 13575,
                             },
                             false => West switch {
-                                true => 12499,
-                                false => 12500,
+                                true => 13576,
+                                false => 13577,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12501,
-                                false => 12502,
+                                true => 13578,
+                                false => 13579,
                             },
                             false => West switch {
-                                true => 12503,
-                                false => 12504,
+                                true => 13580,
+                                false => 13581,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12505,
-                                false => 12506,
+                                true => 13582,
+                                false => 13583,
                             },
                             false => West switch {
-                                true => 12507,
-                                false => 12508,
+                                true => 13584,
+                                false => 13585,
                             },
                         },
                     },
@@ -93,44 +93,44 @@ public record SpruceFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12509,
-                                false => 12510,
+                                true => 13586,
+                                false => 13587,
                             },
                             false => West switch {
-                                true => 12511,
-                                false => 12512,
+                                true => 13588,
+                                false => 13589,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12513,
-                                false => 12514,
+                                true => 13590,
+                                false => 13591,
                             },
                             false => West switch {
-                                true => 12515,
-                                false => 12516,
+                                true => 13592,
+                                false => 13593,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 12517,
-                                false => 12518,
+                                true => 13594,
+                                false => 13595,
                             },
                             false => West switch {
-                                true => 12519,
-                                false => 12520,
+                                true => 13596,
+                                false => 13597,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 12521,
-                                false => 12522,
+                                true => 13598,
+                                false => 13599,
                             },
                             false => West switch {
-                                true => 12523,
-                                false => 12524,
+                                true => 13600,
+                                false => 13601,
                             },
                         },
                     },
@@ -141,38 +141,38 @@ public record SpruceFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12493 => new SpruceFenceBlock(Identifier, true, true, true, true, true),
-            12494 => new SpruceFenceBlock(Identifier, true, true, true, true, false),
-            12495 => new SpruceFenceBlock(Identifier, true, true, true, false, true),
-            12496 => new SpruceFenceBlock(Identifier, true, true, true, false, false),
-            12497 => new SpruceFenceBlock(Identifier, true, true, false, true, true),
-            12498 => new SpruceFenceBlock(Identifier, true, true, false, true, false),
-            12499 => new SpruceFenceBlock(Identifier, true, true, false, false, true),
-            12500 => new SpruceFenceBlock(Identifier, true, true, false, false, false),
-            12501 => new SpruceFenceBlock(Identifier, true, false, true, true, true),
-            12502 => new SpruceFenceBlock(Identifier, true, false, true, true, false),
-            12503 => new SpruceFenceBlock(Identifier, true, false, true, false, true),
-            12504 => new SpruceFenceBlock(Identifier, true, false, true, false, false),
-            12505 => new SpruceFenceBlock(Identifier, true, false, false, true, true),
-            12506 => new SpruceFenceBlock(Identifier, true, false, false, true, false),
-            12507 => new SpruceFenceBlock(Identifier, true, false, false, false, true),
-            12508 => new SpruceFenceBlock(Identifier, true, false, false, false, false),
-            12509 => new SpruceFenceBlock(Identifier, false, true, true, true, true),
-            12510 => new SpruceFenceBlock(Identifier, false, true, true, true, false),
-            12511 => new SpruceFenceBlock(Identifier, false, true, true, false, true),
-            12512 => new SpruceFenceBlock(Identifier, false, true, true, false, false),
-            12513 => new SpruceFenceBlock(Identifier, false, true, false, true, true),
-            12514 => new SpruceFenceBlock(Identifier, false, true, false, true, false),
-            12515 => new SpruceFenceBlock(Identifier, false, true, false, false, true),
-            12516 => new SpruceFenceBlock(Identifier, false, true, false, false, false),
-            12517 => new SpruceFenceBlock(Identifier, false, false, true, true, true),
-            12518 => new SpruceFenceBlock(Identifier, false, false, true, true, false),
-            12519 => new SpruceFenceBlock(Identifier, false, false, true, false, true),
-            12520 => new SpruceFenceBlock(Identifier, false, false, true, false, false),
-            12521 => new SpruceFenceBlock(Identifier, false, false, false, true, true),
-            12522 => new SpruceFenceBlock(Identifier, false, false, false, true, false),
-            12523 => new SpruceFenceBlock(Identifier, false, false, false, false, true),
-            12524 => new SpruceFenceBlock(Identifier, false, false, false, false, false),
+            13570 => new SpruceFenceBlock(Identifier, true, true, true, true, true),
+            13571 => new SpruceFenceBlock(Identifier, true, true, true, true, false),
+            13572 => new SpruceFenceBlock(Identifier, true, true, true, false, true),
+            13573 => new SpruceFenceBlock(Identifier, true, true, true, false, false),
+            13574 => new SpruceFenceBlock(Identifier, true, true, false, true, true),
+            13575 => new SpruceFenceBlock(Identifier, true, true, false, true, false),
+            13576 => new SpruceFenceBlock(Identifier, true, true, false, false, true),
+            13577 => new SpruceFenceBlock(Identifier, true, true, false, false, false),
+            13578 => new SpruceFenceBlock(Identifier, true, false, true, true, true),
+            13579 => new SpruceFenceBlock(Identifier, true, false, true, true, false),
+            13580 => new SpruceFenceBlock(Identifier, true, false, true, false, true),
+            13581 => new SpruceFenceBlock(Identifier, true, false, true, false, false),
+            13582 => new SpruceFenceBlock(Identifier, true, false, false, true, true),
+            13583 => new SpruceFenceBlock(Identifier, true, false, false, true, false),
+            13584 => new SpruceFenceBlock(Identifier, true, false, false, false, true),
+            13585 => new SpruceFenceBlock(Identifier, true, false, false, false, false),
+            13586 => new SpruceFenceBlock(Identifier, false, true, true, true, true),
+            13587 => new SpruceFenceBlock(Identifier, false, true, true, true, false),
+            13588 => new SpruceFenceBlock(Identifier, false, true, true, false, true),
+            13589 => new SpruceFenceBlock(Identifier, false, true, true, false, false),
+            13590 => new SpruceFenceBlock(Identifier, false, true, false, true, true),
+            13591 => new SpruceFenceBlock(Identifier, false, true, false, true, false),
+            13592 => new SpruceFenceBlock(Identifier, false, true, false, false, true),
+            13593 => new SpruceFenceBlock(Identifier, false, true, false, false, false),
+            13594 => new SpruceFenceBlock(Identifier, false, false, true, true, true),
+            13595 => new SpruceFenceBlock(Identifier, false, false, true, true, false),
+            13596 => new SpruceFenceBlock(Identifier, false, false, true, false, true),
+            13597 => new SpruceFenceBlock(Identifier, false, false, true, false, false),
+            13598 => new SpruceFenceBlock(Identifier, false, false, false, true, true),
+            13599 => new SpruceFenceBlock(Identifier, false, false, false, true, false),
+            13600 => new SpruceFenceBlock(Identifier, false, false, false, false, true),
+            13601 => new SpruceFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

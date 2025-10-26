@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SugarCaneBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:sugar_cane";
-    public int ProtocolId => 269;
+    public int ProtocolId => 281;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -43,22 +43,22 @@ public record SugarCaneBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 5978,
-                1 => 5979,
-                2 => 5980,
-                3 => 5981,
-                4 => 5982,
-                5 => 5983,
-                6 => 5984,
-                7 => 5985,
-                8 => 5986,
-                9 => 5987,
-                10 => 5988,
-                11 => 5989,
-                12 => 5990,
-                13 => 5991,
-                14 => 5992,
-                15 => 5993,
+                0 => 6746,
+                1 => 6747,
+                2 => 6748,
+                3 => 6749,
+                4 => 6750,
+                5 => 6751,
+                6 => 6752,
+                7 => 6753,
+                8 => 6754,
+                9 => 6755,
+                10 => 6756,
+                11 => 6757,
+                12 => 6758,
+                13 => 6759,
+                14 => 6760,
+                15 => 6761,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -66,22 +66,22 @@ public record SugarCaneBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            5978 => new SugarCaneBlock(Identifier, 0),
-            5979 => new SugarCaneBlock(Identifier, 1),
-            5980 => new SugarCaneBlock(Identifier, 2),
-            5981 => new SugarCaneBlock(Identifier, 3),
-            5982 => new SugarCaneBlock(Identifier, 4),
-            5983 => new SugarCaneBlock(Identifier, 5),
-            5984 => new SugarCaneBlock(Identifier, 6),
-            5985 => new SugarCaneBlock(Identifier, 7),
-            5986 => new SugarCaneBlock(Identifier, 8),
-            5987 => new SugarCaneBlock(Identifier, 9),
-            5988 => new SugarCaneBlock(Identifier, 10),
-            5989 => new SugarCaneBlock(Identifier, 11),
-            5990 => new SugarCaneBlock(Identifier, 12),
-            5991 => new SugarCaneBlock(Identifier, 13),
-            5992 => new SugarCaneBlock(Identifier, 14),
-            5993 => new SugarCaneBlock(Identifier, 15),
+            6746 => new SugarCaneBlock(Identifier, 0),
+            6747 => new SugarCaneBlock(Identifier, 1),
+            6748 => new SugarCaneBlock(Identifier, 2),
+            6749 => new SugarCaneBlock(Identifier, 3),
+            6750 => new SugarCaneBlock(Identifier, 4),
+            6751 => new SugarCaneBlock(Identifier, 5),
+            6752 => new SugarCaneBlock(Identifier, 6),
+            6753 => new SugarCaneBlock(Identifier, 7),
+            6754 => new SugarCaneBlock(Identifier, 8),
+            6755 => new SugarCaneBlock(Identifier, 9),
+            6756 => new SugarCaneBlock(Identifier, 10),
+            6757 => new SugarCaneBlock(Identifier, 11),
+            6758 => new SugarCaneBlock(Identifier, 12),
+            6759 => new SugarCaneBlock(Identifier, 13),
+            6760 => new SugarCaneBlock(Identifier, 14),
+            6761 => new SugarCaneBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

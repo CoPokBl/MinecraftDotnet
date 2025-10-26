@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, VaultBlock.VaultState VaultStateValue) : IBlock {
     public Identifier Category => "minecraft:vault";
-    public int ProtocolId => 1095;
+    public int ProtocolId => 1156;
     public double Hardness => 50;
     public double ExplosionResistance => 50;
     public double Friction => 0.6;
@@ -45,65 +45,65 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
             return Facing switch {
                 Direction.North => Ominous switch {
                     true => VaultStateValue switch {
-                        VaultState.Inactive => 27742,
-                        VaultState.Active => 27743,
-                        VaultState.Unlocking => 27744,
-                        VaultState.Ejecting => 27745,
+                        VaultState.Inactive => 29467,
+                        VaultState.Active => 29468,
+                        VaultState.Unlocking => 29469,
+                        VaultState.Ejecting => 29470,
                         _ => throw new ArgumentOutOfRangeException(nameof(VaultStateValue), VaultStateValue, "Unknown value for property vault_state.")
                     },
                     false => VaultStateValue switch {
-                        VaultState.Inactive => 27746,
-                        VaultState.Active => 27747,
-                        VaultState.Unlocking => 27748,
-                        VaultState.Ejecting => 27749,
+                        VaultState.Inactive => 29471,
+                        VaultState.Active => 29472,
+                        VaultState.Unlocking => 29473,
+                        VaultState.Ejecting => 29474,
                         _ => throw new ArgumentOutOfRangeException(nameof(VaultStateValue), VaultStateValue, "Unknown value for property vault_state.")
                     },
                 },
                 Direction.South => Ominous switch {
                     true => VaultStateValue switch {
-                        VaultState.Inactive => 27750,
-                        VaultState.Active => 27751,
-                        VaultState.Unlocking => 27752,
-                        VaultState.Ejecting => 27753,
+                        VaultState.Inactive => 29475,
+                        VaultState.Active => 29476,
+                        VaultState.Unlocking => 29477,
+                        VaultState.Ejecting => 29478,
                         _ => throw new ArgumentOutOfRangeException(nameof(VaultStateValue), VaultStateValue, "Unknown value for property vault_state.")
                     },
                     false => VaultStateValue switch {
-                        VaultState.Inactive => 27754,
-                        VaultState.Active => 27755,
-                        VaultState.Unlocking => 27756,
-                        VaultState.Ejecting => 27757,
+                        VaultState.Inactive => 29479,
+                        VaultState.Active => 29480,
+                        VaultState.Unlocking => 29481,
+                        VaultState.Ejecting => 29482,
                         _ => throw new ArgumentOutOfRangeException(nameof(VaultStateValue), VaultStateValue, "Unknown value for property vault_state.")
                     },
                 },
                 Direction.West => Ominous switch {
                     true => VaultStateValue switch {
-                        VaultState.Inactive => 27758,
-                        VaultState.Active => 27759,
-                        VaultState.Unlocking => 27760,
-                        VaultState.Ejecting => 27761,
+                        VaultState.Inactive => 29483,
+                        VaultState.Active => 29484,
+                        VaultState.Unlocking => 29485,
+                        VaultState.Ejecting => 29486,
                         _ => throw new ArgumentOutOfRangeException(nameof(VaultStateValue), VaultStateValue, "Unknown value for property vault_state.")
                     },
                     false => VaultStateValue switch {
-                        VaultState.Inactive => 27762,
-                        VaultState.Active => 27763,
-                        VaultState.Unlocking => 27764,
-                        VaultState.Ejecting => 27765,
+                        VaultState.Inactive => 29487,
+                        VaultState.Active => 29488,
+                        VaultState.Unlocking => 29489,
+                        VaultState.Ejecting => 29490,
                         _ => throw new ArgumentOutOfRangeException(nameof(VaultStateValue), VaultStateValue, "Unknown value for property vault_state.")
                     },
                 },
                 Direction.East => Ominous switch {
                     true => VaultStateValue switch {
-                        VaultState.Inactive => 27766,
-                        VaultState.Active => 27767,
-                        VaultState.Unlocking => 27768,
-                        VaultState.Ejecting => 27769,
+                        VaultState.Inactive => 29491,
+                        VaultState.Active => 29492,
+                        VaultState.Unlocking => 29493,
+                        VaultState.Ejecting => 29494,
                         _ => throw new ArgumentOutOfRangeException(nameof(VaultStateValue), VaultStateValue, "Unknown value for property vault_state.")
                     },
                     false => VaultStateValue switch {
-                        VaultState.Inactive => 27770,
-                        VaultState.Active => 27771,
-                        VaultState.Unlocking => 27772,
-                        VaultState.Ejecting => 27773,
+                        VaultState.Inactive => 29495,
+                        VaultState.Active => 29496,
+                        VaultState.Unlocking => 29497,
+                        VaultState.Ejecting => 29498,
                         _ => throw new ArgumentOutOfRangeException(nameof(VaultStateValue), VaultStateValue, "Unknown value for property vault_state.")
                     },
                 },
@@ -114,38 +114,38 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
     
     public IBlock WithState(uint state) {
         return state switch {
-            27742 => new VaultBlock(Identifier, Direction.North, true, VaultState.Inactive),
-            27743 => new VaultBlock(Identifier, Direction.North, true, VaultState.Active),
-            27744 => new VaultBlock(Identifier, Direction.North, true, VaultState.Unlocking),
-            27745 => new VaultBlock(Identifier, Direction.North, true, VaultState.Ejecting),
-            27746 => new VaultBlock(Identifier, Direction.North, false, VaultState.Inactive),
-            27747 => new VaultBlock(Identifier, Direction.North, false, VaultState.Active),
-            27748 => new VaultBlock(Identifier, Direction.North, false, VaultState.Unlocking),
-            27749 => new VaultBlock(Identifier, Direction.North, false, VaultState.Ejecting),
-            27750 => new VaultBlock(Identifier, Direction.South, true, VaultState.Inactive),
-            27751 => new VaultBlock(Identifier, Direction.South, true, VaultState.Active),
-            27752 => new VaultBlock(Identifier, Direction.South, true, VaultState.Unlocking),
-            27753 => new VaultBlock(Identifier, Direction.South, true, VaultState.Ejecting),
-            27754 => new VaultBlock(Identifier, Direction.South, false, VaultState.Inactive),
-            27755 => new VaultBlock(Identifier, Direction.South, false, VaultState.Active),
-            27756 => new VaultBlock(Identifier, Direction.South, false, VaultState.Unlocking),
-            27757 => new VaultBlock(Identifier, Direction.South, false, VaultState.Ejecting),
-            27758 => new VaultBlock(Identifier, Direction.West, true, VaultState.Inactive),
-            27759 => new VaultBlock(Identifier, Direction.West, true, VaultState.Active),
-            27760 => new VaultBlock(Identifier, Direction.West, true, VaultState.Unlocking),
-            27761 => new VaultBlock(Identifier, Direction.West, true, VaultState.Ejecting),
-            27762 => new VaultBlock(Identifier, Direction.West, false, VaultState.Inactive),
-            27763 => new VaultBlock(Identifier, Direction.West, false, VaultState.Active),
-            27764 => new VaultBlock(Identifier, Direction.West, false, VaultState.Unlocking),
-            27765 => new VaultBlock(Identifier, Direction.West, false, VaultState.Ejecting),
-            27766 => new VaultBlock(Identifier, Direction.East, true, VaultState.Inactive),
-            27767 => new VaultBlock(Identifier, Direction.East, true, VaultState.Active),
-            27768 => new VaultBlock(Identifier, Direction.East, true, VaultState.Unlocking),
-            27769 => new VaultBlock(Identifier, Direction.East, true, VaultState.Ejecting),
-            27770 => new VaultBlock(Identifier, Direction.East, false, VaultState.Inactive),
-            27771 => new VaultBlock(Identifier, Direction.East, false, VaultState.Active),
-            27772 => new VaultBlock(Identifier, Direction.East, false, VaultState.Unlocking),
-            27773 => new VaultBlock(Identifier, Direction.East, false, VaultState.Ejecting),
+            29467 => new VaultBlock(Identifier, Direction.North, true, VaultState.Inactive),
+            29468 => new VaultBlock(Identifier, Direction.North, true, VaultState.Active),
+            29469 => new VaultBlock(Identifier, Direction.North, true, VaultState.Unlocking),
+            29470 => new VaultBlock(Identifier, Direction.North, true, VaultState.Ejecting),
+            29471 => new VaultBlock(Identifier, Direction.North, false, VaultState.Inactive),
+            29472 => new VaultBlock(Identifier, Direction.North, false, VaultState.Active),
+            29473 => new VaultBlock(Identifier, Direction.North, false, VaultState.Unlocking),
+            29474 => new VaultBlock(Identifier, Direction.North, false, VaultState.Ejecting),
+            29475 => new VaultBlock(Identifier, Direction.South, true, VaultState.Inactive),
+            29476 => new VaultBlock(Identifier, Direction.South, true, VaultState.Active),
+            29477 => new VaultBlock(Identifier, Direction.South, true, VaultState.Unlocking),
+            29478 => new VaultBlock(Identifier, Direction.South, true, VaultState.Ejecting),
+            29479 => new VaultBlock(Identifier, Direction.South, false, VaultState.Inactive),
+            29480 => new VaultBlock(Identifier, Direction.South, false, VaultState.Active),
+            29481 => new VaultBlock(Identifier, Direction.South, false, VaultState.Unlocking),
+            29482 => new VaultBlock(Identifier, Direction.South, false, VaultState.Ejecting),
+            29483 => new VaultBlock(Identifier, Direction.West, true, VaultState.Inactive),
+            29484 => new VaultBlock(Identifier, Direction.West, true, VaultState.Active),
+            29485 => new VaultBlock(Identifier, Direction.West, true, VaultState.Unlocking),
+            29486 => new VaultBlock(Identifier, Direction.West, true, VaultState.Ejecting),
+            29487 => new VaultBlock(Identifier, Direction.West, false, VaultState.Inactive),
+            29488 => new VaultBlock(Identifier, Direction.West, false, VaultState.Active),
+            29489 => new VaultBlock(Identifier, Direction.West, false, VaultState.Unlocking),
+            29490 => new VaultBlock(Identifier, Direction.West, false, VaultState.Ejecting),
+            29491 => new VaultBlock(Identifier, Direction.East, true, VaultState.Inactive),
+            29492 => new VaultBlock(Identifier, Direction.East, true, VaultState.Active),
+            29493 => new VaultBlock(Identifier, Direction.East, true, VaultState.Unlocking),
+            29494 => new VaultBlock(Identifier, Direction.East, true, VaultState.Ejecting),
+            29495 => new VaultBlock(Identifier, Direction.East, false, VaultState.Inactive),
+            29496 => new VaultBlock(Identifier, Direction.East, false, VaultState.Active),
+            29497 => new VaultBlock(Identifier, Direction.East, false, VaultState.Unlocking),
+            29498 => new VaultBlock(Identifier, Direction.East, false, VaultState.Ejecting),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

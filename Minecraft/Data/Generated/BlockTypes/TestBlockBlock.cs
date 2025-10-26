@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValue) : IBlock {
     public Identifier Category => "minecraft:test";
-    public int ProtocolId => 867;
+    public int ProtocolId => 905;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;
@@ -43,10 +43,10 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
     public uint StateId {
         get {
             return ModeValue switch {
-                Mode.Start => 20427,
-                Mode.Log => 20428,
-                Mode.Fail => 20429,
-                Mode.Accept => 20430,
+                Mode.Start => 21536,
+                Mode.Log => 21537,
+                Mode.Fail => 21538,
+                Mode.Accept => 21539,
                 _ => throw new ArgumentOutOfRangeException(nameof(ModeValue), ModeValue, "Unknown value for property mode.")
             };
         }
@@ -54,10 +54,10 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
     
     public IBlock WithState(uint state) {
         return state switch {
-            20427 => new TestBlockBlock(Identifier, Mode.Start),
-            20428 => new TestBlockBlock(Identifier, Mode.Log),
-            20429 => new TestBlockBlock(Identifier, Mode.Fail),
-            20430 => new TestBlockBlock(Identifier, Mode.Accept),
+            21536 => new TestBlockBlock(Identifier, Mode.Start),
+            21537 => new TestBlockBlock(Identifier, Mode.Log),
+            21538 => new TestBlockBlock(Identifier, Mode.Fail),
+            21539 => new TestBlockBlock(Identifier, Mode.Accept),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record AcaciaSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:standing_sign";
-    public int ProtocolId => 200;
+    public int ProtocolId => 212;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -44,68 +44,68 @@ public record AcaciaSignBlock(Identifier Identifier, int Rotation, bool Waterlog
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 4462,
-                    false => 4463,
+                    true => 5230,
+                    false => 5231,
                 },
                 1 => Waterlogged switch {
-                    true => 4464,
-                    false => 4465,
+                    true => 5232,
+                    false => 5233,
                 },
                 2 => Waterlogged switch {
-                    true => 4466,
-                    false => 4467,
+                    true => 5234,
+                    false => 5235,
                 },
                 3 => Waterlogged switch {
-                    true => 4468,
-                    false => 4469,
+                    true => 5236,
+                    false => 5237,
                 },
                 4 => Waterlogged switch {
-                    true => 4470,
-                    false => 4471,
+                    true => 5238,
+                    false => 5239,
                 },
                 5 => Waterlogged switch {
-                    true => 4472,
-                    false => 4473,
+                    true => 5240,
+                    false => 5241,
                 },
                 6 => Waterlogged switch {
-                    true => 4474,
-                    false => 4475,
+                    true => 5242,
+                    false => 5243,
                 },
                 7 => Waterlogged switch {
-                    true => 4476,
-                    false => 4477,
+                    true => 5244,
+                    false => 5245,
                 },
                 8 => Waterlogged switch {
-                    true => 4478,
-                    false => 4479,
+                    true => 5246,
+                    false => 5247,
                 },
                 9 => Waterlogged switch {
-                    true => 4480,
-                    false => 4481,
+                    true => 5248,
+                    false => 5249,
                 },
                 10 => Waterlogged switch {
-                    true => 4482,
-                    false => 4483,
+                    true => 5250,
+                    false => 5251,
                 },
                 11 => Waterlogged switch {
-                    true => 4484,
-                    false => 4485,
+                    true => 5252,
+                    false => 5253,
                 },
                 12 => Waterlogged switch {
-                    true => 4486,
-                    false => 4487,
+                    true => 5254,
+                    false => 5255,
                 },
                 13 => Waterlogged switch {
-                    true => 4488,
-                    false => 4489,
+                    true => 5256,
+                    false => 5257,
                 },
                 14 => Waterlogged switch {
-                    true => 4490,
-                    false => 4491,
+                    true => 5258,
+                    false => 5259,
                 },
                 15 => Waterlogged switch {
-                    true => 4492,
-                    false => 4493,
+                    true => 5260,
+                    false => 5261,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -114,38 +114,38 @@ public record AcaciaSignBlock(Identifier Identifier, int Rotation, bool Waterlog
     
     public IBlock WithState(uint state) {
         return state switch {
-            4462 => new AcaciaSignBlock(Identifier, 0, true),
-            4463 => new AcaciaSignBlock(Identifier, 0, false),
-            4464 => new AcaciaSignBlock(Identifier, 1, true),
-            4465 => new AcaciaSignBlock(Identifier, 1, false),
-            4466 => new AcaciaSignBlock(Identifier, 2, true),
-            4467 => new AcaciaSignBlock(Identifier, 2, false),
-            4468 => new AcaciaSignBlock(Identifier, 3, true),
-            4469 => new AcaciaSignBlock(Identifier, 3, false),
-            4470 => new AcaciaSignBlock(Identifier, 4, true),
-            4471 => new AcaciaSignBlock(Identifier, 4, false),
-            4472 => new AcaciaSignBlock(Identifier, 5, true),
-            4473 => new AcaciaSignBlock(Identifier, 5, false),
-            4474 => new AcaciaSignBlock(Identifier, 6, true),
-            4475 => new AcaciaSignBlock(Identifier, 6, false),
-            4476 => new AcaciaSignBlock(Identifier, 7, true),
-            4477 => new AcaciaSignBlock(Identifier, 7, false),
-            4478 => new AcaciaSignBlock(Identifier, 8, true),
-            4479 => new AcaciaSignBlock(Identifier, 8, false),
-            4480 => new AcaciaSignBlock(Identifier, 9, true),
-            4481 => new AcaciaSignBlock(Identifier, 9, false),
-            4482 => new AcaciaSignBlock(Identifier, 10, true),
-            4483 => new AcaciaSignBlock(Identifier, 10, false),
-            4484 => new AcaciaSignBlock(Identifier, 11, true),
-            4485 => new AcaciaSignBlock(Identifier, 11, false),
-            4486 => new AcaciaSignBlock(Identifier, 12, true),
-            4487 => new AcaciaSignBlock(Identifier, 12, false),
-            4488 => new AcaciaSignBlock(Identifier, 13, true),
-            4489 => new AcaciaSignBlock(Identifier, 13, false),
-            4490 => new AcaciaSignBlock(Identifier, 14, true),
-            4491 => new AcaciaSignBlock(Identifier, 14, false),
-            4492 => new AcaciaSignBlock(Identifier, 15, true),
-            4493 => new AcaciaSignBlock(Identifier, 15, false),
+            5230 => new AcaciaSignBlock(Identifier, 0, true),
+            5231 => new AcaciaSignBlock(Identifier, 0, false),
+            5232 => new AcaciaSignBlock(Identifier, 1, true),
+            5233 => new AcaciaSignBlock(Identifier, 1, false),
+            5234 => new AcaciaSignBlock(Identifier, 2, true),
+            5235 => new AcaciaSignBlock(Identifier, 2, false),
+            5236 => new AcaciaSignBlock(Identifier, 3, true),
+            5237 => new AcaciaSignBlock(Identifier, 3, false),
+            5238 => new AcaciaSignBlock(Identifier, 4, true),
+            5239 => new AcaciaSignBlock(Identifier, 4, false),
+            5240 => new AcaciaSignBlock(Identifier, 5, true),
+            5241 => new AcaciaSignBlock(Identifier, 5, false),
+            5242 => new AcaciaSignBlock(Identifier, 6, true),
+            5243 => new AcaciaSignBlock(Identifier, 6, false),
+            5244 => new AcaciaSignBlock(Identifier, 7, true),
+            5245 => new AcaciaSignBlock(Identifier, 7, false),
+            5246 => new AcaciaSignBlock(Identifier, 8, true),
+            5247 => new AcaciaSignBlock(Identifier, 8, false),
+            5248 => new AcaciaSignBlock(Identifier, 9, true),
+            5249 => new AcaciaSignBlock(Identifier, 9, false),
+            5250 => new AcaciaSignBlock(Identifier, 10, true),
+            5251 => new AcaciaSignBlock(Identifier, 10, false),
+            5252 => new AcaciaSignBlock(Identifier, 11, true),
+            5253 => new AcaciaSignBlock(Identifier, 11, false),
+            5254 => new AcaciaSignBlock(Identifier, 12, true),
+            5255 => new AcaciaSignBlock(Identifier, 12, false),
+            5256 => new AcaciaSignBlock(Identifier, 13, true),
+            5257 => new AcaciaSignBlock(Identifier, 13, false),
+            5258 => new AcaciaSignBlock(Identifier, 14, true),
+            5259 => new AcaciaSignBlock(Identifier, 14, false),
+            5260 => new AcaciaSignBlock(Identifier, 15, true),
+            5261 => new AcaciaSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
