@@ -27,6 +27,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="MinecraftDotnet.NBT" Version="0.0.2-dev.174" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.4-beta1" />
     </ItemGroup>
 
@@ -37,9 +38,4 @@
     <ItemGroup>
       <None Remove="Schemas\Registry\registries.json" />
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\NBT\NBT.csproj" />
-    </ItemGroup>
-
 </Project>
