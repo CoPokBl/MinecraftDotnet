@@ -26,6 +26,12 @@ Examples:
 - [Block Sumo FFA](https://github.com/Serble/BlockSumoFFA)
 - The entire `TestServer` subproject
 
+## Versioning (Protocol & Managed Server)
+`0.0.x` - 1.21.5  
+`0.1.x` - 1.21.10  
+
+The major version is probably going to be used to Minecraft major updates.
+
 ## Contributing
 Feel free to submit a pull request with contribution. If I'm missing
 a packet, data component or similar, then submitting a PR adding that packet is probably the most
