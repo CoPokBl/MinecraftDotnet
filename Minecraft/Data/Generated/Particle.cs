@@ -24,7 +24,7 @@ public static class Particle {
     public static readonly SimpleParticle CurrentDown = new("minecraft:current_down", 71);
     public static readonly SimpleParticle DamageIndicator = new("minecraft:damage_indicator", 7);
     public static readonly SimpleParticle Dolphin = new("minecraft:dolphin", 74);
-    public static readonly SimpleParticle DragonBreath = new("minecraft:dragon_breath", 8);
+    public static readonly DragonBreathParticle DragonBreath = new("minecraft:dragon_breath", 8);
     public static readonly SimpleParticle DrippingDripstoneLava = new("minecraft:dripping_dripstone_lava", 93);
     public static readonly SimpleParticle DrippingDripstoneWater = new("minecraft:dripping_dripstone_water", 95);
     public static readonly SimpleParticle DrippingHoney = new("minecraft:dripping_honey", 77);

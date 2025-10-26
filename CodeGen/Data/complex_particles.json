@@ -12,5 +12,6 @@
   "minecraft:shriek": "ShriekParticle",
   "minecraft:trail": "TrailParticle",
   "minecraft:vibration": "VibrationParticle",
-  "minecraft:tinted_leaves": "TintedLeavesParticle"
+  "minecraft:tinted_leaves": "TintedLeavesParticle",
+  "minecraft:dragon_breath": "DragonBreathParticle"
 }
