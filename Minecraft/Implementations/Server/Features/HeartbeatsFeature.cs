@@ -28,7 +28,12 @@ public class HeartbeatsFeature(int heartbeatDelay) : IServerFeature {
             while (!_cts.IsCancellationRequested) {
                 Stopwatch stopwatch = Stopwatch.StartNew();
             
-                foreach (PlayerConnection connection in _server.Connections.Where(connection => connection.State == ConnectionState.Play)) {
+                // Cache the filtered connections to avoid repeated LINQ evaluation
+                PlayerConnection[] playConnections = _server.Connections
+                    .Where(connection => connection.State == ConnectionState.Play)
+                    .ToArray();
+                
+                foreach (PlayerConnection connection in playConnections) {
                     connection.SendPacket(new ClientBoundKeepAlivePacket {
                         Id = Random.Shared.Next()
                     });

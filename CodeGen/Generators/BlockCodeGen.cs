@@ -401,42 +401,44 @@ public static class Block {
             // =====================================================
             //                        ENUMs
             // =====================================================
-            string enumsCode = "";
+            StringBuilder enumsCode = new();
             foreach (IProperty prop in props) {
                 if (prop.Type != PropertyType.Enum) continue;
                 string enumName = CodeGenUtils.NamespacedIdToPascalName(prop.Name);
                 string[] enumValues = ((EnumProperty)prop).AllowedValues;
                 
                 // Definition
-                enumsCode += $"    public enum {enumName} {{\n";
+                enumsCode.Append($"    public enum {enumName} {{\n");
                 foreach (string enumValue in enumValues) {
-                    enumsCode += $"{CodeGenUtils.GetIndentation(2)}{CodeGenUtils.NamespacedIdToPascalName(enumValue)},\n";
+                    enumsCode.Append($"{CodeGenUtils.GetIndentation(2)}{CodeGenUtils.NamespacedIdToPascalName(enumValue)},\n");
                 }
-                enumsCode += "    }\n";
+                enumsCode.Append("    }\n");
                 
                 // We need an extension method to convert from string to enum
-                enumsCode += $"\n{CodeGenUtils.GetIndentation(1)}public static {enumName} {enumName}FromString(string value) {{\n" +
-                             $"{CodeGenUtils.GetIndentation(2)}return value switch {{\n";
-                enumsCode = enumValues.Aggregate(enumsCode, (current, enumValue) => 
-                    current + $"{CodeGenUtils.GetIndentation(3)}\"{enumValue}\" => {enumName}.{CodeGenUtils.NamespacedIdToPascalName(enumValue)},\n");
-                enumsCode += $"{CodeGenUtils.GetIndentation(3)}_ => throw new ArgumentOutOfRangeException(nameof(value), value, \"Unknown value for {enumName}.\")\n" +
-                             $"{CodeGenUtils.GetIndentation(2)}}};\n" +
-                             $"{CodeGenUtils.GetIndentation(1)}}}\n";
+                enumsCode.Append($"\n{CodeGenUtils.GetIndentation(1)}public static {enumName} {enumName}FromString(string value) {{\n")
+                         .Append($"{CodeGenUtils.GetIndentation(2)}return value switch {{\n");
+                foreach (string enumValue in enumValues) {
+                    enumsCode.Append($"{CodeGenUtils.GetIndentation(3)}\"{enumValue}\" => {enumName}.{CodeGenUtils.NamespacedIdToPascalName(enumValue)},\n");
+                }
+                enumsCode.Append($"{CodeGenUtils.GetIndentation(3)}_ => throw new ArgumentOutOfRangeException(nameof(value), value, \"Unknown value for {enumName}.\")\n")
+                         .Append($"{CodeGenUtils.GetIndentation(2)}}};\n")
+                         .Append($"{CodeGenUtils.GetIndentation(1)}}}\n");
                 
                 // We also need a ToName method
-                enumsCode += $"\n{CodeGenUtils.GetIndentation(1)}public static string {enumName}ToName({enumName} value) {{\n" +
-                             $"{CodeGenUtils.GetIndentation(2)}return value switch {{\n";
-                enumsCode = enumValues.Aggregate(enumsCode, (current, enumValue) =>
-                    current + $"{CodeGenUtils.GetIndentation(3)}{enumName}.{CodeGenUtils.NamespacedIdToPascalName(enumValue)} => \"{enumValue}\",\n");
-                enumsCode += $"{CodeGenUtils.GetIndentation(3)}_ => throw new ArgumentOutOfRangeException(nameof(value), value, \"Unknown {enumName} value.\")\n" +
-                             $"{CodeGenUtils.GetIndentation(2)}}};\n" +
-                             $"{CodeGenUtils.GetIndentation(1)}}}\n";
+                enumsCode.Append($"\n{CodeGenUtils.GetIndentation(1)}public static string {enumName}ToName({enumName} value) {{\n")
+                         .Append($"{CodeGenUtils.GetIndentation(2)}return value switch {{\n");
+                foreach (string enumValue in enumValues) {
+                    enumsCode.Append($"{CodeGenUtils.GetIndentation(3)}{enumName}.{CodeGenUtils.NamespacedIdToPascalName(enumValue)} => \"{enumValue}\",\n");
+                }
+                enumsCode.Append($"{CodeGenUtils.GetIndentation(3)}_ => throw new ArgumentOutOfRangeException(nameof(value), value, \"Unknown {enumName} value.\")\n")
+                         .Append($"{CodeGenUtils.GetIndentation(2)}}};\n")
+                         .Append($"{CodeGenUtils.GetIndentation(1)}}}\n");
             }
             
             // =====================================================
             //                  To State Id Logic
             // =====================================================
-            string toStateLogic = "return ";
+            StringBuilder toStateLogic = new("return ");
 
             void GenSwitchStatement(int index, string[] path) {
                 if (index >= props.Count) {
@@ -453,32 +455,32 @@ public static class Block {
                     }).ToObject<JObject>()!;
                     
                     int stateId = state["id"]!.ToObject<int>()!;
-                    toStateLogic += $"{stateId}";
+                    toStateLogic.Append($"{stateId}");
                     return;
                 }
                 
                 IProperty prop = props[index];
 
                 string pascalPropName = GetPascalPropName(prop);
-                toStateLogic += $"{pascalPropName} switch {{\n";
+                toStateLogic.Append($"{pascalPropName} switch {{\n");
                 string[] cases = GetCSharpSwitchCases(prop);
                 for (int i = 0; i < cases.Length; i++) {
                     string t = cases[i];
-                    toStateLogic += $"{CodeGenUtils.GetIndentation(index + 4)}{t} => ";
+                    toStateLogic.Append($"{CodeGenUtils.GetIndentation(index + 4)}{t} => ");
                     string[] newPath = path.ToArray();
                     newPath[index] = prop.AllowedValues[i];
                     GenSwitchStatement(index + 1, newPath);
-                    toStateLogic += $",\n";
+                    toStateLogic.Append($",\n");
                 }
 
                 if (prop is BooleanProperty) {
-                    toStateLogic += $"{CodeGenUtils.GetIndentation(index + 3)}}}";
+                    toStateLogic.Append($"{CodeGenUtils.GetIndentation(index + 3)}}}");
                 }
-                else toStateLogic += $"{CodeGenUtils.GetIndentation(index + 4)}_ => throw new ArgumentOutOfRangeException(nameof({pascalPropName}), {pascalPropName}, \"Unknown value for property {prop.Name}.\")\n{CodeGenUtils.GetIndentation(index + 3)}}}";
+                else toStateLogic.Append($"{CodeGenUtils.GetIndentation(index + 4)}_ => throw new ArgumentOutOfRangeException(nameof({pascalPropName}), {pascalPropName}, \"Unknown value for property {prop.Name}.\")\n{CodeGenUtils.GetIndentation(index + 3)}}}");
             }
             
             GenSwitchStatement(0, new string[props.Count]);
-            toStateLogic += ";";
+            toStateLogic.Append(";");
             
             // =====================================================
             //               From State Logic
@@ -579,9 +581,9 @@ public static class Block {
             
             string file = TemplateFile.Replace("{name}", pascalName)
                 .Replace("{args}", argsCode)
-                .Replace("{to_state_logic}", toStateLogic)
+                .Replace("{to_state_logic}", toStateLogic.ToString())
                 .Replace("{from_state_logic}", fromStateLogic)
-                .Replace("{enums}", enumsCode)
+                .Replace("{enums}", enumsCode.ToString())
                 .Replace("{load_state_logic}", loadStateLogic.ToString())
                 .Replace("{to_nbt_fields}", string.Join(",\n", toNbtFields))
                 .Replace("{reginfo}", staticData.ToString())
@@ -595,7 +597,7 @@ public static class Block {
             List<string> regParams = [];
             for (int i = 0; i < props.Count; i++) {
                 string propVal = defaultState["properties"]!.ToObject<Dictionary<string, string>>()![props[i].Name];
-                int indexOfVal = props[i].AllowedValues.ToList().IndexOf(propVal);
+                int indexOfVal = Array.IndexOf(props[i].AllowedValues, propVal);
                 regParams.Add(GetCSharpSwitchCases(props[i], pascalName, true)[indexOfVal]);
             }
 
