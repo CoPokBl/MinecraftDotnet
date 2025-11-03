@@ -29,9 +29,9 @@ public class HeartbeatsFeature(int heartbeatDelay) : IServerFeature {
                 Stopwatch stopwatch = Stopwatch.StartNew();
             
                 // Cache the filtered connections to avoid repeated LINQ evaluation
-                PlayerConnection[] playConnections = _server.Connections
+                List<PlayerConnection> playConnections = _server.Connections
                     .Where(connection => connection.State == ConnectionState.Play)
-                    .ToArray();
+                    .ToList();
                 
                 foreach (PlayerConnection connection in playConnections) {
                     connection.SendPacket(new ClientBoundKeepAlivePacket {
