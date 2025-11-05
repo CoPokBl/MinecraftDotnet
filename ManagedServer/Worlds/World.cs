@@ -149,7 +149,10 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         player.Connection.SetTag(WaitingPacketsTag, waitingPackets);
 
         bool disconnected = false;
-        player.Connection.Disconnected += () => disconnected = true;
+        player.Connection.Disconnected += () => {
+            disconnected = true;
+            RemovePlayer(player);  // Actually remove them when they disconnect
+        };
         
         // TODO: Don't use threads, use the tick system or manage it better (investigate performance)
         Task.Run(async () => {
