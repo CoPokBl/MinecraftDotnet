@@ -93,7 +93,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         Type = type;
         FeatureHandler = new FeatureHandler(this);
         
-        BoundingBox = new Aabb(new Vec3<double>(Type.Width * -0.5, 0.0, Type.Height * -0.5), new Vec3<double>(Type.Width, Type.Height, Type.Width));
+        BoundingBox = new Aabb(new Vec3<double>(Type.Width * -0.5, 0.0, Type.Width * -0.5), new Vec3<double>(Type.Width, Type.Height, Type.Width));
 
         if (meta == null) {
             // guess the meta type based on the entity type
