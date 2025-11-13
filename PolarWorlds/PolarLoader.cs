@@ -19,10 +19,6 @@ public class PolarLoader : ITerrainProvider {
     private const int MaxHeightmaps = 32;
     private const int BlockPaletteSize = 4096;
     private const int DataVersion = 4325;
-
-    private static readonly Dictionary<Identifier, Identifier> BlockRenameMap = new() {
-        { "minecraft:chain", "minecraft:iron_chain" }
-    };
     
     public Dictionary<Vec2<int>, ChunkData> Chunks = null!;
     private MinecraftRegistry _registry;
@@ -357,7 +353,7 @@ public class PolarLoader : ITerrainProvider {
         string blockName = parts[0];
         
         // To prevent updates breaking worlds
-        if (BlockRenameMap.TryGetValue(blockName, out Identifier newVal)) {
+        if (RenamedBlocks.Map.TryGetValue(blockName, out Identifier newVal)) {
             blockName = newVal.ToString();
         }
         

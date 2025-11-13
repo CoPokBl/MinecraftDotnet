@@ -2,6 +2,7 @@ using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Data.Blocks;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Registry;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
 using NBT;
@@ -158,7 +159,7 @@ public class AnvilLoader : ITerrainProvider {
             int x = blockEntityData["x"].GetInteger();
             int y = blockEntityData["y"].GetInteger();
             int z = blockEntityData["z"].GetInteger();
-            bool _ = blockEntityData["keepPacked"].GetBoolean();  // What is this prop for? We'll ignore it for now
+            // bool _ = blockEntityData["keepPacked"].GetBoolean();  // What is this prop for? We'll ignore it for now
             
             // Create a new compound tag for the block entity
             // but without any of the above properties
@@ -214,6 +215,11 @@ public class AnvilLoader : ITerrainProvider {
         for (int i = 0; i < paletteTag.Tags.Length; i++) {
             if (paletteTag.Tags[i] is CompoundTag compound) {
                 string name = compound["Name"].GetString();
+
+                if (RenamedBlocks.Map.TryGetValue(name, out Identifier newVal)) {
+                    name = newVal;
+                }
+                
                 IBlock block = _registry.Blocks[name];
                 if (compound.ChildrenMap.TryGetValue("Properties", out INbtTag? propsTag)) {
                     block = block.WithState(propsTag.GetCompound());
