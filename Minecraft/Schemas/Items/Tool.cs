@@ -44,4 +44,16 @@ public record Tool(ToolRule[] Rules, float DefaultMiningSpeed, int DamagePerBloc
 
         return false;
     }
+
+    public virtual bool Equals(Tool? other) {
+        return other != null && Rules.SequenceEqual(other.Rules) &&
+               Math.Abs(DefaultMiningSpeed - other.DefaultMiningSpeed) < 0.001 &&
+               DamagePerBlock == other.DamagePerBlock &&
+               CanMineInCreative == other.CanMineInCreative;
+    }
+
+    public override int GetHashCode() {
+        int rulesHash = Rules.Aggregate(17, (current, rule) => current * 31 + rule.GetHashCode());
+        return HashCode.Combine(rulesHash, DefaultMiningSpeed, DamagePerBlock, CanMineInCreative);
+    }
 }

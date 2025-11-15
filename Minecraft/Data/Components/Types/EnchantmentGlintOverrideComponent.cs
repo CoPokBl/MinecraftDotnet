@@ -13,4 +13,8 @@ public record EnchantmentGlintOverrideComponent(int ProtocolId) : IDataComponent
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
         return reader.ReadBoolean();
     }
+
+    public override bool ValuesEqual(bool val1, bool val2) {
+        return val1 == val2;
+    }
 }

@@ -152,6 +152,28 @@ public static class Everything {
                             5,
                             0,
                             1f,
+                            0),
+                        new Trade(
+                            new ItemStack(Item.Stone, 8).With(DataComponent.Enchantments, [(Enchantment.Breach, 5)]),
+                            new ItemStack(Item.TadpoleBucket),
+                            null,
+                            false,
+                            2,
+                            10,
+                            5,
+                            0,
+                            1f,
+                            0),
+                        new Trade(
+                            new ItemStack(Item.Stone, 8).With(DataComponent.Enchantments, [(Enchantment.Breach, 2)]),
+                            new ItemStack(Item.IronAxe),
+                            null,
+                            false,
+                            2,
+                            10,
+                            5,
+                            0,
+                            1f,
                             0)
                     ], MerchantLevel.Master, 1, true, true);
 
@@ -160,6 +182,8 @@ public static class Everything {
                 
                 case "s":
                     e.Player.Inventory.AddItem(new ItemStack(Item.Stone, 8));
+                    e.Player.Inventory.AddItem(new ItemStack(Item.Stone, 8).With(DataComponent.Enchantments, [(Enchantment.Breach, 5)]));
+                    e.Player.Inventory.AddItem(new ItemStack(Item.Stone, 8).With(DataComponent.Enchantments, [(Enchantment.Breach, 2)]));
                     break;
             }
         });

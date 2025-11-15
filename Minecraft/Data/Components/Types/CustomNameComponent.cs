@@ -1,6 +1,7 @@
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Text;
+using NBT;
 
 namespace Minecraft.Data.Components.Types;
 
@@ -13,5 +14,9 @@ public record CustomNameComponent(int ProtocolId) : IDataComponent<TextComponent
 
     public override TextComponent ReadData(DataReader reader, MinecraftRegistry registry) {
         return reader.ReadText();
+    }
+
+    public override bool ValuesEqual(TextComponent val1, TextComponent val2) {
+        return val1.ToJsonString() == val2.ToJsonString();
     }
 }

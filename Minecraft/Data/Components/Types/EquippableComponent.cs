@@ -48,6 +48,10 @@ public record EquippableComponent(int ProtocolId) : IDataComponent<EquippableCom
             equipOnInteract, canBeSheared, shearSound);
     }
 
+    public override bool ValuesEqual(Data val1, Data val2) {
+        return val1.Equals(val2);
+    }
+
     public record Data(Slot Slot, Or<ISoundType, SoundEvent> EquipSound, Identifier? Model, Identifier? CameraOverlay, 
         IdSet? AllowedEntities, bool Dispensable, bool Swappable, bool DamageOnHurt, bool EquipOnInteract, 
         bool CanBeSheared, Or<ISoundType, SoundEvent> ShearSound);

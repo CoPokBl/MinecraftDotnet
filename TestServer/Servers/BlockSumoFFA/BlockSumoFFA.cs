@@ -30,7 +30,11 @@ public static class BlockSumoFfa {
     private const int Port = 25565;
 
     public static async Task Start() {
+        Console.WriteLine("1");
+        
         ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsWithMojangAuthBundle);
+        Console.WriteLine("2");
+        
         server.AddFeatures(new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
                 VersionName = "dotnet",
                 VersionProtocol = connection.Handshake!.ProtocolVersion,

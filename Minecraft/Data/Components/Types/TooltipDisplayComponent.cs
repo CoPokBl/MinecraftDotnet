@@ -18,6 +18,15 @@ public record TooltipDisplayComponent(int ProtocolId) : IDataComponent<TooltipDi
         IDataComponent[] hiddenComponents = reader.ReadPrefixedArray(r => registry.DataComponents[r.ReadVarInt()]);
         return new Info(hideTooltip, hiddenComponents);
     }
-    
+
+    public override bool ValuesEqual(Info val1, Info val2) {
+        if (val1.HideTooltip != val2.HideTooltip) return false;
+        if (val1.Hidden.Length != val2.Hidden.Length) return false;
+        for (int i = 0; i < val1.Hidden.Length; i++) {
+            if (val1.Hidden[i].Identifier != val2.Hidden[i].Identifier) return false;
+        }
+        return true;
+    }
+
     public record Info(bool HideTooltip, params IDataComponent[] Hidden);
 }

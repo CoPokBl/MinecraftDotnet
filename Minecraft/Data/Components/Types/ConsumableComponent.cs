@@ -34,7 +34,11 @@ public record ConsumableComponent(int ProtocolId) : IDataComponent<ConsumableCom
         });
         return new Data(consumeSeconds, animation, sound, hasParticles, effects);
     }
-    
+
+    public override bool ValuesEqual(Data val1, Data val2) {
+        return val1.Equals(val2);
+    }
+
     private const float DefaultConsumeSeconds = 1.6f;
 
     public record Data(
@@ -46,6 +50,24 @@ public record ConsumableComponent(int ProtocolId) : IDataComponent<ConsumableCom
         
         public IConsumeEffect[] Effects { get; init; } = Effects ?? [];
         public Or<ISoundType, SoundEvent> Sound { get; init; } = Sound ?? Or<ISoundType, SoundEvent>.FromValue1(SoundType.GenericEat);
+
+        public virtual bool Equals(Data? other) {
+            if (other is null) return false;
+            if (Math.Abs(ConsumeSeconds - other.ConsumeSeconds) > 0.001) return false;
+            if (Animation != other.Animation) return false;
+            if (!Sound.Equals(other.Sound)) return false;
+            if (HasParticles != other.HasParticles) return false;
+            if (Effects.Length != other.Effects.Length) return false;
+            for (int i = 0; i < Effects.Length; i++) {
+                if (!Effects[i].Equals(other.Effects[i])) return false;
+            }
+            return true;
+        }
+
+        public override int GetHashCode() {
+            int effectsHash = Effects.Aggregate(0, (acc, effect) => acc ^ effect.GetHashCode());
+            return HashCode.Combine(effectsHash, Sound, ConsumeSeconds, (int)Animation, HasParticles);
+        }
     }
     
     public enum ConsumeAnimation {

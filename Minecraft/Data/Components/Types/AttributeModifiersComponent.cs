@@ -13,4 +13,8 @@ public record AttributeModifiersComponent(int ProtocolId) : IDataComponent<ItemA
     public override ItemAttributeModifier[] ReadData(DataReader reader, MinecraftRegistry registry) {
         return reader.ReadPrefixedArray<ItemAttributeModifier>(registry);
     }
+
+    public override bool ValuesEqual(ItemAttributeModifier[] val1, ItemAttributeModifier[] val2) {
+        return val1.SequenceEqual(val2);
+    }
 }

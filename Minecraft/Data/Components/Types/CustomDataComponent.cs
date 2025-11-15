@@ -14,4 +14,9 @@ public record CustomDataComponent(int ProtocolId) : IDataComponent<INbtTag> {
     public override INbtTag ReadData(DataReader reader, MinecraftRegistry registry) {
         return reader.ReadNbt();
     }
+
+    public override bool ValuesEqual(INbtTag val1, INbtTag val2) {
+        // Slow but simple way to compare NBT tags
+        return val1.ToJsonString() == val2.ToJsonString();
+    }
 }

@@ -16,4 +16,8 @@ public record IntangibleProjectileComponent(int ProtocolId) : IDataComponent<Non
         reader.ReadNbt();
         return Value;
     }
+
+    public override bool ValuesEqual(None val1, None val2) {
+        return true;
+    }
 }

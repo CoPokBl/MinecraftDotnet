@@ -4,9 +4,9 @@ using Minecraft.Registry;
 namespace Minecraft.Schemas;
 
 public class ProfileProperty : INetworkType<ProfileProperty> {
-    public required string Name;
-    public required string Value;
-    public string? Signature;
+    public required string Name { get; init; }
+    public required string Value { get; init; }
+    public string? Signature { get; init; }
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
@@ -25,5 +25,14 @@ public class ProfileProperty : INetworkType<ProfileProperty> {
             Value = value,
             Signature = signature
         };
+    }
+
+    public override bool Equals(object? obj) {
+        if (obj is not ProfileProperty other) return false;
+        return Name == other.Name && Value == other.Value && Signature == other.Signature;
+    }
+    
+    public override int GetHashCode() {
+        return HashCode.Combine(Name, Value, Signature);
     }
 }

@@ -20,6 +20,26 @@ public record ProfileComponent(int ProtocolId) : IDataComponent<ProfileComponent
             reader.ReadPrefixedArray(r => ProfileProperty.ReadData(r, registry))
         );
     }
-    
-    public record Data(string? Name, Guid? UniqueId, ProfileProperty[] Properties);
+
+    public override bool ValuesEqual(Data val1, Data val2) {
+        return val1.Equals(val2);
+    }
+
+    public record Data(string? Name, Guid? UniqueId, ProfileProperty[] Properties) {
+        public virtual bool Equals(Data? other) {
+            if (other is null) return false;
+            if (Name != other.Name) return false;
+            if (UniqueId != other.UniqueId) return false;
+            if (!Properties.SequenceEqual(other.Properties)) return false;
+            return true;
+        }
+
+        public override int GetHashCode() {
+            int propsHash = 17;
+            foreach (ProfileProperty prop in Properties) {
+                propsHash = propsHash * 31 + prop.GetHashCode();
+            }
+            return HashCode.Combine(Name, UniqueId, propsHash);
+        }
+    }
 }

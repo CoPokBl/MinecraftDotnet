@@ -54,6 +54,16 @@ public record ItemAttributeModifier(
         
         public abstract DisplayType Type { get; }
 
+        public virtual bool Equals(Display? other) {
+            if (other == null) return false;
+            if (Type != other.Type) return false;
+            return true;
+        }
+
+        public override int GetHashCode() {
+            return (int)Type;
+        }
+
         public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
             return WriteDisplayData(writer.WriteVarInt((int)Type), registry);
         }

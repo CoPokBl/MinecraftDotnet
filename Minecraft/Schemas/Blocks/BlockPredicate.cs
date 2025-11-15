@@ -34,4 +34,40 @@ public record BlockPredicate(
         PartialDataComponentMatcher[] partialComponents = reader.ReadPrefixedArray(r => PartialDataComponentMatcher.Read(r, registry));
         return new BlockPredicate(blocks, properties, nbt, components, partialComponents);
     }
+
+    public virtual bool Equals(BlockPredicate? other) {
+        if (other == null) return false;
+        if (Blocks != other.Blocks) return false;
+        if ((Properties == null) != (other.Properties == null)) return false;
+        if ((Properties != null && other.Properties != null) && !Properties.SequenceEqual(other.Properties)) return false;
+        if ((Nbt == null) != (other.Nbt == null)) return false;
+        if (Nbt != null && other.Nbt != null && Nbt.ToJsonString() != other.Nbt.ToJsonString()) return false;
+        if (Components == null != (other.Components == null)) return false;
+        if (Components != null && other.Components != null && !Components.SequenceEqual(other.Components)) return false;
+        if (PartialComponents == null != (other.PartialComponents == null)) return false;
+        if (PartialComponents != null && other.PartialComponents != null && !PartialComponents.SequenceEqual(other.PartialComponents)) return false;
+        return true;
+    }
+
+    public override int GetHashCode() {
+        int hash = 17;
+        hash = hash * 31 + (Blocks?.GetHashCode() ?? 0);
+        if (Properties != null) {
+            foreach (BlockPropertyFilter prop in Properties) {
+                hash = hash * 31 + prop.GetHashCode();
+            }
+        }
+        hash = hash * 31 + (Nbt?.ToJsonString().GetHashCode() ?? 0);
+        if (Components != null) {
+            foreach (ExactDataComponentMatcher comp in Components) {
+                hash = hash * 31 + comp.GetHashCode();
+            }
+        }
+        if (PartialComponents != null) {
+            foreach (PartialDataComponentMatcher pcomp in PartialComponents) {
+                hash = hash * 31 + pcomp.GetHashCode();
+            }
+        }
+        return hash;
+    }
 }

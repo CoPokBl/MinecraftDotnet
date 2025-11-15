@@ -19,6 +19,10 @@ public record FoodComponent(int ProtocolId) : IDataComponent<FoodComponent.Info>
         bool canAlwaysEat = reader.ReadBoolean();
         return new Info(nutrition, saturationModifier, canAlwaysEat);
     }
-    
+
+    public override bool ValuesEqual(Info val1, Info val2) {
+        return val1 == val2;
+    }
+
     public record Info(int Nutrition, float SaturationModifier, bool CanAlwaysEat);
 }

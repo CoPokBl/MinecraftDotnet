@@ -23,4 +23,8 @@ public record CustomModelDataComponent(int ProtocolId) : IDataComponent<CustomMo
         );
         return customModelData;
     }
+
+    public override bool ValuesEqual(CustomModelData val1, CustomModelData val2) {
+        return val1.Equals(val2);
+    }
 }

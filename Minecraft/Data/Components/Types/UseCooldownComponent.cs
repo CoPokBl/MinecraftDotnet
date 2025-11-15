@@ -14,6 +14,10 @@ public record UseCooldownComponent(int ProtocolId) : IDataComponent<UseCooldownC
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
         return new Data(reader.ReadFloat(), reader.ReadPrefixedOptional<Identifier>(registry));
     }
-    
+
+    public override bool ValuesEqual(Data val1, Data val2) {
+        return val1 == val2;
+    }
+
     public record Data(float Seconds, Identifier? CooldownGroup);
 }

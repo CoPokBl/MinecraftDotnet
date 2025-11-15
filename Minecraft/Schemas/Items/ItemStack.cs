@@ -68,7 +68,14 @@ public class ItemStack(
             return false;
         }
 
-        // TODO: Check if all components match
+        foreach (KeyValuePair<IDataComponent, object> kvp in _components) {
+            if (!other._components.TryGetValue(kvp.Key, out object? otherValue)) {
+                return false;
+            }
+            if (!kvp.Key.ValuesEqual(kvp.Value, otherValue)) {
+                return false;
+            }
+        }
         return true;
     }
     

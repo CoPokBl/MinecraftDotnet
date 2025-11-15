@@ -46,4 +46,29 @@ public class Or<T1, T2> {
         }
         throw new InvalidOperationException("No value of the requested type is present.");
     }
+
+    public override bool Equals(object? obj) {
+        if (obj is Or<T1, T2> other) {
+            return Equals(Value1, other.Value1) && Equals(Value2, other.Value2);
+        }
+        return false;
+    }
+
+    protected bool Equals(Or<T1, T2> other) {
+        return EqualityComparer<T1?>.Default.Equals(Value1, other.Value1) && EqualityComparer<T2?>.Default.Equals(Value2, other.Value2);
+    }
+    
+    public static bool operator ==(Or<T1, T2>? left, Or<T1, T2>? right) {
+        if (left is null && right is null) return true;
+        if (left is null || right is null) return false;
+        return left.Equals(right);
+    }
+    
+    public static bool operator !=(Or<T1, T2>? left, Or<T1, T2>? right) {
+        return !(left == right);
+    }
+
+    public override int GetHashCode() {
+        return HashCode.Combine(Value1, Value2);
+    }
 }

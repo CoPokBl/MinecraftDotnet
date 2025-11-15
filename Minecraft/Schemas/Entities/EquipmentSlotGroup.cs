@@ -20,4 +20,13 @@ public record EquipmentSlotGroup(int ProtocolId, string Name, params EquipmentSl
     public static EquipmentSlotGroup FromProtocolId(int id) => Values.First(v => v.ProtocolId == id);
     
     public bool ContainsSlot(EquipmentSlot slot) => Slots.Contains(slot);
+
+    public virtual bool Equals(EquipmentSlotGroup? other) {
+        if (other is null) return false;
+        return ProtocolId == other.ProtocolId;
+    }
+    
+    public override int GetHashCode() {
+        return ProtocolId.GetHashCode();
+    }
 }

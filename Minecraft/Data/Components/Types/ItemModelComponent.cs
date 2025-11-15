@@ -13,4 +13,8 @@ public record ItemModelComponent(int ProtocolId) : IDataComponent<Identifier> {
     public override string ReadData(DataReader reader, MinecraftRegistry registry) {
         return reader.ReadString();
     }
+
+    public override bool ValuesEqual(Identifier val1, Identifier val2) {
+        return val1 == val2;
+    }
 }

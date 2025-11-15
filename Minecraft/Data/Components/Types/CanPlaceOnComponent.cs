@@ -15,4 +15,8 @@ public record CanPlaceOnComponent(int ProtocolId) : IDataComponent<BlockPredicat
         BlockPredicate[] predicates = reader.ReadPrefixedArray<BlockPredicate>(registry);
         return predicates;
     }
+
+    public override bool ValuesEqual(BlockPredicate[] val1, BlockPredicate[] val2) {
+        return val1.SequenceEqual(val2);
+    }
 }

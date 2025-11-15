@@ -15,4 +15,18 @@ public record CanBreakComponent(int ProtocolId) : IDataComponent<BlockPredicate[
         BlockPredicate[] predicates = reader.ReadPrefixedArray<BlockPredicate>(registry);
         return predicates;
     }
+
+    public override bool ValuesEqual(BlockPredicate[] val1, BlockPredicate[] val2) {
+        if (val1.Length != val2.Length) {
+            return false;
+        }
+
+        for (int i = 0; i < val1.Length; i++) {
+            if (!val1[i].Equals(val2[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

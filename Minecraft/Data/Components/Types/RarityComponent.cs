@@ -14,4 +14,8 @@ public record RarityComponent(int ProtocolId) : IDataComponent<ItemRarity> {
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
         return (ItemRarity)reader.ReadVarInt();
     }
+
+    public override bool ValuesEqual(ItemRarity val1, ItemRarity val2) {
+        return val1 == val2;
+    }
 }

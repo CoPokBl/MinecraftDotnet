@@ -14,4 +14,8 @@ public record ToolComponent(int ProtocolId) : IDataComponent<Tool> {
     public override Tool ReadData(DataReader reader, MinecraftRegistry registry) {
         return reader.Read<Tool>(registry);
     }
+
+    public override bool ValuesEqual(Tool val1, Tool val2) {
+        return val1.Equals(val2);
+    }
 }

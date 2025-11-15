@@ -14,4 +14,8 @@ public record UnbreakableComponent(int ProtocolId) : IDataComponent<None> {
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
         return Value;
     }
+
+    public override bool ValuesEqual(None val1, None val2) {
+        return true;
+    }
 }

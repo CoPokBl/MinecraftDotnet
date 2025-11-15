@@ -13,4 +13,8 @@ public record MaxStackSizeComponent(int ProtocolId) : IDataComponent<int> {
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
         return new MaxStackSizeComponent(reader.ReadVarInt());
     }
+
+    public override bool ValuesEqual(int val1, int val2) {
+        return val1 == val2;
+    }
 }

@@ -13,4 +13,8 @@ public record DyedColorComponent(int ProtocolId) : IDataComponent<TextColor> {
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
         return TextColor.FromDecimal(reader.ReadInteger());
     }
+
+    public override bool ValuesEqual(TextColor val1, TextColor val2) {
+        return val1 == val2;
+    }
 }
