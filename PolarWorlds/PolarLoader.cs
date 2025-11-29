@@ -22,6 +22,7 @@ public class PolarLoader : ITerrainProvider {
     
     public Dictionary<Vec2<int>, ChunkData> Chunks = null!;
     private MinecraftRegistry _registry;
+    private Dictionary<string, IBlock> _blockStringCache = new();  // Cache parsed block strings
 
     public PolarLoader(string path, MinecraftRegistry registry) : this(File.ReadAllBytes(path), registry) {
         
@@ -240,20 +241,26 @@ public class PolarLoader : ITerrainProvider {
     }
 
     private static void WriteSection(DataWriter writer, ChunkSection section, MinecraftRegistry registry) {
-        Dictionary<string, int> blockPaletteMap = new(256);  // Typical palette size estimate
+        Dictionary<uint, int> stateIdToPaletteIndex = new(256);  // Map state ID directly to palette index
         List<string> blockPalette = [];
         ushort[] blockData = new ushort[ChunkSection.Size * ChunkSection.Size * ChunkSection.Size];
         int cBlockDataIndex = 0;
+        
+        // Access blocks array directly - much faster than LookupBlock
+        uint[,,] blocks = section.Blocks;
+        
         for (int y = 0; y < ChunkSection.Size; y++) {
             for (int z = 0; z < ChunkSection.Size; z++) {
                 for (int x = 0; x < ChunkSection.Size; x++) {
-                    IBlock block = section.LookupBlock(x, y, z, registry);
-                    string blockStr = GetStateStringFromBlock(block);
+                    uint stateId = blocks[x, y, z];
                     
-                    if (!blockPaletteMap.TryGetValue(blockStr, out int paletteIndex)) {
+                    // Use state ID as key - only convert to string once per unique state
+                    if (!stateIdToPaletteIndex.TryGetValue(stateId, out int paletteIndex)) {
                         paletteIndex = blockPalette.Count;
-                        blockPaletteMap[blockStr] = paletteIndex;
-                        blockPalette.Add(blockStr);
+                        stateIdToPaletteIndex[stateId] = paletteIndex;
+                        // Only lookup block when we need to convert to string for the first time
+                        IBlock block = registry.Blocks.GetByStateId(stateId);
+                        blockPalette.Add(GetStateStringFromBlock(block));
                     }
                     blockData[cBlockDataIndex++] = (ushort)paletteIndex;
                 }
@@ -309,11 +316,13 @@ public class PolarLoader : ITerrainProvider {
             
             int bitsPerEntry = (int) Math.Ceiling(Math.Log(blockPalette.Length) / Math.Log(2));
             ushort[] blockData = reader.ReadPrefixedPacketDataArray(bitsPerEntry);  // palette indices for blocks
+            
+            // Optimized loop with direct indexing
+            int dataIndex = 0;
             for (int y = 0; y < ChunkSection.Size; y++) {
                 for (int z = 0; z < ChunkSection.Size; z++) {
                     for (int x = 0; x < ChunkSection.Size; x++) {
-                        int index = y * ChunkSection.Size * ChunkSection.Size + z * ChunkSection.Size + x;
-                        section.Blocks[x, y, z] = stateIdPalette[blockData[index]];
+                        section.Blocks[x, y, z] = stateIdPalette[blockData[dataIndex++]];
                     }
                 }
             }
@@ -347,6 +356,11 @@ public class PolarLoader : ITerrainProvider {
     }
     
     private IBlock GetBlockFromString(string blockStr) {
+        // Cache to avoid re-parsing the same block strings
+        if (_blockStringCache.TryGetValue(blockStr, out IBlock? cachedBlock)) {
+            return cachedBlock;
+        }
+        
         // Example: "minecraft:stone[variant=granite]"
         string[] parts = blockStr.Split('[', 2);
         string blockName = parts[0];
@@ -359,11 +373,14 @@ public class PolarLoader : ITerrainProvider {
         IBlock block = _registry.Blocks[blockName];
         
         if (parts.Length <= 1) {
+            _blockStringCache[blockStr] = block;
             return block;
         }
         
         CompoundTag properties = PropertiesStringToNbt(parts[1].TrimEnd(']'));
-        return block.WithState(properties);
+        IBlock result = block.WithState(properties);
+        _blockStringCache[blockStr] = result;
+        return result;
     }
     
     private static CompoundTag PropertiesStringToNbt(string propsStr) {
@@ -393,7 +410,11 @@ public class PolarLoader : ITerrainProvider {
 
     private static string GetPropsStringFromBlock(IBlock block) {
         CompoundTag properties = block.ToStateNbt();
-        List<string> props = [];
+        if (properties.Children.Length == 0) {
+            return string.Empty;
+        }
+        
+        List<string> props = new(properties.Children.Length);
         foreach (INbtTag? tag in properties.Children) {
             if (tag is StringTag stringTag) {
                 props.Add($"{stringTag.Name}={stringTag.Value}");
