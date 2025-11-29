@@ -491,6 +491,15 @@ public class DataWriter : Stream, IWritable {
         byte[] dat = nbt.Serialise();
         return Write(dat);
     }
+    
+    /// <summary>
+    /// Writes NBT data with optimized caching for frequently serialized tags.
+    /// Use this method for tags that are serialized repeatedly (e.g., common items, blocks).
+    /// </summary>
+    public DataWriter WriteNbtCached(INbtTag nbt) {
+        byte[] dat = NbtOptimizations.SerializeWithCache(nbt);
+        return Write(dat);
+    }
 
     public DataWriter WriteUuid(Guid value) {
         return Write(value.ToByteArray(true));

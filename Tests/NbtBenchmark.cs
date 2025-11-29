@@ -119,4 +119,19 @@ public class NbtBenchmark {
     public INbtTag DeserializeViaDataReader() {
         return new DataReader(_simpleNbtData).ReadNbt();
     }
+    
+    [Benchmark]
+    public byte[] SerializeWithCache() {
+        return NbtOptimizations.SerializeWithCache(_simpleTag);
+    }
+    
+    [Benchmark]
+    public byte[] SerializeComplexWithCache() {
+        return NbtOptimizations.SerializeWithCache(_complexTag);
+    }
+    
+    [Benchmark]
+    public byte[] SerializeViaDataWriterCached() {
+        return new DataWriter().WriteNbtCached(_simpleTag).ToArray();
+    }
 }
