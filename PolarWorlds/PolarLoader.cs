@@ -19,6 +19,7 @@ public class PolarLoader : ITerrainProvider {
     private const int MaxHeightmaps = 32;
     private const int BlockPaletteSize = 4096;
     private const int DataVersion = 4325;
+    private const int InitialPaletteCapacity = 256;  // Typical palette size estimate
     
     public Dictionary<Vec2<int>, ChunkData> Chunks = null!;
     private MinecraftRegistry _registry;
@@ -243,7 +244,7 @@ public class PolarLoader : ITerrainProvider {
     }
 
     private static void WriteSection(DataWriter writer, ChunkSection section, MinecraftRegistry registry) {
-        Dictionary<uint, int> stateIdToPaletteIndex = new(256);  // Map state ID directly to palette index
+        Dictionary<uint, int> stateIdToPaletteIndex = new(InitialPaletteCapacity);  // Map state ID directly to palette index
         List<string> blockPalette = [];
         ushort[] blockData = new ushort[ChunkSection.Size * ChunkSection.Size * ChunkSection.Size];
         int cBlockDataIndex = 0;
