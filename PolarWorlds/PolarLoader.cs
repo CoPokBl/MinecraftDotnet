@@ -126,7 +126,9 @@ public class PolarLoader : ITerrainProvider {
     }
     
     private static byte[] CompressZstd(ReadOnlySpan<byte> data) {
-        using Compressor compressor = new();
+        // Use level 1 for faster compression (default is 3)
+        // This trades compression ratio for speed
+        using Compressor compressor = new(1);
         return compressor.Wrap(data).ToArray();
     }
     
