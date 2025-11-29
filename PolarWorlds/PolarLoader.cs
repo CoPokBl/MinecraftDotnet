@@ -242,6 +242,7 @@ public class PolarLoader : ITerrainProvider {
     }
 
     private static void WriteSection(DataWriter writer, ChunkSection section, MinecraftRegistry registry) {
+        Dictionary<string, int> blockPaletteMap = [];
         List<string> blockPalette = [];
         ushort[] blockData = new ushort[ChunkSection.Size * ChunkSection.Size * ChunkSection.Size];
         int cBlockDataIndex = 0;
@@ -251,12 +252,9 @@ public class PolarLoader : ITerrainProvider {
                     IBlock block = section.LookupBlock(x, y, z, registry);
                     string blockStr = GetStateStringFromBlock(block);
                     
-                    int paletteIndex;
-                    if (blockPalette.Contains(blockStr)) {
-                        paletteIndex = blockPalette.IndexOf(blockStr);
-                    }
-                    else {
+                    if (!blockPaletteMap.TryGetValue(blockStr, out int paletteIndex)) {
                         paletteIndex = blockPalette.Count;
+                        blockPaletteMap[blockStr] = paletteIndex;
                         blockPalette.Add(blockStr);
                     }
                     blockData[cBlockDataIndex++] = (ushort)paletteIndex;
@@ -305,16 +303,19 @@ public class PolarLoader : ITerrainProvider {
         
         string[] blockPalette = reader.ReadPrefixedArray(r => r.ReadString());
         if (blockPalette.Length > 1) {
+            // Convert palette strings to state IDs once instead of repeatedly in the loop
+            uint[] stateIdPalette = new uint[blockPalette.Length];
+            for (int i = 0; i < blockPalette.Length; i++) {
+                stateIdPalette[i] = GetBlockFromString(blockPalette[i]).StateId;
+            }
+            
             int bitsPerEntry = (int) Math.Ceiling(Math.Log(blockPalette.Length) / Math.Log(2));
             ushort[] blockData = reader.ReadPrefixedPacketDataArray(bitsPerEntry);  // palette indices for blocks
             for (int y = 0; y < ChunkSection.Size; y++) {
                 for (int z = 0; z < ChunkSection.Size; z++) {
                     for (int x = 0; x < ChunkSection.Size; x++) {
                         int index = y * ChunkSection.Size * ChunkSection.Size + z * ChunkSection.Size + x;
-                        string key = blockPalette[blockData[index]];
-                        
-                        uint stateId = GetBlockFromString(key).StateId;
-                        section.Blocks[x, y, z] = stateId;
+                        section.Blocks[x, y, z] = stateIdPalette[blockData[index]];
                     }
                 }
             }
