@@ -5,5 +5,10 @@ namespace Minecraft.Implementations.Server.Terrain;
 // chunk.ChunkX and chunk.ChunkZ must ALWAYS be set before calling GetChunk or GetChunks
 public interface ITerrainProvider {
     public void GetChunk(ref ChunkData chunk);
-    public void GetChunks(int start, int count, ChunkData[] chunks);
+
+    public void GetChunks(int start, int count, ChunkData[] chunks) {
+        for (int i = start; i < start + count; i++) {
+            GetChunk(ref chunks[i]);
+        }
+    }
 }

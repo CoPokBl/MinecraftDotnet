@@ -38,31 +38,7 @@ public class EventNode<T> {
     }
     
     public Action AddListener<TL>(Action<TL> callback, bool mutable = false) where TL : T {
-        OnListenerAdded?.Invoke(typeof(TL));
-        
-        Action<T> call = obj => {
-            if (obj is not TL tl) {
-                return;
-            }
-
-            callback(tl);
-        };
-
-        if (mutable) {
-            MutableCallback += call;
-        }
-        else {
-            HandleCallback += call;
-        }
-
-        return () => {
-            if (mutable) {
-                MutableCallback -= call;
-            }
-            else {
-                HandleCallback -= call;
-            }
-        };
+        return AddListener(typeof(TL), v => callback((TL)v!),mutable);
     }
 
     public Action AddListener(Type type, Action<T> callback, bool mutable = false) {

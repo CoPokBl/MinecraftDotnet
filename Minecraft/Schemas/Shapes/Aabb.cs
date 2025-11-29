@@ -1,8 +1,13 @@
+using System.Globalization;
 using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Schemas.Shapes;
 
 public record Aabb(Vec3<double> Position, Vec3<double> Size) : ICollisionBox {
+    private static readonly NumberFormatInfo NumberFormat = new() {
+        NumberDecimalSeparator = "."
+    };
+    
     public Vec3<double> End => Position + Size;
     public Vec3<double>[] Corners => [
         Position, Position + new Vec3<double>(Size.X, 0, 0), Position + new Vec3<double>(0, 0, Size.Z), Position + new Vec3<double>(Size.X, 0, Size.Z),
@@ -36,7 +41,7 @@ public record Aabb(Vec3<double> Position, Vec3<double> Size) : ICollisionBox {
     // looks like: N.N, N.N, N.N
     private static float[] ParseAabbValues(string str) {
         string[] parts = str.Split(',');
-        return parts.Select(p => float.Parse(p.Trim())).ToArray();
+        return parts.Select(p => float.Parse(p.Trim(), NumberFormat)).ToArray();
     }
 
     public bool CollidesWithAabb(Aabb other) {
