@@ -24,7 +24,7 @@ public class PolarBenchmark {
         
         // Warmup
         Console.WriteLine("Warming up...");
-        _ = PolarLoader.CreateWorld(chunks);
+        byte[] warmupData = PolarLoader.CreateWorld(chunks);
         
         // Benchmark
         Stopwatch sw = Stopwatch.StartNew();
@@ -55,7 +55,7 @@ public class PolarBenchmark {
         
         // Warmup
         Console.WriteLine("Warming up...");
-        _ = new PolarLoader(polarData, VanillaRegistry.Data);
+        PolarLoader warmupLoader = new(polarData, VanillaRegistry.Data);
         
         // Benchmark
         Stopwatch sw = Stopwatch.StartNew();

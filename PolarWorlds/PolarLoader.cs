@@ -240,7 +240,7 @@ public class PolarLoader : ITerrainProvider {
     }
 
     private static void WriteSection(DataWriter writer, ChunkSection section, MinecraftRegistry registry) {
-        Dictionary<string, int> blockPaletteMap = [];
+        Dictionary<string, int> blockPaletteMap = new(256);  // Typical palette size estimate
         List<string> blockPalette = [];
         ushort[] blockData = new ushort[ChunkSection.Size * ChunkSection.Size * ChunkSection.Size];
         int cBlockDataIndex = 0;
