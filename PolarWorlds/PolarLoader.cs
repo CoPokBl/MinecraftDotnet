@@ -58,7 +58,6 @@ public class PolarLoader : ITerrainProvider {
         
         data.WriteVarInt(chunks.Length);  // Number of chunks
         foreach (ChunkData chunk in chunks) {
-            Console.WriteLine("Writing chunk: " + chunk.ChunkX + ", " + chunk.ChunkZ);
             WriteChunk(data, chunk, registry);
         }
         
@@ -66,7 +65,6 @@ public class PolarLoader : ITerrainProvider {
         writer.WriteByte((sbyte)CompressionType.Zstd);  // Compression type
         byte[] compressedData = CompressZstd(data.ToArray());
         writer.WriteVarInt((int)data.Length);  // Original length of the data before compression
-        Console.WriteLine("Compressed data length: " + data.Length);
         writer.Write(compressedData);  // Compressed data
         return writer.ToArray();
     }
@@ -422,7 +420,6 @@ public class PolarLoader : ITerrainProvider {
     public void GetChunk(ref ChunkData chunk) {
         Chunks.TryGetValue(new Vec2<int>(chunk.ChunkX, chunk.ChunkZ), out ChunkData? data);
         if (data == null) {
-            Console.WriteLine("Polar chunk not found: " + chunk.ChunkX + ", " + chunk.ChunkZ);
             return;
         }
         
@@ -433,8 +430,6 @@ public class PolarLoader : ITerrainProvider {
         for (int i = start; i < start + count; i++) {
             if (Chunks.TryGetValue(new Vec2<int>(chunks[i].ChunkX, chunks[i].ChunkZ), out ChunkData? data)) {
                 chunks[i] = data;
-            } else {
-                Console.WriteLine("Polar chunk not found: " + chunks[i].ChunkX + ", " + chunks[i].ChunkZ);
             }
         }
     }
