@@ -22,10 +22,13 @@ public static class NbtOptimizations {
     
     /// <summary>
     /// Serializes an NBT tag with caching for frequently used tags.
+    /// Note: Uses GetHashCode() for cache keys. Hash collisions are possible but acceptable
+    /// as they only result in cache misses, not correctness issues. Cache is cleared on restart.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] SerializeWithCache(INbtTag tag) {
-        // Simple hash based on object reference and serialized content
+        // Use object's hash code for cache lookup
+        // Collisions are acceptable - they just cause cache misses, not errors
         int hash = tag.GetHashCode();
         
         // Fast path: check cache (thread-safe)
@@ -57,8 +60,6 @@ public static class NbtOptimizations {
     public static (int Size, int MaxSize) GetCacheStats() {
         return (_serializationCache.Count, MaxCacheSize);
     }
-    
-
     
     /// <summary>
     /// Rents a buffer from the pool for temporary NBT operations.

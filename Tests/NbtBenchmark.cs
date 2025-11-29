@@ -112,6 +112,7 @@ public class NbtBenchmark {
     
     [Benchmark]
     public byte[] SerializeViaDataWriter() {
+        // Note: Creates new DataWriter each iteration to measure real-world usage cost
         return new DataWriter().WriteNbt(_simpleTag).ToArray();
     }
     
@@ -132,6 +133,7 @@ public class NbtBenchmark {
     
     [Benchmark]
     public byte[] SerializeViaDataWriterCached() {
+        // Note: Creates new DataWriter each iteration to measure real-world usage cost
         return new DataWriter().WriteNbtCached(_simpleTag).ToArray();
     }
 }
