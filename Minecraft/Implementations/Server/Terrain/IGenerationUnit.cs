@@ -37,4 +37,13 @@ public interface IGenerationUnit {
     /// <param name="end">The absolute end position of the fork (exclusive).</param>
     /// <returns>A new generation unit representing the forked area.</returns>
     IGenerationUnit Fork(Vec3<int> start, Vec3<int> end);
+
+    /// <summary>
+    /// Creates a forked generation unit with automatic bounds detection.
+    /// The fork's bounds are automatically determined based on the blocks set using the setter.
+    /// This is useful when you don't know the structure's size beforehand.
+    /// </summary>
+    /// <param name="setter">An action that receives a block setter to place blocks. The fork bounds
+    /// are automatically expanded to encompass all blocks set.</param>
+    void Fork(Action<IBlockSetter> setter);
 }

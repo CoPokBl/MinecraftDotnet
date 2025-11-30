@@ -56,6 +56,14 @@ public class GenerationUnit : IGenerationUnit {
         ChunkData[] singleChunkArray = [_chunk];
         return new ForkedGenerationUnit(start, end, _minY, _chunk.WorldHeight, singleChunkArray, 0, 1, _pendingForkModifications);
     }
+
+    /// <inheritdoc />
+    public void Fork(Action<IBlockSetter> setter) {
+        ChunkData[] singleChunkArray = [_chunk];
+        AutoExpandingBlockSetter blockSetter = new(singleChunkArray, 0, 1, _minY, _chunk.WorldHeight, _pendingForkModifications);
+        setter(blockSetter);
+        blockSetter.Apply();
+    }
 }
 
 /// <summary>
@@ -126,6 +134,13 @@ public class MultiChunkGenerationUnit : IGenerationUnit {
     /// <inheritdoc />
     public IGenerationUnit Fork(Vec3<int> start, Vec3<int> end) {
         return new ForkedGenerationUnit(start, end, _minY, _chunks[_startIndex].WorldHeight, _chunks, _startIndex, _count, _pendingForkModifications);
+    }
+
+    /// <inheritdoc />
+    public void Fork(Action<IBlockSetter> setter) {
+        AutoExpandingBlockSetter blockSetter = new(_chunks, _startIndex, _count, _minY, _chunks[_startIndex].WorldHeight, _pendingForkModifications);
+        setter(blockSetter);
+        blockSetter.Apply();
     }
 }
 
@@ -225,6 +240,13 @@ public class ForkedGenerationUnit : IGenerationUnit {
         return new ForkedGenerationUnit(start, end, _minY, _worldHeight, _originChunks, _originStartIndex, _originCount, _pendingModifications);
     }
 
+    /// <inheritdoc />
+    public void Fork(Action<IBlockSetter> setter) {
+        AutoExpandingBlockSetter blockSetter = new(_originChunks, _originStartIndex, _originCount, _minY, _worldHeight, _pendingModifications);
+        setter(blockSetter);
+        blockSetter.Apply();
+    }
+
     /// <summary>
     /// Applies a modification to all affected chunks.
     /// If the chunk is in the origin chunks, it applies immediately.
@@ -296,5 +318,71 @@ internal class ForkedGenerationModifier : IGenerationModifier {
         Vec3<int> start = _unit.AbsoluteStart();
         Vec3<int> end = _unit.AbsoluteEnd();
         Fill(new Vec3<int>(start.X, minY, start.Z), new Vec3<int>(end.X, maxY, end.Z), block);
+    }
+}
+
+/// <summary>
+/// A block setter that automatically tracks bounds based on the blocks set.
+/// After all blocks are set, call Apply() to create the fork with the computed bounds.
+/// </summary>
+internal class AutoExpandingBlockSetter : IBlockSetter {
+    private readonly ChunkData[] _originChunks;
+    private readonly int _originStartIndex;
+    private readonly int _originCount;
+    private readonly int _minY;
+    private readonly int _worldHeight;
+    private readonly ConcurrentDictionary<Vec2<int>, List<Action<ChunkData>>> _pendingModifications;
+    private readonly List<(Vec3<int> position, IBlock block)> _pendingBlocks = [];
+    
+    private int _minX = int.MaxValue;
+    private int _minBlockY = int.MaxValue;
+    private int _minZ = int.MaxValue;
+    private int _maxX = int.MinValue;
+    private int _maxBlockY = int.MinValue;
+    private int _maxZ = int.MinValue;
+    private bool _hasBlocks;
+
+    public AutoExpandingBlockSetter(
+        ChunkData[] originChunks,
+        int originStartIndex,
+        int originCount,
+        int minY,
+        int worldHeight,
+        ConcurrentDictionary<Vec2<int>, List<Action<ChunkData>>> pendingModifications) {
+        _originChunks = originChunks;
+        _originStartIndex = originStartIndex;
+        _originCount = originCount;
+        _minY = minY;
+        _worldHeight = worldHeight;
+        _pendingModifications = pendingModifications;
+    }
+
+    public void SetBlock(Vec3<int> position, IBlock block) {
+        _pendingBlocks.Add((position, block));
+        
+        // Expand bounds
+        _minX = Math.Min(_minX, position.X);
+        _minBlockY = Math.Min(_minBlockY, position.Y);
+        _minZ = Math.Min(_minZ, position.Z);
+        _maxX = Math.Max(_maxX, position.X + 1); // +1 for exclusive end
+        _maxBlockY = Math.Max(_maxBlockY, position.Y + 1);
+        _maxZ = Math.Max(_maxZ, position.Z + 1);
+        _hasBlocks = true;
+    }
+
+    /// <summary>
+    /// Applies all the pending block modifications using the computed bounds.
+    /// </summary>
+    public void Apply() {
+        if (!_hasBlocks) return;
+
+        Vec3<int> start = new(_minX, _minBlockY, _minZ);
+        Vec3<int> end = new(_maxX, _maxBlockY, _maxZ);
+
+        ForkedGenerationUnit fork = new(start, end, _minY, _worldHeight, _originChunks, _originStartIndex, _originCount, _pendingModifications);
+
+        foreach ((Vec3<int> position, IBlock block) in _pendingBlocks) {
+            fork.Modifier().SetBlock(position, block);
+        }
     }
 }

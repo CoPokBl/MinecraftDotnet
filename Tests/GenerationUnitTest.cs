@@ -282,4 +282,89 @@ public class GenerationUnitTest {
             Assert.That(chunk.GetBlock(15, 0, 15), Is.EqualTo(Block.GoldBlock.StateId));
         }
     }
+
+    [Test]
+    public void GenerationUnit_ForkWithSetter_AutoExpandsBounds() {
+        // Arrange
+        LambdaTerrainGenerator generator = new(unit => {
+            Vec3<int> start = unit.AbsoluteStart();
+
+            // Create a snow carpet
+            unit.Modifier().FillHeight(-64, -60, Block.Snow);
+
+            // Exit out if unit is not the bottom unit
+            if (start.Y > -64) {
+                return;
+            }
+
+            // Use the setter-based fork (like the Java example)
+            unit.Fork(setter => {
+                for (int x = 0; x < 3; x++) {
+                    for (int y = 0; y < 19; y++) {
+                        for (int z = 0; z < 3; z++) {
+                            setter.SetBlock(start + new Vec3<int>(x, y, z), Block.PowderSnow);
+                        }
+                    }
+                }
+                setter.SetBlock(start + new Vec3<int>(1, 19, 1), Block.JackOLantern);
+            });
+        }, -64);
+
+        ChunkData chunk = new(ChunkData.VanillaOverworldHeight) {
+            ChunkX = 0,
+            ChunkZ = 0
+        };
+
+        // Act
+        generator.GetChunk(ref chunk);
+
+        // Assert - Snow carpet should be present at positions not overwritten by the fork
+        // The fork places blocks at x=0-2, z=0-2, so x=5, z=5 should still have snow
+        Assert.That(chunk.GetBlock(5, 0, 5), Is.EqualTo(Block.Snow.StateId));
+        Assert.That(chunk.GetBlock(10, 2, 10), Is.EqualTo(Block.Snow.StateId));
+        
+        // Assert - Snowman body should be present (powder snow) at fork location
+        // start = (0, -64, 0), fork places from y=0 to y=18 relative to start
+        // Position (0, -64, 0) is local (0, 0, 0) - has powder snow (overwrites snow)
+        Assert.That(chunk.GetBlock(0, 0, 0), Is.EqualTo(Block.PowderSnow.StateId));
+        Assert.That(chunk.GetBlock(2, 18, 2), Is.EqualTo(Block.PowderSnow.StateId)); // Y=-46 absolute is Y=18 local
+        
+        // Assert - Jack o'lantern head at (1, 19, 1) relative, which is (1, -64+19, 1) = (1, -45, 1) absolute = (1, 19, 1) local
+        Assert.That(chunk.GetBlock(1, 19, 1), Is.EqualTo(Block.JackOLantern.StateId));
+    }
+
+    [Test]
+    public void GenerationUnit_ForkWithSetter_CrossesChunkBoundaries() {
+        // Arrange
+        Vec3<int> targetPos = new(18, -64, 5); // This is in chunk (1, 0), not chunk (0, 0)
+
+        LambdaTerrainGenerator generator = new(unit => {
+            Vec3<int> start = unit.AbsoluteStart();
+            
+            // Only from chunk (0, 0), create a structure using setter fork
+            if (start.X == 0 && start.Z == 0) {
+                unit.Fork(setter => {
+                    // Set a block in the adjacent chunk
+                    setter.SetBlock(targetPos, Block.EmeraldBlock);
+                });
+            }
+        }, -64);
+
+        ChunkData chunk0 = new(ChunkData.VanillaOverworldHeight) {
+            ChunkX = 0,
+            ChunkZ = 0
+        };
+        ChunkData chunk1 = new(ChunkData.VanillaOverworldHeight) {
+            ChunkX = 1,
+            ChunkZ = 0
+        };
+
+        // Act - Generate first chunk, then second chunk
+        generator.GetChunk(ref chunk0);
+        generator.GetChunk(ref chunk1);
+
+        // Assert - The block should appear in chunk (1, 0)
+        // targetPos (18, -64, 5) is local (2, 0, 5) in chunk (1, 0)
+        Assert.That(chunk1.GetBlock(2, 0, 5), Is.EqualTo(Block.EmeraldBlock.StateId));
+    }
 }
