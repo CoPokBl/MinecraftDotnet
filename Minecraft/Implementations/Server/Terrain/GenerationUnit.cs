@@ -107,11 +107,13 @@ public class ForkedGenerationUnit : IGenerationUnit {
     /// Otherwise, it queues the modification for later application.
     /// </summary>
     internal void ApplyModification(Action<ChunkData, int> modification) {
-        // Calculate which chunks are affected
-        int startChunkX = (int)Math.Floor((double)_start.X / ChunkSection.Size);
-        int startChunkZ = (int)Math.Floor((double)_start.Z / ChunkSection.Size);
-        int endChunkX = (int)Math.Ceiling((double)_end.X / ChunkSection.Size);
-        int endChunkZ = (int)Math.Ceiling((double)_end.Z / ChunkSection.Size);
+        // Calculate which chunks are affected using integer division
+        // For negative numbers, we need floor division, not truncation
+        int startChunkX = _start.X >= 0 ? _start.X / ChunkSection.Size : (_start.X - ChunkSection.Size + 1) / ChunkSection.Size;
+        int startChunkZ = _start.Z >= 0 ? _start.Z / ChunkSection.Size : (_start.Z - ChunkSection.Size + 1) / ChunkSection.Size;
+        // For end, we need ceiling division
+        int endChunkX = _end.X > 0 ? (_end.X + ChunkSection.Size - 1) / ChunkSection.Size : _end.X / ChunkSection.Size;
+        int endChunkZ = _end.Z > 0 ? (_end.Z + ChunkSection.Size - 1) / ChunkSection.Size : _end.Z / ChunkSection.Size;
 
         for (int cx = startChunkX; cx < endChunkX; cx++) {
             for (int cz = startChunkZ; cz < endChunkZ; cz++) {

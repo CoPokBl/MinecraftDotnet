@@ -28,9 +28,9 @@ internal class ChunkGenerationModifier : IGenerationModifier {
             return;
         }
 
-        // Convert to chunk-local coordinates
-        int localX = (position.X % ChunkSection.Size + ChunkSection.Size) % ChunkSection.Size;
-        int localZ = (position.Z % ChunkSection.Size + ChunkSection.Size) % ChunkSection.Size;
+        // Convert to chunk-local coordinates using bitwise AND (ChunkSection.Size is 16, a power of 2)
+        int localX = position.X & (ChunkSection.Size - 1);
+        int localZ = position.Z & (ChunkSection.Size - 1);
         int localY = position.Y - _minY;
 
         if (localY < 0 || localY >= _chunk.WorldHeight) {
