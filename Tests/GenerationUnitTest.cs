@@ -367,4 +367,68 @@ public class GenerationUnitTest {
         // targetPos (18, -64, 5) is local (2, 0, 5) in chunk (1, 0)
         Assert.That(chunk1.GetBlock(2, 0, 5), Is.EqualTo(Block.EmeraldBlock.StateId));
     }
+
+    [Test]
+    public void GenerationUnit_ForkWithSetter_SpansMultipleChunks() {
+        // Arrange - Test that a fork spanning multiple chunks works correctly
+        LambdaTerrainGenerator generator = new(unit => {
+            Vec3<int> start = unit.AbsoluteStart();
+            
+            // Only from chunk (0, 0), create a structure using setter fork
+            if (start.X == 0 && start.Z == 0) {
+                unit.Fork(setter => {
+                    // Set block in origin chunk (0, 0)
+                    setter.SetBlock(new Vec3<int>(5, -64, 5), Block.DiamondBlock);
+                    // Set block in adjacent chunk (1, 0)
+                    setter.SetBlock(new Vec3<int>(20, -64, 5), Block.EmeraldBlock);
+                    // Set block in another adjacent chunk (0, 1)
+                    setter.SetBlock(new Vec3<int>(5, -64, 20), Block.GoldBlock);
+                });
+            }
+        }, -64);
+
+        ChunkData chunk00 = new(ChunkData.VanillaOverworldHeight) { ChunkX = 0, ChunkZ = 0 };
+        ChunkData chunk10 = new(ChunkData.VanillaOverworldHeight) { ChunkX = 1, ChunkZ = 0 };
+        ChunkData chunk01 = new(ChunkData.VanillaOverworldHeight) { ChunkX = 0, ChunkZ = 1 };
+
+        // Act - Generate all chunks
+        generator.GetChunk(ref chunk00);
+        generator.GetChunk(ref chunk10);
+        generator.GetChunk(ref chunk01);
+
+        // Assert - Each block should appear in its respective chunk
+        // DiamondBlock at (5, -64, 5) in chunk (0, 0) -> local (5, 0, 5)
+        Assert.That(chunk00.GetBlock(5, 0, 5), Is.EqualTo(Block.DiamondBlock.StateId));
+        // EmeraldBlock at (20, -64, 5) in chunk (1, 0) -> local (4, 0, 5)
+        Assert.That(chunk10.GetBlock(4, 0, 5), Is.EqualTo(Block.EmeraldBlock.StateId));
+        // GoldBlock at (5, -64, 20) in chunk (0, 1) -> local (5, 0, 4)
+        Assert.That(chunk01.GetBlock(5, 0, 4), Is.EqualTo(Block.GoldBlock.StateId));
+    }
+
+    [Test]
+    public void GenerationUnit_ForkWithSetter_TargetChunkGeneratedFirst() {
+        // Arrange - Test that pending modifications work even if target chunk is generated before origin chunk
+        // (This tests that the pending modification is stored correctly)
+        LambdaTerrainGenerator generator = new(unit => {
+            Vec3<int> start = unit.AbsoluteStart();
+            
+            // Only from chunk (0, 0), create a structure using setter fork
+            if (start.X == 0 && start.Z == 0) {
+                unit.Fork(setter => {
+                    // Set block in adjacent chunk (1, 0)
+                    setter.SetBlock(new Vec3<int>(20, -64, 5), Block.EmeraldBlock);
+                });
+            }
+        }, -64);
+
+        ChunkData chunk00 = new(ChunkData.VanillaOverworldHeight) { ChunkX = 0, ChunkZ = 0 };
+        ChunkData chunk10 = new(ChunkData.VanillaOverworldHeight) { ChunkX = 1, ChunkZ = 0 };
+
+        // Act - Generate origin chunk first (creates pending modification), then target chunk
+        generator.GetChunk(ref chunk00);
+        generator.GetChunk(ref chunk10);
+
+        // Assert - Block should appear in chunk (1, 0)
+        Assert.That(chunk10.GetBlock(4, 0, 5), Is.EqualTo(Block.EmeraldBlock.StateId));
+    }
 }
