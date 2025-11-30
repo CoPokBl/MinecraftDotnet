@@ -53,7 +53,125 @@ public class GenerationUnit : IGenerationUnit {
 
     /// <inheritdoc />
     public IGenerationUnit Fork(Vec3<int> start, Vec3<int> end) {
-        return new ForkedGenerationUnit(start, end, _minY, _chunk.WorldHeight, _chunk, _pendingForkModifications);
+        ChunkData[] singleChunkArray = [_chunk];
+        return new ForkedGenerationUnit(start, end, _minY, _chunk.WorldHeight, singleChunkArray, 0, 1, _pendingForkModifications);
+    }
+}
+
+/// <summary>
+/// Represents a generation unit that spans multiple chunks.
+/// Created when GetChunks is called with multiple chunks at once.
+/// </summary>
+public class MultiChunkGenerationUnit : IGenerationUnit {
+    private readonly ChunkData[] _chunks;
+    private readonly int _startIndex;
+    private readonly int _count;
+    private readonly int _minY;
+    private readonly IGenerationModifier _modifier;
+    private readonly ConcurrentDictionary<Vec2<int>, List<Action<ChunkData>>> _pendingForkModifications;
+
+    /// <summary>
+    /// Creates a new MultiChunkGenerationUnit spanning multiple chunks.
+    /// </summary>
+    public MultiChunkGenerationUnit(ChunkData[] chunks, int startIndex, int count, int minY, 
+        ConcurrentDictionary<Vec2<int>, List<Action<ChunkData>>> pendingForkModifications) {
+        _chunks = chunks;
+        _startIndex = startIndex;
+        _count = count;
+        _minY = minY;
+        _pendingForkModifications = pendingForkModifications;
+        _modifier = new MultiChunkGenerationModifier(chunks, startIndex, count, minY);
+    }
+
+    /// <inheritdoc />
+    public Vec3<int> AbsoluteStart() {
+        int minX = int.MaxValue;
+        int minZ = int.MaxValue;
+        
+        for (int i = _startIndex; i < _startIndex + _count; i++) {
+            minX = Math.Min(minX, _chunks[i].ChunkX);
+            minZ = Math.Min(minZ, _chunks[i].ChunkZ);
+        }
+        
+        return new Vec3<int>(
+            minX * ChunkSection.Size,
+            _minY,
+            minZ * ChunkSection.Size
+        );
+    }
+
+    /// <inheritdoc />
+    public Vec3<int> AbsoluteEnd() {
+        int maxX = int.MinValue;
+        int maxZ = int.MinValue;
+        int worldHeight = _chunks[_startIndex].WorldHeight;
+        
+        for (int i = _startIndex; i < _startIndex + _count; i++) {
+            maxX = Math.Max(maxX, _chunks[i].ChunkX);
+            maxZ = Math.Max(maxZ, _chunks[i].ChunkZ);
+        }
+        
+        return new Vec3<int>(
+            (maxX + 1) * ChunkSection.Size,
+            _minY + worldHeight,
+            (maxZ + 1) * ChunkSection.Size
+        );
+    }
+
+    /// <inheritdoc />
+    public IGenerationModifier Modifier() {
+        return _modifier;
+    }
+
+    /// <inheritdoc />
+    public IGenerationUnit Fork(Vec3<int> start, Vec3<int> end) {
+        return new ForkedGenerationUnit(start, end, _minY, _chunks[_startIndex].WorldHeight, _chunks, _startIndex, _count, _pendingForkModifications);
+    }
+}
+
+/// <summary>
+/// A modifier for multi-chunk generation units that applies changes across multiple chunks.
+/// </summary>
+internal class MultiChunkGenerationModifier : IGenerationModifier {
+    private readonly ChunkData[] _chunks;
+    private readonly int _startIndex;
+    private readonly int _count;
+    private readonly int _minY;
+    private readonly ChunkGenerationModifier[] _cachedModifiers;
+
+    public MultiChunkGenerationModifier(ChunkData[] chunks, int startIndex, int count, int minY) {
+        _chunks = chunks;
+        _startIndex = startIndex;
+        _count = count;
+        _minY = minY;
+        _cachedModifiers = new ChunkGenerationModifier[count];
+        for (int i = 0; i < count; i++) {
+            _cachedModifiers[i] = new ChunkGenerationModifier(chunks[startIndex + i], minY);
+        }
+    }
+
+    public void SetBlock(Vec3<int> position, IBlock block) {
+        for (int i = 0; i < _count; i++) {
+            _cachedModifiers[i].SetBlock(position, block);
+        }
+    }
+
+    public void Fill(Vec3<int> start, Vec3<int> end, IBlock block) {
+        for (int i = 0; i < _count; i++) {
+            _cachedModifiers[i].Fill(start, end, block);
+        }
+    }
+
+    public void FillHeight(int minY, int maxY, IBlock block) {
+        for (int i = 0; i < _count; i++) {
+            int chunkAbsoluteX = _chunks[_startIndex + i].ChunkX * ChunkSection.Size;
+            int chunkAbsoluteZ = _chunks[_startIndex + i].ChunkZ * ChunkSection.Size;
+            _cachedModifiers[i].Fill(
+                new Vec3<int>(chunkAbsoluteX, minY, chunkAbsoluteZ),
+                new Vec3<int>(chunkAbsoluteX + ChunkSection.Size, maxY, chunkAbsoluteZ + ChunkSection.Size),
+                block
+            );
+        }
     }
 }
 
@@ -66,7 +184,9 @@ public class ForkedGenerationUnit : IGenerationUnit {
     private readonly Vec3<int> _end;
     private readonly int _minY;
     private readonly int _worldHeight;
-    private readonly ChunkData _originChunk;
+    private readonly ChunkData[] _originChunks;
+    private readonly int _originStartIndex;
+    private readonly int _originCount;
     private readonly ConcurrentDictionary<Vec2<int>, List<Action<ChunkData>>> _pendingModifications;
     private readonly ForkedGenerationModifier _modifier;
 
@@ -75,13 +195,17 @@ public class ForkedGenerationUnit : IGenerationUnit {
         Vec3<int> end, 
         int minY,
         int worldHeight,
-        ChunkData originChunk, 
+        ChunkData[] originChunks,
+        int originStartIndex,
+        int originCount,
         ConcurrentDictionary<Vec2<int>, List<Action<ChunkData>>> pendingModifications) {
         _start = start;
         _end = end;
         _minY = minY;
         _worldHeight = worldHeight;
-        _originChunk = originChunk;
+        _originChunks = originChunks;
+        _originStartIndex = originStartIndex;
+        _originCount = originCount;
         _pendingModifications = pendingModifications;
         _modifier = new ForkedGenerationModifier(this);
     }
@@ -98,12 +222,12 @@ public class ForkedGenerationUnit : IGenerationUnit {
     /// <inheritdoc />
     public IGenerationUnit Fork(Vec3<int> start, Vec3<int> end) {
         // Nested forks reuse the same pending modifications dictionary
-        return new ForkedGenerationUnit(start, end, _minY, _worldHeight, _originChunk, _pendingModifications);
+        return new ForkedGenerationUnit(start, end, _minY, _worldHeight, _originChunks, _originStartIndex, _originCount, _pendingModifications);
     }
 
     /// <summary>
     /// Applies a modification to all affected chunks.
-    /// If the chunk is the origin chunk, it applies immediately.
+    /// If the chunk is in the origin chunks, it applies immediately.
     /// Otherwise, it queues the modification for later application.
     /// </summary>
     internal void ApplyModification(Action<ChunkData, int> modification) {
@@ -119,9 +243,18 @@ public class ForkedGenerationUnit : IGenerationUnit {
             for (int cz = startChunkZ; cz < endChunkZ; cz++) {
                 Vec2<int> chunkPos = new(cx, cz);
                 
-                if (cx == _originChunk.ChunkX && cz == _originChunk.ChunkZ) {
+                // Check if this chunk is one of the origin chunks
+                ChunkData? originChunk = null;
+                for (int i = _originStartIndex; i < _originStartIndex + _originCount; i++) {
+                    if (_originChunks[i].ChunkX == cx && _originChunks[i].ChunkZ == cz) {
+                        originChunk = _originChunks[i];
+                        break;
+                    }
+                }
+                
+                if (originChunk != null) {
                     // Apply immediately to the origin chunk
-                    modification(_originChunk, _minY);
+                    modification(originChunk, _minY);
                 }
                 else {
                     // Queue for later application

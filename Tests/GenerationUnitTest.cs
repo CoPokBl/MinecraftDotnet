@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Terrain;
-using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
 
@@ -132,9 +131,9 @@ public class GenerationUnitTest {
     }
 
     [Test]
-    public void GeneratorTerrainProvider_GeneratesChunkWithLambda() {
+    public void LambdaTerrainGenerator_GeneratesChunkWithLambda() {
         // Arrange
-        GeneratorTerrainProvider provider = new(unit => {
+        LambdaTerrainGenerator generator = new(unit => {
             // Fill bottom layer with stone
             unit.Modifier().FillHeight(-64, -63, Block.Stone);
         }, -64);
@@ -144,8 +143,8 @@ public class GenerationUnitTest {
             ChunkZ = 0
         };
 
-        // Act
-        provider.GetChunk(ref chunk);
+        // Act - Use as ITerrainProvider directly
+        generator.GetChunk(ref chunk);
 
         // Assert - Check that the bottom layer is filled with stone
         Assert.That(chunk.GetBlock(0, 0, 0), Is.EqualTo(Block.Stone.StateId));
@@ -154,9 +153,9 @@ public class GenerationUnitTest {
     }
 
     [Test]
-    public void GeneratorTerrainProvider_Fork_ModifiesOriginChunkImmediately() {
+    public void LambdaTerrainGenerator_Fork_ModifiesOriginChunkImmediately() {
         // Arrange
-        GeneratorTerrainProvider provider = new(unit => {
+        LambdaTerrainGenerator generator = new(unit => {
             Vec3<int> start = unit.AbsoluteStart();
             
             // Fork to create a tall structure
@@ -170,7 +169,7 @@ public class GenerationUnitTest {
         };
 
         // Act
-        provider.GetChunk(ref chunk);
+        generator.GetChunk(ref chunk);
 
         // Assert - Block should be set in the origin chunk
         // start = (0, -64, 0), so (5, -64, 5) is local (5, 0, 5)
@@ -178,11 +177,11 @@ public class GenerationUnitTest {
     }
 
     [Test]
-    public void GeneratorTerrainProvider_Fork_QueuesPendingModificationsForOtherChunks() {
+    public void LambdaTerrainGenerator_Fork_QueuesPendingModificationsForOtherChunks() {
         // Arrange
         Vec3<int> targetPos = new(20, -64, 5); // This is in chunk (1, 0), not chunk (0, 0)
 
-        GeneratorTerrainProvider provider = new(unit => {
+        LambdaTerrainGenerator generator = new(unit => {
             Vec3<int> start = unit.AbsoluteStart();
             
             // Only from chunk (0, 0), create a fork that extends to chunk (1, 0)
@@ -202,8 +201,8 @@ public class GenerationUnitTest {
         };
 
         // Act - Generate first chunk, then second chunk
-        provider.GetChunk(ref chunk0);
-        provider.GetChunk(ref chunk1);
+        generator.GetChunk(ref chunk0);
+        generator.GetChunk(ref chunk1);
 
         // Assert - The block should appear in chunk (1, 0)
         // targetPos (20, -64, 5) is local (4, 0, 5) in chunk (1, 0)
@@ -238,9 +237,7 @@ public class GenerationUnitTest {
             // Add the snowman
             fork.Modifier().Fill(start, start + new Vec3<int>(3, 19, 3), Block.PowderSnow);
             fork.Modifier().SetBlock(start + new Vec3<int>(1, 19, 1), Block.JackOLantern);
-        });
-
-        GeneratorTerrainProvider provider = new(generator, -64);
+        }, -64);
 
         ChunkData chunk = new(ChunkData.VanillaOverworldHeight) {
             ChunkX = 0,
@@ -248,12 +245,41 @@ public class GenerationUnitTest {
         };
 
         // Act
-        provider.GetChunk(ref chunk);
+        generator.GetChunk(ref chunk);
 
         // Assert - Snow carpet should be present
         Assert.That(chunk.GetBlock(0, 0, 0), Is.EqualTo(Block.Snow.StateId));
         Assert.That(chunk.GetBlock(8, 3, 8), Is.EqualTo(Block.Snow.StateId));
         // Y=4 (local) = Y=-60 (absolute) should not be filled (exclusive)
         Assert.That(chunk.GetBlock(0, 4, 0), Is.Not.EqualTo(Block.Snow.StateId));
+    }
+
+    [Test]
+    public void MultiChunkGenerationUnit_GetChunks_SpansMultipleChunks() {
+        // Arrange
+        LambdaTerrainGenerator generator = new(unit => {
+            // When called with GetChunks, the unit should span all chunks
+            Vec3<int> start = unit.AbsoluteStart();
+            Vec3<int> end = unit.AbsoluteEnd();
+            
+            // Fill a layer across the entire unit
+            unit.Modifier().FillHeight(-64, -63, Block.GoldBlock);
+        }, -64);
+
+        ChunkData[] chunks = [
+            new(ChunkData.VanillaOverworldHeight) { ChunkX = 0, ChunkZ = 0 },
+            new(ChunkData.VanillaOverworldHeight) { ChunkX = 1, ChunkZ = 0 },
+            new(ChunkData.VanillaOverworldHeight) { ChunkX = 0, ChunkZ = 1 },
+            new(ChunkData.VanillaOverworldHeight) { ChunkX = 1, ChunkZ = 1 }
+        ];
+
+        // Act - Use GetChunks to generate all at once
+        generator.GetChunks(0, chunks.Length, chunks);
+
+        // Assert - All chunks should have the gold block layer
+        foreach (ChunkData chunk in chunks) {
+            Assert.That(chunk.GetBlock(0, 0, 0), Is.EqualTo(Block.GoldBlock.StateId));
+            Assert.That(chunk.GetBlock(15, 0, 15), Is.EqualTo(Block.GoldBlock.StateId));
+        }
     }
 }
