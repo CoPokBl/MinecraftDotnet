@@ -189,12 +189,14 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             .ToArray();
     }
     
+    // TODO: optimise this by removing .ToArray call
     public Entity[] GetNearbyEntities(Vec3<double> pos, double distance) {
         int chunkRadius = (int)Math.Ceiling(distance / 16) + 1;
-        Vec2<int>[] chunksToCheck = IEntityManager.GetChunksInRadius(chunkRadius);
+        
+        Vec2<int> chunkPos = World.GetChunkPos(pos);
         
         List<Entity> entities = [];
-        foreach (Vec2<int> chunk in chunksToCheck) {
+        foreach (Vec2<int> chunk in IEntityManager.GetChunksInRadius(chunkPos, chunkRadius)) {
             List<Entity>? chunkEntities = _entitiesByChunk.GetValueOrDefault(chunk);
             if (chunkEntities == null) continue;
 

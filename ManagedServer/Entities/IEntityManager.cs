@@ -32,20 +32,11 @@ public interface IEntityManager {
     void SendSpawnPackets(Entity entity, PlayerEntity player);
     void SendDespawnPackets(Entity entity, PlayerEntity player);
     
-    public static Vec2<int>[] GetChunksInRadius(int chunkRadius) {
-        int numberOfChunksInRadius = (chunkRadius * 2 + 1) * (chunkRadius * 2 + 1);
-        Vec2<int>[] chunks = new Vec2<int>[numberOfChunksInRadius];
-        int index = 0;
-        for (int x = -chunkRadius; x <= chunkRadius; x++) {
-            for (int z = -chunkRadius; z <= chunkRadius; z++) {
-                chunks[index++] = new Vec2<int>(x, z);
+    public static IEnumerable<Vec2<int>> GetChunksInRadius(Vec2<int> baseChunk, int chunkRadius) {
+        for (int dx = -chunkRadius; dx <= chunkRadius; dx++) {
+            for (int dz = -chunkRadius; dz <= chunkRadius; dz++) {
+                yield return baseChunk + new Vec2<int>(dx, dz);
             }
         }
-
-        if (index != numberOfChunksInRadius) {
-            throw new Exception("Logic error in GetChunksInRadius");
-        }
-        
-        return chunks;
     }
 }
