@@ -1,7 +1,7 @@
 namespace Minecraft.Schemas.Entities;
 
 [Flags]
-public enum ArrowFlag {
+public enum ArrowFlag : sbyte {
     Critical = 0x01,
     
     /// <summary>

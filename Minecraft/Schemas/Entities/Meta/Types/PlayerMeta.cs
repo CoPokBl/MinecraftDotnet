@@ -1,5 +1,3 @@
-using NBT;
-
 namespace Minecraft.Schemas.Entities.Meta.Types;
 
 public record PlayerMeta(

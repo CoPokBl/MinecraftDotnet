@@ -158,8 +158,12 @@ public class EntityMetaContainer {
     }
     
     public T? GetValue<T>(int index) {
-        MetaField<T>? field = GetField<T>(index);
-        return field != null ? field.Value : default;
+        if (!Fields.TryGetValue(index, out MetaField? field)) {
+            return default;
+        }
+        
+        object value = field.Value;
+        return (T?)value;
     }
     
     public EntityMetaContainer WithField<T>(int index, MetaFieldType type, T? value) {

@@ -6,7 +6,7 @@ namespace Minecraft.Schemas;
 /// <param name="present">Whether the value is present.</param>
 /// <param name="val">The value.</param>
 /// <typeparam name="T">The underlying type.</typeparam>
-public class Optional<T>(bool present, T? val) {
+public class Optional<T>(bool present, T? val) : IEquatable<Optional<T>> {
     public bool Present { get; } = present;
 
     public T Value {
@@ -32,4 +32,19 @@ public class Optional<T>(bool present, T? val) {
     }
 
     public static readonly Optional<T> Empty = new();
+    
+    public bool Equals(Optional<T>? other) {
+        if (other == null) return false;
+        if (Present != other.Present) return false;
+        if (!Present) return true; // Both are not present, so they are equal
+        return EqualityComparer<T>.Default.Equals(Value, other.Value);
+    }
+    
+    public override bool Equals(object? obj) {
+        return obj is Optional<T> other && Equals(other);
+    }
+    
+    public override int GetHashCode() {
+        return HashCode.Combine(Present, Present ? Value : default);
+    }
 }

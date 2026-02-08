@@ -20,7 +20,8 @@ public class ItemStack(
     int count = 1,
     Dictionary<IDataComponent, object>? components = null,
     IDataComponent[]? removeComponents = null) : 
-    IImmutableTaggability<ItemStack>, INetworkType<ItemStack> {
+    IImmutableTaggability<ItemStack>, INetworkType<ItemStack>, 
+    IEquatable<ItemStack> {
 
     public int Count { get; } = count;
     public IItem Type { get; }  = type;
@@ -78,7 +79,37 @@ public class ItemStack(
         }
         return true;
     }
-    
+
+    public bool Equals(ItemStack? other) {
+        if (other == null) {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other)) {
+            return true;
+        }
+
+        if (!CanStackWith(other)) {
+            return false;
+        }
+
+        if (Count != other.Count) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    public override bool Equals(object? obj) {
+        return obj is ItemStack other && Equals(other);
+    }
+
+    public override int GetHashCode() {
+        return HashCode.Combine(Type.Identifier, Count, _components.Count, _removeComponents.Length) +
+               _components.Aggregate(0, (hash, kvp) => hash ^ HashCode.Combine(kvp.Key.ProtocolId, kvp.Value)) +
+               _removeComponents.Aggregate(0, (hash, component) => hash ^ component.ProtocolId);
+    }
+
     public bool IsAir() {
         return Count == 0 || Type.Identifier == Item.Air.Identifier;
     }

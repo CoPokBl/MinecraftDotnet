@@ -1,7 +1,7 @@
 namespace Minecraft.Schemas.Entities;
 
 [Flags]
-public enum HandState {
+public enum HandState : sbyte {
     HandActive = 0x01,
     ActiveHandOffhand = 0x02,  // disable for Main hand, set for Offhand
     IsRiptideSpinAttacking = 0x04,
