@@ -1,8 +1,8 @@
 using ManagedServer.Permissions.ContainerImpl;
 
-namespace Tests;
+namespace ManagedServer.Testing.Permissions;
 
-public class PermissionsTest {
+public class NodeListPermissionsTest {
 
     [Test]
     public void TestPatternMatching() {

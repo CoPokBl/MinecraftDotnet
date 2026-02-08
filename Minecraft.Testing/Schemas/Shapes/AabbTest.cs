@@ -1,6 +1,6 @@
 using Minecraft.Schemas.Shapes;
 
-namespace Tests;
+namespace Minecraft.Testing.Schemas.Shapes;
 
 public class CollisionTest {
 

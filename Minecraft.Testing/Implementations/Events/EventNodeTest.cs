@@ -1,11 +1,11 @@
 using Minecraft.Implementations.Events;
 
-namespace Tests;
+namespace Minecraft.Testing.Implementations.Events;
 
 public class EventNodeTest {
 
     [Test]
-    public void CancelListener() {
+    public void CancelListenerTest() {
         EventNode<int> node = new();
         bool set = false;
         Action cancel = node.AddListener<int>(e => {

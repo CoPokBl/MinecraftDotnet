@@ -1,10 +1,9 @@
 using System.Collections;
-using Minecraft;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 using Newtonsoft.Json;
 
-namespace Tests;
+namespace Minecraft.Testing;
 
 public class DataTypesTest {
     

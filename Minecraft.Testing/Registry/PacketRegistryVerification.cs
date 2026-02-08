@@ -1,7 +1,7 @@
 using Minecraft.Data.Generated;
 using Minecraft.Packets;
 
-namespace Tests;
+namespace Minecraft.Testing.Registry;
 
 public class PacketRegistryVerification {
 
