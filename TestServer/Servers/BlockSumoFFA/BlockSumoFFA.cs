@@ -19,6 +19,7 @@ using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Status.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Schemas.Vec.Relative;
@@ -30,10 +31,7 @@ public static class BlockSumoFfa {
     private const int Port = 25565;
 
     public static async Task Start() {
-        Console.WriteLine("1");
-        
         ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsWithMojangAuthBundle);
-        Console.WriteLine("2");
         
         server.AddFeatures(new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
                 VersionName = "dotnet",
@@ -95,6 +93,17 @@ public static class BlockSumoFfa {
         ITerrainProvider terrain = new BlockSumoMapProvider(12);
         World world = server.CreateWorld(terrain, "minecraft:potatoland");
         world.AddFeature(new SimpleCombatFeature(500));
+        
+        Entity displayTextEntity = new(EntityType.TextDisplay) {
+            Position = new Vec3<double>(0, -4, 0),
+            Meta = new TextDisplayMeta {
+                Translation = new Vec3<float>(0, 2, 0),
+                Scale = new Vec3<float>(2, 2, 2),
+                Text = TextComponent.Text("Block Sumo FFA").WithColor(TextColor.Gold).WithBold(),
+                BillboardConstraints = DisplayMeta.BillboardConstraint.Fixed
+            }
+        };
+        world.Spawn(displayTextEntity);
 
         IBlock[] blocks = [
             Block.WhiteConcretePowder,

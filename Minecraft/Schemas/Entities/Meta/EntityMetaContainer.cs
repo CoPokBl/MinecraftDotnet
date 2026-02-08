@@ -49,6 +49,7 @@ public class EntityMetaContainer {
         { MetaFieldType.FrogVariant, (_, reader) => new MetaField<int>(MetaFieldType.FrogVariant, reader.ReadVarInt()) },
         { MetaFieldType.PigVariant, (_, reader) => new MetaField<int>(MetaFieldType.PigVariant, reader.ReadVarInt()) },
         { MetaFieldType.ChickenVariant, (_, reader) => new MetaField<int>(MetaFieldType.ChickenVariant, reader.ReadVarInt()) },
+        { MetaFieldType.ZombieNautilusVariant, (_, reader) => new MetaField<int>(MetaFieldType.ZombieNautilusVariant, reader.ReadVarInt()) },
         { MetaFieldType.OptionalGlobalPosition, (_, reader) => new MetaField<Optional<(Identifier, Vec3<int>)>>(MetaFieldType.OptionalGlobalPosition, 
             reader.ReadPrefixedOptional(r => (r.ReadString(), r.ReadPosition()))) },
         { MetaFieldType.PaintingVariant, (_, reader) => new MetaField<Or<int, PaintingVariant>>(MetaFieldType.PaintingVariant, 
@@ -57,8 +58,15 @@ public class EntityMetaContainer {
             (SnifferState)reader.ReadVarInt()) },
         { MetaFieldType.ArmadilloState, (_, reader) => new MetaField<ArmadilloState>(MetaFieldType.ArmadilloState,
             (ArmadilloState)reader.ReadVarInt()) },
+        { MetaFieldType.CopperGolemState, (_, reader) => new MetaField<CopperGolemState>(MetaFieldType.CopperGolemState,
+            (CopperGolemState)reader.ReadVarInt()) },
+        { MetaFieldType.WeatheringCopperState, (_, reader) => new MetaField<WeatheringCopperState>(MetaFieldType.WeatheringCopperState,
+            (WeatheringCopperState)reader.ReadVarInt()) },
         { MetaFieldType.Vector3, (_, reader) => new MetaField<Vec3<float>>(MetaFieldType.Vector3, reader.ReadFVec3()) },
-        { MetaFieldType.Quaternion, (_, reader) => new MetaField<Quaternion>(MetaFieldType.Quaternion, reader.ReadQuaternion()) }
+        { MetaFieldType.Quaternion, (_, reader) => new MetaField<Quaternion>(MetaFieldType.Quaternion, reader.ReadQuaternion()) },
+        // TODO: { MetaFieldType.ResolvableProfile, (_, reader) => new MetaField<ResolvableProfile>(MetaFieldType.ResolvableProfile, reader.ReadResolvableProfile()) }
+        { MetaFieldType.HumanoidArm, (_, reader) => new MetaField<HumanoidArm>(MetaFieldType.HumanoidArm,
+            (HumanoidArm)reader.ReadVarInt()) },
     };
     
     private static readonly Dictionary<MetaFieldType, Action<MinecraftRegistry, DataWriter, MetaField>> FieldTypeWriters = new() {
@@ -101,6 +109,7 @@ public class EntityMetaContainer {
         { MetaFieldType.FrogVariant, (_, writer, field) => writer.WriteVarInt(field.GetValue<int>()) },
         { MetaFieldType.PigVariant, (_, writer, field) => writer.WriteVarInt(field.GetValue<int>()) },
         { MetaFieldType.ChickenVariant, (_, writer, field) => writer.WriteVarInt(field.GetValue<int>()) },
+        { MetaFieldType.ZombieNautilusVariant, (_, writer, field) => writer.WriteVarInt(field.GetValue<int>()) },
         { MetaFieldType.OptionalGlobalPosition, (_, writer, field) => 
             writer.WritePrefixedOptional(field.GetValue<Optional<(Identifier, Vec3<int>)>>(), 
                 (tuple, w) => w.WriteString(tuple.Item1).WritePosition(tuple.Item2)) },
@@ -108,11 +117,12 @@ public class EntityMetaContainer {
             writer.WriteIdOr(field.GetValue<Or<int, PaintingVariant>>(), (v, w) => v.Write(w)) },
         { MetaFieldType.SnifferState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<SnifferState>()) },
         { MetaFieldType.ArmadilloState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<ArmadilloState>()) },
+        { MetaFieldType.CopperGolemState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<CopperGolemState>()) },
+        { MetaFieldType.WeatheringCopperState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<WeatheringCopperState>()) },
         { MetaFieldType.Vector3, (_, writer, field) => writer.WriteVec3(field.GetValue<Vec3<float>>()) },
         { MetaFieldType.Quaternion, (_, writer, field) => writer.WriteQuaternion(field.GetValue<Quaternion>()) },
-        // { MetaFieldType.ResolvableProfile, (_, writer, field) =>  }
-        
-        // TODO: The 1.21.10 ones
+        // TODO: { MetaFieldType.ResolvableProfile, (_, writer, field) =>  },
+        { MetaFieldType.HumanoidArm, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<HumanoidArm>()) },
     };
 
     public EntityMetaContainer ReadData(MinecraftRegistry reg, DataReader reader) {
