@@ -105,6 +105,12 @@ public static class BlockSumoFfa {
         };
         world.Spawn(displayTextEntity);
 
+        world.Events.AddListener<ServerTickEvent>(_ => {
+            foreach (PlayerEntity player in world.Players) {
+                server.ShowParticle(Particle.DrippingLava, player.Position + player.Direction.Multiply(2));
+            }
+        });
+
         IBlock[] blocks = [
             Block.WhiteConcretePowder,
             Block.OrangeConcretePowder,

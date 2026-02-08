@@ -247,8 +247,7 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
                 if (_waitingTeleport != -1) return;
                 OnGround = sr.Flags.HasFlag(MovePlayerFlags.OnGround);
                 
-                // TODO: Why tf does this seem to need to be inverted???
-                Move(Position, Angle.FromDegrees(sr.Pitch), Angle.FromDegrees(sr.Yaw));
+                Move(Position, Angle.FromDegrees(sr.Yaw), Angle.FromDegrees(sr.Pitch));
                 break;
             }
 

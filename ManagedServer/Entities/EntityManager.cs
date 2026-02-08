@@ -281,14 +281,13 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     }
 
     private void RotateEntity(Entity entity, Angle yaw, Angle pitch) {
-        // for some reason pitch and yaw seem reversed.
         MinecraftPacket packet = new ClientBoundUpdateEntityRotationPacket {
             EntityId = entity.NetId,
-            Pitch = yaw,
-            Yaw = pitch,
+            Pitch = pitch,
+            Yaw = yaw,
             OnGround = true
         };
-        SendPacketsToViewers(entity, packet, HeadRotPacket(entity.NetId, pitch));
+        SendPacketsToViewers(entity, packet, HeadRotPacket(entity.NetId, yaw));
     }
 
     private static ClientBoundSetHeadRotationPacket HeadRotPacket(int id, Angle yaw) {
