@@ -35,7 +35,7 @@ public record MangroveShelfBlock(Identifier Identifier, Direction Facing, bool P
     public bool SignalSource => false;
     public bool Flammable => true;
     public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
+    public int MapColorId => 28;
     public string TranslationKey => "block.minecraft.mangrove_shelf";
     public bool CanRespawnIn => false;
 

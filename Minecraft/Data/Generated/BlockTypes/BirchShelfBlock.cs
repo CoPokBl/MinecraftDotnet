@@ -35,7 +35,7 @@ public record BirchShelfBlock(Identifier Identifier, Direction Facing, bool Powe
     public bool SignalSource => false;
     public bool Flammable => true;
     public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
+    public int MapColorId => 2;
     public string TranslationKey => "block.minecraft.birch_shelf";
     public bool CanRespawnIn => false;
 

@@ -19,7 +19,7 @@ public record WaxedCopperGolemStatueBlock(Identifier Identifier, WaxedCopperGole
     public double JumpFactor => 1;
     public bool Solid => false;
     public bool Liquid => false;
-    public bool Occludes => true;
+    public bool Occludes => false;
     public bool RequiresTool => false;
     public int LightEmission => 0;
     public bool Replaceable => false;

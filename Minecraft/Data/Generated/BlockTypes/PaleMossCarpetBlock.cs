@@ -19,7 +19,7 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
     public double JumpFactor => 1;
     public bool Solid => false;
     public bool Liquid => false;
-    public bool Occludes => true;
+    public bool Occludes => false;
     public bool RequiresTool => false;
     public int LightEmission => 0;
     public bool Replaceable => false;

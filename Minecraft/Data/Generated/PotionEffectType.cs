@@ -43,4 +43,5 @@ public static class PotionEffectType {
     public static SimplePotionEffectType Weaving => new("minecraft:weaving", 36);
     public static SimplePotionEffectType Oozing => new("minecraft:oozing", 37);
     public static SimplePotionEffectType Infested => new("minecraft:infested", 38);
+    public static SimplePotionEffectType BreathOfTheNautilus => new("minecraft:breath_of_the_nautilus", 39);
 }

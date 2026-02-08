@@ -35,7 +35,7 @@ public record CrimsonShelfBlock(Identifier Identifier, Direction Facing, bool Po
     public bool SignalSource => false;
     public bool Flammable => false;
     public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
+    public int MapColorId => 53;
     public string TranslationKey => "block.minecraft.crimson_shelf";
     public bool CanRespawnIn => false;
 

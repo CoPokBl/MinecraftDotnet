@@ -172,9 +172,12 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                         Entries = new Dictionary<string, INbtTag?>(
                             Scope.Server.Dimensions
                                 .Select(kvp => new KeyValuePair<string, INbtTag?>(kvp.Key, kvp.Value.ToNbt())))
-                        // Entries = new Dictionary<string, INbtTag?> {
-                        //     { "minecraft:overworld", null }
-                        // }
+                    },
+                    new ClientBoundRegistryDataPacket {
+                        RegistryId = "minecraft:zombie_nautilus_variant",
+                        Entries = new Dictionary<string, INbtTag?> {
+                            { "minecraft:warm", null }
+                        }
                     },
                     new ClientBoundRegistryDataPacket {
                         RegistryId = "minecraft:cat_variant",

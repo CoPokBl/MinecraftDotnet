@@ -35,7 +35,7 @@ public record PaleOakShelfBlock(Identifier Identifier, Direction Facing, bool Po
     public bool SignalSource => false;
     public bool Flammable => true;
     public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
+    public int MapColorId => 14;
     public string TranslationKey => "block.minecraft.pale_oak_shelf";
     public bool CanRespawnIn => false;
 
