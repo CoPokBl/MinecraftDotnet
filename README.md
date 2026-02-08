@@ -2,7 +2,7 @@
 This project is a WIP Minecraft protocol implementation.
 
 It supports:
-- Minecraft 1.21.10
+- Minecraft 1.21.11
 - Serialising and deserialising packets
 - Sending and receiving them over TCP
 - Packet compression
@@ -32,6 +32,10 @@ Examples:
 `0.2.x` - 1.21.11  
 
 The major version is probably going to be used for Minecraft major updates.
+THERE SHOULD BE **ZERO EXPECTATION** OF BACKWARDS COMPATIBILITY BETWEEN
+MINECRAFT VERSIONS (unless protocol compatible). However, if you wish
+to use an older version of Minecraft then just use an older nuget version
+of the package.
 
 ## Contributing
 Feel free to submit a pull request with contribution. If I'm missing
