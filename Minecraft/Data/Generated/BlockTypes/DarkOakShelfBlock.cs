@@ -35,7 +35,7 @@ public record DarkOakShelfBlock(Identifier Identifier, Direction Facing, bool Po
     public bool SignalSource => false;
     public bool Flammable => true;
     public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
+    public int MapColorId => 26;
     public string TranslationKey => "block.minecraft.dark_oak_shelf";
     public bool CanRespawnIn => false;
 

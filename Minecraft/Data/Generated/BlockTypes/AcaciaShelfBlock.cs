@@ -35,7 +35,7 @@ public record AcaciaShelfBlock(Identifier Identifier, Direction Facing, bool Pow
     public bool SignalSource => false;
     public bool Flammable => true;
     public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
+    public int MapColorId => 15;
     public string TranslationKey => "block.minecraft.acacia_shelf";
     public bool CanRespawnIn => false;
 

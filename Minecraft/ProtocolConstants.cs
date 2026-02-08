@@ -8,8 +8,8 @@ public static class ProtocolConstants {
     public const int SegmentBits = 0x7F;
     public const int ContinueBit = 0x80;
     
-    public const string CurrentVersionString = "1.21.10";
-    public const int ProtocolVersion = 771;
+    public const string CurrentVersionString = "1.21.11";
+    public const int ProtocolVersion = 774;
     
-    public static readonly Version CurrentVersion = new(1, 21, 10);
+    public static readonly Version CurrentVersion = new(1, 21, 11);
 }

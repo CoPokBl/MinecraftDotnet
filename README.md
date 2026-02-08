@@ -29,8 +29,9 @@ Examples:
 ## Versioning (Protocol & Managed Server)
 `0.0.x` - 1.21.5  
 `0.1.x` - 1.21.10  
+`0.2.x` - 1.21.11  
 
-The major version is probably going to be used to Minecraft major updates.
+The major version is probably going to be used for Minecraft major updates.
 
 ## Contributing
 Feel free to submit a pull request with contribution. If I'm missing

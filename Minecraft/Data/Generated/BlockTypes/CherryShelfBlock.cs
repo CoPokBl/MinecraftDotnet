@@ -35,7 +35,7 @@ public record CherryShelfBlock(Identifier Identifier, Direction Facing, bool Pow
     public bool SignalSource => false;
     public bool Flammable => true;
     public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
+    public int MapColorId => 36;
     public string TranslationKey => "block.minecraft.cherry_shelf";
     public bool CanRespawnIn => false;
 

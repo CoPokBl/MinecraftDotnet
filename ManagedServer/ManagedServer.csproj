@@ -12,7 +12,7 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         
         <PackageId>MinecraftDotnet.ManagedServer</PackageId>
-        <Version>0.1.2</Version>
+        <Version>0.2.0</Version>
         <Title>Minecraft Server Library</Title>
         <Authors>CoPokBl</Authors>
         <Description>A library for easily creating Minecraft servers. Similar to Minestom.</Description>
