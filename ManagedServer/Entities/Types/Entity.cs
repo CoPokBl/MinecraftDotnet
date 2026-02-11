@@ -238,8 +238,8 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     }
 
     public void Despawn() {
-        Manager!.BaseEventNode.RemoveChild(Events);
-        Manager.Despawn(this);
+        Manager?.BaseEventNode.RemoveChild(Events);
+        Manager?.Despawn(this);
         Manager = null;
         World = null;
     }
