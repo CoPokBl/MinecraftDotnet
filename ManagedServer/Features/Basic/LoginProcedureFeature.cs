@@ -298,8 +298,11 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
             case ServerBoundAcknowledgeFinishConfigurationPacket: {
                 // We are now done config and are in play
                 // the player has logged in (pending play login)
+                (Guid, string) loginInfo = e.Connection.GetTag(LoginInfoTag);
+                
                 PlayerPreLoginEvent preLoginEvent = new() {
-                    Connection = e.Connection
+                    Connection = e.Connection,
+                    Uuid = loginInfo.Item1
                 };  // should have reasonable defaults
                 e.Connection.Events.CallEvent(preLoginEvent);
 
@@ -337,13 +340,11 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                 // send the play login packet
                 e.Connection.SendPacket(packet);
                 
-                (Guid, string) loginInfo = e.Connection.GetTag(LoginInfoTag);
-                
                 // create a player object
                 PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
                     NetId = pEntityId,
                     GameMode = preLoginEvent.GameMode,
-                    Uuid = loginInfo.Item1,
+                    Uuid = preLoginEvent.Uuid,
                     Skin = null
                 };
                 entity.PermissionContainer = Scope.Server.PermissionsProvider(entity);
