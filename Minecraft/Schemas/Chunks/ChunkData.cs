@@ -8,7 +8,7 @@ namespace Minecraft.Schemas.Chunks;
 public class ChunkData {
     public const int VanillaOverworldHeight = 384;  // vanilla overworld height
     
-    private int ChunkSections => WorldHeight / 16;  // number of sections in a chunk, 24 for vanilla overworld
+    private int ChunkSections => WorldHeight / ChunkSection.Size;  // number of sections in a chunk, 24 for vanilla overworld
     
     public ChunkSection[] Sections;  // bottom to top
     
@@ -71,12 +71,18 @@ public class ChunkData {
         }
     }
 
-    public void SetBlock(int x, int y, int z, uint state) {
-        int chunkSection = y / 16;  // sections from the bottom
-        int chunkY = y % 16;
+    public int GetYSection(int y, out int chunkY)
+    {
+        chunkY = y % ChunkSection.Size;
+        return y / ChunkSection.Size;  // sections from the bottom
+    }
+
+    public void SetBlock(int x, int y, int z, uint state)
+    {
+        int chunkSection = GetYSection(y, out int chunkY);
         Sections[chunkSection].SetBlock(x, chunkY, z, state);
     }
-    
+
     public void SetBlock(int x, int y, int z, IBlock block) {
         SetBlock(x, y, z, block.StateId);
     }
@@ -85,15 +91,15 @@ public class ChunkData {
         SetBlock(pos.X, pos.Y, pos.Z, block);
     }
 
-    public uint GetBlock(int x, int y, int z) {
-        int chunkSection = y / 16;  // sections from the bottom
-        int chunkY = y % 16;
+    public uint GetBlock(int x, int y, int z)
+    {
+        int chunkSection = GetYSection(y, out int chunkY);
         return Sections[chunkSection].GetBlock(x, chunkY, z);
     }
     
-    public IBlock LookupBlock(int x, int y, int z, MinecraftRegistry? registry = null) {
-        int chunkSection = y / 16;  // sections from the bottom
-        int chunkY = y % 16;
+    public IBlock LookupBlock(int x, int y, int z, MinecraftRegistry? registry = null)
+    {
+        int chunkSection = GetYSection(y, out int chunkY);
         return Sections[chunkSection].LookupBlock(x, chunkY, z, registry);
     }
     
