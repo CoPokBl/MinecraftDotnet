@@ -88,6 +88,10 @@ public abstract class Inventory : IViewable {
             SendUpdateTo(p);
         }
         
+        Events.CallEvent(new InventoryClearEvent() { 
+            Inventory = this 
+        });
+
         Refresh(); // Notify that the inventory has changed
     }
 
