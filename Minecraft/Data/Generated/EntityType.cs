@@ -113,7 +113,7 @@ public static class EntityType {
     public static SimpleEntityType Player => new("minecraft:player", 155, false, 0.6, 1.8, 1.62, 0.08, 0.02, 32);
     public static SimpleEntityType PolarBear => new("minecraft:polar_bear", 104, false, 1.4, 1.4, 1.19, 0.08, 0.02, 10);
     public static SimpleEntityType Pufferfish => new("minecraft:pufferfish", 107, false, 0.7, 0.7, 0.455, 0.08, 0.02, 4);
-    public static SimpleEntityType Rabbit => new("minecraft:rabbit", 108, false, 0.4, 0.5, 0.425, 0.08, 0.02, 8);
+    public static SimpleEntityType Rabbit => new("minecraft:rabbit", 108, false, 0.49, 0.6, 0.63, 0.08, 0.02, 8);
     public static SimpleEntityType Ravager => new("minecraft:ravager", 109, false, 1.95, 2.2, 1.8700001, 0.08, 0.02, 10);
     public static SimpleEntityType Salmon => new("minecraft:salmon", 110, false, 0.7, 0.4, 0.26, 0.08, 0.02, 4);
     public static SimpleEntityType Sheep => new("minecraft:sheep", 111, false, 0.9, 1.3, 1.235, 0.08, 0.02, 10);
