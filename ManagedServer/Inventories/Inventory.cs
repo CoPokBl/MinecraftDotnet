@@ -88,6 +88,10 @@ public abstract class Inventory : IViewable {
             SendUpdateTo(p);
         }
         
+        Events.CallEvent(new InventoryClearEvent() { 
+            Inventory = this 
+        });
+
         Refresh(); // Notify that the inventory has changed
     }
 
@@ -105,7 +109,7 @@ public abstract class Inventory : IViewable {
         
         // If no similar item found, return the first empty slot
         foreach (int i in order) {
-            if (this[i] == ItemStack.Air) {
+            if (this[i].IsAir()) {
                 return i; // Found an empty slot
             }
         }
@@ -139,7 +143,7 @@ public abstract class Inventory : IViewable {
                 return remainingItem; // Return the remaining item if we couldn't add it
             }
             
-            if (this[bestSlot] == ItemStack.Air) {
+            if (this[bestSlot].IsAir()) {
                 // Found an empty slot, place the item here
                 this[bestSlot] = remainingItem;
                 return null; // Item added successfully
