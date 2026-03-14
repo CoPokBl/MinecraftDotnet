@@ -7,3 +7,4 @@ riderModule.iml
 .idea/
 **/*.trx
 **/TestResults
+/.vs
