@@ -19,6 +19,7 @@ using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Blocks;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Items;
@@ -446,6 +447,117 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
         
         SendBlockUpdate(pos, this);
+    }
+
+    public async Task SetBlocksAsync(BlockUpdate[] blockUpdates)
+    {
+        if (Immutable)
+            throw new InvalidOperationException("World is immutable, cannot set block data.");
+
+        // 1. Group them into their Chunks
+        Vec2<int>[] chunksPositions = new Vec2<int>[blockUpdates.Length];
+        Vec3<int>[] localChunkPos = new Vec3<int>[blockUpdates.Length];
+
+        for (int i = 0; i < blockUpdates.Length; i++)
+        {
+            CheckY(blockUpdates[i].Location.Y);
+
+            chunksPositions[i] = GetChunkPos(blockUpdates[i].Location);
+            localChunkPos[i] = ToChunkLocalPos(blockUpdates[i].Location);
+        }
+
+        Dictionary<Vec2<int>, List<(Vec3<int> LocalPos, int Index)>> groupedChunkPositionLocalPositionWithLocalIndex = 
+            chunksPositions
+            .Select((chunkPos, index) => new 
+            { 
+                ChunkPos = chunkPos, 
+                LocalPos = localChunkPos[index], 
+                Index = index 
+            })
+            .GroupBy(x => x.ChunkPos)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Select(x => (x.LocalPos, x.Index)).ToList()
+            );
+
+        // 2. Load Required Chunks and blocks
+        await Task.WhenAll(groupedChunkPositionLocalPositionWithLocalIndex
+            .Keys
+            .Select(LoadChunk)
+            .ToArray()
+        );
+
+        // 3. Call Events
+        bool[] eventCancelled = new bool[blockUpdates.Length];
+
+        for (int i = 0; i < blockUpdates.Length; i++)
+        {
+            WorldChangeEvent changeEvent = new()
+            {
+                World = this,
+                Position = blockUpdates[i].Location,
+                OldState = GetBlock(blockUpdates[i].Location),
+                NewState = blockUpdates[i].Block
+            };
+            Events.CallEvent(changeEvent);
+
+            eventCancelled[i] = changeEvent.Cancelled;
+        }
+
+        // 4. Write the blocks into the world and prepare packets
+        List<ClientBoundSectionBlocksUpdatePacket> packets = [];
+
+        foreach (KeyValuePair<Vec2<int>, List<(Vec3<int> LocalPos, int Index)>> group in groupedChunkPositionLocalPositionWithLocalIndex)
+        {
+            ChunkData data = RetrieveChunk(group.Key)!;
+
+            var bottomUp = group.Value.OrderBy(d => d.LocalPos.Y);
+
+            List<BlockUpdate> updatesInSection = [];
+
+            int? currentSection = null;
+            foreach ((Vec3<int> LocalPos, int Index) position in bottomUp)
+            {
+                if (eventCancelled[position.Index])
+                    continue;
+
+                data.SetBlock(GameToProtocolPos(position.LocalPos), blockUpdates[position.Index].Block);
+
+                int chunkSection = data.GetYSection(position.LocalPos.Y, out _);
+                currentSection ??= chunkSection;
+                if (currentSection != chunkSection)
+                {
+                    // New section started
+                    packets.Add(new ClientBoundSectionBlocksUpdatePacket()
+                    {
+                        ChunkSectionPosition = new Vec3<int>(group.Key.X, currentSection.Value, group.Key.Y),
+                        BlockUpdates = updatesInSection.ToArray()
+                    });
+
+                    currentSection = chunkSection;
+                    updatesInSection = [];
+                }
+
+                updatesInSection.Add(blockUpdates[position.Index]);
+            }
+
+            // Packet of the last section
+            if (currentSection != null)
+            {
+                packets.Add(new ClientBoundSectionBlocksUpdatePacket()
+                {
+                    ChunkSectionPosition = new Vec3<int>(group.Key.X, currentSection.Value, group.Key.Y),
+                    BlockUpdates = updatesInSection.ToArray()
+                });
+            }
+        }
+
+        // 5. Send out the update packets to the players
+        foreach (ClientBoundSectionBlocksUpdatePacket packet in packets)
+        {
+            IAudience audience = GetAudienceOf(packet.ChunkSectionPosition.XZ);
+            audience.SendPacket(packet);
+        }
     }
 
     #endregion
