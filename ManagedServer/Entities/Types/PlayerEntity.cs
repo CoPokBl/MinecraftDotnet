@@ -294,9 +294,6 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
                     case ServerBoundPlayerActionPacket.Status.UpdateHeldItem:
                         Inventory.SendUpdateTo(this);
                         break;
-                    case ServerBoundPlayerActionPacket.Status.SwapItem:
-                        SwapHeld();
-                        break;
                 }
                 break;
             }

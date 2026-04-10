@@ -71,8 +71,13 @@ public class AnvilLoader : ITerrainProvider {
         }
 
         foreach (string regionFile in regionFiles) {
-            AnvilRegionFile region = new(regionFile);
-            _regions[Path.GetFileName(regionFile)] = region;
+            try {
+                AnvilRegionFile region = new(regionFile);
+                _regions[Path.GetFileName(regionFile)] = region;
+            }
+            catch (Exception) {
+                // Ignored, invalid chunk or something
+            }
         }
     }
 
