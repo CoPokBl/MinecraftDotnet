@@ -1,4 +1,5 @@
 using ManagedServer;
+using ManagedServer.Bossbar;
 using ManagedServer.Commands;
 using ManagedServer.Commands.Arguments;
 using ManagedServer.Entities.Types;
@@ -184,6 +185,8 @@ public static class BlockSumoFfa {
             };
             e.Connection.SendPacket(links);
         }, true);
+
+        BossBar bar = new("Block Sumo FFA!");
         
         server.Events.AddListener<PlayerLoginEvent>(e => {
             e.Player.Teleport(spawn);
@@ -194,6 +197,8 @@ public static class BlockSumoFfa {
                 server.SendMessage(
                     TextComponent.FromLegacyString("&7[&c-&7] " + e.Player.Name + " &7left the game :("));
             };
+            
+            bar.AddViewer(e.Player);
         });
         
         TcpMinecraftListener listener = new(connection => {
