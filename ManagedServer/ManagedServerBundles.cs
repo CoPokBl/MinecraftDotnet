@@ -35,6 +35,13 @@ public partial class ManagedMinecraftServer {
             .Replace(new LoginProcedureFeature(true, true))
             .With(new MojangAuthenticationFeature());
 
+    /// <summary>
+    /// The basics bundle but with connection encryption disabled because
+    /// velocity does not support it.
+    /// </summary>
+    public static FeatureBundle BasicsWithProxySupport => BasicsBundle
+            .Replace(new LoginProcedureFeature(false));
+
     public static ManagedMinecraftServer NewBasic() {
         return New(BasicsBundle);
     }
