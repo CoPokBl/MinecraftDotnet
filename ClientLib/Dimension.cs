@@ -5,47 +5,36 @@ using NBT.Tags;
 namespace ClientLib;
 
 public record Dimension(
-    long? FixedTime = null, 
+    bool HasFixedTime = false,
     bool HasSkyLight = true, 
     bool HasCeiling = false, 
-    bool UltraWarm = false,
-    bool IsNatural = true,
     double CoordinateScale = 1.0,
-    bool BedWorks = true,
-    bool RespawnAnchorWorks = true,
     int MinY = -64,
     int Height = 384,
     int LogicalHeight = 256,
     string InfiniBurn = "#",
-    string Effects = "minecraft:overworld",
+    string Skybox = "overworld",
+    string CardinalLight = "default",
     float AmbientLight = 0.0f,
-    bool PiglinSafe = true,
-    bool HasRaids = true,
     Or<int, CompoundTag>? MonsterSpawnLightLevel = null,
-    int MonsterSpawnBlockLightLimit = 0) {
+    int MonsterSpawnBlockLightLimit = 0,
+    CompoundTag? Attributes = null,
+    INbtTag? Timelines = null) {
 
     public INbtTag ToNbt() {
         List<INbtTag?> children = [];
         
-        if (FixedTime.HasValue) {
-            children.Add(new LongTag("fixed_time", FixedTime.Value));
-        }
-        
+        children.Add(new BooleanTag("has_fixed_time", HasFixedTime));
         children.Add(new BooleanTag("has_skylight", HasSkyLight));
         children.Add(new BooleanTag("has_ceiling", HasCeiling));
-        children.Add(new BooleanTag("ultrawarm", UltraWarm));
-        children.Add(new BooleanTag("natural", IsNatural));
         children.Add(new DoubleTag("coordinate_scale", CoordinateScale));
-        children.Add(new BooleanTag("bed_works", BedWorks));
-        children.Add(new BooleanTag("respawn_anchor_works", RespawnAnchorWorks));
         children.Add(new IntegerTag("min_y", MinY));
         children.Add(new IntegerTag("height", Height));
         children.Add(new IntegerTag("logical_height", LogicalHeight));
         children.Add(new StringTag("infiniburn", InfiniBurn));
-        children.Add(new StringTag("effects", Effects));
+        children.Add(new StringTag("skybox", Skybox));
+        children.Add(new StringTag("cardinal_light", CardinalLight));
         children.Add(new FloatTag("ambient_light", AmbientLight));
-        children.Add(new BooleanTag("piglin_safe", PiglinSafe));
-        children.Add(new BooleanTag("has_raids", HasRaids));
         
         Or<int, CompoundTag> msll = MonsterSpawnLightLevel ?? new Or<int, CompoundTag>(0);
         if (msll.IsValue1) {
@@ -56,6 +45,15 @@ public record Dimension(
         }
         
         children.Add(new IntegerTag("monster_spawn_block_light_limit", MonsterSpawnBlockLightLimit));
+        
+        if (Attributes != null) {
+            children.Add(Attributes.WithName("attributes"));
+        }
+        
+        if (Timelines != null) {
+            children.Add(Timelines.WithName("timelines"));
+        }
+        
         return new CompoundTag(null, children.ToArray());
     }
     
@@ -64,8 +62,8 @@ public record Dimension(
             throw new ArgumentException("Expected a CompoundTag for Dimension");
         }
         
-        ct.ChildrenMap.TryGetValue("fixed_time", out INbtTag? fixedTimeTag);
-        long? fixedTime = fixedTimeTag?.GetLong();
+        ct.ChildrenMap.TryGetValue("has_fixed_time", out INbtTag? hasFixedTimeTag);
+        bool hasFixedTime = hasFixedTimeTag?.GetBoolean() ?? false;
         
         ct.ChildrenMap.TryGetValue("has_skylight", out INbtTag? hasSkyLightTag);
         bool hasSkyLight = hasSkyLightTag?.GetBoolean() ?? true;
@@ -73,20 +71,8 @@ public record Dimension(
         ct.ChildrenMap.TryGetValue("has_ceiling", out INbtTag? hasCeilingTag);
         bool hasCeiling = hasCeilingTag?.GetBoolean() ?? false;
         
-        ct.ChildrenMap.TryGetValue("ultrawarm", out INbtTag? ultraWarmTag);
-        bool ultraWarm = ultraWarmTag?.GetBoolean() ?? false;
-        
-        ct.ChildrenMap.TryGetValue("natural", out INbtTag? isNaturalTag);
-        bool isNatural = isNaturalTag?.GetBoolean() ?? true;
-        
         ct.ChildrenMap.TryGetValue("coordinate_scale", out INbtTag? coordinateScaleTag);
         double coordinateScale = coordinateScaleTag?.GetDouble() ?? 1.0;
-        
-        ct.ChildrenMap.TryGetValue("bed_works", out INbtTag? bedWorksTag);
-        bool bedWorks = bedWorksTag?.GetBoolean() ?? true;
-        
-        ct.ChildrenMap.TryGetValue("respawn_anchor_works", out INbtTag? respawnAnchorWorksTag);
-        bool respawnAnchorWorks = respawnAnchorWorksTag?.GetBoolean() ?? true;
         
         ct.ChildrenMap.TryGetValue("min_y", out INbtTag? minYTag);
         int minY = minYTag?.GetInteger() ?? -64;
@@ -100,17 +86,14 @@ public record Dimension(
         ct.ChildrenMap.TryGetValue("infiniburn", out INbtTag? infiniburnTag);
         string infiniburn = infiniburnTag?.GetString() ?? "#";
         
-        ct.ChildrenMap.TryGetValue("effects", out INbtTag? effectsTag);
-        string effects = effectsTag?.GetString() ?? "minecraft:overworld";
+        ct.ChildrenMap.TryGetValue("skybox", out INbtTag? skyboxTag);
+        string skybox = skyboxTag?.GetString() ?? "overworld";
+        
+        ct.ChildrenMap.TryGetValue("cardinal_light", out INbtTag? cardinalLightTag);
+        string cardinalLight = cardinalLightTag?.GetString() ?? "default";
         
         ct.ChildrenMap.TryGetValue("ambient_light", out INbtTag? ambientLightTag);
         float ambientLight = ambientLightTag?.GetFloat() ?? 0.0f;
-        
-        ct.ChildrenMap.TryGetValue("piglin_safe", out INbtTag? piglinSafeTag);
-        bool piglinSafe = piglinSafeTag?.GetBoolean() ?? true;
-        
-        ct.ChildrenMap.TryGetValue("has_raids", out INbtTag? hasRaidsTag);
-        bool hasRaids = hasRaidsTag?.GetBoolean() ?? true;
         
         ct.ChildrenMap.TryGetValue("monster_spawn_light_level", out INbtTag? monsterSpawnLightLevelTag);
         Or<int, CompoundTag>? monsterSpawnLightLevel = null;
@@ -125,24 +108,26 @@ public record Dimension(
         ct.ChildrenMap.TryGetValue("monster_spawn_block_light_limit", out INbtTag? monsterSpawnBlockLightLimitTag);
         int monsterSpawnBlockLightLimit = monsterSpawnBlockLightLimitTag?.GetInteger() ?? 0;
         
+        ct.ChildrenMap.TryGetValue("attributes", out INbtTag? attributesTag);
+        CompoundTag? attributes = attributesTag as CompoundTag;
+        
+        ct.ChildrenMap.TryGetValue("timelines", out INbtTag? timelines);
+        
         return new Dimension(
-            fixedTime,
+            hasFixedTime,
             hasSkyLight,
             hasCeiling,
-            ultraWarm,
-            isNatural,
             coordinateScale,
-            bedWorks,
-            respawnAnchorWorks,
             minY,
             height,
             logicalHeight,
             infiniburn,
-            effects,
+            skybox,
+            cardinalLight,
             ambientLight,
-            piglinSafe,
-            hasRaids,
             monsterSpawnLightLevel,
-            monsterSpawnBlockLightLimit);
+            monsterSpawnBlockLightLimit,
+            attributes,
+            timelines);
     }
 }
