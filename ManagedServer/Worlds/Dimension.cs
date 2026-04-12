@@ -4,49 +4,50 @@ using NBT.Tags;
 
 namespace ManagedServer.Worlds;
 
+public enum CardinalLight {
+    Default,
+    Nether,
+}
+
+public enum Skybox {
+    None,
+    Overworld,
+    End
+}
+
 public record Dimension(
-    long? FixedTime = null, 
+    bool HasFixedTime = false, 
     bool HasSkyLight = true, 
-    bool HasCeiling = false, 
-    bool UltraWarm = false,
-    bool IsNatural = true,
+    bool HasCeiling = false,
     double CoordinateScale = 1.0,
-    bool BedWorks = true,
-    bool RespawnAnchorWorks = true,
     int MinY = -64,
     int Height = 384,
     int LogicalHeight = 256,
     string InfiniBurn = "#",
-    string Effects = "minecraft:overworld",
-    float AmbientLight = 0.0f,
-    bool PiglinSafe = true,
-    bool HasRaids = true,
-    Or<int, CompoundTag>? MonsterSpawnLightLevel = null,
-    int MonsterSpawnBlockLightLimit = 0) {
+    Skybox Skybox = Skybox.Overworld,
+    CardinalLight CardinalLight = CardinalLight.Default,
+    float AmbientLight = 0.0f, 
+    Or<int, CompoundTag>? MonsterSpawnLightLevel = null, 
+    int MonsterSpawnBlockLightLimit = 0,
+    CompoundTag? Attributes = null,
+    INbtTag? Timelines = null
+) {
 
     public INbtTag ToNbt() {
-        List<INbtTag?> children = [];
-        
-        if (FixedTime.HasValue) {
-            children.Add(new LongTag("fixed_time", FixedTime.Value));
-        }
-        
-        children.Add(new BooleanTag("has_skylight", HasSkyLight));
-        children.Add(new BooleanTag("has_ceiling", HasCeiling));
-        children.Add(new BooleanTag("ultrawarm", UltraWarm));
-        children.Add(new BooleanTag("natural", IsNatural));
-        children.Add(new DoubleTag("coordinate_scale", CoordinateScale));
-        children.Add(new BooleanTag("bed_works", BedWorks));
-        children.Add(new BooleanTag("respawn_anchor_works", RespawnAnchorWorks));
-        children.Add(new IntegerTag("min_y", MinY));
-        children.Add(new IntegerTag("height", Height));
-        children.Add(new IntegerTag("logical_height", LogicalHeight));
-        children.Add(new StringTag("infiniburn", InfiniBurn));
-        children.Add(new StringTag("effects", Effects));
-        children.Add(new FloatTag("ambient_light", AmbientLight));
-        children.Add(new BooleanTag("piglin_safe", PiglinSafe));
-        children.Add(new BooleanTag("has_raids", HasRaids));
-        
+        List<INbtTag?> children = [
+            new BooleanTag("has_fixed_time", HasFixedTime),
+            new BooleanTag("has_skylight", HasSkyLight),
+            new BooleanTag("has_ceiling", HasCeiling),
+            new DoubleTag("coordinate_scale", CoordinateScale),
+            new IntegerTag("min_y", MinY),
+            new IntegerTag("height", Height),
+            new IntegerTag("logical_height", LogicalHeight),
+            new StringTag("infiniburn", InfiniBurn),
+            new StringTag("skybox", Skybox.ToString().ToLower()),
+            new StringTag("cardinal_light", CardinalLight.ToString().ToLower()),
+            new FloatTag("ambient_light", AmbientLight)
+        ];
+
         Or<int, CompoundTag> msll = MonsterSpawnLightLevel ?? new Or<int, CompoundTag>(0);
         if (msll.IsValue1) {
             children.Add(new IntegerTag("monster_spawn_light_level", msll.Value1));
@@ -56,6 +57,15 @@ public record Dimension(
         }
         
         children.Add(new IntegerTag("monster_spawn_block_light_limit", MonsterSpawnBlockLightLimit));
+        
+        if (Attributes != null) {
+            children.Add(Attributes.WithName("attributes"));
+        }
+
+        if (Timelines != null) {
+            children.Add(Timelines.WithName("timelines"));
+        }
+        
         return new CompoundTag(null, children.ToArray());
     }
 }
