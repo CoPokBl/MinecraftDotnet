@@ -20,6 +20,7 @@ using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
 using Minecraft.Registry;
+using Minecraft.Schemas;
 
 namespace ManagedServer;
 
@@ -55,7 +56,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public int WorldTickDelayMs { get; set; } = 50;
     public bool AllowListeningToUnCalledEvents { get; set; } = false;
     public int TargetTicksPerSecond { get; set; } = 20;
-    public Dictionary<string, Dimension> Dimensions { get; } = new() {
+    public Dictionary<Identifier, Dimension> Dimensions { get; } = new() {
         { "minecraft:overworld", new Dimension() },
         { "minecraft:dummy_world", new Dimension() }  // Dummy world for respawning players
     };
@@ -210,11 +211,21 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         LogAction(exception.ToString());
     }
 
-    public World CreateWorld(ITerrainProvider provider, string dimension = "minecraft:overworld", ILightingProvider? lightingProvider = null) {
-        if (!Dimensions.ContainsKey(dimension)) {
+    /// <summary>
+    /// Create a world with the given parameters.
+    /// </summary>
+    /// <param name="provider">The provider for the terrain generation.</param>
+    /// <param name="dimension">The dimension ID from <see cref="Dimensions"/>.</param>
+    /// <param name="lightingProvider">The lighting provider.</param>
+    /// <returns>The newly created world.</returns>
+    /// <exception cref="ArgumentException">The dimension is not present in <see cref="Dimensions"/>.</exception>
+    public World CreateWorld(ITerrainProvider provider, Identifier? dimension = null, ILightingProvider? lightingProvider = null) {
+        dimension ??= "minecraft:overworld";
+        
+        if (!Dimensions.ContainsKey(dimension.Value)) {
             throw new ArgumentException($"Dimension '{dimension}' does not exist. Please add it to the Dimensions dictionary.");
         }
-        World world = new(this, Events, provider, dimension, lightingProvider, ViewDistance, 
+        World world = new(this, Events, provider, dimension.Value, lightingProvider, ViewDistance, 
             WorldPacketsPerTick, WorldTickDelayMs) {
             Server = this
         };
