@@ -227,6 +227,40 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         return (registry ?? VanillaRegistry.Data).Blocks.GetByStateId(GetBlock(pos));
     }
     
+    /// <summary>
+    /// Fills <paramref name="target"/> with the block state ID at every position in YZX order
+    /// (Y outermost, X fastest — the same layout used by <see cref="IndirectPalette.Blocks"/>).
+    /// <paramref name="target"/> must have at least 4096 elements.
+    /// <p/>
+    /// This avoids repeated palette decode and registry lookups in hot paths such as lighting.
+    /// </summary>
+    public void FillFlatStateIds(Span<uint> target) {
+        // Fast path: SingleValuePalette — every position has the same state ID
+        if (_palette is SingleValuePalette svp) {
+            target[..4096].Fill(svp.Value);
+            return;
+        }
+
+        // Fast path: IndirectPalette — blocks are already stored in YZX/flat order
+        if (_palette is IndirectPalette ip) {
+            ReadOnlySpan<ushort> blocks = ip.Blocks;
+            ReadOnlySpan<uint> palette = ip.PaletteValues;
+            for (int i = 0; i < 4096; i++) {
+                target[i] = palette[blocks[i]];
+            }
+            return;
+        }
+
+        // Fallback: section is in unpacked _blocks form (or an unrecognised palette type)
+        for (int y = 0; y < Size; y++) {
+            for (int z = 0; z < Size; z++) {
+                for (int x = 0; x < Size; x++) {
+                    target[y * 256 + z * 16 + x] = GetBlock(x, y, z);
+                }
+            }
+        }
+    }
+
     public void SetBiome(int x, int y, int z, uint state) {
         if (_biomesPalette is SingleValuePalette svp && svp.Value == state) {
             // If the palette is already a single value, we can just return

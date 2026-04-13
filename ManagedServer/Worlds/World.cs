@@ -100,7 +100,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         _viewDistance = viewDistance;
         _packetsPerTick = packetsPerTick;
         _tickDelayMs = tickDelayMs;
-        _lighting = lighting ?? new FullBrightLightingProvider();
+        _lighting = lighting ?? new CalculatedLightingProvider();
         Server = server;
         DimensionId = dimensionId;
         Events = baseEventNode.CreateChild<IWorldEvent>(e => e.World == this);
@@ -410,6 +410,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         LoadChunk(chunk);
         ChunkData data = RetrieveChunk(chunk)!;
         data.SetBlock(localPos, block);
+        _lighting.Invalidate(chunk);
         if (blockEntityType == null) {
             data.BlockEntities.Remove(pos);
         }
@@ -514,6 +515,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             var bottomUp = group.Value.OrderBy(d => d.LocalPos.Y);
 
             List<BlockUpdate> updatesInSection = [];
+            bool anyWritten = false;
 
             int? currentSection = null;
             foreach ((Vec3<int> LocalPos, int Index) position in bottomUp)
@@ -522,6 +524,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                     continue;
 
                 data.SetBlock(GameToProtocolPos(position.LocalPos), blockUpdates[position.Index].Block);
+                anyWritten = true;
 
                 int chunkSection = data.GetYSection(position.LocalPos.Y, out _);
                 currentSection ??= chunkSection;
@@ -550,6 +553,9 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                     BlockUpdates = updatesInSection.ToArray()
                 });
             }
+
+            if (anyWritten)
+                _lighting.Invalidate(group.Key);
         }
 
         // 5. Send out the update packets to the players
@@ -743,7 +749,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 ChunkX = chunkPos.X,
                 ChunkZ = chunkPos.Y,
                 Data = data,
-                Light = _lighting.GenerateLighting(data, this)
+                Light = _lighting.GetLighting(chunkPos, data, RetrieveChunk, Server.Registry, Dimension.HasSkyLight)
             });
         });
     }
@@ -819,7 +825,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             ChunkX = pos.X,
             ChunkZ = pos.Y,
             Data = data,
-            Light = _lighting.GenerateLighting(data, this)
+            Light = _lighting.GetLighting(pos, data, RetrieveChunk, Server.Registry, Dimension.HasSkyLight)
         });
     }
 
@@ -833,7 +839,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 ChunkX = data.ChunkX,
                 ChunkZ = data.ChunkZ,
                 Data = data,
-                Light = _lighting.GenerateLighting(data, this)
+                Light = _lighting.GetLighting(new Vec2<int>(data.ChunkX, data.ChunkZ), data, RetrieveChunk, Server.Registry, Dimension.HasSkyLight)
             });
         }
     }

@@ -17,6 +17,8 @@ public class BlockRegistry : ProtocolTypeRegistry<BlockRegistry, IBlock> {
     private readonly Dictionary<uint, IBlock> _defaultByState = new();
 
     public long StatesCount => _defaultByState.Count;
+
+    public IReadOnlyDictionary<uint, IBlock> StatesByStateId => _defaultByState;
     
     public IBlock GetByStateId(uint state) {
         return _defaultByState[state].WithState(state);
