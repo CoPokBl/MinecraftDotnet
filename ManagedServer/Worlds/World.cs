@@ -751,7 +751,26 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                 Data = data,
                 Light = _lighting.GetLighting(chunkPos, data, RetrieveChunk, Server.Registry, Dimension.HasSkyLight)
             });
+
+            // This chunk may have been missing when neighbors' lighting was computed.
+            // Invalidate their cached lighting so it gets recomputed with this chunk
+            // available for border exchange, then resend to any viewers.
+            ResendNeighborLighting(chunkPos);
         });
+    }
+
+    private void ResendNeighborLighting(Vec2<int> chunkPos) {
+        ReadOnlySpan<Vec2<int>> offsets = [new(1, 0), new(-1, 0), new(0, 1), new(0, -1)];
+        foreach (Vec2<int> offset in offsets) {
+            Vec2<int> nPos = chunkPos + offset;
+            if (!IsChunkLoaded(nPos)) continue;
+            _lighting.Invalidate(nPos);
+            try {
+                SendChunkUpdate(nPos, GetAudienceOf(nPos));
+            } catch {
+                // Neighbor may have been unloaded between the check and the send
+            }
+        }
     }
     
     private ChunkData? RetrieveChunk(Vec2<int> pos) {

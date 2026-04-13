@@ -70,7 +70,18 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
 
     public LightData GetLighting(Vec2<int> chunkPos, ChunkData chunk,
         Func<Vec2<int>, ChunkData?>? neighborLookup, MinecraftRegistry registry, bool hasSkyLight) {
-        return _cache.GetOrAdd(chunkPos, _ => Compute(chunk, chunkPos, neighborLookup, hasSkyLight));
+        if (_cache.TryGetValue(chunkPos, out LightData? cached))
+            return cached;
+
+        LightData result = Compute(chunk, chunkPos, neighborLookup, hasSkyLight, out bool borderComplete);
+
+        // Only cache when every neighbor was available for border exchange.
+        // Incomplete results are recomputed on the next call, at which point
+        // the missing neighbor may have been loaded.
+        if (borderComplete)
+            _cache.TryAdd(chunkPos, result);
+
+        return result;
     }
 
     public void Invalidate(Vec2<int> chunkPos) {
@@ -84,7 +95,8 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
     // ── Core computation ────────────────────────────────────────────────────
 
     private LightData Compute(ChunkData chunk, Vec2<int> pos,
-        Func<Vec2<int>, ChunkData?>? neighborLookup, bool hasSkyLight) {
+        Func<Vec2<int>, ChunkData?>? neighborLookup, bool hasSkyLight,
+        out bool borderComplete) {
 
         ChunkSection[] sections = chunk.Sections;
         int numSections = sections.Length;
@@ -99,6 +111,8 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
         byte[] blockNibbles = ArrayPool<byte>.Shared.Rent(nibbleSize);
         int[] queue = ArrayPool<int>.Shared.Rent(QueueCapacity);
         uint[] sectionBuf = ArrayPool<uint>.Shared.Rent(4096);
+
+        borderComplete = true;
 
         try {
             Array.Clear(skyNibbles, 0, nibbleSize);
@@ -121,7 +135,7 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
             if (neighborLookup != null)
                 ApplyBorderExchange(skyNibbles, blockNibbles, faceFlat, blockSrcFace,
                     numSections, totalHeight, flatSize, pos, neighborLookup, hasSkyLight,
-                    queue, sectionBuf);
+                    queue, sectionBuf, out borderComplete);
 
             return BuildLightData(skyNibbles, blockNibbles, numSections, nibbleSize, hasSkyLight);
         }
@@ -404,8 +418,10 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
         byte[] skyNibbles, byte[] blockNibbles, byte[] faceFlat, byte[] blockSrcFace,
         int numSections, int totalHeight, int flatSize,
         Vec2<int> pos, Func<Vec2<int>, ChunkData?> neighborLookup,
-        bool hasSkyLight, int[] queue, uint[] sectionBuf) {
+        bool hasSkyLight, int[] queue, uint[] sectionBuf,
+        out bool allNeighborsPresent) {
 
+        allNeighborsPresent = true;
         int nibbleSize = numSections * 2048;
         int maxBorderSeeds = 16 * totalHeight * 4; // 4 borders
 
@@ -432,7 +448,7 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
             for (int b = 0; b < 4; b++) {
                 Vec2<int> neighborPos = pos + new Vec2<int>(borderDx[b], borderDz[b]);
                 ChunkData? neighborChunk = neighborLookup(neighborPos);
-                if (neighborChunk == null) continue;
+                if (neighborChunk == null) { allNeighborsPresent = false; continue; }
                 if (neighborChunk.Sections.Length != numSections) continue;
 
                 // Compute neighbor's internal light
