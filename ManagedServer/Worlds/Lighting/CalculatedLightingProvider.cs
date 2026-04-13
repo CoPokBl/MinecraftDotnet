@@ -94,6 +94,7 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
 
         byte[] faceFlat = ArrayPool<byte>.Shared.Rent(flatSize);
         byte[] emissionFlat = ArrayPool<byte>.Shared.Rent(flatSize);
+        byte[] blockSrcFace = ArrayPool<byte>.Shared.Rent(flatSize);
         byte[] skyNibbles = ArrayPool<byte>.Shared.Rent(nibbleSize);
         byte[] blockNibbles = ArrayPool<byte>.Shared.Rent(nibbleSize);
         int[] queue = ArrayPool<int>.Shared.Rent(QueueCapacity);
@@ -106,15 +107,19 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
             BuildFlatArrays(sections, numSections, sectionBuf, faceFlat, emissionFlat,
                 _faceOcclusionTable, _emissionTable);
 
+            // Light-emitting blocks ignore their own face occlusion when propagating
+            // (matching Minestom's isOccluded: if lightEmission > 0, skip source face check)
+            BuildEmitterSrcFace(blockSrcFace, faceFlat, emissionFlat, flatSize);
+
             // Phase 1: internal BFS
             if (hasSkyLight)
                 ComputeSkyLight(faceFlat, skyNibbles, totalHeight, queue);
 
-            ComputeBlockLight(faceFlat, emissionFlat, blockNibbles, flatSize, totalHeight, queue);
+            ComputeBlockLight(blockSrcFace, faceFlat, emissionFlat, blockNibbles, flatSize, totalHeight, queue);
 
             // Phase 2: cross-chunk border exchange
             if (neighborLookup != null)
-                ApplyBorderExchange(skyNibbles, blockNibbles, faceFlat,
+                ApplyBorderExchange(skyNibbles, blockNibbles, faceFlat, blockSrcFace,
                     numSections, totalHeight, flatSize, pos, neighborLookup, hasSkyLight,
                     queue, sectionBuf);
 
@@ -123,6 +128,7 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
         finally {
             ArrayPool<byte>.Shared.Return(faceFlat);
             ArrayPool<byte>.Shared.Return(emissionFlat);
+            ArrayPool<byte>.Shared.Return(blockSrcFace);
             ArrayPool<byte>.Shared.Return(skyNibbles);
             ArrayPool<byte>.Shared.Return(blockNibbles);
             ArrayPool<int>.Shared.Return(queue);
@@ -315,13 +321,13 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
             }
         }
 
-        BfsPropagate(faceFlat, skyNibbles, totalHeight, queue, ref head, ref tail);
+        BfsPropagate(faceFlat, faceFlat, skyNibbles, totalHeight, queue, ref head, ref tail);
     }
 
     // ── Block light ─────────────────────────────────────────────────────────
 
     private static void ComputeBlockLight(
-        byte[] faceFlat, byte[] emissionFlat,
+        byte[] srcFaceFlat, byte[] dstFaceFlat, byte[] emissionFlat,
         byte[] blockNibbles, int flatSize, int totalHeight, int[] queue) {
 
         int head = 0, tail = 0;
@@ -334,18 +340,18 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
             int shift = (i & 1) << 2;
             if (((blockNibbles[byteIdx] >> shift) & 0xF) < em) {
                 blockNibbles[byteIdx] = (byte)((blockNibbles[byteIdx] & ~(0xF << shift)) | (em << shift));
-                if (faceFlat[i] != ALL_FACES)
+                if (srcFaceFlat[i] != ALL_FACES)
                     queue[tail++ & QueueMask] = i | (em << 17);
             }
         }
 
-        BfsPropagate(faceFlat, blockNibbles, totalHeight, queue, ref head, ref tail);
+        BfsPropagate(srcFaceFlat, dstFaceFlat, blockNibbles, totalHeight, queue, ref head, ref tail);
     }
 
     // ── BFS propagation ─────────────────────────────────────────────────────
 
     private static void BfsPropagate(
-        byte[] faceFlat, byte[] lightArray,
+        byte[] srcFaceFlat, byte[] dstFaceFlat, byte[] lightArray,
         int totalHeight, int[] queue,
         ref int head, ref int tail) {
 
@@ -359,23 +365,23 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
             int x = fi & 0xF;
             int z = (fi >> 4) & 0xF;
             int y = fi >> 8;
-            byte srcFace = faceFlat[fi];
+            byte srcFace = srcFaceFlat[fi];
 
-            if (x < 15 && (srcFace & EAST_BIT)  == 0) TryPropagate(faceFlat, lightArray, fi + 1,   newLevel, WEST_BIT,  queue, ref tail);
-            if (x > 0  && (srcFace & WEST_BIT)  == 0) TryPropagate(faceFlat, lightArray, fi - 1,   newLevel, EAST_BIT,  queue, ref tail);
-            if (z < 15 && (srcFace & SOUTH_BIT) == 0) TryPropagate(faceFlat, lightArray, fi + 16,  newLevel, NORTH_BIT, queue, ref tail);
-            if (z > 0  && (srcFace & NORTH_BIT) == 0) TryPropagate(faceFlat, lightArray, fi - 16,  newLevel, SOUTH_BIT, queue, ref tail);
-            if (y < totalHeight - 1 && (srcFace & UP_BIT)   == 0) TryPropagate(faceFlat, lightArray, fi + 256, newLevel, DOWN_BIT,  queue, ref tail);
-            if (y > 0               && (srcFace & DOWN_BIT) == 0) TryPropagate(faceFlat, lightArray, fi - 256, newLevel, UP_BIT,    queue, ref tail);
+            if (x < 15 && (srcFace & EAST_BIT)  == 0) TryPropagate(srcFaceFlat, dstFaceFlat, lightArray, fi + 1,   newLevel, WEST_BIT,  queue, ref tail);
+            if (x > 0  && (srcFace & WEST_BIT)  == 0) TryPropagate(srcFaceFlat, dstFaceFlat, lightArray, fi - 1,   newLevel, EAST_BIT,  queue, ref tail);
+            if (z < 15 && (srcFace & SOUTH_BIT) == 0) TryPropagate(srcFaceFlat, dstFaceFlat, lightArray, fi + 16,  newLevel, NORTH_BIT, queue, ref tail);
+            if (z > 0  && (srcFace & NORTH_BIT) == 0) TryPropagate(srcFaceFlat, dstFaceFlat, lightArray, fi - 16,  newLevel, SOUTH_BIT, queue, ref tail);
+            if (y < totalHeight - 1 && (srcFace & UP_BIT)   == 0) TryPropagate(srcFaceFlat, dstFaceFlat, lightArray, fi + 256, newLevel, DOWN_BIT,  queue, ref tail);
+            if (y > 0               && (srcFace & DOWN_BIT) == 0) TryPropagate(srcFaceFlat, dstFaceFlat, lightArray, fi - 256, newLevel, UP_BIT,    queue, ref tail);
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void TryPropagate(
-        byte[] faceFlat, byte[] lightArray,
+        byte[] srcFaceFlat, byte[] dstFaceFlat, byte[] lightArray,
         int nfi, int newLevel, byte entryBit, int[] queue, ref int tail) {
 
-        byte dstFace = faceFlat[nfi];
+        byte dstFace = dstFaceFlat[nfi];
 
         // Check destination block's entry face is not occluded
         if ((dstFace & entryBit) != 0) return;
@@ -387,15 +393,15 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
 
         lightArray[nb] = (byte)((lightArray[nb] & ~(0xF << ns)) | (newLevel << ns));
 
-        // Only enqueue if target has at least one open face (can re-emit)
-        if (dstFace != ALL_FACES)
+        // Enqueue if target can propagate (use srcFaceFlat: emitters always propagate)
+        if (srcFaceFlat[nfi] != ALL_FACES)
             queue[tail++ & QueueMask] = nfi | (newLevel << 17);
     }
 
     // ── Cross-chunk border exchange ─────────────────────────────────────────
 
     private void ApplyBorderExchange(
-        byte[] skyNibbles, byte[] blockNibbles, byte[] faceFlat,
+        byte[] skyNibbles, byte[] blockNibbles, byte[] faceFlat, byte[] blockSrcFace,
         int numSections, int totalHeight, int flatSize,
         Vec2<int> pos, Func<Vec2<int>, ChunkData?> neighborLookup,
         bool hasSkyLight, int[] queue, uint[] sectionBuf) {
@@ -405,6 +411,7 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
 
         byte[] nFaceFlat = ArrayPool<byte>.Shared.Rent(flatSize);
         byte[] nEmissionFlat = ArrayPool<byte>.Shared.Rent(flatSize);
+        byte[] nBlockSrcFace = ArrayPool<byte>.Shared.Rent(flatSize);
         byte[] nSkyNibbles = ArrayPool<byte>.Shared.Rent(nibbleSize);
         byte[] nBlockNibbles = ArrayPool<byte>.Shared.Rent(nibbleSize);
         int[] skySeeds = ArrayPool<int>.Shared.Rent(maxBorderSeeds);
@@ -434,18 +441,20 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
                 BuildFlatArrays(neighborChunk.Sections, numSections, sectionBuf,
                     nFaceFlat, nEmissionFlat, _faceOcclusionTable, _emissionTable);
 
+                BuildEmitterSrcFace(nBlockSrcFace, nFaceFlat, nEmissionFlat, flatSize);
+
                 if (hasSkyLight)
                     ComputeSkyLight(nFaceFlat, nSkyNibbles, totalHeight, queue);
 
-                ComputeBlockLight(nFaceFlat, nEmissionFlat, nBlockNibbles, flatSize, totalHeight, queue);
+                ComputeBlockLight(nBlockSrcFace, nFaceFlat, nEmissionFlat, nBlockNibbles, flatSize, totalHeight, queue);
 
                 // Collect border seeds
                 if (hasSkyLight)
-                    CollectBorderSeeds(skyNibbles, faceFlat, nSkyNibbles, nFaceFlat,
+                    CollectBorderSeeds(skyNibbles, faceFlat, faceFlat, nSkyNibbles, nFaceFlat,
                         ourFixed[b], neighFixed[b], isXAxis[b], exitBits[b], entryBits[b],
                         totalHeight, skySeeds, ref skySeedCount);
 
-                CollectBorderSeeds(blockNibbles, faceFlat, nBlockNibbles, nFaceFlat,
+                CollectBorderSeeds(blockNibbles, blockSrcFace, faceFlat, nBlockNibbles, nBlockSrcFace,
                     ourFixed[b], neighFixed[b], isXAxis[b], exitBits[b], entryBits[b],
                     totalHeight, blockSeeds, ref blockSeedCount);
             }
@@ -455,19 +464,20 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
                 int h = 0, t = 0;
                 for (int i = 0; i < skySeedCount; i++)
                     queue[t++ & QueueMask] = skySeeds[i];
-                BfsPropagate(faceFlat, skyNibbles, totalHeight, queue, ref h, ref t);
+                BfsPropagate(faceFlat, faceFlat, skyNibbles, totalHeight, queue, ref h, ref t);
             }
 
             if (blockSeedCount > 0) {
                 int h = 0, t = 0;
                 for (int i = 0; i < blockSeedCount; i++)
                     queue[t++ & QueueMask] = blockSeeds[i];
-                BfsPropagate(faceFlat, blockNibbles, totalHeight, queue, ref h, ref t);
+                BfsPropagate(blockSrcFace, faceFlat, blockNibbles, totalHeight, queue, ref h, ref t);
             }
         }
         finally {
             ArrayPool<byte>.Shared.Return(nFaceFlat);
             ArrayPool<byte>.Shared.Return(nEmissionFlat);
+            ArrayPool<byte>.Shared.Return(nBlockSrcFace);
             ArrayPool<byte>.Shared.Return(nSkyNibbles);
             ArrayPool<byte>.Shared.Return(nBlockNibbles);
             ArrayPool<int>.Shared.Return(skySeeds);
@@ -480,8 +490,8 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
     /// where the neighbor provides higher light.
     /// </summary>
     private static void CollectBorderSeeds(
-        byte[] lightNib, byte[] faceFlat,
-        byte[] nLightNib, byte[] nFaceFlat,
+        byte[] lightNib, byte[] srcFaceFlat, byte[] dstFaceFlat,
+        byte[] nLightNib, byte[] nSrcFaceFlat,
         int cFixed, int nFixed, bool isX, byte exitBit, byte entryBit,
         int totalHeight,
         int[] seeds, ref int seedCount) {
@@ -499,11 +509,11 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
                     nFi = (y << 8) | (nFixed << 4) | v;
                 }
 
-                // Check neighbor's exit face toward us
-                if ((nFaceFlat[nFi] & exitBit) != 0) continue;
+                // Check neighbor's exit face toward us (emitters skip this via srcFace=0)
+                if ((nSrcFaceFlat[nFi] & exitBit) != 0) continue;
 
-                // Check our entry face from neighbor
-                if ((faceFlat[cFi] & entryBit) != 0) continue;
+                // Check our entry face from neighbor (always uses real face mask)
+                if ((dstFaceFlat[cFi] & entryBit) != 0) continue;
 
                 // Read neighbor's light level
                 int nLight = (nLightNib[nFi >> 1] >> ((nFi & 1) << 2)) & 0xF;
@@ -519,8 +529,8 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
                 // Update current chunk's light
                 lightNib[cByteIdx] = (byte)((lightNib[cByteIdx] & ~(0xF << cShift)) | (newLevel << cShift));
 
-                // Add seed if current block can propagate
-                if (faceFlat[cFi] != ALL_FACES)
+                // Add seed if current block can propagate (emitters always can)
+                if (srcFaceFlat[cFi] != ALL_FACES)
                     seeds[seedCount++] = cFi | (newLevel << 17);
             }
         }
@@ -588,6 +598,20 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
     }
 
     // ── Helpers ─────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Builds a source-face array for block light BFS where light-emitting blocks
+    /// have their face occlusion cleared to 0. This matches Minestom's isOccluded
+    /// behavior: when <c>lightEmission &gt; 0</c>, the source block's own face
+    /// occlusion is ignored, allowing it to emit light in all directions.
+    /// </summary>
+    private static void BuildEmitterSrcFace(byte[] dst, byte[] faceFlat, byte[] emissionFlat, int flatSize) {
+        Buffer.BlockCopy(faceFlat, 0, dst, 0, flatSize);
+        for (int i = 0; i < flatSize; i++) {
+            if (emissionFlat[i] > 0)
+                dst[i] = 0;
+        }
+    }
 
     private static bool IsAllZero(byte[] arr, int offset, int length) {
         ReadOnlySpan<byte> span = arr.AsSpan(offset, length);
