@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.ArgumentParsers;
 
-public abstract record ArgumentParser<T>(int ProtocolId) : IArgumentParser<T> {
+public abstract record ArgumentParser<T>() : IArgumentParser<T> {
     public abstract Identifier Identifier { get; }
 
     public virtual DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {

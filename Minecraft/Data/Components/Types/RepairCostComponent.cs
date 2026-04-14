@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record RepairCostComponent(int ProtocolId) : IDataComponent<int> {
+public record RepairCostComponent() : IDataComponent<int> {
     public override Identifier Identifier => "minecraft:repair_cost";
     
     public override DataWriter WriteData(int val, DataWriter writer, MinecraftRegistry registry) {

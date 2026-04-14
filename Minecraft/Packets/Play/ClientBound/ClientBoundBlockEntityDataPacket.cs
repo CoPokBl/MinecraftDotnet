@@ -1,4 +1,5 @@
 using Minecraft.Data.BlockEntityTypes;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 using NBT;
@@ -12,10 +13,10 @@ public class ClientBoundBlockEntityDataPacket : ClientBoundPacket {
     public required IBlockEntityType Type { get; init; }
     public required INbtTag Data { get; init; }
     
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w
             .WritePosition(Position)
-            .WriteVarInt(Type.ProtocolId)
+            .WriteVarInt(registry.BlockEntityTypes.GetProtocolId(Type))
             .WriteNbt(Data);
     }
     

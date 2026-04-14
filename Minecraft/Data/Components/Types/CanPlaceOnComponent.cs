@@ -4,7 +4,7 @@ using Minecraft.Schemas.Blocks;
 
 namespace Minecraft.Data.Components.Types;
 
-public record CanPlaceOnComponent(int ProtocolId) : IDataComponent<BlockPredicate[]> {
+public record CanPlaceOnComponent() : IDataComponent<BlockPredicate[]> {
     public override Identifier Identifier => "minecraft:can_place_on";
     
     public override DataWriter WriteData(BlockPredicate[] val, DataWriter writer, MinecraftRegistry registry) {

@@ -84,8 +84,11 @@ public class MinecraftRegistry {
 
     public T Get<T>(int id) where T : IProtocolType {
         foreach (ISubRegistry subReg in SubRegistries) {
-            if (subReg is ProtocolTypeRegistry<T> reg) {
-                return reg[id];
+            if (subReg is MappedRegistry<T> mappedReg) {
+                return mappedReg[id];
+            }
+            if (subReg is SequentialRegistry<T> seqReg) {
+                return seqReg[id];
             }
         }
         

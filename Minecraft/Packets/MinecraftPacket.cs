@@ -9,10 +9,6 @@ namespace Minecraft.Packets;
 
 public abstract class MinecraftPacket : IProtocolType {
     public abstract Identifier Identifier { get; }
-    
-    [Newtonsoft.Json.JsonIgnore]
-    [JsonIgnore]
-    public int ProtocolId => throw new Exception("Packets do not have a protocol ID");
 
     protected virtual DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w;

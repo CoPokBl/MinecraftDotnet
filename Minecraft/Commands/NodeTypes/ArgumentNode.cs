@@ -39,7 +39,7 @@ public record ArgumentNode : ICommandNode {
 
         writer
             .WriteString(Name)
-            .WriteVarInt(Parser.ProtocolId)
+            .WriteVarInt(registry.CommandArgumentTypes.GetProtocolId(Parser))
             .Write(wr => Parser.WriteData(wr, registry));
         
         if (Flags.HasFlag(CommandNodeFlag.HasSuggestionsType)) {

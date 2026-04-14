@@ -22,7 +22,7 @@ public class ClientBoundSpawnEntityPacket : ClientBoundPacket {
         return w
             .WriteVarInt(Id)
             .WriteUuid(Uuid)
-            .WriteVarInt(EntityType.ProtocolId)
+            .WriteVarInt(reg.EntityTypes.GetProtocolId(EntityType))
             .WriteVec3(Position)
             .Write(new VelocityVecNetworkType(Velocity), reg)
             .WriteAngle(Pitch)

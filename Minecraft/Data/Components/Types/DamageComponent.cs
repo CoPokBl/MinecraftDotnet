@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record DamageComponent(int ProtocolId) : IDataComponent<int> {
+public record DamageComponent() : IDataComponent<int> {
     public override Identifier Identifier => "minecraft:damage";
 
     public override DataWriter WriteData(int val, DataWriter writer, MinecraftRegistry registry) {

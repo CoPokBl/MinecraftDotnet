@@ -4,7 +4,7 @@ using Minecraft.Schemas.Items;
 
 namespace Minecraft.Data.Components.Types;
 
-public record ToolComponent(int ProtocolId) : IDataComponent<Tool> {
+public record ToolComponent() : IDataComponent<Tool> {
     public override Identifier Identifier => "minecraft:tool";
     
     public override DataWriter WriteData(Tool val, DataWriter writer, MinecraftRegistry registry) {

@@ -9,7 +9,7 @@ public record AttributeValue(IAttribute Attribute, double BaseValue, params Attr
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry reg) {
         return writer
-            .WriteVarInt(Attribute.ProtocolId)
+            .WriteVarInt(reg.Attributes.GetProtocolId(Attribute))
             .WriteDouble(BaseValue)
             .WritePrefixedArray(Modifiers, reg);
     }

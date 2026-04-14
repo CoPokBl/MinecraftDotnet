@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record FoodComponent(int ProtocolId) : IDataComponent<FoodComponent.Info> {
+public record FoodComponent() : IDataComponent<FoodComponent.Info> {
     public override Identifier Identifier => "minecraft:food";
     
     public override DataWriter WriteData(Info val, DataWriter writer, MinecraftRegistry registry) {

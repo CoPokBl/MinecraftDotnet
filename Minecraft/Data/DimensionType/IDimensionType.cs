@@ -58,7 +58,7 @@ public interface IDimensionType : IProtocolType {
         return new CompoundTag(null, children.ToArray());
     }
 
-    public static IDimensionType FromNbt(Identifier ident, int protocolId, CompoundTag tag, MinecraftRegistry reg) {
+    public static IDimensionType FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
         bool hasFixedTime = tag["has_fixed_time"].GetBoolean();
         bool hasSkyLight = tag["has_skylight"].GetBoolean();
         bool hasCeiling = tag["has_ceiling"].GetBoolean();
@@ -87,7 +87,7 @@ public interface IDimensionType : IProtocolType {
         CompoundTag? attributes = tag.Contains("attributes") ? tag["attributes"].GetCompound() : null;
         INbtTag? timelines = tag.Contains("timelines") ? tag["timelines"] : null;
 
-        return new SimpleDimensionType(protocolId, ident, hasFixedTime, hasSkyLight, hasCeiling, coordinateScale, minY,
+        return new SimpleDimensionType(ident, hasFixedTime, hasSkyLight, hasCeiling, coordinateScale, minY,
             height, logicalHeight, infiniBurn, skybox, cardinalLight, ambientLight, monsterSpawnLightLevel,
             monsterSpawnBlockLightLimit, attributes, timelines);
     }

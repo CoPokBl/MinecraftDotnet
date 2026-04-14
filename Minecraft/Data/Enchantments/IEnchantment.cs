@@ -52,7 +52,7 @@ public interface IEnchantment : IProtocolType {
         return new CompoundTag(null, tags.ToArray());
     }
 
-    public static IEnchantment FromNbt(Identifier ident, int protocolId, CompoundTag tag, MinecraftRegistry reg) {
+    public static IEnchantment FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
         string supportedItemsStr = tag["supported_items"].GetString();
         TextComponent description = TextComponent.FromTag(tag["description"]!);
         int weight = tag["weight"].GetInteger();
@@ -97,7 +97,7 @@ public interface IEnchantment : IProtocolType {
             }
         }
 
-        return new SimpleEnchantment(ident, protocolId, supportedItemsStr[1..], description, weight, 
+        return new SimpleEnchantment(ident, supportedItemsStr[1..], description, weight, 
             maxLevel, minCost, maxCost, anvilCost, slots, exclusiveSet, primaryItems, effectList.ToArray());
     }
 }

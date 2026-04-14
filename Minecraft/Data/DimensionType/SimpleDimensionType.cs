@@ -5,7 +5,6 @@ using NBT.Tags;
 namespace Minecraft.Data.DimensionType;
 
 public record SimpleDimensionType(
-    int ProtocolId,
     Identifier Identifier,
     bool HasFixedTime,
     bool HasSkyLight,

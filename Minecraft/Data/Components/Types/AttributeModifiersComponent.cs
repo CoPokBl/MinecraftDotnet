@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record AttributeModifiersComponent(int ProtocolId) : IDataComponent<ItemAttributeModifier[]> {
+public record AttributeModifiersComponent() : IDataComponent<ItemAttributeModifier[]> {
     public override Identifier Identifier => "minecraft:attribute_modifiers";
     
     public override DataWriter WriteData(ItemAttributeModifier[] val, DataWriter writer, MinecraftRegistry registry) {

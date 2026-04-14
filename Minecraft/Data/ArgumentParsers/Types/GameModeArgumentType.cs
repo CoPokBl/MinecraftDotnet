@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record GameModeArgumentType(int ProtocolId) : ArgumentParser<GameMode>(ProtocolId) {
+public record GameModeArgumentType() : ArgumentParser<GameMode>() {
     public override Identifier Identifier => "minecraft:gamemode";
     
     public override GameMode Parse(ref string str, MinecraftRegistry _) {

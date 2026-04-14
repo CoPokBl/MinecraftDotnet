@@ -308,7 +308,7 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                 
                 ClientBoundLoginPacket packet = new() {
                     DimensionName = preLoginEvent.World.DimensionId,
-                    DimensionType = Scope.Server.Registry.DimensionTypes[preLoginEvent.World.DimensionId].ProtocolId,
+                    DimensionType = Scope.Server.Registry.DimensionTypes.GetProtocolId(preLoginEvent.World.DimensionId),
                     Dimensions = Scope.Server.Registry.DimensionTypes.Identifiers.ToArray(),
                     DoLimitedCrafting = false,
                     EnableRespawnScreen = true,

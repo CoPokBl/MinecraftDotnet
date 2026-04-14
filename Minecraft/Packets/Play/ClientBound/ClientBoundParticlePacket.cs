@@ -24,7 +24,7 @@ public class ClientBoundParticlePacket : ClientBoundPacket {
             .WriteVec3(Offset)
             .WriteFloat(MaxSpeed)
             .WriteInteger(ParticleCount)
-            .WriteVarInt(Particle.ProtocolId)
+            .WriteVarInt(registry.Particles.GetProtocolId(Particle))
             .Write(wr => Particle.WriteData(wr, registry));
     }
 

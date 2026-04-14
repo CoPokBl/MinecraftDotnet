@@ -3,8 +3,8 @@ using Minecraft.Registry;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public abstract record NumberArgumentType<T>(int ProtocolId, T? Min = null, T? Max = null) 
-    : ArgumentParser<T>(ProtocolId) where T : struct, INumberBase<T> {
+public abstract record NumberArgumentType<T>(T? Min = null, T? Max = null) 
+    : ArgumentParser<T>() where T : struct, INumberBase<T> {
     
     public abstract Action<DataWriter, T> Writer { get; }
     public abstract Func<DataReader, T> Reader { get; }

@@ -91,10 +91,10 @@ public class EntityMetaContainer {
         { MetaFieldType.OptionalBlockState, (_, writer, field) => 
             writer.WritePrefixedOptional(field.GetValue<Optional<IBlock>>(), (block, w) => w.WriteVarInt((int)block.StateId)) },
         { MetaFieldType.Particle, (reg, writer, field) => 
-            writer.WriteVarInt(field.GetValue<IParticle>().ProtocolId).Write(wr => field.GetValue<IParticle>().WriteData(wr, reg)) },
+            writer.WriteVarInt(reg.Particles.GetProtocolId(field.GetValue<IParticle>())).Write(wr => field.GetValue<IParticle>().WriteData(wr, reg)) },
         { MetaFieldType.Particles, (reg, writer, field) => 
             writer.WritePrefixedArray(field.GetValue<IParticle[]>(), (particle, w) => 
-                w.WriteVarInt(particle.ProtocolId).Write(wr => particle.WriteData(wr, reg))) },
+                w.WriteVarInt(reg.Particles.GetProtocolId(particle)).Write(wr => particle.WriteData(wr, reg))) },
         { MetaFieldType.VillagerData, (_, writer, field) => {
             (int type, int profession, int level) = field.GetValue<(int, int, int)>();
             writer.WriteVarInt(type).WriteVarInt(profession).WriteVarInt(level);

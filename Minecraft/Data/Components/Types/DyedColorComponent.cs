@@ -4,7 +4,7 @@ using Minecraft.Text;
 
 namespace Minecraft.Data.Components.Types;
 
-public record DyedColorComponent(int ProtocolId) : IDataComponent<TextColor> {
+public record DyedColorComponent() : IDataComponent<TextColor> {
     public override Identifier Identifier => "minecraft:dyed_color";
     public override DataWriter WriteData(TextColor val, DataWriter writer, MinecraftRegistry registry) {
         return writer.WriteInteger(val.ToDecimal());

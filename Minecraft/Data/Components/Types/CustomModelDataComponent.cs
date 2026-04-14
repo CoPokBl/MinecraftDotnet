@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record CustomModelDataComponent(int ProtocolId) : IDataComponent<CustomModelData> {
+public record CustomModelDataComponent() : IDataComponent<CustomModelData> {
     public override Identifier Identifier => "minecraft:custom_model_data";
     
     public override DataWriter WriteData(CustomModelData val, DataWriter writer, MinecraftRegistry registry) {

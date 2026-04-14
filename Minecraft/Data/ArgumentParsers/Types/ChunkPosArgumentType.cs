@@ -4,7 +4,7 @@ using Minecraft.Schemas.Vec.Relative;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record ChunkPosArgumentType(int ProtocolId) : ArgumentParser<RelativeVec2<int>>(ProtocolId) {
+public record ChunkPosArgumentType() : ArgumentParser<RelativeVec2<int>>() {
     public override Identifier Identifier => "minecraft:column_pos";
     
     private static RelativeCoordinate<int> ReadCoordinate(ref string str) {

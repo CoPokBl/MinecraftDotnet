@@ -106,8 +106,8 @@ public class ItemStack(
 
     public override int GetHashCode() {
         return HashCode.Combine(Type.Identifier, Count, _components.Count, _removeComponents.Length) +
-               _components.Aggregate(0, (hash, kvp) => hash ^ HashCode.Combine(kvp.Key.ProtocolId, kvp.Value)) +
-               _removeComponents.Aggregate(0, (hash, component) => hash ^ component.ProtocolId);
+               _components.Aggregate(0, (hash, kvp) => hash ^ HashCode.Combine(kvp.Key.Identifier.GetHashCode(), kvp.Value)) +
+               _removeComponents.Aggregate(0, (hash, component) => hash ^ component.Identifier.GetHashCode());
     }
 
     public bool IsAir() {
@@ -156,17 +156,17 @@ public class ItemStack(
         }
         
         writer.WriteVarInt(Count);
-        writer.WriteVarInt(Type.ProtocolId);
+        writer.WriteVarInt(registry.Items.GetProtocolId(Type));
         
         writer.WriteVarInt(_components.Count);  // components to add
         writer.WriteVarInt(_removeComponents.Length);  // components to remove
 
         writer.WriteArray(_components, (kvp, w) => w
-            .WriteVarInt(kvp.Key.ProtocolId)
+            .WriteVarInt(registry.DataComponents.GetProtocolId(kvp.Key))
             .Write(wr => kvp.Key.WriteData(kvp.Value, wr, registry)));
         
         return writer.WriteArray(_removeComponents, (component, w) => w
-            .WriteVarInt(component.ProtocolId));
+            .WriteVarInt(registry.DataComponents.GetProtocolId(component)));
     }
 
     public static ItemStack ReadData(DataReader reader, MinecraftRegistry registry) {

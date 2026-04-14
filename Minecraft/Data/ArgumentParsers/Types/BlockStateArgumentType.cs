@@ -6,7 +6,7 @@ using NBT.Tags;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record BlockStateArgumentType(int ProtocolId) : ArgumentParser<IBlock>(ProtocolId) {
+public record BlockStateArgumentType() : ArgumentParser<IBlock>() {
     public override Identifier Identifier => "minecraft:block_state";
     
     private static CompoundTag PropertiesStringToNbt(string propsStr) {

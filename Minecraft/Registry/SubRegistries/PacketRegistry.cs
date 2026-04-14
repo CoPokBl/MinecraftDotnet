@@ -1,4 +1,3 @@
-using Minecraft.Data.Blocks;
 using Minecraft.Packets;
 using Minecraft.Registry.Tags;
 using Minecraft.Registry.Templates;
@@ -74,6 +73,10 @@ public class PacketRegistry : ISubRegistry<PacketRegistry, MinecraftPacket> {
 
     ISubRegistry ISubRegistry.Clone() {
         return Clone();
+    }
+
+    public int GetProtocolId(Identifier id) {
+        throw new NotSupportedException("Packets use state-specific IDs, use GetPacketId instead.");
     }
 
     public void Clear() {

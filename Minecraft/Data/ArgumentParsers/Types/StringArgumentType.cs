@@ -3,8 +3,8 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record StringArgumentType(int ProtocolId, StringArgumentType.Behaviour ValueBehaviour = StringArgumentType.Behaviour.SingleWord) 
-    : ArgumentParser<string>(ProtocolId) {
+public record StringArgumentType(StringArgumentType.Behaviour ValueBehaviour = StringArgumentType.Behaviour.SingleWord) 
+    : ArgumentParser<string>() {
     public override Identifier Identifier => "brigadier:string";
     
     public enum Behaviour {

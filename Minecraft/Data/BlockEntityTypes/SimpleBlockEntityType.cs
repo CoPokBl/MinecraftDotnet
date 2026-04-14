@@ -2,4 +2,4 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.BlockEntityTypes;
 
-public record SimpleBlockEntityType(Identifier Identifier, int ProtocolId) : IBlockEntityType;
+public record SimpleBlockEntityType(Identifier Identifier) : IBlockEntityType;

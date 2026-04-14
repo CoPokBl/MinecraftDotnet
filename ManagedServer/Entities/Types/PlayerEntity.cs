@@ -343,7 +343,7 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
     protected MinecraftPacket GetRespawnPacket(World world) {
         return new ClientBoundRespawnPacket {
             DimensionName = world.DimensionId,
-            DimensionType = world.Dimension.ProtocolId,
+            DimensionType = Server.Registry.DimensionTypes.GetProtocolId(world.Dimension),
             HashedSeed = 0,
             GameMode = GameMode,
             DataKept = ClientBoundRespawnPacket.DataKeptTypes.All,

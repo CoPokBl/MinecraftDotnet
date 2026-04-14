@@ -2,8 +2,8 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record DoubleArgumentType(int ProtocolId, double? Min = null, double? Max = null) 
-    : NumberArgumentType<double>(ProtocolId, Min, Max) {
+public record DoubleArgumentType(double? Min = null, double? Max = null) 
+    : NumberArgumentType<double>(Min, Max) {
     
     public override Identifier Identifier => "brigadier:double";
     public override Action<DataWriter, double> Writer { get; } = (writer, value) => writer.WriteDouble(value);

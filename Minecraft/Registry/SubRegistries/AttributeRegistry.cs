@@ -4,6 +4,6 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class AttributeRegistry : ProtocolTypeRegistry<AttributeRegistry, IAttribute> {
+public class AttributeRegistry : MappedRegistry<AttributeRegistry, IAttribute> {
     public override Identifier RegistryId => "minecraft:attribute";
 }

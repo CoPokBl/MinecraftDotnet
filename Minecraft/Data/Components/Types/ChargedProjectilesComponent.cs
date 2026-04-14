@@ -4,7 +4,7 @@ using Minecraft.Schemas.Items;
 
 namespace Minecraft.Data.Components.Types;
 
-public record ChargedProjectilesComponent(int ProtocolId) : IDataComponent<ItemStack[]> {
+public record ChargedProjectilesComponent() : IDataComponent<ItemStack[]> {
     public override Identifier Identifier => "minecraft:charged_projectiles";
     
     public override DataWriter WriteData(ItemStack[] val, DataWriter writer, MinecraftRegistry registry) {

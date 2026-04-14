@@ -5,7 +5,7 @@ namespace Minecraft.Schemas.Blocks;
 
 public record ExactDataComponentMatcher(IDataComponent Component, object Value) {
     public void Write(DataWriter writer, MinecraftRegistry registry) {
-        writer.WriteVarInt(Component.ProtocolId)
+        writer.WriteVarInt(registry.DataComponents.GetProtocolId(Component))
             .Write(w => Component.WriteData(Value, w, registry));
     }
     

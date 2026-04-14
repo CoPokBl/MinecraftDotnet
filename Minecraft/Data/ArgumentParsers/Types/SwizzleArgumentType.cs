@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record SwizzleArgumentType(int ProtocolId) : ArgumentParser<(bool X, bool Y, bool Z)>(ProtocolId) {
+public record SwizzleArgumentType() : ArgumentParser<(bool X, bool Y, bool Z)>() {
     public override Identifier Identifier => "minecraft:swizzle";
     
     public override (bool X, bool Y, bool Z) Parse(ref string str, MinecraftRegistry _) {

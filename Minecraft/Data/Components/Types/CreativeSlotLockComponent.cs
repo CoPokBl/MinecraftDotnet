@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record CreativeSlotLockComponent(int ProtocolId) : IDataComponent<None> {
+public record CreativeSlotLockComponent() : IDataComponent<None> {
     public static None Value => None.Value;
     public override Identifier Identifier => "minecraft:creative_slot_lock";
     

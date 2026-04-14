@@ -1,5 +1,6 @@
 using Minecraft.Data;
 using Minecraft.Registry;
+using Minecraft.Registry.Templates;
 
 namespace Minecraft.Schemas.Tags;
 
@@ -28,8 +29,8 @@ public abstract record IdSet : INetworkType<IdSet> {
         }
     }
 
-    public static Ids FromProtocolTypes(params IProtocolType[] protocolTypes) {
-        return new Ids(protocolTypes.Select(t => t.ProtocolId).ToArray());
+    public static Ids FromProtocolTypes(ISubRegistry registry, params IProtocolType[] protocolTypes) {
+        return new Ids(protocolTypes.Select(t => registry.GetProtocolId(t)).ToArray());
     }
 
     public abstract DataWriter WriteData(DataWriter writer, MinecraftRegistry reg);

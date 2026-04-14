@@ -1,4 +1,5 @@
 using Minecraft.Data.PotionEffectTypes;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
@@ -20,10 +21,10 @@ public class ClientBoundEntityEffectPacket : ClientBoundPacket {
         Blend = 0x08
     }
 
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w
             .WriteVarInt(EntityId)
-            .WriteVarInt(Effect.ProtocolId)
+            .WriteVarInt(registry.PotionEffectTypes.GetProtocolId(Effect))
             .WriteVarInt(Amplifier)
             .WriteVarInt(Duration)
             .WriteByte((sbyte)EffectFlags);

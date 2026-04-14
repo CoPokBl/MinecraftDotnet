@@ -4,6 +4,6 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class ItemRegistry : ProtocolTypeRegistry<ItemRegistry, IItem> {
+public class ItemRegistry : MappedRegistry<ItemRegistry, IItem> {
     public override Identifier RegistryId => "minecraft:item";
 }

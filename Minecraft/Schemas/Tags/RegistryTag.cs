@@ -34,7 +34,7 @@ public record RegistryTag<T>(Identifier RegistryId, Identifier TagId, RegistryTa
 
     public int[] GetValueRegistryIds(MinecraftRegistry registry) {
         return GetValues(registry)
-            .Select(v => v.ProtocolId)
+            .Select(v => registry[RegistryId].GetProtocolId(v))
             .ToArray();
     }
 }

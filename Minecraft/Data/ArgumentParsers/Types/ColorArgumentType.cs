@@ -4,7 +4,7 @@ using Minecraft.Text;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record ColorArgumentType(int ProtocolId) : ArgumentParser<NamedTextColor?>(ProtocolId) {
+public record ColorArgumentType() : ArgumentParser<NamedTextColor?>() {
     public override Identifier Identifier => "minecraft:color";
     
     public override NamedTextColor? Parse(ref string str, MinecraftRegistry _) {

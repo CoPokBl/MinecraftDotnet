@@ -1,4 +1,5 @@
 using Minecraft.Data.PotionEffectTypes;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 
 namespace Minecraft.Packets.Play.ClientBound;
@@ -9,10 +10,10 @@ public class ClientBoundRemoveEntityEffectPacket : ClientBoundPacket {
     public required int EntityId { get; init; }
     public required IPotionEffectType Effect { get; init; }
 
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w
             .WriteVarInt(EntityId)
-            .WriteVarInt(Effect.ProtocolId);
+            .WriteVarInt(registry.PotionEffectTypes.GetProtocolId(Effect));
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => new ClientBoundRemoveEntityEffectPacket {

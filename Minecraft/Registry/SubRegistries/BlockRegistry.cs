@@ -4,7 +4,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class BlockRegistry : ProtocolTypeRegistry<BlockRegistry, IBlock> {
+public class BlockRegistry : MappedRegistry<BlockRegistry, IBlock> {
     public override Identifier RegistryId => "minecraft:block";
     
     public IBlock DefaultBlock {
@@ -24,13 +24,13 @@ public class BlockRegistry : ProtocolTypeRegistry<BlockRegistry, IBlock> {
         return _defaultByState[state].WithState(state);
     }
     
-    public void Add(IBlock defaultBlock, params uint[] states) {
+    public void Add(int protocolId, IBlock defaultBlock, params uint[] states) {
         foreach (uint state in states) {
             _defaultByState.Add(state, defaultBlock);
         }
         
-        // Call the base add method to add to the protocol type registry
-        ((ProtocolTypeRegistry<IBlock>)this).Add(defaultBlock);
+        // Call the base add method to add to the mapped registry
+        base.Add(protocolId, defaultBlock);
     }
 
     public override BlockRegistry Clone() {

@@ -4,6 +4,6 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class SoundTypeRegistry : ProtocolTypeRegistry<SoundTypeRegistry, ISoundType> {
+public class SoundTypeRegistry : MappedRegistry<SoundTypeRegistry, ISoundType> {
     public override Identifier RegistryId => "minecraft:sound_event";
 }

@@ -4,6 +4,6 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class StatisticTypeRegistry : ProtocolTypeRegistry<StatisticTypeRegistry, IStatisticType> {
+public class StatisticTypeRegistry : MappedRegistry<StatisticTypeRegistry, IStatisticType> {
     public override Identifier RegistryId => "minecraft:stat_type";
 }

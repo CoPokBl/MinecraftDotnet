@@ -4,7 +4,7 @@ using Minecraft.Schemas.Vec.Relative;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record Vec3ArgumentType(int ProtocolId) : ArgumentParser<RelativeVec3<double>>(ProtocolId) {
+public record Vec3ArgumentType() : ArgumentParser<RelativeVec3<double>>() {
     public override Identifier Identifier => "minecraft:vec3";
 
     private static RelativeCoordinate<double> ReadCoordinate(ref string str) {

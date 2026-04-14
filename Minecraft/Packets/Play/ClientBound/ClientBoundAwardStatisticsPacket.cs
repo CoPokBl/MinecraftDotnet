@@ -18,7 +18,7 @@ public class ClientBoundAwardStatisticsPacket : ClientBoundPacket {
         int Statistic,
         int Value) {
 
-        public Entry(IStatisticType category, IProtocolType stat, int val) : this(category, stat.ProtocolId, val) { }
+        public Entry(IStatisticType category, IProtocolType stat, ISubRegistry statRegistry, int val) : this(category, statRegistry.GetProtocolId(stat), val) { }
 
         public T GetStatistic<TReg, T>(ProtocolTypeRegistry<TReg, T> registry) where TReg : ProtocolTypeRegistry<TReg, T> where T : IProtocolType {
             return registry[Statistic];
@@ -49,7 +49,7 @@ public class ClientBoundAwardStatisticsPacket : ClientBoundPacket {
 
     protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w.WritePrefixedArray(Statistics, (entry, wr) => wr
-            .WriteVarInt(entry.Category.ProtocolId)
+            .WriteVarInt(registry.StatisticTypes.GetProtocolId(entry.Category))
             .WriteVarInt(entry.Statistic)
             .WriteVarInt(entry.Value));
     }

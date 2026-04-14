@@ -28,7 +28,7 @@ public record PotionEffect(
 
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
-            .WriteVarInt(Type.ProtocolId)
+            .WriteVarInt(registry.PotionEffectTypes.GetProtocolId(Type))
             .WriteVarInt(Amplifier)
             .WriteVarInt(Duration)
             .WriteBoolean(Ambient)

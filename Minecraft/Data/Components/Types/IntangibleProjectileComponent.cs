@@ -4,7 +4,7 @@ using NBT.Tags;
 
 namespace Minecraft.Data.Components.Types;
 
-public record IntangibleProjectileComponent(int ProtocolId) : IDataComponent<None> {
+public record IntangibleProjectileComponent() : IDataComponent<None> {
     public override Identifier Identifier => "minecraft:intangible_projectile";
     public static None Value => None.Value;
     

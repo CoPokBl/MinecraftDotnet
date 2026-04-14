@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record ProfileComponent(int ProtocolId) : IDataComponent<ProfileComponent.Data> {
+public record ProfileComponent() : IDataComponent<ProfileComponent.Data> {
     public override Identifier Identifier => "minecraft:profile";
 
     public override DataWriter WriteData(Data val, DataWriter writer, MinecraftRegistry registry) {
