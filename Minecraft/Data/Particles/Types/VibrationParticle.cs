@@ -4,7 +4,7 @@ using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Data.Particles.Types;
 
-public record VibrationParticle(Identifier Identifier, int ProtocolId, VibrationParticle.IPositionSource? PositionSource = null, int Ticks = 0) : IParticle {
+public record VibrationParticle(Identifier Identifier,  VibrationParticle.IPositionSource? PositionSource = null, int Ticks = 0) : IParticle {
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer

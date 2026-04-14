@@ -4,7 +4,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Particles.Types;
 
-public record BlockParticle(Identifier Identifier, int ProtocolId, IBlock? BlockState = null) : IParticle {
+public record BlockParticle(Identifier Identifier,  IBlock? BlockState = null) : IParticle {
 
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer

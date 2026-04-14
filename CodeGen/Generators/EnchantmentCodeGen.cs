@@ -11,11 +11,7 @@ public static class EnchantmentCodeGen {
         List<string> fileEntries = [];
         List<string> regEntries = [];
 
-        int cId = 0;
         foreach ((string key, JToken? value) in regJson) {
-            //Identifier Identifier, int ProtocolId, TextComponent Description, int Weight, 
-            // int MaxLevel, EnchantmentCost MinCost, EnchantmentCost MaxCost, int AnvilCost, EquipmentSlotGroup[] Slots
-
             if (value is not JObject obj) {
                 Console.WriteLine("Warning: Invalid enchantment entry for key: " + key);
                 continue;
@@ -24,7 +20,7 @@ public static class EnchantmentCodeGen {
             // description is always a translatable component
             string objJsonStr = obj.ToString(Formatting.None);
             fileEntries.Add($"public static readonly IEnchantment {CodeGenUtils.NamespacedIdToPascalName(key)} = " +
-                            $"IEnchantment.FromNbt(\"{key}\", {cId++}, (CompoundTag)INbtTag.FromJson(\"\"\" {objJsonStr} \"\"\"), VanillaRegistry.Data);");
+                            $"IEnchantment.FromNbt(\"{key}\", (CompoundTag)INbtTag.FromJson(\"\"\" {objJsonStr} \"\"\"), VanillaRegistry.Data);");
             
             regEntries.Add($"{CodeGenUtils.GetIndentation(2)}Data.Enchantments.Add(Enchantment.{CodeGenUtils.NamespacedIdToPascalName(key)});");
         }

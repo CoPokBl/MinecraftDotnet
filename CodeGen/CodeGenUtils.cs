@@ -169,8 +169,8 @@ public static class CodeGenUtils {
             string identParam = existingClassName == null ? $"\"{key}\", " : "";
             string extraParams = extraSimpleParams != null ? ", " + extraSimpleParams(key) : string.Empty;
             file.Append($"{GetIndentation(1)}public static {existingClassName ?? simpleClassName} {pascalName} => " +
-                        $"new({identParam}{protocolId}{extraParams});\n");
-            registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({className}.{pascalName});");
+                        $"new({identParam}{extraParams});\n");
+            registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({protocolId}, {className}.{pascalName});");
         }
         
         // Create the file content
@@ -196,8 +196,8 @@ public static class CodeGenUtils {
             
             // Add to cs file
             string extraParams = extraSimpleParams != null ? ", " + extraSimpleParams(key) : string.Empty;
-            entryStrings.Add($"public static {simpleClassName} {pascalName} => new(\"{key}\", {protocolId}{extraParams});");
-            registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({className}.{pascalName});");
+            entryStrings.Add($"public static {simpleClassName} {pascalName} => new(\"{key}\"{extraParams});");
+            registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({protocolId}, {className}.{pascalName});");
         }
         
         // Create the file content
@@ -234,14 +234,14 @@ public static class CodeGenUtils {
 
             // Add to cs file
             if (!complexTypesDict.TryGetValue(key, out string? typeName)) {
-                file.Append($"{GetIndentation(1)}public static readonly {simpleClassName} {pascalName} = new(\"{key}\", {protocolId});\n");
+                file.Append($"{GetIndentation(1)}public static readonly {simpleClassName} {pascalName} = new(\"{key}\");\n");
             }
             else {
-                file.Append($"{GetIndentation(1)}public static readonly {typeName} {pascalName} = new(\"{key}\", {protocolId});\n");
+                file.Append($"{GetIndentation(1)}public static readonly {typeName} {pascalName} = new(\"{key}\");\n");
             }
             
-            // Add to ParticleRegistry
-            registryEntries.Append($"{GetIndentation(2)}Data.{regVar}.Add({className}.{pascalName});\n");
+            // Add to registry
+            registryEntries.Append($"{GetIndentation(2)}Data.{regVar}.Add({protocolId}, {className}.{pascalName});\n");
         }
         
         file.Append(Footer);

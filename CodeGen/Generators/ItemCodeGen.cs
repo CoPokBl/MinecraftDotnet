@@ -29,6 +29,16 @@ public static class Item {
         JObject itemsJson = registriesJson["minecraft:item"]!.ToObject<JObject>()!;
         JObject itemEntriesJson = itemsJson["entries"]!.ToObject<JObject>()!;
 
+        // Build protocol ID lookup maps for blocks and entities (used in IdSet generation)
+        _protocolIdLookup = new Dictionary<string, int>();
+        foreach (string regName in new[] { "minecraft:block", "minecraft:entity_type" }) {
+            JObject reg = registriesJson[regName]!.ToObject<JObject>()!;
+            JObject entries = reg["entries"]!.ToObject<JObject>()!;
+            foreach ((string key, JToken? val) in entries) {
+                _protocolIdLookup[key] = val!["protocol_id"]!.Value<int>();
+            }
+        }
+
         JObject itemData = JObject.Parse(CodeGenUtils.ReadMinestomDataFile("item.json"));
         
         StringBuilder registryAdditions = new();
@@ -70,10 +80,10 @@ public static class Item {
             }
             
             // Add to cs file
-            file.Append($"{CodeGenUtils.GetIndentation(1)}public static SimpleItem {pascalName} => new(\"{key}\", {protocolId}, " +
+            file.Append($"{CodeGenUtils.GetIndentation(1)}public static SimpleItem {pascalName} => new(\"{key}\", " +
                         $"{toCsStr(block)}, {toCsStr(translationKey)}, " +
                         $"new Dictionary<IDataComponent, object>() {{ {string.Join(", ", defaultComponentConstructors)} }});\n");
-            registryAdditions.AppendLine($"{CodeGenUtils.GetIndentation(2)}Data.Items.Add(Item.{pascalName});");
+            registryAdditions.AppendLine($"{CodeGenUtils.GetIndentation(2)}Data.Items.Add({protocolId}, Item.{pascalName});");
         }
         
         // Create the file content
@@ -254,6 +264,8 @@ public static class Item {
         } }
     };
 
+    private static Dictionary<string, int> _protocolIdLookup = new();
+
     private static string GetIdSet(JToken obj, Func<string, string> transformer) {
         if (obj.Type == JTokenType.String) {
             string id = obj.ToObject<string>()!;
@@ -261,14 +273,20 @@ public static class Item {
                 return $"new IdSet.Tag(\"{id[1..]}\")";
             }
 
-            return $"IdSet.FromProtocolTypes({transformer(id)})";
+            if (_protocolIdLookup.TryGetValue(id, out int protocolId)) {
+                return $"new IdSet.Ids([{protocolId}])";
+            }
+            return $"new IdSet.Ids([/* unknown: {id} */])";
         }
         
         // is array of strings (identifiers of ids)
-        IEnumerable<string> names = obj.ToObject<JArray>()!
-            .Select(jId => transformer(jId.ToObject<string>()!));
+        IEnumerable<string> ids = obj.ToObject<JArray>()!
+            .Select(jId => {
+                string id = jId.ToObject<string>()!;
+                return _protocolIdLookup.TryGetValue(id, out int pid) ? pid.ToString() : $"/* unknown: {id} */0";
+            });
 
-        return $"IdSet.FromProtocolTypes({string.Join(", ", names)})";
+        return $"new IdSet.Ids([{string.Join(", ", ids)}])";
     }
 
     private static string ParseOptionalFloat(JToken? obj) {

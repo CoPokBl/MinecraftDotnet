@@ -20,7 +20,7 @@ public class ClientBoundAwardStatisticsPacket : ClientBoundPacket {
 
         public Entry(IStatisticType category, IProtocolType stat, ISubRegistry statRegistry, int val) : this(category, statRegistry.GetProtocolId(stat), val) { }
 
-        public T GetStatistic<TReg, T>(ProtocolTypeRegistry<TReg, T> registry) where TReg : ProtocolTypeRegistry<TReg, T> where T : IProtocolType {
+        public T GetStatistic<T>(MappedRegistry<T> registry) where T : IProtocolType {
             return registry[Statistic];
         }
 

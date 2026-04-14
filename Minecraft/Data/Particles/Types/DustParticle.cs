@@ -4,7 +4,7 @@ using Minecraft.Text;
 
 namespace Minecraft.Data.Particles.Types;
 
-public record DustParticle(Identifier Identifier, int ProtocolId, TextColor Color = default, float Scale = 1f) : IParticle {
+public record DustParticle(Identifier Identifier,  TextColor Color = default, float Scale = 1f) : IParticle {
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
             .WriteInteger(Color.ToDecimal())

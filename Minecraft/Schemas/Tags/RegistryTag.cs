@@ -13,7 +13,9 @@ public record RegistryTag<T>(Identifier RegistryId, Identifier TagId, RegistryTa
                 values.AddRange(((IRegistryTag<T>)registry[RegistryId].Tags[val.Id]).GetValues(registry));
             }
             else {
-                values.Add(((ProtocolTypeRegistry<T>)registry[RegistryId])[val.Id]);
+                ISubRegistry subReg = registry[RegistryId];
+                T entry = subReg is MappedRegistry<T> mapped ? mapped[val.Id] : ((SequentialRegistry<T>)subReg)[val.Id];
+                values.Add(entry);
             }
         }
         return values.ToArray();

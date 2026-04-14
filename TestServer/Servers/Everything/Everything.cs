@@ -103,8 +103,8 @@ public static class Everything {
             
             e.Player.SendPacket(new ClientBoundAwardStatisticsPacket {
                 Statistics = [
-                    new ClientBoundAwardStatisticsPacket.Entry(StatisticType.Custom, CustomStatistic.AnimalsBred, 69),
-                    new ClientBoundAwardStatisticsPacket.Entry(StatisticType.Broken, Item.Netherrack, 6996)
+                    new ClientBoundAwardStatisticsPacket.Entry(StatisticType.Custom, CustomStatistic.AnimalsBred, server.Registry.CustomStatistics, 69),
+                    new ClientBoundAwardStatisticsPacket.Entry(StatisticType.Broken, Item.Netherrack, server.Registry.Items, 6996)
                 ]
             });
         });
