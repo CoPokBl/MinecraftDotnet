@@ -10,6 +10,7 @@ using ManagedServer.Worlds.Lighting;
 using Minecraft;
 using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.DimensionType;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
@@ -65,7 +66,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     private readonly ILightingProvider _lighting;
     
     // dimension will be set in constructor
-    public Dimension Dimension => Server.Dimensions[DimensionId];
+    public IDimensionType Dimension => Server.Registry.DimensionTypes[DimensionId];
     private readonly int _maxY;
     
     // The actual data
@@ -107,7 +108,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         Entities = new EntityManager(Events, viewDistance*16);
         FeatureHandler = new FeatureHandler(this);
 
-        if (!Server.Dimensions.ContainsKey(DimensionId)) {
+        if (!Server.Registry.DimensionTypes.Contains(DimensionId)) {
             throw new ArgumentException($"Dimension {DimensionId} does not exist in the server's dimensions.");
         }
 

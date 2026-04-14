@@ -12,6 +12,7 @@ using ManagedServer.Scheduling;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using ManagedServer.Worlds.Lighting;
+using Minecraft.Data.DimensionType;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
@@ -20,6 +21,7 @@ using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
 using Minecraft.Registry;
+using Minecraft.Registry.SubRegistries;
 using Minecraft.Schemas;
 
 namespace ManagedServer;
@@ -56,10 +58,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public int WorldTickDelayMs { get; set; } = 50;
     public bool AllowListeningToUnCalledEvents { get; set; } = false;
     public int TargetTicksPerSecond { get; set; } = 20;
-    public Dictionary<Identifier, Dimension> Dimensions { get; } = new() {
-        { "minecraft:overworld", new Dimension() },
-        { "minecraft:dummy_world", new Dimension() }  // Dummy world for respawning players
-    };
+    
     public MinecraftRegistry Registry { get; set; } = VanillaRegistry.Data;
     public Action<string> LogAction { get; set; } = Console.WriteLine;
     public event Action? ServerStopped;
@@ -222,8 +221,8 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public World CreateWorld(ITerrainProvider provider, Identifier? dimension = null, ILightingProvider? lightingProvider = null) {
         dimension ??= "minecraft:overworld";
         
-        if (!Dimensions.ContainsKey(dimension.Value)) {
-            throw new ArgumentException($"Dimension '{dimension}' does not exist. Please add it to the Dimensions dictionary.");
+        if (!Registry.DimensionTypes.Contains(dimension.Value)) {
+            throw new ArgumentException($"Dimension '{dimension}' does not exist. Please add it to the Dimensions registry.");
         }
         World world = new(this, Events, provider, dimension.Value, lightingProvider, ViewDistance, 
             WorldPacketsPerTick, WorldTickDelayMs) {

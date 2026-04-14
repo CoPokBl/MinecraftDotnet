@@ -5,12 +5,14 @@ using ManagedServer.Commands.Arguments;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
+using ManagedServer.Features.Basic;
 using ManagedServer.Features.Impl;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Components.Types;
+using Minecraft.Data.DimensionType;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Features;
@@ -32,8 +34,8 @@ public static class BlockSumoFfa {
     private const int Port = 25565;
 
     public static async Task Start() {
-        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsWithMojangAuthBundle);
-        
+        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsWithProxySupport);
+
         server.AddFeatures(new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
                 VersionName = "dotnet",
                 VersionProtocol = connection.Handshake!.ProtocolVersion,
@@ -44,11 +46,18 @@ public static class BlockSumoFfa {
                 PreventsChatReports = true
             }),
             new OpenToLanAdFeature("Block Sumo FFA over LAN", Port));
-        
+
         // server.LoginSteps.Add(new HappyCookieLoginStep());  // This makes us have to use the transferer to join
-        
-        server.Dimensions.Add("minecraft:potatoland", new Dimension());
-        
+
+        server.Registry.DimensionTypes.Add(((SimpleDimensionType)server.Registry.DimensionTypes["minecraft:overworld"]) with {
+            Identifier = "minecraft:potatoland"
+        });
+
+        server.Events.AddListener<PlayerSwapItemEvent>(e => {
+            e.Player.SendMessage("Swap");
+            e.Cancelled = true;
+        });
+
         server.Commands.Add(new CommandBuilder("helloworld")
             .WithDefaultSyntax((player, _) => {
                 player.SendMessage("Hello world!");
@@ -62,25 +71,19 @@ public static class BlockSumoFfa {
                         .GetValue(new Vec3<int>(1, 1, 1)));
                     player.SendMessage("Your rancol is: " +
                                        (context.GetArgument<NamedTextColor?>("rancol")?.GetName() ?? "none"));
-                    
+
                     player.SendMessage("Swizzle: " + context.GetArgument<(bool X, bool Y, bool Z)>("swiz"));
-                    
+
                     player.SendMessage("Block: " + CommandArgumentType.BlockState.Format(context.GetArgument<IBlock>("block")));
-                }, 
-                    new Argument<RelativeVec3<int>>("message", CommandArgumentType.BlockPos), 
+                },
+                    new Argument<RelativeVec3<int>>("message", CommandArgumentType.BlockPos),
                     new Argument<NamedTextColor?>("rancol", CommandArgumentType.Color),
                     new Argument<(bool X, bool Y, bool Z)>("swiz", CommandArgumentType.Swizzle),
                     new Argument<IBlock>("block", CommandArgumentType.BlockState)))
                 .Build())
             .Build());
-        
-        CancellationTokenSource cts = new();
 
-        bool run = true;
-        Console.CancelKeyPress += (_, _) => {
-            Console.WriteLine("Stopping...");
-            run = false;
-        };
+        CancellationTokenSource cts = new();
 
         ItemStack blockItem = new ItemStack(Item.BambooBlock, 64)
             .With(DataComponent.CustomName, TextComponent.Text("Michael's Bamboo").WithColor(TextColor.Green).WithBold().WithItalic(false))
@@ -89,12 +92,12 @@ public static class BlockSumoFfa {
             .With(DataComponent.MaxDamage, 100)
             // .With(DataComponent.TooltipDisplay, new TooltipDisplayComponent.Info(true))
             .With(DataComponent.Enchantments, [(Enchantment.Breach, 10)]);
-        
+
         PlayerPosition spawn = new(new Vec3<double>(0, 0, 0), Vec3<double>.Zero, Angle.FromDegrees(-90), Angle.Zero);
         ITerrainProvider terrain = new BlockSumoMapProvider(12);
         World world = server.CreateWorld(terrain, "minecraft:potatoland");
         world.AddFeature(new SimpleCombatFeature(500));
-        
+
         Entity displayTextEntity = new(EntityType.TextDisplay) {
             Position = new Vec3<double>(0, -4, 0),
             Meta = new TextDisplayMeta {
@@ -116,7 +119,7 @@ public static class BlockSumoFfa {
             Block.WhiteConcretePowder,
             Block.OrangeConcretePowder,
             Block.MagentaConcretePowder,
-            Block.LightBlueConcretePowder,  
+            Block.LightBlueConcretePowder,
             Block.YellowConcretePowder,
             Block.LimeConcretePowder,
             Block.PinkConcretePowder,
@@ -141,7 +144,7 @@ public static class BlockSumoFfa {
                 e.Cancelled = true;
                 return;
             }
-            
+
             AtomicCounter count = new(-1);
             int breakingEntity = Random.Shared.Next();
             server.Scheduler.ScheduleRepeatingTask(TimeSpan.FromSeconds(disappearTime/9), () => {
@@ -155,7 +158,7 @@ public static class BlockSumoFfa {
                     e.World.SetBlock(e.Position, Block.Air);
                     return false;
                 }
-                
+
                 e.World.SendPacket(new ClientBoundSetBlockDestroyStagePacket {
                     EntityId = breakingEntity,
                     Block = e.Position,
@@ -172,7 +175,7 @@ public static class BlockSumoFfa {
         world.Events.AddListener<PlayerStartBreakingBlockEvent>(e => {
             e.Cancelled = false;
         }, true);
-        
+
         server.Events.AddListener<PlayerPreLoginEvent>(e => {
             e.GameMode = GameMode.Survival;
             e.Hardcore = true;
@@ -187,7 +190,7 @@ public static class BlockSumoFfa {
         }, true);
 
         BossBar bar = new("Block Sumo FFA!");
-        
+
         server.Events.AddListener<PlayerLoginEvent>(e => {
             e.Player.Teleport(spawn);
             e.Player.Inventory.SetHotbarItem(0, blockItem);
@@ -197,20 +200,20 @@ public static class BlockSumoFfa {
                 server.SendMessage(
                     TextComponent.FromLegacyString("&7[&c-&7] " + e.Player.Name + " &7left the game :("));
             };
-            
+
             bar.AddViewer(e.Player);
         });
-        
+
         TcpMinecraftListener listener = new(connection => {
             Console.WriteLine("Got new connection");
             // connection.DebugLog = Console.WriteLine;
             server.AddConnection(connection);
         }, cts.Token);
-        
+
         const int dieLevel = -10;
         world.Events.AddListener<EntityMoveEvent>(e => {
             if (!(e.NewPos.Y < dieLevel)) return;
-            
+
             // die
             e.Entity.Teleport(spawn);
             if (e.Entity is not PlayerEntity player) return;
@@ -221,16 +224,16 @@ public static class BlockSumoFfa {
                 player.GameMode = GameMode.Survival;
                 player.Teleport(spawn);
             });
-                
+
             player.Inventory.SetHotbarItem(0, blockItem);
-                
+
             TextComponent msg = $"{player.Name} was killed";
             world.StrikeLightning(e.NewPos);
             server.SendMessage(msg);
         });
-        
+
         server.Start();
-        
+
         Console.WriteLine("Server ready, listening...");
 
         Console.CancelKeyPress += (_, e) => {
@@ -239,12 +242,12 @@ public static class BlockSumoFfa {
                 Console.WriteLine("Already attempting to stop...");
                 return;
             }
-            
+
             Console.WriteLine("Stopping...");
             cts.Cancel();
             server.Stop();
         };
-        
+
         await listener.Listen(Port);
         Console.WriteLine("Listener stopped");
     }

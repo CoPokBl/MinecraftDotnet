@@ -20,7 +20,7 @@ public abstract class ProtocolTypeRegistry<TSelf, T> : ProtocolTypeRegistry<T>, 
 }
 
 // This allows us to avoid needing the TSelf generic parameter in most cases
-public abstract class ProtocolTypeRegistry<T> : ISubRegistry where T : IProtocolType {
+public abstract class ProtocolTypeRegistry<T> : IProtocolTypeRegistry where T : IProtocolType {
     protected readonly Dictionary<int, T> ByProtocolId = new();
     protected readonly Dictionary<Identifier, T> ById = new();
     
@@ -52,4 +52,10 @@ public abstract class ProtocolTypeRegistry<T> : ISubRegistry where T : IProtocol
         ById.Clear();
         ByProtocolId.Clear();
     }
+}
+
+public interface IProtocolTypeRegistry : ISubRegistry {
+    long Count { get; }
+    bool Contains(Identifier id);
+    bool Contains(int protocolId);
 }

@@ -168,12 +168,6 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
             
                 e.Connection.SendPackets(
                     new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:dimension_type",
-                        Entries = new Dictionary<string, INbtTag?>(
-                            Scope.Server.Dimensions
-                                .Select(kvp => new KeyValuePair<string, INbtTag?>(kvp.Key, kvp.Value.ToNbt())))
-                    },
-                    new ClientBoundRegistryDataPacket {
                         RegistryId = "minecraft:zombie_nautilus_variant",
                         Entries = new Dictionary<string, INbtTag?> {
                             { "minecraft:warm", null }
@@ -314,10 +308,8 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                 
                 ClientBoundLoginPacket packet = new() {
                     DimensionName = preLoginEvent.World.DimensionId,
-                    DimensionType = Scope.Server.Dimensions.Keys.ToList()
-                        .IndexOf(preLoginEvent.World.DimensionId),
-                    Dimensions = Scope.Server.Dimensions.Keys.Select(s => (Identifier)s)
-                        .ToArray(),
+                    DimensionType = Scope.Server.Registry.DimensionTypes[preLoginEvent.World.DimensionId].ProtocolId,
+                    Dimensions = Scope.Server.Registry.DimensionTypes.Identifiers.ToArray(),
                     DoLimitedCrafting = false,
                     EnableRespawnScreen = true,
                     EnforcesSecureChat = false,
