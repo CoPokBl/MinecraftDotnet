@@ -16,8 +16,10 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Tags;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Items;
+using Minecraft.Data.DimensionType;
 using Minecraft.Data.Enchantments;
 using Minecraft.Data.Entities;
+using Minecraft.Data.Timelines;
 using Minecraft.Registry;
 using Minecraft.Data.Components.Types;
 using Minecraft.Schemas.Blocks.BlockEnums;
@@ -224,6 +226,8 @@ RunStep("Tags", TagsCodeGen.CreateTagEntries);
 
 // Do dynamic registries last because they might use other vanilla registries
 RunStep("Enchantments", EnchantmentCodeGen.CreateEnchantmentEntries);
+RunStep("Dimension Types", DimensionTypeCodeGen.CreateDimensionTypeEntries);
+RunStep("Timelines", TimelineCodeGen.CreateTimelineEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

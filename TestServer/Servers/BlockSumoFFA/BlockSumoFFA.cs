@@ -49,7 +49,7 @@ public static class BlockSumoFfa {
 
         // server.LoginSteps.Add(new HappyCookieLoginStep());  // This makes us have to use the transferer to join
 
-        server.Registry.DimensionTypes.Add(((SimpleDimensionType)server.Registry.DimensionTypes["minecraft:overworld"]) with {
+        server.Registry.DimensionTypes.Add((SimpleDimensionType)DimensionType.Overworld with {
             Identifier = "minecraft:potatoland"
         });
 
@@ -95,7 +95,7 @@ public static class BlockSumoFfa {
 
         PlayerPosition spawn = new(new Vec3<double>(0, 0, 0), Vec3<double>.Zero, Angle.FromDegrees(-90), Angle.Zero);
         ITerrainProvider terrain = new BlockSumoMapProvider(12);
-        World world = server.CreateWorld(terrain, "minecraft:potatoland");
+        World world = server.CreateWorld(terrain);//, "minecraft:potatoland");
         world.AddFeature(new SimpleCombatFeature(500));
 
         Entity displayTextEntity = new(EntityType.TextDisplay) {

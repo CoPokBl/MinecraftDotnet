@@ -59,7 +59,7 @@ public interface IDimensionType : IProtocolType {
     }
 
     public static IDimensionType FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
-        bool hasFixedTime = tag["has_fixed_time"].GetBoolean();
+        bool hasFixedTime = tag.Contains("has_fixed_time") && tag["has_fixed_time"].GetBoolean();
         bool hasSkyLight = tag["has_skylight"].GetBoolean();
         bool hasCeiling = tag["has_ceiling"].GetBoolean();
         double coordinateScale = tag["coordinate_scale"].GetDouble();
@@ -67,8 +67,8 @@ public interface IDimensionType : IProtocolType {
         int height = tag["height"].GetInteger();
         int logicalHeight = tag["logical_height"].GetInteger();
         string infiniBurn = tag["infiniburn"].GetString();
-        Skybox skybox = Enum.Parse<Skybox>(tag["skybox"].GetString(), true);
-        CardinalLight cardinalLight = Enum.Parse<CardinalLight>(tag["cardinal_light"].GetString(), true);
+        Skybox skybox = tag.Contains("skybox") ? Enum.Parse<Skybox>(tag["skybox"].GetString(), true) : Skybox.Overworld;
+        CardinalLight cardinalLight = tag.Contains("cardinal_light") ? Enum.Parse<CardinalLight>(tag["cardinal_light"].GetString(), true) : CardinalLight.Default;
         float ambientLight = tag["ambient_light"].GetFloat();
 
         Or<int, CompoundTag>? monsterSpawnLightLevel = null;
