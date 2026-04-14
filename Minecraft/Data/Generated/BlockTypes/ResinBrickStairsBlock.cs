@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ResinBrickStairsBlock(Identifier Identifier, Direction Facing, ResinBrickStairsBlock.Half HalfValue, StairShape Shape, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:stair";
-    public int ProtocolId => 376;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

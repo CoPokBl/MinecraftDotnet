@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhase SculkSensorPhase, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:sculk_sensor";
-    public int ProtocolId => 999;
     public double Hardness => 1.5;
     public double ExplosionResistance => 1.5;
     public double Friction => 0.6;

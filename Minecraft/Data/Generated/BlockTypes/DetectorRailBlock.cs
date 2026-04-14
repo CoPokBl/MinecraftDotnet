@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:detector_rail";
-    public int ProtocolId => 127;
     public double Hardness => 0.7;
     public double ExplosionResistance => 0.7;
     public double Friction => 0.6;

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBlock {
     public Identifier Category => "minecraft:turtle_egg";
-    public int ProtocolId => 743;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

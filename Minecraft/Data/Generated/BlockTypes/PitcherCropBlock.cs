@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) : IBlock {
     public Identifier Category => "minecraft:pitcher_crop";
-    public int ProtocolId => 661;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

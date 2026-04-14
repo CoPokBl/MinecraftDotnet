@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DamagedAnvilBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:anvil";
-    public int ProtocolId => 467;
     public double Hardness => 5;
     public double ExplosionResistance => 1200;
     public double Friction => 0.6;

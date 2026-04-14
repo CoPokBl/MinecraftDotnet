@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WaxedWeatheredCopperChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:chain";
-    public int ProtocolId => 356;
     public double Hardness => 5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

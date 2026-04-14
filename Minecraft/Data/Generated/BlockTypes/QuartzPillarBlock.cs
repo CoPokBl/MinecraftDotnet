@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record QuartzPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:rotated_pillar";
-    public int ProtocolId => 478;
     public double Hardness => 0.8;
     public double ExplosionResistance => 0.8;
     public double Friction => 0.6;

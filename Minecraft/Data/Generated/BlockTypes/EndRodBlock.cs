@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     public Identifier Category => "minecraft:end_rod";
-    public int ProtocolId => 653;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

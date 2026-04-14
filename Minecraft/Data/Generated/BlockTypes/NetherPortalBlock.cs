@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis AxisValue) : IBlock {
     public Identifier Category => "minecraft:nether_portal";
-    public int ProtocolId => 294;
     public double Hardness => -1;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

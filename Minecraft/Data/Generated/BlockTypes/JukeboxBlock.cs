@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     public Identifier Category => "minecraft:jukebox";
-    public int ProtocolId => 282;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

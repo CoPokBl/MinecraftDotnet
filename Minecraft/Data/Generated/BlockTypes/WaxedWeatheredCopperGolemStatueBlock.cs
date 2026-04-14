@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WaxedWeatheredCopperGolemStatueBlock(Identifier Identifier, WaxedWeatheredCopperGolemStatueBlock.CopperGolemPose CopperGolemPoseValue, Direction Facing, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:copper_golem_statue";
-    public int ProtocolId => 1093;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

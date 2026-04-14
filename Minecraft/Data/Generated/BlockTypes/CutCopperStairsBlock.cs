@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CutCopperStairsBlock(Identifier Identifier, Direction Facing, CutCopperStairsBlock.Half HalfValue, StairShape Shape, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:weathering_copper_stair";
-    public int ProtocolId => 1026;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

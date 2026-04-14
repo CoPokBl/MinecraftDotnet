@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlock {
     public Identifier Category => "minecraft:jigsaw";
-    public int ProtocolId => 904;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;

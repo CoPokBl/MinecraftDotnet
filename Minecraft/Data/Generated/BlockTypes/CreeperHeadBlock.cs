@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CreeperHeadBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock {
     public Identifier Category => "minecraft:skull";
-    public int ProtocolId => 459;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

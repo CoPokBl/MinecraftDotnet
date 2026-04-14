@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RedMushroomBlockBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool West) : IBlock {
     public Identifier Category => "minecraft:huge_mushroom";
-    public int ProtocolId => 338;
     public double Hardness => 0.2;
     public double ExplosionResistance => 0.2;
     public double Friction => 0.6;

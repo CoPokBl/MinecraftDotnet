@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WeepingVinesBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:weeping_vines";
-    public int ProtocolId => 876;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

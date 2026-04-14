@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WaxedCopperBarsBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
     public Identifier Category => "minecraft:iron_bars";
-    public int ProtocolId => 345;
     public double Hardness => 5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

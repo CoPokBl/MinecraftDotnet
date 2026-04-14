@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
     public Identifier Category => "minecraft:sniffer_egg";
-    public int ProtocolId => 744;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

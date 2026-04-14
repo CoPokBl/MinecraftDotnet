@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record HayBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:hay";
-    public int ProtocolId => 535;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;

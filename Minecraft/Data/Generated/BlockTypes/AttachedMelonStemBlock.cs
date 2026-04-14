@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record AttachedMelonStemBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:attached_stem";
-    public int ProtocolId => 362;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

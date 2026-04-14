@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BirchTrapdoorBlock(Identifier Identifier, Direction Facing, BirchTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:trapdoor";
-    public int ProtocolId => 317;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record GrassBlockBlock(Identifier Identifier, bool Snowy) : IBlock {
     public Identifier Category => "minecraft:grass";
-    public int ProtocolId => 8;
     public double Hardness => 0.6;
     public double ExplosionResistance => 0.6;
     public double Friction => 0.6;

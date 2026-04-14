@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DispenserBlock(Identifier Identifier, Cardinal Facing, bool Triggered) : IBlock {
     public Identifier Category => "minecraft:dispenser";
-    public int ProtocolId => 105;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;

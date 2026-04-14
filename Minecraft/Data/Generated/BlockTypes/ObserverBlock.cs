@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:observer";
-    public int ProtocolId => 674;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OxidizedLightningRodBlock(Identifier Identifier, Cardinal Facing, bool Powered, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:weathering_lightning_rod";
-    public int ProtocolId => 1098;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

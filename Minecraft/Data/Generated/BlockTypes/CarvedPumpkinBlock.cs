@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CarvedPumpkinBlock(Identifier Identifier, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:jack_o_lantern";
-    public int ProtocolId => 295;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

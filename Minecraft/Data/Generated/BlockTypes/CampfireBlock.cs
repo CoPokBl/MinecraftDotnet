@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CampfireBlock(Identifier Identifier, Direction Facing, bool Lit, bool SignalFire, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:campfire";
-    public int ProtocolId => 857;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;

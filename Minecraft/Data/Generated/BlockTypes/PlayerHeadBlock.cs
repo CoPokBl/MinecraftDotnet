@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PlayerHeadBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock {
     public Identifier Category => "minecraft:player_head";
-    public int ProtocolId => 457;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;

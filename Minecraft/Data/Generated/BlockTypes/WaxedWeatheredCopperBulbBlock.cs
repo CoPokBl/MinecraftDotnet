@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WaxedWeatheredCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : IBlock {
     public Identifier Category => "minecraft:copper_bulb_block";
-    public int ProtocolId => 1077;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;

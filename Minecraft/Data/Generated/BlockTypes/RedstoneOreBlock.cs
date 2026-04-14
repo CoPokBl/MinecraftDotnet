@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock {
     public Identifier Category => "minecraft:redstone_ore";
-    public int ProtocolId => 270;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

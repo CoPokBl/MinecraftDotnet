@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record OxidizedCopperLanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:weathering_lantern";
-    public int ProtocolId => 852;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;

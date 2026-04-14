@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TntBlock(Identifier Identifier, bool Unstable) : IBlock {
     public Identifier Category => "minecraft:tnt";
-    public int ProtocolId => 176;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BambooShelfBlock(Identifier Identifier, Direction Facing, bool Powered, BambooShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:shelf";
-    public int ProtocolId => 180;
     public double Hardness => 2;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;

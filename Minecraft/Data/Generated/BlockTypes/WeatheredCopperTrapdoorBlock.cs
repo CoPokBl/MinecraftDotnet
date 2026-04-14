@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WeatheredCopperTrapdoorBlock(Identifier Identifier, Direction Facing, WeatheredCopperTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:weathering_copper_trap_door";
-    public int ProtocolId => 1058;
     public double Hardness => 3;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
