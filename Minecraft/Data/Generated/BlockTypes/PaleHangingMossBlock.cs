@@ -58,13 +58,13 @@ public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Tip = properties.ChildrenMap.ContainsKey("tip") ? properties["tip"].GetString() == "true" : Tip,
+            Tip = properties.Contains("tip") ? properties["tip"].GetString() == "true" : Tip,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("tip", Tip.ToString().ToLower())
+        return new CompoundTag(
+            ("tip", new StringTag(Tip.ToString().ToLower()))
         );
     }
     

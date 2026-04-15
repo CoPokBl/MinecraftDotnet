@@ -82,17 +82,17 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            CanSummon = properties.ChildrenMap.ContainsKey("can_summon") ? properties["can_summon"].GetString() == "true" : CanSummon,
-            Shrieking = properties.ChildrenMap.ContainsKey("shrieking") ? properties["shrieking"].GetString() == "true" : Shrieking,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            CanSummon = properties.Contains("can_summon") ? properties["can_summon"].GetString() == "true" : CanSummon,
+            Shrieking = properties.Contains("shrieking") ? properties["shrieking"].GetString() == "true" : Shrieking,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("can_summon", CanSummon.ToString().ToLower()),
-            new StringTag("shrieking", Shrieking.ToString().ToLower()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("can_summon", new StringTag(CanSummon.ToString().ToLower())),
+            ("shrieking", new StringTag(Shrieking.ToString().ToLower())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

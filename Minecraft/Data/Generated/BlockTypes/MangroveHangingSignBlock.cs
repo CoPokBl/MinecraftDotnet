@@ -252,17 +252,17 @@ public record MangroveHangingSignBlock(Identifier Identifier, bool Attached, int
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Attached = properties.ChildrenMap.ContainsKey("attached") ? properties["attached"].GetString() == "true" : Attached,
-            Rotation = properties.ChildrenMap.ContainsKey("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Attached = properties.Contains("attached") ? properties["attached"].GetString() == "true" : Attached,
+            Rotation = properties.Contains("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("attached", Attached.ToString().ToLower()),
-            new StringTag("rotation", Rotation.ToString()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("attached", new StringTag(Attached.ToString().ToLower())),
+            ("rotation", new StringTag(Rotation.ToString())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

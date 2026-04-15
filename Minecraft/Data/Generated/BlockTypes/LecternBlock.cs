@@ -111,17 +111,17 @@ public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            HasBook = properties.ChildrenMap.ContainsKey("has_book") ? properties["has_book"].GetString() == "true" : HasBook,
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            HasBook = properties.Contains("has_book") ? properties["has_book"].GetString() == "true" : HasBook,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("has_book", HasBook.ToString().ToLower()),
-            new StringTag("powered", Powered.ToString().ToLower())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("has_book", new StringTag(HasBook.ToString().ToLower())),
+            ("powered", new StringTag(Powered.ToString().ToLower()))
         );
     }
     

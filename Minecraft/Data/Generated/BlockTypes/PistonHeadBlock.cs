@@ -133,17 +133,17 @@ public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeVa
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            TypeValue = properties.ChildrenMap.ContainsKey("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Short = properties.ChildrenMap.ContainsKey("short") ? properties["short"].GetString() == "true" : Short,
+            TypeValue = properties.Contains("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
+            Facing = properties.Contains("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Short = properties.Contains("short") ? properties["short"].GetString() == "true" : Short,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("type", TypeToName(TypeValue)),
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("short", Short.ToString().ToLower())
+        return new CompoundTag(
+            ("type", new StringTag(TypeToName(TypeValue))),
+            ("facing", new StringTag(Facing.ToName())),
+            ("short", new StringTag(Short.ToString().ToLower()))
         );
     }
     

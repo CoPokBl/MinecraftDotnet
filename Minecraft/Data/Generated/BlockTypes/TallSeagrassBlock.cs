@@ -59,13 +59,13 @@ public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Half = properties.ChildrenMap.ContainsKey("half") ? BlockHalfExtensions.FromString(properties["half"].GetString()) : Half,
+            Half = properties.Contains("half") ? BlockHalfExtensions.FromString(properties["half"].GetString()) : Half,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("half", Half.ToName())
+        return new CompoundTag(
+            ("half", new StringTag(Half.ToName()))
         );
     }
     

@@ -80,15 +80,15 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Enabled = properties.ChildrenMap.ContainsKey("enabled") ? properties["enabled"].GetString() == "true" : Enabled,
-            FacingValue = properties.ChildrenMap.ContainsKey("facing") ? FacingFromString(properties["facing"].GetString()) : FacingValue,
+            Enabled = properties.Contains("enabled") ? properties["enabled"].GetString() == "true" : Enabled,
+            FacingValue = properties.Contains("facing") ? FacingFromString(properties["facing"].GetString()) : FacingValue,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("enabled", Enabled.ToString().ToLower()),
-            new StringTag("facing", FacingToName(FacingValue))
+        return new CompoundTag(
+            ("enabled", new StringTag(Enabled.ToString().ToLower())),
+            ("facing", new StringTag(FacingToName(FacingValue)))
         );
     }
     

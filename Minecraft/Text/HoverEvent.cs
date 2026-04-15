@@ -3,23 +3,27 @@ using NBT.Tags;
 
 namespace Minecraft.Text;
 
-public record HoverEvent(string Action, params INbtTag?[] Fields) {
+public record HoverEvent(string Action, params (string Key, INbtTag? Tag)[] Fields) {
 
     public static HoverEvent ShowText(TextComponent text) {
-        return new HoverEvent("show_text", text.WithComponentName("value"));
+        return new HoverEvent("show_text", ("value", text.SerialiseToTag()));
     }
 
     public static HoverEvent ShowItem(string id, int count, CompoundTag? components = null) {
-        return new HoverEvent("show_item", 
-            new StringTag("id", id), 
-            new IntegerTag("count", count),
-            components?.WithName("components"));
+        List<(string, INbtTag?)> fields = [
+            ("id", new StringTag(id)),
+            ("count", new IntegerTag(count))
+        ];
+        if (components != null) {
+            fields.Add(("components", components));
+        }
+        return new HoverEvent("show_item", fields.ToArray());
     }
 
-    public static HoverEvent ShowEntity(TextComponent name, string type, string uuid) {  // TODO: Untested (does the entity need to exist on client)
-        return new HoverEvent("show_entity", 
-            name.WithComponentName("name"),
-            new StringTag("id", type),
-            new StringTag("uuid", uuid));
+    public static HoverEvent ShowEntity(TextComponent name, string type, string uuid) {  // TODO: Untested
+        return new HoverEvent("show_entity",
+            ("name", name.SerialiseToTag()),
+            ("id", new StringTag(type)),
+            ("uuid", new StringTag(uuid)));
     }
 }

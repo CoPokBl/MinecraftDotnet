@@ -66,15 +66,15 @@ public record WaxedExposedCopperLanternBlock(Identifier Identifier, bool Hanging
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Hanging = properties.ChildrenMap.ContainsKey("hanging") ? properties["hanging"].GetString() == "true" : Hanging,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Hanging = properties.Contains("hanging") ? properties["hanging"].GetString() == "true" : Hanging,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("hanging", Hanging.ToString().ToLower()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("hanging", new StringTag(Hanging.ToString().ToLower())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

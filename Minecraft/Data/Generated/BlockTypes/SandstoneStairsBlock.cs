@@ -331,19 +331,19 @@ public record SandstoneStairsBlock(Identifier Identifier, Direction Facing, Sand
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            HalfValue = properties.ChildrenMap.ContainsKey("half") ? HalfFromString(properties["half"].GetString()) : HalfValue,
-            Shape = properties.ChildrenMap.ContainsKey("shape") ? StairShapeExtensions.FromString(properties["shape"].GetString()) : Shape,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            HalfValue = properties.Contains("half") ? HalfFromString(properties["half"].GetString()) : HalfValue,
+            Shape = properties.Contains("shape") ? StairShapeExtensions.FromString(properties["shape"].GetString()) : Shape,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("half", HalfToName(HalfValue)),
-            new StringTag("shape", Shape.ToName()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("half", new StringTag(HalfToName(HalfValue))),
+            ("shape", new StringTag(Shape.ToName())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

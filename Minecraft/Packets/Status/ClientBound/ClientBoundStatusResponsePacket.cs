@@ -86,7 +86,7 @@ public class ClientBoundStatusResponsePacket : ClientBoundPacket {
         }
         
         if (obj.TryGetValue("description", out JToken? value)) {
-            packet.Description = TextComponent.FromTag(INbtTag.FromJson(null, value));
+            packet.Description = TextComponent.FromTag(INbtTag.FromJson(value));
         }
 
         if (obj.TryGetValue("favicon", out JToken? favicon)) {

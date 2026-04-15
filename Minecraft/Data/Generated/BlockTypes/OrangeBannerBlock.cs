@@ -87,13 +87,13 @@ public record OrangeBannerBlock(Identifier Identifier, int Rotation) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Rotation = properties.ChildrenMap.ContainsKey("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
+            Rotation = properties.Contains("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("rotation", Rotation.ToString())
+        return new CompoundTag(
+            ("rotation", new StringTag(Rotation.ToString()))
         );
     }
     

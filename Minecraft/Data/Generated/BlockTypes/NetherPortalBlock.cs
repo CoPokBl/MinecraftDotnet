@@ -59,13 +59,13 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            AxisValue = properties.ChildrenMap.ContainsKey("axis") ? AxisFromString(properties["axis"].GetString()) : AxisValue,
+            AxisValue = properties.Contains("axis") ? AxisFromString(properties["axis"].GetString()) : AxisValue,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("axis", AxisToName(AxisValue))
+        return new CompoundTag(
+            ("axis", new StringTag(AxisToName(AxisValue)))
         );
     }
     

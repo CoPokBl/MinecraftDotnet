@@ -139,17 +139,17 @@ public record LightningRodBlock(Identifier Identifier, Cardinal Facing, bool Pow
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Facing = properties.Contains("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("powered", Powered.ToString().ToLower()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("powered", new StringTag(Powered.ToString().ToLower())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

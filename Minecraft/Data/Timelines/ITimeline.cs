@@ -9,7 +9,7 @@ public interface ITimeline : IProtocolType {
     public CompoundTag Data { get; }
 
     public INbtTag ToNbt() {
-        return Data.WithName(null);
+        return Data;
     }
 
     public static ITimeline FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {

@@ -63,13 +63,13 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            ModeValue = properties.ChildrenMap.ContainsKey("mode") ? ModeFromString(properties["mode"].GetString()) : ModeValue,
+            ModeValue = properties.Contains("mode") ? ModeFromString(properties["mode"].GetString()) : ModeValue,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("mode", ModeToName(ModeValue))
+        return new CompoundTag(
+            ("mode", new StringTag(ModeToName(ModeValue)))
         );
     }
     

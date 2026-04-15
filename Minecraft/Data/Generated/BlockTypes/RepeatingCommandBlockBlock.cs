@@ -84,15 +84,15 @@ public record RepeatingCommandBlockBlock(Identifier Identifier, bool Conditional
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Conditional = properties.ChildrenMap.ContainsKey("conditional") ? properties["conditional"].GetString() == "true" : Conditional,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Conditional = properties.Contains("conditional") ? properties["conditional"].GetString() == "true" : Conditional,
+            Facing = properties.Contains("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("conditional", Conditional.ToString().ToLower()),
-            new StringTag("facing", Facing.ToName())
+        return new CompoundTag(
+            ("conditional", new StringTag(Conditional.ToString().ToLower())),
+            ("facing", new StringTag(Facing.ToName()))
         );
     }
     

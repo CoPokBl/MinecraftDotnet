@@ -84,15 +84,15 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Ominous = properties.ChildrenMap.ContainsKey("ominous") ? properties["ominous"].GetString() == "true" : Ominous,
-            TrialSpawnerStateValue = properties.ChildrenMap.ContainsKey("trial_spawner_state") ? TrialSpawnerStateFromString(properties["trial_spawner_state"].GetString()) : TrialSpawnerStateValue,
+            Ominous = properties.Contains("ominous") ? properties["ominous"].GetString() == "true" : Ominous,
+            TrialSpawnerStateValue = properties.Contains("trial_spawner_state") ? TrialSpawnerStateFromString(properties["trial_spawner_state"].GetString()) : TrialSpawnerStateValue,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("ominous", Ominous.ToString().ToLower()),
-            new StringTag("trial_spawner_state", TrialSpawnerStateToName(TrialSpawnerStateValue))
+        return new CompoundTag(
+            ("ominous", new StringTag(Ominous.ToString().ToLower())),
+            ("trial_spawner_state", new StringTag(TrialSpawnerStateToName(TrialSpawnerStateValue)))
         );
     }
     

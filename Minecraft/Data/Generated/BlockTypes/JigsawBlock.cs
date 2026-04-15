@@ -79,13 +79,13 @@ public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Orientation = properties.ChildrenMap.ContainsKey("orientation") ? OrientationExtensions.FromString(properties["orientation"].GetString()) : Orientation,
+            Orientation = properties.Contains("orientation") ? OrientationExtensions.FromString(properties["orientation"].GetString()) : Orientation,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("orientation", Orientation.ToName())
+        return new CompoundTag(
+            ("orientation", new StringTag(Orientation.ToName()))
         );
     }
     

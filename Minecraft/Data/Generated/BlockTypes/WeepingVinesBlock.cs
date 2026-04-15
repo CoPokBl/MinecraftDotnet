@@ -107,13 +107,13 @@ public record WeepingVinesBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
+            Age = properties.Contains("age") ? int.Parse(properties["age"].GetString()) : Age,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("age", Age.ToString())
+        return new CompoundTag(
+            ("age", new StringTag(Age.ToString()))
         );
     }
     

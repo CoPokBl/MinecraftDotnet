@@ -163,17 +163,17 @@ public record DriedGhastBlock(Identifier Identifier, Direction Facing, int Hydra
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Hydration = properties.ChildrenMap.ContainsKey("hydration") ? int.Parse(properties["hydration"].GetString()) : Hydration,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Hydration = properties.Contains("hydration") ? int.Parse(properties["hydration"].GetString()) : Hydration,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("hydration", Hydration.ToString()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("hydration", new StringTag(Hydration.ToString())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

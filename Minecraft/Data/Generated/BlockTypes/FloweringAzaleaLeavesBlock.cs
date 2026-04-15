@@ -153,17 +153,17 @@ public record FloweringAzaleaLeavesBlock(Identifier Identifier, int Distance, bo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Distance = properties.ChildrenMap.ContainsKey("distance") ? int.Parse(properties["distance"].GetString()) : Distance,
-            Persistent = properties.ChildrenMap.ContainsKey("persistent") ? properties["persistent"].GetString() == "true" : Persistent,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Distance = properties.Contains("distance") ? int.Parse(properties["distance"].GetString()) : Distance,
+            Persistent = properties.Contains("persistent") ? properties["persistent"].GetString() == "true" : Persistent,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("distance", Distance.ToString()),
-            new StringTag("persistent", Persistent.ToString().ToLower()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("distance", new StringTag(Distance.ToString())),
+            ("persistent", new StringTag(Persistent.ToString().ToLower())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

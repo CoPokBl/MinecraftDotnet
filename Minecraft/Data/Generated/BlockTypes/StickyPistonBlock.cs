@@ -84,15 +84,15 @@ public record StickyPistonBlock(Identifier Identifier, bool Extended, Cardinal F
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Extended = properties.ChildrenMap.ContainsKey("extended") ? properties["extended"].GetString() == "true" : Extended,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Extended = properties.Contains("extended") ? properties["extended"].GetString() == "true" : Extended,
+            Facing = properties.Contains("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("extended", Extended.ToString().ToLower()),
-            new StringTag("facing", Facing.ToName())
+        return new CompoundTag(
+            ("extended", new StringTag(Extended.ToString().ToLower())),
+            ("facing", new StringTag(Facing.ToName()))
         );
     }
     

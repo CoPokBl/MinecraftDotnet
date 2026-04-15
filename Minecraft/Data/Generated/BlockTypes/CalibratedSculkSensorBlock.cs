@@ -1411,19 +1411,19 @@ public record CalibratedSculkSensorBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Power = properties.ChildrenMap.ContainsKey("power") ? int.Parse(properties["power"].GetString()) : Power,
-            SculkSensorPhase = properties.ChildrenMap.ContainsKey("sculk_sensor_phase") ? SculkSensorPhaseExtensions.FromString(properties["sculk_sensor_phase"].GetString()) : SculkSensorPhase,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Power = properties.Contains("power") ? int.Parse(properties["power"].GetString()) : Power,
+            SculkSensorPhase = properties.Contains("sculk_sensor_phase") ? SculkSensorPhaseExtensions.FromString(properties["sculk_sensor_phase"].GetString()) : SculkSensorPhase,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("power", Power.ToString()),
-            new StringTag("sculk_sensor_phase", SculkSensorPhase.ToName()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("power", new StringTag(Power.ToString())),
+            ("sculk_sensor_phase", new StringTag(SculkSensorPhase.ToName())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

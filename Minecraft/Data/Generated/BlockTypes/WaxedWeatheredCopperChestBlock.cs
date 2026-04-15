@@ -136,17 +136,17 @@ public record WaxedWeatheredCopperChestBlock(Identifier Identifier, WaxedWeather
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            TypeValue = properties.ChildrenMap.ContainsKey("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            TypeValue = properties.Contains("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("type", TypeToName(TypeValue)),
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("type", new StringTag(TypeToName(TypeValue))),
+            ("facing", new StringTag(Facing.ToName())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

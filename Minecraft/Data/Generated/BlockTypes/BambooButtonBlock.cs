@@ -136,17 +136,17 @@ public record BambooButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Face = properties.ChildrenMap.ContainsKey("face") ? AttachDirectionExtensions.FromString(properties["face"].GetString()) : Face,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Face = properties.Contains("face") ? AttachDirectionExtensions.FromString(properties["face"].GetString()) : Face,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("face", Face.ToName()),
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("powered", Powered.ToString().ToLower())
+        return new CompoundTag(
+            ("face", new StringTag(Face.ToName())),
+            ("facing", new StringTag(Facing.ToName())),
+            ("powered", new StringTag(Powered.ToString().ToLower()))
         );
     }
     

@@ -58,13 +58,13 @@ public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Drag = properties.ChildrenMap.ContainsKey("drag") ? properties["drag"].GetString() == "true" : Drag,
+            Drag = properties.Contains("drag") ? properties["drag"].GetString() == "true" : Drag,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("drag", Drag.ToString().ToLower())
+        return new CompoundTag(
+            ("drag", new StringTag(Drag.ToString().ToLower()))
         );
     }
     

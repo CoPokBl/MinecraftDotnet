@@ -99,15 +99,15 @@ public record LeafLitterBlock(Identifier Identifier, Direction Facing, int Segme
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            SegmentAmount = properties.ChildrenMap.ContainsKey("segment_amount") ? int.Parse(properties["segment_amount"].GetString()) : SegmentAmount,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            SegmentAmount = properties.Contains("segment_amount") ? int.Parse(properties["segment_amount"].GetString()) : SegmentAmount,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("segment_amount", SegmentAmount.ToString())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("segment_amount", new StringTag(SegmentAmount.ToString()))
         );
     }
     

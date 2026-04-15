@@ -291,19 +291,19 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Delay = properties.ChildrenMap.ContainsKey("delay") ? int.Parse(properties["delay"].GetString()) : Delay,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Locked = properties.ChildrenMap.ContainsKey("locked") ? properties["locked"].GetString() == "true" : Locked,
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Delay = properties.Contains("delay") ? int.Parse(properties["delay"].GetString()) : Delay,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Locked = properties.Contains("locked") ? properties["locked"].GetString() == "true" : Locked,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("delay", Delay.ToString()),
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("locked", Locked.ToString().ToLower()),
-            new StringTag("powered", Powered.ToString().ToLower())
+        return new CompoundTag(
+            ("delay", new StringTag(Delay.ToString())),
+            ("facing", new StringTag(Facing.ToName())),
+            ("locked", new StringTag(Locked.ToString().ToLower())),
+            ("powered", new StringTag(Powered.ToString().ToLower()))
         );
     }
     

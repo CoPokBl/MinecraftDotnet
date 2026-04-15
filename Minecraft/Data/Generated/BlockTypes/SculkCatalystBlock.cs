@@ -58,13 +58,13 @@ public record SculkCatalystBlock(Identifier Identifier, bool Bloom) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Bloom = properties.ChildrenMap.ContainsKey("bloom") ? properties["bloom"].GetString() == "true" : Bloom,
+            Bloom = properties.Contains("bloom") ? properties["bloom"].GetString() == "true" : Bloom,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("bloom", Bloom.ToString().ToLower())
+        return new CompoundTag(
+            ("bloom", new StringTag(Bloom.ToString().ToLower()))
         );
     }
     

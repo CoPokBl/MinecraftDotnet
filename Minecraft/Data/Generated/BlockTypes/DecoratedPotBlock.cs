@@ -108,17 +108,17 @@ public record DecoratedPotBlock(Identifier Identifier, bool Cracked, Direction F
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Cracked = properties.ChildrenMap.ContainsKey("cracked") ? properties["cracked"].GetString() == "true" : Cracked,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Cracked = properties.Contains("cracked") ? properties["cracked"].GetString() == "true" : Cracked,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("cracked", Cracked.ToString().ToLower()),
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("cracked", new StringTag(Cracked.ToString().ToLower())),
+            ("facing", new StringTag(Facing.ToName())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

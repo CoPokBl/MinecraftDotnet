@@ -58,13 +58,13 @@ public record CaveVinesPlantBlock(Identifier Identifier, bool Berries) : IBlock 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Berries = properties.ChildrenMap.ContainsKey("berries") ? properties["berries"].GetString() == "true" : Berries,
+            Berries = properties.Contains("berries") ? properties["berries"].GetString() == "true" : Berries,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("berries", Berries.ToString().ToLower())
+        return new CompoundTag(
+            ("berries", new StringTag(Berries.ToString().ToLower()))
         );
     }
     

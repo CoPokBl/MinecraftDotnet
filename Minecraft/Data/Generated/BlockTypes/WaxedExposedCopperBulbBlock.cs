@@ -66,15 +66,15 @@ public record WaxedExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Lit = properties.Contains("lit") ? properties["lit"].GetString() == "true" : Lit,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("lit", Lit.ToString().ToLower()),
-            new StringTag("powered", Powered.ToString().ToLower())
+        return new CompoundTag(
+            ("lit", new StringTag(Lit.ToString().ToLower())),
+            ("powered", new StringTag(Powered.ToString().ToLower()))
         );
     }
     

@@ -178,21 +178,21 @@ public record CherryFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            East = properties.ChildrenMap.ContainsKey("east") ? properties["east"].GetString() == "true" : East,
-            North = properties.ChildrenMap.ContainsKey("north") ? properties["north"].GetString() == "true" : North,
-            South = properties.ChildrenMap.ContainsKey("south") ? properties["south"].GetString() == "true" : South,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
-            West = properties.ChildrenMap.ContainsKey("west") ? properties["west"].GetString() == "true" : West,
+            East = properties.Contains("east") ? properties["east"].GetString() == "true" : East,
+            North = properties.Contains("north") ? properties["north"].GetString() == "true" : North,
+            South = properties.Contains("south") ? properties["south"].GetString() == "true" : South,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            West = properties.Contains("west") ? properties["west"].GetString() == "true" : West,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("east", East.ToString().ToLower()),
-            new StringTag("north", North.ToString().ToLower()),
-            new StringTag("south", South.ToString().ToLower()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower()),
-            new StringTag("west", West.ToString().ToLower())
+        return new CompoundTag(
+            ("east", new StringTag(East.ToString().ToLower())),
+            ("north", new StringTag(North.ToString().ToLower())),
+            ("south", new StringTag(South.ToString().ToLower())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower())),
+            ("west", new StringTag(West.ToString().ToLower()))
         );
     }
     

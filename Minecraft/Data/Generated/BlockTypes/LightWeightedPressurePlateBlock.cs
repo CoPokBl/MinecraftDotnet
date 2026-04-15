@@ -87,13 +87,13 @@ public record LightWeightedPressurePlateBlock(Identifier Identifier, int Power) 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Power = properties.ChildrenMap.ContainsKey("power") ? int.Parse(properties["power"].GetString()) : Power,
+            Power = properties.Contains("power") ? int.Parse(properties["power"].GetString()) : Power,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("power", Power.ToString())
+        return new CompoundTag(
+            ("power", new StringTag(Power.ToString()))
         );
     }
     

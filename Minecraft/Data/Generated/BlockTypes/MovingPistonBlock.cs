@@ -85,15 +85,15 @@ public record MovingPistonBlock(Identifier Identifier, MovingPistonBlock.Type Ty
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            TypeValue = properties.ChildrenMap.ContainsKey("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            TypeValue = properties.Contains("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
+            Facing = properties.Contains("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("type", TypeToName(TypeValue)),
-            new StringTag("facing", Facing.ToName())
+        return new CompoundTag(
+            ("type", new StringTag(TypeToName(TypeValue))),
+            ("facing", new StringTag(Facing.ToName()))
         );
     }
     

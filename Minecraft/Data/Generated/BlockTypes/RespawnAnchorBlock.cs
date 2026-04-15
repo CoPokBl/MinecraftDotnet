@@ -65,13 +65,13 @@ public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Charges = properties.ChildrenMap.ContainsKey("charges") ? int.Parse(properties["charges"].GetString()) : Charges,
+            Charges = properties.Contains("charges") ? int.Parse(properties["charges"].GetString()) : Charges,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("charges", Charges.ToString())
+        return new CompoundTag(
+            ("charges", new StringTag(Charges.ToString()))
         );
     }
     

@@ -163,17 +163,17 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            TiltValue = properties.ChildrenMap.ContainsKey("tilt") ? TiltFromString(properties["tilt"].GetString()) : TiltValue,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            TiltValue = properties.Contains("tilt") ? TiltFromString(properties["tilt"].GetString()) : TiltValue,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("tilt", TiltToName(TiltValue)),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("tilt", new StringTag(TiltToName(TiltValue))),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

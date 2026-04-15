@@ -58,13 +58,13 @@ public record TntBlock(Identifier Identifier, bool Unstable) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Unstable = properties.ChildrenMap.ContainsKey("unstable") ? properties["unstable"].GetString() == "true" : Unstable,
+            Unstable = properties.Contains("unstable") ? properties["unstable"].GetString() == "true" : Unstable,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("unstable", Unstable.ToString().ToLower())
+        return new CompoundTag(
+            ("unstable", new StringTag(Unstable.ToString().ToLower()))
         );
     }
     

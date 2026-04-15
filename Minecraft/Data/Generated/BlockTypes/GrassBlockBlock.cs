@@ -58,13 +58,13 @@ public record GrassBlockBlock(Identifier Identifier, bool Snowy) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Snowy = properties.ChildrenMap.ContainsKey("snowy") ? properties["snowy"].GetString() == "true" : Snowy,
+            Snowy = properties.Contains("snowy") ? properties["snowy"].GetString() == "true" : Snowy,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("snowy", Snowy.ToString().ToLower())
+        return new CompoundTag(
+            ("snowy", new StringTag(Snowy.ToString().ToLower()))
         );
     }
     

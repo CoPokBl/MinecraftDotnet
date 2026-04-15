@@ -5,10 +5,10 @@ namespace Minecraft.Data.Enchantments;
 
 public record EnchantmentCost(int Base, int PerLevelAboveFirst) {
     
-    public CompoundTag ToNbt(string name) {
-        return new CompoundTag(name, 
-            new IntegerTag("base", Base), 
-            new IntegerTag("per_level_above_first", PerLevelAboveFirst));
+    public CompoundTag ToNbt() {
+        return new CompoundTag(
+            ("base", new IntegerTag(Base)),
+            ("per_level_above_first", new IntegerTag(PerLevelAboveFirst)));
     }
     
     public static EnchantmentCost FromNbt(CompoundTag tag) {

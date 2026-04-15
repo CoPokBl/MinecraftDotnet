@@ -59,13 +59,13 @@ public record JungleSaplingBlock(Identifier Identifier, int Stage) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Stage = properties.ChildrenMap.ContainsKey("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
+            Stage = properties.Contains("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("stage", Stage.ToString())
+        return new CompoundTag(
+            ("stage", new StringTag(Stage.ToString()))
         );
     }
     

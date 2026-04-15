@@ -175,19 +175,19 @@ public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            InWall = properties.ChildrenMap.ContainsKey("in_wall") ? properties["in_wall"].GetString() == "true" : InWall,
-            Open = properties.ChildrenMap.ContainsKey("open") ? properties["open"].GetString() == "true" : Open,
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            InWall = properties.Contains("in_wall") ? properties["in_wall"].GetString() == "true" : InWall,
+            Open = properties.Contains("open") ? properties["open"].GetString() == "true" : Open,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("in_wall", InWall.ToString().ToLower()),
-            new StringTag("open", Open.ToString().ToLower()),
-            new StringTag("powered", Powered.ToString().ToLower())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("in_wall", new StringTag(InWall.ToString().ToLower())),
+            ("open", new StringTag(Open.ToString().ToLower())),
+            ("powered", new StringTag(Powered.ToString().ToLower()))
         );
     }
     

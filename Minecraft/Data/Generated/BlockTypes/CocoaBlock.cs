@@ -88,15 +88,15 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Age = properties.Contains("age") ? int.Parse(properties["age"].GetString()) : Age,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("age", Age.ToString()),
-            new StringTag("facing", Facing.ToName())
+        return new CompoundTag(
+            ("age", new StringTag(Age.ToString())),
+            ("facing", new StringTag(Facing.ToName()))
         );
     }
     

@@ -204,17 +204,17 @@ public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Ori
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Crafting = properties.ChildrenMap.ContainsKey("crafting") ? properties["crafting"].GetString() == "true" : Crafting,
-            Orientation = properties.ChildrenMap.ContainsKey("orientation") ? OrientationExtensions.FromString(properties["orientation"].GetString()) : Orientation,
-            Triggered = properties.ChildrenMap.ContainsKey("triggered") ? properties["triggered"].GetString() == "true" : Triggered,
+            Crafting = properties.Contains("crafting") ? properties["crafting"].GetString() == "true" : Crafting,
+            Orientation = properties.Contains("orientation") ? OrientationExtensions.FromString(properties["orientation"].GetString()) : Orientation,
+            Triggered = properties.Contains("triggered") ? properties["triggered"].GetString() == "true" : Triggered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("crafting", Crafting.ToString().ToLower()),
-            new StringTag("orientation", Orientation.ToName()),
-            new StringTag("triggered", Triggered.ToString().ToLower())
+        return new CompoundTag(
+            ("crafting", new StringTag(Crafting.ToString().ToLower())),
+            ("orientation", new StringTag(Orientation.ToName())),
+            ("triggered", new StringTag(Triggered.ToString().ToLower()))
         );
     }
     

@@ -58,13 +58,13 @@ public record CherryPressurePlateBlock(Identifier Identifier, bool Powered) : IB
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("powered", Powered.ToString().ToLower())
+        return new CompoundTag(
+            ("powered", new StringTag(Powered.ToString().ToLower()))
         );
     }
     

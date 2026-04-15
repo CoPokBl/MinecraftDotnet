@@ -23,39 +23,39 @@ public interface IDimensionType : IProtocolType {
     public INbtTag? Timelines { get; }
     
     public INbtTag ToNbt() {
-        List<INbtTag?> children = [
-            new BooleanTag("has_fixed_time", HasFixedTime),
-            new BooleanTag("has_skylight", HasSkyLight),
-            new BooleanTag("has_ceiling", HasCeiling),
-            new DoubleTag("coordinate_scale", CoordinateScale),
-            new IntegerTag("min_y", MinY),
-            new IntegerTag("height", Height),
-            new IntegerTag("logical_height", LogicalHeight),
-            new StringTag("infiniburn", InfiniBurn),
-            new StringTag("skybox", Skybox.ToString().ToLower()),
-            new StringTag("cardinal_light", CardinalLight.ToString().ToLower()),
-            new FloatTag("ambient_light", AmbientLight)
+        List<(string, INbtTag?)> children = [
+            ("has_fixed_time", new BooleanTag(HasFixedTime)),
+            ("has_skylight", new BooleanTag(HasSkyLight)),
+            ("has_ceiling", new BooleanTag(HasCeiling)),
+            ("coordinate_scale", new DoubleTag(CoordinateScale)),
+            ("min_y", new IntegerTag(MinY)),
+            ("height", new IntegerTag(Height)),
+            ("logical_height", new IntegerTag(LogicalHeight)),
+            ("infiniburn", new StringTag(InfiniBurn)),
+            ("skybox", new StringTag(Skybox.ToString().ToLower())),
+            ("cardinal_light", new StringTag(CardinalLight.ToString().ToLower())),
+            ("ambient_light", new FloatTag(AmbientLight))
         ];
 
         Or<int, CompoundTag> msll = MonsterSpawnLightLevel ?? new Or<int, CompoundTag>(0);
         if (msll.IsValue1) {
-            children.Add(new IntegerTag("monster_spawn_light_level", msll.Value1));
+            children.Add(("monster_spawn_light_level", new IntegerTag(msll.Value1)));
         }
         else {
-            children.Add(msll.Value2!.WithName("monster_spawn_light_level"));
+            children.Add(("monster_spawn_light_level", msll.Value2!));
         }
         
-        children.Add(new IntegerTag("monster_spawn_block_light_limit", MonsterSpawnBlockLightLimit));
+        children.Add(("monster_spawn_block_light_limit", new IntegerTag(MonsterSpawnBlockLightLimit)));
         
         if (Attributes != null) {
-            children.Add(Attributes.WithName("attributes"));
+            children.Add(("attributes", Attributes));
         }
 
         if (Timelines != null) {
-            children.Add(Timelines.WithName("timelines"));
+            children.Add(("timelines", Timelines));
         }
         
-        return new CompoundTag(null, children.ToArray());
+        return new CompoundTag(children.ToArray());
     }
 
     public static IDimensionType FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {

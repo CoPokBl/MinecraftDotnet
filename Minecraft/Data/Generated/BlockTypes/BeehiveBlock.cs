@@ -115,15 +115,15 @@ public record BeehiveBlock(Identifier Identifier, Direction Facing, int HoneyLev
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            HoneyLevel = properties.ChildrenMap.ContainsKey("honey_level") ? int.Parse(properties["honey_level"].GetString()) : HoneyLevel,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            HoneyLevel = properties.Contains("honey_level") ? int.Parse(properties["honey_level"].GetString()) : HoneyLevel,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("honey_level", HoneyLevel.ToString())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("honey_level", new StringTag(HoneyLevel.ToString()))
         );
     }
     

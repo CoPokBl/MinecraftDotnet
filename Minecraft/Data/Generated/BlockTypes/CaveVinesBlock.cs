@@ -211,15 +211,15 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
-            Berries = properties.ChildrenMap.ContainsKey("berries") ? properties["berries"].GetString() == "true" : Berries,
+            Age = properties.Contains("age") ? int.Parse(properties["age"].GetString()) : Age,
+            Berries = properties.Contains("berries") ? properties["berries"].GetString() == "true" : Berries,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("age", Age.ToString()),
-            new StringTag("berries", Berries.ToString().ToLower())
+        return new CompoundTag(
+            ("age", new StringTag(Age.ToString())),
+            ("berries", new StringTag(Berries.ToString().ToLower()))
         );
     }
     

@@ -207,38 +207,38 @@ public class ItemStack(
     
     public bool HasTag<T>(Tag<T> tag) {
         INbtTag? nbt = GetOrNull(DataComponent.CustomData);
-        return nbt is CompoundTag ct && ct.ChildrenMap.ContainsKey(tag.Id);
+        return nbt is CompoundTag ct && ct.Contains(tag.Id);
     }
     
     public ItemStack WithTag<T>(Tag<T> tag, T? value) {
-        CompoundTag nbt = GetOrNull(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag(null);
+        CompoundTag nbt = GetOrNull(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag();
 
         if (value == null) {
-            return With(DataComponent.CustomData, new CompoundTag(null, nbt.Children
-                .Where(t => t?.GetName() != tag.Id)
+            return With(DataComponent.CustomData, new CompoundTag(nbt.Children
+                .Where(t => t.Item1 != tag.Id)
                 .ToArray()));
         }
         
         JToken json = JToken.FromObject(value);
-        INbtTag nbtVal = INbtTag.FromJson(tag.Id, json);
+        INbtTag nbtVal = INbtTag.FromJson(json);
         
-        nbt = new CompoundTag(null, nbt.Children
-            .Where(t => t?.GetName() != tag.Id)
-            .Append(nbtVal)
+        nbt = new CompoundTag(nbt.Children
+            .Where(t => t.Item1 != tag.Id)
+            .Append((tag.Id, nbtVal))
             .ToArray());
         
         return With(DataComponent.CustomData, nbt);
     }
     
     public ItemStack WithoutTag<T>(Tag<T> tag) {
-        CompoundTag nbt = GetOrNull(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag(null);
+        CompoundTag nbt = GetOrNull(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag();
         
-        if (!nbt.ChildrenMap.ContainsKey(tag.Id)) {
+        if (!nbt.Contains(tag.Id)) {
             return this;  // No change if tag doesn't exist
         }
         
-        nbt = new CompoundTag(null, nbt.Children
-            .Where(t => t?.GetName() != tag.Id)
+        nbt = new CompoundTag(nbt.Children
+            .Where(t => t.Item1 != tag.Id)
             .ToArray());
         
         return With(DataComponent.CustomData, nbt);

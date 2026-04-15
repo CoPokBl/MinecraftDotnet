@@ -61,13 +61,13 @@ public record StrippedJungleWoodBlock(Identifier Identifier, Axis Axis) : IBlock
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Axis = properties.ChildrenMap.ContainsKey("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
+            Axis = properties.Contains("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("axis", Axis.ToName())
+        return new CompoundTag(
+            ("axis", new StringTag(Axis.ToName()))
         );
     }
     

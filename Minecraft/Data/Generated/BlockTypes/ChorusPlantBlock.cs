@@ -306,23 +306,23 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Down = properties.ChildrenMap.ContainsKey("down") ? properties["down"].GetString() == "true" : Down,
-            East = properties.ChildrenMap.ContainsKey("east") ? properties["east"].GetString() == "true" : East,
-            North = properties.ChildrenMap.ContainsKey("north") ? properties["north"].GetString() == "true" : North,
-            South = properties.ChildrenMap.ContainsKey("south") ? properties["south"].GetString() == "true" : South,
-            Up = properties.ChildrenMap.ContainsKey("up") ? properties["up"].GetString() == "true" : Up,
-            West = properties.ChildrenMap.ContainsKey("west") ? properties["west"].GetString() == "true" : West,
+            Down = properties.Contains("down") ? properties["down"].GetString() == "true" : Down,
+            East = properties.Contains("east") ? properties["east"].GetString() == "true" : East,
+            North = properties.Contains("north") ? properties["north"].GetString() == "true" : North,
+            South = properties.Contains("south") ? properties["south"].GetString() == "true" : South,
+            Up = properties.Contains("up") ? properties["up"].GetString() == "true" : Up,
+            West = properties.Contains("west") ? properties["west"].GetString() == "true" : West,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("down", Down.ToString().ToLower()),
-            new StringTag("east", East.ToString().ToLower()),
-            new StringTag("north", North.ToString().ToLower()),
-            new StringTag("south", South.ToString().ToLower()),
-            new StringTag("up", Up.ToString().ToLower()),
-            new StringTag("west", West.ToString().ToLower())
+        return new CompoundTag(
+            ("down", new StringTag(Down.ToString().ToLower())),
+            ("east", new StringTag(East.ToString().ToLower())),
+            ("north", new StringTag(North.ToString().ToLower())),
+            ("south", new StringTag(South.ToString().ToLower())),
+            ("up", new StringTag(Up.ToString().ToLower())),
+            ("west", new StringTag(West.ToString().ToLower()))
         );
     }
     

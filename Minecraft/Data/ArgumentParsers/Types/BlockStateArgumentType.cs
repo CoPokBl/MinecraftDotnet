@@ -13,28 +13,28 @@ public record BlockStateArgumentType() : ArgumentParser<IBlock>() {
         // string should look like: north=false,south=false,west=true,waterlogged=false,east=true
         // so just chuck it into a string, string dictionary
         if (string.IsNullOrWhiteSpace(propsStr)) {
-            return new CompoundTag(null);
+            return new CompoundTag();
         }
         
-        List<INbtTag?> props = [];
+        List<(string, INbtTag?)> props = [];
         string[] pairs = propsStr.Split(',');
         foreach (string pair in pairs) {
             string[] vals = pair.Split('=');
             string key = vals[0].Trim();
             string value = vals[1].Trim();
-            props.Add(new StringTag(key, value));
+            props.Add((key, new StringTag(value)));
         }
 
-        return new CompoundTag(null, props.ToArray());
+        return new CompoundTag(props.ToArray());
     }
     
     private static string PropertiesNbtToString(CompoundTag properties) {
         // Convert the properties NBT to a string format
         // This is the reverse of PropertiesStringToNbt
         List<string> pairs = [];
-        foreach (INbtTag? tag in properties.Children) {
+        foreach ((string key, INbtTag tag) in properties.Children) {
             if (tag is StringTag stringTag) {
-                pairs.Add($"{stringTag.Name}={stringTag.Value}");
+                pairs.Add($"{key}={stringTag.Value}");
             }
         }
         return string.Join(",", pairs);

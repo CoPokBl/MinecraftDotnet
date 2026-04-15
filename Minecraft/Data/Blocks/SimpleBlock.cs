@@ -23,6 +23,6 @@ public record SimpleBlock(Identifier Identifier, uint StateId, Identifier Catego
     }
 
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null);
+        return new CompoundTag();
     }
 }

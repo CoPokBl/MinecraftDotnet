@@ -75,7 +75,7 @@ public record {name}(Identifier Identifier, {args}) : IBlock {
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
+        return new CompoundTag(
 {to_nbt_fields}
         );
     }
@@ -530,7 +530,7 @@ public static class Block {
             // =====================================================
             StringBuilder loadStateLogic = new("return this with {\n");
             Func<string, string, string, string> withFormatter = (propName, fieldName, serialiser) => 
-                $"{CodeGenUtils.GetIndentation(3)}{fieldName} = properties.ChildrenMap.ContainsKey(\"{propName}\") ? {serialiser} : {fieldName},\n";
+                $"{CodeGenUtils.GetIndentation(3)}{fieldName} = properties.Contains(\"{propName}\") ? {serialiser} : {fieldName},\n";
             foreach (IProperty prop in props) {
                 string pascalPropName = GetPascalPropName(prop);
                 switch (prop) {
@@ -555,7 +555,7 @@ public static class Block {
             //               To NBT State Logic
             // =====================================================
             List<string> toNbtFields = [];
-            Func<string, string, string> toNbtFieldGenerator = (name, strVal) => $"{CodeGenUtils.GetIndentation(3)}new StringTag(\"{name}\", {strVal})";
+            Func<string, string, string> toNbtFieldGenerator = (name, strVal) => $"{CodeGenUtils.GetIndentation(3)}(\"{name}\", new StringTag({strVal}))";
             Action<string, string> addNbtField = (name, strVal) => {
                 toNbtFields.Add(toNbtFieldGenerator(name, strVal));
             };

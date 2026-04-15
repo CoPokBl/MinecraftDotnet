@@ -90,15 +90,15 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
-            Half = properties.ChildrenMap.ContainsKey("half") ? BlockHalfExtensions.FromString(properties["half"].GetString()) : Half,
+            Age = properties.Contains("age") ? int.Parse(properties["age"].GetString()) : Age,
+            Half = properties.Contains("half") ? BlockHalfExtensions.FromString(properties["half"].GetString()) : Half,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("age", Age.ToString()),
-            new StringTag("half", Half.ToName())
+        return new CompoundTag(
+            ("age", new StringTag(Age.ToString())),
+            ("half", new StringTag(Half.ToName()))
         );
     }
     

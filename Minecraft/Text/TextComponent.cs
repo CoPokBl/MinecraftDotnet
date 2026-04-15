@@ -163,70 +163,70 @@ public class TextComponent : CompoundTagSerialisable {
     }
 
     public override CompoundTag SerialiseToTag() {
-        List<INbtTag?> tags = [
-            new StringTag("type", Content.Type)
+        List<(string, INbtTag?)> tags = [
+            ("type", new StringTag(Content.Type))
         ];
         tags.AddRange(Content.Fields);  // add all the content fields
 
         if (Color != null) {
-            tags.Add(new StringTag("color", Color.Value.ToHex()));
+            tags.Add(("color", new StringTag(Color.Value.ToHex())));
         }
 
         if (Bold.HasValue) {
-            tags.Add(new BooleanTag("bold", Bold.Value));
+            tags.Add(("bold", new BooleanTag(Bold.Value)));
         }
 
         if (Underlined.HasValue) {
-            tags.Add(new BooleanTag("underlined", Underlined.Value));
+            tags.Add(("underlined", new BooleanTag(Underlined.Value)));
         }
 
         if (Italic.HasValue) {
-            tags.Add(new BooleanTag("italic", Italic.Value));
+            tags.Add(("italic", new BooleanTag(Italic.Value)));
         }
 
         if (Strikethrough.HasValue) {
-            tags.Add(new BooleanTag("strikethrough", Strikethrough.Value));
+            tags.Add(("strikethrough", new BooleanTag(Strikethrough.Value)));
         }
 
         if (Obfuscated.HasValue) {
-            tags.Add(new BooleanTag("obfuscated", Obfuscated.Value));
+            tags.Add(("obfuscated", new BooleanTag(Obfuscated.Value)));
         }
 
         if (Insertion != null) {
-            tags.Add(new StringTag("insertion", Insertion));
+            tags.Add(("insertion", new StringTag(Insertion)));
         }
 
         if (ShadowColor != null) {
-            tags.Add(new IntegerTag("shadow_color", ShadowColor.Value.ToDecimal()));
+            tags.Add(("shadow_color", new IntegerTag(ShadowColor.Value.ToDecimal())));
         }
 
         if (Font != null) {
-            tags.Add(new StringTag("font", Font));
+            tags.Add(("font", new StringTag(Font)));
         }
 
         if (ClickEvent != null) {
-            List<INbtTag?> fields = [
-                new StringTag("action", ClickEvent.Action)
+            List<(string, INbtTag?)> fields = [
+                ("action", new StringTag(ClickEvent.Action))
             ];
             fields.AddRange(ClickEvent.Fields);
-            tags.Add(new CompoundTag("click_event", fields.ToArray()));
+            tags.Add(("click_event", new CompoundTag(fields.ToArray())));
         }
 
         if (HoverEvent != null) {
-            List<INbtTag?> fields = [
-                new StringTag("action", HoverEvent.Action)
+            List<(string, INbtTag?)> fields = [
+                ("action", new StringTag(HoverEvent.Action))
             ];
             fields.AddRange(HoverEvent.Fields);
-            tags.Add(new CompoundTag("hover_event", fields.ToArray()));
+            tags.Add(("hover_event", new CompoundTag(fields.ToArray())));
         }
         
         // children
         if (Children.Count > 0) {
-            ListTag<CompoundTag> extra = new("extra", Children.Select(t => t.SerialiseToTag()).ToArray());
-            tags.Add(extra);
+            ListTag<CompoundTag> extra = new(Children.Select(t => t.SerialiseToTag()).ToArray());
+            tags.Add(("extra", extra));
         }
         
-        return new CompoundTag(ComponentName, tags.ToArray());
+        return new CompoundTag(tags.ToArray());
     }
 
     public static TextComponent FromTag(INbtTag tag) {
@@ -241,7 +241,7 @@ public class TextComponent : CompoundTagSerialisable {
         TextComponent textComponent = Empty();
         
         // alright, let's work out what content it has
-        Dictionary<string, INbtTag> fields = compound.ChildrenMap;
+        Dictionary<string, INbtTag> fields = compound.Children.ToDictionary(c => c.Item1, c => c.Item2);
 
         if (fields.Count == 1 && fields.ContainsKey("") && fields[""] is StringTag strTag) {
             // special case, if the tag has only one field with an empty name, it's a string
@@ -273,12 +273,12 @@ public class TextComponent : CompoundTagSerialisable {
                 fallback = ((StringTag)fallbackTag).Value;
             }
             if (fields.TryGetValue("with", out INbtTag? withTag)) {
-                with = ((ListTag)withTag).Tags.Select(FromTag).ToArray();
+                with = ((ListTag)withTag).Tags.ToArray().Select(FromTag).ToArray();
             }
             textComponent.Content = TextContent.Translatable(key, fallback, with);
         }
         else if (contentType == "score") {
-            Dictionary<string, INbtTag> scoreFields = ((CompoundTag)fields["score"]).ChildrenMap;
+            Dictionary<string, INbtTag> scoreFields = ((CompoundTag)fields["score"]).Children.ToDictionary(c => c.Item1, c => c.Item2);
             textComponent.Content = TextContent.ScoreboardValue(
                 ((StringTag)scoreFields["name"]).Value, 
                 ((StringTag)scoreFields["objective"]).Value);
@@ -398,11 +398,12 @@ public class TextComponent : CompoundTagSerialisable {
                 
                 case "show_item":
                     int count = 1;
-                    if (ct.ChildrenMap.TryGetValue("count", out INbtTag? countTag)) {
+                    INbtTag? countTag = ct["count"];
+                    if (countTag != null) {
                         count = countTag.GetInteger();
                     }
 
-                    ct.ChildrenMap.TryGetValue("components", out INbtTag? componentsTag);
+                    INbtTag? componentsTag = ct["components"];
                     textComponent.WithHoverEvent(HoverEvent.ShowItem(ct["id"]!.GetString(), count, (CompoundTag?)componentsTag));
                     break;
                 

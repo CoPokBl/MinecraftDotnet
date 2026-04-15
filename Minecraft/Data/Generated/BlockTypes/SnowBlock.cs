@@ -71,13 +71,13 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Layers = properties.ChildrenMap.ContainsKey("layers") ? int.Parse(properties["layers"].GetString()) : Layers,
+            Layers = properties.Contains("layers") ? int.Parse(properties["layers"].GetString()) : Layers,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("layers", Layers.ToString())
+        return new CompoundTag(
+            ("layers", new StringTag(Layers.ToString()))
         );
     }
     

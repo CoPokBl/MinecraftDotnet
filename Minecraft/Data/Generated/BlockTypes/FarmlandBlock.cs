@@ -71,13 +71,13 @@ public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Moisture = properties.ChildrenMap.ContainsKey("moisture") ? int.Parse(properties["moisture"].GetString()) : Moisture,
+            Moisture = properties.Contains("moisture") ? int.Parse(properties["moisture"].GetString()) : Moisture,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("moisture", Moisture.ToString())
+        return new CompoundTag(
+            ("moisture", new StringTag(Moisture.ToString()))
         );
     }
     

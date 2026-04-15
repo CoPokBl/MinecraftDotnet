@@ -124,15 +124,15 @@ public record PiglinHeadBlock(Identifier Identifier, bool Powered, int Rotation)
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
-            Rotation = properties.ChildrenMap.ContainsKey("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Rotation = properties.Contains("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("powered", Powered.ToString().ToLower()),
-            new StringTag("rotation", Rotation.ToString())
+        return new CompoundTag(
+            ("powered", new StringTag(Powered.ToString().ToLower())),
+            ("rotation", new StringTag(Rotation.ToString()))
         );
     }
     

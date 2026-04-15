@@ -130,17 +130,17 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            ThicknessValue = properties.ChildrenMap.ContainsKey("thickness") ? ThicknessFromString(properties["thickness"].GetString()) : ThicknessValue,
-            VerticalDirectionValue = properties.ChildrenMap.ContainsKey("vertical_direction") ? VerticalDirectionFromString(properties["vertical_direction"].GetString()) : VerticalDirectionValue,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            ThicknessValue = properties.Contains("thickness") ? ThicknessFromString(properties["thickness"].GetString()) : ThicknessValue,
+            VerticalDirectionValue = properties.Contains("vertical_direction") ? VerticalDirectionFromString(properties["vertical_direction"].GetString()) : VerticalDirectionValue,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("thickness", ThicknessToName(ThicknessValue)),
-            new StringTag("vertical_direction", VerticalDirectionToName(VerticalDirectionValue)),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("thickness", new StringTag(ThicknessToName(ThicknessValue))),
+            ("vertical_direction", new StringTag(VerticalDirectionToName(VerticalDirectionValue))),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

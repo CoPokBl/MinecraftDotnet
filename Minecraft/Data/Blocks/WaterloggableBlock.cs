@@ -35,7 +35,7 @@ public record WaterloggableBlock(Identifier Identifier,  uint StateIdAirLogged, 
     }
 
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower()));
+        return new CompoundTag(
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower())));
     }
 }

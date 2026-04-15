@@ -87,13 +87,13 @@ public record LavaBlock(Identifier Identifier, int Level) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Level = properties.ChildrenMap.ContainsKey("level") ? int.Parse(properties["level"].GetString()) : Level,
+            Level = properties.Contains("level") ? int.Parse(properties["level"].GetString()) : Level,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("level", Level.ToString())
+        return new CompoundTag(
+            ("level", new StringTag(Level.ToString()))
         );
     }
     

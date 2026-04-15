@@ -156,17 +156,17 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Bottom = properties.ChildrenMap.ContainsKey("bottom") ? properties["bottom"].GetString() == "true" : Bottom,
-            Distance = properties.ChildrenMap.ContainsKey("distance") ? int.Parse(properties["distance"].GetString()) : Distance,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Bottom = properties.Contains("bottom") ? properties["bottom"].GetString() == "true" : Bottom,
+            Distance = properties.Contains("distance") ? int.Parse(properties["distance"].GetString()) : Distance,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("bottom", Bottom.ToString().ToLower()),
-            new StringTag("distance", Distance.ToString()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("bottom", new StringTag(Bottom.ToString().ToLower())),
+            ("distance", new StringTag(Distance.ToString())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

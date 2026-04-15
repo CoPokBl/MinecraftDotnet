@@ -58,13 +58,13 @@ public record RedstoneLampBlock(Identifier Identifier, bool Lit) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
+            Lit = properties.Contains("lit") ? properties["lit"].GetString() == "true" : Lit,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("lit", Lit.ToString().ToLower())
+        return new CompoundTag(
+            ("lit", new StringTag(Lit.ToString().ToLower()))
         );
     }
     

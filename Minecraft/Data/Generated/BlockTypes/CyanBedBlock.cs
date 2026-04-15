@@ -119,17 +119,17 @@ public record CyanBedBlock(Identifier Identifier, Direction Facing, bool Occupie
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Occupied = properties.ChildrenMap.ContainsKey("occupied") ? properties["occupied"].GetString() == "true" : Occupied,
-            Part = properties.ChildrenMap.ContainsKey("part") ? BedPartExtensions.FromString(properties["part"].GetString()) : Part,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Occupied = properties.Contains("occupied") ? properties["occupied"].GetString() == "true" : Occupied,
+            Part = properties.Contains("part") ? BedPartExtensions.FromString(properties["part"].GetString()) : Part,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("occupied", Occupied.ToString().ToLower()),
-            new StringTag("part", Part.ToName())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("occupied", new StringTag(Occupied.ToString().ToLower())),
+            ("part", new StringTag(Part.ToName()))
         );
     }
     

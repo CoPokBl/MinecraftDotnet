@@ -69,13 +69,13 @@ public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Bites = properties.ChildrenMap.ContainsKey("bites") ? int.Parse(properties["bites"].GetString()) : Bites,
+            Bites = properties.Contains("bites") ? int.Parse(properties["bites"].GetString()) : Bites,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("bites", Bites.ToString())
+        return new CompoundTag(
+            ("bites", new StringTag(Bites.ToString()))
         );
     }
     
