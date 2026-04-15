@@ -21,6 +21,14 @@ public class Vec2Test {
         double distance = vecA.DistanceTo(vecB);
         Assert.That(distance, Is.EqualTo(5.0).Within(0.0001));
     }
+
+    [Test]
+    public void TestDotProduct() {
+        Vec2<int> vecA = new(1, 2);
+        Vec2<int> vecB = new(3, 4);
+        int dotProduct = vecA.DotProduct(vecB);
+        Assert.That(dotProduct, Is.EqualTo(11));
+    }
     
     // BASIC OPS
     

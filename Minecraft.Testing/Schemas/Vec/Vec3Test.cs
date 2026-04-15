@@ -21,6 +21,22 @@ public class Vec3Test {
         double distance = vecA.DistanceTo(vecB);
         Assert.That(distance, Is.EqualTo(13.0).Within(0.0001));
     }
+
+    [Test]
+    public void TestDotProduct() {
+        Vec3<int> vecA = new(1, 2, 3);
+        Vec3<int> vecB = new(4, 5, 6);
+        int dotProduct = vecA.DotProduct(vecB);
+        Assert.That(dotProduct, Is.EqualTo(32));
+    }
+
+    [Test]
+    public void TestCrossProduct() {
+        Vec3<int> vecA = new(1, 2, 3);
+        Vec3<int> vecB = new(4, 5, 6);
+        Vec3<int> crossProduct = vecA.CrossProduct(vecB);
+        Assert.That(crossProduct, Is.EqualTo(new Vec3<int>(-3, 6, -3)));
+    }
     
     // BASIC OPS
     

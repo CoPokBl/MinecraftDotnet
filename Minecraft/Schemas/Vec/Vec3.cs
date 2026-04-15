@@ -160,6 +160,20 @@ public readonly struct Vec3<T>(T x, T y, T z) : IEquatable<Vec3<T>> where T : IN
     }
 
     [Pure]
+    public T DotProduct(Vec3<T> other) {
+        return X * other.X + Y * other.Y + Z * other.Z;
+    }
+
+    [Pure]
+    public Vec3<T> CrossProduct(Vec3<T> other) {
+        return new Vec3<T>(
+            Y * other.Z - Z * other.Y,
+            Z * other.X - X * other.Z,
+            X * other.Y - Y * other.X
+        );
+    }
+
+    [Pure]
     public Vec3<int> ToBlockPos() {
         if (this is Vec3<int> vec3Int) {
             return vec3Int;
