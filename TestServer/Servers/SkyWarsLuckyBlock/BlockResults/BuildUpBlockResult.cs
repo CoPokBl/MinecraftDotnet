@@ -8,7 +8,7 @@ namespace TestServer.Servers.SkyWarsLuckyBlock.BlockResults;
 
 public class BuildUpBlockResult : IBlockResult {
     
-    public void Trigger(World world, PlayerEntity? player, Vec3<int> position) {
+    public void Trigger(World world, Player? player, Vec3<int> position) {
         int yOffset = 0;
         world.Server.Scheduler.ScheduleRepeatingTask(TimeSpan.FromSeconds(0.2), () => {
             if (!world.IsInBounds(position.WithY(position.Y - yOffset)) || 

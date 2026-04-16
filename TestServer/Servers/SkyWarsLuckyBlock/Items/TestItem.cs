@@ -10,7 +10,7 @@ public class TestItem : SkyWarsItem {
         .With(DataComponent.ItemName, "Test Item");
     public override string Id => "test";
 
-    public override bool Use(PlayerEntity player) {
+    public override bool Use(Player player) {
         player.SendMessage("Hello there");
         return false;
     }

@@ -163,7 +163,7 @@ public class TextComponent : CompoundTagSerialisable {
     }
 
     public override CompoundTag SerialiseToTag() {
-        List<(string, INbtTag?)> tags = [
+        List<(string, INbtTag)> tags = [
             ("type", new StringTag(Content.Type))
         ];
         tags.AddRange(Content.Fields);  // add all the content fields
@@ -205,7 +205,7 @@ public class TextComponent : CompoundTagSerialisable {
         }
 
         if (ClickEvent != null) {
-            List<(string, INbtTag?)> fields = [
+            List<(string, INbtTag)> fields = [
                 ("action", new StringTag(ClickEvent.Action))
             ];
             fields.AddRange(ClickEvent.Fields);
@@ -213,7 +213,7 @@ public class TextComponent : CompoundTagSerialisable {
         }
 
         if (HoverEvent != null) {
-            List<(string, INbtTag?)> fields = [
+            List<(string, INbtTag)> fields = [
                 ("action", new StringTag(HoverEvent.Action))
             ];
             fields.AddRange(HoverEvent.Fields);

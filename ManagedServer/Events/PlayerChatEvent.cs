@@ -11,7 +11,7 @@ namespace ManagedServer.Events;
 [NotCalledByDefault]
 public class PlayerChatEvent : IPlayerEvent, ICancelableEvent {
     public required World World { get; init; }
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     public required string RawMessage { get; init; }
     public required TextComponent Message { get; set; }
     public required IAudience Audience { get; set; }

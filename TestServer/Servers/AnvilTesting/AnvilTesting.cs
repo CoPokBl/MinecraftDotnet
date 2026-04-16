@@ -47,7 +47,7 @@ public static class AnvilTesting {
             if (e.NewPos.Y < 0) {
                 // If the player falls below Y=0, teleport them back to the spawn point
                 e.Entity.Teleport(new Vec3<double>(0, 200, 0));
-                ((PlayerEntity)e.Entity).Connection.SendSystemMessage("You fell below the world! Teleporting back to spawn.");
+                ((Player)e.Entity).Connection.SendSystemMessage("You fell below the world! Teleporting back to spawn.");
             }
         });
 

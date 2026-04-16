@@ -25,12 +25,12 @@ namespace ManagedServer.Entities.Types;
 /// <summary>
 /// Entity that represents a player and is controlled by a <see cref="PlayerConnection"/>.
 /// </summary>
-public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
+public class Player : LivingEntity, IAudience, IPermissionHolder {
     public readonly string Name;
     public readonly PlayerConnection Connection;
     public readonly PlayerInventory Inventory;
 
-    public override List<PlayerEntity> Players => [this];
+    public override List<Player> Players => [this];
 
     public IPermissionContainer PermissionContainer { get; set; } = new DummyPermissionContainer();
     public EventNode<IServerEvent> EventNode => Events;
@@ -155,7 +155,7 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
     private readonly ConcurrentQueue<MinecraftPacket> _packetProcessQueue = new();
 
     // Listen to movement packets so we can do stuff
-    public PlayerEntity(ManagedMinecraftServer server, PlayerConnection connection, string name, PlayerMeta? meta = null) 
+    public Player(ManagedMinecraftServer server, PlayerConnection connection, string name, PlayerMeta? meta = null) 
         : base(EntityType.Player, meta ?? new PlayerMeta()) {
         Server = server;
         Name = name;

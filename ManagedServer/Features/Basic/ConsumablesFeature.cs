@@ -100,7 +100,7 @@ public class ConsumablesFeature : ScopedFeature {
         });
     }
 
-    private static void CancelEating(PlayerEntity player) {
+    private static void CancelEating(Player player) {
         // They finished using the item, check if they were eating
         if (!player.HasTag(EatingTaskTag)) {
             return;

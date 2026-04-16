@@ -10,7 +10,7 @@ public class ExplosiveChestplateItem : SkyWarsItem {
         .With(DataComponent.ItemName, "Explosive Chestplate");
     public override string Id => "skywars:explosive_chestplate";
 
-    public override void OnHitWhileWearing(PlayerEntity wearer, PlayerEntity attacker) {
+    public override void OnHitWhileWearing(Player wearer, Player attacker) {
         DoKaboom(wearer.World!, wearer.Position.ToBlockPos(), 4, 4, 2);
     }
 }

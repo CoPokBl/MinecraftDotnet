@@ -16,7 +16,7 @@ public class ItemPickupFeature : ScopedFeature {
     
     public override void Register() {
         AddEventHandler<EntityMoveEvent>(e => {
-            if (e.Entity is not PlayerEntity player) {
+            if (e.Entity is not Player player) {
                 return;
             }
             

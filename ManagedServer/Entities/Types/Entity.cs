@@ -33,8 +33,8 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     public Aabb BoundingBox { get; init; }
 
-    private Func<PlayerEntity, bool> _viewableRule = _ => true;
-    public Func<PlayerEntity, bool> ViewableRule {
+    private Func<Player, bool> _viewableRule = _ => true;
+    public Func<Player, bool> ViewableRule {
         get => _viewableRule;
         set {
             _viewableRule = value;
@@ -74,7 +74,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     public virtual bool OnGround { get; set; }
 
-    public virtual List<PlayerEntity> Players => [];  // for ScopedFeature
+    public virtual List<Player> Players => [];  // for ScopedFeature
     public ManagedMinecraftServer Server => World.ThrowIfNull().Server;
     public FeatureHandler FeatureHandler { get; }
     public EventNode<IServerEvent> Events { get; } = new();
@@ -393,7 +393,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         Manager?.RefreshViewers(this);
     }
 
-    public PlayerEntity[] GetViewers() {
+    public Player[] GetViewers() {
         return Manager?.GetViewersOf(this) ?? [];
     }
 }

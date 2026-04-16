@@ -8,7 +8,7 @@ namespace TestServer.Servers.SkyWarsLuckyBlock.BlockResults;
 
 public class BobBlockResult : IBlockResult {
     
-    public void Trigger(World world, PlayerEntity? player, Vec3<int> position) {
+    public void Trigger(World world, Player? player, Vec3<int> position) {
         LivingEntity bob = new(EntityType.IronGolem) {
             Position = position.BlockPosToDouble()
         };

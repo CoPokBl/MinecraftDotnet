@@ -370,7 +370,7 @@ public class PolarLoader : ITerrainProvider {
     private static CompoundTag PropertiesStringToNbt(string propsStr) {
         // string should look like: north=false,south=false,west=true,waterlogged=false,east=true
         // so just chuck it into a string, string dictionary
-        List<(string, INbtTag?)> props = [];
+        List<(string, INbtTag)> props = [];
         string[] pairs = propsStr.Split(',');
         foreach (string pair in pairs) {
             string[] vals = pair.Split('=');

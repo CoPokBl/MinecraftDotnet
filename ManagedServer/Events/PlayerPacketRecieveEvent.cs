@@ -10,7 +10,7 @@ namespace ManagedServer.Events;
 [BuiltinEvent]
 public class PlayerPacketReceiveEvent : IPlayerEvent, ICancelableEvent {
     public required World World { get; init; }
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     public required MinecraftPacket Packet { get; init; }
     public bool Cancelled { get; set; }
     

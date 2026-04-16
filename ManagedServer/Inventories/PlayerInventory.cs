@@ -10,7 +10,7 @@ public class PlayerInventory : Inventory {
 
     public override IInventoryType Type => InventoryType.Generic9x4;
     public override int WindowId => 0;
-    public PlayerEntity Owner;
+    public Player Owner;
     
     // We search the hotbar first, then the rest of the inventory. Ignoring armour and crafting slots.
     public override int[] AddItemSearchOrder => 
@@ -40,7 +40,7 @@ public class PlayerInventory : Inventory {
     public const int HotbarSlot8 = 43;
     public const int HotbarSlot9 = 44;
     
-    public PlayerInventory(ManagedMinecraftServer server, PlayerEntity owner) : 
+    public PlayerInventory(ManagedMinecraftServer server, Player owner) : 
         base(server, InventorySize, RegularInventoryStartIndex) {
         Viewers.Add(owner);
         Title = owner.Name + "'s Inventory";

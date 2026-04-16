@@ -60,7 +60,7 @@ public static class MlgRush {
         
         ManualResetEvent gotPlayers = new(false);
         object queuePlayersLock = new();
-        List<PlayerEntity> connectionQueue = [];
+        List<Player> connectionQueue = [];
 
         World lobbyWorld = server.CreateWorld(new TestingProvider());
         server.Start();
@@ -108,8 +108,8 @@ public static class MlgRush {
             World world = server.CreateWorld(terrain);
             world.AddFeature(new SimpleCombatFeature(500));
             
-            PlayerEntity p1 = null!;
-            PlayerEntity p2 = null!;
+            Player p1 = null!;
+            Player p2 = null!;
             
             // Remove them from the queue
             // Get two players in
@@ -169,7 +169,7 @@ public static class MlgRush {
             }
 
             void BroadcastSound(ISoundType id) {
-                foreach (PlayerEntity player in world.Players) {
+                foreach (Player player in world.Players) {
                     player.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
                         Category = SoundCategory.Master,
                         EntityId = player.NetId,
@@ -228,7 +228,7 @@ public static class MlgRush {
                 e.Entity.Teleport(e.Entity == p1 ? p1Spawn : p2Spawn);
                 
                 // play nice sound
-                PlayerEntity killer = e.Entity == p1 ? p2 : p1;
+                Player killer = e.Entity == p1 ? p2 : p1;
                 killer.Connection.SendPacket(new ClientBoundEntitySoundEffectPacket {
                     Category = SoundCategory.Players,
                     EntityId = e.Entity.NetId,
@@ -238,7 +238,7 @@ public static class MlgRush {
                     Seed = 0L
                 });
 
-                TextComponent msg = $"{((PlayerEntity)e.Entity).Name} was killed by {killer.Name}";
+                TextComponent msg = $"{((Player)e.Entity).Name} was killed by {killer.Name}";
                 world.StrikeLightning(e.NewPos);
                 BroadcastMsg(msg);
             });

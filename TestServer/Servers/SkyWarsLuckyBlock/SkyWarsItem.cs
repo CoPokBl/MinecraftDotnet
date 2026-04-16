@@ -12,19 +12,19 @@ public abstract class SkyWarsItem {
     public abstract ItemStack Item { get; }
     public abstract string Id { get; }
 
-    public virtual bool Use(PlayerEntity player) {
+    public virtual bool Use(Player player) {
         return false;
     }
 
-    public virtual void OnEat(PlayerEntity player) {
+    public virtual void OnEat(Player player) {
         
     }
 
-    public virtual bool OnPlace(PlayerEntity player, Vec3<int> position) {
+    public virtual bool OnPlace(Player player, Vec3<int> position) {
         return true;
     }
 
-    public virtual void OnHitWhileWearing(PlayerEntity wearer, PlayerEntity attacker) {
+    public virtual void OnHitWhileWearing(Player wearer, Player attacker) {
         
     }
 
@@ -59,7 +59,7 @@ public abstract class SkyWarsItem {
             if (!(entity.Position.DistanceTo(pos) <= launchRadius)) continue;
 
             double kbReduction = 0.0;
-            if (entity is PlayerEntity p) {
+            if (entity is Player p) {
                 ItemStack[] armour = [
                     p.Inventory.Helmet,
                     p.Inventory.Chestplate,

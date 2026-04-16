@@ -42,7 +42,7 @@ public interface IEnchantment : IProtocolType {
         }
 
         if (Effects.Length > 0) {
-            CompoundTag effects = new(Effects.Select(e => (e.Id, e.SerialiseData())).ToArray());
+            CompoundTag effects = new(Effects.Select(e => (e.Id, e.SerialiseData())).ToArray()!);
             tags.Add(("effects", effects));
         }
         

@@ -3,7 +3,7 @@ using NBT.Tags;
 
 namespace Minecraft.Text;
 
-public record TextContent(string Type, params (string Key, INbtTag? Tag)[] Fields) {
+public record TextContent(string Type, params (string Key, INbtTag Tag)[] Fields) {
 
     public static TextContent Text(string msg) {
         return new TextContent("text", ("text", new StringTag(msg)));
@@ -14,7 +14,7 @@ public record TextContent(string Type, params (string Key, INbtTag? Tag)[] Field
     }
 
     public static TextContent Translatable(string key, string? fallback = null, TextComponent[]? with = null) {
-        List<(string, INbtTag?)> tags = [
+        List<(string, INbtTag)> tags = [
             ("translate", new StringTag(key))
         ];
         if (fallback != null) {
@@ -34,7 +34,7 @@ public record TextContent(string Type, params (string Key, INbtTag? Tag)[] Field
     }
 
     public static TextContent EntityNames(string selector, TextComponent? separator = null) {
-        List<(string, INbtTag?)> tags = [
+        List<(string, INbtTag)> tags = [
             ("selector", new StringTag(selector))
         ];
         if (separator != null) {

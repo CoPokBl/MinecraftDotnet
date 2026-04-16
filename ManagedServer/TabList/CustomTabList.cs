@@ -12,22 +12,22 @@ public class CustomTabList {
     
     public TextComponent Header { get; set; } = TextComponent.Text("");
     public TextComponent Footer { get; set; } = TextComponent.Text("");
-    public Func<PlayerEntity, IEnumerable<TabListEntry>> EntriesProvider { get; set; } = _ => [];
+    public Func<Player, IEnumerable<TabListEntry>> EntriesProvider { get; set; } = _ => [];
     
-    private readonly List<PlayerEntity> _players = [];
+    private readonly List<Player> _players = [];
 
-    public void AddPlayer(PlayerEntity player) {
+    public void AddPlayer(Player player) {
         _players.Add(player);
         UpdateTabListFor(player);
     }
     
     public void Refresh() {
-        foreach (PlayerEntity player in _players) {
+        foreach (Player player in _players) {
             UpdateTabListFor(player);
         }
     }
 
-    public void UpdateTabListFor(PlayerEntity player) {
+    public void UpdateTabListFor(Player player) {
         ClientBoundSetTabListHeaderFooterPacket headerFooterPacket = new() {
             Header = Header,
             Footer = Footer

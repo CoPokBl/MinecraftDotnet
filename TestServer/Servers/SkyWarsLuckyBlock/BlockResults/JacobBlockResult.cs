@@ -8,7 +8,7 @@ namespace TestServer.Servers.SkyWarsLuckyBlock.BlockResults;
 
 public class JacobBlockResult : IBlockResult {
     
-    public void Trigger(World world, PlayerEntity? player, Vec3<int> position) {
+    public void Trigger(World world, Player? player, Vec3<int> position) {
         LivingEntity jacob = new(EntityType.Goat) {
             Position = position.BlockPosToDouble()
         };

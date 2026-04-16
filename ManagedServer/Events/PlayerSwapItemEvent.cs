@@ -13,7 +13,7 @@ namespace ManagedServer.Events;
 [NotCalledByDefault]
 public class PlayerSwapItemEvent : ICancelableEvent, IPlayerEvent {
     public required World World { get; init; }
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     
     public required ItemStack MainHand { get; init; }
     public required ItemStack OffHand { get; init; }

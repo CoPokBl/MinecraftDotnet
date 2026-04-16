@@ -9,7 +9,7 @@ namespace ManagedServer.Events;
 
 [BuiltinEvent]
 public class PlayerPacketOutEvent : ICancelableEvent, IPlayerEvent {
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     public required MinecraftPacket Packet { get; init; }
     public required World World { get; init; }
     

@@ -7,7 +7,7 @@ namespace ManagedServer.Events;
 
 [BuiltinEvent]
 public class PlayerLoginEvent : IPlayerEvent {
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     public required World World { get; init; }
     
     public Entity Entity {

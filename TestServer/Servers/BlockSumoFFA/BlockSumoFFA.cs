@@ -109,8 +109,29 @@ public static class BlockSumoFfa {
         };
         world.Spawn(displayTextEntity);
 
+        world.Events.AddListener<PlayerChatEvent>(e => {
+            if (e.RawMessage.StartsWith("time")) {
+                string[] parts = e.RawMessage.Split(' ');
+                if (parts.Length != 2) {
+                    e.Player.SendMessage("Usage: time <ticks>");
+                    return;
+                }
+
+                if (!int.TryParse(parts[1], out int ticks)) {
+                    e.Player.SendMessage("Invalid number of ticks.");
+                    return;
+                }
+
+                world.Time = ticks;
+            }
+
+            if (e.RawMessage.StartsWith("high")) {
+                e.Player.Teleport(new Vec3<double>(0, 200, 0));
+            }
+        });
+
         world.Events.AddListener<ServerTickEvent>(_ => {
-            foreach (PlayerEntity player in world.Players) {
+            foreach (Player player in world.Players) {
                 server.ShowParticle(Particle.DrippingLava, player.Position + player.Direction.Multiply(2));
             }
         });
@@ -216,7 +237,7 @@ public static class BlockSumoFfa {
 
             // die
             e.Entity.Teleport(spawn);
-            if (e.Entity is not PlayerEntity player) return;
+            if (e.Entity is not Player player) return;
             player.GameMode = GameMode.Spectator;
             player.Connection.SendTitle(TextComponent.FromLegacyString("&c&lNoob"), TextComponent.Empty());
 

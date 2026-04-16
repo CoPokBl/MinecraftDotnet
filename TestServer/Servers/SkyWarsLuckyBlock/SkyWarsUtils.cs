@@ -8,7 +8,7 @@ namespace TestServer.Servers.SkyWarsLuckyBlock;
 
 public static class SkyWarsUtils {
 
-    public static Vec3<int>? GetTargetBlock(PlayerEntity player, double maxDist = 100, bool particle = false) {
+    public static Vec3<int>? GetTargetBlock(Player player, double maxDist = 100, bool particle = false) {
         Vec3<double> direction = player.Direction;
         
         // Cast a ray in the direction the player is looking

@@ -7,7 +7,7 @@ namespace ManagedServer.Features;
 
 public interface IFeatureScope {
     public EventNode<IServerEvent> Events { get; }
-    public List<PlayerEntity> Players { get; }
+    public List<Player> Players { get; }
     public ManagedMinecraftServer Server { get; }
     public FeatureHandler FeatureHandler { get; }
 }

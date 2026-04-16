@@ -9,7 +9,7 @@ namespace ManagedServer.Events;
 [NotCalledByDefault]
 public class PlayerCloseInventoryEvent : IPlayerEvent {
     public required World World { get; init; }
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     public required Inventory Inventory { get; init; }
     
     public Entity Entity {

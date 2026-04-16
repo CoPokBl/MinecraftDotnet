@@ -27,7 +27,7 @@ public class BlockPlacingFeature : ScopedFeature {
         });
     }
     
-    private void CheckBlockPlace(PlayerEntity player, ServerBoundUseItemOnPacket use) {
+    private void CheckBlockPlace(Player player, ServerBoundUseItemOnPacket use) {
         // TODO: Only allow whitelisted items in adventure
         
         if (player.GameMode == GameMode.Spectator) {
@@ -70,7 +70,7 @@ public class BlockPlacingFeature : ScopedFeature {
         
         // is player inside that block?
         bool insideEntity = false;
-        foreach (PlayerEntity en in player.World!.Players) {
+        foreach (Player en in player.World!.Players) {
             Vec3<double> pos = en.Position;
             Vec3<double> blockPos = new(target.X + 0.5, target.Y + 0.5, target.Z + 0.5);
             if (Math.Abs(pos.X - blockPos.X) < 0.5 + PlayerWidth/2 && 

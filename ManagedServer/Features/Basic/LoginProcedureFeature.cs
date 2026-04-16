@@ -333,7 +333,7 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                 e.Connection.SendPacket(packet);
                 
                 // create a player object
-                PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
+                Player entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
                     NetId = pEntityId,
                     GameMode = preLoginEvent.GameMode,
                     Uuid = preLoginEvent.Uuid,

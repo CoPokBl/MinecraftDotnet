@@ -55,7 +55,7 @@ public class AttributeModifiersFeature(bool includeEnchantments) : ScopedFeature
         });
     }
 
-    private static bool IsCorrectSlot(int slot, EquipmentSlotGroup group, PlayerEntity player) {
+    private static bool IsCorrectSlot(int slot, EquipmentSlotGroup group, Player player) {
         if (group.ContainsSlot(EquipmentSlot.Body)) {
             return true;
         }
@@ -87,7 +87,7 @@ public class AttributeModifiersFeature(bool includeEnchantments) : ScopedFeature
         return false;
     }
 
-    public void UpdatePlayerAttributes(PlayerEntity player) {
+    public void UpdatePlayerAttributes(Player player) {
         List<(IAttribute, Identifier)> activeMods = [];
 
         for (int i = 0; i < player.Inventory.Items.Length; i++) {

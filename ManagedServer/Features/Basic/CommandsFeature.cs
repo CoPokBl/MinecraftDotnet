@@ -37,7 +37,7 @@ public class CommandsFeature : ScopedFeature {
         });
     }
 
-    private void HandlePlayerCommand(PlayerEntity player, string rawCmd) {
+    private void HandlePlayerCommand(Player player, string rawCmd) {
         string[] cmdAndArgs = rawCmd.Split(' ', 2);
         string cmd = cmdAndArgs[0];
         
@@ -65,7 +65,7 @@ public class CommandsFeature : ScopedFeature {
         HandlePlayerCommand(player, command, argsString, rawCmd);
     }
 
-    private bool HandlePlayerCommand(PlayerEntity player, Command command, string argsStr, string rawCmd) {
+    private bool HandlePlayerCommand(Player player, Command command, string argsStr, string rawCmd) {
         string[] split = argsStr.Split(' ', 2);
         string? subCmdStr = split.Length > 0 ? split[0] : null;
         foreach (Command subCmd in command.Subcommands) {
@@ -109,7 +109,7 @@ public class CommandsFeature : ScopedFeature {
         return handled;
     }
     
-    public ClientBoundCommandsPacket GenerateCommandsPacket(PlayerEntity player) {
+    public ClientBoundCommandsPacket GenerateCommandsPacket(Player player) {
         List<ICommandNode> graph = [
             new RootNode(CommandNodeFlag.RootType, [], null, null)
         ];
@@ -137,7 +137,7 @@ public class CommandsFeature : ScopedFeature {
     }
 
     // returns the index of the comamnd's root node in the graph
-    private int BuildCommand(Command command, PlayerEntity player, List<ICommandNode> graph) {
+    private int BuildCommand(Command command, Player player, List<ICommandNode> graph) {
         // Add the root literal node for the command
         List<int> childrenIndexes = [];
         
@@ -186,7 +186,7 @@ public class CommandsFeature : ScopedFeature {
         return rootNodeIndex;
     }
 
-    private (CommandSyntax syntax, ArgumentNode[] argNodes) BuildSyntax(CommandSyntax syntax, PlayerEntity player) {
+    private (CommandSyntax syntax, ArgumentNode[] argNodes) BuildSyntax(CommandSyntax syntax, Player player) {
         List<ArgumentNode> argNodes = [];
         for (int i = 0; i < syntax.Arguments.Length; i++) {
             IArgument arg = syntax.Arguments[i];

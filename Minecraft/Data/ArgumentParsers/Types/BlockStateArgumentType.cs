@@ -16,7 +16,7 @@ public record BlockStateArgumentType() : ArgumentParser<IBlock>() {
             return new CompoundTag();
         }
         
-        List<(string, INbtTag?)> props = [];
+        List<(string, INbtTag)> props = [];
         string[] pairs = propsStr.Split(',');
         foreach (string pair in pairs) {
             string[] vals = pair.Split('=');

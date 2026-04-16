@@ -63,16 +63,16 @@ public static class SkyWarsLuckyBlock {
         
         Timer? startTimer = null;
         DateTime startTime = DateTime.Now;
-        List<PlayerEntity> waitingPlayers = [];
+        List<Player> waitingPlayers = [];
 
         void StartGame() {
             startTimer?.Dispose();
             startTimer = null;
 
             lock (waitingPlayers) {
-                PlayerEntity[] players = waitingPlayers.ToArray();
+                Player[] players = waitingPlayers.ToArray();
                 SkyWarsGame game = new(server, players, () => {
-                    foreach (PlayerEntity player in players) {
+                    foreach (Player player in players) {
                         EnqueuePlayer(player);
                     }
                 });
@@ -81,7 +81,7 @@ public static class SkyWarsLuckyBlock {
             }
         }
         
-        void EnqueuePlayer(PlayerEntity player) {
+        void EnqueuePlayer(Player player) {
             player.GameMode = GameMode.Survival;
             player.Inventory.Clear();
             player.Health = 20;
@@ -155,7 +155,7 @@ public static class SkyWarsLuckyBlock {
         });
 
         lobby.Events.AddListener<EntityMoveEvent>(e => {
-            if (e.Entity is not PlayerEntity player) {
+            if (e.Entity is not Player player) {
                 return;
             }
 

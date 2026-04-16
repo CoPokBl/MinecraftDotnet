@@ -11,7 +11,7 @@ namespace ManagedServer.Events;
 [NotCalledByDefault]
 public class PlayerUseItemEvent : IPlayerEvent, ICancelableEvent {
     public required World World { get; init; }
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     public required ItemStack Item { get; init; }
     public required Hand Hand { get; init; }
     public bool StopsBlockPlacement { get; set; } = false;

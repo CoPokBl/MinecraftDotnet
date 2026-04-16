@@ -3,7 +3,7 @@ using NBT.Tags;
 
 namespace Minecraft.Text;
 
-public record ClickEvent(string Action, params (string Key, INbtTag? Tag)[] Fields) {
+public record ClickEvent(string Action, params (string Key, INbtTag Tag)[] Fields) {
     
     public static ClickEvent OpenUrl(string url) {
         return new ClickEvent("open_url", ("url", new StringTag(url)));

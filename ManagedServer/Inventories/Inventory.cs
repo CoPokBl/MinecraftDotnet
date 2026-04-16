@@ -39,7 +39,7 @@ public abstract class Inventory : IViewable {
 
     public TextComponent Title = "Inventory";
     
-    internal readonly List<PlayerEntity> Viewers = [];
+    internal readonly List<Player> Viewers = [];
     internal int LastStateId;
 
     protected Inventory(ManagedMinecraftServer server, int size, int playerInventoryStartIndex) {
@@ -84,7 +84,7 @@ public abstract class Inventory : IViewable {
             Items[i] = ItemStack.Air;
         }
 
-        foreach (PlayerEntity p in Viewers) {
+        foreach (Player p in Viewers) {
             SendUpdateTo(p);
         }
         
@@ -178,7 +178,7 @@ public abstract class Inventory : IViewable {
         });
     }
 
-    public void SendUpdateTo(PlayerEntity audience) {
+    public void SendUpdateTo(Player audience) {
         LastStateId = Random.Shared.Next();
         audience.SendPacket(new ClientBoundSetContainerContentPacket {
             CursorItem = audience.CursorItem,
@@ -203,13 +203,13 @@ public abstract class Inventory : IViewable {
         
     }
 
-    public void AddViewer(PlayerEntity player) {
+    public void AddViewer(Player player) {
         Viewers.Add(player);
         player.SendPackets(GenerateOpenPackets());
         SendUpdateTo(player);
     }
 
-    public PlayerEntity[] GetViewers() {
+    public Player[] GetViewers() {
         return Viewers.ToArray();
     }
 }

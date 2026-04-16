@@ -8,7 +8,7 @@ namespace ManagedServer.Events;
 [BuiltinEvent]
 public class PlayerEnteringWorldEvent : IPlayerEvent {
     public required World World { get; init; }
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     
     public Entity Entity {
         get => Player;

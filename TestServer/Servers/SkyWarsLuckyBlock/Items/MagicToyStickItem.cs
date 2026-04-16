@@ -18,7 +18,7 @@ public class MagicToyStickItem : SkyWarsItem {
         .With(DataComponent.EnchantmentGlintOverride, true);
     public override string Id => "magic_toy_stick";
 
-    public override bool Use(PlayerEntity player) {
+    public override bool Use(Player player) {
         Vec3<int>? targetBlock = SkyWarsUtils.GetTargetBlock(player, MaxDistance, true);
         if (targetBlock == null) {
             player.SendMessage(TextComponent.FromLegacyString("&cNo target found within range."));
@@ -29,7 +29,7 @@ public class MagicToyStickItem : SkyWarsItem {
         return true;
     }
 
-    private static void Hit(PlayerEntity player, Vec3<int> location) {
+    private static void Hit(Player player, Vec3<int> location) {
         player.SendMessage("Boom!");
         DoKaboom(player.World!, location, ExplodeRadius, LaunchRadius, LaunchPower);
     }

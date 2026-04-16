@@ -37,7 +37,7 @@ namespace ManagedServer.Worlds;
 
 public class World : MappedTaggable, IAudience, IFeatureScope {
     // Props
-    public List<PlayerEntity> Players { get; } = [];
+    public List<Player> Players { get; } = [];
     public EventNode<IServerEvent> Events { get; }
     public IEntityManager Entities { get; }
     public ManagedMinecraftServer Server { get; init; }
@@ -124,7 +124,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
     #region player_handling
     
-    public virtual void AddPlayer(PlayerEntity player) {
+    public virtual void AddPlayer(Player player) {
         Log("Adding player " + player.Name + " to world " + DimensionId);
         PlayerEnteringWorldEvent enterEvent = new() {
             Player = player,
@@ -182,7 +182,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         Action cancelAction = null!;
         Log("Registering player move listener for " + player.Name);
         cancelAction = player.Events.AddListener<EntityMoveEvent>(e => {
-            if (e.Entity is not PlayerEntity pe) {
+            if (e.Entity is not Player pe) {
                 throw new Exception("Entity is not PlayerEntity (called on PlayerEntity eventnode)");
             }
             
@@ -204,7 +204,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         HandlePlayerMove(player, GetChunkPos(player.Position));
     }
 
-    public void HandlePlayerMove(PlayerEntity player, Vec2<int> chunkPos) {
+    public void HandlePlayerMove(Player player, Vec2<int> chunkPos) {
         PlayerConnection connection = player.Connection;
         
         if (player.HasTag(CurrentChunkTag) && player.GetTagOrNull(CurrentChunkTag) == chunkPos) {
@@ -302,7 +302,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
     }
 
-    public virtual void RemovePlayer(PlayerEntity player) {
+    public virtual void RemovePlayer(Player player) {
         Log("Removing player " + player.Name);
         
         PlayerLeavingWorldEvent leaveEvent = new() {
@@ -317,7 +317,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         Log("Player is removed: " + player.Name);
     }
 
-    public void ResetPlayer(PlayerEntity player) {
+    public void ResetPlayer(Player player) {
         SetPlayerLoadedChunks(player.Connection, []);
         
         player.SendPacket(new ClientBoundGameEventPacket {
@@ -794,17 +794,17 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         return new AudiencesList(GetViewersOf(pos));
     }
     
-    public PlayerEntity[] GetViewersOf(Vec2<int> chunkPos) {
+    public Player[] GetViewersOf(Vec2<int> chunkPos) {
         return Players
             .Where(player => GetChunkPos(player.Position).IsWithinRadiusOf(chunkPos, _viewDistance))
             .ToArray();
     }
     
-    public PlayerEntity[] GetViewersOf(Vec3<double> pos) {
+    public Player[] GetViewersOf(Vec3<double> pos) {
         return GetViewersOf(GetChunkPos(pos));
     }
     
-    public bool DoesPlayerHaveChunkLoaded(PlayerEntity player, Vec2<int> chunkPos) {
+    public bool DoesPlayerHaveChunkLoaded(Player player, Vec2<int> chunkPos) {
         return GetPlayerLoadedChunks(player.Connection).Contains(chunkPos);
     }
 
@@ -865,7 +865,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     public void SendPacket(MinecraftPacket packet) {
-        foreach (PlayerEntity player in Players) {
+        foreach (Player player in Players) {
             player.SendPacket(packet);
         }
     }

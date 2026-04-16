@@ -17,14 +17,14 @@ public class Scoreboard(
     public string ObjectiveName { get; } = objectiveName ?? Guid.NewGuid().ToString();
     
     private readonly Dictionary<string, ScoreboardEntry> _entries = [];
-    private readonly List<PlayerEntity> _viewers = [];
+    private readonly List<Player> _viewers = [];
 
-    public void AddViewer(PlayerEntity player) {
+    public void AddViewer(Player player) {
         _viewers.Add(player);
         InitPlayer(player);
     }
     
-    public void RemoveViewer(PlayerEntity player) {
+    public void RemoveViewer(Player player) {
         _viewers.Remove(player);
         player.SendPacket(new ClientBoundUpdateObjectivePacket {
             ObjectiveName = ObjectiveName,
@@ -53,7 +53,7 @@ public class Scoreboard(
     
     public ScoreboardEntry[] GetEntries() => _entries.Values.ToArray();
 
-    private void InitPlayer(PlayerEntity player) {
+    private void InitPlayer(Player player) {
         player.SendPacket(new ClientBoundUpdateObjectivePacket {
             ObjectiveName = ObjectiveName,
             UpdateMode = ClientBoundUpdateObjectivePacket.Mode.Create,
@@ -79,7 +79,7 @@ public class Scoreboard(
     }
 
     private void PacketToViewers(ClientBoundPacket packet) {
-        foreach (PlayerEntity viewer in _viewers) {
+        foreach (Player viewer in _viewers) {
             viewer.SendPacket(packet);
         }
     }

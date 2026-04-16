@@ -257,6 +257,17 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
         int tableMax = faceTable.Length;
         emitters.Clear();
 
+        // Pre-compute max palette length to stackalloc once outside the loop
+        int maxPalLen = 0;
+        for (int s = 0; s < numSections; s++) {
+            if (sections[s].Palette is IndirectPalette ipScan)
+                maxPalLen = Math.Max(maxPalLen, ipScan.PaletteValues.Length);
+        }
+
+        Span<byte> palFaceBuf    = maxPalLen > 0 ? stackalloc byte[maxPalLen] : Span<byte>.Empty;
+        Span<byte> palSrcFaceBuf = maxPalLen > 0 ? stackalloc byte[maxPalLen] : Span<byte>.Empty;
+        Span<byte> palEmBuf      = maxPalLen > 0 ? stackalloc byte[maxPalLen] : Span<byte>.Empty;
+
         for (int s = 0; s < numSections; s++) {
             int sBase = s * 4096;
             Palette pal = sections[s].Palette;
@@ -284,9 +295,9 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
                 int palLen = paletteValues.Length;
 
                 // Pre-compute face/emission/srcFace per palette entry (fits in L1)
-                Span<byte> palFace    = stackalloc byte[palLen];
-                Span<byte> palSrcFace = stackalloc byte[palLen];
-                Span<byte> palEm      = stackalloc byte[palLen];
+                Span<byte> palFace    = palFaceBuf[..palLen];
+                Span<byte> palSrcFace = palSrcFaceBuf[..palLen];
+                Span<byte> palEm      = palEmBuf[..palLen];
                 bool hasEmitters = false;
 
                 for (int p = 0; p < palLen; p++) {

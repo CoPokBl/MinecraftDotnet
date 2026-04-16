@@ -11,7 +11,7 @@ public class OneUpItem : SkyWarsItem {
         .With(DataComponent.ItemName, "One-Up Mushroom");
     public override string Id => "skywars:one_up_item";
 
-    public override bool Use(PlayerEntity player) {
+    public override bool Use(Player player) {
         // Heal the player by 2 hearts
         player.Heal();
         player.SendMessage(TextComponent.FromLegacyString("&aYou have been healed!"));

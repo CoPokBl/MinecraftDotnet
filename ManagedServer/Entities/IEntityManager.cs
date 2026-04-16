@@ -16,21 +16,21 @@ public interface IEntityManager {
     void SendPacketsToViewers(Entity entity, params MinecraftPacket[] packets);
     Entity? GetEntity(int id);
     Entity[] GetEntities();
-    PlayerEntity? GetPlayerByConnection(PlayerConnection connection);
-    PlayerEntity[] GetViewersOf(Entity entity, bool ignoreViewableRule = false);
-    PlayerEntity[] GetPlayers();
+    Player? GetPlayerByConnection(PlayerConnection connection);
+    Player[] GetViewersOf(Entity entity, bool ignoreViewableRule = false);
+    Player[] GetPlayers();
     Entity[] GetNearbyEntities(Vec3<double> pos, double distance);
     Entity[] GetEntitiesInChunk(Vec2<int> chunkPos);
 
     void Register(Entity entity, int? id = null);
     void Despawn(Entity entity);
     void RefreshViewers(Entity entity);
-    void RefreshPlayerVisibleEntities(PlayerEntity player);
+    void RefreshPlayerVisibleEntities(Player player);
     void MoveEntity(Entity entity, Vec3<double> newPos, Angle? yaw = null, Angle? pitch = null);
     void TeleportEntity(Entity entity, Vec3<double> newPos, Angle yaw, Angle pitch);
 
-    void SendSpawnPackets(Entity entity, PlayerEntity player);
-    void SendDespawnPackets(Entity entity, PlayerEntity player);
+    void SendSpawnPackets(Entity entity, Player player);
+    void SendDespawnPackets(Entity entity, Player player);
     
     public static IEnumerable<Vec2<int>> GetChunksInRadius(Vec2<int> baseChunk, int chunkRadius) {
         for (int dx = -chunkRadius; dx <= chunkRadius; dx++) {

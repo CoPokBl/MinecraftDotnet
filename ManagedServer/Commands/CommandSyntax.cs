@@ -3,10 +3,10 @@ using ManagedServer.Entities.Types;
 
 namespace ManagedServer.Commands;
 
-public record CommandSyntax(Action<PlayerEntity, CommandContext> Executor, Func<PlayerEntity, bool>? Condition = null, params IArgument[] Arguments) {
+public record CommandSyntax(Action<Player, CommandContext> Executor, Func<Player, bool>? Condition = null, params IArgument[] Arguments) {
 
-    public CommandSyntax(Action<PlayerEntity, CommandContext> Executor, params IArgument[] Arguments) 
+    public CommandSyntax(Action<Player, CommandContext> Executor, params IArgument[] Arguments) 
         : this(Executor, null, Arguments) { }
     
-    public Func<PlayerEntity, bool> Condition { get; init; } = Condition ?? (_ => true);
+    public Func<Player, bool> Condition { get; init; } = Condition ?? (_ => true);
 }

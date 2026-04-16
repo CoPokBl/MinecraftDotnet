@@ -12,7 +12,7 @@ namespace ManagedServer.Events;
 [NotCalledByDefault]
 public class InventoryClickEvent : IPlayerEvent, IInventoryEvent {
     public required World World { get; init; }
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     public required Inventory Inventory { get; init; }
     public required int Slot { get; init; }
     public required ItemStack? ClickedItem { get; init; }

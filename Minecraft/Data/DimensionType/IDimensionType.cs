@@ -23,7 +23,7 @@ public interface IDimensionType : IProtocolType {
     public INbtTag? Timelines { get; }
     
     public INbtTag ToNbt() {
-        List<(string, INbtTag?)> children = [
+        List<(string, INbtTag)> children = [
             ("has_fixed_time", new BooleanTag(HasFixedTime)),
             ("has_skylight", new BooleanTag(HasSkyLight)),
             ("has_ceiling", new BooleanTag(HasCeiling)),

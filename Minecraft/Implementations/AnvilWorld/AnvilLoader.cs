@@ -171,7 +171,7 @@ public class AnvilLoader : ITerrainProvider {
             string[] excludeProps = ["id", "x", "y", "z", "keepPacked"];
             CompoundTag entityData = new(blockEntityData.Children
                 .Where(t => !excludeProps.Contains(t.Item1))
-                .ToArray());
+                .ToArray()!);
             data.BlockEntities[new Vec3<int>(x, y, z)] = new BlockEntity(x, y, z, type, entityData);
         }
     }
