@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Minecraft.Data.Sounds;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
 
@@ -65,13 +66,13 @@ public class ClientBoundEntitySoundEffectPacket() : ClientBoundPacket {
         Seed = seed;
     }
 
-    protected override DataWriter WriteData(DataWriter w) {
+    protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         if (Event != null) {
             w.WriteVarInt(0)
                 .WriteString(Event.Type.Identifier)
                 .WritePrefixedOptional(Event.FixedRange, (f, writer) => writer.WriteFloat(f));
         }
-        else w.WriteVarInt(Type!.ProtocolId + 1);
+        else w.WriteVarInt(registry.SoundTypes.GetProtocolId(Type!) + 1);
 
         return w.WriteVarInt((int)Category)
             .WriteVarInt(EntityId)

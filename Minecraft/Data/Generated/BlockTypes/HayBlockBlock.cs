@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record HayBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     public Identifier Category => "minecraft:hay";
-    public int ProtocolId => 535;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -62,13 +61,13 @@ public record HayBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Axis = properties.ChildrenMap.ContainsKey("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
+            Axis = properties.Contains("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("axis", Axis.ToName())
+        return new CompoundTag(
+            ("axis", new StringTag(Axis.ToName()))
         );
     }
     

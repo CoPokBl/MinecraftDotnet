@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     public Identifier Category => "minecraft:jukebox";
-    public int ProtocolId => 282;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -59,13 +58,13 @@ public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            HasRecord = properties.ChildrenMap.ContainsKey("has_record") ? properties["has_record"].GetString() == "true" : HasRecord,
+            HasRecord = properties.Contains("has_record") ? properties["has_record"].GetString() == "true" : HasRecord,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("has_record", HasRecord.ToString().ToLower())
+        return new CompoundTag(
+            ("has_record", new StringTag(HasRecord.ToString().ToLower()))
         );
     }
     

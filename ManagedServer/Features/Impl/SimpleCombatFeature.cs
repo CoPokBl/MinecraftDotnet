@@ -25,7 +25,7 @@ public class SimpleCombatFeature(int attackCooldown = -1, float damage = 0) : Sc
             }
 
             Entity? entity;
-            PlayerEntity attacker;
+            Player attacker;
             try {
                 entity = e.World.Entities.GetEntity(packet.EntityId);
                 attacker = e.Player;
@@ -66,7 +66,7 @@ public class SimpleCombatFeature(int attackCooldown = -1, float damage = 0) : Sc
                 le.Damage(damage);
             }
             
-            if (entity is PlayerEntity p) {
+            if (entity is Player p) {
                 // p.SetVelocity(attacker.Direction.Multiply(0.5) with { Y = 0.5 });  // Original
                 p.SetVelocity(attacker.Direction.Multiply(0.60).WithY(0.5));  // Original 2.0 GOOD
                 p.SetVelocity(attacker.Direction.Multiply(0.90).WithY(0.4));  // Original 2.0 GOOD

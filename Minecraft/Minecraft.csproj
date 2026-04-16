@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -12,13 +11,15 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         
         <PackageId>MinecraftDotnet.Protocol</PackageId>
-        <Version>0.2.0</Version>
+        <Version>0.2.1</Version>
         <Title>MinecraftDotnet Protocol</Title>
         <Authors>CoPokBl</Authors>
         <PackageProjectUrl>https://github.com/CoPokBl/MinecraftDotnet</PackageProjectUrl>
         <RepositoryUrl>https://github.com/CoPokBl/MinecraftDotnet.git</RepositoryUrl>
         <Description>Library for interacting the Minecraft Java network protocol. As well as some other utils.</Description>
         <PackageLicenseUrl>https://github.com/CoPokBl/MinecraftDotnet/blob/main/LICENSE</PackageLicenseUrl>
+        <LangVersion>14</LangVersion>
+        <TargetFrameworks>net10.0;net8.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,7 +28,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="MinecraftDotnet.NBT" Version="0.0.3-dev.2" />
+      <PackageReference Include="MinecraftDotnet.NBT" Version="1.0.3-dev.9" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.4-beta1" />
     </ItemGroup>
 

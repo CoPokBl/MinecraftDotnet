@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeartBlock.CreakingHeartState CreakingHeartStateValue, bool Natural) : IBlock {
     public Identifier Category => "minecraft:creaking_heart";
-    public int ProtocolId => 198;
     public double Hardness => 10;
     public double ExplosionResistance => 10;
     public double Friction => 0.6;
@@ -119,17 +118,17 @@ public record CreakingHeartBlock(Identifier Identifier, Axis Axis, CreakingHeart
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Axis = properties.ChildrenMap.ContainsKey("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
-            CreakingHeartStateValue = properties.ChildrenMap.ContainsKey("creaking_heart_state") ? CreakingHeartStateFromString(properties["creaking_heart_state"].GetString()) : CreakingHeartStateValue,
-            Natural = properties.ChildrenMap.ContainsKey("natural") ? properties["natural"].GetString() == "true" : Natural,
+            Axis = properties.Contains("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
+            CreakingHeartStateValue = properties.Contains("creaking_heart_state") ? CreakingHeartStateFromString(properties["creaking_heart_state"].GetString()) : CreakingHeartStateValue,
+            Natural = properties.Contains("natural") ? properties["natural"].GetString() == "true" : Natural,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("axis", Axis.ToName()),
-            new StringTag("creaking_heart_state", CreakingHeartStateToName(CreakingHeartStateValue)),
-            new StringTag("natural", Natural.ToString().ToLower())
+        return new CompoundTag(
+            ("axis", new StringTag(Axis.ToName())),
+            ("creaking_heart_state", new StringTag(CreakingHeartStateToName(CreakingHeartStateValue))),
+            ("natural", new StringTag(Natural.ToString().ToLower()))
         );
     }
     

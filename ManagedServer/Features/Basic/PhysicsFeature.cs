@@ -15,7 +15,7 @@ public class PhysicsFeature(Func<Entity, bool>? entityFilter = null) : ScopedFea
         AddEventHandler<ServerTickEvent>(e => {
             foreach (World world in e.Server.Worlds) {
                 foreach (Entity entity in world.Entities.GetEntities()) {
-                    if (entity is PlayerEntity || !EntityFilter(entity)) {
+                    if (entity is Player || !EntityFilter(entity)) {
                         continue;
                     }
                     

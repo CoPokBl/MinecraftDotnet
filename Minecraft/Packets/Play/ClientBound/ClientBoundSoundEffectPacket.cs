@@ -72,7 +72,7 @@ public class ClientBoundSoundEffectPacket() : ClientBoundPacket {
             w.WriteVarInt(0)
                 .Write(Event, reg);
         }
-        else w.WriteVarInt(Type.ThrowIfNull().ProtocolId + 1);
+        else w.WriteVarInt(reg.SoundTypes.GetProtocolId(Type.ThrowIfNull()) + 1);
 
         int x = (int) Pos.X * (1 << 3);
         int y = (int) Pos.Y * (1 << 3);

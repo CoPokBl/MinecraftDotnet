@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BlackstoneWallBlock(Identifier Identifier, WallSide East, WallSide North, WallSide South, bool Up, bool Waterlogged, WallSide West) : IBlock {
     public Identifier Category => "minecraft:wall";
-    public int ProtocolId => 924;
     public double Hardness => 1.5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -1226,23 +1225,23 @@ public record BlackstoneWallBlock(Identifier Identifier, WallSide East, WallSide
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            East = properties.ChildrenMap.ContainsKey("east") ? WallSideExtensions.FromString(properties["east"].GetString()) : East,
-            North = properties.ChildrenMap.ContainsKey("north") ? WallSideExtensions.FromString(properties["north"].GetString()) : North,
-            South = properties.ChildrenMap.ContainsKey("south") ? WallSideExtensions.FromString(properties["south"].GetString()) : South,
-            Up = properties.ChildrenMap.ContainsKey("up") ? properties["up"].GetString() == "true" : Up,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
-            West = properties.ChildrenMap.ContainsKey("west") ? WallSideExtensions.FromString(properties["west"].GetString()) : West,
+            East = properties.Contains("east") ? WallSideExtensions.FromString(properties["east"].GetString()) : East,
+            North = properties.Contains("north") ? WallSideExtensions.FromString(properties["north"].GetString()) : North,
+            South = properties.Contains("south") ? WallSideExtensions.FromString(properties["south"].GetString()) : South,
+            Up = properties.Contains("up") ? properties["up"].GetString() == "true" : Up,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            West = properties.Contains("west") ? WallSideExtensions.FromString(properties["west"].GetString()) : West,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("east", East.ToName()),
-            new StringTag("north", North.ToName()),
-            new StringTag("south", South.ToName()),
-            new StringTag("up", Up.ToString().ToLower()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower()),
-            new StringTag("west", West.ToName())
+        return new CompoundTag(
+            ("east", new StringTag(East.ToName())),
+            ("north", new StringTag(North.ToName())),
+            ("south", new StringTag(South.ToName())),
+            ("up", new StringTag(Up.ToString().ToLower())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower())),
+            ("west", new StringTag(West.ToName()))
         );
     }
     

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PodzolBlock(Identifier Identifier, bool Snowy) : IBlock {
     public Identifier Category => "minecraft:snowy_dirt";
-    public int ProtocolId => 11;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -59,13 +58,13 @@ public record PodzolBlock(Identifier Identifier, bool Snowy) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Snowy = properties.ChildrenMap.ContainsKey("snowy") ? properties["snowy"].GetString() == "true" : Snowy,
+            Snowy = properties.Contains("snowy") ? properties["snowy"].GetString() == "true" : Snowy,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("snowy", Snowy.ToString().ToLower())
+        return new CompoundTag(
+            ("snowy", new StringTag(Snowy.ToString().ToLower()))
         );
     }
     

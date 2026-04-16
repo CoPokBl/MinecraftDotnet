@@ -4,7 +4,7 @@ using Minecraft.Schemas.Vec.Relative;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record BlockPosArgumentType(int ProtocolId) : ArgumentParser<RelativeVec3<int>>(ProtocolId) {
+public record BlockPosArgumentType() : ArgumentParser<RelativeVec3<int>>() {
     public override Identifier Identifier => "minecraft:block_pos";
     
     private static RelativeCoordinate<int> ReadCoordinate(ref string str) {

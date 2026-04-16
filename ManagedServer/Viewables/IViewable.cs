@@ -4,7 +4,7 @@ using Minecraft.Packets;
 namespace ManagedServer.Viewables;
 
 public interface IViewable {
-    PlayerEntity[] GetViewers();
+    Player[] GetViewers();
 }
 
 public static class ViewableExtensions {

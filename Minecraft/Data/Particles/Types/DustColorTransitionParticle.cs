@@ -6,7 +6,7 @@ namespace Minecraft.Data.Particles.Types;
 
 public record DustColorTransitionParticle(
     Identifier Identifier, 
-    int ProtocolId, 
+    
     TextColor FromColor = default, 
     TextColor ToColor = default, 
     float Scale = 1f) : IParticle {

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hanging, int Stage, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:mangrove_propagule";
-    public int ProtocolId => 33;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -216,19 +215,19 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
-            Hanging = properties.ChildrenMap.ContainsKey("hanging") ? properties["hanging"].GetString() == "true" : Hanging,
-            Stage = properties.ChildrenMap.ContainsKey("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Age = properties.Contains("age") ? int.Parse(properties["age"].GetString()) : Age,
+            Hanging = properties.Contains("hanging") ? properties["hanging"].GetString() == "true" : Hanging,
+            Stage = properties.Contains("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("age", Age.ToString()),
-            new StringTag("hanging", Hanging.ToString().ToLower()),
-            new StringTag("stage", Stage.ToString()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("age", new StringTag(Age.ToString())),
+            ("hanging", new StringTag(Hanging.ToString().ToLower())),
+            ("stage", new StringTag(Stage.ToString())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

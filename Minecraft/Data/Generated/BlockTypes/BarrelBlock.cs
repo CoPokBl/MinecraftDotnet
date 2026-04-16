@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : IBlock {
     public Identifier Category => "minecraft:barrel";
-    public int ProtocolId => 837;
     public double Hardness => 2.5;
     public double ExplosionResistance => 2.5;
     public double Friction => 0.6;
@@ -92,15 +91,15 @@ public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : I
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Open = properties.ChildrenMap.ContainsKey("open") ? properties["open"].GetString() == "true" : Open,
+            Facing = properties.Contains("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Open = properties.Contains("open") ? properties["open"].GetString() == "true" : Open,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("open", Open.ToString().ToLower())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("open", new StringTag(Open.ToString().ToLower()))
         );
     }
     

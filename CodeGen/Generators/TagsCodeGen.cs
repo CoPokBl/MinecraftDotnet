@@ -22,6 +22,7 @@ public static class VanillaTags {
         { "item", "IItem" },
         { "entity_type", "IEntityType" },
         { "enchantment", "IEnchantment" },
+        { "timeline", "ITimeline" },
     };
     
     public static string CreateTagEntries(JObject registriesJson) {

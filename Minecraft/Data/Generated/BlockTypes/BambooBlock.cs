@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves LeavesValue, int Stage) : IBlock {
     public Identifier Category => "minecraft:bamboo_stalk";
-    public int ProtocolId => 790;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -104,17 +103,17 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
-            LeavesValue = properties.ChildrenMap.ContainsKey("leaves") ? LeavesFromString(properties["leaves"].GetString()) : LeavesValue,
-            Stage = properties.ChildrenMap.ContainsKey("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
+            Age = properties.Contains("age") ? int.Parse(properties["age"].GetString()) : Age,
+            LeavesValue = properties.Contains("leaves") ? LeavesFromString(properties["leaves"].GetString()) : LeavesValue,
+            Stage = properties.Contains("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("age", Age.ToString()),
-            new StringTag("leaves", LeavesToName(LeavesValue)),
-            new StringTag("stage", Stage.ToString())
+        return new CompoundTag(
+            ("age", new StringTag(Age.ToString())),
+            ("leaves", new StringTag(LeavesToName(LeavesValue))),
+            ("stage", new StringTag(Stage.ToString()))
         );
     }
     

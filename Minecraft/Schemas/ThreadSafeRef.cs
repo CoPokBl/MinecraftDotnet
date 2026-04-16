@@ -8,17 +8,16 @@ namespace Minecraft.Schemas;
 /// <typeparam name="T">The type to encapsulate.</typeparam>
 public class ThreadSafeRef<T> where T : struct {
     private readonly object _lock = new();
-    private T _value;
 
     public T Value {
         get {
             lock (_lock) {
-                return _value;
+                return field;
             }
         }
         set {
             lock (_lock) {
-                _value = value;
+                field = value;
             }
         }
     }

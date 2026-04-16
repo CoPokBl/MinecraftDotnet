@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PolishedBlackstonePressurePlateBlock(Identifier Identifier, bool Powered) : IBlock {
     public Identifier Category => "minecraft:pressure_plate";
-    public int ProtocolId => 936;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -59,13 +58,13 @@ public record PolishedBlackstonePressurePlateBlock(Identifier Identifier, bool P
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("powered", Powered.ToString().ToLower())
+        return new CompoundTag(
+            ("powered", new StringTag(Powered.ToString().ToLower()))
         );
     }
     

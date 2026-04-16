@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DarkOakSaplingBlock(Identifier Identifier, int Stage) : IBlock {
     public Identifier Category => "minecraft:sapling";
-    public int ProtocolId => 31;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -60,13 +59,13 @@ public record DarkOakSaplingBlock(Identifier Identifier, int Stage) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Stage = properties.ChildrenMap.ContainsKey("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
+            Stage = properties.Contains("stage") ? int.Parse(properties["stage"].GetString()) : Stage,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("stage", Stage.ToString())
+        return new CompoundTag(
+            ("stage", new StringTag(Stage.ToString()))
         );
     }
     

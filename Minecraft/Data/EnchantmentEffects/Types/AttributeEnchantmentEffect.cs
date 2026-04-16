@@ -12,6 +12,7 @@ public record AttributeEnchantmentEffect(AttributeEnchantmentEffect.Effect[] Eff
     public static AttributeEnchantmentEffect ParseData(INbtTag tag, MinecraftRegistry reg) {
         ListTag tags = tag.GetList();
         return new AttributeEnchantmentEffect(tags.Tags
+            .ToArray()
             .Select(t => Parse(t.GetCompound(), reg))
             .ToArray());
     }
@@ -30,17 +31,17 @@ public record AttributeEnchantmentEffect(AttributeEnchantmentEffect.Effect[] Eff
     }
 
     public INbtTag SerialiseData() {
-        return new ListTag(null, Effects.Select(INbtTag (e) => new CompoundTag(null, 
-            new StringTag("id", e.ModifierId),
-            new StringTag("attribute", e.Attribute.Identifier), 
-            e.Amount.ToNbt("amount"), 
-            new StringTag("operation", 
+        return new ListTag(Effects.Select(INbtTag (e) => new CompoundTag(
+            ("id", new StringTag(e.ModifierId)),
+            ("attribute", new StringTag(e.Attribute.Identifier)),
+            ("amount", e.Amount.ToNbt()),
+            ("operation", new StringTag(
                 e.Operation switch {
                     AttributeOperation.Add => "add_value",
                     AttributeOperation.AddMultipliedBase => "add_multiplied_base",
                     AttributeOperation.AddMultipliedTotal => "add_multiplied_total",
                     _ => throw new ArgumentException("Unknown attribute operation: " + e.Operation)
-        }))).ToArray());
+                })))).ToArray());
     }
 
     public record Effect(IAttribute Attribute, ILevelBasedValue Amount, AttributeOperation Operation, string ModifierId);

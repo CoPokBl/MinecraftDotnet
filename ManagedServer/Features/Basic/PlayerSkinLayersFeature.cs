@@ -36,7 +36,7 @@ public class PlayerSkinLayersFeature : ScopedFeature {
         });
     }
     
-    private static void SetSkinParts(PlayerEntity player, SkinParts skinParts) {
+    private static void SetSkinParts(Player player, SkinParts skinParts) {
         player.Meta = player.Meta with {
             SkinFlags = skinParts
         };

@@ -18,7 +18,7 @@ public class InstaboomTntItem : SkyWarsItem {
     private const int LaunchRadius = 4;
     private const double LaunchPower = 1.025;
     
-    public override bool OnPlace(PlayerEntity player, Vec3<int> position) {
+    public override bool OnPlace(Player player, Vec3<int> position) {
         DoKaboom(player.World!, position, ExplodeRadius, LaunchRadius, LaunchPower);
         World world = player.World!;
         player.Server.Scheduler.ScheduleNextTick(() => {

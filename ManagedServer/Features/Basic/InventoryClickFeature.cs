@@ -150,7 +150,7 @@ public class InventoryClickFeature : ScopedFeature {
         }
     }
     
-    private void HandleInventoryClick(PlayerEntity player, ServerBoundClickContainerPacket packet) {
+    private void HandleInventoryClick(Player player, ServerBoundClickContainerPacket packet) {
         // player.SendMessage($"Inventory Clicked: {packet.Slot}, Mode: {packet.Mode}");
         Inventory clickedInventory = packet.WindowId == 0 ? player.Inventory : player.OpenInventory!;
         Inventory targetInventory = packet.Slot == -999 ? clickedInventory :
@@ -639,7 +639,7 @@ public class InventoryClickFeature : ScopedFeature {
     /// <param name="player">The player performing the drop.</param>
     /// <param name="item">The item being dropped.</param>
     /// <returns>Whether the item should be removed from the inventory.</returns>
-    private bool HandleDrop(PlayerEntity player, ItemStack item) {
+    private bool HandleDrop(Player player, ItemStack item) {
         if (item.IsAir()) {
             return false;
         }

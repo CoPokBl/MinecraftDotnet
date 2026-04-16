@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, VaultBlock.VaultState VaultStateValue) : IBlock {
     public Identifier Category => "minecraft:vault";
-    public int ProtocolId => 1156;
     public double Hardness => 50;
     public double ExplosionResistance => 50;
     public double Friction => 0.6;
@@ -152,17 +151,17 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Ominous = properties.ChildrenMap.ContainsKey("ominous") ? properties["ominous"].GetString() == "true" : Ominous,
-            VaultStateValue = properties.ChildrenMap.ContainsKey("vault_state") ? VaultStateFromString(properties["vault_state"].GetString()) : VaultStateValue,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Ominous = properties.Contains("ominous") ? properties["ominous"].GetString() == "true" : Ominous,
+            VaultStateValue = properties.Contains("vault_state") ? VaultStateFromString(properties["vault_state"].GetString()) : VaultStateValue,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("ominous", Ominous.ToString().ToLower()),
-            new StringTag("vault_state", VaultStateToName(VaultStateValue))
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("ominous", new StringTag(Ominous.ToString().ToLower())),
+            ("vault_state", new StringTag(VaultStateToName(VaultStateValue)))
         );
     }
     

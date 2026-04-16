@@ -4,6 +4,6 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class ConsumeEffectRegistry : ProtocolTypeRegistry<ConsumeEffectRegistry, IConsumeEffect> {
+public class ConsumeEffectRegistry : MappedRegistry<ConsumeEffectRegistry, IConsumeEffect> {
     public override Identifier RegistryId => "minecraft:consume_effect_type";
 }

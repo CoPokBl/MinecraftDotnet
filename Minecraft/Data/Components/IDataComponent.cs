@@ -4,7 +4,6 @@ using Minecraft.Schemas;
 namespace Minecraft.Data.Components;
 
 public abstract record IDataComponent<T> : IDataComponent {
-    public abstract int ProtocolId { get; init; }
     public abstract Identifier Identifier { get; }
     
     public abstract DataWriter WriteData(T val, DataWriter writer, MinecraftRegistry registry);

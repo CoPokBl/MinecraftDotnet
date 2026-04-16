@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:grindstone";
-    public int ProtocolId => 842;
     public double Hardness => 2;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -89,15 +88,15 @@ public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direc
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Face = properties.ChildrenMap.ContainsKey("face") ? AttachDirectionExtensions.FromString(properties["face"].GetString()) : Face,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Face = properties.Contains("face") ? AttachDirectionExtensions.FromString(properties["face"].GetString()) : Face,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("face", Face.ToName()),
-            new StringTag("facing", Facing.ToName())
+        return new CompoundTag(
+            ("face", new StringTag(Face.ToName())),
+            ("facing", new StringTag(Facing.ToName()))
         );
     }
     

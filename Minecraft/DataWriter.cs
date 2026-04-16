@@ -511,13 +511,13 @@ public class DataWriter : Stream, IWritable {
         return this;
     }
 
-    public DataWriter WriteIdOr<TP, T>(Or<TP, T> idOr, Action<T, DataWriter> writerAction) where TP : IProtocolType {
-        Or<int, T> newOr = idOr.IsValue1 ? Or<int, T>.FromValue1(idOr.Value1!.ProtocolId) : Or<int, T>.FromValue2(idOr.Value2!);
+    public DataWriter WriteIdOr<TP, T>(Or<TP, T> idOr, Func<TP, int> idResolver, Action<T, DataWriter> writerAction) where TP : IProtocolType {
+        Or<int, T> newOr = idOr.IsValue1 ? Or<int, T>.FromValue1(idResolver(idOr.Value1!)) : Or<int, T>.FromValue2(idOr.Value2!);
         return WriteIdOr(newOr, writerAction);
     }
     
-    public DataWriter WriteIdOr<TP, T>(Or<TP, T> idOr, MinecraftRegistry reg) where TP : IProtocolType where T : INetworkType<T> {
-        return WriteIdOr(idOr, (type, writer) => type.WriteData(writer, reg));
+    public DataWriter WriteIdOr<TP, T>(Or<TP, T> idOr, Func<TP, int> idResolver, MinecraftRegistry reg) where TP : IProtocolType where T : INetworkType<T> {
+        return WriteIdOr(idOr, idResolver, (type, writer) => type.WriteData(writer, reg));
     }
 
     public DataWriter WritePrefixedArray<T>(T[] values, Action<T, DataWriter> writerAction) {

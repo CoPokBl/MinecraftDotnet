@@ -5,8 +5,7 @@ using Newtonsoft.Json.Linq;
 namespace Minecraft.Schemas;
 
 public record PlayerSkin(string Textures, string Signature) {
-    private JObject? _parsedTextures;
-    private JObject ParsedTextures => _parsedTextures ??= JObject.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(Textures)));
+    private JObject ParsedTextures => field ??= JObject.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(Textures)));
 
     public string SkinUrl => ParsedTextures["textures"]?["SKIN"]?["url"]?.ToString() ?? string.Empty;
     public string CapeUrl => ParsedTextures["textures"]?["CAPE"]?["url"]?.ToString() ?? string.Empty;

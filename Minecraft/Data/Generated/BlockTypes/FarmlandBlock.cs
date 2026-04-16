@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
     public Identifier Category => "minecraft:farm";
-    public int ProtocolId => 207;
     public double Hardness => 0.6;
     public double ExplosionResistance => 0.6;
     public double Friction => 0.6;
@@ -72,13 +71,13 @@ public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Moisture = properties.ChildrenMap.ContainsKey("moisture") ? int.Parse(properties["moisture"].GetString()) : Moisture,
+            Moisture = properties.Contains("moisture") ? int.Parse(properties["moisture"].GetString()) : Moisture,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("moisture", Moisture.ToString())
+        return new CompoundTag(
+            ("moisture", new StringTag(Moisture.ToString()))
         );
     }
     

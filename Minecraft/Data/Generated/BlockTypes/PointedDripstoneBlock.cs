@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock.Thickness ThicknessValue, PointedDripstoneBlock.VerticalDirection VerticalDirectionValue, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:pointed_dripstone";
-    public int ProtocolId => 1103;
     public double Hardness => 1.5;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -131,17 +130,17 @@ public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            ThicknessValue = properties.ChildrenMap.ContainsKey("thickness") ? ThicknessFromString(properties["thickness"].GetString()) : ThicknessValue,
-            VerticalDirectionValue = properties.ChildrenMap.ContainsKey("vertical_direction") ? VerticalDirectionFromString(properties["vertical_direction"].GetString()) : VerticalDirectionValue,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            ThicknessValue = properties.Contains("thickness") ? ThicknessFromString(properties["thickness"].GetString()) : ThicknessValue,
+            VerticalDirectionValue = properties.Contains("vertical_direction") ? VerticalDirectionFromString(properties["vertical_direction"].GetString()) : VerticalDirectionValue,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("thickness", ThicknessToName(ThicknessValue)),
-            new StringTag("vertical_direction", VerticalDirectionToName(VerticalDirectionValue)),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("thickness", new StringTag(ThicknessToName(ThicknessValue))),
+            ("vertical_direction", new StringTag(VerticalDirectionToName(VerticalDirectionValue))),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ExposedCopperChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:weathering_copper_chain";
-    public int ProtocolId => 351;
     public double Hardness => 5;
     public double ExplosionResistance => 6;
     public double Friction => 0.6;
@@ -74,15 +73,15 @@ public record ExposedCopperChainBlock(Identifier Identifier, Axis Axis, bool Wat
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Axis = properties.ChildrenMap.ContainsKey("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Axis = properties.Contains("axis") ? AxisExtensions.FromString(properties["axis"].GetString()) : Axis,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("axis", Axis.ToName()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("axis", new StringTag(Axis.ToName())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

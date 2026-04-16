@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SuspiciousSandBlock(Identifier Identifier, int Dusted) : IBlock {
     public Identifier Category => "minecraft:brushable";
-    public int ProtocolId => 38;
     public double Hardness => 0.25;
     public double ExplosionResistance => 0.25;
     public double Friction => 0.6;
@@ -64,13 +63,13 @@ public record SuspiciousSandBlock(Identifier Identifier, int Dusted) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Dusted = properties.ChildrenMap.ContainsKey("dusted") ? int.Parse(properties["dusted"].GetString()) : Dusted,
+            Dusted = properties.Contains("dusted") ? int.Parse(properties["dusted"].GetString()) : Dusted,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("dusted", Dusted.ToString())
+        return new CompoundTag(
+            ("dusted", new StringTag(Dusted.ToString()))
         );
     }
     

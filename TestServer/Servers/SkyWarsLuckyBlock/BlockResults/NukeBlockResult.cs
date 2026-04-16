@@ -9,7 +9,7 @@ namespace TestServer.Servers.SkyWarsLuckyBlock.BlockResults;
 
 public class NukeBlockResult : IBlockResult {
     
-    public void Trigger(World world, PlayerEntity? player, Vec3<int> position) {
+    public void Trigger(World world, Player? player, Vec3<int> position) {
         world.SendMessage(TextComponent.FromLegacyString("&cNuclear launch activated!"));
         world.SendMessage(TextComponent.FromLegacyString("&cSetting coordinates for the nuke..."));
         world.SendMessage(TextComponent.FromLegacyString("&cX: " + position.X + ", Y: " + position.Y + ", Z: " + position.Z));

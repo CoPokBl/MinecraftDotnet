@@ -4,7 +4,6 @@ using ManagedServer.Events.Types;
 using ManagedServer.Inventories;
 using ManagedServer.Schemas;
 using ManagedServer.Worlds;
-using Minecraft.Implementations.Events;
 using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Events;
@@ -12,7 +11,7 @@ namespace ManagedServer.Events;
 [NotCalledByDefault]
 public class InventoryClickEvent : IPlayerEvent, IInventoryEvent {
     public required World World { get; init; }
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     public required Inventory Inventory { get; init; }
     public required int Slot { get; init; }
     public required ItemStack? ClickedItem { get; init; }

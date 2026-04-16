@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument InstrumentValue, int Note, bool Powered) : IBlock {
     public Identifier Category => "minecraft:note";
-    public int ProtocolId => 109;
     public double Hardness => 0.8;
     public double ExplosionResistance => 0.8;
     public double Friction => 0.6;
@@ -3575,17 +3574,17 @@ public record NoteBlockBlock(Identifier Identifier, NoteBlockBlock.Instrument In
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            InstrumentValue = properties.ChildrenMap.ContainsKey("instrument") ? InstrumentFromString(properties["instrument"].GetString()) : InstrumentValue,
-            Note = properties.ChildrenMap.ContainsKey("note") ? int.Parse(properties["note"].GetString()) : Note,
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            InstrumentValue = properties.Contains("instrument") ? InstrumentFromString(properties["instrument"].GetString()) : InstrumentValue,
+            Note = properties.Contains("note") ? int.Parse(properties["note"].GetString()) : Note,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("instrument", InstrumentToName(InstrumentValue)),
-            new StringTag("note", Note.ToString()),
-            new StringTag("powered", Powered.ToString().ToLower())
+        return new CompoundTag(
+            ("instrument", new StringTag(InstrumentToName(InstrumentValue))),
+            ("note", new StringTag(Note.ToString())),
+            ("powered", new StringTag(Powered.ToString().ToLower()))
         );
     }
     

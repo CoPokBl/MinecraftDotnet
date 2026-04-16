@@ -15,4 +15,6 @@ public interface ISubRegistry {
     RegistryTagContainer Tags { get; }
     ISubRegistry Clone();
     void Clear();
+    int GetProtocolId(Identifier id);
+    int GetProtocolId(IProtocolType type) => GetProtocolId(type.Identifier);
 }

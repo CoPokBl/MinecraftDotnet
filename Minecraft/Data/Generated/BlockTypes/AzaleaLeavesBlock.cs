@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record AzaleaLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:untinted_particle_leaves";
-    public int ProtocolId => 97;
     public double Hardness => 0.2;
     public double ExplosionResistance => 0.2;
     public double Friction => 0.6;
@@ -154,17 +153,17 @@ public record AzaleaLeavesBlock(Identifier Identifier, int Distance, bool Persis
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Distance = properties.ChildrenMap.ContainsKey("distance") ? int.Parse(properties["distance"].GetString()) : Distance,
-            Persistent = properties.ChildrenMap.ContainsKey("persistent") ? properties["persistent"].GetString() == "true" : Persistent,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Distance = properties.Contains("distance") ? int.Parse(properties["distance"].GetString()) : Distance,
+            Persistent = properties.Contains("persistent") ? properties["persistent"].GetString() == "true" : Persistent,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("distance", Distance.ToString()),
-            new StringTag("persistent", Persistent.ToString().ToLower()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("distance", new StringTag(Distance.ToString())),
+            ("persistent", new StringTag(Persistent.ToString().ToLower())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

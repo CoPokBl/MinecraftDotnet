@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentValue, Direction Facing, bool Powered) : IBlock {
     public Identifier Category => "minecraft:bell";
-    public int ProtocolId => 846;
     public double Hardness => 5;
     public double ExplosionResistance => 5;
     public double Friction => 0.6;
@@ -164,17 +163,17 @@ public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentVa
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            AttachmentValue = properties.ChildrenMap.ContainsKey("attachment") ? AttachmentFromString(properties["attachment"].GetString()) : AttachmentValue,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
+            AttachmentValue = properties.Contains("attachment") ? AttachmentFromString(properties["attachment"].GetString()) : AttachmentValue,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("attachment", AttachmentToName(AttachmentValue)),
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("powered", Powered.ToString().ToLower())
+        return new CompoundTag(
+            ("attachment", new StringTag(AttachmentToName(AttachmentValue))),
+            ("facing", new StringTag(Facing.ToName())),
+            ("powered", new StringTag(Powered.ToString().ToLower()))
         );
     }
     

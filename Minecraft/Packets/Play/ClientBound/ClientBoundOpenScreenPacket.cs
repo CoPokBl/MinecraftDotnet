@@ -15,7 +15,7 @@ public class ClientBoundOpenScreenPacket : ClientBoundPacket {
     protected override DataWriter WriteData(DataWriter w, MinecraftRegistry registry) {
         return w
             .WriteVarInt(WindowId)
-            .WriteVarInt(Type.ProtocolId)
+            .WriteVarInt(registry.InventoryTypes.GetProtocolId(Type))
             .WriteNbt(Title);
     }
     

@@ -14,15 +14,15 @@ public class HashedSlot(int count, IItem? type = null, (IDataComponent, int)[]? 
     public readonly IDataComponent[] RemoveComponents = removeComponents ?? [];
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
-        writer.WriteVarInt(Type.ProtocolId);
+        writer.WriteVarInt(registry.Items.GetProtocolId(Type));
         writer.WriteVarInt(Count);
 
         writer.WritePrefixedArray(Components, (component, w) => w
-            .WriteVarInt(registry.DataComponents[component.Item1.Identifier].ProtocolId)
+            .WriteVarInt(registry.DataComponents.GetProtocolId(component.Item1.Identifier))
             .WriteInteger(component.Item2));
         
         return writer.WritePrefixedArray(RemoveComponents, (component, w) => w
-            .WriteVarInt(registry.DataComponents[component.Identifier].ProtocolId));
+            .WriteVarInt(registry.DataComponents.GetProtocolId(component.Identifier)));
     }
 
     public static HashedSlot ReadData(DataReader reader, MinecraftRegistry registry) {

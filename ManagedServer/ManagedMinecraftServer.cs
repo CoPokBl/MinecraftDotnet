@@ -27,13 +27,13 @@ namespace ManagedServer;
 // TODO: Remove MinecraftServer inheritance
 public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience, IFeatureScope {
     public List<World> Worlds { get; } = [];
-    public List<PlayerEntity> Players { get; } = [];
+    public List<Player> Players { get; } = [];
     public ManagedMinecraftServer Server => this;
     public FeatureHandler FeatureHandler { get; }
     public ServerScheduler Scheduler { get; }
     public ulong CurrentTick { get; private set; }
     public string ServerId { get; set; } = Random.Shared.Next(int.MaxValue).ToString();  // must be <=20 chars
-    public Func<PlayerEntity, IPermissionContainer> PermissionsProvider { get; set; } = _ => new MapPermissionContainer();
+    public Func<Player, IPermissionContainer> PermissionsProvider { get; set; } = _ => new MapPermissionContainer();
     
     /// <summary>
     /// Lists of steps that must be completed before a player can log in.
@@ -56,10 +56,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public int WorldTickDelayMs { get; set; } = 50;
     public bool AllowListeningToUnCalledEvents { get; set; } = false;
     public int TargetTicksPerSecond { get; set; } = 20;
-    public Dictionary<Identifier, Dimension> Dimensions { get; } = new() {
-        { "minecraft:overworld", new Dimension() },
-        { "minecraft:dummy_world", new Dimension() }  // Dummy world for respawning players
-    };
+    
     public MinecraftRegistry Registry { get; set; } = VanillaRegistry.Data;
     public Action<string> LogAction { get; set; } = Console.WriteLine;
     public event Action? ServerStopped;
@@ -222,8 +219,8 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public World CreateWorld(ITerrainProvider provider, Identifier? dimension = null, ILightingProvider? lightingProvider = null) {
         dimension ??= "minecraft:overworld";
         
-        if (!Dimensions.ContainsKey(dimension.Value)) {
-            throw new ArgumentException($"Dimension '{dimension}' does not exist. Please add it to the Dimensions dictionary.");
+        if (!Registry.DimensionTypes.Contains(dimension.Value)) {
+            throw new ArgumentException($"Dimension '{dimension}' does not exist. Please add it to the Dimensions registry.");
         }
         World world = new(this, Events, provider, dimension.Value, lightingProvider, ViewDistance, 
             WorldPacketsPerTick, WorldTickDelayMs) {
@@ -241,12 +238,12 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         return listener.Listen(port);
     }
 
-    public PlayerEntity[] GetViewers() {
+    public Player[] GetViewers() {
         return Players.ToArray();
     }
 
     public void SendPacket(MinecraftPacket packet) {
-        foreach (PlayerEntity player in Players) {
+        foreach (Player player in Players) {
             player.SendPacket(packet);
         }
     }

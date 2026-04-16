@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PowderSnowCauldronBlock(Identifier Identifier, int Level) : IBlock {
     public Identifier Category => "minecraft:layered_cauldron";
-    public int ProtocolId => 389;
     public double Hardness => 2;
     public double ExplosionResistance => 2;
     public double Friction => 0.6;
@@ -62,13 +61,13 @@ public record PowderSnowCauldronBlock(Identifier Identifier, int Level) : IBlock
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Level = properties.ChildrenMap.ContainsKey("level") ? int.Parse(properties["level"].GetString()) : Level,
+            Level = properties.Contains("level") ? int.Parse(properties["level"].GetString()) : Level,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("level", Level.ToString())
+        return new CompoundTag(
+            ("level", new StringTag(Level.ToString()))
         );
     }
     

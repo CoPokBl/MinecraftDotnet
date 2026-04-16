@@ -5,7 +5,7 @@ using NBT.Tags;
 
 namespace Minecraft.Data.Blocks;
 
-public record WaterloggableBlock(Identifier Identifier, int ProtocolId, uint StateIdAirLogged, uint StateIdWaterlogged, bool Waterlogged, Identifier Category,
+public record WaterloggableBlock(Identifier Identifier,  uint StateIdAirLogged, uint StateIdWaterlogged, bool Waterlogged, Identifier Category,
     double Hardness, double ExplosionResistance, double Friction, double SpeedFactor, double JumpFactor, bool Solid, 
     bool Liquid, bool Occludes, bool RequiresTool, int LightEmission, bool Replaceable, string SoundType, 
     Identifier? BlockEntity, Identifier? Item, ICollisionBox CollisionShape, ICollisionBox OcclusionShape, 
@@ -35,7 +35,7 @@ public record WaterloggableBlock(Identifier Identifier, int ProtocolId, uint Sta
     }
 
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower()));
+        return new CompoundTag(
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower())));
     }
 }

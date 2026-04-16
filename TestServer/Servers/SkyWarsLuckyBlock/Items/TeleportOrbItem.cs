@@ -22,7 +22,7 @@ public class TeleportOrbItem : SkyWarsItem {
         .With(DataComponent.UseCooldown, new UseCooldownComponent.Data(0.1f, "skywars:teleport_orb"));
     public override string Id => "teleport_orb";
 
-    public override bool Use(PlayerEntity player) {
+    public override bool Use(Player player) {
         Vec3<int>? targetBlock = SkyWarsUtils.GetTargetBlock(player);
         if (targetBlock == null) {
             player.SendMessage(TextComponent.FromLegacyString("&cNo target found within range."));

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WaterBlock(Identifier Identifier, int Level) : IBlock {
     public Identifier Category => "minecraft:liquid";
-    public int ProtocolId => 35;
     public double Hardness => 100;
     public double ExplosionResistance => 100;
     public double Friction => 0.6;
@@ -88,13 +87,13 @@ public record WaterBlock(Identifier Identifier, int Level) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Level = properties.ChildrenMap.ContainsKey("level") ? int.Parse(properties["level"].GetString()) : Level,
+            Level = properties.Contains("level") ? int.Parse(properties["level"].GetString()) : Level,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("level", Level.ToString())
+        return new CompoundTag(
+            ("level", new StringTag(Level.ToString()))
         );
     }
     

@@ -11,7 +11,7 @@ namespace Minecraft.Implementations.Client;
 
 public abstract class ServerConnection : MinecraftConnection {
     public EventNode<IClientEvent> Events = new();
-    public byte[]? ServerPubKey;
+    public new byte[]? ServerPubKey;
 
     protected static readonly MinecraftPacket[] DontLog = [];
 

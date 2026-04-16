@@ -185,7 +185,7 @@ public class DataReader(byte[] data) : Stream {
         // Combine into a 64-bit big-endian value:
         long packed = 0;
         for (int i = 0; i < 8; i++) {
-            packed = (packed << 8) | (buffer[i] & 0xFF);
+            packed = (packed << 8) | (uint)(buffer[i] & 0xFF);
         }
 
         // Extract X (26 bits), Z (26 bits), Y (12 bits)
@@ -226,7 +226,8 @@ public class DataReader(byte[] data) : Stream {
 
         for (int i = 0; i < longCount; i++) {
             // Read out one long of data
-            byte[] bytes = Read(sizeof(long)).Reverse().ToArray();
+            byte[] bytes = Read(sizeof(long));
+            Array.Reverse(bytes);
             BitArray bits = new(bytes);
 
             for (int j = 0; j < entriesPerLong; j++) {
@@ -251,7 +252,8 @@ public class DataReader(byte[] data) : Stream {
 
         for (int i = 0; i < longCount; i++) {
             // Read out one long of data
-            byte[] bytes = Read(sizeof(long)).Reverse().ToArray();
+            byte[] bytes = Read(sizeof(long));
+            Array.Reverse(bytes);
             BitArray bits = new(bytes);
 
             for (int j = 0; j < entriesPerLong; j++) {

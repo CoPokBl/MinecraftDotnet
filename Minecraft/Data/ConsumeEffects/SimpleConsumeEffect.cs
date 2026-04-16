@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.ConsumeEffects;
 
-public record SimpleConsumeEffect(Identifier Identifier, int ProtocolId) : IConsumeEffect {
+public record SimpleConsumeEffect(Identifier Identifier) : IConsumeEffect {
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer;
     }

@@ -4,7 +4,7 @@ using Minecraft.Text;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record HexColourArgumentType(int ProtocolId) : ArgumentParser<TextColor>(ProtocolId) {
+public record HexColourArgumentType() : ArgumentParser<TextColor>() {
     public override Identifier Identifier => "minecraft:hex_color";
     
     public override TextColor Parse(ref string str, MinecraftRegistry _) {

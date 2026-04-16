@@ -6,15 +6,15 @@ public class Command {
     public required string CommandName { get; init; }
     public required CommandSyntax[] Syntax { get; init; }
     public required Command[] Subcommands { get; init; }
-    public required Action<PlayerEntity, CommandContext> Executor { get; init; }
-    public required Func<PlayerEntity, bool> Condition { get; init; }
+    public required Action<Player, CommandContext> Executor { get; init; }
+    public required Func<Player, bool> Condition { get; init; }
 }
 
 public class CommandBuilder(string command) {
-    private Action<PlayerEntity, CommandContext> _executor = (_, _) => { };
+    private Action<Player, CommandContext> _executor = (_, _) => { };
     private List<CommandSyntax> _syntax = [];
     private List<Command> _subcommands = [];
-    private Func<PlayerEntity, bool> _condition = _ => true;
+    private Func<Player, bool> _condition = _ => true;
 
     public Command Build() {
         return new Command {
@@ -26,7 +26,7 @@ public class CommandBuilder(string command) {
         };
     }
     
-    public CommandBuilder WithExecutor(Action<PlayerEntity, CommandContext> executor) {
+    public CommandBuilder WithExecutor(Action<Player, CommandContext> executor) {
         _executor = executor;
         return this;
     }
@@ -41,7 +41,7 @@ public class CommandBuilder(string command) {
         return this;
     }
 
-    public CommandBuilder WithDefaultSyntax(Action<PlayerEntity, CommandContext> executor, Func<PlayerEntity, bool> condition) {
+    public CommandBuilder WithDefaultSyntax(Action<Player, CommandContext> executor, Func<Player, bool> condition) {
         _syntax.Add(new CommandSyntax(executor, condition));
         return this;
     }
@@ -56,7 +56,7 @@ public class CommandBuilder(string command) {
         return this;
     }
     
-    public CommandBuilder WithCondition(Func<PlayerEntity, bool> condition) {
+    public CommandBuilder WithCondition(Func<Player, bool> condition) {
         _condition = condition;
         return this;
     }

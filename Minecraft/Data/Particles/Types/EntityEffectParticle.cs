@@ -4,7 +4,7 @@ using Minecraft.Text;
 
 namespace Minecraft.Data.Particles.Types;
 
-public record EntityEffectParticle(Identifier Identifier, int ProtocolId, TextColor Color = default) : IParticle {
+public record EntityEffectParticle(Identifier Identifier,  TextColor Color = default) : IParticle {
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer

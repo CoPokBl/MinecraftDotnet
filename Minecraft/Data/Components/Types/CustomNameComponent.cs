@@ -5,7 +5,7 @@ using NBT;
 
 namespace Minecraft.Data.Components.Types;
 
-public record CustomNameComponent(int ProtocolId) : IDataComponent<TextComponent> {
+public record CustomNameComponent() : IDataComponent<TextComponent> {
     public override Identifier Identifier => "minecraft:custom_name";
     
     public override DataWriter WriteData(TextComponent val, DataWriter writer, MinecraftRegistry registry) {

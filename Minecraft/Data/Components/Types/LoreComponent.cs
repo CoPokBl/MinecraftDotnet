@@ -5,7 +5,7 @@ using NBT;
 
 namespace Minecraft.Data.Components.Types;
 
-public record LoreComponent(int ProtocolId) : IDataComponent<TextComponent[]> {
+public record LoreComponent() : IDataComponent<TextComponent[]> {
     public override Identifier Identifier => "minecraft:lore";
     
     public override DataWriter WriteData(TextComponent[] val, DataWriter writer, MinecraftRegistry registry) {

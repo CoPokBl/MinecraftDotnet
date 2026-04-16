@@ -22,37 +22,34 @@ public interface IEnchantment : IProtocolType {
     IEnchantmentEffect[] Effects { get; }
 
     public CompoundTag ToNbt() {
-        List<INbtTag> tags = [
-            new StringTag("supported_items", $"#{SupportedItemsTag}"),
-            Description.SerialiseToTag().WithName("description"),
-            new IntegerTag("weight", Weight),
-            new IntegerTag("max_level", MaxLevel),
-            MinCost.ToNbt("min_cost"),
-            MaxCost.ToNbt("max_cost"),
-            new IntegerTag("anvil_cost", AnvilCost),
-            new ListTag("slots", Slots
-                .Select(s => new StringTag(null, s.Name))
-                .ToArray<INbtTag>())
+        List<(string, INbtTag)> tags = [
+            ("supported_items", new StringTag($"#{SupportedItemsTag}")),
+            ("description", Description.SerialiseToTag()),
+            ("weight", new IntegerTag(Weight)),
+            ("max_level", new IntegerTag(MaxLevel)),
+            ("min_cost", MinCost.ToNbt()),
+            ("max_cost", MaxCost.ToNbt()),
+            ("anvil_cost", new IntegerTag(AnvilCost)),
+            ("slots", new ListTag(Slots.Select(s => (INbtTag)new StringTag(s.Name)).ToArray()))
         ];
         
         if (ExclusiveSetTag != null) {
-            tags.Add(new StringTag("exclusive_set", $"#{ExclusiveSetTag}"));
+            tags.Add(("exclusive_set", new StringTag($"#{ExclusiveSetTag}")));
         }
         
         if (PrimaryItemsTag != null) {
-            tags.Add(new StringTag("primary_items", $"#{PrimaryItemsTag}"));
+            tags.Add(("primary_items", new StringTag($"#{PrimaryItemsTag}")));
         }
 
         if (Effects.Length > 0) {
-            CompoundTag effects = new("effects", Effects
-                .Select(e => e.SerialiseData().WithName(e.Id)).ToArray());
-            tags.Add(effects);
+            CompoundTag effects = new(Effects.Select(e => (e.Id, e.SerialiseData())).ToArray()!);
+            tags.Add(("effects", effects));
         }
         
-        return new CompoundTag(null, tags.ToArray());
+        return new CompoundTag(tags.ToArray());
     }
 
-    public static IEnchantment FromNbt(Identifier ident, int protocolId, CompoundTag tag, MinecraftRegistry reg) {
+    public static IEnchantment FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
         string supportedItemsStr = tag["supported_items"].GetString();
         TextComponent description = TextComponent.FromTag(tag["description"]!);
         int weight = tag["weight"].GetInteger();
@@ -62,6 +59,7 @@ public interface IEnchantment : IProtocolType {
         int anvilCost = tag["anvil_cost"].GetInteger();
         ListTag slotsTag = tag["slots"].GetList();
         EquipmentSlotGroup[] slots = slotsTag.Tags
+            .ToArray()
             .OfType<StringTag>()
             .Select(t => EquipmentSlotGroup.FromName(t.GetString()))
             .ToArray();
@@ -81,13 +79,7 @@ public interface IEnchantment : IProtocolType {
         List<IEnchantmentEffect> effectList = [];
         if (tag.Contains("effects")) {
             CompoundTag effects = tag["effects"].GetCompound();
-            foreach (INbtTag? child in effects.Children) {
-                // each child is a map entry that represents an effect type
-                if (child == null) {
-                    throw new ArgumentException("Effect entry cannot be null");
-                }
-                string id = child.GetName().ThrowIfNull();
-                
+            foreach ((string id, INbtTag child) in effects.Children) {
                 try {
                     effectList.Add(IEnchantmentEffect.FromNbt(id, child, reg));
                 }
@@ -97,7 +89,7 @@ public interface IEnchantment : IProtocolType {
             }
         }
 
-        return new SimpleEnchantment(ident, protocolId, supportedItemsStr[1..], description, weight, 
+        return new SimpleEnchantment(ident, supportedItemsStr[1..], description, weight, 
             maxLevel, minCost, maxCost, anvilCost, slots, exclusiveSet, primaryItems, effectList.ToArray());
     }
 }

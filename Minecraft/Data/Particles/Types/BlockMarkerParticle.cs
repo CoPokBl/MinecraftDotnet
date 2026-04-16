@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Particles.Types;
 
-public record BlockMarkerParticle(Identifier Identifier, int ProtocolId, int BlockState = 0) : IParticle {
+public record BlockMarkerParticle(Identifier Identifier,  int BlockState = 0) : IParticle {
 
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer

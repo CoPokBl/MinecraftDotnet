@@ -8,6 +8,20 @@ using TestServer.Servers.Transferer;
 // File.WriteAllBytes("polar.polar", PolarLoader.CreateWorld(new AnvilLoader("anvil", VanillaRegistry.Data)));
 // return 0;
 
+// foreach (var subReg in VanillaRegistry.Data.SubRegistries) {
+//     if (subReg is IProtocolTypeRegistry reg) {
+//         for (int i = 0; i < reg.Count; i++) {
+//             if (!reg.Contains(i)) {
+//                 Console.WriteLine($"No {reg.GetType().Name} for " + i + "");
+//             }
+//         }
+//         Console.WriteLine("Count: " + reg.Count);
+//     }
+// }
+//
+//
+// return 0;
+
 if (args.Length == 0) {
     Console.WriteLine("Please specify a gamemode.");
     return 1;

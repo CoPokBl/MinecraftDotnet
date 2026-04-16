@@ -17,7 +17,7 @@ public record ItemAttributeModifier(
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
-            .WriteVarInt(Attribute.ProtocolId)
+            .WriteVarInt(registry.Attributes.GetProtocolId(Attribute))
             .WriteString(Id)
             .WriteDouble(Value)
             .WriteVarInt((int)Operation)

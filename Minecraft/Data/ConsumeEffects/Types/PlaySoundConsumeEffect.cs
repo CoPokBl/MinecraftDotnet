@@ -4,7 +4,7 @@ using Minecraft.Schemas.Sound;
 
 namespace Minecraft.Data.ConsumeEffects.Types;
 
-public record PlaySoundConsumeEffect(Identifier Identifier, int ProtocolId, SoundEvent? Sound = null) : IConsumeEffect {
+public record PlaySoundConsumeEffect(Identifier Identifier,  SoundEvent? Sound = null) : IConsumeEffect {
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer.Write(Sound.ThrowIfNull(), registry);

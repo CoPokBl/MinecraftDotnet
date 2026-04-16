@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PinkPetalsBlock(Identifier Identifier, Direction Facing, int FlowerAmount) : IBlock {
     public Identifier Category => "minecraft:flower_bed";
-    public int ProtocolId => 1111;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -100,15 +99,15 @@ public record PinkPetalsBlock(Identifier Identifier, Direction Facing, int Flowe
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            FlowerAmount = properties.ChildrenMap.ContainsKey("flower_amount") ? int.Parse(properties["flower_amount"].GetString()) : FlowerAmount,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            FlowerAmount = properties.Contains("flower_amount") ? int.Parse(properties["flower_amount"].GetString()) : FlowerAmount,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("flower_amount", FlowerAmount.ToString())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("flower_amount", new StringTag(FlowerAmount.ToString()))
         );
     }
     

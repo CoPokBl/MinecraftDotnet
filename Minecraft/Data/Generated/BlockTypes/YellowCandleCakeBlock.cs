@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record YellowCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock {
     public Identifier Category => "minecraft:candle_cake";
-    public int ProtocolId => 964;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -59,13 +58,13 @@ public record YellowCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Lit = properties.ChildrenMap.ContainsKey("lit") ? properties["lit"].GetString() == "true" : Lit,
+            Lit = properties.Contains("lit") ? properties["lit"].GetString() == "true" : Lit,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("lit", Lit.ToString().ToLower())
+        return new CompoundTag(
+            ("lit", new StringTag(Lit.ToString().ToLower()))
         );
     }
     

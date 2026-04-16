@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record UseCooldownComponent(int ProtocolId) : IDataComponent<UseCooldownComponent.Data> {
+public record UseCooldownComponent() : IDataComponent<UseCooldownComponent.Data> {
     public override Identifier Identifier => "minecraft:use_cooldown";
     
     public override DataWriter WriteData(Data val, DataWriter writer, MinecraftRegistry registry) {

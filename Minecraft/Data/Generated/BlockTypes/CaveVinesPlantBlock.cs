@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CaveVinesPlantBlock(Identifier Identifier, bool Berries) : IBlock {
     public Identifier Category => "minecraft:cave_vines_plant";
-    public int ProtocolId => 1106;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -59,13 +58,13 @@ public record CaveVinesPlantBlock(Identifier Identifier, bool Berries) : IBlock 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Berries = properties.ChildrenMap.ContainsKey("berries") ? properties["berries"].GetString() == "true" : Berries,
+            Berries = properties.Contains("berries") ? properties["berries"].GetString() == "true" : Berries,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("berries", Berries.ToString().ToLower())
+        return new CompoundTag(
+            ("berries", new StringTag(Berries.ToString().ToLower()))
         );
     }
     

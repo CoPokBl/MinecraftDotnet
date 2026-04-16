@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
     public Identifier Category => "minecraft:sniffer_egg";
-    public int ProtocolId => 744;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -62,13 +61,13 @@ public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Hatch = properties.ChildrenMap.ContainsKey("hatch") ? int.Parse(properties["hatch"].GetString()) : Hatch,
+            Hatch = properties.Contains("hatch") ? int.Parse(properties["hatch"].GetString()) : Hatch,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("hatch", Hatch.ToString())
+        return new CompoundTag(
+            ("hatch", new StringTag(Hatch.ToString()))
         );
     }
     

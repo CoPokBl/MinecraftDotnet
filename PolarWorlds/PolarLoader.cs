@@ -206,7 +206,7 @@ public class PolarLoader : ITerrainProvider {
             int posIndex = reader.ReadInteger();  // posIndex
             string? id = reader.ReadPrefixedOptional(r => r.ReadString());
 
-            INbtTag nbt = new CompoundTag(null);
+            INbtTag nbt = new CompoundTag();
             if (reader.ReadBoolean()) {
                 nbt = reader.ReadNbt();
                 BlockEntity entity = new(
@@ -370,16 +370,16 @@ public class PolarLoader : ITerrainProvider {
     private static CompoundTag PropertiesStringToNbt(string propsStr) {
         // string should look like: north=false,south=false,west=true,waterlogged=false,east=true
         // so just chuck it into a string, string dictionary
-        List<INbtTag?> props = [];
+        List<(string, INbtTag)> props = [];
         string[] pairs = propsStr.Split(',');
         foreach (string pair in pairs) {
             string[] vals = pair.Split('=');
             string key = vals[0].Trim();
             string value = vals[1].Trim();
-            props.Add(new StringTag(key, value));
+            props.Add((key, new StringTag(value)));
         }
 
-        return new CompoundTag(null, props.ToArray());
+        return new CompoundTag(props.ToArray());
     }
     
     private static string GetStateStringFromBlock(IBlock block) {
@@ -395,12 +395,12 @@ public class PolarLoader : ITerrainProvider {
     private static string GetPropsStringFromBlock(IBlock block) {
         CompoundTag properties = block.ToStateNbt();
         List<string> props = [];
-        foreach (INbtTag? tag in properties.Children) {
+        foreach ((string key, INbtTag tag) in properties.Children) {
             if (tag is StringTag stringTag) {
-                props.Add($"{stringTag.Name}={stringTag.Value}");
+                props.Add($"{key}={stringTag.Value}");
             }
             else {
-                throw new NotSupportedException($"Unsupported tag type: {tag!.GetType().Name}");
+                throw new NotSupportedException($"Unsupported tag type: {tag.GetType().Name}");
             }
         }
         return string.Join(",", props);

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection East, RedstoneWireConnection North, int Power, RedstoneWireConnection South, RedstoneWireConnection West) : IBlock {
     public Identifier Category => "minecraft:redstone_wire";
-    public int ProtocolId => 201;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -4412,21 +4411,21 @@ public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection Ea
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            East = properties.ChildrenMap.ContainsKey("east") ? RedstoneWireConnectionExtensions.FromString(properties["east"].GetString()) : East,
-            North = properties.ChildrenMap.ContainsKey("north") ? RedstoneWireConnectionExtensions.FromString(properties["north"].GetString()) : North,
-            Power = properties.ChildrenMap.ContainsKey("power") ? int.Parse(properties["power"].GetString()) : Power,
-            South = properties.ChildrenMap.ContainsKey("south") ? RedstoneWireConnectionExtensions.FromString(properties["south"].GetString()) : South,
-            West = properties.ChildrenMap.ContainsKey("west") ? RedstoneWireConnectionExtensions.FromString(properties["west"].GetString()) : West,
+            East = properties.Contains("east") ? RedstoneWireConnectionExtensions.FromString(properties["east"].GetString()) : East,
+            North = properties.Contains("north") ? RedstoneWireConnectionExtensions.FromString(properties["north"].GetString()) : North,
+            Power = properties.Contains("power") ? int.Parse(properties["power"].GetString()) : Power,
+            South = properties.Contains("south") ? RedstoneWireConnectionExtensions.FromString(properties["south"].GetString()) : South,
+            West = properties.Contains("west") ? RedstoneWireConnectionExtensions.FromString(properties["west"].GetString()) : West,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("east", East.ToName()),
-            new StringTag("north", North.ToName()),
-            new StringTag("power", Power.ToString()),
-            new StringTag("south", South.ToName()),
-            new StringTag("west", West.ToName())
+        return new CompoundTag(
+            ("east", new StringTag(East.ToName())),
+            ("north", new StringTag(North.ToName())),
+            ("power", new StringTag(Power.ToString())),
+            ("south", new StringTag(South.ToName())),
+            ("west", new StringTag(West.ToName()))
         );
     }
     

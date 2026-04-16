@@ -9,7 +9,6 @@ using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Terrain;
-using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Items;
@@ -19,7 +18,7 @@ using PolarWorlds;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
-public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, Action gameEndCallback) {
+public class SkyWarsGame(ManagedMinecraftServer server, Player[] players, Action gameEndCallback) {
     private static readonly ITerrainProvider[] Maps = [
         new PolarLoader(SkyWarsUtils.ReadPolarMap("ramen.polar"), VanillaRegistry.Data)
     ];
@@ -36,7 +35,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
     private static readonly Vec3<double> SpecSpawn = new(0.5, 25, 0.5);
     private const int StartTimeSeconds = 5;
     
-    public readonly List<PlayerEntity> RemainingPlayers = [];
+    public readonly List<Player> RemainingPlayers = [];
     public World World { get; private set; } = null!;
     public bool HasEnded { get; private set; }
     
@@ -72,7 +71,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
         return spawns;
     }
     
-    private void Die(PlayerEntity player) {
+    private void Die(Player player) {
         if (HasEnded) {
             return;
         }
@@ -91,7 +90,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
             
             // Winner
             HasEnded = true;
-            PlayerEntity winner = RemainingPlayers[0];
+            Player winner = RemainingPlayers[0];
             winner.SendMessage(TextComponent.FromLegacyString("&a&lYou won the game!"));
             
             World.SendTitle(
@@ -108,14 +107,14 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
         
         Queue<Vec3<double>> spawns = CreateRandomSpawns();
         
-        foreach (PlayerEntity player in players) {
+        foreach (Player player in players) {
             RemainingPlayers.Add(player);
             player.SetWorld(World);
             player.Teleport(spawns.Dequeue());
             player.SendMessage(TextComponent.FromLegacyString("&a&lGame Started! Good luck!"));
         }
 
-        foreach (PlayerEntity player in players) {
+        foreach (Player player in players) {
             player.GameMode = GameMode.Survival;
         }
         
@@ -127,7 +126,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, PlayerEntity[] players, 
             }
 
             // death
-            if (e.Entity is not PlayerEntity player) {
+            if (e.Entity is not Player player) {
                 return;
             }
 

@@ -4,6 +4,6 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class PotionEffectTypeRegistry : ProtocolTypeRegistry<PotionEffectTypeRegistry, IPotionEffectType> {
+public class PotionEffectTypeRegistry : MappedRegistry<PotionEffectTypeRegistry, IPotionEffectType> {
     public override Identifier RegistryId => "minecraft:potion_effect";
 }

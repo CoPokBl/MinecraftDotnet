@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlock {
     public Identifier Category => "minecraft:jigsaw";
-    public int ProtocolId => 904;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;
@@ -80,13 +79,13 @@ public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Orientation = properties.ChildrenMap.ContainsKey("orientation") ? OrientationExtensions.FromString(properties["orientation"].GetString()) : Orientation,
+            Orientation = properties.Contains("orientation") ? OrientationExtensions.FromString(properties["orientation"].GetString()) : Orientation,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("orientation", Orientation.ToName())
+        return new CompoundTag(
+            ("orientation", new StringTag(Orientation.ToName()))
         );
     }
     

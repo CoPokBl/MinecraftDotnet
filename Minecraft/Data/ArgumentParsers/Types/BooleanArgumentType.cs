@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record BooleanArgumentType(int ProtocolId) : ArgumentParser<bool>(ProtocolId) {
+public record BooleanArgumentType() : ArgumentParser<bool>() {
     public override Identifier Identifier => "brigadier:bool";
     
     public override bool Parse(ref string str, MinecraftRegistry _) {

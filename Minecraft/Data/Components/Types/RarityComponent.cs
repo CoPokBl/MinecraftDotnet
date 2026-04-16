@@ -4,7 +4,7 @@ using Minecraft.Schemas.Items;
 
 namespace Minecraft.Data.Components.Types;
 
-public record RarityComponent(int ProtocolId) : IDataComponent<ItemRarity> {
+public record RarityComponent() : IDataComponent<ItemRarity> {
     public override Identifier Identifier => "minecraft:rarity";
 
     public override DataWriter WriteData(ItemRarity val, DataWriter writer, MinecraftRegistry registry) {

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DispenserBlock(Identifier Identifier, Cardinal Facing, bool Triggered) : IBlock {
     public Identifier Category => "minecraft:dispenser";
-    public int ProtocolId => 105;
     public double Hardness => 3.5;
     public double ExplosionResistance => 3.5;
     public double Friction => 0.6;
@@ -92,15 +91,15 @@ public record DispenserBlock(Identifier Identifier, Cardinal Facing, bool Trigge
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Triggered = properties.ChildrenMap.ContainsKey("triggered") ? properties["triggered"].GetString() == "true" : Triggered,
+            Facing = properties.Contains("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Triggered = properties.Contains("triggered") ? properties["triggered"].GetString() == "true" : Triggered,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("triggered", Triggered.ToString().ToLower())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("triggered", new StringTag(Triggered.ToString().ToLower()))
         );
     }
     

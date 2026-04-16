@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Particles;
 
-public record SimpleParticle(Identifier Identifier, int ProtocolId) : IParticle {
+public record SimpleParticle(Identifier Identifier) : IParticle {
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         // No data for simple particles

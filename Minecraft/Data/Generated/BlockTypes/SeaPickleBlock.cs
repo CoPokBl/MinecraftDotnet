@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:sea_pickle";
-    public int ProtocolId => 786;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -80,15 +79,15 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Pickles = properties.ChildrenMap.ContainsKey("pickles") ? int.Parse(properties["pickles"].GetString()) : Pickles,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Pickles = properties.Contains("pickles") ? int.Parse(properties["pickles"].GetString()) : Pickles,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("pickles", Pickles.ToString()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("pickles", new StringTag(Pickles.ToString())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

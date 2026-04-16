@@ -2,7 +2,6 @@ using System.Diagnostics;
 using ManagedServer.Events;
 using ManagedServer.Events.Types;
 using ManagedServer.Features;
-using ManagedServer.Permissions;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
@@ -33,39 +32,38 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     public Aabb BoundingBox { get; init; }
 
-    private Func<PlayerEntity, bool> _viewableRule = _ => true;
-    public Func<PlayerEntity, bool> ViewableRule {
-        get => _viewableRule;
+    public Func<Player, bool> ViewableRule {
+        get;
         set {
-            _viewableRule = value;
+            field = value;
             UpdateViewers();
         }
-    }
+    } = _ => true;
 
     public EntityMeta Meta {
-        get => _meta;
+        get;
         set {
-            _meta = value;
+            field = value;
             SendToSelfAndViewers(new ClientBoundSetEntityMetadataPacket {
                 EntityId = NetId,
-                Meta = _meta
+                Meta = field
             });
         }
-    }
-    
+    } = null!;
+
     public bool Crouching {
-        get => _crouching;
+        get;
 
         set {
-            if (_crouching == value) {
+            if (field == value) {
                 return;
             }
-            
+
             Meta = Meta with {
                 Pose = value ? EntityPose.Sneaking : EntityPose.Standing,
                 Status = value ? EntityStatus.Sneaking : EntityStatus.None
             };
-            _crouching = value;
+            field = value;
         }
     }
 
@@ -74,7 +72,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     public virtual bool OnGround { get; set; }
 
-    public virtual List<PlayerEntity> Players => [];  // for ScopedFeature
+    public virtual List<Player> Players => [];  // for ScopedFeature
     public ManagedMinecraftServer Server => World.ThrowIfNull().Server;
     public FeatureHandler FeatureHandler { get; }
     public EventNode<IServerEvent> Events { get; } = new();
@@ -84,9 +82,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     public int NetId { get; internal set; } = -1;
     public IEntityManager? Manager { get; private set; }
     public World? World { get; private set; }
-    
-    private EntityMeta _meta = null!;  // set by the constructor, so it is never null
-    private bool _crouching;
+
     private readonly Dictionary<IAttribute, (double Base, List<AttributeModifier> Modifiers)> _attributes = [];
 
     public Entity(IEntityType type, EntityMeta? meta = null) {
@@ -393,7 +389,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         Manager?.RefreshViewers(this);
     }
 
-    public PlayerEntity[] GetViewers() {
+    public Player[] GetViewers() {
         return Manager?.GetViewersOf(this) ?? [];
     }
 }

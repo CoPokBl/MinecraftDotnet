@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:rail";
-    public int ProtocolId => 221;
     public double Hardness => 0.7;
     public double ExplosionResistance => 0.7;
     public double Friction => 0.6;
@@ -116,15 +115,15 @@ public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            ShapeValue = properties.ChildrenMap.ContainsKey("shape") ? ShapeFromString(properties["shape"].GetString()) : ShapeValue,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            ShapeValue = properties.Contains("shape") ? ShapeFromString(properties["shape"].GetString()) : ShapeValue,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("shape", ShapeToName(ShapeValue)),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("shape", new StringTag(ShapeToName(ShapeValue))),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

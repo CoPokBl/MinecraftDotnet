@@ -1,4 +1,3 @@
-using System.Reflection;
 using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
@@ -16,7 +15,6 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
-using PolarWorlds;
 
 namespace TestServer.Servers.Everything;
 
@@ -26,7 +24,7 @@ namespace TestServer.Servers.Everything;
 public static class Everything {
 
     public static async Task Start() {
-        ManagedMinecraftServer server = ManagedMinecraftServer.NewBasic();
+        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsBundle);
         server.AddFeature(new TradingFeature());
 
         World world = server.CreateWorld(new VoidProvider());
@@ -103,8 +101,8 @@ public static class Everything {
             
             e.Player.SendPacket(new ClientBoundAwardStatisticsPacket {
                 Statistics = [
-                    new ClientBoundAwardStatisticsPacket.Entry(StatisticType.Custom, CustomStatistic.AnimalsBred, 69),
-                    new ClientBoundAwardStatisticsPacket.Entry(StatisticType.Broken, Item.Netherrack, 6996)
+                    new ClientBoundAwardStatisticsPacket.Entry(StatisticType.Custom, CustomStatistic.AnimalsBred, server.Registry.CustomStatistics, 69),
+                    new ClientBoundAwardStatisticsPacket.Entry(StatisticType.Broken, Item.Netherrack, server.Registry.Items, 6996)
                 ]
             });
         });

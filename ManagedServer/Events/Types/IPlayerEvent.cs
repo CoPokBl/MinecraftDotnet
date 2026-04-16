@@ -9,5 +9,5 @@ public interface IPlayerEvent : IEntityEvent {
     /// <summary>
     /// The player that the event is related to.
     /// </summary>
-    public PlayerEntity Player { get; init; }
+    public Player Player { get; init; }
 }

@@ -106,8 +106,8 @@ public class ItemStack(
 
     public override int GetHashCode() {
         return HashCode.Combine(Type.Identifier, Count, _components.Count, _removeComponents.Length) +
-               _components.Aggregate(0, (hash, kvp) => hash ^ HashCode.Combine(kvp.Key.ProtocolId, kvp.Value)) +
-               _removeComponents.Aggregate(0, (hash, component) => hash ^ component.ProtocolId);
+               _components.Aggregate(0, (hash, kvp) => hash ^ HashCode.Combine(kvp.Key.Identifier.GetHashCode(), kvp.Value)) +
+               _removeComponents.Aggregate(0, (hash, component) => hash ^ component.Identifier.GetHashCode());
     }
 
     public bool IsAir() {
@@ -156,17 +156,17 @@ public class ItemStack(
         }
         
         writer.WriteVarInt(Count);
-        writer.WriteVarInt(Type.ProtocolId);
+        writer.WriteVarInt(registry.Items.GetProtocolId(Type));
         
         writer.WriteVarInt(_components.Count);  // components to add
         writer.WriteVarInt(_removeComponents.Length);  // components to remove
 
         writer.WriteArray(_components, (kvp, w) => w
-            .WriteVarInt(kvp.Key.ProtocolId)
+            .WriteVarInt(registry.DataComponents.GetProtocolId(kvp.Key))
             .Write(wr => kvp.Key.WriteData(kvp.Value, wr, registry)));
         
         return writer.WriteArray(_removeComponents, (component, w) => w
-            .WriteVarInt(component.ProtocolId));
+            .WriteVarInt(registry.DataComponents.GetProtocolId(component)));
     }
 
     public static ItemStack ReadData(DataReader reader, MinecraftRegistry registry) {
@@ -207,38 +207,38 @@ public class ItemStack(
     
     public bool HasTag<T>(Tag<T> tag) {
         INbtTag? nbt = GetOrNull(DataComponent.CustomData);
-        return nbt is CompoundTag ct && ct.ChildrenMap.ContainsKey(tag.Id);
+        return nbt is CompoundTag ct && ct.Contains(tag.Id);
     }
     
     public ItemStack WithTag<T>(Tag<T> tag, T? value) {
-        CompoundTag nbt = GetOrNull(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag(null);
+        CompoundTag nbt = GetOrNull(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag();
 
         if (value == null) {
-            return With(DataComponent.CustomData, new CompoundTag(null, nbt.Children
-                .Where(t => t?.GetName() != tag.Id)
+            return With(DataComponent.CustomData, new CompoundTag(nbt.Children
+                .Where(t => t.Item1 != tag.Id)
                 .ToArray()));
         }
         
         JToken json = JToken.FromObject(value);
-        INbtTag nbtVal = INbtTag.FromJson(tag.Id, json);
+        INbtTag nbtVal = INbtTag.FromJson(json);
         
-        nbt = new CompoundTag(null, nbt.Children
-            .Where(t => t?.GetName() != tag.Id)
-            .Append(nbtVal)
+        nbt = new CompoundTag(nbt.Children
+            .Where(t => t.Item1 != tag.Id)
+            .Append((tag.Id, nbtVal))
             .ToArray());
         
         return With(DataComponent.CustomData, nbt);
     }
     
     public ItemStack WithoutTag<T>(Tag<T> tag) {
-        CompoundTag nbt = GetOrNull(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag(null);
+        CompoundTag nbt = GetOrNull(DataComponent.CustomData)?.GetCompound() ?? new CompoundTag();
         
-        if (!nbt.ChildrenMap.ContainsKey(tag.Id)) {
+        if (!nbt.Contains(tag.Id)) {
             return this;  // No change if tag doesn't exist
         }
         
-        nbt = new CompoundTag(null, nbt.Children
-            .Where(t => t?.GetName() != tag.Id)
+        nbt = new CompoundTag(nbt.Children
+            .Where(t => t.Item1 != tag.Id)
             .ToArray());
         
         return With(DataComponent.CustomData, nbt);

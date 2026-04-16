@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SunflowerBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     public Identifier Category => "minecraft:tall_flower";
-    public int ProtocolId => 555;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -60,13 +59,13 @@ public record SunflowerBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Half = properties.ChildrenMap.ContainsKey("half") ? BlockHalfExtensions.FromString(properties["half"].GetString()) : Half,
+            Half = properties.Contains("half") ? BlockHalfExtensions.FromString(properties["half"].GetString()) : Half,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("half", Half.ToName())
+        return new CompoundTag(
+            ("half", new StringTag(Half.ToName()))
         );
     }
     

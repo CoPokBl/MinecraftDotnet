@@ -10,10 +10,10 @@ public record TradeItem(ItemStack Item) : INetworkType<TradeItem> {
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
-            .WriteVarInt(Item.Type.ProtocolId)
+            .WriteVarInt(registry.Items.GetProtocolId(Item.Type))
             .WriteVarInt(Item.Count)
             .WritePrefixedArray(Item.Components.ToArray(), (comp, wr) => {
-                wr.WriteVarInt(comp.Key.ProtocolId);
+                wr.WriteVarInt(registry.DataComponents.GetProtocolId(comp.Key));
                 comp.Key.WriteData(comp.Value, writer, registry);
             });
     }

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBlock {
     public Identifier Category => "minecraft:turtle_egg";
-    public int ProtocolId => 743;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -92,15 +91,15 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Eggs = properties.ChildrenMap.ContainsKey("eggs") ? int.Parse(properties["eggs"].GetString()) : Eggs,
-            Hatch = properties.ChildrenMap.ContainsKey("hatch") ? int.Parse(properties["hatch"].GetString()) : Hatch,
+            Eggs = properties.Contains("eggs") ? int.Parse(properties["eggs"].GetString()) : Eggs,
+            Hatch = properties.Contains("hatch") ? int.Parse(properties["hatch"].GetString()) : Hatch,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("eggs", Eggs.ToString()),
-            new StringTag("hatch", Hatch.ToString())
+        return new CompoundTag(
+            ("eggs", new StringTag(Eggs.ToString())),
+            ("hatch", new StringTag(Hatch.ToString()))
         );
     }
     

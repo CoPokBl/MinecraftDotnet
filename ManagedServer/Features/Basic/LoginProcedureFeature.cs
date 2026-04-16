@@ -3,7 +3,6 @@ using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using ManagedServer.Login;
 using Minecraft;
-using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Tags;
@@ -13,7 +12,6 @@ using Minecraft.Packets.Config.ServerBound;
 using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
-using Minecraft.Registry;
 using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
 using NBT;
@@ -168,12 +166,6 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
             
                 e.Connection.SendPackets(
                     new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:dimension_type",
-                        Entries = new Dictionary<string, INbtTag?>(
-                            Scope.Server.Dimensions
-                                .Select(kvp => new KeyValuePair<string, INbtTag?>(kvp.Key, kvp.Value.ToNbt())))
-                    },
-                    new ClientBoundRegistryDataPacket {
                         RegistryId = "minecraft:zombie_nautilus_variant",
                         Entries = new Dictionary<string, INbtTag?> {
                             { "minecraft:warm", null }
@@ -314,10 +306,8 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                 
                 ClientBoundLoginPacket packet = new() {
                     DimensionName = preLoginEvent.World.DimensionId,
-                    DimensionType = Scope.Server.Dimensions.Keys.ToList()
-                        .IndexOf(preLoginEvent.World.DimensionId),
-                    Dimensions = Scope.Server.Dimensions.Keys.Select(s => (Identifier)s)
-                        .ToArray(),
+                    DimensionType = Scope.Server.Registry.DimensionTypes.GetProtocolId(preLoginEvent.World.DimensionId),
+                    Dimensions = Scope.Server.Registry.DimensionTypes.Identifiers.ToArray(),
                     DoLimitedCrafting = false,
                     EnableRespawnScreen = true,
                     EnforcesSecureChat = false,
@@ -341,7 +331,7 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                 e.Connection.SendPacket(packet);
                 
                 // create a player object
-                PlayerEntity entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
+                Player entity = new(Scope.Server, e.Connection, PlayerInfoFeature.GetInfo(e.Connection).Username!) {
                     NetId = pEntityId,
                     GameMode = preLoginEvent.GameMode,
                     Uuid = preLoginEvent.Uuid,

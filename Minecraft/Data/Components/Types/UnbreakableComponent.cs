@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Components.Types;
 
-public record UnbreakableComponent(int ProtocolId) : IDataComponent<None> {
+public record UnbreakableComponent() : IDataComponent<None> {
     public static None Value => None.Value;
     public override Identifier Identifier => "minecraft:unbreakable";
     

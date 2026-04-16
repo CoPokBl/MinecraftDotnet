@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
     public Identifier Category => "minecraft:hanging_moss";
-    public int ProtocolId => 1160;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -59,13 +58,13 @@ public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Tip = properties.ChildrenMap.ContainsKey("tip") ? properties["tip"].GetString() == "true" : Tip,
+            Tip = properties.Contains("tip") ? properties["tip"].GetString() == "true" : Tip,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("tip", Tip.ToString().ToLower())
+        return new CompoundTag(
+            ("tip", new StringTag(Tip.ToString().ToLower()))
         );
     }
     

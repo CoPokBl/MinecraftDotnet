@@ -4,6 +4,6 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class EntityTypeRegistry : ProtocolTypeRegistry<EntityTypeRegistry, IEntityType> {
+public class EntityTypeRegistry : MappedRegistry<EntityTypeRegistry, IEntityType> {
     public override Identifier RegistryId => "minecraft:entity_type";
 }

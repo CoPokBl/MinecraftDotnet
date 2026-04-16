@@ -1,6 +1,5 @@
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Packets;
-using Minecraft.Packets.Login.ClientBound;
 using Minecraft.Text;
 
 namespace ManagedServer.Login;

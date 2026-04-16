@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide East, WallSide North, WallSide South, WallSide West) : IBlock {
     public Identifier Category => "minecraft:mossy_carpet";
-    public int ProtocolId => 1159;
     public double Hardness => 0.1;
     public double ExplosionResistance => 0.1;
     public double Friction => 0.6;
@@ -619,21 +618,21 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Bottom = properties.ChildrenMap.ContainsKey("bottom") ? properties["bottom"].GetString() == "true" : Bottom,
-            East = properties.ChildrenMap.ContainsKey("east") ? WallSideExtensions.FromString(properties["east"].GetString()) : East,
-            North = properties.ChildrenMap.ContainsKey("north") ? WallSideExtensions.FromString(properties["north"].GetString()) : North,
-            South = properties.ChildrenMap.ContainsKey("south") ? WallSideExtensions.FromString(properties["south"].GetString()) : South,
-            West = properties.ChildrenMap.ContainsKey("west") ? WallSideExtensions.FromString(properties["west"].GetString()) : West,
+            Bottom = properties.Contains("bottom") ? properties["bottom"].GetString() == "true" : Bottom,
+            East = properties.Contains("east") ? WallSideExtensions.FromString(properties["east"].GetString()) : East,
+            North = properties.Contains("north") ? WallSideExtensions.FromString(properties["north"].GetString()) : North,
+            South = properties.Contains("south") ? WallSideExtensions.FromString(properties["south"].GetString()) : South,
+            West = properties.Contains("west") ? WallSideExtensions.FromString(properties["west"].GetString()) : West,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("bottom", Bottom.ToString().ToLower()),
-            new StringTag("east", East.ToName()),
-            new StringTag("north", North.ToName()),
-            new StringTag("south", South.ToName()),
-            new StringTag("west", West.ToName())
+        return new CompoundTag(
+            ("bottom", new StringTag(Bottom.ToString().ToLower())),
+            ("east", new StringTag(East.ToName())),
+            ("north", new StringTag(North.ToName())),
+            ("south", new StringTag(South.ToName())),
+            ("west", new StringTag(West.ToName()))
         );
     }
     

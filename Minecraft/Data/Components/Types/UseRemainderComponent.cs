@@ -4,7 +4,7 @@ using Minecraft.Schemas.Items;
 
 namespace Minecraft.Data.Components.Types;
 
-public record UseRemainderComponent(int ProtocolId) : IDataComponent<ItemStack> {
+public record UseRemainderComponent() : IDataComponent<ItemStack> {
     public override Identifier Identifier => "minecraft:use_remainder";
     
     public override DataWriter WriteData(ItemStack val, DataWriter writer, MinecraftRegistry registry) {

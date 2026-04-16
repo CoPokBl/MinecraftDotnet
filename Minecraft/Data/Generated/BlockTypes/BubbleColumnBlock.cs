@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
     public Identifier Category => "minecraft:bubble_column";
-    public int ProtocolId => 794;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -59,13 +58,13 @@ public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Drag = properties.ChildrenMap.ContainsKey("drag") ? properties["drag"].GetString() == "true" : Drag,
+            Drag = properties.Contains("drag") ? properties["drag"].GetString() == "true" : Drag,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("drag", Drag.ToString().ToLower())
+        return new CompoundTag(
+            ("drag", new StringTag(Drag.ToString().ToLower()))
         );
     }
     

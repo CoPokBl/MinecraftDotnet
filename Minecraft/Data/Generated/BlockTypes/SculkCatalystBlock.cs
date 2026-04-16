@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SculkCatalystBlock(Identifier Identifier, bool Bloom) : IBlock {
     public Identifier Category => "minecraft:sculk_catalyst";
-    public int ProtocolId => 1003;
     public double Hardness => 3;
     public double ExplosionResistance => 3;
     public double Friction => 0.6;
@@ -59,13 +58,13 @@ public record SculkCatalystBlock(Identifier Identifier, bool Bloom) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Bloom = properties.ChildrenMap.ContainsKey("bloom") ? properties["bloom"].GetString() == "true" : Bloom,
+            Bloom = properties.Contains("bloom") ? properties["bloom"].GetString() == "true" : Bloom,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("bloom", Bloom.ToString().ToLower())
+        return new CompoundTag(
+            ("bloom", new StringTag(Bloom.ToString().ToLower()))
         );
     }
     

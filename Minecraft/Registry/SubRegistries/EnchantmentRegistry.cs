@@ -6,17 +6,15 @@ using NBT.Tags;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class EnchantmentRegistry : ProtocolTypeRegistry<EnchantmentRegistry, IEnchantment>, INbtSerialisableRegistry {
+public class EnchantmentRegistry : SequentialRegistry<EnchantmentRegistry, IEnchantment>, INbtSerialisableRegistry {
     public override Identifier RegistryId => "minecraft:enchantment";
     
     public void LoadNbt(Dictionary<string, INbtTag> entries, MinecraftRegistry reg) {
-        // Clear existing entries since it would break the protocol ID mapping
         Clear();
         
-        int cId = 0;
         foreach (KeyValuePair<string, INbtTag> entry in entries) {
             if (entry.Value is CompoundTag compoundTag) {
-                IEnchantment enchantment = IEnchantment.FromNbt(entry.Key, cId++, compoundTag, reg);
+                IEnchantment enchantment = IEnchantment.FromNbt(entry.Key, compoundTag, reg);
                 Add(enchantment);
             }
         }
@@ -24,8 +22,8 @@ public class EnchantmentRegistry : ProtocolTypeRegistry<EnchantmentRegistry, IEn
 
     public Dictionary<string, INbtTag> ToNbt() {
         Dictionary<string, INbtTag> nbtDict = new();
-        foreach (KeyValuePair<Identifier, IEnchantment> pair in ById) {
-            nbtDict.Add(pair.Key.ToString(), pair.Value.ToNbt());
+        foreach (IEnchantment entry in Entries) {
+            nbtDict.Add(entry.Identifier.ToString(), entry.ToNbt());
         }
         return nbtDict;
     }

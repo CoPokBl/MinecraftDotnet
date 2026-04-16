@@ -1,9 +1,11 @@
 using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
+using ManagedServer.Features.Basic;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using ManagedServer.Worlds.Lighting;
+using Minecraft.Data.DimensionType;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Packets.Status.ClientBound;
@@ -20,7 +22,8 @@ public static class SkyWarsLuckyBlock {
     private static readonly Vec3<double> LobbySpawn = new(5, 66, 5);
     
     public static async Task Start() {
-        ManagedMinecraftServer server = ManagedMinecraftServer.NewBasic();
+        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsBundle
+            .With(new PhysicsFeature()));
         server.AddFeatures(new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
             VersionName = "dotnet",
             VersionProtocol = connection.Handshake!.ProtocolVersion,
@@ -32,8 +35,11 @@ public static class SkyWarsLuckyBlock {
         }));
         // server.AddFeature(new SimpleBenchmarkFeature());
         
-        server.Dimensions.Add("skywars:lobby", new Dimension());
-        server.Dimensions.Add("skywars:game", new Dimension());
+        // server.Dimensions.Add("skywars:lobby", new Dimension());
+        // server.Dimensions.Add("skywars:game", new Dimension());
+
+        server.Registry.DimensionTypes.Add(
+            ((SimpleDimensionType)server.Registry.DimensionTypes["minecraft:overworld"]) with { });
         
         Console.WriteLine("Loading maps...");
         World lobby = server.CreateWorld(new PolarLoader(SkyWarsUtils.ReadPolarMap("lobby.polar"), VanillaRegistry.Data), "skywars:lobby", new FullBrightLightingProvider());
@@ -59,16 +65,16 @@ public static class SkyWarsLuckyBlock {
         
         Timer? startTimer = null;
         DateTime startTime = DateTime.Now;
-        List<PlayerEntity> waitingPlayers = [];
+        List<Player> waitingPlayers = [];
 
         void StartGame() {
             startTimer?.Dispose();
             startTimer = null;
 
             lock (waitingPlayers) {
-                PlayerEntity[] players = waitingPlayers.ToArray();
+                Player[] players = waitingPlayers.ToArray();
                 SkyWarsGame game = new(server, players, () => {
-                    foreach (PlayerEntity player in players) {
+                    foreach (Player player in players) {
                         EnqueuePlayer(player);
                     }
                 });
@@ -77,7 +83,7 @@ public static class SkyWarsLuckyBlock {
             }
         }
         
-        void EnqueuePlayer(PlayerEntity player) {
+        void EnqueuePlayer(Player player) {
             player.GameMode = GameMode.Survival;
             player.Inventory.Clear();
             player.Health = 20;
@@ -151,7 +157,7 @@ public static class SkyWarsLuckyBlock {
         });
 
         lobby.Events.AddListener<EntityMoveEvent>(e => {
-            if (e.Entity is not PlayerEntity player) {
+            if (e.Entity is not Player player) {
                 return;
             }
 

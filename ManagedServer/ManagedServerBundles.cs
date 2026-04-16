@@ -20,7 +20,6 @@ public partial class ManagedMinecraftServer {
         new DropItemsEventFeature(),
         new ConsumablesFeature(),
         new LoginProcedureFeature(),
-        new PhysicsFeature(),
         new SimpleTabListFeature(),
         new PlayerSkinLayersFeature(),
         new UseItemEventFeature(),
@@ -41,14 +40,6 @@ public partial class ManagedMinecraftServer {
     /// </summary>
     public static FeatureBundle BasicsWithProxySupport => BasicsBundle
             .Replace(new LoginProcedureFeature(false));
-
-    public static ManagedMinecraftServer NewBasic() {
-        return New(BasicsBundle);
-    }
-    
-    public static ManagedMinecraftServer NewBasicWithMojangAuth() {
-        return New(BasicsWithMojangAuthBundle);
-    }
     
     public static ManagedMinecraftServer New(params FeatureBundle[] bundle) {
         ManagedMinecraftServer server = new();

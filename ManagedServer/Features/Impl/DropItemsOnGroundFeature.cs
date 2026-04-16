@@ -11,7 +11,7 @@ public class DropItemsOnGroundFeature : ScopedFeature {
                 return;
             }
 
-            PlayerEntity player = e.Player;
+            Player player = e.Player;
             
             Entity itemEntity = e.World.DropItem(player.Position.WithY(player.Position.Y + player.EyeHeight - 0.3), e.Item);
             // TODO: set thrower

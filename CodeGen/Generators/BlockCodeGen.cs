@@ -75,7 +75,7 @@ public record {name}(Identifier Identifier, {args}) : IBlock {
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
+        return new CompoundTag(
 {to_nbt_fields}
         );
     }
@@ -223,9 +223,9 @@ public static class Block {
                 JObject state = states[0].ToObject<JObject>()!;
                 int stateId = state["id"]!.ToObject<int>();
 
-                registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, {stateId});\n");
+                registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add({protocolId}, Block.{staticVarName}, {stateId});\n");
                 blocksFileEntries.Append($"{CodeGenUtils.GetIndentation(1)}public static readonly SimpleBlock {staticVarName} = " +
-                                         $"new(\"{id}\", {protocolId}, {stateId}, {propArgsStringRecord});\n");
+                                         $"new(\"{id}\", {stateId}, {propArgsStringRecord});\n");
                 continue;  // they don't need a record class, just a simple block
             }
             
@@ -244,10 +244,10 @@ public static class Block {
 
                 bool defaultIsWaterlogged = (stateOneIsWaterlogged ? state1 : state2).ContainsKey("default");
                 
-                registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, {waterloggedState}, {airLoggedState});\n");
+                registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add({protocolId}, Block.{staticVarName}, {waterloggedState}, {airLoggedState});\n");
                 blocksFileEntries.Append(
                     $"{CodeGenUtils.GetIndentation(1)}public static readonly WaterloggableBlock {staticVarName} = " +
-                    $"new(\"{id}\", {protocolId}, {airLoggedState}, {waterloggedState}, {defaultIsWaterlogged.ToString().ToLower()}, {propArgsStringRecord});\n");
+                    $"new(\"{id}\", {airLoggedState}, {waterloggedState}, {defaultIsWaterlogged.ToString().ToLower()}, {propArgsStringRecord});\n");
                 continue;  // they don't need a record class, just a simple block
             }
             
@@ -257,7 +257,6 @@ public static class Block {
             // COMPILE ALL THE DATA INTO PROPS
             StringBuilder staticData = new();
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public Identifier Category => {toCsStr(category)};\n");
-            staticData.Append($"{CodeGenUtils.GetIndentation(1)}public int ProtocolId => {protocolId};\n");
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double Hardness => {hardness};\n");
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double ExplosionResistance => {explosionResistance};\n");
             staticData.Append($"{CodeGenUtils.GetIndentation(1)}public double Friction => {friction};\n");
@@ -531,7 +530,7 @@ public static class Block {
             // =====================================================
             StringBuilder loadStateLogic = new("return this with {\n");
             Func<string, string, string, string> withFormatter = (propName, fieldName, serialiser) => 
-                $"{CodeGenUtils.GetIndentation(3)}{fieldName} = properties.ChildrenMap.ContainsKey(\"{propName}\") ? {serialiser} : {fieldName},\n";
+                $"{CodeGenUtils.GetIndentation(3)}{fieldName} = properties.Contains(\"{propName}\") ? {serialiser} : {fieldName},\n";
             foreach (IProperty prop in props) {
                 string pascalPropName = GetPascalPropName(prop);
                 switch (prop) {
@@ -556,7 +555,7 @@ public static class Block {
             //               To NBT State Logic
             // =====================================================
             List<string> toNbtFields = [];
-            Func<string, string, string> toNbtFieldGenerator = (name, strVal) => $"{CodeGenUtils.GetIndentation(3)}new StringTag(\"{name}\", {strVal})";
+            Func<string, string, string> toNbtFieldGenerator = (name, strVal) => $"{CodeGenUtils.GetIndentation(3)}(\"{name}\", new StringTag({strVal}))";
             Action<string, string> addNbtField = (name, strVal) => {
                 toNbtFields.Add(toNbtFieldGenerator(name, strVal));
             };
@@ -602,7 +601,7 @@ public static class Block {
             }
 
             string defaultBlockDefinition = $"new(\"{id}\", {string.Join(", ", regParams)})";
-            registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add(Block.{staticVarName}, {string.Join(", ", stateIds)});\n");
+            registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add({protocolId}, Block.{staticVarName}, {string.Join(", ", stateIds)});\n");
             blocksFileEntries.Append(
                 $"{CodeGenUtils.GetIndentation(1)}public static readonly {pascalName} {staticVarName} = {defaultBlockDefinition};\n");
             

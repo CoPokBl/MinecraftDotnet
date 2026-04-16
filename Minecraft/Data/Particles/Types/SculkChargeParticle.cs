@@ -3,7 +3,7 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Data.Particles.Types;
 
-public record SculkChargeParticle(Identifier Identifier, int ProtocolId, float Roll = 0f) : IParticle {
+public record SculkChargeParticle(Identifier Identifier,  float Roll = 0f) : IParticle {
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer

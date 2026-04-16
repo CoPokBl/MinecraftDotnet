@@ -36,8 +36,8 @@ Tag<bool> instaMineTag = new("minecraftdotnet:proxy:instamine");
 
 // Add stupid registry entries for resource packs
 // Emortal
-VanillaRegistry.Data.SoundTypes.Add(new SimpleSoundType("minecraft:random.cube.zap", 2000));
-VanillaRegistry.Data.SoundTypes.Add(new SimpleSoundType("minecraft:entity.roblox.reporter", 2001));
+VanillaRegistry.Data.SoundTypes.Add(2000, new SimpleSoundType("minecraft:random.cube.zap"));
+VanillaRegistry.Data.SoundTypes.Add(2001, new SimpleSoundType("minecraft:entity.roblox.reporter"));
 
 
 // some fun stuff

@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed, bool East, bool North, bool Powered, bool South, bool West) : IBlock {
     public Identifier Category => "minecraft:tripwire";
-    public int ProtocolId => 401;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -563,25 +562,25 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Attached = properties.ChildrenMap.ContainsKey("attached") ? properties["attached"].GetString() == "true" : Attached,
-            Disarmed = properties.ChildrenMap.ContainsKey("disarmed") ? properties["disarmed"].GetString() == "true" : Disarmed,
-            East = properties.ChildrenMap.ContainsKey("east") ? properties["east"].GetString() == "true" : East,
-            North = properties.ChildrenMap.ContainsKey("north") ? properties["north"].GetString() == "true" : North,
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
-            South = properties.ChildrenMap.ContainsKey("south") ? properties["south"].GetString() == "true" : South,
-            West = properties.ChildrenMap.ContainsKey("west") ? properties["west"].GetString() == "true" : West,
+            Attached = properties.Contains("attached") ? properties["attached"].GetString() == "true" : Attached,
+            Disarmed = properties.Contains("disarmed") ? properties["disarmed"].GetString() == "true" : Disarmed,
+            East = properties.Contains("east") ? properties["east"].GetString() == "true" : East,
+            North = properties.Contains("north") ? properties["north"].GetString() == "true" : North,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
+            South = properties.Contains("south") ? properties["south"].GetString() == "true" : South,
+            West = properties.Contains("west") ? properties["west"].GetString() == "true" : West,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("attached", Attached.ToString().ToLower()),
-            new StringTag("disarmed", Disarmed.ToString().ToLower()),
-            new StringTag("east", East.ToString().ToLower()),
-            new StringTag("north", North.ToString().ToLower()),
-            new StringTag("powered", Powered.ToString().ToLower()),
-            new StringTag("south", South.ToString().ToLower()),
-            new StringTag("west", West.ToString().ToLower())
+        return new CompoundTag(
+            ("attached", new StringTag(Attached.ToString().ToLower())),
+            ("disarmed", new StringTag(Disarmed.ToString().ToLower())),
+            ("east", new StringTag(East.ToString().ToLower())),
+            ("north", new StringTag(North.ToString().ToLower())),
+            ("powered", new StringTag(Powered.ToString().ToLower())),
+            ("south", new StringTag(South.ToString().ToLower())),
+            ("west", new StringTag(West.ToString().ToLower()))
         );
     }
     

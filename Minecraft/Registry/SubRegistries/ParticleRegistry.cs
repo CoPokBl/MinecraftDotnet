@@ -4,6 +4,6 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class ParticleRegistry : ProtocolTypeRegistry<ParticleRegistry, IParticle> {
+public class ParticleRegistry : MappedRegistry<ParticleRegistry, IParticle> {
     public override Identifier RegistryId => "minecraft:particle_type";
 }

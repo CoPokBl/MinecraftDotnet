@@ -22,6 +22,8 @@ public class MinecraftRegistry {
     public StatisticTypeRegistry StatisticTypes { get; set; } = new();
     public CustomStatisticRegistry CustomStatistics { get; set; } = new();
     public EnchantmentRegistry Enchantments { get; set; } = new();
+    public DimensionTypeRegistry DimensionTypes { get; set; } = new();
+    public TimelineRegistry Timelines { get; set; } = new();
 
     public ISubRegistry this[Identifier id] {
         get {
@@ -51,7 +53,9 @@ public class MinecraftRegistry {
         CommandArgumentTypes,
         StatisticTypes,
         CustomStatistics,
-        Enchantments
+        Enchantments,
+        DimensionTypes,
+        Timelines
     ];
 
     public MinecraftRegistry Clone() {
@@ -71,7 +75,9 @@ public class MinecraftRegistry {
             CommandArgumentTypes = CommandArgumentTypes.Clone(),
             StatisticTypes = StatisticTypes.Clone(),
             CustomStatistics = CustomStatistics.Clone(),
-            Enchantments = Enchantments.Clone()
+            Enchantments = Enchantments.Clone(),
+            DimensionTypes = DimensionTypes.Clone(),
+            Timelines = Timelines.Clone()
         };
     }
     
@@ -81,8 +87,11 @@ public class MinecraftRegistry {
 
     public T Get<T>(int id) where T : IProtocolType {
         foreach (ISubRegistry subReg in SubRegistries) {
-            if (subReg is ProtocolTypeRegistry<T> reg) {
-                return reg[id];
+            if (subReg is MappedRegistry<T> mappedReg) {
+                return mappedReg[id];
+            }
+            if (subReg is SequentialRegistry<T> seqReg) {
+                return seqReg[id];
             }
         }
         

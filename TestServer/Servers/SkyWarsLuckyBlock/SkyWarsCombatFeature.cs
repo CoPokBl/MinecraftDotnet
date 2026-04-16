@@ -12,7 +12,7 @@ using Minecraft.Schemas.Sound;
 
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
-public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFeature {
+public class SkyWarsCombatFeature(Action<Player> deathCallback) : ScopedFeature {
     private const int AttackCooldown = 500; // milliseconds
     
     private static readonly Tag<long> LastHitTag = new("skywars:lasthit");
@@ -33,7 +33,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
             }
 
             Entity? entity;
-            PlayerEntity attacker;
+            Player attacker;
             try {
                 entity = e.World.Entities.GetEntity(packet.EntityId);
                 attacker = e.Player;
@@ -48,7 +48,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
                 throw;
             }
 
-            if (attacker.GameMode == GameMode.Spectator && entity is not PlayerEntity { Name: "Michael" }) {
+            if (attacker.GameMode == GameMode.Spectator && entity is not Player { Name: "Michael" }) {
                 return;
             }
             
@@ -75,7 +75,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
             float damage = weaponDamage ?? 1.0f;  // Default damage if not specified
             double knockbackReduction = 0;
             
-            if (entity is PlayerEntity p) {
+            if (entity is Player p) {
                 p.PlaySound(SoundType.PlayerHurt, entity, SoundCategory.Players);
 
                 ItemStack[] armour = [
@@ -104,7 +104,7 @@ public class SkyWarsCombatFeature(Action<PlayerEntity> deathCallback) : ScopedFe
 
             if (entity is LivingEntity le) {
                 le.Damage(damage);
-                if (le.Health <= 0 && le is PlayerEntity pe) {
+                if (le.Health <= 0 && le is Player pe) {
                     // death
                     deathCallback(pe);
                 }

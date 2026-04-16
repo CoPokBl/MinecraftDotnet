@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record MelonStemBlock(Identifier Identifier, int Age) : IBlock {
     public Identifier Category => "minecraft:stem";
-    public int ProtocolId => 364;
     public double Hardness => 0;
     public double ExplosionResistance => 0;
     public double Friction => 0.6;
@@ -72,13 +71,13 @@ public record MelonStemBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Age = properties.ChildrenMap.ContainsKey("age") ? int.Parse(properties["age"].GetString()) : Age,
+            Age = properties.Contains("age") ? int.Parse(properties["age"].GetString()) : Age,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("age", Age.ToString())
+        return new CompoundTag(
+            ("age", new StringTag(Age.ToString()))
         );
     }
     

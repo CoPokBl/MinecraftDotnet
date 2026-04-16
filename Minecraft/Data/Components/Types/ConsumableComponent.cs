@@ -7,16 +7,16 @@ using Minecraft.Schemas.Sound;
 
 namespace Minecraft.Data.Components.Types;
 
-public record ConsumableComponent(int ProtocolId) : IDataComponent<ConsumableComponent.Data> {
+public record ConsumableComponent() : IDataComponent<ConsumableComponent.Data> {
     public override Identifier Identifier => "minecraft:consumable";
     
     public override DataWriter WriteData(Data val, DataWriter writer, MinecraftRegistry registry) {
         return writer.Write(w => {
             w.WriteFloat(val.ConsumeSeconds);
             w.WriteVarInt((int)val.Animation);
-            w.WriteIdOr(val.Sound, registry);
+            w.WriteIdOr(val.Sound, registry.SoundTypes.GetProtocolId, registry);
             w.WriteBoolean(val.HasParticles);
-            w.WritePrefixedArray(val.Effects, (effect, wr) => effect.WriteData(wr.WriteVarInt(effect.ProtocolId), registry));
+            w.WritePrefixedArray(val.Effects, (effect, wr) => effect.WriteData(wr.WriteVarInt(registry.ConsumeEffects.GetProtocolId(effect)), registry));
         });
     }
 

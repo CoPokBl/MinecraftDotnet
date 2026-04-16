@@ -4,6 +4,6 @@ using Minecraft.Schemas;
 
 namespace Minecraft.Registry.SubRegistries;
 
-public class InventoryTypeRegistry : ProtocolTypeRegistry<InventoryTypeRegistry, IInventoryType> {
+public class InventoryTypeRegistry : MappedRegistry<InventoryTypeRegistry, IInventoryType> {
     public override Identifier RegistryId => "minecraft:menu";
 }

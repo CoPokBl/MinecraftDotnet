@@ -136,7 +136,7 @@ public class AnvilLoader : ITerrainProvider {
             }
             else {
                 // Console.WriteLine(chunk.ToJsonString());
-                long[] packedStates = blockStates["data"].GetLongs();
+                ReadOnlySpan<long> packedStates = blockStates["data"].GetLongs();
                 UnpackPalette(blockStateIndices, packedStates, packedStates.Length * 64 / blockStateIndices.Length);
                 
                 for (int y = 0; y < ChunkSection.Size; y++) {
@@ -169,8 +169,9 @@ public class AnvilLoader : ITerrainProvider {
             // Create a new compound tag for the block entity
             // but without any of the above properties
             string[] excludeProps = ["id", "x", "y", "z", "keepPacked"];
-            CompoundTag entityData = new(null, blockEntityData.Children.Where(t => 
-                !excludeProps.Contains(t?.GetName())).ToArray());
+            CompoundTag entityData = new(blockEntityData.Children
+                .Where(t => !excludeProps.Contains(t.Item1))
+                .ToArray()!);
             data.BlockEntities[new Vec3<int>(x, y, z)] = new BlockEntity(x, y, z, type, entityData);
         }
     }
@@ -202,7 +203,7 @@ public class AnvilLoader : ITerrainProvider {
         return chunks.ToArray();
     }
 
-    private static void UnpackPalette(int[] outp, long[] data, int bitsPerEntry) {
+    private static void UnpackPalette(int[] outp, ReadOnlySpan<long> data, int bitsPerEntry) {
         double intsPerLong = Math.Floor(64d / bitsPerEntry);
         int intsPerLongCeil = (int)Math.Ceiling(intsPerLong);
 
@@ -226,7 +227,8 @@ public class AnvilLoader : ITerrainProvider {
                 }
                 
                 IBlock block = _registry.Blocks[name];
-                if (compound.ChildrenMap.TryGetValue("Properties", out INbtTag? propsTag)) {
+                INbtTag? propsTag = compound["Properties"];
+                if (propsTag != null) {
                     block = block.WithState(propsTag.GetCompound());
                 }
                 palette[i] = block;

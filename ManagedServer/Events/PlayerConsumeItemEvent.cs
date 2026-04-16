@@ -10,7 +10,7 @@ namespace ManagedServer.Events;
 [NotCalledByDefault]
 public class PlayerConsumeItemEvent : IPlayerEvent, ICancelableEvent {
     public required World World { get; init; }
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     
     public required ItemStack Item { get; init; }
     public required int ConsumedAmount { get; set; }

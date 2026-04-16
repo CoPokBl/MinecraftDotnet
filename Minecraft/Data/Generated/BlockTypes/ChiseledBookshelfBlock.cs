@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bool Slot0Occupied, bool Slot1Occupied, bool Slot2Occupied, bool Slot3Occupied, bool Slot4Occupied, bool Slot5Occupied) : IBlock {
     public Identifier Category => "minecraft:chiseled_book_shelf";
-    public int ProtocolId => 178;
     public double Hardness => 1.5;
     public double ExplosionResistance => 1.5;
     public double Friction => 0.6;
@@ -1072,25 +1071,25 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            Slot0Occupied = properties.ChildrenMap.ContainsKey("slot_0_occupied") ? properties["slot_0_occupied"].GetString() == "true" : Slot0Occupied,
-            Slot1Occupied = properties.ChildrenMap.ContainsKey("slot_1_occupied") ? properties["slot_1_occupied"].GetString() == "true" : Slot1Occupied,
-            Slot2Occupied = properties.ChildrenMap.ContainsKey("slot_2_occupied") ? properties["slot_2_occupied"].GetString() == "true" : Slot2Occupied,
-            Slot3Occupied = properties.ChildrenMap.ContainsKey("slot_3_occupied") ? properties["slot_3_occupied"].GetString() == "true" : Slot3Occupied,
-            Slot4Occupied = properties.ChildrenMap.ContainsKey("slot_4_occupied") ? properties["slot_4_occupied"].GetString() == "true" : Slot4Occupied,
-            Slot5Occupied = properties.ChildrenMap.ContainsKey("slot_5_occupied") ? properties["slot_5_occupied"].GetString() == "true" : Slot5Occupied,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Slot0Occupied = properties.Contains("slot_0_occupied") ? properties["slot_0_occupied"].GetString() == "true" : Slot0Occupied,
+            Slot1Occupied = properties.Contains("slot_1_occupied") ? properties["slot_1_occupied"].GetString() == "true" : Slot1Occupied,
+            Slot2Occupied = properties.Contains("slot_2_occupied") ? properties["slot_2_occupied"].GetString() == "true" : Slot2Occupied,
+            Slot3Occupied = properties.Contains("slot_3_occupied") ? properties["slot_3_occupied"].GetString() == "true" : Slot3Occupied,
+            Slot4Occupied = properties.Contains("slot_4_occupied") ? properties["slot_4_occupied"].GetString() == "true" : Slot4Occupied,
+            Slot5Occupied = properties.Contains("slot_5_occupied") ? properties["slot_5_occupied"].GetString() == "true" : Slot5Occupied,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("facing", Facing.ToName()),
-            new StringTag("slot_0_occupied", Slot0Occupied.ToString().ToLower()),
-            new StringTag("slot_1_occupied", Slot1Occupied.ToString().ToLower()),
-            new StringTag("slot_2_occupied", Slot2Occupied.ToString().ToLower()),
-            new StringTag("slot_3_occupied", Slot3Occupied.ToString().ToLower()),
-            new StringTag("slot_4_occupied", Slot4Occupied.ToString().ToLower()),
-            new StringTag("slot_5_occupied", Slot5Occupied.ToString().ToLower())
+        return new CompoundTag(
+            ("facing", new StringTag(Facing.ToName())),
+            ("slot_0_occupied", new StringTag(Slot0Occupied.ToString().ToLower())),
+            ("slot_1_occupied", new StringTag(Slot1Occupied.ToString().ToLower())),
+            ("slot_2_occupied", new StringTag(Slot2Occupied.ToString().ToLower())),
+            ("slot_3_occupied", new StringTag(Slot3Occupied.ToString().ToLower())),
+            ("slot_4_occupied", new StringTag(Slot4Occupied.ToString().ToLower())),
+            ("slot_5_occupied", new StringTag(Slot5Occupied.ToString().ToLower()))
         );
     }
     

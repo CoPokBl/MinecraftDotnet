@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool HasBottle1, bool HasBottle2) : IBlock {
     public Identifier Category => "minecraft:brewing_stand";
-    public int ProtocolId => 385;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -83,17 +82,17 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            HasBottle0 = properties.ChildrenMap.ContainsKey("has_bottle_0") ? properties["has_bottle_0"].GetString() == "true" : HasBottle0,
-            HasBottle1 = properties.ChildrenMap.ContainsKey("has_bottle_1") ? properties["has_bottle_1"].GetString() == "true" : HasBottle1,
-            HasBottle2 = properties.ChildrenMap.ContainsKey("has_bottle_2") ? properties["has_bottle_2"].GetString() == "true" : HasBottle2,
+            HasBottle0 = properties.Contains("has_bottle_0") ? properties["has_bottle_0"].GetString() == "true" : HasBottle0,
+            HasBottle1 = properties.Contains("has_bottle_1") ? properties["has_bottle_1"].GetString() == "true" : HasBottle1,
+            HasBottle2 = properties.Contains("has_bottle_2") ? properties["has_bottle_2"].GetString() == "true" : HasBottle2,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("has_bottle_0", HasBottle0.ToString().ToLower()),
-            new StringTag("has_bottle_1", HasBottle1.ToString().ToLower()),
-            new StringTag("has_bottle_2", HasBottle2.ToString().ToLower())
+        return new CompoundTag(
+            ("has_bottle_0", new StringTag(HasBottle0.ToString().ToLower())),
+            ("has_bottle_1", new StringTag(HasBottle1.ToString().ToLower())),
+            ("has_bottle_2", new StringTag(HasBottle2.ToString().ToLower()))
         );
     }
     

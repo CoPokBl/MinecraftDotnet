@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record WitherSkeletonSkullBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock {
     public Identifier Category => "minecraft:wither_skull";
-    public int ProtocolId => 453;
     public double Hardness => 1;
     public double ExplosionResistance => 1;
     public double Friction => 0.6;
@@ -125,15 +124,15 @@ public record WitherSkeletonSkullBlock(Identifier Identifier, bool Powered, int 
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Powered = properties.ChildrenMap.ContainsKey("powered") ? properties["powered"].GetString() == "true" : Powered,
-            Rotation = properties.ChildrenMap.ContainsKey("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
+            Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
+            Rotation = properties.Contains("rotation") ? int.Parse(properties["rotation"].GetString()) : Rotation,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("powered", Powered.ToString().ToLower()),
-            new StringTag("rotation", Rotation.ToString())
+        return new CompoundTag(
+            ("powered", new StringTag(Powered.ToString().ToLower())),
+            ("rotation", new StringTag(Rotation.ToString()))
         );
     }
     

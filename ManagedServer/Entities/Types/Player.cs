@@ -25,12 +25,12 @@ namespace ManagedServer.Entities.Types;
 /// <summary>
 /// Entity that represents a player and is controlled by a <see cref="PlayerConnection"/>.
 /// </summary>
-public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
+public class Player : LivingEntity, IAudience, IPermissionHolder {
     public readonly string Name;
     public readonly PlayerConnection Connection;
     public readonly PlayerInventory Inventory;
 
-    public override List<PlayerEntity> Players => [this];
+    public override List<Player> Players => [this];
 
     public IPermissionContainer PermissionContainer { get; set; } = new DummyPermissionContainer();
     public EventNode<IServerEvent> EventNode => Events;
@@ -41,17 +41,20 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
     }
 
     public Inventory? OpenInventory {
-        get => _openInventory;
+        get;
         set {
             if (value == null) {
-                if (_openInventory != null) SendPacket(new ClientBoundCloseContainerPacket {
-                    WindowId = _openInventory.WindowId
-                });
-            } else value.AddViewer(this);
-            _openInventory = value;
+                if (field != null)
+                    SendPacket(new ClientBoundCloseContainerPacket {
+                        WindowId = field.WindowId
+                    });
+            }
+            else value.AddViewer(this);
+
+            field = value;
         }
     }
-    
+
     public int ActiveHotbarSlot {
         get => _activeHotbarSlot;
         set {
@@ -63,32 +66,32 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
             RefreshEquipment();
         }
     }
-    
+
     public ItemStack CursorItem {
-        get => _cursorItem;
+        get;
         set {
-            _cursorItem = value;
+            field = value;
             SendPacket(new ClientBoundSetCursorItemPacket {
                 Item = value
             });
         }
-    }
+    } = ItemStack.Air;
 
     public GameMode GameMode {
-        get => _gameMode;
+        get;
         set {
-            _gameMode = value;
+            field = value;
             UpdateGameMode();
         }
     }
-    
+
     public int Level {
-        get => _level;
+        get;
         set {
-            _level = value;
+            field = value;
             SendPacket(new ClientBoundSetExperiencePacket {
                 ExperienceProgress = 0f,
-                Level = _level,
+                Level = field,
                 TotalExperience = 0
             });
         }
@@ -110,9 +113,9 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
     /// The entity that the player is viewing through. (Like in spectator when you click on an entity)
     /// </summary>
     public Entity? CameraEntity {
-        get => _cameraEntity;
+        get;
         set {
-            _cameraEntity = value;
+            field = value;
             SendPacket(new ClientBoundSetCameraPacket {
                 EntityId = value?.NetId ?? NetId
             });
@@ -120,13 +123,13 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
     }
 
     public PlayerSkin? Skin {
-        get => _skin;
+        get;
         set {
-            _skin = value;
-            
+            field = value;
+
             // To change the skin, we need to remove the player info and send a new one
             SendToSelfAndViewers(new ClientBoundPlayerInfoRemovePacket {
-                Uuids = [ Uuid ]
+                Uuids = [Uuid]
             }, GetPlayerInfoPacket());
             if (World != null) {
                 ResetEntity();
@@ -143,19 +146,13 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
     private int _waitingTeleport = -1;
     
     // backend fields
-    private Entity? _cameraEntity;
-    private int _level;
-    private GameMode _gameMode;
-    private Inventory? _openInventory;
     private int _activeHotbarSlot;
-    private ItemStack _cursorItem = ItemStack.Air;
-    private PlayerSkin? _skin;
-    
+
     private readonly ConcurrentQueue<MinecraftPacket> _packetSendingQueue = new();
     private readonly ConcurrentQueue<MinecraftPacket> _packetProcessQueue = new();
 
     // Listen to movement packets so we can do stuff
-    public PlayerEntity(ManagedMinecraftServer server, PlayerConnection connection, string name, PlayerMeta? meta = null) 
+    public Player(ManagedMinecraftServer server, PlayerConnection connection, string name, PlayerMeta? meta = null) 
         : base(EntityType.Player, meta ?? new PlayerMeta()) {
         Server = server;
         Name = name;
@@ -343,7 +340,7 @@ public class PlayerEntity : LivingEntity, IAudience, IPermissionHolder {
     protected MinecraftPacket GetRespawnPacket(World world) {
         return new ClientBoundRespawnPacket {
             DimensionName = world.DimensionId,
-            DimensionType = 0,
+            DimensionType = Server.Registry.DimensionTypes.GetProtocolId(world.Dimension),
             HashedSeed = 0,
             GameMode = GameMode,
             DataKept = ClientBoundRespawnPacket.DataKeptTypes.All,

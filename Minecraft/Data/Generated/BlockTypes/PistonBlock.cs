@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing) : IBlock {
     public Identifier Category => "minecraft:piston_base";
-    public int ProtocolId => 138;
     public double Hardness => 1.5;
     public double ExplosionResistance => 1.5;
     public double Friction => 0.6;
@@ -85,15 +84,15 @@ public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing)
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Extended = properties.ChildrenMap.ContainsKey("extended") ? properties["extended"].GetString() == "true" : Extended,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Extended = properties.Contains("extended") ? properties["extended"].GetString() == "true" : Extended,
+            Facing = properties.Contains("facing") ? CardinalExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("extended", Extended.ToString().ToLower()),
-            new StringTag("facing", Facing.ToName())
+        return new CompoundTag(
+            ("extended", new StringTag(Extended.ToString().ToLower())),
+            ("facing", new StringTag(Facing.ToName()))
         );
     }
     

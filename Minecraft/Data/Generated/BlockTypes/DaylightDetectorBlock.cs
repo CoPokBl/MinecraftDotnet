@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Power) : IBlock {
     public Identifier Category => "minecraft:daylight_detector";
-    public int ProtocolId => 472;
     public double Hardness => 0.2;
     public double ExplosionResistance => 0.2;
     public double Friction => 0.6;
@@ -125,15 +124,15 @@ public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Po
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Inverted = properties.ChildrenMap.ContainsKey("inverted") ? properties["inverted"].GetString() == "true" : Inverted,
-            Power = properties.ChildrenMap.ContainsKey("power") ? int.Parse(properties["power"].GetString()) : Power,
+            Inverted = properties.Contains("inverted") ? properties["inverted"].GetString() == "true" : Inverted,
+            Power = properties.Contains("power") ? int.Parse(properties["power"].GetString()) : Power,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("inverted", Inverted.ToString().ToLower()),
-            new StringTag("power", Power.ToString())
+        return new CompoundTag(
+            ("inverted", new StringTag(Inverted.ToString().ToLower())),
+            ("power", new StringTag(Power.ToString()))
         );
     }
     

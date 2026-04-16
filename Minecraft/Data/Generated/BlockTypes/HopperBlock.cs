@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facing FacingValue) : IBlock {
     public Identifier Category => "minecraft:hopper";
-    public int ProtocolId => 475;
     public double Hardness => 3;
     public double ExplosionResistance => 4.8;
     public double Friction => 0.6;
@@ -81,15 +80,15 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Enabled = properties.ChildrenMap.ContainsKey("enabled") ? properties["enabled"].GetString() == "true" : Enabled,
-            FacingValue = properties.ChildrenMap.ContainsKey("facing") ? FacingFromString(properties["facing"].GetString()) : FacingValue,
+            Enabled = properties.Contains("enabled") ? properties["enabled"].GetString() == "true" : Enabled,
+            FacingValue = properties.Contains("facing") ? FacingFromString(properties["facing"].GetString()) : FacingValue,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("enabled", Enabled.ToString().ToLower()),
-            new StringTag("facing", FacingToName(FacingValue))
+        return new CompoundTag(
+            ("enabled", new StringTag(Enabled.ToString().ToLower())),
+            ("facing", new StringTag(FacingToName(FacingValue)))
         );
     }
     

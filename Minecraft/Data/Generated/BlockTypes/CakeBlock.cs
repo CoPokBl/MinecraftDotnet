@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     public Identifier Category => "minecraft:cake";
-    public int ProtocolId => 297;
     public double Hardness => 0.5;
     public double ExplosionResistance => 0.5;
     public double Friction => 0.6;
@@ -70,13 +69,13 @@ public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Bites = properties.ChildrenMap.ContainsKey("bites") ? int.Parse(properties["bites"].GetString()) : Bites,
+            Bites = properties.Contains("bites") ? int.Parse(properties["bites"].GetString()) : Bites,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("bites", Bites.ToString())
+        return new CompoundTag(
+            ("bites", new StringTag(Bites.ToString()))
         );
     }
     

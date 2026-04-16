@@ -9,7 +9,7 @@ namespace ManagedServer.Events;
 
 public class PlayerEntityInteractEvent : IPlayerEvent {
     public required Entity Target;
-    public required PlayerEntity Player { get; init; }
+    public required Player Player { get; init; }
     public required World World { get; init; }
     public required ServerBoundInteractPacket.InteractType Type;
     public Vec3<float>? TargetLocation;

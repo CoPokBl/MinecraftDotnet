@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Facing) : IBlock {
     public Identifier Category => "minecraft:end_portal_frame";
-    public int ProtocolId => 391;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000;
     public double Friction => 0.6;
@@ -77,15 +76,15 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Eye = properties.ChildrenMap.ContainsKey("eye") ? properties["eye"].GetString() == "true" : Eye,
-            Facing = properties.ChildrenMap.ContainsKey("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
+            Eye = properties.Contains("eye") ? properties["eye"].GetString() == "true" : Eye,
+            Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("eye", Eye.ToString().ToLower()),
-            new StringTag("facing", Facing.ToName())
+        return new CompoundTag(
+            ("eye", new StringTag(Eye.ToString().ToLower())),
+            ("facing", new StringTag(Facing.ToName()))
         );
     }
     

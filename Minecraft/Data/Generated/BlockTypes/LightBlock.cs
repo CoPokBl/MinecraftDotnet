@@ -11,7 +11,6 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record LightBlock(Identifier Identifier, int Level, bool Waterlogged) : IBlock {
     public Identifier Category => "minecraft:light";
-    public int ProtocolId => 523;
     public double Hardness => -1;
     public double ExplosionResistance => 3600000.8;
     public double Friction => 0.6;
@@ -152,15 +151,15 @@ public record LightBlock(Identifier Identifier, int Level, bool Waterlogged) : I
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            Level = properties.ChildrenMap.ContainsKey("level") ? int.Parse(properties["level"].GetString()) : Level,
-            Waterlogged = properties.ChildrenMap.ContainsKey("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
+            Level = properties.Contains("level") ? int.Parse(properties["level"].GetString()) : Level,
+            Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
-        return new CompoundTag(null, 
-            new StringTag("level", Level.ToString()),
-            new StringTag("waterlogged", Waterlogged.ToString().ToLower())
+        return new CompoundTag(
+            ("level", new StringTag(Level.ToString())),
+            ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     

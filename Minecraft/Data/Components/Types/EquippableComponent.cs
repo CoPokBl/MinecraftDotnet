@@ -7,13 +7,13 @@ using Minecraft.Schemas.Tags;
 namespace Minecraft.Data.Components.Types;
 
 // TODO: Make this actually work without kicking the client
-public record EquippableComponent(int ProtocolId) : IDataComponent<EquippableComponent.Data> {
+public record EquippableComponent() : IDataComponent<EquippableComponent.Data> {
     public override Identifier Identifier => "minecraft:equippable";
     
     public override DataWriter WriteData(Data val, DataWriter writer, MinecraftRegistry registry) {
         return writer
             .WriteVarInt((int)val.Slot)
-            .WriteIdOr(val.EquipSound, (sound, w) => w.Write(sound, registry))
+            .WriteIdOr(val.EquipSound, registry.SoundTypes.GetProtocolId, (sound, w) => w.Write(sound, registry))
             .WritePrefixedOptional(val.Model, (id, w) => w.Write(id, registry))
             .WritePrefixedOptional(val.CameraOverlay, (id, w) => w.Write(id, registry))
             .WritePrefixedOptional(val.AllowedEntities, (set, w) => w.Write(set, registry))
@@ -22,7 +22,7 @@ public record EquippableComponent(int ProtocolId) : IDataComponent<EquippableCom
             .WriteBoolean(val.DamageOnHurt)
             .WriteBoolean(val.EquipOnInteract)
             .WriteBoolean(val.CanBeSheared)
-            .WriteIdOr(val.ShearSound, (sound, w) => w.Write(sound, registry));
+            .WriteIdOr(val.ShearSound, registry.SoundTypes.GetProtocolId, (sound, w) => w.Write(sound, registry));
     }
 
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
