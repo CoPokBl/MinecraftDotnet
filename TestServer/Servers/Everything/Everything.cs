@@ -24,7 +24,7 @@ namespace TestServer.Servers.Everything;
 public static class Everything {
 
     public static async Task Start() {
-        ManagedMinecraftServer server = ManagedMinecraftServer.NewBasic();
+        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsBundle);
         server.AddFeature(new TradingFeature());
 
         World world = server.CreateWorld(new VoidProvider());

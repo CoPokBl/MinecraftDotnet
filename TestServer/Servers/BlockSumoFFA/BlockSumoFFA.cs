@@ -128,12 +128,6 @@ public static class BlockSumoFfa {
             }
         });
 
-        world.Events.AddListener<ServerTickEvent>(_ => {
-            foreach (Player player in world.Players) {
-                server.ShowParticle(Particle.DrippingLava, player.Position + player.Direction.Multiply(2));
-            }
-        });
-
         IBlock[] blocks = [
             Block.WhiteConcretePowder,
             Block.OrangeConcretePowder,

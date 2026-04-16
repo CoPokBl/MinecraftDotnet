@@ -32,7 +32,7 @@ public static class MlgRush {
     private const bool CanBreakOwnBed = true;
 
     public static async Task Start() {
-        ManagedMinecraftServer server = ManagedMinecraftServer.NewBasic();
+        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsBundle);
         server.AddFeatures(
             new OpenToLanAdFeature("MLG Rush over LAN", Port),
             new TabListFeature(

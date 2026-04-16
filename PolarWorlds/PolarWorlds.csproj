@@ -11,7 +11,7 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         
         <PackageId>MinecraftDotnet.Polar</PackageId>
-        <Version>0.0.2</Version>
+        <Version>0.1.2</Version>
         <Title>Polar World Support</Title>
         <Authors>CoPokBl</Authors>
         <PackageProjectUrl>https://github.com/CoPokBl/MinecraftDotnet</PackageProjectUrl>
