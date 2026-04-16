@@ -12,7 +12,6 @@ using ManagedServer.Scheduling;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using ManagedServer.Worlds.Lighting;
-using Minecraft.Data.DimensionType;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
@@ -21,7 +20,6 @@ using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
 using Minecraft.Registry;
-using Minecraft.Registry.SubRegistries;
 using Minecraft.Schemas;
 
 namespace ManagedServer;

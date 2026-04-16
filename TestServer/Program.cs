@@ -1,6 +1,4 @@
-﻿using Minecraft.Data.Generated;
-using Minecraft.Registry.Templates;
-using TestServer.Servers.AnvilTesting;
+﻿using TestServer.Servers.AnvilTesting;
 using TestServer.Servers.BlockSumoFFA;
 using TestServer.Servers.Everything;
 using TestServer.Servers.MlgRush;

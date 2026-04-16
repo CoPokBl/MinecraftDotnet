@@ -9,7 +9,6 @@ using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Terrain;
-using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Items;

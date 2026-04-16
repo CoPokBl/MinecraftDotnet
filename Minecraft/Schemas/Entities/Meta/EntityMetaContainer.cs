@@ -5,7 +5,6 @@ using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
-using NBT;
 
 namespace Minecraft.Schemas.Entities.Meta;
 

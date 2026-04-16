@@ -2,7 +2,6 @@ using System.Diagnostics;
 using ManagedServer.Events;
 using ManagedServer.Events.Types;
 using ManagedServer.Features;
-using ManagedServer.Permissions;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;

@@ -4,7 +4,6 @@ using ManagedServer.Events.Types;
 using ManagedServer.Inventories;
 using ManagedServer.Schemas;
 using ManagedServer.Worlds;
-using Minecraft.Implementations.Events;
 using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Events;
