@@ -34,6 +34,8 @@ public interface ICollisionBox {
     public bool CollidesWithAabb(Aabb other);
 
     public Aabb? CollidesWhichAabb(Aabb other);
+
+    public bool CollidesWithRaycast(Vec3<double> origin, Vec3<double> end);
     
     [Pure]
     public ICollisionBox Add(Vec3<double> other);

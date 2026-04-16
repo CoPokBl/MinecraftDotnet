@@ -65,6 +65,45 @@ public record Aabb(Vec3<double> Position, Vec3<double> Size) : ICollisionBox {
         return true;
     }
 
+    public bool CollidesWithRaycast(Vec3<double> origin, Vec3<double> end) {
+        Vec3<double> direction = end - origin;
+        
+        double minX = Math.Min(Position.X, Position.X + Size.X);
+        double maxX = Math.Max(Position.X, Position.X + Size.X);
+        double minY = Math.Min(Position.Y, Position.Y + Size.Y);
+        double maxY = Math.Max(Position.Y, Position.Y + Size.Y);
+        double minZ = Math.Min(Position.Z, Position.Z + Size.Z);
+        double maxZ = Math.Max(Position.Z, Position.Z + Size.Z);
+
+        double tMin = 0.0;
+        double tMax = 1.0;
+
+        if (!IntersectsAxis(origin.X, direction.X, minX, maxX, ref tMin, ref tMax)) {
+            return false;
+        }
+        if (!IntersectsAxis(origin.Y, direction.Y, minY, maxY, ref tMin, ref tMax)) {
+            return false;
+        }
+        return IntersectsAxis(origin.Z, direction.Z, minZ, maxZ, ref tMin, ref tMax);
+    }
+
+    private static bool IntersectsAxis(double origin, double direction, double min, double max, ref double tMin, ref double tMax) {
+        const double epsilon = 1e-9;
+        if (Math.Abs(direction) < epsilon) {
+            return origin >= min && origin <= max;
+        }
+        
+        double t1 = (min - origin) / direction;
+        double t2 = (max - origin) / direction;
+        if (t1 > t2) {
+            (t1, t2) = (t2, t1);
+        }
+        
+        tMin = Math.Max(tMin, t1);
+        tMax = Math.Min(tMax, t2);
+        return tMin <= tMax;
+    }
+
     public Aabb? CollidesWhichAabb(Aabb other) {
         return CollidesWithAabb(other) ? this : null;
     }

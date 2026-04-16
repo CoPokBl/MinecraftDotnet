@@ -59,6 +59,10 @@ public readonly struct Vec2<T>(T x, T y) : IEquatable<Vec2<T>> where T : INumber
         return Math.Sqrt((absX * absX + absY * absY).ToDouble());
     }
 
+    public T DotProduct(Vec2<T> other) {
+        return X * other.X + Y * other.Y;
+    }
+
     #endregion
 
     #region operators
