@@ -11,37 +11,33 @@ namespace ManagedServer.Entities.Types;
 
 public class LivingEntity(IEntityType type, LivingEntityMeta? meta = null) 
     : Entity(type, meta ?? new LivingEntityMeta()) {
-    
     public float Health {
-        get => _health;
+        get;
         set {
-            _health = value;
+            field = value;
             Meta = Meta with {
                 Health = value
             };
             SendHealthUpdate();
         }
-    }
+    } = 20f;
 
     public int Food {
-        get => _food;
+        get;
         set {
-            _food = value;
+            field = value;
             SendHealthUpdate();
         }
-    }
-    
-    public float Saturation {
-        get => _saturation;
-        set {
-            _saturation = value;
-            SendHealthUpdate();
-        }
-    }
+    } = 20;
 
-    private float _health = 20f;
-    private int _food = 20;
-    private float _saturation = 20f;
+    public float Saturation {
+        get;
+        set {
+            field = value;
+            SendHealthUpdate();
+        }
+    } = 20f;
+
     private Dictionary<EquipmentSlot, ItemStack> _equipment = [];
     
     public new LivingEntityMeta Meta {

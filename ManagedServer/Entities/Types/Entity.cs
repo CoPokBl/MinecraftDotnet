@@ -33,39 +33,38 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     public Aabb BoundingBox { get; init; }
 
-    private Func<Player, bool> _viewableRule = _ => true;
     public Func<Player, bool> ViewableRule {
-        get => _viewableRule;
+        get;
         set {
-            _viewableRule = value;
+            field = value;
             UpdateViewers();
         }
-    }
+    } = _ => true;
 
     public EntityMeta Meta {
-        get => _meta;
+        get;
         set {
-            _meta = value;
+            field = value;
             SendToSelfAndViewers(new ClientBoundSetEntityMetadataPacket {
                 EntityId = NetId,
-                Meta = _meta
+                Meta = field
             });
         }
-    }
-    
+    } = null!;
+
     public bool Crouching {
-        get => _crouching;
+        get;
 
         set {
-            if (_crouching == value) {
+            if (field == value) {
                 return;
             }
-            
+
             Meta = Meta with {
                 Pose = value ? EntityPose.Sneaking : EntityPose.Standing,
                 Status = value ? EntityStatus.Sneaking : EntityStatus.None
             };
-            _crouching = value;
+            field = value;
         }
     }
 
@@ -84,9 +83,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     public int NetId { get; internal set; } = -1;
     public IEntityManager? Manager { get; private set; }
     public World? World { get; private set; }
-    
-    private EntityMeta _meta = null!;  // set by the constructor, so it is never null
-    private bool _crouching;
+
     private readonly Dictionary<IAttribute, (double Base, List<AttributeModifier> Modifiers)> _attributes = [];
 
     public Entity(IEntityType type, EntityMeta? meta = null) {

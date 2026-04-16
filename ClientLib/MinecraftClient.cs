@@ -44,13 +44,15 @@ public class MinecraftClient : MappedTaggable, IFeatureScope {
     public GameMode GameMode { get; set; } = GameMode.Survival;
     public GameMode PreviousGameMode { get; set; } = GameMode.Undefined;
     public GameRuleSet GameRules { get; private set; } = new();
+
     public Vec3<double> Position {
-        get => _position;
+        get;
         set {
-            _position = value;
+            field = value;
             SendPositionUpdate();
         }
-    }
+    } = new(0, 0, 0);
+
     public List<PlayerInfoEntry> PlayerInfoEntries { get; } = [];
 
     public MinecraftClient Client => this;
@@ -64,9 +66,7 @@ public class MinecraftClient : MappedTaggable, IFeatureScope {
     private readonly CancellationTokenSource _cts = new();
     private TimeSpan TargetTickTime => TimeSpan.FromSeconds(1.0 / TargetTicksPerSecond);
     public int TargetTicksPerSecond = 20;
-    
-    private Vec3<double> _position = new(0, 0, 0);
-    
+
     public static readonly FeatureBundle BasicFeatures = new(
         new GravityFeature()
     );

@@ -20,9 +20,8 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
 
     private readonly Dictionary<Vec2<int>, List<Entity>> _entitiesByChunk = [];
     private readonly Dictionary<int, Entity> _entitiesById = [];
-    
-    private int _currentId;
-    public int NewNetId => _currentId++;
+
+    public int NewNetId => field++;
 
     public int EntityCount => _entitiesById.Count;
 

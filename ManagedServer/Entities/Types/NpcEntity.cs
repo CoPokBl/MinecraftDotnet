@@ -14,19 +14,17 @@ public class NpcEntity(PlayerMeta? meta = null) : LivingEntity(EntityType.Player
         get => (PlayerMeta)base.Meta;
         set => base.Meta = value;
     }
-    
+
     public GameMode GameMode {
-        get => _gameMode;
+        get;
         set {
-            _gameMode = value;
+            field = value;
             UpdateGameMode();
         }
     }
-    
+
     public PlayerSkin? Skin { get; set; }
     public double EyeHeight => Crouching ? 1.27 : EntityType.Player.EyeHeight;
-    
-    private GameMode _gameMode;
 
     public void UpdateGameMode() {
         SendToSelfAndViewers(new ClientBoundPlayerInfoUpdatePacket {

@@ -6,20 +6,20 @@ namespace ManagedServer.Bossbar;
 
 public class BossBar(TextComponent title, float health = 1.0f, ClientBoundBossBarPacket.Color color = ClientBoundBossBarPacket.Color.Purple, ClientBoundBossBarPacket.Division division = ClientBoundBossBarPacket.Division.Zero, ClientBoundBossBarPacket.Flags flags = ClientBoundBossBarPacket.Flags.None) {
     public TextComponent Title {
-        get => _title;
+        get;
         set {
-            _title = value;
-            SendPacket(new ClientBoundBossBarPacket.UpdateTitle(_title));
+            field = value;
+            SendPacket(new ClientBoundBossBarPacket.UpdateTitle(field));
         }
-    }
+    } = title;
 
     public float Health {
-        get => _health;
+        get;
         set {
-            _health = value;
-            SendPacket(new ClientBoundBossBarPacket.UpdateHealth(_health));
+            field = value;
+            SendPacket(new ClientBoundBossBarPacket.UpdateHealth(field));
         }
-    }
+    } = health;
 
     public ClientBoundBossBarPacket.Color Color {
         get => _color;
@@ -38,19 +38,16 @@ public class BossBar(TextComponent title, float health = 1.0f, ClientBoundBossBa
     }
 
     public ClientBoundBossBarPacket.Flags Flags {
-        get => _flags;
+        get;
         set {
-            _flags = value;
-            SendPacket(new ClientBoundBossBarPacket.UpdateFlags(_flags));
+            field = value;
+            SendPacket(new ClientBoundBossBarPacket.UpdateFlags(field));
         }
-    }
-    
-    private TextComponent _title = title;
-    private float _health = health;
+    } = flags;
+
     private ClientBoundBossBarPacket.Color _color = color;
     private ClientBoundBossBarPacket.Division _division = division;
-    private ClientBoundBossBarPacket.Flags _flags = flags;
-    
+
     private readonly List<IAudience> _viewers = [];
     private readonly Guid _id = Guid.NewGuid();
 

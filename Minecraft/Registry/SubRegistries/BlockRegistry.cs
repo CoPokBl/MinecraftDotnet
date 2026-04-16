@@ -6,14 +6,12 @@ namespace Minecraft.Registry.SubRegistries;
 
 public class BlockRegistry : MappedRegistry<BlockRegistry, IBlock> {
     public override Identifier RegistryId => "minecraft:block";
-    
+
     public IBlock DefaultBlock {
-        get => _defBlock.ThrowIfNull();
-        set => _defBlock = value;
+        get => field.ThrowIfNull();
+        set;
     }
 
-    private IBlock? _defBlock;
-    
     private readonly Dictionary<uint, IBlock> _defaultByState = new();
 
     public long StatesCount => _defaultByState.Count;

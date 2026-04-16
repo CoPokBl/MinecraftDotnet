@@ -41,17 +41,20 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     }
 
     public Inventory? OpenInventory {
-        get => _openInventory;
+        get;
         set {
             if (value == null) {
-                if (_openInventory != null) SendPacket(new ClientBoundCloseContainerPacket {
-                    WindowId = _openInventory.WindowId
-                });
-            } else value.AddViewer(this);
-            _openInventory = value;
+                if (field != null)
+                    SendPacket(new ClientBoundCloseContainerPacket {
+                        WindowId = field.WindowId
+                    });
+            }
+            else value.AddViewer(this);
+
+            field = value;
         }
     }
-    
+
     public int ActiveHotbarSlot {
         get => _activeHotbarSlot;
         set {
@@ -63,32 +66,32 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
             RefreshEquipment();
         }
     }
-    
+
     public ItemStack CursorItem {
-        get => _cursorItem;
+        get;
         set {
-            _cursorItem = value;
+            field = value;
             SendPacket(new ClientBoundSetCursorItemPacket {
                 Item = value
             });
         }
-    }
+    } = ItemStack.Air;
 
     public GameMode GameMode {
-        get => _gameMode;
+        get;
         set {
-            _gameMode = value;
+            field = value;
             UpdateGameMode();
         }
     }
-    
+
     public int Level {
-        get => _level;
+        get;
         set {
-            _level = value;
+            field = value;
             SendPacket(new ClientBoundSetExperiencePacket {
                 ExperienceProgress = 0f,
-                Level = _level,
+                Level = field,
                 TotalExperience = 0
             });
         }
@@ -110,9 +113,9 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     /// The entity that the player is viewing through. (Like in spectator when you click on an entity)
     /// </summary>
     public Entity? CameraEntity {
-        get => _cameraEntity;
+        get;
         set {
-            _cameraEntity = value;
+            field = value;
             SendPacket(new ClientBoundSetCameraPacket {
                 EntityId = value?.NetId ?? NetId
             });
@@ -120,13 +123,13 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     }
 
     public PlayerSkin? Skin {
-        get => _skin;
+        get;
         set {
-            _skin = value;
-            
+            field = value;
+
             // To change the skin, we need to remove the player info and send a new one
             SendToSelfAndViewers(new ClientBoundPlayerInfoRemovePacket {
-                Uuids = [ Uuid ]
+                Uuids = [Uuid]
             }, GetPlayerInfoPacket());
             if (World != null) {
                 ResetEntity();
@@ -143,14 +146,8 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     private int _waitingTeleport = -1;
     
     // backend fields
-    private Entity? _cameraEntity;
-    private int _level;
-    private GameMode _gameMode;
-    private Inventory? _openInventory;
     private int _activeHotbarSlot;
-    private ItemStack _cursorItem = ItemStack.Air;
-    private PlayerSkin? _skin;
-    
+
     private readonly ConcurrentQueue<MinecraftPacket> _packetSendingQueue = new();
     private readonly ConcurrentQueue<MinecraftPacket> _packetProcessQueue = new();
 
