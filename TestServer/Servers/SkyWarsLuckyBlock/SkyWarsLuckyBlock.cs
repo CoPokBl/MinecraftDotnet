@@ -35,11 +35,14 @@ public static class SkyWarsLuckyBlock {
         }));
         // server.AddFeature(new SimpleBenchmarkFeature());
         
-        // server.Dimensions.Add("skywars:lobby", new Dimension());
-        // server.Dimensions.Add("skywars:game", new Dimension());
-
         server.Registry.DimensionTypes.Add(
-            ((SimpleDimensionType)server.Registry.DimensionTypes["minecraft:overworld"]) with { });
+            (SimpleDimensionType)server.Registry.DimensionTypes["minecraft:overworld"] with {
+                Identifier = "skywars:lobby"
+            });
+        server.Registry.DimensionTypes.Add(
+            (SimpleDimensionType)server.Registry.DimensionTypes["minecraft:overworld"] with {
+                Identifier = "skywars:game"
+            });
         
         Console.WriteLine("Loading maps...");
         World lobby = server.CreateWorld(new PolarLoader(SkyWarsUtils.ReadPolarMap("lobby.polar"), VanillaRegistry.Data), "skywars:lobby", new FullBrightLightingProvider());
