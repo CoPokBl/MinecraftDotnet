@@ -126,19 +126,24 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             return;
         }
         
-        // Inform viewers of the chunk change
+        // Inform viewers of the chunk change. We schedule on the next tick because
+        // entity.Position is set by Entity.Move *after* this method returns, and the
+        // spawn packet needs the new position. On next tick we build the packets
+        // (cheap) on the tick thread, then hand the socket write to the pool so the
+        // tick itself doesn't block on serialisation/network I/O.
         foreach (Player player in entity.World.GetViewersOf(toChunk)) {
-            if (player == entity) {
-                continue;  // Don't send to self
-            }
-            
-            if (entity.World.DoesPlayerHaveChunkLoaded(player, fromChunk)) {
-                continue;  // they could already see it
-            }
+            if (player == entity) continue;
+            if (entity.World.DoesPlayerHaveChunkLoaded(player, fromChunk)) continue;
 
-            // do it next tick so that the position is updated
+            Player capturedPlayer = player;
             entity.Server.Scheduler.ScheduleNextTick(() => {
-                SendSpawnPackets(entity, player);
+                if (!entity.ViewableRule(capturedPlayer)) return;
+                MinecraftPacket[] packets = entity.GenerateSpawnEntityPackets();
+                AddViewedEntity(capturedPlayer, entity.NetId);
+                _ = Task.Run(() => {
+                    try { capturedPlayer.SendPackets(packets); }
+                    catch { /* player may have disconnected mid-send */ }
+                });
             });
         }
     }

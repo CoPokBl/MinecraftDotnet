@@ -300,7 +300,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             }
         }
 
-        List<Vec2<int>> toAdd = [];
         for (int dx = -_viewDistance; dx <= _viewDistance; dx++) {
             for (int dz = -_viewDistance; dz <= _viewDistance; dz++) {
                 Vec2<int> chunk = new(chunkPos.X + dx, chunkPos.Y + dz);
@@ -313,8 +312,16 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
                 ChunkData? data = TryGetLoadedChunk(chunk);
                 if (data != null) {
-                    packets.Add(BuildChunkPacket(chunk, data));
-                    toAdd.Add(chunk);
+                    // Already loaded but not yet streamed to this player. BuildChunkPacket
+                    // involves expensive lighting computation, so run it off this thread and
+                    // enqueue via the normal async path. EnqueueChunkToPlayers owns the
+                    // LoadedChunks update, so we don't add to toAdd here.
+                    Vec2<int> capturedChunk = chunk;
+                    ChunkData capturedData = data;
+                    _ = Task.Run(() => {
+                        MinecraftPacket pkt = BuildChunkPacket(capturedChunk, capturedData);
+                        Server.Scheduler.ScheduleNextTick(() => EnqueueChunkToPlayers(capturedChunk, pkt));
+                    });
                 } else {
                     // Not yet loaded; kick off an async load. The completion handler will enqueue
                     // the chunk packet to any player still in range (including this one).
@@ -323,16 +330,16 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             }
         }
 
+        // packets now only contains SetCenterChunk + UnloadChunk — always send SetCenter first.
         packets.Sort((a, b) => PacketOrderKey(a, chunkPos).CompareTo(PacketOrderKey(b, chunkPos)));
 
         // Phase 2: commit under state.Lock.
         lock (state.Lock) {
             if (state.Disconnected) return;
-            // If another move raced us to the same chunk, drop this batch (theirs or ours — doesn't matter which wins as long as only one does).
+            // If another move raced us to the same chunk, drop this batch.
             if (state.CurrentChunk == chunkPos) return;
             state.CurrentChunk = chunkPos;
             foreach (Vec2<int> c in toUnload) state.LoadedChunks.Remove(c);
-            foreach (Vec2<int> c in toAdd) state.LoadedChunks.Add(c);
             foreach (MinecraftPacket p in packets) state.PendingPackets.Enqueue(p);
         }
     }
