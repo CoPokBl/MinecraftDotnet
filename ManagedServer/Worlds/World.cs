@@ -146,14 +146,35 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         foreach (Player player in snap) {
             if (!_playerStates.TryGetValue(player, out PlayerWorldState? state) || state.Disconnected) continue;
 
-            List<MinecraftPacket>? batch = null;
+            // Only one send flight per player at a time — prevents socket races and
+            // controls memory pressure. If the previous batch hasn't finished being
+            // written to the socket yet, skip this flush cycle for that player.
+            if (Interlocked.CompareExchange(ref state.SendInProgress, 1, 0) != 0) continue;
+
+            MinecraftPacket[]? batch = null;
             lock (state.Lock) {
-                for (int i = 0; i < _packetsPerTick; i++) {
-                    if (!state.PendingPackets.TryDequeue(out MinecraftPacket? pkt)) break;
-                    (batch ??= []).Add(pkt);
+                int n = Math.Min(state.PendingPackets.Count, _packetsPerTick);
+                if (n > 0) {
+                    batch = new MinecraftPacket[n];
+                    for (int i = 0; i < n; i++) batch[i] = state.PendingPackets.Dequeue();
                 }
             }
-            if (batch != null) player.SendPackets(batch.ToArray());
+
+            if (batch == null) {
+                Interlocked.Exchange(ref state.SendInProgress, 0);
+                continue;
+            }
+
+            // Serialise and write to the socket off the tick thread.
+            _ = Task.Run(() => {
+                try {
+                    player.SendPackets(batch);
+                } catch {
+                    // Player disconnected mid-send; RemovePlayer handles cleanup.
+                } finally {
+                    Interlocked.Exchange(ref state.SendInProgress, 0);
+                }
+            });
         }
     }
 
@@ -752,7 +773,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         public volatile bool Disconnected;
         public Action? CancelMoveListener;
         public Action? DisconnectHandler;
-        public int RemovedFlag;  // Interlocked
+        public int RemovedFlag;    // Interlocked
+        public int SendInProgress; // Interlocked — one socket write in flight at a time
     }
 
     #endregion

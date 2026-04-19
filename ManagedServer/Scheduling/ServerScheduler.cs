@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using ManagedServer.Events;
 
@@ -10,21 +11,32 @@ public class ServerScheduler {
     private readonly List<(ulong tick, ScheduledTask task)> _tickTasks = [];
     private readonly ManagedMinecraftServer _server;
 
+    /// <summary>
+    /// Tasks that take longer than this threshold (ms) are logged to <see cref="ManagedMinecraftServer.LogAction"/>.
+    /// Set to 0 to disable slow-task logging.
+    /// </summary>
+    public int SlowTaskThresholdMs { get; set; } = 5;
+
     public ServerScheduler(ManagedMinecraftServer server) {
         _server = server;
-        
+
         server.Events.AddListener<ServerTickEvent>(_ => {
-            // Execute all next tick actions
             if (_tickTasks.Count == 0) return;
-            
+
             ulong tick = _server.CurrentTick;
+            int threshold = SlowTaskThresholdMs;
             _tickTasks.RemoveAll(schedule => {
                 if (schedule.tick > tick) return false;
+                Stopwatch sw = Stopwatch.StartNew();
                 try {
                     schedule.task.Run();
                 }
                 catch (Exception e) {
                     _server.HandleError(e);
+                }
+                sw.Stop();
+                if (threshold > 0 && sw.ElapsedMilliseconds >= threshold) {
+                    _server.LogAction($"[SLOW TICK TASK +{sw.ElapsedMilliseconds}ms] {schedule.task.Description}");
                 }
                 return true;
             });

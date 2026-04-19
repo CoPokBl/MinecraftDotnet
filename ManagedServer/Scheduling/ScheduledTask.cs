@@ -8,6 +8,11 @@ public class ScheduledTask(Action action, Action? cancelAction = null) {
 
     private volatile bool _cancelled;
 
+    // Human-readable name derived from the delegate target and method, shown in slow-task warnings.
+    public string Description { get; } = action.Target?.GetType().Name is { } t
+        ? $"{t}.{action.Method.Name}"
+        : $"static.{action.Method.Name}";
+
     public void Cancel() {
         Cancelled = true;
         cancelAction?.Invoke();
