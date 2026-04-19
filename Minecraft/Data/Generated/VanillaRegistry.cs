@@ -3,6 +3,7 @@ using Minecraft.Schemas.Tags;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Items;
 using Minecraft.Data.DimensionType;
+using Minecraft.Data.DamageType;
 using Minecraft.Data.Enchantments;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Timelines;
@@ -25,7 +26,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2026-04-14
+// Last updated: 2026-04-19
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -5803,5 +5804,55 @@ public static class VanillaRegistry {
         Data.Timelines.Add(Timeline.EarlyGame);
         Data.Timelines.Add(Timeline.Day);
         Data.Timelines.Add(Timeline.Moon);
+        Data.DamageTypes.Add(DamageType.Wither);
+        Data.DamageTypes.Add(DamageType.WitherSkull);
+        Data.DamageTypes.Add(DamageType.MaceSmash);
+        Data.DamageTypes.Add(DamageType.Trident);
+        Data.DamageTypes.Add(DamageType.OnFire);
+        Data.DamageTypes.Add(DamageType.Campfire);
+        Data.DamageTypes.Add(DamageType.FallingStalactite);
+        Data.DamageTypes.Add(DamageType.Fireball);
+        Data.DamageTypes.Add(DamageType.Spit);
+        Data.DamageTypes.Add(DamageType.Sting);
+        Data.DamageTypes.Add(DamageType.Spear);
+        Data.DamageTypes.Add(DamageType.InFire);
+        Data.DamageTypes.Add(DamageType.Arrow);
+        Data.DamageTypes.Add(DamageType.HotFloor);
+        Data.DamageTypes.Add(DamageType.Drown);
+        Data.DamageTypes.Add(DamageType.GenericKill);
+        Data.DamageTypes.Add(DamageType.DragonBreath);
+        Data.DamageTypes.Add(DamageType.Lava);
+        Data.DamageTypes.Add(DamageType.FlyIntoWall);
+        Data.DamageTypes.Add(DamageType.PlayerAttack);
+        Data.DamageTypes.Add(DamageType.Freeze);
+        Data.DamageTypes.Add(DamageType.FallingAnvil);
+        Data.DamageTypes.Add(DamageType.SweetBerryBush);
+        Data.DamageTypes.Add(DamageType.Fireworks);
+        Data.DamageTypes.Add(DamageType.Stalagmite);
+        Data.DamageTypes.Add(DamageType.Generic);
+        Data.DamageTypes.Add(DamageType.SonicBoom);
+        Data.DamageTypes.Add(DamageType.DryOut);
+        Data.DamageTypes.Add(DamageType.EnderPearl);
+        Data.DamageTypes.Add(DamageType.Fall);
+        Data.DamageTypes.Add(DamageType.MobAttack);
+        Data.DamageTypes.Add(DamageType.MobProjectile);
+        Data.DamageTypes.Add(DamageType.Thrown);
+        Data.DamageTypes.Add(DamageType.FallingBlock);
+        Data.DamageTypes.Add(DamageType.WindCharge);
+        Data.DamageTypes.Add(DamageType.PlayerExplosion);
+        Data.DamageTypes.Add(DamageType.UnattributedFireball);
+        Data.DamageTypes.Add(DamageType.InWall);
+        Data.DamageTypes.Add(DamageType.Starve);
+        Data.DamageTypes.Add(DamageType.MobAttackNoAggro);
+        Data.DamageTypes.Add(DamageType.OutsideBorder);
+        Data.DamageTypes.Add(DamageType.LightningBolt);
+        Data.DamageTypes.Add(DamageType.OutOfWorld);
+        Data.DamageTypes.Add(DamageType.Magic);
+        Data.DamageTypes.Add(DamageType.Explosion);
+        Data.DamageTypes.Add(DamageType.BadRespawnPoint);
+        Data.DamageTypes.Add(DamageType.Thorns);
+        Data.DamageTypes.Add(DamageType.IndirectMagic);
+        Data.DamageTypes.Add(DamageType.Cramming);
+        Data.DamageTypes.Add(DamageType.Cactus);
     }
 }

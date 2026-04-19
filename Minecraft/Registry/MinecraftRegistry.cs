@@ -24,6 +24,7 @@ public class MinecraftRegistry {
     public EnchantmentRegistry Enchantments { get; set; } = new();
     public DimensionTypeRegistry DimensionTypes { get; set; } = new();
     public TimelineRegistry Timelines { get; set; } = new();
+    public DamageTypeRegistry DamageTypes { get; set; } = new();
 
     public ISubRegistry this[Identifier id] {
         get {
@@ -55,7 +56,8 @@ public class MinecraftRegistry {
         CustomStatistics,
         Enchantments,
         DimensionTypes,
-        Timelines
+        Timelines,
+        DamageTypes
     ];
 
     public MinecraftRegistry Clone() {
@@ -77,7 +79,8 @@ public class MinecraftRegistry {
             CustomStatistics = CustomStatistics.Clone(),
             Enchantments = Enchantments.Clone(),
             DimensionTypes = DimensionTypes.Clone(),
-            Timelines = Timelines.Clone()
+            Timelines = Timelines.Clone(),
+            DamageTypes = DamageTypes.Clone()
         };
     }
     
