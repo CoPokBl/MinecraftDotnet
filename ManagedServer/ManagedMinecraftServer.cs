@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using ManagedServer.Commands;
+using Minecraft.Implementations.Events;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
@@ -59,7 +60,18 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     
     public MinecraftRegistry Registry { get; set; } = VanillaRegistry.Data;
     public Action<string> LogAction { get; set; } = Console.WriteLine;
+    public bool AlwaysLogSlowEvents { get; set; } = false;
     public event Action? ServerStopped;
+
+    /// <summary>
+    /// When a tick exceeds its target duration, the <em>next</em> tick is profiled: any event
+    /// listener that takes at least this many milliseconds is logged with its class and method name.
+    /// Set to 0 to disable auto-profiling. Defaults to 10ms.
+    /// </summary>
+    public int SlowListenerThresholdMs {
+        get => EventProfiler.ThresholdMs;
+        set => EventProfiler.ThresholdMs = value;
+    }
     
     private TimeSpan TargetTickTime => TimeSpan.FromSeconds(1.0 / TargetTicksPerSecond);
 
@@ -171,30 +183,41 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     private void Ticker() {
         Stopwatch tickTimer = new();
         TimeSpan lastTickTime = TimeSpan.Zero;
+        bool profileNextTick = AlwaysLogSlowEvents;
+
         while (!_cts.IsCancellationRequested) {
             tickTimer.Restart();
+
+            // When the previous tick was slow, enable per-listener profiling for this tick.
+            if (profileNextTick && SlowListenerThresholdMs > 0) {
+                EventProfiler.Logger = msg => LogAction($"  {msg}");
+            }
+
             ServerTickEvent tickEvent = new() {
                 Delta = lastTickTime,
                 TargetDelta = TargetTickTime,
                 Server = this
             };
             Exception? exception = Events.CallEventCatchErrors(tickEvent);
-            if (exception != null) {
-                HandleError(exception);
+            if (exception != null) HandleError(exception);
+
+            // Always clear the profiler after the tick — it's only active for one tick at a time.
+            if (!AlwaysLogSlowEvents) {
+                EventProfiler.Logger = null;
+                profileNextTick = false;
             }
+
             TimeSpan tickTime = tickTimer.Elapsed;
             lastTickTime = tickTime;
-            
+
             if (tickTime < TargetTickTime) {
-                // Sleep for the remaining time to maintain the target tick rate
                 Thread.Sleep(TargetTickTime - tickTime);
+            } else {
+                LogAction($"WARNING: Tick took {tickTime.TotalMilliseconds:F1}ms, " +
+                          $"exceeding target of {TargetTickTime.TotalMilliseconds:F1}ms.");
+                profileNextTick = true;
             }
-            else {
-                // If we took too long, log a warning
-                LogAction($"WARNING: Tick took {tickTime.TotalMilliseconds}ms, " + 
-                          $"exceeding target of {TargetTickTime.TotalMilliseconds}ms.");
-            }
-            
+
             CurrentTick++;
         }
     }
