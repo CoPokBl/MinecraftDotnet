@@ -18,6 +18,7 @@ using Minecraft.Data.Blocks;
 using Minecraft.Data.Items;
 using Minecraft.Data.DimensionType;
 using Minecraft.Data.DamageType;
+using Minecraft.Data.PaintingVariant;
 using Minecraft.Data.Enchantments;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Timelines;
@@ -230,6 +231,7 @@ RunStep("Enchantments", EnchantmentCodeGen.CreateEnchantmentEntries);
 RunStep("Dimension Types", DimensionTypeCodeGen.CreateDimensionTypeEntries);
 RunStep("Timelines", TimelineCodeGen.CreateTimelineEntries);
 RunStep("Damage Types", DamageTypeCodeGen.CreateDamageTypeEntries);
+RunStep("Painting Variants", PaintingVariantCodeGen.CreatePaintingVariantEntries);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))

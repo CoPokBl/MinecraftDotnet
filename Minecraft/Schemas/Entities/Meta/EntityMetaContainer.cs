@@ -1,5 +1,6 @@
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Particles;
+using Minecraft.Data.PaintingVariant;
 using Minecraft.Registry;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Items;
@@ -51,8 +52,8 @@ public class EntityMetaContainer {
         { MetaFieldType.ZombieNautilusVariant, (_, reader) => new MetaField<int>(MetaFieldType.ZombieNautilusVariant, reader.ReadVarInt()) },
         { MetaFieldType.OptionalGlobalPosition, (_, reader) => new MetaField<Optional<(Identifier, Vec3<int>)>>(MetaFieldType.OptionalGlobalPosition, 
             reader.ReadPrefixedOptional(r => (r.ReadString(), r.ReadPosition()))) },
-        { MetaFieldType.PaintingVariant, (_, reader) => new MetaField<Or<int, PaintingVariant>>(MetaFieldType.PaintingVariant, 
-            reader.ReadIdOr(PaintingVariant.Read)) },
+        { MetaFieldType.PaintingVariant, (reg, reader) => new MetaField<Or<int, IPaintingVariant>>(MetaFieldType.PaintingVariant, 
+            reader.ReadIdOr(r => IPaintingVariant.ReadData(r, reg))) },
         { MetaFieldType.SnifferState, (_, reader) => new MetaField<SnifferState>(MetaFieldType.SnifferState, 
             (SnifferState)reader.ReadVarInt()) },
         { MetaFieldType.ArmadilloState, (_, reader) => new MetaField<ArmadilloState>(MetaFieldType.ArmadilloState,
@@ -112,8 +113,8 @@ public class EntityMetaContainer {
         { MetaFieldType.OptionalGlobalPosition, (_, writer, field) => 
             writer.WritePrefixedOptional(field.GetValue<Optional<(Identifier, Vec3<int>)>>(), 
                 (tuple, w) => w.WriteString(tuple.Item1).WritePosition(tuple.Item2)) },
-        { MetaFieldType.PaintingVariant, (_, writer, field) => 
-            writer.WriteIdOr(field.GetValue<Or<int, PaintingVariant>>(), (v, w) => v.Write(w)) },
+        { MetaFieldType.PaintingVariant, (reg, writer, field) => 
+            writer.WriteIdOr(field.GetValue<Or<int, IPaintingVariant>>(), (v, w) => v.WriteData(w, reg)) },
         { MetaFieldType.SnifferState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<SnifferState>()) },
         { MetaFieldType.ArmadilloState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<ArmadilloState>()) },
         { MetaFieldType.CopperGolemState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<CopperGolemState>()) },

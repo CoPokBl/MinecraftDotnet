@@ -1,13 +1,21 @@
+using System.Diagnostics.CodeAnalysis;
+using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
 using NBT;
 
 namespace Minecraft.Packets.Config.ClientBound;
 
-public class ClientBoundRegistryDataPacket : ClientBoundPacket {
+public class ClientBoundRegistryDataPacket() : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:registry_data";
 
     public required Identifier RegistryId { get; init; }
     public required Dictionary<string, INbtTag?> Entries { get; init; }
+
+    [SetsRequiredMembers]
+    public ClientBoundRegistryDataPacket(INbtSerialisableRegistry registry) : this() {
+        RegistryId = registry.RegistryId;
+        Entries = registry.ToNbt()!;
+    }
     
     protected override DataWriter WriteData(DataWriter w) {
         return w

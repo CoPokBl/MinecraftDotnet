@@ -157,10 +157,7 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                         continue;
                     }
                     
-                    registryPackets.Add(new ClientBoundRegistryDataPacket {
-                        RegistryId = nbtReg.RegistryId,
-                        Entries = nbtReg.ToNbt()!
-                    });
+                    registryPackets.Add(new ClientBoundRegistryDataPacket(nbtReg));
                 }
                 e.Connection.SendPackets(registryPackets);
             
@@ -193,12 +190,6 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                         RegistryId = "minecraft:frog_variant",
                         Entries = new Dictionary<string, INbtTag?> {
                             { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:painting_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:alban", null }
                         }
                     },
                     new ClientBoundRegistryDataPacket {

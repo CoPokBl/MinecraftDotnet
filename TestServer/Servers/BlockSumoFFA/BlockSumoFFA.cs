@@ -12,6 +12,7 @@ using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.DimensionType;
 using Minecraft.Data.Generated;
+using Minecraft.Data.PaintingVariant;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Implementations.Server.Terrain;
@@ -106,6 +107,10 @@ public static class BlockSumoFfa {
             }
         };
         world.Spawn(displayTextEntity);
+
+        Entity painting = new(EntityType.Painting, new PaintingMeta(Variant: new Or<int, IPaintingVariant>(
+            VanillaRegistry.Data.PaintingVariants.GetProtocolId(PaintingVariant.Dennis))));
+        world.Spawn(painting);
 
         world.Events.AddListener<PlayerChatEvent>(e => {
             if (e.RawMessage.StartsWith("time")) {

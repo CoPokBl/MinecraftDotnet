@@ -169,7 +169,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
             Pitch = Pitch,
             Yaw = Yaw,
             HeadYaw = HeadYaw,
-            Data = 0,
+            Data = Meta.GetObjectData(),
             Velocity = Vec3<double>.Zero
         }, new ClientBoundSetEntityMetadataPacket {
             EntityId = NetId,

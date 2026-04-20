@@ -1,6 +1,7 @@
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Particles;
+using Minecraft.Data.PaintingVariant;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Entities;
@@ -49,7 +50,7 @@ public class EntityMetaContainerTest {
         (MetaFieldType.ChickenVariant, 6),
         (MetaFieldType.ZombieNautilusVariant, 2),
         (MetaFieldType.OptionalGlobalPosition, new Optional<(Identifier Dimension, Vec3<int> Position)>(("minecraft:overworld", new Vec3<int>(100, 64, 100)))),
-        (MetaFieldType.PaintingVariant, Or<int, PaintingVariant>.FromValue1(5)),
+        (MetaFieldType.PaintingVariant, Or<int, IPaintingVariant>.FromValue1(5)),
         (MetaFieldType.SnifferState, SnifferState.Rising),
         (MetaFieldType.ArmadilloState, ArmadilloState.Rolling),
         (MetaFieldType.CopperGolemState, CopperGolemState.GettingItem),

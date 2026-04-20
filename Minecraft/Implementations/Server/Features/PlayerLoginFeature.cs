@@ -10,6 +10,7 @@ using NBT;
 
 namespace Minecraft.Implementations.Server.Features;
 
+[Obsolete("Use ManagedServer for constructs like this.")]
 public class PlayerLoginFeature(
     KnownDataPack[]? knownPacks = null, 
     Func<PlayerConnection, ClientBoundLoginPacket>? loginPacketProvider = null, 
@@ -93,12 +94,6 @@ public class PlayerLoginFeature(
                             RegistryId = "minecraft:frog_variant",
                             Entries = new Dictionary<string, INbtTag?> {
                                 { "minecraft:warm", null }
-                            }
-                        },
-                        new ClientBoundRegistryDataPacket {
-                            RegistryId = "minecraft:painting_variant",
-                            Entries = new Dictionary<string, INbtTag?> {
-                                { "minecraft:alban", null }
                             }
                         },
                         new ClientBoundRegistryDataPacket {

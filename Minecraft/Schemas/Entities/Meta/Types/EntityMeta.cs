@@ -37,6 +37,12 @@ public record EntityMeta(
             .WithField(7, MetaFieldType.VarInt, TicksInPowderedSnow);
     }
 
+    /// <summary>
+    /// Returns the Data field value for the spawn entity packet.
+    /// Override in subclasses that need entity-specific spawn data (e.g. direction for paintings).
+    /// </summary>
+    public virtual int GetObjectData() => 0;
+
     public static implicit operator EntityMetaContainer(EntityMeta meta) {
         return meta.CreateContainer();
     }
