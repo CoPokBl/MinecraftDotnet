@@ -27,6 +27,7 @@ public class ServerScheduler {
             int threshold = SlowTaskThresholdMs;
             _tickTasks.RemoveAll(schedule => {
                 if (schedule.tick > tick) return false;
+                if (schedule.task.Cancelled) return true;
                 Stopwatch sw = Stopwatch.StartNew();
                 try {
                     schedule.task.Run();
@@ -143,7 +144,11 @@ public class ServerScheduler {
             throw new ArgumentOutOfRangeException(nameof(ticks), "Ticks must be non-negative.");
         }
 
-        ScheduledTask task = new(action);
+        ScheduledTask task = null!;
+        task = new ScheduledTask(action, () => {
+            // ReSharper disable once AccessToModifiedClosure
+            _tickTasks.RemoveAll(t => t.task == task);
+        });
         _tickTasks.Add((_server.CurrentTick + (ulong)ticks, task));
         return task;
     }
