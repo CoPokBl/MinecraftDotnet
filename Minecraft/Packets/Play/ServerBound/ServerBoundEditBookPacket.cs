@@ -13,19 +13,13 @@ namespace Minecraft.Packets.Play.ServerBound
         public required int Count { get; init; }
         public required string[] Entries { get; init; }
         public required bool HasTitle { get; init; }
-        public required string Title { get; init; }
+        public required string? Title { get; init; }
 
-        protected override DataWriter WriteData(DataWriter w)
-        {
+        protected override DataWriter WriteData(DataWriter w) {
 
-            w.WriteVarInt(Slot)
-            .WriteVarInt(Count)
-            .WriteArray(Entries, (s, w) => w.WriteString(s))
-            .WriteBoolean(HasTitle);
-
-            if (HasTitle)
-                w.WriteString(Title);
-            return w;
+            return w.WriteVarInt(Slot)
+                .WritePrefixedArray(Entries, (s, w) => w.WriteString(s))
+                .WritePrefixedOptional(Title, (s, w) => w.WriteString(s));
 
         }
 
@@ -34,9 +28,8 @@ namespace Minecraft.Packets.Play.ServerBound
             var Count = r.ReadVarInt();
             var Entries = r.ReadArray(Count, (w, l) => w.ReadString());
             var HasTitle = r.ReadBoolean();
-            var Title = HasTitle ? r.ReadString() : "";
-            return new ServerBoundEditBookPacket
-            {
+            var Title = HasTitle ? r.ReadString() : null;
+            return new ServerBoundEditBookPacket {
                 Slot = Slot,
                 Count = Count,
                 Entries = Entries,
