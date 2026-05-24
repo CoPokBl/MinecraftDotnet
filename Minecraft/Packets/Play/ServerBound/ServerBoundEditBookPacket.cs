@@ -1,41 +1,31 @@
 ﻿using Minecraft.Schemas;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Minecraft.Packets.Play.ServerBound
-{
-    public class ServerBoundEditBookPacket : ServerBoundPacket
-    {
-        public override Identifier Identifier => "minecraft:edit_book";
+namespace Minecraft.Packets.Play.ServerBound;
 
-        public required int Slot { get; init; }
-        public required int Count { get; init; }
-        public required string[] Entries { get; init; }
-        public required bool HasTitle { get; init; }
-        public required string? Title { get; init; }
+public class ServerBoundEditBookPacket : ServerBoundPacket {
+    public override Identifier Identifier => "minecraft:edit_book";
 
-        protected override DataWriter WriteData(DataWriter w) {
+    public required int Slot { get; init; }
+    public required string[] Entries { get; init; }
+    public required string? Title { get; init; }
 
-            return w.WriteVarInt(Slot)
-                .WritePrefixedArray(Entries, (s, w) => w.WriteString(s))
-                .WritePrefixedOptional(Title, (s, w) => w.WriteString(s));
+    protected override DataWriter WriteData(DataWriter w) {
 
-        }
+        return w.WriteVarInt(Slot)
+            .WritePrefixedArray(Entries, (s, w) => w.WriteString(s))
+            .WritePrefixedOptional(Title, (s, w) => w.WriteString(s));
 
-        public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
-            var Slot = r.ReadVarInt();
-            var Count = r.ReadVarInt();
-            var Entries = r.ReadArray(Count, (w, l) => w.ReadString());
-            var HasTitle = r.ReadBoolean();
-            var Title = HasTitle ? r.ReadString() : null;
-            return new ServerBoundEditBookPacket {
-                Slot = Slot,
-                Count = Count,
-                Entries = Entries,
-                HasTitle = HasTitle,
-                Title = Title
-            };
-        };
     }
+
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
+        int slot = r.ReadVarInt();
+        string[] entries = r.ReadPrefixedArray(r2 => r2.ReadString());
+        string? title = r.ReadPrefixedOptional(re => re.ReadString());
+        return new ServerBoundEditBookPacket {
+            Slot = slot,
+            Entries = entries,
+            Title = title
+        };
+    };
 }
+
