@@ -27,7 +27,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2026-04-19
+// Last updated: 2026-05-25
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -1351,6 +1351,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Play, false, 0x12, typeof(ServerBoundCloseContainerPacket), ServerBoundCloseContainerPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x14, typeof(ServerBoundCookieResponsePacket), ServerBoundCookieResponsePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x15, typeof(ServerBoundPluginMessagePacket), ServerBoundPluginMessagePacket.Deserialiser);
+        Data.Packets.Add(ConnectionState.Play, false, 0x17, typeof(ServerBoundEditBookPacket), ServerBoundEditBookPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x19, typeof(ServerBoundInteractPacket), ServerBoundInteractPacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x1B, typeof(ServerBoundKeepAlivePacket), ServerBoundKeepAlivePacket.Deserialiser);
         Data.Packets.Add(ConnectionState.Play, false, 0x1D, typeof(ServerBoundSetPlayerPositionPacket), ServerBoundSetPlayerPositionPacket.Deserialiser);
