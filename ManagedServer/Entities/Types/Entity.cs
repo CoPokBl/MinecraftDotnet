@@ -100,6 +100,8 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
                 Meta = new PlayerMeta();
             } else if (type.Identifier == EntityType.Arrow.Identifier) {
                 Meta = new ArrowMeta();
+            } else if (type.Identifier == EntityType.ArmorStand.Identifier) {
+                Meta = new ArmorStandMeta();
             } else if (type.Identifier == EntityType.AreaEffectCloud.Identifier) {
                 Meta = new AreaEffectCloudMeta();
             } else if (type.Identifier == EntityType.FallingBlock.Identifier) {
