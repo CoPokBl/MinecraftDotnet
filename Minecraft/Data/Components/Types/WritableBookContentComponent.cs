@@ -9,8 +9,8 @@ public record WritableBookContentComponent() : IDataComponent<WritableBookConten
     public override DataWriter WriteData(Data val, DataWriter writer, MinecraftRegistry registry) {
         return writer
             .WritePrefixedArray(val.Contents, (val2, w) => {
-                w.WriteString(val2.rawContent);
-                w.WritePrefixedOptional(val2.filteredContent, (l2, w2) => w2.WriteString(l2));
+                w.WriteString(val2.Raw);
+                w.WritePrefixedOptional(val2.Filtered, (l2, w2) => w2.WriteString(l2));
         });
     }
 
@@ -23,17 +23,19 @@ public record WritableBookContentComponent() : IDataComponent<WritableBookConten
         return new Data(contents);
     }
 
-    public override bool ValuesEqual(Data val1, Data val2) {
-        return val1 == val2;
+    public override bool ValuesEqual(Data val1, Data val2)
+    {
+        if (ReferenceEquals(val1, val2))
+            return true;
+
+        if (val1.Contents.Length != val2.Contents.Length)
+            return false;
+
+        return val1.Contents.SequenceEqual(val2.Contents);
     }
     public record Data(BookContent[] Contents);
-    public class BookContent {
-        public string rawContent;
-        public string? filteredContent = null;
-        public BookContent(string raw) { rawContent = raw; }
-        public BookContent(string raw, string? filtered) { rawContent = raw; filteredContent = filtered; }
-    }
-    public static Data ConvertStringsToData(string[] rawStrings) {
+    public record BookContent(string Raw, string? Filtered = null);
+    public static Data ConvertStringsToData(string[]? rawStrings) {
         if (rawStrings == null) return new Data(Array.Empty<BookContent>());
 
         var contents = new BookContent[rawStrings.Length];
