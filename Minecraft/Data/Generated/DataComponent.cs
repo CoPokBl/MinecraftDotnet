@@ -34,4 +34,5 @@ public static class DataComponent {
     public static readonly UnbreakableComponent Unbreakable = new();
     public static readonly UseCooldownComponent UseCooldown = new();
     public static readonly UseRemainderComponent UseRemainder = new();
+    public static readonly WritableBookContentComponent WritableBookContent = new();
 }

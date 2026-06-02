@@ -27,7 +27,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2026-05-25
+// Last updated: 2026-06-02
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -1513,6 +1513,7 @@ public static class VanillaRegistry {
         Data.DataComponents.Add(4, DataComponent.Unbreakable);
         Data.DataComponents.Add(26, DataComponent.UseCooldown);
         Data.DataComponents.Add(25, DataComponent.UseRemainder);
+        Data.DataComponents.Add(52, DataComponent.WritableBookContent);
 
         Data.Items.Add(871, Item.AcaciaBoat);
         Data.Items.Add(755, Item.AcaciaButton);
