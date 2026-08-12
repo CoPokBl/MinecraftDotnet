@@ -43,20 +43,20 @@ public record SmokerBlock(Identifier Identifier, Direction Facing, bool Lit) : I
         get {
             return Facing switch {
                 Direction.North => Lit switch {
-                    true => 20552,
-                    false => 20553,
+                    true => 20754,
+                    false => 20755,
                 },
                 Direction.South => Lit switch {
-                    true => 20554,
-                    false => 20555,
+                    true => 20756,
+                    false => 20757,
                 },
                 Direction.West => Lit switch {
-                    true => 20556,
-                    false => 20557,
+                    true => 20758,
+                    false => 20759,
                 },
                 Direction.East => Lit switch {
-                    true => 20558,
-                    false => 20559,
+                    true => 20760,
+                    false => 20761,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record SmokerBlock(Identifier Identifier, Direction Facing, bool Lit) : I
     
     public IBlock WithState(uint state) {
         return state switch {
-            20552 => new SmokerBlock(Identifier, Direction.North, true),
-            20553 => new SmokerBlock(Identifier, Direction.North, false),
-            20554 => new SmokerBlock(Identifier, Direction.South, true),
-            20555 => new SmokerBlock(Identifier, Direction.South, false),
-            20556 => new SmokerBlock(Identifier, Direction.West, true),
-            20557 => new SmokerBlock(Identifier, Direction.West, false),
-            20558 => new SmokerBlock(Identifier, Direction.East, true),
-            20559 => new SmokerBlock(Identifier, Direction.East, false),
+            20754 => new SmokerBlock(Identifier, Direction.North, true),
+            20755 => new SmokerBlock(Identifier, Direction.North, false),
+            20756 => new SmokerBlock(Identifier, Direction.South, true),
+            20757 => new SmokerBlock(Identifier, Direction.South, false),
+            20758 => new SmokerBlock(Identifier, Direction.West, true),
+            20759 => new SmokerBlock(Identifier, Direction.West, false),
+            20760 => new SmokerBlock(Identifier, Direction.East, true),
+            20761 => new SmokerBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

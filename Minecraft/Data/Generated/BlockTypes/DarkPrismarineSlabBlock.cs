@@ -43,16 +43,16 @@ public record DarkPrismarineSlabBlock(Identifier Identifier, SlabType Type, bool
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12684,
-                    false => 12685,
+                    true => 12886,
+                    false => 12887,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12686,
-                    false => 12687,
+                    true => 12888,
+                    false => 12889,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12688,
-                    false => 12689,
+                    true => 12890,
+                    false => 12891,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record DarkPrismarineSlabBlock(Identifier Identifier, SlabType Type, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            12684 => new DarkPrismarineSlabBlock(Identifier, SlabType.Top, true),
-            12685 => new DarkPrismarineSlabBlock(Identifier, SlabType.Top, false),
-            12686 => new DarkPrismarineSlabBlock(Identifier, SlabType.Bottom, true),
-            12687 => new DarkPrismarineSlabBlock(Identifier, SlabType.Bottom, false),
-            12688 => new DarkPrismarineSlabBlock(Identifier, SlabType.Double, true),
-            12689 => new DarkPrismarineSlabBlock(Identifier, SlabType.Double, false),
+            12886 => new DarkPrismarineSlabBlock(Identifier, SlabType.Top, true),
+            12887 => new DarkPrismarineSlabBlock(Identifier, SlabType.Top, false),
+            12888 => new DarkPrismarineSlabBlock(Identifier, SlabType.Bottom, true),
+            12889 => new DarkPrismarineSlabBlock(Identifier, SlabType.Bottom, false),
+            12890 => new DarkPrismarineSlabBlock(Identifier, SlabType.Double, true),
+            12891 => new DarkPrismarineSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

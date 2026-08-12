@@ -42,10 +42,10 @@ public record JackOLanternBlock(Identifier Identifier, Direction Facing) : IBloc
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 6822,
-                Direction.South => 6823,
-                Direction.West => 6824,
-                Direction.East => 6825,
+                Direction.North => 7023,
+                Direction.South => 7024,
+                Direction.West => 7025,
+                Direction.East => 7026,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -53,10 +53,10 @@ public record JackOLanternBlock(Identifier Identifier, Direction Facing) : IBloc
     
     public IBlock WithState(uint state) {
         return state switch {
-            6822 => new JackOLanternBlock(Identifier, Direction.North),
-            6823 => new JackOLanternBlock(Identifier, Direction.South),
-            6824 => new JackOLanternBlock(Identifier, Direction.West),
-            6825 => new JackOLanternBlock(Identifier, Direction.East),
+            7023 => new JackOLanternBlock(Identifier, Direction.North),
+            7024 => new JackOLanternBlock(Identifier, Direction.South),
+            7025 => new JackOLanternBlock(Identifier, Direction.West),
+            7026 => new JackOLanternBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

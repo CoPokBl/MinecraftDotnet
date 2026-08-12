@@ -44,58 +44,58 @@ public record CherryButtonBlock(Identifier Identifier, AttachDirection Face, Dir
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10593,
-                        false => 10594,
+                        true => 10795,
+                        false => 10796,
                     },
                     Direction.South => Powered switch {
-                        true => 10595,
-                        false => 10596,
+                        true => 10797,
+                        false => 10798,
                     },
                     Direction.West => Powered switch {
-                        true => 10597,
-                        false => 10598,
+                        true => 10799,
+                        false => 10800,
                     },
                     Direction.East => Powered switch {
-                        true => 10599,
-                        false => 10600,
+                        true => 10801,
+                        false => 10802,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10601,
-                        false => 10602,
+                        true => 10803,
+                        false => 10804,
                     },
                     Direction.South => Powered switch {
-                        true => 10603,
-                        false => 10604,
+                        true => 10805,
+                        false => 10806,
                     },
                     Direction.West => Powered switch {
-                        true => 10605,
-                        false => 10606,
+                        true => 10807,
+                        false => 10808,
                     },
                     Direction.East => Powered switch {
-                        true => 10607,
-                        false => 10608,
+                        true => 10809,
+                        false => 10810,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10609,
-                        false => 10610,
+                        true => 10811,
+                        false => 10812,
                     },
                     Direction.South => Powered switch {
-                        true => 10611,
-                        false => 10612,
+                        true => 10813,
+                        false => 10814,
                     },
                     Direction.West => Powered switch {
-                        true => 10613,
-                        false => 10614,
+                        true => 10815,
+                        false => 10816,
                     },
                     Direction.East => Powered switch {
-                        true => 10615,
-                        false => 10616,
+                        true => 10817,
+                        false => 10818,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -106,30 +106,30 @@ public record CherryButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     
     public IBlock WithState(uint state) {
         return state switch {
-            10593 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            10594 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            10595 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            10596 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            10597 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            10598 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            10599 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            10600 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            10601 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            10602 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            10603 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            10604 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            10605 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            10606 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            10607 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            10608 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            10609 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            10610 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            10611 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            10612 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            10613 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            10614 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            10615 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            10616 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            10795 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            10796 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            10797 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            10798 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            10799 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            10800 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            10801 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            10802 => new CherryButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            10803 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            10804 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            10805 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            10806 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            10807 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            10808 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            10809 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            10810 => new CherryButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            10811 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            10812 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            10813 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            10814 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            10815 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            10816 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            10817 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            10818 => new CherryButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

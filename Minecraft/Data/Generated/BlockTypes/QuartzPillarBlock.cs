@@ -42,9 +42,9 @@ public record QuartzPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 11123,
-                Axis.Y => 11124,
-                Axis.Z => 11125,
+                Axis.X => 11325,
+                Axis.Y => 11326,
+                Axis.Z => 11327,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record QuartzPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            11123 => new QuartzPillarBlock(Identifier, Axis.X),
-            11124 => new QuartzPillarBlock(Identifier, Axis.Y),
-            11125 => new QuartzPillarBlock(Identifier, Axis.Z),
+            11325 => new QuartzPillarBlock(Identifier, Axis.X),
+            11326 => new QuartzPillarBlock(Identifier, Axis.Y),
+            11327 => new QuartzPillarBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

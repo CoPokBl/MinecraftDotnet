@@ -42,12 +42,12 @@ public record LightBlueShulkerBoxBlock(Identifier Identifier, Cardinal Facing) :
     public uint StateId {
         get {
             return Facing switch {
-                Cardinal.North => 14686,
-                Cardinal.East => 14687,
-                Cardinal.South => 14688,
-                Cardinal.West => 14689,
-                Cardinal.Up => 14690,
-                Cardinal.Down => 14691,
+                Cardinal.North => 14888,
+                Cardinal.East => 14889,
+                Cardinal.South => 14890,
+                Cardinal.West => 14891,
+                Cardinal.Up => 14892,
+                Cardinal.Down => 14893,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -55,12 +55,12 @@ public record LightBlueShulkerBoxBlock(Identifier Identifier, Cardinal Facing) :
     
     public IBlock WithState(uint state) {
         return state switch {
-            14686 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.North),
-            14687 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.East),
-            14688 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.South),
-            14689 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.West),
-            14690 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.Up),
-            14691 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.Down),
+            14888 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.North),
+            14889 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.East),
+            14890 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.South),
+            14891 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.West),
+            14892 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.Up),
+            14893 => new LightBlueShulkerBoxBlock(Identifier, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

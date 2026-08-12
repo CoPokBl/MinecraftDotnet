@@ -42,16 +42,16 @@ public record PaleOakPressurePlateBlock(Identifier Identifier, bool Powered) : I
     public uint StateId {
         get {
             return Powered switch {
-                true => 6674,
-                false => 6675,
+                true => 6875,
+                false => 6876,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6674 => new PaleOakPressurePlateBlock(Identifier, true),
-            6675 => new PaleOakPressurePlateBlock(Identifier, false),
+            6875 => new PaleOakPressurePlateBlock(Identifier, true),
+            6876 => new PaleOakPressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

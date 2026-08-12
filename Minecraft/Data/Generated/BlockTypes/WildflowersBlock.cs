@@ -43,31 +43,31 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
         get {
             return Facing switch {
                 Direction.North => FlowerAmount switch {
-                    1 => 27628,
-                    2 => 27629,
-                    3 => 27630,
-                    4 => 27631,
+                    1 => 30323,
+                    2 => 30324,
+                    3 => 30325,
+                    4 => 30326,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 Direction.South => FlowerAmount switch {
-                    1 => 27632,
-                    2 => 27633,
-                    3 => 27634,
-                    4 => 27635,
+                    1 => 30327,
+                    2 => 30328,
+                    3 => 30329,
+                    4 => 30330,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 Direction.West => FlowerAmount switch {
-                    1 => 27636,
-                    2 => 27637,
-                    3 => 27638,
-                    4 => 27639,
+                    1 => 30331,
+                    2 => 30332,
+                    3 => 30333,
+                    4 => 30334,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 Direction.East => FlowerAmount switch {
-                    1 => 27640,
-                    2 => 27641,
-                    3 => 27642,
-                    4 => 27643,
+                    1 => 30335,
+                    2 => 30336,
+                    3 => 30337,
+                    4 => 30338,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -77,22 +77,22 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
     
     public IBlock WithState(uint state) {
         return state switch {
-            27628 => new WildflowersBlock(Identifier, Direction.North, 1),
-            27629 => new WildflowersBlock(Identifier, Direction.North, 2),
-            27630 => new WildflowersBlock(Identifier, Direction.North, 3),
-            27631 => new WildflowersBlock(Identifier, Direction.North, 4),
-            27632 => new WildflowersBlock(Identifier, Direction.South, 1),
-            27633 => new WildflowersBlock(Identifier, Direction.South, 2),
-            27634 => new WildflowersBlock(Identifier, Direction.South, 3),
-            27635 => new WildflowersBlock(Identifier, Direction.South, 4),
-            27636 => new WildflowersBlock(Identifier, Direction.West, 1),
-            27637 => new WildflowersBlock(Identifier, Direction.West, 2),
-            27638 => new WildflowersBlock(Identifier, Direction.West, 3),
-            27639 => new WildflowersBlock(Identifier, Direction.West, 4),
-            27640 => new WildflowersBlock(Identifier, Direction.East, 1),
-            27641 => new WildflowersBlock(Identifier, Direction.East, 2),
-            27642 => new WildflowersBlock(Identifier, Direction.East, 3),
-            27643 => new WildflowersBlock(Identifier, Direction.East, 4),
+            30323 => new WildflowersBlock(Identifier, Direction.North, 1),
+            30324 => new WildflowersBlock(Identifier, Direction.North, 2),
+            30325 => new WildflowersBlock(Identifier, Direction.North, 3),
+            30326 => new WildflowersBlock(Identifier, Direction.North, 4),
+            30327 => new WildflowersBlock(Identifier, Direction.South, 1),
+            30328 => new WildflowersBlock(Identifier, Direction.South, 2),
+            30329 => new WildflowersBlock(Identifier, Direction.South, 3),
+            30330 => new WildflowersBlock(Identifier, Direction.South, 4),
+            30331 => new WildflowersBlock(Identifier, Direction.West, 1),
+            30332 => new WildflowersBlock(Identifier, Direction.West, 2),
+            30333 => new WildflowersBlock(Identifier, Direction.West, 3),
+            30334 => new WildflowersBlock(Identifier, Direction.West, 4),
+            30335 => new WildflowersBlock(Identifier, Direction.East, 1),
+            30336 => new WildflowersBlock(Identifier, Direction.East, 2),
+            30337 => new WildflowersBlock(Identifier, Direction.East, 3),
+            30338 => new WildflowersBlock(Identifier, Direction.East, 4),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

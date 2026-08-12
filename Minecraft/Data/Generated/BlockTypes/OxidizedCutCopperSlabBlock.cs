@@ -43,16 +43,16 @@ public record OxidizedCutCopperSlabBlock(Identifier Identifier, SlabType Type, b
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 25445,
-                    false => 25446,
+                    true => 28466,
+                    false => 28467,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 25447,
-                    false => 25448,
+                    true => 28468,
+                    false => 28469,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 25449,
-                    false => 25450,
+                    true => 28470,
+                    false => 28471,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record OxidizedCutCopperSlabBlock(Identifier Identifier, SlabType Type, b
     
     public IBlock WithState(uint state) {
         return state switch {
-            25445 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Top, true),
-            25446 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Top, false),
-            25447 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Bottom, true),
-            25448 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Bottom, false),
-            25449 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Double, true),
-            25450 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Double, false),
+            28466 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Top, true),
+            28467 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Top, false),
+            28468 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Bottom, true),
+            28469 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Bottom, false),
+            28470 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Double, true),
+            28471 => new OxidizedCutCopperSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

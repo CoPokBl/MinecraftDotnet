@@ -148,6 +148,10 @@ public class DataReader(byte[] data) : Stream {
         return new Vec3<float>(x, y, z);
     }
     
+    public Vec3<double> ReadLpVec3() {
+        return LpVec3.Read(this);
+    }
+
     public float ReadFloat() {
         byte[] bytes = Read(4);
         if (BitConverter.IsLittleEndian) {

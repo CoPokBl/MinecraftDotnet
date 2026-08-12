@@ -43,21 +43,21 @@ public record CommandBlockBlock(Identifier Identifier, bool Conditional, Cardina
         get {
             return Conditional switch {
                 true => Facing switch {
-                    Cardinal.North => 9767,
-                    Cardinal.East => 9768,
-                    Cardinal.South => 9769,
-                    Cardinal.West => 9770,
-                    Cardinal.Up => 9771,
-                    Cardinal.Down => 9772,
+                    Cardinal.North => 9968,
+                    Cardinal.East => 9969,
+                    Cardinal.South => 9970,
+                    Cardinal.West => 9971,
+                    Cardinal.Up => 9972,
+                    Cardinal.Down => 9973,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
-                    Cardinal.North => 9773,
-                    Cardinal.East => 9774,
-                    Cardinal.South => 9775,
-                    Cardinal.West => 9776,
-                    Cardinal.Up => 9777,
-                    Cardinal.Down => 9778,
+                    Cardinal.North => 9974,
+                    Cardinal.East => 9975,
+                    Cardinal.South => 9976,
+                    Cardinal.West => 9977,
+                    Cardinal.Up => 9978,
+                    Cardinal.Down => 9979,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
             };
@@ -66,18 +66,18 @@ public record CommandBlockBlock(Identifier Identifier, bool Conditional, Cardina
     
     public IBlock WithState(uint state) {
         return state switch {
-            9767 => new CommandBlockBlock(Identifier, true, Cardinal.North),
-            9768 => new CommandBlockBlock(Identifier, true, Cardinal.East),
-            9769 => new CommandBlockBlock(Identifier, true, Cardinal.South),
-            9770 => new CommandBlockBlock(Identifier, true, Cardinal.West),
-            9771 => new CommandBlockBlock(Identifier, true, Cardinal.Up),
-            9772 => new CommandBlockBlock(Identifier, true, Cardinal.Down),
-            9773 => new CommandBlockBlock(Identifier, false, Cardinal.North),
-            9774 => new CommandBlockBlock(Identifier, false, Cardinal.East),
-            9775 => new CommandBlockBlock(Identifier, false, Cardinal.South),
-            9776 => new CommandBlockBlock(Identifier, false, Cardinal.West),
-            9777 => new CommandBlockBlock(Identifier, false, Cardinal.Up),
-            9778 => new CommandBlockBlock(Identifier, false, Cardinal.Down),
+            9968 => new CommandBlockBlock(Identifier, true, Cardinal.North),
+            9969 => new CommandBlockBlock(Identifier, true, Cardinal.East),
+            9970 => new CommandBlockBlock(Identifier, true, Cardinal.South),
+            9971 => new CommandBlockBlock(Identifier, true, Cardinal.West),
+            9972 => new CommandBlockBlock(Identifier, true, Cardinal.Up),
+            9973 => new CommandBlockBlock(Identifier, true, Cardinal.Down),
+            9974 => new CommandBlockBlock(Identifier, false, Cardinal.North),
+            9975 => new CommandBlockBlock(Identifier, false, Cardinal.East),
+            9976 => new CommandBlockBlock(Identifier, false, Cardinal.South),
+            9977 => new CommandBlockBlock(Identifier, false, Cardinal.West),
+            9978 => new CommandBlockBlock(Identifier, false, Cardinal.Up),
+            9979 => new CommandBlockBlock(Identifier, false, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

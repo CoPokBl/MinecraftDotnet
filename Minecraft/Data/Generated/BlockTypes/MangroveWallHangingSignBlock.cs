@@ -43,20 +43,20 @@ public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Faci
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6538,
-                    false => 6539,
+                    true => 6739,
+                    false => 6740,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6540,
-                    false => 6541,
+                    true => 6741,
+                    false => 6742,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6542,
-                    false => 6543,
+                    true => 6743,
+                    false => 6744,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6544,
-                    false => 6545,
+                    true => 6745,
+                    false => 6746,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Faci
     
     public IBlock WithState(uint state) {
         return state switch {
-            6538 => new MangroveWallHangingSignBlock(Identifier, Direction.North, true),
-            6539 => new MangroveWallHangingSignBlock(Identifier, Direction.North, false),
-            6540 => new MangroveWallHangingSignBlock(Identifier, Direction.South, true),
-            6541 => new MangroveWallHangingSignBlock(Identifier, Direction.South, false),
-            6542 => new MangroveWallHangingSignBlock(Identifier, Direction.West, true),
-            6543 => new MangroveWallHangingSignBlock(Identifier, Direction.West, false),
-            6544 => new MangroveWallHangingSignBlock(Identifier, Direction.East, true),
-            6545 => new MangroveWallHangingSignBlock(Identifier, Direction.East, false),
+            6739 => new MangroveWallHangingSignBlock(Identifier, Direction.North, true),
+            6740 => new MangroveWallHangingSignBlock(Identifier, Direction.North, false),
+            6741 => new MangroveWallHangingSignBlock(Identifier, Direction.South, true),
+            6742 => new MangroveWallHangingSignBlock(Identifier, Direction.South, false),
+            6743 => new MangroveWallHangingSignBlock(Identifier, Direction.West, true),
+            6744 => new MangroveWallHangingSignBlock(Identifier, Direction.West, false),
+            6745 => new MangroveWallHangingSignBlock(Identifier, Direction.East, true),
+            6746 => new MangroveWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

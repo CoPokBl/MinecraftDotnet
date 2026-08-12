@@ -43,20 +43,20 @@ public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 10825,
-                    false => 10826,
+                    true => 11027,
+                    false => 11028,
                 },
                 Direction.South => Powered switch {
-                    true => 10827,
-                    false => 10828,
+                    true => 11029,
+                    false => 11030,
                 },
                 Direction.West => Powered switch {
-                    true => 10829,
-                    false => 10830,
+                    true => 11031,
+                    false => 11032,
                 },
                 Direction.East => Powered switch {
-                    true => 10831,
-                    false => 10832,
+                    true => 11033,
+                    false => 11034,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            10825 => new ZombieWallHeadBlock(Identifier, Direction.North, true),
-            10826 => new ZombieWallHeadBlock(Identifier, Direction.North, false),
-            10827 => new ZombieWallHeadBlock(Identifier, Direction.South, true),
-            10828 => new ZombieWallHeadBlock(Identifier, Direction.South, false),
-            10829 => new ZombieWallHeadBlock(Identifier, Direction.West, true),
-            10830 => new ZombieWallHeadBlock(Identifier, Direction.West, false),
-            10831 => new ZombieWallHeadBlock(Identifier, Direction.East, true),
-            10832 => new ZombieWallHeadBlock(Identifier, Direction.East, false),
+            11027 => new ZombieWallHeadBlock(Identifier, Direction.North, true),
+            11028 => new ZombieWallHeadBlock(Identifier, Direction.North, false),
+            11029 => new ZombieWallHeadBlock(Identifier, Direction.South, true),
+            11030 => new ZombieWallHeadBlock(Identifier, Direction.South, false),
+            11031 => new ZombieWallHeadBlock(Identifier, Direction.West, true),
+            11032 => new ZombieWallHeadBlock(Identifier, Direction.West, false),
+            11033 => new ZombieWallHeadBlock(Identifier, Direction.East, true),
+            11034 => new ZombieWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

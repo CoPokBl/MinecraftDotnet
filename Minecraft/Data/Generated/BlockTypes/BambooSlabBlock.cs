@@ -43,16 +43,16 @@ public record BambooSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 13182,
-                    false => 13183,
+                    true => 13384,
+                    false => 13385,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 13184,
-                    false => 13185,
+                    true => 13386,
+                    false => 13387,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 13186,
-                    false => 13187,
+                    true => 13388,
+                    false => 13389,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record BambooSlabBlock(Identifier Identifier, SlabType Type, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            13182 => new BambooSlabBlock(Identifier, SlabType.Top, true),
-            13183 => new BambooSlabBlock(Identifier, SlabType.Top, false),
-            13184 => new BambooSlabBlock(Identifier, SlabType.Bottom, true),
-            13185 => new BambooSlabBlock(Identifier, SlabType.Bottom, false),
-            13186 => new BambooSlabBlock(Identifier, SlabType.Double, true),
-            13187 => new BambooSlabBlock(Identifier, SlabType.Double, false),
+            13384 => new BambooSlabBlock(Identifier, SlabType.Top, true),
+            13385 => new BambooSlabBlock(Identifier, SlabType.Top, false),
+            13386 => new BambooSlabBlock(Identifier, SlabType.Bottom, true),
+            13387 => new BambooSlabBlock(Identifier, SlabType.Bottom, false),
+            13388 => new BambooSlabBlock(Identifier, SlabType.Double, true),
+            13389 => new BambooSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

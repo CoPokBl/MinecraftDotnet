@@ -44,58 +44,58 @@ public record LeverBlock(Identifier Identifier, AttachDirection Face, Direction 
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 6570,
-                        false => 6571,
+                        true => 6771,
+                        false => 6772,
                     },
                     Direction.South => Powered switch {
-                        true => 6572,
-                        false => 6573,
+                        true => 6773,
+                        false => 6774,
                     },
                     Direction.West => Powered switch {
-                        true => 6574,
-                        false => 6575,
+                        true => 6775,
+                        false => 6776,
                     },
                     Direction.East => Powered switch {
-                        true => 6576,
-                        false => 6577,
+                        true => 6777,
+                        false => 6778,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 6578,
-                        false => 6579,
+                        true => 6779,
+                        false => 6780,
                     },
                     Direction.South => Powered switch {
-                        true => 6580,
-                        false => 6581,
+                        true => 6781,
+                        false => 6782,
                     },
                     Direction.West => Powered switch {
-                        true => 6582,
-                        false => 6583,
+                        true => 6783,
+                        false => 6784,
                     },
                     Direction.East => Powered switch {
-                        true => 6584,
-                        false => 6585,
+                        true => 6785,
+                        false => 6786,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 6586,
-                        false => 6587,
+                        true => 6787,
+                        false => 6788,
                     },
                     Direction.South => Powered switch {
-                        true => 6588,
-                        false => 6589,
+                        true => 6789,
+                        false => 6790,
                     },
                     Direction.West => Powered switch {
-                        true => 6590,
-                        false => 6591,
+                        true => 6791,
+                        false => 6792,
                     },
                     Direction.East => Powered switch {
-                        true => 6592,
-                        false => 6593,
+                        true => 6793,
+                        false => 6794,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -106,30 +106,30 @@ public record LeverBlock(Identifier Identifier, AttachDirection Face, Direction 
     
     public IBlock WithState(uint state) {
         return state switch {
-            6570 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            6571 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            6572 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            6573 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            6574 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            6575 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            6576 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            6577 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            6578 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            6579 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            6580 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            6581 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            6582 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            6583 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            6584 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            6585 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            6586 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            6587 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            6588 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            6589 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            6590 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            6591 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            6592 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            6593 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            6771 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            6772 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            6773 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            6774 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            6775 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            6776 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            6777 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            6778 => new LeverBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            6779 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            6780 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            6781 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            6782 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            6783 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            6784 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            6785 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            6786 => new LeverBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            6787 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            6788 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            6789 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            6790 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            6791 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            6792 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            6793 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            6794 => new LeverBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

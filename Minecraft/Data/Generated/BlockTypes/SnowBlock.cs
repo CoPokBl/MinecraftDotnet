@@ -42,14 +42,14 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock {
     public uint StateId {
         get {
             return Layers switch {
-                1 => 6718,
-                2 => 6719,
-                3 => 6720,
-                4 => 6721,
-                5 => 6722,
-                6 => 6723,
-                7 => 6724,
-                8 => 6725,
+                1 => 6919,
+                2 => 6920,
+                3 => 6921,
+                4 => 6922,
+                5 => 6923,
+                6 => 6924,
+                7 => 6925,
+                8 => 6926,
                 _ => throw new ArgumentOutOfRangeException(nameof(Layers), Layers, "Unknown value for property layers.")
             };
         }
@@ -57,14 +57,14 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            6718 => new SnowBlock(Identifier, 1),
-            6719 => new SnowBlock(Identifier, 2),
-            6720 => new SnowBlock(Identifier, 3),
-            6721 => new SnowBlock(Identifier, 4),
-            6722 => new SnowBlock(Identifier, 5),
-            6723 => new SnowBlock(Identifier, 6),
-            6724 => new SnowBlock(Identifier, 7),
-            6725 => new SnowBlock(Identifier, 8),
+            6919 => new SnowBlock(Identifier, 1),
+            6920 => new SnowBlock(Identifier, 2),
+            6921 => new SnowBlock(Identifier, 3),
+            6922 => new SnowBlock(Identifier, 4),
+            6923 => new SnowBlock(Identifier, 5),
+            6924 => new SnowBlock(Identifier, 6),
+            6925 => new SnowBlock(Identifier, 7),
+            6926 => new SnowBlock(Identifier, 8),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

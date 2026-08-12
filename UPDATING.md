@@ -10,3 +10,6 @@ create a new class for them in `/Data/Particles/Types/` and then specify them in
 ### 2. Check for Changes
 - New packets
 - Check code gen for warnings of missing types (data components, etc.)
+- Run `./Conformance/run.sh <version>` and fix everything it reports. Packets whose *fields*
+changed don't fail to compile and still round-trip through our own deserialiser, so this is
+what catches them — it decodes our packets with the vanilla codecs the client uses.

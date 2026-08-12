@@ -42,8 +42,8 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
     public uint StateId {
         get {
             return AxisValue switch {
-                Axis.X => 6816,
-                Axis.Z => 6817,
+                Axis.X => 7017,
+                Axis.Z => 7018,
                 _ => throw new ArgumentOutOfRangeException(nameof(AxisValue), AxisValue, "Unknown value for property axis.")
             };
         }
@@ -51,8 +51,8 @@ public record NetherPortalBlock(Identifier Identifier, NetherPortalBlock.Axis Ax
     
     public IBlock WithState(uint state) {
         return state switch {
-            6816 => new NetherPortalBlock(Identifier, Axis.X),
-            6817 => new NetherPortalBlock(Identifier, Axis.Z),
+            7017 => new NetherPortalBlock(Identifier, Axis.X),
+            7018 => new NetherPortalBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

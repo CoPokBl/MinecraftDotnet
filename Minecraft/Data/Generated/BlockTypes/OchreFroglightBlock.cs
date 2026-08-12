@@ -42,9 +42,9 @@ public record OchreFroglightBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 29380,
-                Axis.Y => 29381,
-                Axis.Z => 29382,
+                Axis.X => 32075,
+                Axis.Y => 32076,
+                Axis.Z => 32077,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record OchreFroglightBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            29380 => new OchreFroglightBlock(Identifier, Axis.X),
-            29381 => new OchreFroglightBlock(Identifier, Axis.Y),
-            29382 => new OchreFroglightBlock(Identifier, Axis.Z),
+            32075 => new OchreFroglightBlock(Identifier, Axis.X),
+            32076 => new OchreFroglightBlock(Identifier, Axis.Y),
+            32077 => new OchreFroglightBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

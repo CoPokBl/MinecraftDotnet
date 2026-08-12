@@ -16,11 +16,7 @@ public class SimpleCombatFeature(int attackCooldown = -1, float damage = 0) : Sc
     
     public override void Register() {
         AddEventHandler<PlayerPacketHandleEvent>(e => {
-            if (e.Packet is not ServerBoundInteractPacket packet) {
-                return;
-            }
-
-            if (packet.Type != ServerBoundInteractPacket.InteractType.Attack) {
+            if (e.Packet is not ServerBoundAttackPacket packet) {
                 return;
             }
 

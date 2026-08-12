@@ -43,20 +43,20 @@ public record SkeletonWallSkullBlock(Identifier Identifier, Direction Facing, bo
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 10745,
-                    false => 10746,
+                    true => 10947,
+                    false => 10948,
                 },
                 Direction.South => Powered switch {
-                    true => 10747,
-                    false => 10748,
+                    true => 10949,
+                    false => 10950,
                 },
                 Direction.West => Powered switch {
-                    true => 10749,
-                    false => 10750,
+                    true => 10951,
+                    false => 10952,
                 },
                 Direction.East => Powered switch {
-                    true => 10751,
-                    false => 10752,
+                    true => 10953,
+                    false => 10954,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record SkeletonWallSkullBlock(Identifier Identifier, Direction Facing, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            10745 => new SkeletonWallSkullBlock(Identifier, Direction.North, true),
-            10746 => new SkeletonWallSkullBlock(Identifier, Direction.North, false),
-            10747 => new SkeletonWallSkullBlock(Identifier, Direction.South, true),
-            10748 => new SkeletonWallSkullBlock(Identifier, Direction.South, false),
-            10749 => new SkeletonWallSkullBlock(Identifier, Direction.West, true),
-            10750 => new SkeletonWallSkullBlock(Identifier, Direction.West, false),
-            10751 => new SkeletonWallSkullBlock(Identifier, Direction.East, true),
-            10752 => new SkeletonWallSkullBlock(Identifier, Direction.East, false),
+            10947 => new SkeletonWallSkullBlock(Identifier, Direction.North, true),
+            10948 => new SkeletonWallSkullBlock(Identifier, Direction.North, false),
+            10949 => new SkeletonWallSkullBlock(Identifier, Direction.South, true),
+            10950 => new SkeletonWallSkullBlock(Identifier, Direction.South, false),
+            10951 => new SkeletonWallSkullBlock(Identifier, Direction.West, true),
+            10952 => new SkeletonWallSkullBlock(Identifier, Direction.West, false),
+            10953 => new SkeletonWallSkullBlock(Identifier, Direction.East, true),
+            10954 => new SkeletonWallSkullBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

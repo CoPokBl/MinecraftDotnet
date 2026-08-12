@@ -42,16 +42,16 @@ public record BirchPressurePlateBlock(Identifier Identifier, bool Powered) : IBl
     public uint StateId {
         get {
             return Powered switch {
-                true => 6664,
-                false => 6665,
+                true => 6865,
+                false => 6866,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6664 => new BirchPressurePlateBlock(Identifier, true),
-            6665 => new BirchPressurePlateBlock(Identifier, false),
+            6865 => new BirchPressurePlateBlock(Identifier, true),
+            6866 => new BirchPressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

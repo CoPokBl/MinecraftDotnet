@@ -43,20 +43,20 @@ public record HornCoralWallFanBlock(Identifier Identifier, Direction Facing, boo
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 15057,
-                    false => 15058,
+                    true => 15259,
+                    false => 15260,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 15059,
-                    false => 15060,
+                    true => 15261,
+                    false => 15262,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 15061,
-                    false => 15062,
+                    true => 15263,
+                    false => 15264,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 15063,
-                    false => 15064,
+                    true => 15265,
+                    false => 15266,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record HornCoralWallFanBlock(Identifier Identifier, Direction Facing, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            15057 => new HornCoralWallFanBlock(Identifier, Direction.North, true),
-            15058 => new HornCoralWallFanBlock(Identifier, Direction.North, false),
-            15059 => new HornCoralWallFanBlock(Identifier, Direction.South, true),
-            15060 => new HornCoralWallFanBlock(Identifier, Direction.South, false),
-            15061 => new HornCoralWallFanBlock(Identifier, Direction.West, true),
-            15062 => new HornCoralWallFanBlock(Identifier, Direction.West, false),
-            15063 => new HornCoralWallFanBlock(Identifier, Direction.East, true),
-            15064 => new HornCoralWallFanBlock(Identifier, Direction.East, false),
+            15259 => new HornCoralWallFanBlock(Identifier, Direction.North, true),
+            15260 => new HornCoralWallFanBlock(Identifier, Direction.North, false),
+            15261 => new HornCoralWallFanBlock(Identifier, Direction.South, true),
+            15262 => new HornCoralWallFanBlock(Identifier, Direction.South, false),
+            15263 => new HornCoralWallFanBlock(Identifier, Direction.West, true),
+            15264 => new HornCoralWallFanBlock(Identifier, Direction.West, false),
+            15265 => new HornCoralWallFanBlock(Identifier, Direction.East, true),
+            15266 => new HornCoralWallFanBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

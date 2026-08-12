@@ -42,15 +42,15 @@ public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
     public uint StateId {
         get {
             return Level switch {
-                0 => 21541,
-                1 => 21542,
-                2 => 21543,
-                3 => 21544,
-                4 => 21545,
-                5 => 21546,
-                6 => 21547,
-                7 => 21548,
-                8 => 21549,
+                0 => 21743,
+                1 => 21744,
+                2 => 21745,
+                3 => 21746,
+                4 => 21747,
+                5 => 21748,
+                6 => 21749,
+                7 => 21750,
+                8 => 21751,
                 _ => throw new ArgumentOutOfRangeException(nameof(Level), Level, "Unknown value for property level.")
             };
         }
@@ -58,15 +58,15 @@ public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            21541 => new ComposterBlock(Identifier, 0),
-            21542 => new ComposterBlock(Identifier, 1),
-            21543 => new ComposterBlock(Identifier, 2),
-            21544 => new ComposterBlock(Identifier, 3),
-            21545 => new ComposterBlock(Identifier, 4),
-            21546 => new ComposterBlock(Identifier, 5),
-            21547 => new ComposterBlock(Identifier, 6),
-            21548 => new ComposterBlock(Identifier, 7),
-            21549 => new ComposterBlock(Identifier, 8),
+            21743 => new ComposterBlock(Identifier, 0),
+            21744 => new ComposterBlock(Identifier, 1),
+            21745 => new ComposterBlock(Identifier, 2),
+            21746 => new ComposterBlock(Identifier, 3),
+            21747 => new ComposterBlock(Identifier, 4),
+            21748 => new ComposterBlock(Identifier, 5),
+            21749 => new ComposterBlock(Identifier, 6),
+            21750 => new ComposterBlock(Identifier, 7),
+            21751 => new ComposterBlock(Identifier, 8),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

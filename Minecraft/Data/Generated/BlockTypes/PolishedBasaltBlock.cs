@@ -42,9 +42,9 @@ public record PolishedBasaltBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 6802,
-                Axis.Y => 6803,
-                Axis.Z => 6804,
+                Axis.X => 7003,
+                Axis.Y => 7004,
+                Axis.Z => 7005,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record PolishedBasaltBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            6802 => new PolishedBasaltBlock(Identifier, Axis.X),
-            6803 => new PolishedBasaltBlock(Identifier, Axis.Y),
-            6804 => new PolishedBasaltBlock(Identifier, Axis.Z),
+            7003 => new PolishedBasaltBlock(Identifier, Axis.X),
+            7004 => new PolishedBasaltBlock(Identifier, Axis.Y),
+            7005 => new PolishedBasaltBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

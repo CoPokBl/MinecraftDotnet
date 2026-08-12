@@ -26,6 +26,12 @@ public class MinecraftRegistry {
     public TimelineRegistry Timelines { get; set; } = new();
     public DamageTypeRegistry DamageTypes { get; set; } = new();
     public PaintingVariantRegistry PaintingVariants { get; set; } = new();
+    public BannerPatternRegistry BannerPatterns { get; set; } = new();
+    public TrimPatternRegistry TrimPatterns { get; set; } = new();
+    public JukeboxSongRegistry JukeboxSongs { get; set; } = new();
+    public InstrumentRegistry Instruments { get; set; } = new();
+    public CowSoundVariantRegistry CowSoundVariants { get; set; } = new();
+    public WorldClockRegistry WorldClocks { get; set; } = new();
 
     public ISubRegistry this[Identifier id] {
         get {
@@ -59,7 +65,13 @@ public class MinecraftRegistry {
         DimensionTypes,
         Timelines,
         DamageTypes,
-        PaintingVariants
+        PaintingVariants,
+        BannerPatterns,
+        TrimPatterns,
+        JukeboxSongs,
+        Instruments,
+        CowSoundVariants,
+        WorldClocks
     ];
 
     public MinecraftRegistry Clone() {
@@ -83,7 +95,13 @@ public class MinecraftRegistry {
             DimensionTypes = DimensionTypes.Clone(),
             Timelines = Timelines.Clone(),
             DamageTypes = DamageTypes.Clone(),
-            PaintingVariants = PaintingVariants.Clone()
+            PaintingVariants = PaintingVariants.Clone(),
+            BannerPatterns = BannerPatterns.Clone(),
+            TrimPatterns = TrimPatterns.Clone(),
+            JukeboxSongs = JukeboxSongs.Clone(),
+            Instruments = Instruments.Clone(),
+            CowSoundVariants = CowSoundVariants.Clone(),
+            WorldClocks = WorldClocks.Clone()
         };
     }
     

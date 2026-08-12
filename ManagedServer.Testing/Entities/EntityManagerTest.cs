@@ -64,4 +64,21 @@ public class EntityManagerTest {
         nearbyEntities = manager.GetNearbyEntities(new Vec3<double>(190, 0, 10), 150);
         Assert.That(nearbyEntities, Has.Length.EqualTo(1));
     }
+
+    /// <summary>
+    /// Zero is vanilla's "id not assigned yet". An entity sent with it kills the connection as
+    /// soon as the client touches the entity, so the very first id a world hands out matters.
+    /// </summary>
+    [Test]
+    public void NetIdsAreNeverZero() {
+        EntityManager manager = new(new EventNode<IServerEvent>(), 128);
+
+        for (int i = 0; i < 5; i++) {
+            Entity entity = new(EntityType.AcaciaBoat) {
+                Position = new Vec3<double>(0, 0, 0)
+            };
+            manager.Register(entity);
+            Assert.That(entity.NetId, Is.Not.Zero);
+        }
+    }
 }

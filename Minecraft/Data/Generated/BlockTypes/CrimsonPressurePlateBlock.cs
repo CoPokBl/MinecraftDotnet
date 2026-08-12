@@ -42,16 +42,16 @@ public record CrimsonPressurePlateBlock(Identifier Identifier, bool Powered) : I
     public uint StateId {
         get {
             return Powered switch {
-                true => 20844,
-                false => 20845,
+                true => 21046,
+                false => 21047,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            20844 => new CrimsonPressurePlateBlock(Identifier, true),
-            20845 => new CrimsonPressurePlateBlock(Identifier, false),
+            21046 => new CrimsonPressurePlateBlock(Identifier, true),
+            21047 => new CrimsonPressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -15,7 +15,10 @@ public static class CodeGenUtils {
             namespacedId = namespacedId.Split(':')[1];
         }
 
-        return string.Join("", namespacedId.Split('_').Select(CapitaliseFirstLetter));
+        string name = string.Join("", namespacedId.Split('_').Select(CapitaliseFirstLetter));
+
+        // Some ids are just numbers (the 11, 13 and 5 music discs), which don't make a member name
+        return name.Length > 0 && char.IsDigit(name[0]) ? '_' + name : name;
     }
     
     public static string CapitaliseFirstLetter(string input) {
@@ -168,7 +171,7 @@ public static class CodeGenUtils {
             // Add to cs file
             string identParam = existingClassName == null ? $"\"{key}\", " : "";
             string extraParams = extraSimpleParams != null ? ", " + extraSimpleParams(key) : string.Empty;
-            file.Append($"{GetIndentation(1)}public static {existingClassName ?? simpleClassName} {pascalName} => " +
+            file.Append($"{GetIndentation(1)}public static readonly {existingClassName ?? simpleClassName} {pascalName} = " +
                         $"new({identParam}{extraParams});\n");
             registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({protocolId}, {className}.{pascalName});");
         }
@@ -196,7 +199,7 @@ public static class CodeGenUtils {
             
             // Add to cs file
             string extraParams = extraSimpleParams != null ? ", " + extraSimpleParams(key) : string.Empty;
-            entryStrings.Add($"public static {simpleClassName} {pascalName} => new(\"{key}\"{extraParams});");
+            entryStrings.Add($"public static readonly {simpleClassName} {pascalName} = new(\"{key}\"{extraParams});");
             registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({protocolId}, {className}.{pascalName});");
         }
         

@@ -20,4 +20,6 @@ public record SimpleDimensionType(
     Or<int, CompoundTag>? MonsterSpawnLightLevel,
     int MonsterSpawnBlockLightLimit,
     CompoundTag? Attributes,
-    INbtTag? Timelines) : IDimensionType;
+    INbtTag? Timelines,
+    bool HasEnderDragonFight = false,
+    Identifier? DefaultClock = null) : IDimensionType;

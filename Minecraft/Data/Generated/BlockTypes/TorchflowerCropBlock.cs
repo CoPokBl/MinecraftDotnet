@@ -42,8 +42,8 @@ public record TorchflowerCropBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 14595,
-                1 => 14596,
+                0 => 14797,
+                1 => 14798,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -51,8 +51,8 @@ public record TorchflowerCropBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            14595 => new TorchflowerCropBlock(Identifier, 0),
-            14596 => new TorchflowerCropBlock(Identifier, 1),
+            14797 => new TorchflowerCropBlock(Identifier, 0),
+            14798 => new TorchflowerCropBlock(Identifier, 1),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

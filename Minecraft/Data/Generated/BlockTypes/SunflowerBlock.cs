@@ -42,8 +42,8 @@ public record SunflowerBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     public uint StateId {
         get {
             return Half switch {
-                BlockHalf.Upper => 12713,
-                BlockHalf.Lower => 12714,
+                BlockHalf.Upper => 12915,
+                BlockHalf.Lower => 12916,
                 _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
             };
         }
@@ -51,8 +51,8 @@ public record SunflowerBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            12713 => new SunflowerBlock(Identifier, BlockHalf.Upper),
-            12714 => new SunflowerBlock(Identifier, BlockHalf.Lower),
+            12915 => new SunflowerBlock(Identifier, BlockHalf.Upper),
+            12916 => new SunflowerBlock(Identifier, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

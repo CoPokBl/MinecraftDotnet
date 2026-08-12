@@ -42,9 +42,9 @@ public record StrippedWarpedHyphaeBlock(Identifier Identifier, Axis Axis) : IBlo
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 20752,
-                Axis.Y => 20753,
-                Axis.Z => 20754,
+                Axis.X => 20954,
+                Axis.Y => 20955,
+                Axis.Z => 20956,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record StrippedWarpedHyphaeBlock(Identifier Identifier, Axis Axis) : IBlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            20752 => new StrippedWarpedHyphaeBlock(Identifier, Axis.X),
-            20753 => new StrippedWarpedHyphaeBlock(Identifier, Axis.Y),
-            20754 => new StrippedWarpedHyphaeBlock(Identifier, Axis.Z),
+            20954 => new StrippedWarpedHyphaeBlock(Identifier, Axis.X),
+            20955 => new StrippedWarpedHyphaeBlock(Identifier, Axis.Y),
+            20956 => new StrippedWarpedHyphaeBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

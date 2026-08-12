@@ -43,20 +43,20 @@ public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 10985,
-                    false => 10986,
+                    true => 11187,
+                    false => 11188,
                 },
                 Direction.South => Powered switch {
-                    true => 10987,
-                    false => 10988,
+                    true => 11189,
+                    false => 11190,
                 },
                 Direction.West => Powered switch {
-                    true => 10989,
-                    false => 10990,
+                    true => 11191,
+                    false => 11192,
                 },
                 Direction.East => Powered switch {
-                    true => 10991,
-                    false => 10992,
+                    true => 11193,
+                    false => 11194,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            10985 => new PiglinWallHeadBlock(Identifier, Direction.North, true),
-            10986 => new PiglinWallHeadBlock(Identifier, Direction.North, false),
-            10987 => new PiglinWallHeadBlock(Identifier, Direction.South, true),
-            10988 => new PiglinWallHeadBlock(Identifier, Direction.South, false),
-            10989 => new PiglinWallHeadBlock(Identifier, Direction.West, true),
-            10990 => new PiglinWallHeadBlock(Identifier, Direction.West, false),
-            10991 => new PiglinWallHeadBlock(Identifier, Direction.East, true),
-            10992 => new PiglinWallHeadBlock(Identifier, Direction.East, false),
+            11187 => new PiglinWallHeadBlock(Identifier, Direction.North, true),
+            11188 => new PiglinWallHeadBlock(Identifier, Direction.North, false),
+            11189 => new PiglinWallHeadBlock(Identifier, Direction.South, true),
+            11190 => new PiglinWallHeadBlock(Identifier, Direction.South, false),
+            11191 => new PiglinWallHeadBlock(Identifier, Direction.West, true),
+            11192 => new PiglinWallHeadBlock(Identifier, Direction.West, false),
+            11193 => new PiglinWallHeadBlock(Identifier, Direction.East, true),
+            11194 => new PiglinWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

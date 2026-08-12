@@ -43,21 +43,21 @@ public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing)
         get {
             return Extended switch {
                 true => Facing switch {
-                    Cardinal.North => 2057,
-                    Cardinal.East => 2058,
-                    Cardinal.South => 2059,
-                    Cardinal.West => 2060,
-                    Cardinal.Up => 2061,
-                    Cardinal.Down => 2062,
+                    Cardinal.North => 2257,
+                    Cardinal.East => 2258,
+                    Cardinal.South => 2259,
+                    Cardinal.West => 2260,
+                    Cardinal.Up => 2261,
+                    Cardinal.Down => 2262,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
-                    Cardinal.North => 2063,
-                    Cardinal.East => 2064,
-                    Cardinal.South => 2065,
-                    Cardinal.West => 2066,
-                    Cardinal.Up => 2067,
-                    Cardinal.Down => 2068,
+                    Cardinal.North => 2263,
+                    Cardinal.East => 2264,
+                    Cardinal.South => 2265,
+                    Cardinal.West => 2266,
+                    Cardinal.Up => 2267,
+                    Cardinal.Down => 2268,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
             };
@@ -66,18 +66,18 @@ public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing)
     
     public IBlock WithState(uint state) {
         return state switch {
-            2057 => new PistonBlock(Identifier, true, Cardinal.North),
-            2058 => new PistonBlock(Identifier, true, Cardinal.East),
-            2059 => new PistonBlock(Identifier, true, Cardinal.South),
-            2060 => new PistonBlock(Identifier, true, Cardinal.West),
-            2061 => new PistonBlock(Identifier, true, Cardinal.Up),
-            2062 => new PistonBlock(Identifier, true, Cardinal.Down),
-            2063 => new PistonBlock(Identifier, false, Cardinal.North),
-            2064 => new PistonBlock(Identifier, false, Cardinal.East),
-            2065 => new PistonBlock(Identifier, false, Cardinal.South),
-            2066 => new PistonBlock(Identifier, false, Cardinal.West),
-            2067 => new PistonBlock(Identifier, false, Cardinal.Up),
-            2068 => new PistonBlock(Identifier, false, Cardinal.Down),
+            2257 => new PistonBlock(Identifier, true, Cardinal.North),
+            2258 => new PistonBlock(Identifier, true, Cardinal.East),
+            2259 => new PistonBlock(Identifier, true, Cardinal.South),
+            2260 => new PistonBlock(Identifier, true, Cardinal.West),
+            2261 => new PistonBlock(Identifier, true, Cardinal.Up),
+            2262 => new PistonBlock(Identifier, true, Cardinal.Down),
+            2263 => new PistonBlock(Identifier, false, Cardinal.North),
+            2264 => new PistonBlock(Identifier, false, Cardinal.East),
+            2265 => new PistonBlock(Identifier, false, Cardinal.South),
+            2266 => new PistonBlock(Identifier, false, Cardinal.West),
+            2267 => new PistonBlock(Identifier, false, Cardinal.Up),
+            2268 => new PistonBlock(Identifier, false, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

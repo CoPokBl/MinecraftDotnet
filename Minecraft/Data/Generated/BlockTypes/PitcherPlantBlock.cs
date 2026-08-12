@@ -42,8 +42,8 @@ public record PitcherPlantBlock(Identifier Identifier, BlockHalf Half) : IBlock 
     public uint StateId {
         get {
             return Half switch {
-                BlockHalf.Upper => 14607,
-                BlockHalf.Lower => 14608,
+                BlockHalf.Upper => 14809,
+                BlockHalf.Lower => 14810,
                 _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
             };
         }
@@ -51,8 +51,8 @@ public record PitcherPlantBlock(Identifier Identifier, BlockHalf Half) : IBlock 
     
     public IBlock WithState(uint state) {
         return state switch {
-            14607 => new PitcherPlantBlock(Identifier, BlockHalf.Upper),
-            14608 => new PitcherPlantBlock(Identifier, BlockHalf.Lower),
+            14809 => new PitcherPlantBlock(Identifier, BlockHalf.Upper),
+            14810 => new PitcherPlantBlock(Identifier, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

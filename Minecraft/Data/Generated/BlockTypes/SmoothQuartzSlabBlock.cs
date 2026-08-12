@@ -43,16 +43,16 @@ public record SmoothQuartzSlabBlock(Identifier Identifier, SlabType Type, bool W
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 16256,
-                    false => 16257,
+                    true => 16458,
+                    false => 16459,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 16258,
-                    false => 16259,
+                    true => 16460,
+                    false => 16461,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 16260,
-                    false => 16261,
+                    true => 16462,
+                    false => 16463,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record SmoothQuartzSlabBlock(Identifier Identifier, SlabType Type, bool W
     
     public IBlock WithState(uint state) {
         return state switch {
-            16256 => new SmoothQuartzSlabBlock(Identifier, SlabType.Top, true),
-            16257 => new SmoothQuartzSlabBlock(Identifier, SlabType.Top, false),
-            16258 => new SmoothQuartzSlabBlock(Identifier, SlabType.Bottom, true),
-            16259 => new SmoothQuartzSlabBlock(Identifier, SlabType.Bottom, false),
-            16260 => new SmoothQuartzSlabBlock(Identifier, SlabType.Double, true),
-            16261 => new SmoothQuartzSlabBlock(Identifier, SlabType.Double, false),
+            16458 => new SmoothQuartzSlabBlock(Identifier, SlabType.Top, true),
+            16459 => new SmoothQuartzSlabBlock(Identifier, SlabType.Top, false),
+            16460 => new SmoothQuartzSlabBlock(Identifier, SlabType.Bottom, true),
+            16461 => new SmoothQuartzSlabBlock(Identifier, SlabType.Bottom, false),
+            16462 => new SmoothQuartzSlabBlock(Identifier, SlabType.Double, true),
+            16463 => new SmoothQuartzSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

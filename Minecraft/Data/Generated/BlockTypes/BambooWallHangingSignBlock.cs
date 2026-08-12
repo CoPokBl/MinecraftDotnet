@@ -43,20 +43,20 @@ public record BambooWallHangingSignBlock(Identifier Identifier, Direction Facing
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6562,
-                    false => 6563,
+                    true => 6763,
+                    false => 6764,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6564,
-                    false => 6565,
+                    true => 6765,
+                    false => 6766,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6566,
-                    false => 6567,
+                    true => 6767,
+                    false => 6768,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6568,
-                    false => 6569,
+                    true => 6769,
+                    false => 6770,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record BambooWallHangingSignBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            6562 => new BambooWallHangingSignBlock(Identifier, Direction.North, true),
-            6563 => new BambooWallHangingSignBlock(Identifier, Direction.North, false),
-            6564 => new BambooWallHangingSignBlock(Identifier, Direction.South, true),
-            6565 => new BambooWallHangingSignBlock(Identifier, Direction.South, false),
-            6566 => new BambooWallHangingSignBlock(Identifier, Direction.West, true),
-            6567 => new BambooWallHangingSignBlock(Identifier, Direction.West, false),
-            6568 => new BambooWallHangingSignBlock(Identifier, Direction.East, true),
-            6569 => new BambooWallHangingSignBlock(Identifier, Direction.East, false),
+            6763 => new BambooWallHangingSignBlock(Identifier, Direction.North, true),
+            6764 => new BambooWallHangingSignBlock(Identifier, Direction.North, false),
+            6765 => new BambooWallHangingSignBlock(Identifier, Direction.South, true),
+            6766 => new BambooWallHangingSignBlock(Identifier, Direction.South, false),
+            6767 => new BambooWallHangingSignBlock(Identifier, Direction.West, true),
+            6768 => new BambooWallHangingSignBlock(Identifier, Direction.West, false),
+            6769 => new BambooWallHangingSignBlock(Identifier, Direction.East, true),
+            6770 => new BambooWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -42,16 +42,16 @@ public record AcaciaPressurePlateBlock(Identifier Identifier, bool Powered) : IB
     public uint StateId {
         get {
             return Powered switch {
-                true => 6668,
-                false => 6669,
+                true => 6869,
+                false => 6870,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6668 => new AcaciaPressurePlateBlock(Identifier, true),
-            6669 => new AcaciaPressurePlateBlock(Identifier, false),
+            6869 => new AcaciaPressurePlateBlock(Identifier, true),
+            6870 => new AcaciaPressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -43,12 +43,12 @@ public record CopperLanternBlock(Identifier Identifier, bool Hanging, bool Water
         get {
             return Hanging switch {
                 true => Waterlogged switch {
-                    true => 20643,
-                    false => 20644,
+                    true => 20845,
+                    false => 20846,
                 },
                 false => Waterlogged switch {
-                    true => 20645,
-                    false => 20646,
+                    true => 20847,
+                    false => 20848,
                 },
             };
         }
@@ -56,10 +56,10 @@ public record CopperLanternBlock(Identifier Identifier, bool Hanging, bool Water
     
     public IBlock WithState(uint state) {
         return state switch {
-            20643 => new CopperLanternBlock(Identifier, true, true),
-            20644 => new CopperLanternBlock(Identifier, true, false),
-            20645 => new CopperLanternBlock(Identifier, false, true),
-            20646 => new CopperLanternBlock(Identifier, false, false),
+            20845 => new CopperLanternBlock(Identifier, true, true),
+            20846 => new CopperLanternBlock(Identifier, true, false),
+            20847 => new CopperLanternBlock(Identifier, false, true),
+            20848 => new CopperLanternBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

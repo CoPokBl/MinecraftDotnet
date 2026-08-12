@@ -8,3 +8,6 @@ riderModule.iml
 **/*.trx
 **/TestResults
 /.vs
+
+# Compiled output of the protocol conformance harness
+ProtocolConformance/build/

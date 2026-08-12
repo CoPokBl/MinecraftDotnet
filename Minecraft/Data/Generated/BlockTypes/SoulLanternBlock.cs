@@ -43,12 +43,12 @@ public record SoulLanternBlock(Identifier Identifier, bool Hanging, bool Waterlo
         get {
             return Hanging switch {
                 true => Waterlogged switch {
-                    true => 20639,
-                    false => 20640,
+                    true => 20841,
+                    false => 20842,
                 },
                 false => Waterlogged switch {
-                    true => 20641,
-                    false => 20642,
+                    true => 20843,
+                    false => 20844,
                 },
             };
         }
@@ -56,10 +56,10 @@ public record SoulLanternBlock(Identifier Identifier, bool Hanging, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            20639 => new SoulLanternBlock(Identifier, true, true),
-            20640 => new SoulLanternBlock(Identifier, true, false),
-            20641 => new SoulLanternBlock(Identifier, false, true),
-            20642 => new SoulLanternBlock(Identifier, false, false),
+            20841 => new SoulLanternBlock(Identifier, true, true),
+            20842 => new SoulLanternBlock(Identifier, true, false),
+            20843 => new SoulLanternBlock(Identifier, false, true),
+            20844 => new SoulLanternBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

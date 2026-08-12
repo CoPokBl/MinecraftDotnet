@@ -42,9 +42,9 @@ public record StrippedWarpedStemBlock(Identifier Identifier, Axis Axis) : IBlock
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 20746,
-                Axis.Y => 20747,
-                Axis.Z => 20748,
+                Axis.X => 20948,
+                Axis.Y => 20949,
+                Axis.Z => 20950,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record StrippedWarpedStemBlock(Identifier Identifier, Axis Axis) : IBlock
     
     public IBlock WithState(uint state) {
         return state switch {
-            20746 => new StrippedWarpedStemBlock(Identifier, Axis.X),
-            20747 => new StrippedWarpedStemBlock(Identifier, Axis.Y),
-            20748 => new StrippedWarpedStemBlock(Identifier, Axis.Z),
+            20948 => new StrippedWarpedStemBlock(Identifier, Axis.X),
+            20949 => new StrippedWarpedStemBlock(Identifier, Axis.Y),
+            20950 => new StrippedWarpedStemBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

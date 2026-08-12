@@ -44,62 +44,62 @@ public record WaxedWeatheredLightningRodBlock(Identifier Identifier, Cardinal Fa
             return Facing switch {
                 Cardinal.North => Powered switch {
                     true => Waterlogged switch {
-                        true => 27485,
-                        false => 27486,
+                        true => 30160,
+                        false => 30161,
                     },
                     false => Waterlogged switch {
-                        true => 27487,
-                        false => 27488,
+                        true => 30162,
+                        false => 30163,
                     },
                 },
                 Cardinal.East => Powered switch {
                     true => Waterlogged switch {
-                        true => 27489,
-                        false => 27490,
+                        true => 30164,
+                        false => 30165,
                     },
                     false => Waterlogged switch {
-                        true => 27491,
-                        false => 27492,
+                        true => 30166,
+                        false => 30167,
                     },
                 },
                 Cardinal.South => Powered switch {
                     true => Waterlogged switch {
-                        true => 27493,
-                        false => 27494,
+                        true => 30168,
+                        false => 30169,
                     },
                     false => Waterlogged switch {
-                        true => 27495,
-                        false => 27496,
+                        true => 30170,
+                        false => 30171,
                     },
                 },
                 Cardinal.West => Powered switch {
                     true => Waterlogged switch {
-                        true => 27497,
-                        false => 27498,
+                        true => 30172,
+                        false => 30173,
                     },
                     false => Waterlogged switch {
-                        true => 27499,
-                        false => 27500,
+                        true => 30174,
+                        false => 30175,
                     },
                 },
                 Cardinal.Up => Powered switch {
                     true => Waterlogged switch {
-                        true => 27501,
-                        false => 27502,
+                        true => 30176,
+                        false => 30177,
                     },
                     false => Waterlogged switch {
-                        true => 27503,
-                        false => 27504,
+                        true => 30178,
+                        false => 30179,
                     },
                 },
                 Cardinal.Down => Powered switch {
                     true => Waterlogged switch {
-                        true => 27505,
-                        false => 27506,
+                        true => 30180,
+                        false => 30181,
                     },
                     false => Waterlogged switch {
-                        true => 27507,
-                        false => 27508,
+                        true => 30182,
+                        false => 30183,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -109,30 +109,30 @@ public record WaxedWeatheredLightningRodBlock(Identifier Identifier, Cardinal Fa
     
     public IBlock WithState(uint state) {
         return state switch {
-            27485 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.North, true, true),
-            27486 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.North, true, false),
-            27487 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.North, false, true),
-            27488 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.North, false, false),
-            27489 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.East, true, true),
-            27490 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.East, true, false),
-            27491 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.East, false, true),
-            27492 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.East, false, false),
-            27493 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.South, true, true),
-            27494 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.South, true, false),
-            27495 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.South, false, true),
-            27496 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.South, false, false),
-            27497 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.West, true, true),
-            27498 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.West, true, false),
-            27499 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.West, false, true),
-            27500 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.West, false, false),
-            27501 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Up, true, true),
-            27502 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Up, true, false),
-            27503 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Up, false, true),
-            27504 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Up, false, false),
-            27505 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Down, true, true),
-            27506 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Down, true, false),
-            27507 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Down, false, true),
-            27508 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Down, false, false),
+            30160 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.North, true, true),
+            30161 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.North, true, false),
+            30162 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.North, false, true),
+            30163 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.North, false, false),
+            30164 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.East, true, true),
+            30165 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.East, true, false),
+            30166 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.East, false, true),
+            30167 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.East, false, false),
+            30168 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.South, true, true),
+            30169 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.South, true, false),
+            30170 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.South, false, true),
+            30171 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.South, false, false),
+            30172 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.West, true, true),
+            30173 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.West, true, false),
+            30174 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.West, false, true),
+            30175 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.West, false, false),
+            30176 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Up, true, true),
+            30177 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Up, true, false),
+            30178 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Up, false, true),
+            30179 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Up, false, false),
+            30180 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Down, true, true),
+            30181 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Down, true, false),
+            30182 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Down, false, true),
+            30183 => new WaxedWeatheredLightningRodBlock(Identifier, Cardinal.Down, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

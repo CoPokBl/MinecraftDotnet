@@ -42,10 +42,10 @@ public record FrostedIceBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 14639,
-                1 => 14640,
-                2 => 14641,
-                3 => 14642,
+                0 => 14841,
+                1 => 14842,
+                2 => 14843,
+                3 => 14844,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -53,10 +53,10 @@ public record FrostedIceBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            14639 => new FrostedIceBlock(Identifier, 0),
-            14640 => new FrostedIceBlock(Identifier, 1),
-            14641 => new FrostedIceBlock(Identifier, 2),
-            14642 => new FrostedIceBlock(Identifier, 3),
+            14841 => new FrostedIceBlock(Identifier, 0),
+            14842 => new FrostedIceBlock(Identifier, 1),
+            14843 => new FrostedIceBlock(Identifier, 2),
+            14844 => new FrostedIceBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -43,16 +43,16 @@ public record CopperChainBlock(Identifier Identifier, Axis Axis, bool Waterlogge
         get {
             return Axis switch {
                 Axis.X => Waterlogged switch {
-                    true => 8051,
-                    false => 8052,
+                    true => 8252,
+                    false => 8253,
                 },
                 Axis.Y => Waterlogged switch {
-                    true => 8053,
-                    false => 8054,
+                    true => 8254,
+                    false => 8255,
                 },
                 Axis.Z => Waterlogged switch {
-                    true => 8055,
-                    false => 8056,
+                    true => 8256,
+                    false => 8257,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
@@ -61,12 +61,12 @@ public record CopperChainBlock(Identifier Identifier, Axis Axis, bool Waterlogge
     
     public IBlock WithState(uint state) {
         return state switch {
-            8051 => new CopperChainBlock(Identifier, Axis.X, true),
-            8052 => new CopperChainBlock(Identifier, Axis.X, false),
-            8053 => new CopperChainBlock(Identifier, Axis.Y, true),
-            8054 => new CopperChainBlock(Identifier, Axis.Y, false),
-            8055 => new CopperChainBlock(Identifier, Axis.Z, true),
-            8056 => new CopperChainBlock(Identifier, Axis.Z, false),
+            8252 => new CopperChainBlock(Identifier, Axis.X, true),
+            8253 => new CopperChainBlock(Identifier, Axis.X, false),
+            8254 => new CopperChainBlock(Identifier, Axis.Y, true),
+            8255 => new CopperChainBlock(Identifier, Axis.Y, false),
+            8256 => new CopperChainBlock(Identifier, Axis.Z, true),
+            8257 => new CopperChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

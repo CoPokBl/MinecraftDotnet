@@ -42,9 +42,9 @@ public record HayBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 12691,
-                Axis.Y => 12692,
-                Axis.Z => 12693,
+                Axis.X => 12893,
+                Axis.Y => 12894,
+                Axis.Z => 12895,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record HayBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            12691 => new HayBlockBlock(Identifier, Axis.X),
-            12692 => new HayBlockBlock(Identifier, Axis.Y),
-            12693 => new HayBlockBlock(Identifier, Axis.Z),
+            12893 => new HayBlockBlock(Identifier, Axis.X),
+            12894 => new HayBlockBlock(Identifier, Axis.Y),
+            12895 => new HayBlockBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

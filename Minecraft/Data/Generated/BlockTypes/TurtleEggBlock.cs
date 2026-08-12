@@ -43,27 +43,27 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
         get {
             return Eggs switch {
                 1 => Hatch switch {
-                    0 => 14888,
-                    1 => 14889,
-                    2 => 14890,
+                    0 => 15090,
+                    1 => 15091,
+                    2 => 15092,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 2 => Hatch switch {
-                    0 => 14891,
-                    1 => 14892,
-                    2 => 14893,
+                    0 => 15093,
+                    1 => 15094,
+                    2 => 15095,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 3 => Hatch switch {
-                    0 => 14894,
-                    1 => 14895,
-                    2 => 14896,
+                    0 => 15096,
+                    1 => 15097,
+                    2 => 15098,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 4 => Hatch switch {
-                    0 => 14897,
-                    1 => 14898,
-                    2 => 14899,
+                    0 => 15099,
+                    1 => 15100,
+                    2 => 15101,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Eggs), Eggs, "Unknown value for property eggs.")
@@ -73,18 +73,18 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
     
     public IBlock WithState(uint state) {
         return state switch {
-            14888 => new TurtleEggBlock(Identifier, 1, 0),
-            14889 => new TurtleEggBlock(Identifier, 1, 1),
-            14890 => new TurtleEggBlock(Identifier, 1, 2),
-            14891 => new TurtleEggBlock(Identifier, 2, 0),
-            14892 => new TurtleEggBlock(Identifier, 2, 1),
-            14893 => new TurtleEggBlock(Identifier, 2, 2),
-            14894 => new TurtleEggBlock(Identifier, 3, 0),
-            14895 => new TurtleEggBlock(Identifier, 3, 1),
-            14896 => new TurtleEggBlock(Identifier, 3, 2),
-            14897 => new TurtleEggBlock(Identifier, 4, 0),
-            14898 => new TurtleEggBlock(Identifier, 4, 1),
-            14899 => new TurtleEggBlock(Identifier, 4, 2),
+            15090 => new TurtleEggBlock(Identifier, 1, 0),
+            15091 => new TurtleEggBlock(Identifier, 1, 1),
+            15092 => new TurtleEggBlock(Identifier, 1, 2),
+            15093 => new TurtleEggBlock(Identifier, 2, 0),
+            15094 => new TurtleEggBlock(Identifier, 2, 1),
+            15095 => new TurtleEggBlock(Identifier, 2, 2),
+            15096 => new TurtleEggBlock(Identifier, 3, 0),
+            15097 => new TurtleEggBlock(Identifier, 3, 1),
+            15098 => new TurtleEggBlock(Identifier, 3, 2),
+            15099 => new TurtleEggBlock(Identifier, 4, 0),
+            15100 => new TurtleEggBlock(Identifier, 4, 1),
+            15101 => new TurtleEggBlock(Identifier, 4, 2),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

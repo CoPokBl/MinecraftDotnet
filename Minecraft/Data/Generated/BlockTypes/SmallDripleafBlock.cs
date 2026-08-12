@@ -44,45 +44,45 @@ public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockH
             return Facing switch {
                 Direction.North => Half switch {
                     BlockHalf.Upper => Waterlogged switch {
-                        true => 27701,
-                        false => 27702,
+                        true => 30396,
+                        false => 30397,
                     },
                     BlockHalf.Lower => Waterlogged switch {
-                        true => 27703,
-                        false => 27704,
+                        true => 30398,
+                        false => 30399,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 Direction.South => Half switch {
                     BlockHalf.Upper => Waterlogged switch {
-                        true => 27705,
-                        false => 27706,
+                        true => 30400,
+                        false => 30401,
                     },
                     BlockHalf.Lower => Waterlogged switch {
-                        true => 27707,
-                        false => 27708,
+                        true => 30402,
+                        false => 30403,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 Direction.West => Half switch {
                     BlockHalf.Upper => Waterlogged switch {
-                        true => 27709,
-                        false => 27710,
+                        true => 30404,
+                        false => 30405,
                     },
                     BlockHalf.Lower => Waterlogged switch {
-                        true => 27711,
-                        false => 27712,
+                        true => 30406,
+                        false => 30407,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 Direction.East => Half switch {
                     BlockHalf.Upper => Waterlogged switch {
-                        true => 27713,
-                        false => 27714,
+                        true => 30408,
+                        false => 30409,
                     },
                     BlockHalf.Lower => Waterlogged switch {
-                        true => 27715,
-                        false => 27716,
+                        true => 30410,
+                        false => 30411,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
@@ -93,22 +93,22 @@ public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockH
     
     public IBlock WithState(uint state) {
         return state switch {
-            27701 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Upper, true),
-            27702 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Upper, false),
-            27703 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Lower, true),
-            27704 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Lower, false),
-            27705 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Upper, true),
-            27706 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Upper, false),
-            27707 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Lower, true),
-            27708 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Lower, false),
-            27709 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Upper, true),
-            27710 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Upper, false),
-            27711 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Lower, true),
-            27712 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Lower, false),
-            27713 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Upper, true),
-            27714 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Upper, false),
-            27715 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Lower, true),
-            27716 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Lower, false),
+            30396 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Upper, true),
+            30397 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Upper, false),
+            30398 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Lower, true),
+            30399 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Lower, false),
+            30400 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Upper, true),
+            30401 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Upper, false),
+            30402 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Lower, true),
+            30403 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Lower, false),
+            30404 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Upper, true),
+            30405 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Upper, false),
+            30406 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Lower, true),
+            30407 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Lower, false),
+            30408 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Upper, true),
+            30409 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Upper, false),
+            30410 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Lower, true),
+            30411 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Lower, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

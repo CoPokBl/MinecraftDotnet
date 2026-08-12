@@ -42,10 +42,10 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
     public uint StateId {
         get {
             return ModeValue switch {
-                Mode.Start => 21536,
-                Mode.Log => 21537,
-                Mode.Fail => 21538,
-                Mode.Accept => 21539,
+                Mode.Start => 21738,
+                Mode.Log => 21739,
+                Mode.Fail => 21740,
+                Mode.Accept => 21741,
                 _ => throw new ArgumentOutOfRangeException(nameof(ModeValue), ModeValue, "Unknown value for property mode.")
             };
         }
@@ -53,10 +53,10 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
     
     public IBlock WithState(uint state) {
         return state switch {
-            21536 => new TestBlockBlock(Identifier, Mode.Start),
-            21537 => new TestBlockBlock(Identifier, Mode.Log),
-            21538 => new TestBlockBlock(Identifier, Mode.Fail),
-            21539 => new TestBlockBlock(Identifier, Mode.Accept),
+            21738 => new TestBlockBlock(Identifier, Mode.Start),
+            21739 => new TestBlockBlock(Identifier, Mode.Log),
+            21740 => new TestBlockBlock(Identifier, Mode.Fail),
+            21741 => new TestBlockBlock(Identifier, Mode.Accept),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

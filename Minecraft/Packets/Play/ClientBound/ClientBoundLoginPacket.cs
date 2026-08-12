@@ -6,6 +6,13 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:login";
     
     public required bool EnforcesSecureChat { get; init; }
+
+    /// <summary>
+    /// Whether the server authenticates players with Mojang. Vanilla fills this from
+    /// <c>MinecraftServer.usesAuthentication</c>.
+    /// </summary>
+    public bool OnlineMode { get; init; }
+
     public required int SeaLevel { get; init; }
     public required int PortalCooldown { get; init; }
     public DeathLocation? Location;
@@ -50,6 +57,7 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
                 .WritePosition(location.Position))
             .WriteVarInt(PortalCooldown)
             .WriteVarInt(SeaLevel)
+            .WriteBoolean(OnlineMode)
             .WriteBoolean(EnforcesSecureChat);
     }
     
@@ -74,6 +82,7 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
             new DeathLocation(re.ReadString(), re.ReadPosition())),
         PortalCooldown = r.ReadVarInt(),
         SeaLevel = r.ReadVarInt(),
+        OnlineMode = r.ReadBoolean(),
         EnforcesSecureChat = r.ReadBoolean()
     };
 }

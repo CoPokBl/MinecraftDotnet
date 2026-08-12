@@ -43,28 +43,28 @@ public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggere
         get {
             return Facing switch {
                 Cardinal.North => Triggered switch {
-                    true => 11230,
-                    false => 11231,
+                    true => 11432,
+                    false => 11433,
                 },
                 Cardinal.East => Triggered switch {
-                    true => 11232,
-                    false => 11233,
+                    true => 11434,
+                    false => 11435,
                 },
                 Cardinal.South => Triggered switch {
-                    true => 11234,
-                    false => 11235,
+                    true => 11436,
+                    false => 11437,
                 },
                 Cardinal.West => Triggered switch {
-                    true => 11236,
-                    false => 11237,
+                    true => 11438,
+                    false => 11439,
                 },
                 Cardinal.Up => Triggered switch {
-                    true => 11238,
-                    false => 11239,
+                    true => 11440,
+                    false => 11441,
                 },
                 Cardinal.Down => Triggered switch {
-                    true => 11240,
-                    false => 11241,
+                    true => 11442,
+                    false => 11443,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -73,18 +73,18 @@ public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggere
     
     public IBlock WithState(uint state) {
         return state switch {
-            11230 => new DropperBlock(Identifier, Cardinal.North, true),
-            11231 => new DropperBlock(Identifier, Cardinal.North, false),
-            11232 => new DropperBlock(Identifier, Cardinal.East, true),
-            11233 => new DropperBlock(Identifier, Cardinal.East, false),
-            11234 => new DropperBlock(Identifier, Cardinal.South, true),
-            11235 => new DropperBlock(Identifier, Cardinal.South, false),
-            11236 => new DropperBlock(Identifier, Cardinal.West, true),
-            11237 => new DropperBlock(Identifier, Cardinal.West, false),
-            11238 => new DropperBlock(Identifier, Cardinal.Up, true),
-            11239 => new DropperBlock(Identifier, Cardinal.Up, false),
-            11240 => new DropperBlock(Identifier, Cardinal.Down, true),
-            11241 => new DropperBlock(Identifier, Cardinal.Down, false),
+            11432 => new DropperBlock(Identifier, Cardinal.North, true),
+            11433 => new DropperBlock(Identifier, Cardinal.North, false),
+            11434 => new DropperBlock(Identifier, Cardinal.East, true),
+            11435 => new DropperBlock(Identifier, Cardinal.East, false),
+            11436 => new DropperBlock(Identifier, Cardinal.South, true),
+            11437 => new DropperBlock(Identifier, Cardinal.South, false),
+            11438 => new DropperBlock(Identifier, Cardinal.West, true),
+            11439 => new DropperBlock(Identifier, Cardinal.West, false),
+            11440 => new DropperBlock(Identifier, Cardinal.Up, true),
+            11441 => new DropperBlock(Identifier, Cardinal.Up, false),
+            11442 => new DropperBlock(Identifier, Cardinal.Down, true),
+            11443 => new DropperBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -2,7 +2,7 @@
 This project is a WIP Minecraft protocol implementation.
 
 It supports:
-- Minecraft 1.21.11
+- Minecraft 26.2
 - Serialising and deserialising packets
 - Sending and receiving them over TCP
 - Packet compression
@@ -30,6 +30,7 @@ Examples:
 `0.0.x` - 1.21.5  
 `0.1.x` - 1.21.10  
 `0.2.x` - 1.21.11  
+`0.3.x` - 26.2  
 
 The major version is probably going to be used for Minecraft major updates.
 THERE SHOULD BE **ZERO EXPECTATION** OF BACKWARDS COMPATIBILITY BETWEEN

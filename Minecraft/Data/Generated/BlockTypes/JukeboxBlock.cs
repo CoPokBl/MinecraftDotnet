@@ -42,16 +42,16 @@ public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     public uint StateId {
         get {
             return HasRecord switch {
-                true => 6762,
-                false => 6763,
+                true => 6963,
+                false => 6964,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6762 => new JukeboxBlock(Identifier, true),
-            6763 => new JukeboxBlock(Identifier, false),
+            6963 => new JukeboxBlock(Identifier, true),
+            6964 => new JukeboxBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

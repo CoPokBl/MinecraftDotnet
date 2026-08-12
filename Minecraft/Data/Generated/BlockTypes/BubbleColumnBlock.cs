@@ -42,16 +42,16 @@ public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
     public uint StateId {
         get {
             return Drag switch {
-                true => 15092,
-                false => 15093,
+                true => 15294,
+                false => 15295,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            15092 => new BubbleColumnBlock(Identifier, true),
-            15093 => new BubbleColumnBlock(Identifier, false),
+            15294 => new BubbleColumnBlock(Identifier, true),
+            15295 => new BubbleColumnBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

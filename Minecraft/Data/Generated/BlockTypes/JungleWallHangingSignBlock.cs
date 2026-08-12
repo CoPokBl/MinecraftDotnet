@@ -43,20 +43,20 @@ public record JungleWallHangingSignBlock(Identifier Identifier, Direction Facing
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6514,
-                    false => 6515,
+                    true => 6715,
+                    false => 6716,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6516,
-                    false => 6517,
+                    true => 6717,
+                    false => 6718,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6518,
-                    false => 6519,
+                    true => 6719,
+                    false => 6720,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6520,
-                    false => 6521,
+                    true => 6721,
+                    false => 6722,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record JungleWallHangingSignBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            6514 => new JungleWallHangingSignBlock(Identifier, Direction.North, true),
-            6515 => new JungleWallHangingSignBlock(Identifier, Direction.North, false),
-            6516 => new JungleWallHangingSignBlock(Identifier, Direction.South, true),
-            6517 => new JungleWallHangingSignBlock(Identifier, Direction.South, false),
-            6518 => new JungleWallHangingSignBlock(Identifier, Direction.West, true),
-            6519 => new JungleWallHangingSignBlock(Identifier, Direction.West, false),
-            6520 => new JungleWallHangingSignBlock(Identifier, Direction.East, true),
-            6521 => new JungleWallHangingSignBlock(Identifier, Direction.East, false),
+            6715 => new JungleWallHangingSignBlock(Identifier, Direction.North, true),
+            6716 => new JungleWallHangingSignBlock(Identifier, Direction.North, false),
+            6717 => new JungleWallHangingSignBlock(Identifier, Direction.South, true),
+            6718 => new JungleWallHangingSignBlock(Identifier, Direction.South, false),
+            6719 => new JungleWallHangingSignBlock(Identifier, Direction.West, true),
+            6720 => new JungleWallHangingSignBlock(Identifier, Direction.West, false),
+            6721 => new JungleWallHangingSignBlock(Identifier, Direction.East, true),
+            6722 => new JungleWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

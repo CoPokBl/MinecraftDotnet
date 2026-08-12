@@ -21,7 +21,9 @@ public interface IDimensionType : IProtocolType {
     public int MonsterSpawnBlockLightLimit { get; }
     public CompoundTag? Attributes { get; }
     public INbtTag? Timelines { get; }
-    
+    public bool HasEnderDragonFight { get; }
+    public Identifier? DefaultClock { get; }
+
     public INbtTag ToNbt() {
         List<(string, INbtTag)> children = [
             ("has_fixed_time", new BooleanTag(HasFixedTime)),
@@ -34,8 +36,13 @@ public interface IDimensionType : IProtocolType {
             ("infiniburn", new StringTag(InfiniBurn)),
             ("skybox", new StringTag(Skybox.ToString().ToLower())),
             ("cardinal_light", new StringTag(CardinalLight.ToString().ToLower())),
-            ("ambient_light", new FloatTag(AmbientLight))
+            ("ambient_light", new FloatTag(AmbientLight)),
+            ("has_ender_dragon_fight", new BooleanTag(HasEnderDragonFight))
         ];
+
+        if (DefaultClock.HasValue) {
+            children.Add(("default_clock", new StringTag(DefaultClock.Value)));
+        }
 
         Or<int, CompoundTag> msll = MonsterSpawnLightLevel ?? new Or<int, CompoundTag>(0);
         if (msll.IsValue1) {
@@ -86,9 +93,16 @@ public interface IDimensionType : IProtocolType {
         
         CompoundTag? attributes = tag.Contains("attributes") ? tag["attributes"].GetCompound() : null;
         INbtTag? timelines = tag.Contains("timelines") ? tag["timelines"] : null;
+        bool hasEnderDragonFight = tag.Contains("has_ender_dragon_fight") && tag["has_ender_dragon_fight"].GetBoolean();
+        // Assigned separately because a null string would otherwise be converted into an
+        // Identifier rather than staying null
+        Identifier? defaultClock = null;
+        if (tag.Contains("default_clock")) {
+            defaultClock = tag["default_clock"].GetString();
+        }
 
         return new SimpleDimensionType(ident, hasFixedTime, hasSkyLight, hasCeiling, coordinateScale, minY,
             height, logicalHeight, infiniBurn, skybox, cardinalLight, ambientLight, monsterSpawnLightLevel,
-            monsterSpawnBlockLightLimit, attributes, timelines);
+            monsterSpawnBlockLightLimit, attributes, timelines, hasEnderDragonFight, defaultClock);
     }
 }

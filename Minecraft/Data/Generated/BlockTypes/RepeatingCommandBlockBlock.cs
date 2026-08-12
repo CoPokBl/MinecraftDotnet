@@ -43,21 +43,21 @@ public record RepeatingCommandBlockBlock(Identifier Identifier, bool Conditional
         get {
             return Conditional switch {
                 true => Facing switch {
-                    Cardinal.North => 14615,
-                    Cardinal.East => 14616,
-                    Cardinal.South => 14617,
-                    Cardinal.West => 14618,
-                    Cardinal.Up => 14619,
-                    Cardinal.Down => 14620,
+                    Cardinal.North => 14817,
+                    Cardinal.East => 14818,
+                    Cardinal.South => 14819,
+                    Cardinal.West => 14820,
+                    Cardinal.Up => 14821,
+                    Cardinal.Down => 14822,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
-                    Cardinal.North => 14621,
-                    Cardinal.East => 14622,
-                    Cardinal.South => 14623,
-                    Cardinal.West => 14624,
-                    Cardinal.Up => 14625,
-                    Cardinal.Down => 14626,
+                    Cardinal.North => 14823,
+                    Cardinal.East => 14824,
+                    Cardinal.South => 14825,
+                    Cardinal.West => 14826,
+                    Cardinal.Up => 14827,
+                    Cardinal.Down => 14828,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
             };
@@ -66,18 +66,18 @@ public record RepeatingCommandBlockBlock(Identifier Identifier, bool Conditional
     
     public IBlock WithState(uint state) {
         return state switch {
-            14615 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.North),
-            14616 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.East),
-            14617 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.South),
-            14618 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.West),
-            14619 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.Up),
-            14620 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.Down),
-            14621 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.North),
-            14622 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.East),
-            14623 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.South),
-            14624 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.West),
-            14625 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.Up),
-            14626 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.Down),
+            14817 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.North),
+            14818 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.East),
+            14819 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.South),
+            14820 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.West),
+            14821 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.Up),
+            14822 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.Down),
+            14823 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.North),
+            14824 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.East),
+            14825 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.South),
+            14826 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.West),
+            14827 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.Up),
+            14828 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

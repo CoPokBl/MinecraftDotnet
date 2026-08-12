@@ -42,10 +42,10 @@ public record CarvedPumpkinBlock(Identifier Identifier, Direction Facing) : IBlo
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 6818,
-                Direction.South => 6819,
-                Direction.West => 6820,
-                Direction.East => 6821,
+                Direction.North => 7019,
+                Direction.South => 7020,
+                Direction.West => 7021,
+                Direction.East => 7022,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -53,10 +53,10 @@ public record CarvedPumpkinBlock(Identifier Identifier, Direction Facing) : IBlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            6818 => new CarvedPumpkinBlock(Identifier, Direction.North),
-            6819 => new CarvedPumpkinBlock(Identifier, Direction.South),
-            6820 => new CarvedPumpkinBlock(Identifier, Direction.West),
-            6821 => new CarvedPumpkinBlock(Identifier, Direction.East),
+            7019 => new CarvedPumpkinBlock(Identifier, Direction.North),
+            7020 => new CarvedPumpkinBlock(Identifier, Direction.South),
+            7021 => new CarvedPumpkinBlock(Identifier, Direction.West),
+            7022 => new CarvedPumpkinBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

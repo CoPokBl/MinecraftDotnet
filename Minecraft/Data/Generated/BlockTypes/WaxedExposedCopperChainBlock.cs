@@ -43,16 +43,16 @@ public record WaxedExposedCopperChainBlock(Identifier Identifier, Axis Axis, boo
         get {
             return Axis switch {
                 Axis.X => Waterlogged switch {
-                    true => 8081,
-                    false => 8082,
+                    true => 8282,
+                    false => 8283,
                 },
                 Axis.Y => Waterlogged switch {
-                    true => 8083,
-                    false => 8084,
+                    true => 8284,
+                    false => 8285,
                 },
                 Axis.Z => Waterlogged switch {
-                    true => 8085,
-                    false => 8086,
+                    true => 8286,
+                    false => 8287,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
@@ -61,12 +61,12 @@ public record WaxedExposedCopperChainBlock(Identifier Identifier, Axis Axis, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            8081 => new WaxedExposedCopperChainBlock(Identifier, Axis.X, true),
-            8082 => new WaxedExposedCopperChainBlock(Identifier, Axis.X, false),
-            8083 => new WaxedExposedCopperChainBlock(Identifier, Axis.Y, true),
-            8084 => new WaxedExposedCopperChainBlock(Identifier, Axis.Y, false),
-            8085 => new WaxedExposedCopperChainBlock(Identifier, Axis.Z, true),
-            8086 => new WaxedExposedCopperChainBlock(Identifier, Axis.Z, false),
+            8282 => new WaxedExposedCopperChainBlock(Identifier, Axis.X, true),
+            8283 => new WaxedExposedCopperChainBlock(Identifier, Axis.X, false),
+            8284 => new WaxedExposedCopperChainBlock(Identifier, Axis.Y, true),
+            8285 => new WaxedExposedCopperChainBlock(Identifier, Axis.Y, false),
+            8286 => new WaxedExposedCopperChainBlock(Identifier, Axis.Z, true),
+            8287 => new WaxedExposedCopperChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

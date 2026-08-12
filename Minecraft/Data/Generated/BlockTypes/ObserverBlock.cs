@@ -43,28 +43,28 @@ public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered
         get {
             return Facing switch {
                 Cardinal.North => Powered switch {
-                    true => 14650,
-                    false => 14651,
+                    true => 14852,
+                    false => 14853,
                 },
                 Cardinal.East => Powered switch {
-                    true => 14652,
-                    false => 14653,
+                    true => 14854,
+                    false => 14855,
                 },
                 Cardinal.South => Powered switch {
-                    true => 14654,
-                    false => 14655,
+                    true => 14856,
+                    false => 14857,
                 },
                 Cardinal.West => Powered switch {
-                    true => 14656,
-                    false => 14657,
+                    true => 14858,
+                    false => 14859,
                 },
                 Cardinal.Up => Powered switch {
-                    true => 14658,
-                    false => 14659,
+                    true => 14860,
+                    false => 14861,
                 },
                 Cardinal.Down => Powered switch {
-                    true => 14660,
-                    false => 14661,
+                    true => 14862,
+                    false => 14863,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -73,18 +73,18 @@ public record ObserverBlock(Identifier Identifier, Cardinal Facing, bool Powered
     
     public IBlock WithState(uint state) {
         return state switch {
-            14650 => new ObserverBlock(Identifier, Cardinal.North, true),
-            14651 => new ObserverBlock(Identifier, Cardinal.North, false),
-            14652 => new ObserverBlock(Identifier, Cardinal.East, true),
-            14653 => new ObserverBlock(Identifier, Cardinal.East, false),
-            14654 => new ObserverBlock(Identifier, Cardinal.South, true),
-            14655 => new ObserverBlock(Identifier, Cardinal.South, false),
-            14656 => new ObserverBlock(Identifier, Cardinal.West, true),
-            14657 => new ObserverBlock(Identifier, Cardinal.West, false),
-            14658 => new ObserverBlock(Identifier, Cardinal.Up, true),
-            14659 => new ObserverBlock(Identifier, Cardinal.Up, false),
-            14660 => new ObserverBlock(Identifier, Cardinal.Down, true),
-            14661 => new ObserverBlock(Identifier, Cardinal.Down, false),
+            14852 => new ObserverBlock(Identifier, Cardinal.North, true),
+            14853 => new ObserverBlock(Identifier, Cardinal.North, false),
+            14854 => new ObserverBlock(Identifier, Cardinal.East, true),
+            14855 => new ObserverBlock(Identifier, Cardinal.East, false),
+            14856 => new ObserverBlock(Identifier, Cardinal.South, true),
+            14857 => new ObserverBlock(Identifier, Cardinal.South, false),
+            14858 => new ObserverBlock(Identifier, Cardinal.West, true),
+            14859 => new ObserverBlock(Identifier, Cardinal.West, false),
+            14860 => new ObserverBlock(Identifier, Cardinal.Up, true),
+            14861 => new ObserverBlock(Identifier, Cardinal.Up, false),
+            14862 => new ObserverBlock(Identifier, Cardinal.Down, true),
+            14863 => new ObserverBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

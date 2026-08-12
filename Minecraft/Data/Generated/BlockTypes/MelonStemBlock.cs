@@ -42,14 +42,14 @@ public record MelonStemBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 8149,
-                1 => 8150,
-                2 => 8151,
-                3 => 8152,
-                4 => 8153,
-                5 => 8154,
-                6 => 8155,
-                7 => 8156,
+                0 => 8350,
+                1 => 8351,
+                2 => 8352,
+                3 => 8353,
+                4 => 8354,
+                5 => 8355,
+                6 => 8356,
+                7 => 8357,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -57,14 +57,14 @@ public record MelonStemBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            8149 => new MelonStemBlock(Identifier, 0),
-            8150 => new MelonStemBlock(Identifier, 1),
-            8151 => new MelonStemBlock(Identifier, 2),
-            8152 => new MelonStemBlock(Identifier, 3),
-            8153 => new MelonStemBlock(Identifier, 4),
-            8154 => new MelonStemBlock(Identifier, 5),
-            8155 => new MelonStemBlock(Identifier, 6),
-            8156 => new MelonStemBlock(Identifier, 7),
+            8350 => new MelonStemBlock(Identifier, 0),
+            8351 => new MelonStemBlock(Identifier, 1),
+            8352 => new MelonStemBlock(Identifier, 2),
+            8353 => new MelonStemBlock(Identifier, 3),
+            8354 => new MelonStemBlock(Identifier, 4),
+            8355 => new MelonStemBlock(Identifier, 5),
+            8356 => new MelonStemBlock(Identifier, 6),
+            8357 => new MelonStemBlock(Identifier, 7),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

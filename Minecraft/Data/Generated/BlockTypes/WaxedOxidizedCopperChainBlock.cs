@@ -43,16 +43,16 @@ public record WaxedOxidizedCopperChainBlock(Identifier Identifier, Axis Axis, bo
         get {
             return Axis switch {
                 Axis.X => Waterlogged switch {
-                    true => 8093,
-                    false => 8094,
+                    true => 8294,
+                    false => 8295,
                 },
                 Axis.Y => Waterlogged switch {
-                    true => 8095,
-                    false => 8096,
+                    true => 8296,
+                    false => 8297,
                 },
                 Axis.Z => Waterlogged switch {
-                    true => 8097,
-                    false => 8098,
+                    true => 8298,
+                    false => 8299,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
@@ -61,12 +61,12 @@ public record WaxedOxidizedCopperChainBlock(Identifier Identifier, Axis Axis, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            8093 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.X, true),
-            8094 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.X, false),
-            8095 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.Y, true),
-            8096 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.Y, false),
-            8097 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.Z, true),
-            8098 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.Z, false),
+            8294 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.X, true),
+            8295 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.X, false),
+            8296 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.Y, true),
+            8297 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.Y, false),
+            8298 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.Z, true),
+            8299 => new WaxedOxidizedCopperChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

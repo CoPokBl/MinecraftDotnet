@@ -42,10 +42,10 @@ public record BeetrootsBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 14609,
-                1 => 14610,
-                2 => 14611,
-                3 => 14612,
+                0 => 14811,
+                1 => 14812,
+                2 => 14813,
+                3 => 14814,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -53,10 +53,10 @@ public record BeetrootsBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            14609 => new BeetrootsBlock(Identifier, 0),
-            14610 => new BeetrootsBlock(Identifier, 1),
-            14611 => new BeetrootsBlock(Identifier, 2),
-            14612 => new BeetrootsBlock(Identifier, 3),
+            14811 => new BeetrootsBlock(Identifier, 0),
+            14812 => new BeetrootsBlock(Identifier, 1),
+            14813 => new BeetrootsBlock(Identifier, 2),
+            14814 => new BeetrootsBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

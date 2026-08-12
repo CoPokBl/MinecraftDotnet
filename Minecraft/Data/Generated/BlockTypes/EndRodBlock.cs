@@ -42,12 +42,12 @@ public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     public uint StateId {
         get {
             return Facing switch {
-                Cardinal.North => 14434,
-                Cardinal.East => 14435,
-                Cardinal.South => 14436,
-                Cardinal.West => 14437,
-                Cardinal.Up => 14438,
-                Cardinal.Down => 14439,
+                Cardinal.North => 14636,
+                Cardinal.East => 14637,
+                Cardinal.South => 14638,
+                Cardinal.West => 14639,
+                Cardinal.Up => 14640,
+                Cardinal.Down => 14641,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -55,12 +55,12 @@ public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            14434 => new EndRodBlock(Identifier, Cardinal.North),
-            14435 => new EndRodBlock(Identifier, Cardinal.East),
-            14436 => new EndRodBlock(Identifier, Cardinal.South),
-            14437 => new EndRodBlock(Identifier, Cardinal.West),
-            14438 => new EndRodBlock(Identifier, Cardinal.Up),
-            14439 => new EndRodBlock(Identifier, Cardinal.Down),
+            14636 => new EndRodBlock(Identifier, Cardinal.North),
+            14637 => new EndRodBlock(Identifier, Cardinal.East),
+            14638 => new EndRodBlock(Identifier, Cardinal.South),
+            14639 => new EndRodBlock(Identifier, Cardinal.West),
+            14640 => new EndRodBlock(Identifier, Cardinal.Up),
+            14641 => new EndRodBlock(Identifier, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -44,22 +44,22 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
             return HasBottle0 switch {
                 true => HasBottle1 switch {
                     true => HasBottle2 switch {
-                        true => 9251,
-                        false => 9252,
+                        true => 9452,
+                        false => 9453,
                     },
                     false => HasBottle2 switch {
-                        true => 9253,
-                        false => 9254,
+                        true => 9454,
+                        false => 9455,
                     },
                 },
                 false => HasBottle1 switch {
                     true => HasBottle2 switch {
-                        true => 9255,
-                        false => 9256,
+                        true => 9456,
+                        false => 9457,
                     },
                     false => HasBottle2 switch {
-                        true => 9257,
-                        false => 9258,
+                        true => 9458,
+                        false => 9459,
                     },
                 },
             };
@@ -68,14 +68,14 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
     
     public IBlock WithState(uint state) {
         return state switch {
-            9251 => new BrewingStandBlock(Identifier, true, true, true),
-            9252 => new BrewingStandBlock(Identifier, true, true, false),
-            9253 => new BrewingStandBlock(Identifier, true, false, true),
-            9254 => new BrewingStandBlock(Identifier, true, false, false),
-            9255 => new BrewingStandBlock(Identifier, false, true, true),
-            9256 => new BrewingStandBlock(Identifier, false, true, false),
-            9257 => new BrewingStandBlock(Identifier, false, false, true),
-            9258 => new BrewingStandBlock(Identifier, false, false, false),
+            9452 => new BrewingStandBlock(Identifier, true, true, true),
+            9453 => new BrewingStandBlock(Identifier, true, true, false),
+            9454 => new BrewingStandBlock(Identifier, true, false, true),
+            9455 => new BrewingStandBlock(Identifier, true, false, false),
+            9456 => new BrewingStandBlock(Identifier, false, true, true),
+            9457 => new BrewingStandBlock(Identifier, false, true, false),
+            9458 => new BrewingStandBlock(Identifier, false, false, true),
+            9459 => new BrewingStandBlock(Identifier, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

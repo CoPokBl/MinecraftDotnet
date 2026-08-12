@@ -43,20 +43,20 @@ public record LadderBlock(Identifier Identifier, Direction Facing, bool Waterlog
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5518,
-                    false => 5519,
+                    true => 5719,
+                    false => 5720,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5520,
-                    false => 5521,
+                    true => 5721,
+                    false => 5722,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5522,
-                    false => 5523,
+                    true => 5723,
+                    false => 5724,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5524,
-                    false => 5525,
+                    true => 5725,
+                    false => 5726,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record LadderBlock(Identifier Identifier, Direction Facing, bool Waterlog
     
     public IBlock WithState(uint state) {
         return state switch {
-            5518 => new LadderBlock(Identifier, Direction.North, true),
-            5519 => new LadderBlock(Identifier, Direction.North, false),
-            5520 => new LadderBlock(Identifier, Direction.South, true),
-            5521 => new LadderBlock(Identifier, Direction.South, false),
-            5522 => new LadderBlock(Identifier, Direction.West, true),
-            5523 => new LadderBlock(Identifier, Direction.West, false),
-            5524 => new LadderBlock(Identifier, Direction.East, true),
-            5525 => new LadderBlock(Identifier, Direction.East, false),
+            5719 => new LadderBlock(Identifier, Direction.North, true),
+            5720 => new LadderBlock(Identifier, Direction.North, false),
+            5721 => new LadderBlock(Identifier, Direction.South, true),
+            5722 => new LadderBlock(Identifier, Direction.South, false),
+            5723 => new LadderBlock(Identifier, Direction.West, true),
+            5724 => new LadderBlock(Identifier, Direction.West, false),
+            5725 => new LadderBlock(Identifier, Direction.East, true),
+            5726 => new LadderBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

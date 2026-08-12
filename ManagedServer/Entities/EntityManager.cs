@@ -21,7 +21,12 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     private readonly Dictionary<Vec2<int>, List<Entity>> _entitiesByChunk = [];
     private readonly Dictionary<int, Entity> _entitiesById = [];
 
-    public int NewNetId => field++;
+    /// <summary>
+    /// Ids start at one: vanilla uses zero to mean "not assigned yet" and throws
+    /// <c>Tried to access entity ID before ID assignment</c> the moment a client touches an
+    /// entity carrying it, which drops the connection.
+    /// </summary>
+    public int NewNetId => ++field;
 
     public int EntityCount => _entitiesById.Count;
 

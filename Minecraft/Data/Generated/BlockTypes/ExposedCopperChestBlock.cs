@@ -44,58 +44,58 @@ public record ExposedCopperChestBlock(Identifier Identifier, ExposedCopperChestB
             return TypeValue switch {
                 Type.Single => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 26917,
-                        false => 26918,
+                        true => 29592,
+                        false => 29593,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 26923,
-                        false => 26924,
+                        true => 29598,
+                        false => 29599,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 26929,
-                        false => 26930,
+                        true => 29604,
+                        false => 29605,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 26935,
-                        false => 26936,
+                        true => 29610,
+                        false => 29611,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 Type.Left => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 26919,
-                        false => 26920,
+                        true => 29594,
+                        false => 29595,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 26925,
-                        false => 26926,
+                        true => 29600,
+                        false => 29601,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 26931,
-                        false => 26932,
+                        true => 29606,
+                        false => 29607,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 26937,
-                        false => 26938,
+                        true => 29612,
+                        false => 29613,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 Type.Right => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 26921,
-                        false => 26922,
+                        true => 29596,
+                        false => 29597,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 26927,
-                        false => 26928,
+                        true => 29602,
+                        false => 29603,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 26933,
-                        false => 26934,
+                        true => 29608,
+                        false => 29609,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 26939,
-                        false => 26940,
+                        true => 29614,
+                        false => 29615,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -106,30 +106,30 @@ public record ExposedCopperChestBlock(Identifier Identifier, ExposedCopperChestB
     
     public IBlock WithState(uint state) {
         return state switch {
-            26917 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.North, true),
-            26918 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.North, false),
-            26919 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.North, true),
-            26920 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.North, false),
-            26921 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.North, true),
-            26922 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.North, false),
-            26923 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.South, true),
-            26924 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.South, false),
-            26925 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.South, true),
-            26926 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.South, false),
-            26927 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.South, true),
-            26928 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.South, false),
-            26929 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.West, true),
-            26930 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.West, false),
-            26931 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.West, true),
-            26932 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.West, false),
-            26933 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.West, true),
-            26934 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.West, false),
-            26935 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.East, true),
-            26936 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.East, false),
-            26937 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.East, true),
-            26938 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.East, false),
-            26939 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.East, true),
-            26940 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.East, false),
+            29592 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.North, true),
+            29593 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.North, false),
+            29594 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.North, true),
+            29595 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.North, false),
+            29596 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.North, true),
+            29597 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.North, false),
+            29598 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.South, true),
+            29599 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.South, false),
+            29600 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.South, true),
+            29601 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.South, false),
+            29602 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.South, true),
+            29603 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.South, false),
+            29604 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.West, true),
+            29605 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.West, false),
+            29606 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.West, true),
+            29607 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.West, false),
+            29608 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.West, true),
+            29609 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.West, false),
+            29610 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.East, true),
+            29611 => new ExposedCopperChestBlock(Identifier, Type.Single, Direction.East, false),
+            29612 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.East, true),
+            29613 => new ExposedCopperChestBlock(Identifier, Type.Left, Direction.East, false),
+            29614 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.East, true),
+            29615 => new ExposedCopperChestBlock(Identifier, Type.Right, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

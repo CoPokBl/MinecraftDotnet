@@ -42,10 +42,10 @@ public record AttachedMelonStemBlock(Identifier Identifier, Direction Facing) : 
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 8137,
-                Direction.South => 8138,
-                Direction.West => 8139,
-                Direction.East => 8140,
+                Direction.North => 8338,
+                Direction.South => 8339,
+                Direction.West => 8340,
+                Direction.East => 8341,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -53,10 +53,10 @@ public record AttachedMelonStemBlock(Identifier Identifier, Direction Facing) : 
     
     public IBlock WithState(uint state) {
         return state switch {
-            8137 => new AttachedMelonStemBlock(Identifier, Direction.North),
-            8138 => new AttachedMelonStemBlock(Identifier, Direction.South),
-            8139 => new AttachedMelonStemBlock(Identifier, Direction.West),
-            8140 => new AttachedMelonStemBlock(Identifier, Direction.East),
+            8338 => new AttachedMelonStemBlock(Identifier, Direction.North),
+            8339 => new AttachedMelonStemBlock(Identifier, Direction.South),
+            8340 => new AttachedMelonStemBlock(Identifier, Direction.West),
+            8341 => new AttachedMelonStemBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

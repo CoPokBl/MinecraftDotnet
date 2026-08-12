@@ -42,16 +42,16 @@ public record DeepslateRedstoneOreBlock(Identifier Identifier, bool Lit) : IBloc
     public uint StateId {
         get {
             return Lit switch {
-                true => 6682,
-                false => 6683,
+                true => 6883,
+                false => 6884,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6682 => new DeepslateRedstoneOreBlock(Identifier, true),
-            6683 => new DeepslateRedstoneOreBlock(Identifier, false),
+            6883 => new DeepslateRedstoneOreBlock(Identifier, true),
+            6884 => new DeepslateRedstoneOreBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

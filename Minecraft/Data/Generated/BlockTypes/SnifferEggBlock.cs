@@ -42,9 +42,9 @@ public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
     public uint StateId {
         get {
             return Hatch switch {
-                0 => 14900,
-                1 => 14901,
-                2 => 14902,
+                0 => 15102,
+                1 => 15103,
+                2 => 15104,
                 _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
             };
         }
@@ -52,9 +52,9 @@ public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            14900 => new SnifferEggBlock(Identifier, 0),
-            14901 => new SnifferEggBlock(Identifier, 1),
-            14902 => new SnifferEggBlock(Identifier, 2),
+            15102 => new SnifferEggBlock(Identifier, 0),
+            15103 => new SnifferEggBlock(Identifier, 1),
+            15104 => new SnifferEggBlock(Identifier, 2),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

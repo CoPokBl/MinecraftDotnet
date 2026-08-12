@@ -42,10 +42,10 @@ public record AttachedPumpkinStemBlock(Identifier Identifier, Direction Facing) 
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 8133,
-                Direction.South => 8134,
-                Direction.West => 8135,
-                Direction.East => 8136,
+                Direction.North => 8334,
+                Direction.South => 8335,
+                Direction.West => 8336,
+                Direction.East => 8337,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -53,10 +53,10 @@ public record AttachedPumpkinStemBlock(Identifier Identifier, Direction Facing) 
     
     public IBlock WithState(uint state) {
         return state switch {
-            8133 => new AttachedPumpkinStemBlock(Identifier, Direction.North),
-            8134 => new AttachedPumpkinStemBlock(Identifier, Direction.South),
-            8135 => new AttachedPumpkinStemBlock(Identifier, Direction.West),
-            8136 => new AttachedPumpkinStemBlock(Identifier, Direction.East),
+            8334 => new AttachedPumpkinStemBlock(Identifier, Direction.North),
+            8335 => new AttachedPumpkinStemBlock(Identifier, Direction.South),
+            8336 => new AttachedPumpkinStemBlock(Identifier, Direction.West),
+            8337 => new AttachedPumpkinStemBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

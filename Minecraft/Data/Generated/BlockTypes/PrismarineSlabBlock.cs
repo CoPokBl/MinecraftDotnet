@@ -43,16 +43,16 @@ public record PrismarineSlabBlock(Identifier Identifier, SlabType Type, bool Wat
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12672,
-                    false => 12673,
+                    true => 12874,
+                    false => 12875,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12674,
-                    false => 12675,
+                    true => 12876,
+                    false => 12877,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12676,
-                    false => 12677,
+                    true => 12878,
+                    false => 12879,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record PrismarineSlabBlock(Identifier Identifier, SlabType Type, bool Wat
     
     public IBlock WithState(uint state) {
         return state switch {
-            12672 => new PrismarineSlabBlock(Identifier, SlabType.Top, true),
-            12673 => new PrismarineSlabBlock(Identifier, SlabType.Top, false),
-            12674 => new PrismarineSlabBlock(Identifier, SlabType.Bottom, true),
-            12675 => new PrismarineSlabBlock(Identifier, SlabType.Bottom, false),
-            12676 => new PrismarineSlabBlock(Identifier, SlabType.Double, true),
-            12677 => new PrismarineSlabBlock(Identifier, SlabType.Double, false),
+            12874 => new PrismarineSlabBlock(Identifier, SlabType.Top, true),
+            12875 => new PrismarineSlabBlock(Identifier, SlabType.Top, false),
+            12876 => new PrismarineSlabBlock(Identifier, SlabType.Bottom, true),
+            12877 => new PrismarineSlabBlock(Identifier, SlabType.Bottom, false),
+            12878 => new PrismarineSlabBlock(Identifier, SlabType.Double, true),
+            12879 => new PrismarineSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

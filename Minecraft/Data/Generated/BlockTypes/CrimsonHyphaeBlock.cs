@@ -42,9 +42,9 @@ public record CrimsonHyphaeBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 20766,
-                Axis.Y => 20767,
-                Axis.Z => 20768,
+                Axis.X => 20968,
+                Axis.Y => 20969,
+                Axis.Z => 20970,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record CrimsonHyphaeBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            20766 => new CrimsonHyphaeBlock(Identifier, Axis.X),
-            20767 => new CrimsonHyphaeBlock(Identifier, Axis.Y),
-            20768 => new CrimsonHyphaeBlock(Identifier, Axis.Z),
+            20968 => new CrimsonHyphaeBlock(Identifier, Axis.X),
+            20969 => new CrimsonHyphaeBlock(Identifier, Axis.Y),
+            20970 => new CrimsonHyphaeBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

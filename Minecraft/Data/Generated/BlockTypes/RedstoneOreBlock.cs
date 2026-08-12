@@ -42,16 +42,16 @@ public record RedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock {
     public uint StateId {
         get {
             return Lit switch {
-                true => 6680,
-                false => 6681,
+                true => 6881,
+                false => 6882,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6680 => new RedstoneOreBlock(Identifier, true),
-            6681 => new RedstoneOreBlock(Identifier, false),
+            6881 => new RedstoneOreBlock(Identifier, true),
+            6882 => new RedstoneOreBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

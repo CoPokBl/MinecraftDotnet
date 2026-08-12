@@ -42,16 +42,16 @@ public record MangrovePressurePlateBlock(Identifier Identifier, bool Powered) : 
     public uint StateId {
         get {
             return Powered switch {
-                true => 6676,
-                false => 6677,
+                true => 6877,
+                false => 6878,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6676 => new MangrovePressurePlateBlock(Identifier, true),
-            6677 => new MangrovePressurePlateBlock(Identifier, false),
+            6877 => new MangrovePressurePlateBlock(Identifier, true),
+            6878 => new MangrovePressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

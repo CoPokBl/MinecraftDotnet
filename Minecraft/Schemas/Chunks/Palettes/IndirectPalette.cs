@@ -51,16 +51,27 @@ public class IndirectPalette : Palette {
             .ToArray();
     }
 
-    public override int BlockCount() {
-        if (!PaletteValues.Contains((uint)0)) return 0; // palette doesn't have air
-        
+    public override int Count(Func<uint, bool> predicate) {
+        // Test each distinct value once, then tally the entries pointing at the ones that matched
+        bool[] matches = new bool[PaletteValues.Length];
+        bool any = false;
         for (int i = 0; i < PaletteValues.Length; i++) {
-            if (PaletteValues[i] == 0) {
-                return Blocks.Count(v => v == i);
+            matches[i] = predicate(PaletteValues[i]);
+            any |= matches[i];
+        }
+
+        if (!any) {
+            return 0;
+        }
+
+        int count = 0;
+        foreach (ushort index in Blocks) {
+            if (matches[index]) {
+                count++;
             }
         }
 
-        throw new Exception("This cannot happen");
+        return count;
     }
 
     public override uint[,,] GetData() {

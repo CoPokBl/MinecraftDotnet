@@ -43,16 +43,16 @@ public record WaxedWeatheredCopperChainBlock(Identifier Identifier, Axis Axis, b
         get {
             return Axis switch {
                 Axis.X => Waterlogged switch {
-                    true => 8087,
-                    false => 8088,
+                    true => 8288,
+                    false => 8289,
                 },
                 Axis.Y => Waterlogged switch {
-                    true => 8089,
-                    false => 8090,
+                    true => 8290,
+                    false => 8291,
                 },
                 Axis.Z => Waterlogged switch {
-                    true => 8091,
-                    false => 8092,
+                    true => 8292,
+                    false => 8293,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
@@ -61,12 +61,12 @@ public record WaxedWeatheredCopperChainBlock(Identifier Identifier, Axis Axis, b
     
     public IBlock WithState(uint state) {
         return state switch {
-            8087 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.X, true),
-            8088 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.X, false),
-            8089 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.Y, true),
-            8090 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.Y, false),
-            8091 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.Z, true),
-            8092 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.Z, false),
+            8288 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.X, true),
+            8289 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.X, false),
+            8290 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.Y, true),
+            8291 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.Y, false),
+            8292 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.Z, true),
+            8293 => new WaxedWeatheredCopperChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

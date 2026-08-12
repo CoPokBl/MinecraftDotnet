@@ -42,16 +42,16 @@ public record JunglePressurePlateBlock(Identifier Identifier, bool Powered) : IB
     public uint StateId {
         get {
             return Powered switch {
-                true => 6666,
-                false => 6667,
+                true => 6867,
+                false => 6868,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6666 => new JunglePressurePlateBlock(Identifier, true),
-            6667 => new JunglePressurePlateBlock(Identifier, false),
+            6867 => new JunglePressurePlateBlock(Identifier, true),
+            6868 => new JunglePressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

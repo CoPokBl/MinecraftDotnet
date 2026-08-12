@@ -19,6 +19,12 @@ using Minecraft.Data.Items;
 using Minecraft.Data.DimensionType;
 using Minecraft.Data.DamageType;
 using Minecraft.Data.PaintingVariant;
+using Minecraft.Data.BannerPattern;
+using Minecraft.Data.TrimPattern;
+using Minecraft.Data.JukeboxSong;
+using Minecraft.Data.Instrument;
+using Minecraft.Data.CowSoundVariant;
+using Minecraft.Data.WorldClock;
 using Minecraft.Data.Enchantments;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Timelines;
@@ -26,6 +32,8 @@ using Minecraft.Registry;
 using Minecraft.Data.Components.Types;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Generated.BlockTypes;
+using NBT;
+using NBT.Tags;
 
 using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Packets.Config.ServerBound;
@@ -183,13 +191,25 @@ if (!Directory.Exists($"MinestomData{mcVersion}")) {
         return 1;
     }
     
-    // Move all the files from MinestomDataGenerator/MinestomData to MinestomData
-    // for easier access
+    // Move all the generated files to MinestomData for easier access.
+    // Older generators wrote them to MinestomDataGenerator/MinestomData, newer
+    // ones write them straight into the generator's resources directory.
+    string[] candidateOutputDirs = [
+        Path.Combine($"MinestomDataGenerator{mcVersion}", "MinestomData"),
+        Path.Combine($"MinestomDataGenerator{mcVersion}", "src", "main", "resources", "net", "minestom", "data")
+    ];
+    string? generatedDir = candidateOutputDirs.FirstOrDefault(Directory.Exists);
+    if (generatedDir == null) {
+        Console.WriteLine("Could not find the MinestomDataGenerator output in any of: " +
+                          string.Join(", ", candidateOutputDirs));
+        return 1;
+    }
+
     if (Directory.Exists($"MinestomData{mcVersion}")) {
         Directory.Delete($"MinestomData{mcVersion}", true);
         Console.WriteLine("Deleted existing MinestomData directory.");
     }
-    Directory.Move(Path.Combine($"MinestomDataGenerator{mcVersion}", "MinestomData"), $"MinestomData{mcVersion}");
+    Directory.Move(generatedDir, $"MinestomData{mcVersion}");
     
     Console.WriteLine("Done!");
 }
@@ -225,13 +245,20 @@ RunStep("Argument Types", ArgumentTypeCodeGen.CreateArgumentTypeEntries);
 RunStep("Statistic Types", StatisticTypeCodeGen.CreateStatisticTypes);
 RunStep("Custom Statistics", CustomStatisticCodeGen.CreateCustomStatistics);
 RunStep("Tags", TagsCodeGen.CreateTagEntries);
+RunStep("Client Registry Data", ClientRegistryCodeGen.CreateClientRegistryData);
 
 // Do dynamic registries last because they might use other vanilla registries
-RunStep("Enchantments", EnchantmentCodeGen.CreateEnchantmentEntries);
-RunStep("Dimension Types", DimensionTypeCodeGen.CreateDimensionTypeEntries);
-RunStep("Timelines", TimelineCodeGen.CreateTimelineEntries);
-RunStep("Damage Types", DamageTypeCodeGen.CreateDamageTypeEntries);
-RunStep("Painting Variants", PaintingVariantCodeGen.CreatePaintingVariantEntries);
+RunDynamicRegistry("Enchantments", "enchantment.json", "IEnchantment", "Enchantment", "Enchantments", "Enchantments");
+RunDynamicRegistry("Dimension Types", "dimension_type.json", "IDimensionType", "DimensionType", "DimensionTypes");
+RunDynamicRegistry("Timelines", "timeline.json", "ITimeline", "Timeline", "Timelines", "Timelines");
+RunDynamicRegistry("Damage Types", "damage_type.json", "IDamageType", "DamageType", "DamageTypes");
+RunDynamicRegistry("Painting Variants", "painting_variant.json", "IPaintingVariant", "PaintingVariant", "PaintingVariants");
+RunDynamicRegistry("Banner Patterns", "banner_pattern.json", "IBannerPattern", "BannerPattern", "BannerPatterns");
+RunDynamicRegistry("Trim Patterns", "trim_pattern.json", "ITrimPattern", "TrimPattern", "TrimPatterns");
+RunDynamicRegistry("Jukebox Songs", "jukebox_song.json", "IJukeboxSong", "JukeboxSong", "JukeboxSongs");
+RunDynamicRegistry("Instruments", "instrument.json", "IInstrument", "Instrument", "Instruments");
+RunDynamicRegistry("Cow Sound Variants", "cow_sound_variant.json", "ICowSoundVariant", "CowSoundVariant", "CowSoundVariants");
+RunDynamicRegistry("World Clocks", "world_clock.json", "IWorldClock", "WorldClock", "WorldClocks");
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))
@@ -246,4 +273,10 @@ void RunStep(string name, Func<JObject, string> func) {
     Stopwatch sw = Stopwatch.StartNew();
     registryEntries.Append(func(registriesJson)).Append('\n');
     Console.WriteLine($"{name} took {sw.Elapsed}");
+}
+
+void RunDynamicRegistry(string name, string dataFile, string interfaceName, string className,
+    string registryProperty, string? typeNamespace = null) {
+    RunStep(name, _ => DynamicRegistryCodeGen.CreateEntries(dataFile, interfaceName, className,
+        registryProperty, typeNamespace));
 }

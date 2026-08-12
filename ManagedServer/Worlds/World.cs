@@ -3,6 +3,7 @@ using ManagedServer.Entities;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Types;
+using ManagedServer.Features.Basic;
 using ManagedServer.Features;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds.Lighting;
@@ -18,6 +19,7 @@ using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Implementations.Tags;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
+using Minecraft.Registry.SubRegistries;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks;
 using Minecraft.Schemas.Chunks;
@@ -56,11 +58,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         get => _time;
         set {
             _time = value;
-            SendPacket(new ClientBoundUpdateTimePacket {
-                ClientAdvanceTime = false,
-                TimeOfDay = value,
-                WorldAge = value
-            });
+            SendPacket(BuildTimePacket());
         }
     }
 
@@ -133,6 +131,26 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         Events.AddListener<ServerTickEvent>(_ => Tick());
     }
 
+    /// <summary>
+    /// Time of day rides on the overworld world clock as of 26.2, so setting it means sending a
+    /// state for that clock. A rate of zero holds it where we put it, which is what the server
+    /// has always done here.
+    /// </summary>
+    private ClientBoundUpdateTimePacket BuildTimePacket() {
+        // Kept as an id rather than a registry entry so a server that dropped the vanilla clocks
+        // just sends no clock update instead of failing to build the packet
+        Identifier overworldClock = "minecraft:overworld";
+        WorldClockRegistry clocks = Server.Registry.WorldClocks;
+
+        return new ClientBoundUpdateTimePacket {
+            GameTime = _time,
+            ClockUpdates = clocks.Contains(overworldClock)
+                ? [new ClientBoundUpdateTimePacket.ClockUpdate(
+                    clocks.GetProtocolId(overworldClock), _time, 0f, 0f)]
+                : []
+        };
+    }
+
     #endregion
 
     #region tick
@@ -190,11 +208,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             throw new InvalidOperationException($"Player {player.Name} is already in world {DimensionId}.");
         }
 
-        player.SendPacket(new ClientBoundUpdateTimePacket {
-            ClientAdvanceTime = false,
-            TimeOfDay = _time,
-            WorldAge = _time
-        });
+        player.SendPacket(BuildTimePacket());
         player.SendPacket(new ClientBoundGameEventPacket {
             Event = GameEvent.StartWaitingForLevelChunks,
             Value = 0f

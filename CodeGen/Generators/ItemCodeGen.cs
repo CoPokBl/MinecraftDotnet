@@ -7,6 +7,7 @@ namespace CodeGen.Generators;
 public static class ItemCodeGen {
     private const string Header = 
 """
+using System.Collections.Frozen;
 using Minecraft.Data.Items;
 using Minecraft.Data.Components;
 using Minecraft.Data.Components.Types;
@@ -44,6 +45,11 @@ public static class Item {
         StringBuilder registryAdditions = new();
         StringBuilder file = new(Header);
 
+        // Entries are static readonly fields, so an item referencing another one (eg. the bowl left
+        // behind by beetroot soup) reads null unless the item it needs is initialised first.
+        // Collected here and emitted in dependency order below.
+        List<(string Name, string Entry)> itemEntries = [];
+
         foreach ((string key, JToken? value) in itemEntriesJson) {
             int protocolId = value!["protocol_id"]!.Value<int>();
             string pascalName = CodeGenUtils.NamespacedIdToPascalName(key);
@@ -80,17 +86,93 @@ public static class Item {
             }
             
             // Add to cs file
-            file.Append($"{CodeGenUtils.GetIndentation(1)}public static SimpleItem {pascalName} => new(\"{key}\", " +
+            itemEntries.Add((pascalName, $"{CodeGenUtils.GetIndentation(1)}public static readonly SimpleItem {pascalName} = new(\"{key}\", " +
                         $"{toCsStr(block)}, {toCsStr(translationKey)}, " +
-                        $"new Dictionary<IDataComponent, object>() {{ {string.Join(", ", defaultComponentConstructors)} }});\n");
+                        $"new Dictionary<IDataComponent, object>() {{ {string.Join(", ", defaultComponentConstructors)} }}" +
+                        ".ToFrozenDictionary());\n"));
             registryAdditions.AppendLine($"{CodeGenUtils.GetIndentation(2)}Data.Items.Add({protocolId}, Item.{pascalName});");
         }
-        
+
+        foreach ((string _, string entry) in SortByDependencies(itemEntries)) {
+            file.Append(entry);
+        }
+
         // Create the file content
         file.Append(Footer);
         File.WriteAllText("Item.cs", file.ToString().Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
 
         return registryAdditions.ToString();
+    }
+
+    /// <summary>
+    /// Orders entries so that an item referenced by another item's initialiser is declared first.
+    /// Static field initialisers run in declaration order, so a reference to a field declared later
+    /// evaluates to null instead of the item, with nothing to say so at runtime.
+    /// </summary>
+    private static List<(string Name, string Entry)> SortByDependencies(List<(string Name, string Entry)> entries) {
+        Dictionary<string, int> indexByName = new();
+        for (int i = 0; i < entries.Count; i++) {
+            indexByName[entries[i].Name] = i;
+        }
+
+        List<(string Name, string Entry)> sorted = new(entries.Count);
+        // 0 = unvisited, 1 = being visited (so a cycle is a second visit), 2 = emitted
+        int[] state = new int[entries.Count];
+
+        void Visit(int index) {
+            if (state[index] != 0) {
+                if (state[index] == 1) {
+                    Console.WriteLine("WARNING: Item default components contain a reference cycle involving " +
+                                      entries[index].Name + ", so it may be null at static init.");
+                }
+                return;
+            }
+
+            state[index] = 1;
+            foreach (string dependency in GetReferencedNames(entries[index], indexByName)) {
+                Visit(indexByName[dependency]);
+            }
+            state[index] = 2;
+            sorted.Add(entries[index]);
+        }
+
+        for (int i = 0; i < entries.Count; i++) {
+            Visit(i);
+        }
+
+        return sorted;
+    }
+
+    /// <summary>
+    /// Every unqualified identifier in the entry that names another item, ie. an <c>Item</c> member
+    /// read during static init. Identifiers after a dot are members of some other type, and item
+    /// names are always PascalCase, so they never collide with the snake_case ids in the literals.
+    /// </summary>
+    private static IEnumerable<string> GetReferencedNames((string Name, string Entry) entry, Dictionary<string, int> indexByName) {
+        HashSet<string> found = [];
+        string text = entry.Entry;
+
+        for (int i = 0; i < text.Length; i++) {
+            if (!char.IsLetter(text[i]) && text[i] != '_') {
+                continue;
+            }
+
+            int start = i;
+            while (i < text.Length && (char.IsLetterOrDigit(text[i]) || text[i] == '_')) {
+                i++;
+            }
+
+            if (start > 0 && text[start - 1] == '.') {
+                continue;  // a member of something else, not one of ours
+            }
+
+            string identifier = text[start..i];
+            if (identifier != entry.Name && indexByName.ContainsKey(identifier)) {
+                found.Add(identifier);
+            }
+        }
+
+        return found;
     }
 
     private static readonly Dictionary<string, Func<JToken, string>> Deserialisers = new() {

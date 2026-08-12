@@ -43,16 +43,16 @@ public record PrismarineBrickSlabBlock(Identifier Identifier, SlabType Type, boo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 12678,
-                    false => 12679,
+                    true => 12880,
+                    false => 12881,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 12680,
-                    false => 12681,
+                    true => 12882,
+                    false => 12883,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 12682,
-                    false => 12683,
+                    true => 12884,
+                    false => 12885,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record PrismarineBrickSlabBlock(Identifier Identifier, SlabType Type, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12678 => new PrismarineBrickSlabBlock(Identifier, SlabType.Top, true),
-            12679 => new PrismarineBrickSlabBlock(Identifier, SlabType.Top, false),
-            12680 => new PrismarineBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            12681 => new PrismarineBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            12682 => new PrismarineBrickSlabBlock(Identifier, SlabType.Double, true),
-            12683 => new PrismarineBrickSlabBlock(Identifier, SlabType.Double, false),
+            12880 => new PrismarineBrickSlabBlock(Identifier, SlabType.Top, true),
+            12881 => new PrismarineBrickSlabBlock(Identifier, SlabType.Top, false),
+            12882 => new PrismarineBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            12883 => new PrismarineBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            12884 => new PrismarineBrickSlabBlock(Identifier, SlabType.Double, true),
+            12885 => new PrismarineBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

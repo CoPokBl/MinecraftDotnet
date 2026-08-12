@@ -43,20 +43,20 @@ public record SpruceWallHangingSignBlock(Identifier Identifier, Direction Facing
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6482,
-                    false => 6483,
+                    true => 6683,
+                    false => 6684,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6484,
-                    false => 6485,
+                    true => 6685,
+                    false => 6686,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6486,
-                    false => 6487,
+                    true => 6687,
+                    false => 6688,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6488,
-                    false => 6489,
+                    true => 6689,
+                    false => 6690,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record SpruceWallHangingSignBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            6482 => new SpruceWallHangingSignBlock(Identifier, Direction.North, true),
-            6483 => new SpruceWallHangingSignBlock(Identifier, Direction.North, false),
-            6484 => new SpruceWallHangingSignBlock(Identifier, Direction.South, true),
-            6485 => new SpruceWallHangingSignBlock(Identifier, Direction.South, false),
-            6486 => new SpruceWallHangingSignBlock(Identifier, Direction.West, true),
-            6487 => new SpruceWallHangingSignBlock(Identifier, Direction.West, false),
-            6488 => new SpruceWallHangingSignBlock(Identifier, Direction.East, true),
-            6489 => new SpruceWallHangingSignBlock(Identifier, Direction.East, false),
+            6683 => new SpruceWallHangingSignBlock(Identifier, Direction.North, true),
+            6684 => new SpruceWallHangingSignBlock(Identifier, Direction.North, false),
+            6685 => new SpruceWallHangingSignBlock(Identifier, Direction.South, true),
+            6686 => new SpruceWallHangingSignBlock(Identifier, Direction.South, false),
+            6687 => new SpruceWallHangingSignBlock(Identifier, Direction.West, true),
+            6688 => new SpruceWallHangingSignBlock(Identifier, Direction.West, false),
+            6689 => new SpruceWallHangingSignBlock(Identifier, Direction.East, true),
+            6690 => new SpruceWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

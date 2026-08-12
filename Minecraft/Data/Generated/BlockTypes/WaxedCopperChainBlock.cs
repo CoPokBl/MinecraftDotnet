@@ -43,16 +43,16 @@ public record WaxedCopperChainBlock(Identifier Identifier, Axis Axis, bool Water
         get {
             return Axis switch {
                 Axis.X => Waterlogged switch {
-                    true => 8075,
-                    false => 8076,
+                    true => 8276,
+                    false => 8277,
                 },
                 Axis.Y => Waterlogged switch {
-                    true => 8077,
-                    false => 8078,
+                    true => 8278,
+                    false => 8279,
                 },
                 Axis.Z => Waterlogged switch {
-                    true => 8079,
-                    false => 8080,
+                    true => 8280,
+                    false => 8281,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
@@ -61,12 +61,12 @@ public record WaxedCopperChainBlock(Identifier Identifier, Axis Axis, bool Water
     
     public IBlock WithState(uint state) {
         return state switch {
-            8075 => new WaxedCopperChainBlock(Identifier, Axis.X, true),
-            8076 => new WaxedCopperChainBlock(Identifier, Axis.X, false),
-            8077 => new WaxedCopperChainBlock(Identifier, Axis.Y, true),
-            8078 => new WaxedCopperChainBlock(Identifier, Axis.Y, false),
-            8079 => new WaxedCopperChainBlock(Identifier, Axis.Z, true),
-            8080 => new WaxedCopperChainBlock(Identifier, Axis.Z, false),
+            8276 => new WaxedCopperChainBlock(Identifier, Axis.X, true),
+            8277 => new WaxedCopperChainBlock(Identifier, Axis.X, false),
+            8278 => new WaxedCopperChainBlock(Identifier, Axis.Y, true),
+            8279 => new WaxedCopperChainBlock(Identifier, Axis.Y, false),
+            8280 => new WaxedCopperChainBlock(Identifier, Axis.Z, true),
+            8281 => new WaxedCopperChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

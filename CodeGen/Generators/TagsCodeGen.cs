@@ -4,25 +4,16 @@ using Newtonsoft.Json.Linq;
 namespace CodeGen.Generators;
 
 public static class TagsCodeGen {
-    private const string Header = 
-"""
-using Minecraft.Schemas;
-
-namespace Minecraft.Data.Generated;
-
-// Generated using the CodeGen project. Do not edit manually.
-public static class VanillaTags {
-
-""";
-    
-    private const string Footer = "}\n";
-    
     private static readonly Dictionary<string, string> RegistryTypeMap = new() {
         { "block", "IBlock" },
         { "item", "IItem" },
         { "entity_type", "IEntityType" },
         { "enchantment", "IEnchantment" },
         { "timeline", "ITimeline" },
+        { "damage_type", "IDamageType" },
+        { "painting_variant", "IPaintingVariant" },
+        { "banner_pattern", "IBannerPattern" },
+        { "instrument", "IInstrument" },
     };
     
     public static string CreateTagEntries(JObject registriesJson) {
@@ -80,11 +71,6 @@ public static class VanillaTags {
             SearchDirectory(regDir.Split(Path.DirectorySeparatorChar)[^1], regDir);
         }
         
-        // Create the file content
-        // StringBuilder file = new(Header);
-        // file.Append(tagEntries);
-        // file.Append(Footer);
-        // File.WriteAllText("VanillaTags.cs", file.ToString().Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
         return tagEntries.ToString();
     }
 }

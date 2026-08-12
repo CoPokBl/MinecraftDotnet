@@ -44,36 +44,36 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
             return Age switch {
                 0 => LeavesValue switch {
                     Leaves.None => Stage switch {
-                        0 => 15077,
-                        1 => 15078,
+                        0 => 15279,
+                        1 => 15280,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     Leaves.Small => Stage switch {
-                        0 => 15079,
-                        1 => 15080,
+                        0 => 15281,
+                        1 => 15282,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     Leaves.Large => Stage switch {
-                        0 => 15081,
-                        1 => 15082,
+                        0 => 15283,
+                        1 => 15284,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(LeavesValue), LeavesValue, "Unknown value for property leaves.")
                 },
                 1 => LeavesValue switch {
                     Leaves.None => Stage switch {
-                        0 => 15083,
-                        1 => 15084,
+                        0 => 15285,
+                        1 => 15286,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     Leaves.Small => Stage switch {
-                        0 => 15085,
-                        1 => 15086,
+                        0 => 15287,
+                        1 => 15288,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     Leaves.Large => Stage switch {
-                        0 => 15087,
-                        1 => 15088,
+                        0 => 15289,
+                        1 => 15290,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(LeavesValue), LeavesValue, "Unknown value for property leaves.")
@@ -85,18 +85,18 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
     
     public IBlock WithState(uint state) {
         return state switch {
-            15077 => new BambooBlock(Identifier, 0, Leaves.None, 0),
-            15078 => new BambooBlock(Identifier, 0, Leaves.None, 1),
-            15079 => new BambooBlock(Identifier, 0, Leaves.Small, 0),
-            15080 => new BambooBlock(Identifier, 0, Leaves.Small, 1),
-            15081 => new BambooBlock(Identifier, 0, Leaves.Large, 0),
-            15082 => new BambooBlock(Identifier, 0, Leaves.Large, 1),
-            15083 => new BambooBlock(Identifier, 1, Leaves.None, 0),
-            15084 => new BambooBlock(Identifier, 1, Leaves.None, 1),
-            15085 => new BambooBlock(Identifier, 1, Leaves.Small, 0),
-            15086 => new BambooBlock(Identifier, 1, Leaves.Small, 1),
-            15087 => new BambooBlock(Identifier, 1, Leaves.Large, 0),
-            15088 => new BambooBlock(Identifier, 1, Leaves.Large, 1),
+            15279 => new BambooBlock(Identifier, 0, Leaves.None, 0),
+            15280 => new BambooBlock(Identifier, 0, Leaves.None, 1),
+            15281 => new BambooBlock(Identifier, 0, Leaves.Small, 0),
+            15282 => new BambooBlock(Identifier, 0, Leaves.Small, 1),
+            15283 => new BambooBlock(Identifier, 0, Leaves.Large, 0),
+            15284 => new BambooBlock(Identifier, 0, Leaves.Large, 1),
+            15285 => new BambooBlock(Identifier, 1, Leaves.None, 0),
+            15286 => new BambooBlock(Identifier, 1, Leaves.None, 1),
+            15287 => new BambooBlock(Identifier, 1, Leaves.Small, 0),
+            15288 => new BambooBlock(Identifier, 1, Leaves.Small, 1),
+            15289 => new BambooBlock(Identifier, 1, Leaves.Large, 0),
+            15290 => new BambooBlock(Identifier, 1, Leaves.Large, 1),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -43,24 +43,24 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
         get {
             return Age switch {
                 0 => Facing switch {
-                    Direction.North => 9280,
-                    Direction.South => 9281,
-                    Direction.West => 9282,
-                    Direction.East => 9283,
+                    Direction.North => 9481,
+                    Direction.South => 9482,
+                    Direction.West => 9483,
+                    Direction.East => 9484,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 1 => Facing switch {
-                    Direction.North => 9284,
-                    Direction.South => 9285,
-                    Direction.West => 9286,
-                    Direction.East => 9287,
+                    Direction.North => 9485,
+                    Direction.South => 9486,
+                    Direction.West => 9487,
+                    Direction.East => 9488,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 2 => Facing switch {
-                    Direction.North => 9288,
-                    Direction.South => 9289,
-                    Direction.West => 9290,
-                    Direction.East => 9291,
+                    Direction.North => 9489,
+                    Direction.South => 9490,
+                    Direction.West => 9491,
+                    Direction.East => 9492,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
@@ -70,18 +70,18 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
     
     public IBlock WithState(uint state) {
         return state switch {
-            9280 => new CocoaBlock(Identifier, 0, Direction.North),
-            9281 => new CocoaBlock(Identifier, 0, Direction.South),
-            9282 => new CocoaBlock(Identifier, 0, Direction.West),
-            9283 => new CocoaBlock(Identifier, 0, Direction.East),
-            9284 => new CocoaBlock(Identifier, 1, Direction.North),
-            9285 => new CocoaBlock(Identifier, 1, Direction.South),
-            9286 => new CocoaBlock(Identifier, 1, Direction.West),
-            9287 => new CocoaBlock(Identifier, 1, Direction.East),
-            9288 => new CocoaBlock(Identifier, 2, Direction.North),
-            9289 => new CocoaBlock(Identifier, 2, Direction.South),
-            9290 => new CocoaBlock(Identifier, 2, Direction.West),
-            9291 => new CocoaBlock(Identifier, 2, Direction.East),
+            9481 => new CocoaBlock(Identifier, 0, Direction.North),
+            9482 => new CocoaBlock(Identifier, 0, Direction.South),
+            9483 => new CocoaBlock(Identifier, 0, Direction.West),
+            9484 => new CocoaBlock(Identifier, 0, Direction.East),
+            9485 => new CocoaBlock(Identifier, 1, Direction.North),
+            9486 => new CocoaBlock(Identifier, 1, Direction.South),
+            9487 => new CocoaBlock(Identifier, 1, Direction.West),
+            9488 => new CocoaBlock(Identifier, 1, Direction.East),
+            9489 => new CocoaBlock(Identifier, 2, Direction.North),
+            9490 => new CocoaBlock(Identifier, 2, Direction.South),
+            9491 => new CocoaBlock(Identifier, 2, Direction.West),
+            9492 => new CocoaBlock(Identifier, 2, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -43,20 +43,20 @@ public record TubeCoralWallFanBlock(Identifier Identifier, Direction Facing, boo
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 15025,
-                    false => 15026,
+                    true => 15227,
+                    false => 15228,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 15027,
-                    false => 15028,
+                    true => 15229,
+                    false => 15230,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 15029,
-                    false => 15030,
+                    true => 15231,
+                    false => 15232,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 15031,
-                    false => 15032,
+                    true => 15233,
+                    false => 15234,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record TubeCoralWallFanBlock(Identifier Identifier, Direction Facing, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            15025 => new TubeCoralWallFanBlock(Identifier, Direction.North, true),
-            15026 => new TubeCoralWallFanBlock(Identifier, Direction.North, false),
-            15027 => new TubeCoralWallFanBlock(Identifier, Direction.South, true),
-            15028 => new TubeCoralWallFanBlock(Identifier, Direction.South, false),
-            15029 => new TubeCoralWallFanBlock(Identifier, Direction.West, true),
-            15030 => new TubeCoralWallFanBlock(Identifier, Direction.West, false),
-            15031 => new TubeCoralWallFanBlock(Identifier, Direction.East, true),
-            15032 => new TubeCoralWallFanBlock(Identifier, Direction.East, false),
+            15227 => new TubeCoralWallFanBlock(Identifier, Direction.North, true),
+            15228 => new TubeCoralWallFanBlock(Identifier, Direction.North, false),
+            15229 => new TubeCoralWallFanBlock(Identifier, Direction.South, true),
+            15230 => new TubeCoralWallFanBlock(Identifier, Direction.South, false),
+            15231 => new TubeCoralWallFanBlock(Identifier, Direction.West, true),
+            15232 => new TubeCoralWallFanBlock(Identifier, Direction.West, false),
+            15233 => new TubeCoralWallFanBlock(Identifier, Direction.East, true),
+            15234 => new TubeCoralWallFanBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

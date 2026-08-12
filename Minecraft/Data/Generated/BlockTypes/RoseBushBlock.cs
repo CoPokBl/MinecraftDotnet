@@ -42,8 +42,8 @@ public record RoseBushBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     public uint StateId {
         get {
             return Half switch {
-                BlockHalf.Upper => 12717,
-                BlockHalf.Lower => 12718,
+                BlockHalf.Upper => 12919,
+                BlockHalf.Lower => 12920,
                 _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
             };
         }
@@ -51,8 +51,8 @@ public record RoseBushBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            12717 => new RoseBushBlock(Identifier, BlockHalf.Upper),
-            12718 => new RoseBushBlock(Identifier, BlockHalf.Lower),
+            12919 => new RoseBushBlock(Identifier, BlockHalf.Upper),
+            12920 => new RoseBushBlock(Identifier, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

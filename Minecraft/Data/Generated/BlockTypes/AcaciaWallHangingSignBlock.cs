@@ -43,20 +43,20 @@ public record AcaciaWallHangingSignBlock(Identifier Identifier, Direction Facing
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6498,
-                    false => 6499,
+                    true => 6699,
+                    false => 6700,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6500,
-                    false => 6501,
+                    true => 6701,
+                    false => 6702,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6502,
-                    false => 6503,
+                    true => 6703,
+                    false => 6704,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6504,
-                    false => 6505,
+                    true => 6705,
+                    false => 6706,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record AcaciaWallHangingSignBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            6498 => new AcaciaWallHangingSignBlock(Identifier, Direction.North, true),
-            6499 => new AcaciaWallHangingSignBlock(Identifier, Direction.North, false),
-            6500 => new AcaciaWallHangingSignBlock(Identifier, Direction.South, true),
-            6501 => new AcaciaWallHangingSignBlock(Identifier, Direction.South, false),
-            6502 => new AcaciaWallHangingSignBlock(Identifier, Direction.West, true),
-            6503 => new AcaciaWallHangingSignBlock(Identifier, Direction.West, false),
-            6504 => new AcaciaWallHangingSignBlock(Identifier, Direction.East, true),
-            6505 => new AcaciaWallHangingSignBlock(Identifier, Direction.East, false),
+            6699 => new AcaciaWallHangingSignBlock(Identifier, Direction.North, true),
+            6700 => new AcaciaWallHangingSignBlock(Identifier, Direction.North, false),
+            6701 => new AcaciaWallHangingSignBlock(Identifier, Direction.South, true),
+            6702 => new AcaciaWallHangingSignBlock(Identifier, Direction.South, false),
+            6703 => new AcaciaWallHangingSignBlock(Identifier, Direction.West, true),
+            6704 => new AcaciaWallHangingSignBlock(Identifier, Direction.West, false),
+            6705 => new AcaciaWallHangingSignBlock(Identifier, Direction.East, true),
+            6706 => new AcaciaWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

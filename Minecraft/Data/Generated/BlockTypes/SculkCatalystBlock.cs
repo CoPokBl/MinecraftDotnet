@@ -42,16 +42,16 @@ public record SculkCatalystBlock(Identifier Identifier, bool Bloom) : IBlock {
     public uint StateId {
         get {
             return Bloom switch {
-                true => 25097,
-                false => 25098,
+                true => 27772,
+                false => 27773,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            25097 => new SculkCatalystBlock(Identifier, true),
-            25098 => new SculkCatalystBlock(Identifier, false),
+            27772 => new SculkCatalystBlock(Identifier, true),
+            27773 => new SculkCatalystBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

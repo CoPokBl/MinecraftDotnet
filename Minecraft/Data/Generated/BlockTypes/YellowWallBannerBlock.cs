@@ -42,10 +42,10 @@ public record YellowWallBannerBlock(Identifier Identifier, Direction Facing) : I
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 12997,
-                Direction.South => 12998,
-                Direction.West => 12999,
-                Direction.East => 13000,
+                Direction.North => 13199,
+                Direction.South => 13200,
+                Direction.West => 13201,
+                Direction.East => 13202,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -53,10 +53,10 @@ public record YellowWallBannerBlock(Identifier Identifier, Direction Facing) : I
     
     public IBlock WithState(uint state) {
         return state switch {
-            12997 => new YellowWallBannerBlock(Identifier, Direction.North),
-            12998 => new YellowWallBannerBlock(Identifier, Direction.South),
-            12999 => new YellowWallBannerBlock(Identifier, Direction.West),
-            13000 => new YellowWallBannerBlock(Identifier, Direction.East),
+            13199 => new YellowWallBannerBlock(Identifier, Direction.North),
+            13200 => new YellowWallBannerBlock(Identifier, Direction.South),
+            13201 => new YellowWallBannerBlock(Identifier, Direction.West),
+            13202 => new YellowWallBannerBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

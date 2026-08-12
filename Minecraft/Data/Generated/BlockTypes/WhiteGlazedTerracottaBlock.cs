@@ -42,10 +42,10 @@ public record WhiteGlazedTerracottaBlock(Identifier Identifier, Direction Facing
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 14764,
-                Direction.South => 14765,
-                Direction.West => 14766,
-                Direction.East => 14767,
+                Direction.North => 14966,
+                Direction.South => 14967,
+                Direction.West => 14968,
+                Direction.East => 14969,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -53,10 +53,10 @@ public record WhiteGlazedTerracottaBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            14764 => new WhiteGlazedTerracottaBlock(Identifier, Direction.North),
-            14765 => new WhiteGlazedTerracottaBlock(Identifier, Direction.South),
-            14766 => new WhiteGlazedTerracottaBlock(Identifier, Direction.West),
-            14767 => new WhiteGlazedTerracottaBlock(Identifier, Direction.East),
+            14966 => new WhiteGlazedTerracottaBlock(Identifier, Direction.North),
+            14967 => new WhiteGlazedTerracottaBlock(Identifier, Direction.South),
+            14968 => new WhiteGlazedTerracottaBlock(Identifier, Direction.West),
+            14969 => new WhiteGlazedTerracottaBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

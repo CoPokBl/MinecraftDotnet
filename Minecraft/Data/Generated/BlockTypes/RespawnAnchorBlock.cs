@@ -42,11 +42,11 @@ public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
     public uint StateId {
         get {
             return Charges switch {
-                0 => 21619,
-                1 => 21620,
-                2 => 21621,
-                3 => 21622,
-                4 => 21623,
+                0 => 21821,
+                1 => 21822,
+                2 => 21823,
+                3 => 21824,
+                4 => 21825,
                 _ => throw new ArgumentOutOfRangeException(nameof(Charges), Charges, "Unknown value for property charges.")
             };
         }
@@ -54,11 +54,11 @@ public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            21619 => new RespawnAnchorBlock(Identifier, 0),
-            21620 => new RespawnAnchorBlock(Identifier, 1),
-            21621 => new RespawnAnchorBlock(Identifier, 2),
-            21622 => new RespawnAnchorBlock(Identifier, 3),
-            21623 => new RespawnAnchorBlock(Identifier, 4),
+            21821 => new RespawnAnchorBlock(Identifier, 0),
+            21822 => new RespawnAnchorBlock(Identifier, 1),
+            21823 => new RespawnAnchorBlock(Identifier, 2),
+            21824 => new RespawnAnchorBlock(Identifier, 3),
+            21825 => new RespawnAnchorBlock(Identifier, 4),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

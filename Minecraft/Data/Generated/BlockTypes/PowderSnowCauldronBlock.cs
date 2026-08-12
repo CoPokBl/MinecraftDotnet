@@ -42,9 +42,9 @@ public record PowderSnowCauldronBlock(Identifier Identifier, int Level) : IBlock
     public uint StateId {
         get {
             return Level switch {
-                1 => 9264,
-                2 => 9265,
-                3 => 9266,
+                1 => 9465,
+                2 => 9466,
+                3 => 9467,
                 _ => throw new ArgumentOutOfRangeException(nameof(Level), Level, "Unknown value for property level.")
             };
         }
@@ -52,9 +52,9 @@ public record PowderSnowCauldronBlock(Identifier Identifier, int Level) : IBlock
     
     public IBlock WithState(uint state) {
         return state switch {
-            9264 => new PowderSnowCauldronBlock(Identifier, 1),
-            9265 => new PowderSnowCauldronBlock(Identifier, 2),
-            9266 => new PowderSnowCauldronBlock(Identifier, 3),
+            9465 => new PowderSnowCauldronBlock(Identifier, 1),
+            9466 => new PowderSnowCauldronBlock(Identifier, 2),
+            9467 => new PowderSnowCauldronBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

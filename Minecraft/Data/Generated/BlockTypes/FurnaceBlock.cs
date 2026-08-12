@@ -43,20 +43,20 @@ public record FurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : 
         get {
             return Facing switch {
                 Direction.North => Lit switch {
-                    true => 5126,
-                    false => 5127,
+                    true => 5327,
+                    false => 5328,
                 },
                 Direction.South => Lit switch {
-                    true => 5128,
-                    false => 5129,
+                    true => 5329,
+                    false => 5330,
                 },
                 Direction.West => Lit switch {
-                    true => 5130,
-                    false => 5131,
+                    true => 5331,
+                    false => 5332,
                 },
                 Direction.East => Lit switch {
-                    true => 5132,
-                    false => 5133,
+                    true => 5333,
+                    false => 5334,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record FurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : 
     
     public IBlock WithState(uint state) {
         return state switch {
-            5126 => new FurnaceBlock(Identifier, Direction.North, true),
-            5127 => new FurnaceBlock(Identifier, Direction.North, false),
-            5128 => new FurnaceBlock(Identifier, Direction.South, true),
-            5129 => new FurnaceBlock(Identifier, Direction.South, false),
-            5130 => new FurnaceBlock(Identifier, Direction.West, true),
-            5131 => new FurnaceBlock(Identifier, Direction.West, false),
-            5132 => new FurnaceBlock(Identifier, Direction.East, true),
-            5133 => new FurnaceBlock(Identifier, Direction.East, false),
+            5327 => new FurnaceBlock(Identifier, Direction.North, true),
+            5328 => new FurnaceBlock(Identifier, Direction.North, false),
+            5329 => new FurnaceBlock(Identifier, Direction.South, true),
+            5330 => new FurnaceBlock(Identifier, Direction.South, false),
+            5331 => new FurnaceBlock(Identifier, Direction.West, true),
+            5332 => new FurnaceBlock(Identifier, Direction.West, false),
+            5333 => new FurnaceBlock(Identifier, Direction.East, true),
+            5334 => new FurnaceBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -44,58 +44,58 @@ public record WaxedOxidizedCopperChestBlock(Identifier Identifier, WaxedOxidized
             return TypeValue switch {
                 Type.Single => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27061,
-                        false => 27062,
+                        true => 29736,
+                        false => 29737,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27067,
-                        false => 27068,
+                        true => 29742,
+                        false => 29743,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27073,
-                        false => 27074,
+                        true => 29748,
+                        false => 29749,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27079,
-                        false => 27080,
+                        true => 29754,
+                        false => 29755,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 Type.Left => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27063,
-                        false => 27064,
+                        true => 29738,
+                        false => 29739,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27069,
-                        false => 27070,
+                        true => 29744,
+                        false => 29745,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27075,
-                        false => 27076,
+                        true => 29750,
+                        false => 29751,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27081,
-                        false => 27082,
+                        true => 29756,
+                        false => 29757,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 Type.Right => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27065,
-                        false => 27066,
+                        true => 29740,
+                        false => 29741,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27071,
-                        false => 27072,
+                        true => 29746,
+                        false => 29747,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27077,
-                        false => 27078,
+                        true => 29752,
+                        false => 29753,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27083,
-                        false => 27084,
+                        true => 29758,
+                        false => 29759,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -106,30 +106,30 @@ public record WaxedOxidizedCopperChestBlock(Identifier Identifier, WaxedOxidized
     
     public IBlock WithState(uint state) {
         return state switch {
-            27061 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.North, true),
-            27062 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.North, false),
-            27063 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.North, true),
-            27064 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.North, false),
-            27065 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.North, true),
-            27066 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.North, false),
-            27067 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.South, true),
-            27068 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.South, false),
-            27069 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.South, true),
-            27070 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.South, false),
-            27071 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.South, true),
-            27072 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.South, false),
-            27073 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.West, true),
-            27074 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.West, false),
-            27075 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.West, true),
-            27076 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.West, false),
-            27077 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.West, true),
-            27078 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.West, false),
-            27079 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.East, true),
-            27080 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.East, false),
-            27081 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.East, true),
-            27082 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.East, false),
-            27083 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.East, true),
-            27084 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.East, false),
+            29736 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.North, true),
+            29737 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.North, false),
+            29738 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.North, true),
+            29739 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.North, false),
+            29740 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.North, true),
+            29741 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.North, false),
+            29742 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.South, true),
+            29743 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.South, false),
+            29744 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.South, true),
+            29745 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.South, false),
+            29746 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.South, true),
+            29747 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.South, false),
+            29748 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.West, true),
+            29749 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.West, false),
+            29750 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.West, true),
+            29751 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.West, false),
+            29752 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.West, true),
+            29753 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.West, false),
+            29754 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.East, true),
+            29755 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.East, false),
+            29756 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.East, true),
+            29757 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.East, false),
+            29758 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.East, true),
+            29759 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -44,42 +44,42 @@ public record BrownCandleBlock(Identifier Identifier, int Candles, bool Lit, boo
             return Candles switch {
                 1 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23102,
-                        false => 23103,
+                        true => 23304,
+                        false => 23305,
                     },
                     false => Waterlogged switch {
-                        true => 23104,
-                        false => 23105,
+                        true => 23306,
+                        false => 23307,
                     },
                 },
                 2 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23106,
-                        false => 23107,
+                        true => 23308,
+                        false => 23309,
                     },
                     false => Waterlogged switch {
-                        true => 23108,
-                        false => 23109,
+                        true => 23310,
+                        false => 23311,
                     },
                 },
                 3 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23110,
-                        false => 23111,
+                        true => 23312,
+                        false => 23313,
                     },
                     false => Waterlogged switch {
-                        true => 23112,
-                        false => 23113,
+                        true => 23314,
+                        false => 23315,
                     },
                 },
                 4 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23114,
-                        false => 23115,
+                        true => 23316,
+                        false => 23317,
                     },
                     false => Waterlogged switch {
-                        true => 23116,
-                        false => 23117,
+                        true => 23318,
+                        false => 23319,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Candles), Candles, "Unknown value for property candles.")
@@ -89,22 +89,22 @@ public record BrownCandleBlock(Identifier Identifier, int Candles, bool Lit, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            23102 => new BrownCandleBlock(Identifier, 1, true, true),
-            23103 => new BrownCandleBlock(Identifier, 1, true, false),
-            23104 => new BrownCandleBlock(Identifier, 1, false, true),
-            23105 => new BrownCandleBlock(Identifier, 1, false, false),
-            23106 => new BrownCandleBlock(Identifier, 2, true, true),
-            23107 => new BrownCandleBlock(Identifier, 2, true, false),
-            23108 => new BrownCandleBlock(Identifier, 2, false, true),
-            23109 => new BrownCandleBlock(Identifier, 2, false, false),
-            23110 => new BrownCandleBlock(Identifier, 3, true, true),
-            23111 => new BrownCandleBlock(Identifier, 3, true, false),
-            23112 => new BrownCandleBlock(Identifier, 3, false, true),
-            23113 => new BrownCandleBlock(Identifier, 3, false, false),
-            23114 => new BrownCandleBlock(Identifier, 4, true, true),
-            23115 => new BrownCandleBlock(Identifier, 4, true, false),
-            23116 => new BrownCandleBlock(Identifier, 4, false, true),
-            23117 => new BrownCandleBlock(Identifier, 4, false, false),
+            23304 => new BrownCandleBlock(Identifier, 1, true, true),
+            23305 => new BrownCandleBlock(Identifier, 1, true, false),
+            23306 => new BrownCandleBlock(Identifier, 1, false, true),
+            23307 => new BrownCandleBlock(Identifier, 1, false, false),
+            23308 => new BrownCandleBlock(Identifier, 2, true, true),
+            23309 => new BrownCandleBlock(Identifier, 2, true, false),
+            23310 => new BrownCandleBlock(Identifier, 2, false, true),
+            23311 => new BrownCandleBlock(Identifier, 2, false, false),
+            23312 => new BrownCandleBlock(Identifier, 3, true, true),
+            23313 => new BrownCandleBlock(Identifier, 3, true, false),
+            23314 => new BrownCandleBlock(Identifier, 3, false, true),
+            23315 => new BrownCandleBlock(Identifier, 3, false, false),
+            23316 => new BrownCandleBlock(Identifier, 4, true, true),
+            23317 => new BrownCandleBlock(Identifier, 4, true, false),
+            23318 => new BrownCandleBlock(Identifier, 4, false, true),
+            23319 => new BrownCandleBlock(Identifier, 4, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

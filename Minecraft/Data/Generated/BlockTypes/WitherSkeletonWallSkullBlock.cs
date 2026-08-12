@@ -43,20 +43,20 @@ public record WitherSkeletonWallSkullBlock(Identifier Identifier, Direction Faci
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 10785,
-                    false => 10786,
+                    true => 10987,
+                    false => 10988,
                 },
                 Direction.South => Powered switch {
-                    true => 10787,
-                    false => 10788,
+                    true => 10989,
+                    false => 10990,
                 },
                 Direction.West => Powered switch {
-                    true => 10789,
-                    false => 10790,
+                    true => 10991,
+                    false => 10992,
                 },
                 Direction.East => Powered switch {
-                    true => 10791,
-                    false => 10792,
+                    true => 10993,
+                    false => 10994,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record WitherSkeletonWallSkullBlock(Identifier Identifier, Direction Faci
     
     public IBlock WithState(uint state) {
         return state switch {
-            10785 => new WitherSkeletonWallSkullBlock(Identifier, Direction.North, true),
-            10786 => new WitherSkeletonWallSkullBlock(Identifier, Direction.North, false),
-            10787 => new WitherSkeletonWallSkullBlock(Identifier, Direction.South, true),
-            10788 => new WitherSkeletonWallSkullBlock(Identifier, Direction.South, false),
-            10789 => new WitherSkeletonWallSkullBlock(Identifier, Direction.West, true),
-            10790 => new WitherSkeletonWallSkullBlock(Identifier, Direction.West, false),
-            10791 => new WitherSkeletonWallSkullBlock(Identifier, Direction.East, true),
-            10792 => new WitherSkeletonWallSkullBlock(Identifier, Direction.East, false),
+            10987 => new WitherSkeletonWallSkullBlock(Identifier, Direction.North, true),
+            10988 => new WitherSkeletonWallSkullBlock(Identifier, Direction.North, false),
+            10989 => new WitherSkeletonWallSkullBlock(Identifier, Direction.South, true),
+            10990 => new WitherSkeletonWallSkullBlock(Identifier, Direction.South, false),
+            10991 => new WitherSkeletonWallSkullBlock(Identifier, Direction.West, true),
+            10992 => new WitherSkeletonWallSkullBlock(Identifier, Direction.West, false),
+            10993 => new WitherSkeletonWallSkullBlock(Identifier, Direction.East, true),
+            10994 => new WitherSkeletonWallSkullBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

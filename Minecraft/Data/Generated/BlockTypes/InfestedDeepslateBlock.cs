@@ -42,9 +42,9 @@ public record InfestedDeepslateBlock(Identifier Identifier, Axis Axis) : IBlock 
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 29371,
-                Axis.Y => 29372,
-                Axis.Z => 29373,
+                Axis.X => 32066,
+                Axis.Y => 32067,
+                Axis.Z => 32068,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record InfestedDeepslateBlock(Identifier Identifier, Axis Axis) : IBlock 
     
     public IBlock WithState(uint state) {
         return state switch {
-            29371 => new InfestedDeepslateBlock(Identifier, Axis.X),
-            29372 => new InfestedDeepslateBlock(Identifier, Axis.Y),
-            29373 => new InfestedDeepslateBlock(Identifier, Axis.Z),
+            32066 => new InfestedDeepslateBlock(Identifier, Axis.X),
+            32067 => new InfestedDeepslateBlock(Identifier, Axis.Y),
+            32068 => new InfestedDeepslateBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

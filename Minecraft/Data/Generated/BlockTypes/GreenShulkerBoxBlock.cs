@@ -42,12 +42,12 @@ public record GreenShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBl
     public uint StateId {
         get {
             return Facing switch {
-                Cardinal.North => 14746,
-                Cardinal.East => 14747,
-                Cardinal.South => 14748,
-                Cardinal.West => 14749,
-                Cardinal.Up => 14750,
-                Cardinal.Down => 14751,
+                Cardinal.North => 14948,
+                Cardinal.East => 14949,
+                Cardinal.South => 14950,
+                Cardinal.West => 14951,
+                Cardinal.Up => 14952,
+                Cardinal.Down => 14953,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -55,12 +55,12 @@ public record GreenShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBl
     
     public IBlock WithState(uint state) {
         return state switch {
-            14746 => new GreenShulkerBoxBlock(Identifier, Cardinal.North),
-            14747 => new GreenShulkerBoxBlock(Identifier, Cardinal.East),
-            14748 => new GreenShulkerBoxBlock(Identifier, Cardinal.South),
-            14749 => new GreenShulkerBoxBlock(Identifier, Cardinal.West),
-            14750 => new GreenShulkerBoxBlock(Identifier, Cardinal.Up),
-            14751 => new GreenShulkerBoxBlock(Identifier, Cardinal.Down),
+            14948 => new GreenShulkerBoxBlock(Identifier, Cardinal.North),
+            14949 => new GreenShulkerBoxBlock(Identifier, Cardinal.East),
+            14950 => new GreenShulkerBoxBlock(Identifier, Cardinal.South),
+            14951 => new GreenShulkerBoxBlock(Identifier, Cardinal.West),
+            14952 => new GreenShulkerBoxBlock(Identifier, Cardinal.Up),
+            14953 => new GreenShulkerBoxBlock(Identifier, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

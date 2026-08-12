@@ -43,20 +43,20 @@ public record SpruceWallSignBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5634,
-                    false => 5635,
+                    true => 5835,
+                    false => 5836,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5636,
-                    false => 5637,
+                    true => 5837,
+                    false => 5838,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5638,
-                    false => 5639,
+                    true => 5839,
+                    false => 5840,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5640,
-                    false => 5641,
+                    true => 5841,
+                    false => 5842,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record SpruceWallSignBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            5634 => new SpruceWallSignBlock(Identifier, Direction.North, true),
-            5635 => new SpruceWallSignBlock(Identifier, Direction.North, false),
-            5636 => new SpruceWallSignBlock(Identifier, Direction.South, true),
-            5637 => new SpruceWallSignBlock(Identifier, Direction.South, false),
-            5638 => new SpruceWallSignBlock(Identifier, Direction.West, true),
-            5639 => new SpruceWallSignBlock(Identifier, Direction.West, false),
-            5640 => new SpruceWallSignBlock(Identifier, Direction.East, true),
-            5641 => new SpruceWallSignBlock(Identifier, Direction.East, false),
+            5835 => new SpruceWallSignBlock(Identifier, Direction.North, true),
+            5836 => new SpruceWallSignBlock(Identifier, Direction.North, false),
+            5837 => new SpruceWallSignBlock(Identifier, Direction.South, true),
+            5838 => new SpruceWallSignBlock(Identifier, Direction.South, false),
+            5839 => new SpruceWallSignBlock(Identifier, Direction.West, true),
+            5840 => new SpruceWallSignBlock(Identifier, Direction.West, false),
+            5841 => new SpruceWallSignBlock(Identifier, Direction.East, true),
+            5842 => new SpruceWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

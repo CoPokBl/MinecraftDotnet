@@ -42,10 +42,10 @@ public record NetherWartBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 9246,
-                1 => 9247,
-                2 => 9248,
-                3 => 9249,
+                0 => 9447,
+                1 => 9448,
+                2 => 9449,
+                3 => 9450,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -53,10 +53,10 @@ public record NetherWartBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            9246 => new NetherWartBlock(Identifier, 0),
-            9247 => new NetherWartBlock(Identifier, 1),
-            9248 => new NetherWartBlock(Identifier, 2),
-            9249 => new NetherWartBlock(Identifier, 3),
+            9447 => new NetherWartBlock(Identifier, 0),
+            9448 => new NetherWartBlock(Identifier, 1),
+            9449 => new NetherWartBlock(Identifier, 2),
+            9450 => new NetherWartBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

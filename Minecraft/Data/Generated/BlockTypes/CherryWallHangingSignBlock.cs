@@ -43,20 +43,20 @@ public record CherryWallHangingSignBlock(Identifier Identifier, Direction Facing
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6506,
-                    false => 6507,
+                    true => 6707,
+                    false => 6708,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6508,
-                    false => 6509,
+                    true => 6709,
+                    false => 6710,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6510,
-                    false => 6511,
+                    true => 6711,
+                    false => 6712,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6512,
-                    false => 6513,
+                    true => 6713,
+                    false => 6714,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record CherryWallHangingSignBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            6506 => new CherryWallHangingSignBlock(Identifier, Direction.North, true),
-            6507 => new CherryWallHangingSignBlock(Identifier, Direction.North, false),
-            6508 => new CherryWallHangingSignBlock(Identifier, Direction.South, true),
-            6509 => new CherryWallHangingSignBlock(Identifier, Direction.South, false),
-            6510 => new CherryWallHangingSignBlock(Identifier, Direction.West, true),
-            6511 => new CherryWallHangingSignBlock(Identifier, Direction.West, false),
-            6512 => new CherryWallHangingSignBlock(Identifier, Direction.East, true),
-            6513 => new CherryWallHangingSignBlock(Identifier, Direction.East, false),
+            6707 => new CherryWallHangingSignBlock(Identifier, Direction.North, true),
+            6708 => new CherryWallHangingSignBlock(Identifier, Direction.North, false),
+            6709 => new CherryWallHangingSignBlock(Identifier, Direction.South, true),
+            6710 => new CherryWallHangingSignBlock(Identifier, Direction.South, false),
+            6711 => new CherryWallHangingSignBlock(Identifier, Direction.West, true),
+            6712 => new CherryWallHangingSignBlock(Identifier, Direction.West, false),
+            6713 => new CherryWallHangingSignBlock(Identifier, Direction.East, true),
+            6714 => new CherryWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

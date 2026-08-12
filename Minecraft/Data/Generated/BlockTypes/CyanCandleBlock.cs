@@ -44,42 +44,42 @@ public record CyanCandleBlock(Identifier Identifier, int Candles, bool Lit, bool
             return Candles switch {
                 1 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23054,
-                        false => 23055,
+                        true => 23256,
+                        false => 23257,
                     },
                     false => Waterlogged switch {
-                        true => 23056,
-                        false => 23057,
+                        true => 23258,
+                        false => 23259,
                     },
                 },
                 2 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23058,
-                        false => 23059,
+                        true => 23260,
+                        false => 23261,
                     },
                     false => Waterlogged switch {
-                        true => 23060,
-                        false => 23061,
+                        true => 23262,
+                        false => 23263,
                     },
                 },
                 3 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23062,
-                        false => 23063,
+                        true => 23264,
+                        false => 23265,
                     },
                     false => Waterlogged switch {
-                        true => 23064,
-                        false => 23065,
+                        true => 23266,
+                        false => 23267,
                     },
                 },
                 4 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23066,
-                        false => 23067,
+                        true => 23268,
+                        false => 23269,
                     },
                     false => Waterlogged switch {
-                        true => 23068,
-                        false => 23069,
+                        true => 23270,
+                        false => 23271,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Candles), Candles, "Unknown value for property candles.")
@@ -89,22 +89,22 @@ public record CyanCandleBlock(Identifier Identifier, int Candles, bool Lit, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            23054 => new CyanCandleBlock(Identifier, 1, true, true),
-            23055 => new CyanCandleBlock(Identifier, 1, true, false),
-            23056 => new CyanCandleBlock(Identifier, 1, false, true),
-            23057 => new CyanCandleBlock(Identifier, 1, false, false),
-            23058 => new CyanCandleBlock(Identifier, 2, true, true),
-            23059 => new CyanCandleBlock(Identifier, 2, true, false),
-            23060 => new CyanCandleBlock(Identifier, 2, false, true),
-            23061 => new CyanCandleBlock(Identifier, 2, false, false),
-            23062 => new CyanCandleBlock(Identifier, 3, true, true),
-            23063 => new CyanCandleBlock(Identifier, 3, true, false),
-            23064 => new CyanCandleBlock(Identifier, 3, false, true),
-            23065 => new CyanCandleBlock(Identifier, 3, false, false),
-            23066 => new CyanCandleBlock(Identifier, 4, true, true),
-            23067 => new CyanCandleBlock(Identifier, 4, true, false),
-            23068 => new CyanCandleBlock(Identifier, 4, false, true),
-            23069 => new CyanCandleBlock(Identifier, 4, false, false),
+            23256 => new CyanCandleBlock(Identifier, 1, true, true),
+            23257 => new CyanCandleBlock(Identifier, 1, true, false),
+            23258 => new CyanCandleBlock(Identifier, 1, false, true),
+            23259 => new CyanCandleBlock(Identifier, 1, false, false),
+            23260 => new CyanCandleBlock(Identifier, 2, true, true),
+            23261 => new CyanCandleBlock(Identifier, 2, true, false),
+            23262 => new CyanCandleBlock(Identifier, 2, false, true),
+            23263 => new CyanCandleBlock(Identifier, 2, false, false),
+            23264 => new CyanCandleBlock(Identifier, 3, true, true),
+            23265 => new CyanCandleBlock(Identifier, 3, true, false),
+            23266 => new CyanCandleBlock(Identifier, 3, false, true),
+            23267 => new CyanCandleBlock(Identifier, 3, false, false),
+            23268 => new CyanCandleBlock(Identifier, 4, true, true),
+            23269 => new CyanCandleBlock(Identifier, 4, true, false),
+            23270 => new CyanCandleBlock(Identifier, 4, false, true),
+            23271 => new CyanCandleBlock(Identifier, 4, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -42,9 +42,9 @@ public record PurpurPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 14511,
-                Axis.Y => 14512,
-                Axis.Z => 14513,
+                Axis.X => 14713,
+                Axis.Y => 14714,
+                Axis.Z => 14715,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record PurpurPillarBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            14511 => new PurpurPillarBlock(Identifier, Axis.X),
-            14512 => new PurpurPillarBlock(Identifier, Axis.Y),
-            14513 => new PurpurPillarBlock(Identifier, Axis.Z),
+            14713 => new PurpurPillarBlock(Identifier, Axis.X),
+            14714 => new PurpurPillarBlock(Identifier, Axis.Y),
+            14715 => new PurpurPillarBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

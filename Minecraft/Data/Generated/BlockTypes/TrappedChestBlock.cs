@@ -44,58 +44,58 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
             return TypeValue switch {
                 Type.Single => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 11005,
-                        false => 11006,
+                        true => 11207,
+                        false => 11208,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 11011,
-                        false => 11012,
+                        true => 11213,
+                        false => 11214,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 11017,
-                        false => 11018,
+                        true => 11219,
+                        false => 11220,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 11023,
-                        false => 11024,
+                        true => 11225,
+                        false => 11226,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 Type.Left => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 11007,
-                        false => 11008,
+                        true => 11209,
+                        false => 11210,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 11013,
-                        false => 11014,
+                        true => 11215,
+                        false => 11216,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 11019,
-                        false => 11020,
+                        true => 11221,
+                        false => 11222,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 11025,
-                        false => 11026,
+                        true => 11227,
+                        false => 11228,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 Type.Right => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 11009,
-                        false => 11010,
+                        true => 11211,
+                        false => 11212,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 11015,
-                        false => 11016,
+                        true => 11217,
+                        false => 11218,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 11021,
-                        false => 11022,
+                        true => 11223,
+                        false => 11224,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 11027,
-                        false => 11028,
+                        true => 11229,
+                        false => 11230,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -106,30 +106,30 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
     
     public IBlock WithState(uint state) {
         return state switch {
-            11005 => new TrappedChestBlock(Identifier, Type.Single, Direction.North, true),
-            11006 => new TrappedChestBlock(Identifier, Type.Single, Direction.North, false),
-            11007 => new TrappedChestBlock(Identifier, Type.Left, Direction.North, true),
-            11008 => new TrappedChestBlock(Identifier, Type.Left, Direction.North, false),
-            11009 => new TrappedChestBlock(Identifier, Type.Right, Direction.North, true),
-            11010 => new TrappedChestBlock(Identifier, Type.Right, Direction.North, false),
-            11011 => new TrappedChestBlock(Identifier, Type.Single, Direction.South, true),
-            11012 => new TrappedChestBlock(Identifier, Type.Single, Direction.South, false),
-            11013 => new TrappedChestBlock(Identifier, Type.Left, Direction.South, true),
-            11014 => new TrappedChestBlock(Identifier, Type.Left, Direction.South, false),
-            11015 => new TrappedChestBlock(Identifier, Type.Right, Direction.South, true),
-            11016 => new TrappedChestBlock(Identifier, Type.Right, Direction.South, false),
-            11017 => new TrappedChestBlock(Identifier, Type.Single, Direction.West, true),
-            11018 => new TrappedChestBlock(Identifier, Type.Single, Direction.West, false),
-            11019 => new TrappedChestBlock(Identifier, Type.Left, Direction.West, true),
-            11020 => new TrappedChestBlock(Identifier, Type.Left, Direction.West, false),
-            11021 => new TrappedChestBlock(Identifier, Type.Right, Direction.West, true),
-            11022 => new TrappedChestBlock(Identifier, Type.Right, Direction.West, false),
-            11023 => new TrappedChestBlock(Identifier, Type.Single, Direction.East, true),
-            11024 => new TrappedChestBlock(Identifier, Type.Single, Direction.East, false),
-            11025 => new TrappedChestBlock(Identifier, Type.Left, Direction.East, true),
-            11026 => new TrappedChestBlock(Identifier, Type.Left, Direction.East, false),
-            11027 => new TrappedChestBlock(Identifier, Type.Right, Direction.East, true),
-            11028 => new TrappedChestBlock(Identifier, Type.Right, Direction.East, false),
+            11207 => new TrappedChestBlock(Identifier, Type.Single, Direction.North, true),
+            11208 => new TrappedChestBlock(Identifier, Type.Single, Direction.North, false),
+            11209 => new TrappedChestBlock(Identifier, Type.Left, Direction.North, true),
+            11210 => new TrappedChestBlock(Identifier, Type.Left, Direction.North, false),
+            11211 => new TrappedChestBlock(Identifier, Type.Right, Direction.North, true),
+            11212 => new TrappedChestBlock(Identifier, Type.Right, Direction.North, false),
+            11213 => new TrappedChestBlock(Identifier, Type.Single, Direction.South, true),
+            11214 => new TrappedChestBlock(Identifier, Type.Single, Direction.South, false),
+            11215 => new TrappedChestBlock(Identifier, Type.Left, Direction.South, true),
+            11216 => new TrappedChestBlock(Identifier, Type.Left, Direction.South, false),
+            11217 => new TrappedChestBlock(Identifier, Type.Right, Direction.South, true),
+            11218 => new TrappedChestBlock(Identifier, Type.Right, Direction.South, false),
+            11219 => new TrappedChestBlock(Identifier, Type.Single, Direction.West, true),
+            11220 => new TrappedChestBlock(Identifier, Type.Single, Direction.West, false),
+            11221 => new TrappedChestBlock(Identifier, Type.Left, Direction.West, true),
+            11222 => new TrappedChestBlock(Identifier, Type.Left, Direction.West, false),
+            11223 => new TrappedChestBlock(Identifier, Type.Right, Direction.West, true),
+            11224 => new TrappedChestBlock(Identifier, Type.Right, Direction.West, false),
+            11225 => new TrappedChestBlock(Identifier, Type.Single, Direction.East, true),
+            11226 => new TrappedChestBlock(Identifier, Type.Single, Direction.East, false),
+            11227 => new TrappedChestBlock(Identifier, Type.Left, Direction.East, true),
+            11228 => new TrappedChestBlock(Identifier, Type.Left, Direction.East, false),
+            11229 => new TrappedChestBlock(Identifier, Type.Right, Direction.East, true),
+            11230 => new TrappedChestBlock(Identifier, Type.Right, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

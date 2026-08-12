@@ -43,16 +43,16 @@ public record CobblestoneSlabBlock(Identifier Identifier, SlabType Type, bool Wa
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 13224,
-                    false => 13225,
+                    true => 13426,
+                    false => 13427,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 13226,
-                    false => 13227,
+                    true => 13428,
+                    false => 13429,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 13228,
-                    false => 13229,
+                    true => 13430,
+                    false => 13431,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record CobblestoneSlabBlock(Identifier Identifier, SlabType Type, bool Wa
     
     public IBlock WithState(uint state) {
         return state switch {
-            13224 => new CobblestoneSlabBlock(Identifier, SlabType.Top, true),
-            13225 => new CobblestoneSlabBlock(Identifier, SlabType.Top, false),
-            13226 => new CobblestoneSlabBlock(Identifier, SlabType.Bottom, true),
-            13227 => new CobblestoneSlabBlock(Identifier, SlabType.Bottom, false),
-            13228 => new CobblestoneSlabBlock(Identifier, SlabType.Double, true),
-            13229 => new CobblestoneSlabBlock(Identifier, SlabType.Double, false),
+            13426 => new CobblestoneSlabBlock(Identifier, SlabType.Top, true),
+            13427 => new CobblestoneSlabBlock(Identifier, SlabType.Top, false),
+            13428 => new CobblestoneSlabBlock(Identifier, SlabType.Bottom, true),
+            13429 => new CobblestoneSlabBlock(Identifier, SlabType.Bottom, false),
+            13430 => new CobblestoneSlabBlock(Identifier, SlabType.Double, true),
+            13431 => new CobblestoneSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

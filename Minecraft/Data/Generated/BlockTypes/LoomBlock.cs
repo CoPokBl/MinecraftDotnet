@@ -42,10 +42,10 @@ public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock {
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 20536,
-                Direction.South => 20537,
-                Direction.West => 20538,
-                Direction.East => 20539,
+                Direction.North => 20738,
+                Direction.South => 20739,
+                Direction.West => 20740,
+                Direction.East => 20741,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -53,10 +53,10 @@ public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            20536 => new LoomBlock(Identifier, Direction.North),
-            20537 => new LoomBlock(Identifier, Direction.South),
-            20538 => new LoomBlock(Identifier, Direction.West),
-            20539 => new LoomBlock(Identifier, Direction.East),
+            20738 => new LoomBlock(Identifier, Direction.North),
+            20739 => new LoomBlock(Identifier, Direction.South),
+            20740 => new LoomBlock(Identifier, Direction.West),
+            20741 => new LoomBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

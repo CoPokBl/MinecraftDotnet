@@ -43,16 +43,16 @@ public record ResinBrickSlabBlock(Identifier Identifier, SlabType Type, bool Wat
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 8802,
-                    false => 8803,
+                    true => 9003,
+                    false => 9004,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 8804,
-                    false => 8805,
+                    true => 9005,
+                    false => 9006,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 8806,
-                    false => 8807,
+                    true => 9007,
+                    false => 9008,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record ResinBrickSlabBlock(Identifier Identifier, SlabType Type, bool Wat
     
     public IBlock WithState(uint state) {
         return state switch {
-            8802 => new ResinBrickSlabBlock(Identifier, SlabType.Top, true),
-            8803 => new ResinBrickSlabBlock(Identifier, SlabType.Top, false),
-            8804 => new ResinBrickSlabBlock(Identifier, SlabType.Bottom, true),
-            8805 => new ResinBrickSlabBlock(Identifier, SlabType.Bottom, false),
-            8806 => new ResinBrickSlabBlock(Identifier, SlabType.Double, true),
-            8807 => new ResinBrickSlabBlock(Identifier, SlabType.Double, false),
+            9003 => new ResinBrickSlabBlock(Identifier, SlabType.Top, true),
+            9004 => new ResinBrickSlabBlock(Identifier, SlabType.Top, false),
+            9005 => new ResinBrickSlabBlock(Identifier, SlabType.Bottom, true),
+            9006 => new ResinBrickSlabBlock(Identifier, SlabType.Bottom, false),
+            9007 => new ResinBrickSlabBlock(Identifier, SlabType.Double, true),
+            9008 => new ResinBrickSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

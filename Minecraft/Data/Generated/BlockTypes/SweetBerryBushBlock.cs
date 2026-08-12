@@ -42,10 +42,10 @@ public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 20739,
-                1 => 20740,
-                2 => 20741,
-                3 => 20742,
+                0 => 20941,
+                1 => 20942,
+                2 => 20943,
+                3 => 20944,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -53,10 +53,10 @@ public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            20739 => new SweetBerryBushBlock(Identifier, 0),
-            20740 => new SweetBerryBushBlock(Identifier, 1),
-            20741 => new SweetBerryBushBlock(Identifier, 2),
-            20742 => new SweetBerryBushBlock(Identifier, 3),
+            20941 => new SweetBerryBushBlock(Identifier, 0),
+            20942 => new SweetBerryBushBlock(Identifier, 1),
+            20943 => new SweetBerryBushBlock(Identifier, 2),
+            20944 => new SweetBerryBushBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

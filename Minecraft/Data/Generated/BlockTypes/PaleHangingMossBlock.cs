@@ -42,16 +42,16 @@ public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
     public uint StateId {
         get {
             return Tip switch {
-                true => 29664,
-                false => 29665,
+                true => 32359,
+                false => 32360,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            29664 => new PaleHangingMossBlock(Identifier, true),
-            29665 => new PaleHangingMossBlock(Identifier, false),
+            32359 => new PaleHangingMossBlock(Identifier, true),
+            32360 => new PaleHangingMossBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

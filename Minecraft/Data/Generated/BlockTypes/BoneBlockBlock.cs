@@ -42,9 +42,9 @@ public record BoneBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 14646,
-                Axis.Y => 14647,
-                Axis.Z => 14648,
+                Axis.X => 14848,
+                Axis.Y => 14849,
+                Axis.Z => 14850,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record BoneBlockBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            14646 => new BoneBlockBlock(Identifier, Axis.X),
-            14647 => new BoneBlockBlock(Identifier, Axis.Y),
-            14648 => new BoneBlockBlock(Identifier, Axis.Z),
+            14848 => new BoneBlockBlock(Identifier, Axis.X),
+            14849 => new BoneBlockBlock(Identifier, Axis.Y),
+            14850 => new BoneBlockBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

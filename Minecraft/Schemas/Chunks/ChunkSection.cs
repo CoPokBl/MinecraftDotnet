@@ -13,6 +13,13 @@ namespace Minecraft.Schemas.Chunks;
 /// <p/>
 /// https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Data_structure
 /// </summary>
+/// <remarks>
+/// Not thread-safe, and the failure mode is silent. Blocks live either in a packed
+/// <see cref="Palettes.Palette"/> or an unpacked array, and touching one form converts from the
+/// other in place; two threads converting at once each build their own copy and the loser's
+/// writes vanish with it. A threaded terrain provider must therefore give each thread whole
+/// sections — never a slice of one.
+/// </remarks>
 public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     public const int Size = 16;  // the dimension of the cubic section (16x16x16)
     public const int BiomeDimension = 4;  // the dimension of the biomes (4x4x4)
@@ -282,18 +289,42 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     }
     
     public void Write(DataWriter w) {
+        Write(w, VanillaRegistry.Data);
+    }
+
+    /// <param name="reg">Used to tell which block states hold a fluid.</param>
+    public void Write(DataWriter w, MinecraftRegistry reg) {
         // BLOCK COUNT
         w.WriteShort((short)Palette.BlockCount());  // Number of non-air blocks in chunk section
-        
+
+        // FLUID COUNT
+        // The client takes this straight off the wire rather than recounting, and uses it to
+        // decide whether the section has fluid in it at all.
+        w.WriteShort((short)Palette.Count(state => IsFluid(reg, state)));
+
         // BLOCK STATES
         w.Write(Palette.Serialise());
-        
+
         // BIOMES
         w.Write(BiomesPalette.Serialise());
     }
 
+    /// <summary>
+    /// Whether a block state carries a fluid, either by being one or by being waterlogged.
+    /// </summary>
+    private static bool IsFluid(MinecraftRegistry reg, uint state) {
+        // Chunks can carry state ids we don't know, and a section that won't serialise is worse
+        // than one whose fluid count is a little off
+        if (!reg.Blocks.StatesByStateId.TryGetValue(state, out IBlock? block)) {
+            return false;
+        }
+
+        return block.Liquid || block.WithState(state) is WaterloggableBlock { Waterlogged: true };
+    }
+
     public ChunkSection Read(DataReader r) {
         r.ReadShort();  // This is the number of non-air blocks in the chunk section, we don't need it
+        r.ReadShort();  // Fluid count, likewise
         _palette = Palette.Deserialise(Size, 8, 4, 8, r);
         _biomesPalette = Palette.Deserialise(4, 3, 1, 3, r);  // not yet implemented
         

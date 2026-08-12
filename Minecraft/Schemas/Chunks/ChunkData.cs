@@ -126,7 +126,7 @@ public class ChunkData {
         // Chunk data
         DataWriter chunks = new();
         foreach (ChunkSection chunkSection in Sections) {
-            chunks.Write(chunkSection);
+            chunkSection.Write(chunks, reg);
         }
         
         List<byte> chunkData = chunks.GetRaw()!;

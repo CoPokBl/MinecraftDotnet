@@ -43,20 +43,20 @@ public record BirchWallSignBlock(Identifier Identifier, Direction Facing, bool W
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5642,
-                    false => 5643,
+                    true => 5843,
+                    false => 5844,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5644,
-                    false => 5645,
+                    true => 5845,
+                    false => 5846,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5646,
-                    false => 5647,
+                    true => 5847,
+                    false => 5848,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5648,
-                    false => 5649,
+                    true => 5849,
+                    false => 5850,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record BirchWallSignBlock(Identifier Identifier, Direction Facing, bool W
     
     public IBlock WithState(uint state) {
         return state switch {
-            5642 => new BirchWallSignBlock(Identifier, Direction.North, true),
-            5643 => new BirchWallSignBlock(Identifier, Direction.North, false),
-            5644 => new BirchWallSignBlock(Identifier, Direction.South, true),
-            5645 => new BirchWallSignBlock(Identifier, Direction.South, false),
-            5646 => new BirchWallSignBlock(Identifier, Direction.West, true),
-            5647 => new BirchWallSignBlock(Identifier, Direction.West, false),
-            5648 => new BirchWallSignBlock(Identifier, Direction.East, true),
-            5649 => new BirchWallSignBlock(Identifier, Direction.East, false),
+            5843 => new BirchWallSignBlock(Identifier, Direction.North, true),
+            5844 => new BirchWallSignBlock(Identifier, Direction.North, false),
+            5845 => new BirchWallSignBlock(Identifier, Direction.South, true),
+            5846 => new BirchWallSignBlock(Identifier, Direction.South, false),
+            5847 => new BirchWallSignBlock(Identifier, Direction.West, true),
+            5848 => new BirchWallSignBlock(Identifier, Direction.West, false),
+            5849 => new BirchWallSignBlock(Identifier, Direction.East, true),
+            5850 => new BirchWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

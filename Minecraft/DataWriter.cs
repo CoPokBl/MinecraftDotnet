@@ -186,6 +186,10 @@ public class DataWriter : Stream, IWritable {
             .WriteFloat(value.Z);
     }
     
+    public DataWriter WriteLpVec3(Vec3<double> value) {
+        return LpVec3.Write(this, value);
+    }
+
     public DataWriter WriteQuaternion(Quaternion value) {
         return WriteFloat(value.X)
             .WriteFloat(value.Y)

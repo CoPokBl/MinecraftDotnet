@@ -16,16 +16,32 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
     /// <param name="data">The chunk.</param>
     /// <returns>The generated chunk data.</returns>
     public void GetChunk(ref ChunkData data) {
-        Thread[] threads = new Thread[threadCount];
-        
         ChunkData dat = data;
-        for (int i = 0; i < threadCount; i++) {
+
+        // The split has to land on section boundaries. A ChunkSection is not thread-safe: the
+        // first write to one lazily unpacks its palette into a fresh block array, so two threads
+        // writing the same section each allocate one and whichever stores last silently throws
+        // the other's blocks away. Splitting by raw Y let that happen wherever a thread boundary
+        // fell inside a section, which for the default 16 threads was most of them.
+        int sectionCount = dat.WorldHeight / ChunkSection.Size;
+        int usedThreads = Math.Min(threadCount, sectionCount);
+        if (usedThreads <= 0) {
+            return;
+        }
+
+        Thread[] threads = new Thread[usedThreads];
+
+        for (int i = 0; i < usedThreads; i++) {
             int threadIndex = i;
             Thread t = new(() => {
-                int end = (threadIndex + 1) * dat.WorldHeight / threadCount;
-                
+                int firstSection = threadIndex * sectionCount / usedThreads;
+                int lastSection = (threadIndex + 1) * sectionCount / usedThreads;
+
+                int startY = firstSection * ChunkSection.Size;
+                int endY = Math.Min(lastSection * ChunkSection.Size, dat.WorldHeight);
+
                 for (int x = 0; x < ChunkSection.Size; x++) {
-                    for (int y = threadIndex * dat.WorldHeight / threadCount; y < end; y++) {
+                    for (int y = startY; y < endY; y++) {
                         for (int z = 0; z < ChunkSection.Size; z++) {
                             int absX = dat.ChunkX * ChunkSection.Size + x;
                             int absZ = dat.ChunkZ * ChunkSection.Size + z;
@@ -34,7 +50,7 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
                     }
                 }
             });
-            
+
             t.Start();
             threads[i] = t;
         }
@@ -42,7 +58,7 @@ public abstract class ThreadedPerBlockTerrainProvider(int threadCount = 16) : IT
         foreach (Thread t in threads) {
             t.Join();
         }
-        
+
         data = dat; // Update the original data reference with the modified chunk data
     }
     

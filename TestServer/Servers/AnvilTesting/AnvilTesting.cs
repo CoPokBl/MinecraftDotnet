@@ -4,6 +4,7 @@ using ManagedServer.Events;
 using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Generated;
+using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Packets.Play.ServerBound;
@@ -30,8 +31,8 @@ public static class AnvilTesting {
         server.ViewDistance = 16;
 
         Console.WriteLine("Creating world...");
-        // World world = server.CreateWorld(new AnvilLoader("testanvil", VanillaRegistry.Data));
-        World world = server.CreateWorld(new PolarLoader("testpolar.polar", VanillaRegistry.Data));
+        World world = server.CreateWorld(new AnvilLoader("testanvil", VanillaRegistry.Data));
+        // World world = server.CreateWorld(new PolarLoader("testpolar.polar", VanillaRegistry.Data));
         Console.WriteLine("World created.");
         
         server.Events.AddListener<PlayerPreLoginEvent>(e => {
@@ -51,14 +52,15 @@ public static class AnvilTesting {
             }
         });
 
-        world.Events.AddListener<PacketHandleEvent>(e => {
-            if (e.Packet is not ServerBoundChatMessagePacket chat) {
-                return;
-            }
-
-            switch (chat.Message) {
+        world.Events.AddListener<PlayerChatEvent>(e => {
+            switch (e.RawMessage) {
                 case "gc": {
                     GC.Collect();
+                    break;
+                }
+
+                case "spec": {
+                    e.Player.GameMode = GameMode.Spectator;
                     break;
                 }
             }

@@ -4,8 +4,8 @@ using Minecraft.Text;
 
 namespace Minecraft.Data.ArgumentParsers.Types;
 
-public record ColorArgumentType() : ArgumentParser<NamedTextColor?>() {
-    public override Identifier Identifier => "minecraft:color";
+public record TeamColorArgumentType() : ArgumentParser<NamedTextColor?>() {
+    public override Identifier Identifier => "minecraft:team_color";
     
     public override NamedTextColor? Parse(ref string str, MinecraftRegistry _) {
         string[] parts = str.Split(' ', 2);

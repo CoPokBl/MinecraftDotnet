@@ -44,42 +44,42 @@ public record RedCandleBlock(Identifier Identifier, int Candles, bool Lit, bool 
             return Candles switch {
                 1 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23134,
-                        false => 23135,
+                        true => 23336,
+                        false => 23337,
                     },
                     false => Waterlogged switch {
-                        true => 23136,
-                        false => 23137,
+                        true => 23338,
+                        false => 23339,
                     },
                 },
                 2 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23138,
-                        false => 23139,
+                        true => 23340,
+                        false => 23341,
                     },
                     false => Waterlogged switch {
-                        true => 23140,
-                        false => 23141,
+                        true => 23342,
+                        false => 23343,
                     },
                 },
                 3 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23142,
-                        false => 23143,
+                        true => 23344,
+                        false => 23345,
                     },
                     false => Waterlogged switch {
-                        true => 23144,
-                        false => 23145,
+                        true => 23346,
+                        false => 23347,
                     },
                 },
                 4 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23146,
-                        false => 23147,
+                        true => 23348,
+                        false => 23349,
                     },
                     false => Waterlogged switch {
-                        true => 23148,
-                        false => 23149,
+                        true => 23350,
+                        false => 23351,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Candles), Candles, "Unknown value for property candles.")
@@ -89,22 +89,22 @@ public record RedCandleBlock(Identifier Identifier, int Candles, bool Lit, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            23134 => new RedCandleBlock(Identifier, 1, true, true),
-            23135 => new RedCandleBlock(Identifier, 1, true, false),
-            23136 => new RedCandleBlock(Identifier, 1, false, true),
-            23137 => new RedCandleBlock(Identifier, 1, false, false),
-            23138 => new RedCandleBlock(Identifier, 2, true, true),
-            23139 => new RedCandleBlock(Identifier, 2, true, false),
-            23140 => new RedCandleBlock(Identifier, 2, false, true),
-            23141 => new RedCandleBlock(Identifier, 2, false, false),
-            23142 => new RedCandleBlock(Identifier, 3, true, true),
-            23143 => new RedCandleBlock(Identifier, 3, true, false),
-            23144 => new RedCandleBlock(Identifier, 3, false, true),
-            23145 => new RedCandleBlock(Identifier, 3, false, false),
-            23146 => new RedCandleBlock(Identifier, 4, true, true),
-            23147 => new RedCandleBlock(Identifier, 4, true, false),
-            23148 => new RedCandleBlock(Identifier, 4, false, true),
-            23149 => new RedCandleBlock(Identifier, 4, false, false),
+            23336 => new RedCandleBlock(Identifier, 1, true, true),
+            23337 => new RedCandleBlock(Identifier, 1, true, false),
+            23338 => new RedCandleBlock(Identifier, 1, false, true),
+            23339 => new RedCandleBlock(Identifier, 1, false, false),
+            23340 => new RedCandleBlock(Identifier, 2, true, true),
+            23341 => new RedCandleBlock(Identifier, 2, true, false),
+            23342 => new RedCandleBlock(Identifier, 2, false, true),
+            23343 => new RedCandleBlock(Identifier, 2, false, false),
+            23344 => new RedCandleBlock(Identifier, 3, true, true),
+            23345 => new RedCandleBlock(Identifier, 3, true, false),
+            23346 => new RedCandleBlock(Identifier, 3, false, true),
+            23347 => new RedCandleBlock(Identifier, 3, false, false),
+            23348 => new RedCandleBlock(Identifier, 4, true, true),
+            23349 => new RedCandleBlock(Identifier, 4, true, false),
+            23350 => new RedCandleBlock(Identifier, 4, false, true),
+            23351 => new RedCandleBlock(Identifier, 4, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

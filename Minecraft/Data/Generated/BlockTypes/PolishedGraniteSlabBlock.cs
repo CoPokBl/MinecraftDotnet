@@ -43,16 +43,16 @@ public record PolishedGraniteSlabBlock(Identifier Identifier, SlabType Type, boo
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 16214,
-                    false => 16215,
+                    true => 16416,
+                    false => 16417,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 16216,
-                    false => 16217,
+                    true => 16418,
+                    false => 16419,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 16218,
-                    false => 16219,
+                    true => 16420,
+                    false => 16421,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record PolishedGraniteSlabBlock(Identifier Identifier, SlabType Type, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            16214 => new PolishedGraniteSlabBlock(Identifier, SlabType.Top, true),
-            16215 => new PolishedGraniteSlabBlock(Identifier, SlabType.Top, false),
-            16216 => new PolishedGraniteSlabBlock(Identifier, SlabType.Bottom, true),
-            16217 => new PolishedGraniteSlabBlock(Identifier, SlabType.Bottom, false),
-            16218 => new PolishedGraniteSlabBlock(Identifier, SlabType.Double, true),
-            16219 => new PolishedGraniteSlabBlock(Identifier, SlabType.Double, false),
+            16416 => new PolishedGraniteSlabBlock(Identifier, SlabType.Top, true),
+            16417 => new PolishedGraniteSlabBlock(Identifier, SlabType.Top, false),
+            16418 => new PolishedGraniteSlabBlock(Identifier, SlabType.Bottom, true),
+            16419 => new PolishedGraniteSlabBlock(Identifier, SlabType.Bottom, false),
+            16420 => new PolishedGraniteSlabBlock(Identifier, SlabType.Double, true),
+            16421 => new PolishedGraniteSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

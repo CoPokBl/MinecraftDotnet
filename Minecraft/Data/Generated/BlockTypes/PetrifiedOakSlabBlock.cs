@@ -43,16 +43,16 @@ public record PetrifiedOakSlabBlock(Identifier Identifier, SlabType Type, bool W
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 13218,
-                    false => 13219,
+                    true => 13420,
+                    false => 13421,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 13220,
-                    false => 13221,
+                    true => 13422,
+                    false => 13423,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 13222,
-                    false => 13223,
+                    true => 13424,
+                    false => 13425,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record PetrifiedOakSlabBlock(Identifier Identifier, SlabType Type, bool W
     
     public IBlock WithState(uint state) {
         return state switch {
-            13218 => new PetrifiedOakSlabBlock(Identifier, SlabType.Top, true),
-            13219 => new PetrifiedOakSlabBlock(Identifier, SlabType.Top, false),
-            13220 => new PetrifiedOakSlabBlock(Identifier, SlabType.Bottom, true),
-            13221 => new PetrifiedOakSlabBlock(Identifier, SlabType.Bottom, false),
-            13222 => new PetrifiedOakSlabBlock(Identifier, SlabType.Double, true),
-            13223 => new PetrifiedOakSlabBlock(Identifier, SlabType.Double, false),
+            13420 => new PetrifiedOakSlabBlock(Identifier, SlabType.Top, true),
+            13421 => new PetrifiedOakSlabBlock(Identifier, SlabType.Top, false),
+            13422 => new PetrifiedOakSlabBlock(Identifier, SlabType.Bottom, true),
+            13423 => new PetrifiedOakSlabBlock(Identifier, SlabType.Bottom, false),
+            13424 => new PetrifiedOakSlabBlock(Identifier, SlabType.Double, true),
+            13425 => new PetrifiedOakSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

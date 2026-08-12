@@ -42,9 +42,9 @@ public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
     public uint StateId {
         get {
             return Level switch {
-                1 => 9260,
-                2 => 9261,
-                3 => 9262,
+                1 => 9461,
+                2 => 9462,
+                3 => 9463,
                 _ => throw new ArgumentOutOfRangeException(nameof(Level), Level, "Unknown value for property level.")
             };
         }
@@ -52,9 +52,9 @@ public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            9260 => new WaterCauldronBlock(Identifier, 1),
-            9261 => new WaterCauldronBlock(Identifier, 2),
-            9262 => new WaterCauldronBlock(Identifier, 3),
+            9461 => new WaterCauldronBlock(Identifier, 1),
+            9462 => new WaterCauldronBlock(Identifier, 2),
+            9463 => new WaterCauldronBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

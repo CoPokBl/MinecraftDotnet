@@ -76,7 +76,7 @@ public static class BlockSumoFfa {
                     player.SendMessage("Block: " + CommandArgumentType.BlockState.Format(context.GetArgument<IBlock>("block")));
                 },
                     new Argument<RelativeVec3<int>>("message", CommandArgumentType.BlockPos),
-                    new Argument<NamedTextColor?>("rancol", CommandArgumentType.Color),
+                    new Argument<NamedTextColor?>("rancol", CommandArgumentType.TeamColor),
                     new Argument<(bool X, bool Y, bool Z)>("swiz", CommandArgumentType.Swizzle),
                     new Argument<IBlock>("block", CommandArgumentType.BlockState)))
                 .Build())

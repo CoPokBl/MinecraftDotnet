@@ -42,12 +42,12 @@ public record ChorusFlowerBlock(Identifier Identifier, int Age) : IBlock {
     public uint StateId {
         get {
             return Age switch {
-                0 => 14504,
-                1 => 14505,
-                2 => 14506,
-                3 => 14507,
-                4 => 14508,
-                5 => 14509,
+                0 => 14706,
+                1 => 14707,
+                2 => 14708,
+                3 => 14709,
+                4 => 14710,
+                5 => 14711,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -55,12 +55,12 @@ public record ChorusFlowerBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            14504 => new ChorusFlowerBlock(Identifier, 0),
-            14505 => new ChorusFlowerBlock(Identifier, 1),
-            14506 => new ChorusFlowerBlock(Identifier, 2),
-            14507 => new ChorusFlowerBlock(Identifier, 3),
-            14508 => new ChorusFlowerBlock(Identifier, 4),
-            14509 => new ChorusFlowerBlock(Identifier, 5),
+            14706 => new ChorusFlowerBlock(Identifier, 0),
+            14707 => new ChorusFlowerBlock(Identifier, 1),
+            14708 => new ChorusFlowerBlock(Identifier, 2),
+            14709 => new ChorusFlowerBlock(Identifier, 3),
+            14710 => new ChorusFlowerBlock(Identifier, 4),
+            14711 => new ChorusFlowerBlock(Identifier, 5),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

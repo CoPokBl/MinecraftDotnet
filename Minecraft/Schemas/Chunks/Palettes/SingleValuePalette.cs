@@ -17,8 +17,8 @@ public class SingleValuePalette(int d, int maxbpe, int minbpe, uint val) : Palet
         return Value;
     }
 
-    public override int BlockCount() {
-        return Value == 0 ? 0 : _dimension * _dimension * _dimension;
+    public override int Count(Func<uint, bool> predicate) {
+        return predicate(Value) ? _dimension * _dimension * _dimension : 0;
     }
 
     public override uint[,,] GetData() {

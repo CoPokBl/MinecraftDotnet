@@ -42,10 +42,10 @@ public record ChippedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 10997,
-                Direction.South => 10998,
-                Direction.West => 10999,
-                Direction.East => 11000,
+                Direction.North => 11199,
+                Direction.South => 11200,
+                Direction.West => 11201,
+                Direction.East => 11202,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -53,10 +53,10 @@ public record ChippedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
     
     public IBlock WithState(uint state) {
         return state switch {
-            10997 => new ChippedAnvilBlock(Identifier, Direction.North),
-            10998 => new ChippedAnvilBlock(Identifier, Direction.South),
-            10999 => new ChippedAnvilBlock(Identifier, Direction.West),
-            11000 => new ChippedAnvilBlock(Identifier, Direction.East),
+            11199 => new ChippedAnvilBlock(Identifier, Direction.North),
+            11200 => new ChippedAnvilBlock(Identifier, Direction.South),
+            11201 => new ChippedAnvilBlock(Identifier, Direction.West),
+            11202 => new ChippedAnvilBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

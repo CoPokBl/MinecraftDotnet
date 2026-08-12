@@ -43,16 +43,16 @@ public record IronChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged)
         get {
             return Axis switch {
                 Axis.X => Waterlogged switch {
-                    true => 8045,
-                    false => 8046,
+                    true => 8246,
+                    false => 8247,
                 },
                 Axis.Y => Waterlogged switch {
-                    true => 8047,
-                    false => 8048,
+                    true => 8248,
+                    false => 8249,
                 },
                 Axis.Z => Waterlogged switch {
-                    true => 8049,
-                    false => 8050,
+                    true => 8250,
+                    false => 8251,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
@@ -61,12 +61,12 @@ public record IronChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged)
     
     public IBlock WithState(uint state) {
         return state switch {
-            8045 => new IronChainBlock(Identifier, Axis.X, true),
-            8046 => new IronChainBlock(Identifier, Axis.X, false),
-            8047 => new IronChainBlock(Identifier, Axis.Y, true),
-            8048 => new IronChainBlock(Identifier, Axis.Y, false),
-            8049 => new IronChainBlock(Identifier, Axis.Z, true),
-            8050 => new IronChainBlock(Identifier, Axis.Z, false),
+            8246 => new IronChainBlock(Identifier, Axis.X, true),
+            8247 => new IronChainBlock(Identifier, Axis.X, false),
+            8248 => new IronChainBlock(Identifier, Axis.Y, true),
+            8249 => new IronChainBlock(Identifier, Axis.Y, false),
+            8250 => new IronChainBlock(Identifier, Axis.Z, true),
+            8251 => new IronChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -43,16 +43,16 @@ public record BambooMosaicSlabBlock(Identifier Identifier, SlabType Type, bool W
         get {
             return Type switch {
                 SlabType.Top => Waterlogged switch {
-                    true => 13188,
-                    false => 13189,
+                    true => 13390,
+                    false => 13391,
                 },
                 SlabType.Bottom => Waterlogged switch {
-                    true => 13190,
-                    false => 13191,
+                    true => 13392,
+                    false => 13393,
                 },
                 SlabType.Double => Waterlogged switch {
-                    true => 13192,
-                    false => 13193,
+                    true => 13394,
+                    false => 13395,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
@@ -61,12 +61,12 @@ public record BambooMosaicSlabBlock(Identifier Identifier, SlabType Type, bool W
     
     public IBlock WithState(uint state) {
         return state switch {
-            13188 => new BambooMosaicSlabBlock(Identifier, SlabType.Top, true),
-            13189 => new BambooMosaicSlabBlock(Identifier, SlabType.Top, false),
-            13190 => new BambooMosaicSlabBlock(Identifier, SlabType.Bottom, true),
-            13191 => new BambooMosaicSlabBlock(Identifier, SlabType.Bottom, false),
-            13192 => new BambooMosaicSlabBlock(Identifier, SlabType.Double, true),
-            13193 => new BambooMosaicSlabBlock(Identifier, SlabType.Double, false),
+            13390 => new BambooMosaicSlabBlock(Identifier, SlabType.Top, true),
+            13391 => new BambooMosaicSlabBlock(Identifier, SlabType.Top, false),
+            13392 => new BambooMosaicSlabBlock(Identifier, SlabType.Bottom, true),
+            13393 => new BambooMosaicSlabBlock(Identifier, SlabType.Bottom, false),
+            13394 => new BambooMosaicSlabBlock(Identifier, SlabType.Double, true),
+            13395 => new BambooMosaicSlabBlock(Identifier, SlabType.Double, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

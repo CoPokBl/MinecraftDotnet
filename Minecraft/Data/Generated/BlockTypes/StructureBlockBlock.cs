@@ -42,10 +42,10 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
     public uint StateId {
         get {
             return ModeValue switch {
-                Mode.Save => 21520,
-                Mode.Load => 21521,
-                Mode.Corner => 21522,
-                Mode.Data => 21523,
+                Mode.Save => 21722,
+                Mode.Load => 21723,
+                Mode.Corner => 21724,
+                Mode.Data => 21725,
                 _ => throw new ArgumentOutOfRangeException(nameof(ModeValue), ModeValue, "Unknown value for property mode.")
             };
         }
@@ -53,10 +53,10 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
     
     public IBlock WithState(uint state) {
         return state switch {
-            21520 => new StructureBlockBlock(Identifier, Mode.Save),
-            21521 => new StructureBlockBlock(Identifier, Mode.Load),
-            21522 => new StructureBlockBlock(Identifier, Mode.Corner),
-            21523 => new StructureBlockBlock(Identifier, Mode.Data),
+            21722 => new StructureBlockBlock(Identifier, Mode.Save),
+            21723 => new StructureBlockBlock(Identifier, Mode.Load),
+            21724 => new StructureBlockBlock(Identifier, Mode.Corner),
+            21725 => new StructureBlockBlock(Identifier, Mode.Data),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

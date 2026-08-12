@@ -42,16 +42,16 @@ public record CherryPressurePlateBlock(Identifier Identifier, bool Powered) : IB
     public uint StateId {
         get {
             return Powered switch {
-                true => 6670,
-                false => 6671,
+                true => 6871,
+                false => 6872,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6670 => new CherryPressurePlateBlock(Identifier, true),
-            6671 => new CherryPressurePlateBlock(Identifier, false),
+            6871 => new CherryPressurePlateBlock(Identifier, true),
+            6872 => new CherryPressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

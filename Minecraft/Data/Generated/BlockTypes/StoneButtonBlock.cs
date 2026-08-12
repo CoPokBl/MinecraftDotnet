@@ -44,58 +44,58 @@ public record StoneButtonBlock(Identifier Identifier, AttachDirection Face, Dire
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 6694,
-                        false => 6695,
+                        true => 6895,
+                        false => 6896,
                     },
                     Direction.South => Powered switch {
-                        true => 6696,
-                        false => 6697,
+                        true => 6897,
+                        false => 6898,
                     },
                     Direction.West => Powered switch {
-                        true => 6698,
-                        false => 6699,
+                        true => 6899,
+                        false => 6900,
                     },
                     Direction.East => Powered switch {
-                        true => 6700,
-                        false => 6701,
+                        true => 6901,
+                        false => 6902,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 6702,
-                        false => 6703,
+                        true => 6903,
+                        false => 6904,
                     },
                     Direction.South => Powered switch {
-                        true => 6704,
-                        false => 6705,
+                        true => 6905,
+                        false => 6906,
                     },
                     Direction.West => Powered switch {
-                        true => 6706,
-                        false => 6707,
+                        true => 6907,
+                        false => 6908,
                     },
                     Direction.East => Powered switch {
-                        true => 6708,
-                        false => 6709,
+                        true => 6909,
+                        false => 6910,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 6710,
-                        false => 6711,
+                        true => 6911,
+                        false => 6912,
                     },
                     Direction.South => Powered switch {
-                        true => 6712,
-                        false => 6713,
+                        true => 6913,
+                        false => 6914,
                     },
                     Direction.West => Powered switch {
-                        true => 6714,
-                        false => 6715,
+                        true => 6915,
+                        false => 6916,
                     },
                     Direction.East => Powered switch {
-                        true => 6716,
-                        false => 6717,
+                        true => 6917,
+                        false => 6918,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -106,30 +106,30 @@ public record StoneButtonBlock(Identifier Identifier, AttachDirection Face, Dire
     
     public IBlock WithState(uint state) {
         return state switch {
-            6694 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            6695 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            6696 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            6697 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            6698 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            6699 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            6700 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            6701 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            6702 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            6703 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            6704 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            6705 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            6706 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            6707 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            6708 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            6709 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            6710 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            6711 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            6712 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            6713 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            6714 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            6715 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            6716 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            6717 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            6895 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            6896 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            6897 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            6898 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            6899 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            6900 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            6901 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            6902 => new StoneButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            6903 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            6904 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            6905 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            6906 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            6907 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            6908 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            6909 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            6910 => new StoneButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            6911 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            6912 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            6913 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            6914 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            6915 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            6916 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            6917 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            6918 => new StoneButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

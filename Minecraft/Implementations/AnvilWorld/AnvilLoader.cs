@@ -1,3 +1,4 @@
+using System.Numerics;
 using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Data.Blocks;
 using Minecraft.Implementations.Server.Terrain;
@@ -19,6 +20,11 @@ namespace Minecraft.Implementations.AnvilWorld;
 /// and trying again.
 /// </remarks>
 public class AnvilLoader : ITerrainProvider {
+    // Block state storage never goes below four bits, and past eight vanilla stops using a
+    // palette at all and stores raw state ids.
+    private const int MinPaletteBits = 4;
+    private const int MaxIndirectPaletteBits = 8;
+
     private readonly MinecraftRegistry _registry;
     private readonly Dictionary<string, AnvilRegionFile> _regions = [];
     private readonly int _minY;
@@ -115,17 +121,23 @@ public class AnvilLoader : ITerrainProvider {
         foreach (INbtTag sectionTag in sectionsList.Tags) {
             CompoundTag sectionData = sectionTag.GetCompound();
             int sectionY = sectionData["Y"].GetInteger();
-            int yOffset = sectionY * ChunkSection.Size;
 
+            // Vanilla writes a section for every *light* section, which is one either side of the
+            // block range, so the list runs from minSection-1 to maxSection inclusive. Those two
+            // carry light only and have no index in the chunk.
             int minSection = _minY / ChunkSection.Size;
-            int maxSection = (_minY + data.WorldHeight) / ChunkSection.Size;
-            if (sectionY < minSection || sectionY > maxSection) {
+            int sectionIndex = sectionY - minSection;
+            if (sectionIndex < 0 || sectionIndex >= data.Sections.Length) {
                 continue;
             }
-            
-            ChunkSection section = data.Sections[sectionY - minSection];
-            
-            CompoundTag blockStates = sectionData["block_states"].GetCompound();
+
+            ChunkSection section = data.Sections[sectionIndex];
+
+            // Sections outside the generated range can also turn up without any blocks at all.
+            if (sectionData["block_states"] is not CompoundTag blockStates) {
+                continue;
+            }
+
             ListTag blockPalette = blockStates["palette"].GetList();  // list of compound tags
                     
             IBlock[] palette = LoadPalette(blockPalette);
@@ -137,15 +149,31 @@ public class AnvilLoader : ITerrainProvider {
             else {
                 // Console.WriteLine(chunk.ToJsonString());
                 ReadOnlySpan<long> packedStates = blockStates["data"].GetLongs();
-                UnpackPalette(blockStateIndices, packedStates, packedStates.Length * 64 / blockStateIndices.Length);
-                
+
+                // The entry width is a function of the palette, exactly as vanilla derives it in
+                // PalettedContainer.unpack. It can't be recovered from the number of longs:
+                // entries never straddle a long, so 4096 entries at 11 and at 12 bits both come
+                // to 820 longs, and guessing from the length picks the wrong one.
+                int paletteBits = CeilLog2(palette.Length);
+                bool globalPalette = paletteBits > MaxIndirectPaletteBits;
+                int bitsPerEntry = globalPalette
+                    ? CeilLog2((int)_registry.Blocks.StatesCount)
+                    : Math.Max(MinPaletteBits, paletteBits);
+
+                UnpackPalette(blockStateIndices, packedStates, bitsPerEntry);
+
                 for (int y = 0; y < ChunkSection.Size; y++) {
                     for (int z = 0; z < ChunkSection.Size; z++) {
                         for (int x = 0; x < ChunkSection.Size; x++) {
                             int blockIndex = y * ChunkSection.Size * ChunkSection.Size + z * ChunkSection.Size + x;
-                            int paletteIndex = blockStateIndices[blockIndex];
-                            IBlock block = palette[paletteIndex];
-                            data.SetBlock(x, y + yOffset + 64, z, block);
+                            int entry = blockStateIndices[blockIndex];
+
+                            // Past 8 bits vanilla drops the palette and stores raw state ids.
+                            IBlock block = globalPalette
+                                ? _registry.Blocks.GetByStateId((uint)entry)
+                                : palette[entry];
+
+                            data.SetBlock(x, sectionIndex * ChunkSection.Size + y, z, block);
                         }
                     }
                 }
@@ -201,6 +229,11 @@ public class AnvilLoader : ITerrainProvider {
             }
         }
         return chunks.ToArray();
+    }
+
+    /// <summary>The smallest number of bits that can hold <paramref name="values"/> distinct values.</summary>
+    private static int CeilLog2(int values) {
+        return values <= 1 ? 0 : BitOperations.Log2((uint)(values - 1)) + 1;
     }
 
     private static void UnpackPalette(int[] outp, ReadOnlySpan<long> data, int bitsPerEntry) {

@@ -42,16 +42,16 @@ public record TntBlock(Identifier Identifier, bool Unstable) : IBlock {
     public uint StateId {
         get {
             return Unstable switch {
-                true => 2140,
-                false => 2141,
+                true => 2341,
+                false => 2342,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            2140 => new TntBlock(Identifier, true),
-            2141 => new TntBlock(Identifier, false),
+            2341 => new TntBlock(Identifier, true),
+            2342 => new TntBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -43,20 +43,20 @@ public record RedstoneWallTorchBlock(Identifier Identifier, Direction Facing, bo
         get {
             return Facing switch {
                 Direction.North => Lit switch {
-                    true => 6686,
-                    false => 6687,
+                    true => 6887,
+                    false => 6888,
                 },
                 Direction.South => Lit switch {
-                    true => 6688,
-                    false => 6689,
+                    true => 6889,
+                    false => 6890,
                 },
                 Direction.West => Lit switch {
-                    true => 6690,
-                    false => 6691,
+                    true => 6891,
+                    false => 6892,
                 },
                 Direction.East => Lit switch {
-                    true => 6692,
-                    false => 6693,
+                    true => 6893,
+                    false => 6894,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record RedstoneWallTorchBlock(Identifier Identifier, Direction Facing, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            6686 => new RedstoneWallTorchBlock(Identifier, Direction.North, true),
-            6687 => new RedstoneWallTorchBlock(Identifier, Direction.North, false),
-            6688 => new RedstoneWallTorchBlock(Identifier, Direction.South, true),
-            6689 => new RedstoneWallTorchBlock(Identifier, Direction.South, false),
-            6690 => new RedstoneWallTorchBlock(Identifier, Direction.West, true),
-            6691 => new RedstoneWallTorchBlock(Identifier, Direction.West, false),
-            6692 => new RedstoneWallTorchBlock(Identifier, Direction.East, true),
-            6693 => new RedstoneWallTorchBlock(Identifier, Direction.East, false),
+            6887 => new RedstoneWallTorchBlock(Identifier, Direction.North, true),
+            6888 => new RedstoneWallTorchBlock(Identifier, Direction.North, false),
+            6889 => new RedstoneWallTorchBlock(Identifier, Direction.South, true),
+            6890 => new RedstoneWallTorchBlock(Identifier, Direction.South, false),
+            6891 => new RedstoneWallTorchBlock(Identifier, Direction.West, true),
+            6892 => new RedstoneWallTorchBlock(Identifier, Direction.West, false),
+            6893 => new RedstoneWallTorchBlock(Identifier, Direction.East, true),
+            6894 => new RedstoneWallTorchBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

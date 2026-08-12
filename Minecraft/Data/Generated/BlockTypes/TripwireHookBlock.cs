@@ -44,39 +44,39 @@ public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction 
             return Attached switch {
                 true => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9382,
-                        false => 9383,
+                        true => 9583,
+                        false => 9584,
                     },
                     Direction.South => Powered switch {
-                        true => 9384,
-                        false => 9385,
+                        true => 9585,
+                        false => 9586,
                     },
                     Direction.West => Powered switch {
-                        true => 9386,
-                        false => 9387,
+                        true => 9587,
+                        false => 9588,
                     },
                     Direction.East => Powered switch {
-                        true => 9388,
-                        false => 9389,
+                        true => 9589,
+                        false => 9590,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
                     Direction.North => Powered switch {
-                        true => 9390,
-                        false => 9391,
+                        true => 9591,
+                        false => 9592,
                     },
                     Direction.South => Powered switch {
-                        true => 9392,
-                        false => 9393,
+                        true => 9593,
+                        false => 9594,
                     },
                     Direction.West => Powered switch {
-                        true => 9394,
-                        false => 9395,
+                        true => 9595,
+                        false => 9596,
                     },
                     Direction.East => Powered switch {
-                        true => 9396,
-                        false => 9397,
+                        true => 9597,
+                        false => 9598,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -86,22 +86,22 @@ public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction 
     
     public IBlock WithState(uint state) {
         return state switch {
-            9382 => new TripwireHookBlock(Identifier, true, Direction.North, true),
-            9383 => new TripwireHookBlock(Identifier, true, Direction.North, false),
-            9384 => new TripwireHookBlock(Identifier, true, Direction.South, true),
-            9385 => new TripwireHookBlock(Identifier, true, Direction.South, false),
-            9386 => new TripwireHookBlock(Identifier, true, Direction.West, true),
-            9387 => new TripwireHookBlock(Identifier, true, Direction.West, false),
-            9388 => new TripwireHookBlock(Identifier, true, Direction.East, true),
-            9389 => new TripwireHookBlock(Identifier, true, Direction.East, false),
-            9390 => new TripwireHookBlock(Identifier, false, Direction.North, true),
-            9391 => new TripwireHookBlock(Identifier, false, Direction.North, false),
-            9392 => new TripwireHookBlock(Identifier, false, Direction.South, true),
-            9393 => new TripwireHookBlock(Identifier, false, Direction.South, false),
-            9394 => new TripwireHookBlock(Identifier, false, Direction.West, true),
-            9395 => new TripwireHookBlock(Identifier, false, Direction.West, false),
-            9396 => new TripwireHookBlock(Identifier, false, Direction.East, true),
-            9397 => new TripwireHookBlock(Identifier, false, Direction.East, false),
+            9583 => new TripwireHookBlock(Identifier, true, Direction.North, true),
+            9584 => new TripwireHookBlock(Identifier, true, Direction.North, false),
+            9585 => new TripwireHookBlock(Identifier, true, Direction.South, true),
+            9586 => new TripwireHookBlock(Identifier, true, Direction.South, false),
+            9587 => new TripwireHookBlock(Identifier, true, Direction.West, true),
+            9588 => new TripwireHookBlock(Identifier, true, Direction.West, false),
+            9589 => new TripwireHookBlock(Identifier, true, Direction.East, true),
+            9590 => new TripwireHookBlock(Identifier, true, Direction.East, false),
+            9591 => new TripwireHookBlock(Identifier, false, Direction.North, true),
+            9592 => new TripwireHookBlock(Identifier, false, Direction.North, false),
+            9593 => new TripwireHookBlock(Identifier, false, Direction.South, true),
+            9594 => new TripwireHookBlock(Identifier, false, Direction.South, false),
+            9595 => new TripwireHookBlock(Identifier, false, Direction.West, true),
+            9596 => new TripwireHookBlock(Identifier, false, Direction.West, false),
+            9597 => new TripwireHookBlock(Identifier, false, Direction.East, true),
+            9598 => new TripwireHookBlock(Identifier, false, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

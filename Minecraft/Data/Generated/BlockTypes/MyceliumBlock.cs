@@ -42,16 +42,16 @@ public record MyceliumBlock(Identifier Identifier, bool Snowy) : IBlock {
     public uint StateId {
         get {
             return Snowy switch {
-                true => 8717,
-                false => 8718,
+                true => 8918,
+                false => 8919,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            8717 => new MyceliumBlock(Identifier, true),
-            8718 => new MyceliumBlock(Identifier, false),
+            8918 => new MyceliumBlock(Identifier, true),
+            8919 => new MyceliumBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -42,8 +42,8 @@ public record PeonyBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     public uint StateId {
         get {
             return Half switch {
-                BlockHalf.Upper => 12719,
-                BlockHalf.Lower => 12720,
+                BlockHalf.Upper => 12921,
+                BlockHalf.Lower => 12922,
                 _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
             };
         }
@@ -51,8 +51,8 @@ public record PeonyBlock(Identifier Identifier, BlockHalf Half) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            12719 => new PeonyBlock(Identifier, BlockHalf.Upper),
-            12720 => new PeonyBlock(Identifier, BlockHalf.Lower),
+            12921 => new PeonyBlock(Identifier, BlockHalf.Upper),
+            12922 => new PeonyBlock(Identifier, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -43,20 +43,20 @@ public record CreeperWallHeadBlock(Identifier Identifier, Direction Facing, bool
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 10905,
-                    false => 10906,
+                    true => 11107,
+                    false => 11108,
                 },
                 Direction.South => Powered switch {
-                    true => 10907,
-                    false => 10908,
+                    true => 11109,
+                    false => 11110,
                 },
                 Direction.West => Powered switch {
-                    true => 10909,
-                    false => 10910,
+                    true => 11111,
+                    false => 11112,
                 },
                 Direction.East => Powered switch {
-                    true => 10911,
-                    false => 10912,
+                    true => 11113,
+                    false => 11114,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record CreeperWallHeadBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            10905 => new CreeperWallHeadBlock(Identifier, Direction.North, true),
-            10906 => new CreeperWallHeadBlock(Identifier, Direction.North, false),
-            10907 => new CreeperWallHeadBlock(Identifier, Direction.South, true),
-            10908 => new CreeperWallHeadBlock(Identifier, Direction.South, false),
-            10909 => new CreeperWallHeadBlock(Identifier, Direction.West, true),
-            10910 => new CreeperWallHeadBlock(Identifier, Direction.West, false),
-            10911 => new CreeperWallHeadBlock(Identifier, Direction.East, true),
-            10912 => new CreeperWallHeadBlock(Identifier, Direction.East, false),
+            11107 => new CreeperWallHeadBlock(Identifier, Direction.North, true),
+            11108 => new CreeperWallHeadBlock(Identifier, Direction.North, false),
+            11109 => new CreeperWallHeadBlock(Identifier, Direction.South, true),
+            11110 => new CreeperWallHeadBlock(Identifier, Direction.South, false),
+            11111 => new CreeperWallHeadBlock(Identifier, Direction.West, true),
+            11112 => new CreeperWallHeadBlock(Identifier, Direction.West, false),
+            11113 => new CreeperWallHeadBlock(Identifier, Direction.East, true),
+            11114 => new CreeperWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

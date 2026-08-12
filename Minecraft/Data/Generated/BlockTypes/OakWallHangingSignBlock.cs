@@ -43,20 +43,20 @@ public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, b
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6474,
-                    false => 6475,
+                    true => 6675,
+                    false => 6676,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6476,
-                    false => 6477,
+                    true => 6677,
+                    false => 6678,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6478,
-                    false => 6479,
+                    true => 6679,
+                    false => 6680,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6480,
-                    false => 6481,
+                    true => 6681,
+                    false => 6682,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, b
     
     public IBlock WithState(uint state) {
         return state switch {
-            6474 => new OakWallHangingSignBlock(Identifier, Direction.North, true),
-            6475 => new OakWallHangingSignBlock(Identifier, Direction.North, false),
-            6476 => new OakWallHangingSignBlock(Identifier, Direction.South, true),
-            6477 => new OakWallHangingSignBlock(Identifier, Direction.South, false),
-            6478 => new OakWallHangingSignBlock(Identifier, Direction.West, true),
-            6479 => new OakWallHangingSignBlock(Identifier, Direction.West, false),
-            6480 => new OakWallHangingSignBlock(Identifier, Direction.East, true),
-            6481 => new OakWallHangingSignBlock(Identifier, Direction.East, false),
+            6675 => new OakWallHangingSignBlock(Identifier, Direction.North, true),
+            6676 => new OakWallHangingSignBlock(Identifier, Direction.North, false),
+            6677 => new OakWallHangingSignBlock(Identifier, Direction.South, true),
+            6678 => new OakWallHangingSignBlock(Identifier, Direction.South, false),
+            6679 => new OakWallHangingSignBlock(Identifier, Direction.West, true),
+            6680 => new OakWallHangingSignBlock(Identifier, Direction.West, false),
+            6681 => new OakWallHangingSignBlock(Identifier, Direction.East, true),
+            6682 => new OakWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

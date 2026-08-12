@@ -42,9 +42,9 @@ public record DeepslateBlock(Identifier Identifier, Axis Axis) : IBlock {
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 27721,
-                Axis.Y => 27722,
-                Axis.Z => 27723,
+                Axis.X => 30416,
+                Axis.Y => 30417,
+                Axis.Z => 30418,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -52,9 +52,9 @@ public record DeepslateBlock(Identifier Identifier, Axis Axis) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            27721 => new DeepslateBlock(Identifier, Axis.X),
-            27722 => new DeepslateBlock(Identifier, Axis.Y),
-            27723 => new DeepslateBlock(Identifier, Axis.Z),
+            30416 => new DeepslateBlock(Identifier, Axis.X),
+            30417 => new DeepslateBlock(Identifier, Axis.Y),
+            30418 => new DeepslateBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

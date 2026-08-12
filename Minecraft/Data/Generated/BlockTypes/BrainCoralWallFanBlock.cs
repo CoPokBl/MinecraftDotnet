@@ -43,20 +43,20 @@ public record BrainCoralWallFanBlock(Identifier Identifier, Direction Facing, bo
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 15033,
-                    false => 15034,
+                    true => 15235,
+                    false => 15236,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 15035,
-                    false => 15036,
+                    true => 15237,
+                    false => 15238,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 15037,
-                    false => 15038,
+                    true => 15239,
+                    false => 15240,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 15039,
-                    false => 15040,
+                    true => 15241,
+                    false => 15242,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +65,14 @@ public record BrainCoralWallFanBlock(Identifier Identifier, Direction Facing, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            15033 => new BrainCoralWallFanBlock(Identifier, Direction.North, true),
-            15034 => new BrainCoralWallFanBlock(Identifier, Direction.North, false),
-            15035 => new BrainCoralWallFanBlock(Identifier, Direction.South, true),
-            15036 => new BrainCoralWallFanBlock(Identifier, Direction.South, false),
-            15037 => new BrainCoralWallFanBlock(Identifier, Direction.West, true),
-            15038 => new BrainCoralWallFanBlock(Identifier, Direction.West, false),
-            15039 => new BrainCoralWallFanBlock(Identifier, Direction.East, true),
-            15040 => new BrainCoralWallFanBlock(Identifier, Direction.East, false),
+            15235 => new BrainCoralWallFanBlock(Identifier, Direction.North, true),
+            15236 => new BrainCoralWallFanBlock(Identifier, Direction.North, false),
+            15237 => new BrainCoralWallFanBlock(Identifier, Direction.South, true),
+            15238 => new BrainCoralWallFanBlock(Identifier, Direction.South, false),
+            15239 => new BrainCoralWallFanBlock(Identifier, Direction.West, true),
+            15240 => new BrainCoralWallFanBlock(Identifier, Direction.West, false),
+            15241 => new BrainCoralWallFanBlock(Identifier, Direction.East, true),
+            15242 => new BrainCoralWallFanBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

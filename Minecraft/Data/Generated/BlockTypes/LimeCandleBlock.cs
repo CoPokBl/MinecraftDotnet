@@ -44,42 +44,42 @@ public record LimeCandleBlock(Identifier Identifier, int Candles, bool Lit, bool
             return Candles switch {
                 1 => Lit switch {
                     true => Waterlogged switch {
-                        true => 22990,
-                        false => 22991,
+                        true => 23192,
+                        false => 23193,
                     },
                     false => Waterlogged switch {
-                        true => 22992,
-                        false => 22993,
+                        true => 23194,
+                        false => 23195,
                     },
                 },
                 2 => Lit switch {
                     true => Waterlogged switch {
-                        true => 22994,
-                        false => 22995,
+                        true => 23196,
+                        false => 23197,
                     },
                     false => Waterlogged switch {
-                        true => 22996,
-                        false => 22997,
+                        true => 23198,
+                        false => 23199,
                     },
                 },
                 3 => Lit switch {
                     true => Waterlogged switch {
-                        true => 22998,
-                        false => 22999,
+                        true => 23200,
+                        false => 23201,
                     },
                     false => Waterlogged switch {
-                        true => 23000,
-                        false => 23001,
+                        true => 23202,
+                        false => 23203,
                     },
                 },
                 4 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23002,
-                        false => 23003,
+                        true => 23204,
+                        false => 23205,
                     },
                     false => Waterlogged switch {
-                        true => 23004,
-                        false => 23005,
+                        true => 23206,
+                        false => 23207,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Candles), Candles, "Unknown value for property candles.")
@@ -89,22 +89,22 @@ public record LimeCandleBlock(Identifier Identifier, int Candles, bool Lit, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            22990 => new LimeCandleBlock(Identifier, 1, true, true),
-            22991 => new LimeCandleBlock(Identifier, 1, true, false),
-            22992 => new LimeCandleBlock(Identifier, 1, false, true),
-            22993 => new LimeCandleBlock(Identifier, 1, false, false),
-            22994 => new LimeCandleBlock(Identifier, 2, true, true),
-            22995 => new LimeCandleBlock(Identifier, 2, true, false),
-            22996 => new LimeCandleBlock(Identifier, 2, false, true),
-            22997 => new LimeCandleBlock(Identifier, 2, false, false),
-            22998 => new LimeCandleBlock(Identifier, 3, true, true),
-            22999 => new LimeCandleBlock(Identifier, 3, true, false),
-            23000 => new LimeCandleBlock(Identifier, 3, false, true),
-            23001 => new LimeCandleBlock(Identifier, 3, false, false),
-            23002 => new LimeCandleBlock(Identifier, 4, true, true),
-            23003 => new LimeCandleBlock(Identifier, 4, true, false),
-            23004 => new LimeCandleBlock(Identifier, 4, false, true),
-            23005 => new LimeCandleBlock(Identifier, 4, false, false),
+            23192 => new LimeCandleBlock(Identifier, 1, true, true),
+            23193 => new LimeCandleBlock(Identifier, 1, true, false),
+            23194 => new LimeCandleBlock(Identifier, 1, false, true),
+            23195 => new LimeCandleBlock(Identifier, 1, false, false),
+            23196 => new LimeCandleBlock(Identifier, 2, true, true),
+            23197 => new LimeCandleBlock(Identifier, 2, true, false),
+            23198 => new LimeCandleBlock(Identifier, 2, false, true),
+            23199 => new LimeCandleBlock(Identifier, 2, false, false),
+            23200 => new LimeCandleBlock(Identifier, 3, true, true),
+            23201 => new LimeCandleBlock(Identifier, 3, true, false),
+            23202 => new LimeCandleBlock(Identifier, 3, false, true),
+            23203 => new LimeCandleBlock(Identifier, 3, false, false),
+            23204 => new LimeCandleBlock(Identifier, 4, true, true),
+            23205 => new LimeCandleBlock(Identifier, 4, true, false),
+            23206 => new LimeCandleBlock(Identifier, 4, false, true),
+            23207 => new LimeCandleBlock(Identifier, 4, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

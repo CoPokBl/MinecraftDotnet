@@ -24,11 +24,7 @@ public class SkyWarsCombatFeature(Action<Player> deathCallback) : ScopedFeature 
     
     public override void Register() {
         AddEventHandler<PlayerPacketHandleEvent>(e => {
-            if (e.Packet is not ServerBoundInteractPacket packet) {
-                return;
-            }
-
-            if (packet.Type != ServerBoundInteractPacket.InteractType.Attack) {
+            if (e.Packet is not ServerBoundAttackPacket packet) {
                 return;
             }
 

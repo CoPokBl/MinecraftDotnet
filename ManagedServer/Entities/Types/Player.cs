@@ -260,13 +260,22 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
                 PlayerEntityInteractEvent interactEvent = new() {
                     Target = Manager!.GetEntity(ip.EntityId)!,
                     Player = this,
-                    Type = ip.Type,
                     TargetLocation = ip.Target,
                     UsedHand = ip.UsedHand,
                     SneakPressed = ip.SneakPressed,
                     World = World!
                 };
                 Events.CallEvent(interactEvent);
+                break;
+            }
+
+            case ServerBoundAttackPacket ap: {
+                PlayerAttackEntityEvent attackEvent = new() {
+                    Target = Manager!.GetEntity(ap.EntityId)!,
+                    Player = this,
+                    World = World!
+                };
+                Events.CallEvent(attackEvent);
                 break;
             }
 

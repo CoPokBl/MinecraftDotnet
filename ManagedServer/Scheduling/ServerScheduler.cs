@@ -9,6 +9,10 @@ public class ServerScheduler {
     // ReSharper disable once CollectionNeverQueried.Local
     private readonly List<Timer> _timers = [];
     private readonly List<(ulong tick, ScheduledTask task)> _tickTasks = [];
+    // Both lists are mutated from arbitrary threads (chunk loads schedule onto the tick
+    // thread from the pool, timer callbacks remove themselves), so every access is guarded.
+    private readonly Lock _tickTasksLock = new();
+    private readonly Lock _timersLock = new();
     private readonly ManagedMinecraftServer _server;
 
     /// <summary>
@@ -21,26 +25,44 @@ public class ServerScheduler {
         _server = server;
 
         server.Events.AddListener<ServerTickEvent>(_ => {
-            if (_tickTasks.Count == 0) return;
-
             ulong tick = _server.CurrentTick;
             int threshold = SlowTaskThresholdMs;
-            _tickTasks.RemoveAll(schedule => {
-                if (schedule.tick > tick) return false;
-                if (schedule.task.Cancelled) return true;
+
+            // Take the due tasks out of the list first, then run them with the lock released.
+            // Running them inline would mean holding the lock across arbitrary user code, which
+            // both re-enters this list (repeating tasks re-add themselves, tasks cancel tasks)
+            // and takes other locks.
+            List<ScheduledTask>? due = null;
+            lock (_tickTasksLock) {
+                if (_tickTasks.Count == 0) return;
+
+                for (int i = _tickTasks.Count - 1; i >= 0; i--) {
+                    (ulong scheduledTick, ScheduledTask task) = _tickTasks[i];
+                    if (scheduledTick > tick) continue;
+                    _tickTasks.RemoveAt(i);
+                    if (task.Cancelled) continue;
+                    (due ??= []).Add(task);
+                }
+            }
+
+            if (due == null) return;
+
+            // Undo the reverse iteration above so tasks run in the order they were scheduled.
+            due.Reverse();
+            foreach (ScheduledTask task in due) {
+                if (task.Cancelled) continue;
                 Stopwatch sw = Stopwatch.StartNew();
                 try {
-                    schedule.task.Run();
+                    task.Run();
                 }
                 catch (Exception e) {
                     _server.HandleError(e);
                 }
                 sw.Stop();
                 if (threshold > 0 && sw.ElapsedMilliseconds >= threshold) {
-                    _server.LogAction($"[SLOW TICK TASK +{sw.ElapsedMilliseconds}ms] {schedule.task.Description}");
+                    _server.LogAction($"[SLOW TICK TASK +{sw.ElapsedMilliseconds}ms] {task.Description}");
                 }
-                return true;
-            });
+            }
         });
     }
 
@@ -54,22 +76,27 @@ public class ServerScheduler {
     /// </returns>
     public ScheduledTask ScheduleTask(TimeSpan delay, Action action) {
         Timer timer = null!;
+        // ReSharper disable AccessToModifiedClosure
+        ScheduledTask task = new(action, () => {
+            timer.Dispose();
+            lock (_timersLock) _timers.Remove(timer);
+        });
+
         timer = new Timer(_ => {
+            // Disposing the timer doesn't recall a callback that has already been dispatched.
+            if (task.Cancelled) return;
             action();
-            // ReSharper disable once AccessToModifiedClosure
             try {
-                _timers.Remove(timer);
+                lock (_timersLock) _timers.Remove(timer);
             }
             catch (Exception e) {
                 _server.HandleError(e);
             }
         }, null, delay, Timeout.InfiniteTimeSpan);
-        _timers.Add(timer);
+        // ReSharper restore AccessToModifiedClosure
+        lock (_timersLock) _timers.Add(timer);
 
-        return new ScheduledTask(action, () => {
-            timer.Dispose();
-            _timers.Remove(timer);
-        });
+        return task;
     }
     
     /// <summary>
@@ -88,10 +115,14 @@ public class ServerScheduler {
         [SuppressMessage("ReSharper", "AccessToModifiedClosure")]
         void StopTask() {
             timer.Dispose();
-            _timers.Remove(timer);
+            lock (_timersLock) _timers.Remove(timer);
         }
 
+        ScheduledTask task = new(() => action(), StopTask);
+
         timer = new Timer(_ => {
+            // Disposing the timer doesn't recall a callback that has already been dispatched.
+            if (task.Cancelled) return;
             try {
                 if (action()) return;
             }
@@ -100,9 +131,9 @@ public class ServerScheduler {
             }
             StopTask();
         }, null, delay, delay);
-        _timers.Add(timer);
+        lock (_timersLock) _timers.Add(timer);
 
-        return new ScheduledTask(() => action(), StopTask);
+        return task;
     }
     
     /// <summary>
@@ -122,16 +153,23 @@ public class ServerScheduler {
 
         ScheduledTask task = null!;
         task = new ScheduledTask(() => {
-            if (action()) {
+            if (!action()) return;
+            // Cancel() may have run while the action was executing; don't re-queue a dead task.
+            if (task.Cancelled) return;
+            lock (_tickTasksLock) {
                 _tickTasks.Add((_server.CurrentTick + (ulong)tickDelay, task));
             }
         }, () => {
             // Remove the task from the list of scheduled tasks
-            _tickTasks.RemoveAll(t => t.task == task);
+            lock (_tickTasksLock) {
+                _tickTasks.RemoveAll(t => t.task == task);
+            }
         });
-        
-        _tickTasks.Add((_server.CurrentTick + (ulong)tickDelay, task));
-        
+
+        lock (_tickTasksLock) {
+            _tickTasks.Add((_server.CurrentTick + (ulong)tickDelay, task));
+        }
+
         return task;
     }
     
@@ -147,9 +185,13 @@ public class ServerScheduler {
         ScheduledTask task = null!;
         task = new ScheduledTask(action, () => {
             // ReSharper disable once AccessToModifiedClosure
-            _tickTasks.RemoveAll(t => t.task == task);
+            lock (_tickTasksLock) {
+                _tickTasks.RemoveAll(t => t.task == task);
+            }
         });
-        _tickTasks.Add((_server.CurrentTick + (ulong)ticks, task));
+        lock (_tickTasksLock) {
+            _tickTasks.Add((_server.CurrentTick + (ulong)ticks, task));
+        }
         return task;
     }
 }

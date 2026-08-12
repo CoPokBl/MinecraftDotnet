@@ -42,10 +42,10 @@ public record WallTorchBlock(Identifier Identifier, Direction Facing) : IBlock {
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 3170,
-                Direction.South => 3171,
-                Direction.West => 3172,
-                Direction.East => 3173,
+                Direction.North => 3371,
+                Direction.South => 3372,
+                Direction.West => 3373,
+                Direction.East => 3374,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -53,10 +53,10 @@ public record WallTorchBlock(Identifier Identifier, Direction Facing) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            3170 => new WallTorchBlock(Identifier, Direction.North),
-            3171 => new WallTorchBlock(Identifier, Direction.South),
-            3172 => new WallTorchBlock(Identifier, Direction.West),
-            3173 => new WallTorchBlock(Identifier, Direction.East),
+            3371 => new WallTorchBlock(Identifier, Direction.North),
+            3372 => new WallTorchBlock(Identifier, Direction.South),
+            3373 => new WallTorchBlock(Identifier, Direction.West),
+            3374 => new WallTorchBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

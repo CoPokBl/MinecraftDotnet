@@ -42,13 +42,13 @@ public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     public uint StateId {
         get {
             return Bites switch {
-                0 => 6826,
-                1 => 6827,
-                2 => 6828,
-                3 => 6829,
-                4 => 6830,
-                5 => 6831,
-                6 => 6832,
+                0 => 7027,
+                1 => 7028,
+                2 => 7029,
+                3 => 7030,
+                4 => 7031,
+                5 => 7032,
+                6 => 7033,
                 _ => throw new ArgumentOutOfRangeException(nameof(Bites), Bites, "Unknown value for property bites.")
             };
         }
@@ -56,13 +56,13 @@ public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            6826 => new CakeBlock(Identifier, 0),
-            6827 => new CakeBlock(Identifier, 1),
-            6828 => new CakeBlock(Identifier, 2),
-            6829 => new CakeBlock(Identifier, 3),
-            6830 => new CakeBlock(Identifier, 4),
-            6831 => new CakeBlock(Identifier, 5),
-            6832 => new CakeBlock(Identifier, 6),
+            7027 => new CakeBlock(Identifier, 0),
+            7028 => new CakeBlock(Identifier, 1),
+            7029 => new CakeBlock(Identifier, 2),
+            7030 => new CakeBlock(Identifier, 3),
+            7031 => new CakeBlock(Identifier, 4),
+            7032 => new CakeBlock(Identifier, 5),
+            7033 => new CakeBlock(Identifier, 6),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -43,16 +43,16 @@ public record OxidizedCopperChainBlock(Identifier Identifier, Axis Axis, bool Wa
         get {
             return Axis switch {
                 Axis.X => Waterlogged switch {
-                    true => 8069,
-                    false => 8070,
+                    true => 8270,
+                    false => 8271,
                 },
                 Axis.Y => Waterlogged switch {
-                    true => 8071,
-                    false => 8072,
+                    true => 8272,
+                    false => 8273,
                 },
                 Axis.Z => Waterlogged switch {
-                    true => 8073,
-                    false => 8074,
+                    true => 8274,
+                    false => 8275,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
@@ -61,12 +61,12 @@ public record OxidizedCopperChainBlock(Identifier Identifier, Axis Axis, bool Wa
     
     public IBlock WithState(uint state) {
         return state switch {
-            8069 => new OxidizedCopperChainBlock(Identifier, Axis.X, true),
-            8070 => new OxidizedCopperChainBlock(Identifier, Axis.X, false),
-            8071 => new OxidizedCopperChainBlock(Identifier, Axis.Y, true),
-            8072 => new OxidizedCopperChainBlock(Identifier, Axis.Y, false),
-            8073 => new OxidizedCopperChainBlock(Identifier, Axis.Z, true),
-            8074 => new OxidizedCopperChainBlock(Identifier, Axis.Z, false),
+            8270 => new OxidizedCopperChainBlock(Identifier, Axis.X, true),
+            8271 => new OxidizedCopperChainBlock(Identifier, Axis.X, false),
+            8272 => new OxidizedCopperChainBlock(Identifier, Axis.Y, true),
+            8273 => new OxidizedCopperChainBlock(Identifier, Axis.Y, false),
+            8274 => new OxidizedCopperChainBlock(Identifier, Axis.Z, true),
+            8275 => new OxidizedCopperChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

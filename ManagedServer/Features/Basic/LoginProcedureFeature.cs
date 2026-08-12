@@ -14,12 +14,18 @@ using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
+using Minecraft.Text;
 using NBT;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ManagedServer.Features.Basic;
 
 [CallsEvent(typeof(PlayerPreLoginEvent), typeof(PlayerLoginEvent))]
-public class LoginProcedureFeature(bool encryption = true, bool requestAuthentication = false) : ScopedFeature {
+public class LoginProcedureFeature(
+    bool encryption = true,
+    bool requestAuthentication = false,
+    bool verifyProtocolVersion = true) : ScopedFeature {
     public static readonly Tag<(Guid, string)> LoginInfoTag = new("minecraftdotnet:loginprocfeat:logininfo");
     
     // this tag is used to mark that the player is ready to login once all login steps are done
@@ -27,6 +33,121 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
     
     // We'll just say we know vanilla for now
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", ProtocolConstants.CurrentVersionString) ];
+
+    // Vanilla generates this once per server start and sends the same one to every client,
+    // and a feature instance is per server, so matching that is just a field
+    private readonly Guid _sessionId = Guid.NewGuid();
+
+    // Registries the client needs element data for that we can't produce ourselves yet. It
+    // resolves individual elements by key, so these have to carry the real vanilla data.
+    // Generated from the vanilla data by the CodeGen project, see ClientRegistryCodeGen.
+    private static readonly Lazy<(ClientBoundRegistryDataPacket[] Registries,
+        ClientBoundUpdateTagsPacket.TagSet[] Tags)> ClientSideRegistries = new(() => {
+        using Stream stream = typeof(LoginProcedureFeature).Assembly
+            .GetManifestResourceStream("ManagedServer.Resources.ClientRegistries.json")
+            ?? throw new InvalidOperationException("ClientRegistries.json is missing from the assembly.");
+        using StreamReader reader = new(stream);
+
+        JObject registries = JObject.Parse(reader.ReadToEnd());
+        List<ClientBoundRegistryDataPacket> packets = [];
+        List<ClientBoundUpdateTagsPacket.TagSet> tagSets = [];
+        List<string> unconvertible = [];
+
+        foreach ((string registryId, JToken? registry) in registries) {
+            JObject entries = (JObject)registry!["entries"]!;
+
+            Dictionary<string, INbtTag?> data = [];
+            List<string> order = [];
+            foreach ((string entryId, JToken? element) in entries) {
+                try {
+                    data[entryId] = INbtTag.FromJson(element!.ToString(Formatting.None));
+                    order.Add(entryId);
+                }
+                catch (Exception ex) {
+                    // Some vanilla elements use mixed type arrays, which don't map onto an
+                    // NBT list. Skip them rather than losing the whole registry, the client
+                    // only complains if it actually looks the element up.
+                    unconvertible.Add($"{registryId}/{entryId} ({ex.Message})");
+                }
+            }
+
+            packets.Add(new ClientBoundRegistryDataPacket {
+                RegistryId = registryId,
+                Entries = data
+            });
+
+            JObject tags = (JObject)registry["tags"]!;
+            if (tags.Count == 0) {
+                continue;
+            }
+
+            // Tags are sent as indexes into the entries we just wrote out
+            List<ClientBoundUpdateTagsPacket.Tag> registryTags = [];
+            foreach ((string tagId, JToken? values) in tags) {
+                registryTags.Add(new ClientBoundUpdateTagsPacket.Tag(
+                    tagId, ResolveTagValues(values!, tags, order)));
+            }
+            tagSets.Add(new ClientBoundUpdateTagsPacket.TagSet(registryId, registryTags.ToArray()));
+        }
+
+        if (unconvertible.Count > 0) {
+            Console.WriteLine($"Skipped {unconvertible.Count} registry entries that could not be " +
+                              $"converted to NBT: {string.Join(", ", unconvertible)}");
+        }
+
+        return (packets.ToArray(), tagSets.ToArray());
+    });
+
+    /// <summary>
+    /// Looks up the protocol id an element of one of the generated client side registries will
+    /// have, which is just its position in the registry data packet we send.
+    /// </summary>
+    /// <returns>The id, or -1 if the registry or element isn't one we send.</returns>
+    /// <remarks>
+    /// Packets that reference these registries (world clocks in
+    /// <see cref="ClientBoundUpdateTimePacket"/>, for instance) travel as ids, so they have to
+    /// agree with the order used here rather than with any vanilla ordering.
+    /// </remarks>
+    public static int GetClientRegistryEntryId(Identifier registry, Identifier element) {
+        ClientBoundRegistryDataPacket? packet = ClientSideRegistries.Value.Registries
+            .FirstOrDefault(p => p.RegistryId == registry);
+        if (packet == null) {
+            return -1;
+        }
+
+        int id = 0;
+        foreach (string entry in packet.Entries.Keys) {
+            if (entry == element) {
+                return id;
+            }
+            id++;
+        }
+
+        return -1;
+    }
+
+    private static int[] ResolveTagValues(JToken values, JObject allTags, List<string> order) {
+        List<int> ids = [];
+        foreach (JToken value in values) {
+            string name = value.Value<string>()!;
+
+            // Tags can pull in other tags, so flatten those into the same list
+            if (name.StartsWith('#')) {
+                if (allTags.TryGetValue(name[1..], out JToken? referenced)) {
+                    ids.AddRange(ResolveTagValues(referenced, allTags, order));
+                }
+                continue;
+            }
+
+            int index = order.IndexOf(name);
+            if (index != -1) {
+                ids.Add(index);
+            }
+        }
+
+        return ids.Distinct().ToArray();
+    }
+
 
     public override void Register() {
         if (Scope is not ManagedMinecraftServer) {
@@ -80,6 +201,19 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
         
         switch (e.Packet) {
             case ServerBoundLoginStartPacket ls: {
+                // A client on the wrong version gets all the way through login and dies in
+                // configuration instead, on whatever registry entry happens to be new this
+                // version, so say it plainly here rather than letting that happen
+                int protocolVersion = e.Connection.Handshake?.ProtocolVersion
+                                      ?? ProtocolConstants.ProtocolVersion;
+                if (verifyProtocolVersion && protocolVersion != ProtocolConstants.ProtocolVersion) {
+                    e.Connection.Kick(TextComponent.FromLegacyString(
+                        protocolVersion < ProtocolConstants.ProtocolVersion
+                            ? $"&cOutdated client! Please use {ProtocolConstants.CurrentVersionString}"
+                            : $"&cOutdated server! I'm still on {ProtocolConstants.CurrentVersionString}"));
+                    break;
+                }
+
                 e.Connection.SetTag(LoginInfoTag, (ls.Uuid, ls.Name));
                 e.Connection.SetCompression(10);
                 if (encryption) {
@@ -115,7 +249,8 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
             (Guid, string) ls = e.Connection.GetTag(LoginInfoTag);
             e.Connection.SendPacket(new ClientBoundLoginSuccessPacket {
                 Uuid = ls.Item1,
-                Username = ls.Item2
+                Username = ls.Item2,
+                SessionId = _sessionId
             });
         }
     }
@@ -151,8 +286,10 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                 };
                 e.Connection.SendPacket(tagsPacket);
 
+                HashSet<Identifier> sentRegistries = [];
                 List<ClientBoundRegistryDataPacket> registryPackets = [];
                 foreach (ISubRegistry reg in Scope.Server.Registry.SubRegistries) {
+                    sentRegistries.Add(reg.RegistryId);
                     if (reg is not INbtSerialisableRegistry nbtReg) {
                         continue;
                     }
@@ -161,63 +298,18 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                 }
                 e.Connection.SendPackets(registryPackets);
             
-                e.Connection.SendPackets(
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:zombie_nautilus_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:cat_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:tabby", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:chicken_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:cow_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:frog_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:pig_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:wolf_sound_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:big", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:wolf_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:ashen", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:worldgen/biome",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:plains", null }
-                        }
-                    },
-                    new ClientBoundFinishConfigurationPacket()
-                );
+                // Fill in the rest from the generated vanilla data, skipping anything a real
+                // registry already covered
+                e.Connection.SendPackets(ClientSideRegistries.Value.Registries
+                    .Where(packet => !sentRegistries.Contains(packet.RegistryId)));
+
+                ClientBoundUpdateTagsPacket.TagSet[] extraTags = ClientSideRegistries.Value.Tags
+                    .Where(set => !sentRegistries.Contains(set.Registry))
+                    .ToArray();
+                if (extraTags.Length > 0) {
+                    e.Connection.SendPacket(new ClientBoundUpdateTagsPacket { Tags = extraTags });
+                }
+                e.Connection.SendPacket(new ClientBoundFinishConfigurationPacket());
                 break;
             }
         }
@@ -240,7 +332,8 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                     throw new Exception("You must specify a spawn world for joining players in the PlayerPreLoginEvent.");
                 }
 
-                int pEntityId = Random.Shared.Next();
+                // Zero is vanilla's "id not assigned yet" and makes the client throw on sight
+                int pEntityId = Random.Shared.Next(1, int.MaxValue);
                 
                 ClientBoundLoginPacket packet = new() {
                     DimensionName = preLoginEvent.World.DimensionId,
@@ -249,6 +342,7 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                     DoLimitedCrafting = false,
                     EnableRespawnScreen = true,
                     EnforcesSecureChat = false,
+                    OnlineMode = requestAuthentication,
                     EntityId = pEntityId,
                     GameMode = preLoginEvent.GameMode,
                     SeaLevel = 64,
