@@ -31,6 +31,15 @@ public static class ExtensionUtils {
         return result;
     }
 
+    /// <summary>The inverse of <see cref="ToLongArray"/>, for reading a Java BitSet back.</summary>
+    public static BitArray ToBitArray(this long[] longs) {
+        BitArray bits = new(longs.Length * 64);
+        for (int i = 0; i < bits.Length; i++) {
+            bits[i] = (longs[i / 64] & (1L << (i % 64))) != 0;
+        }
+        return bits;
+    }
+
     public static T LogVal<T>(this T val, Func<T, Object> thing) {
         Console.WriteLine(thing.Invoke(val));
         return val;

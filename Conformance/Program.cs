@@ -36,6 +36,10 @@ foreach (Type type in VanillaRegistry.Data.Packets.GetPacketTypes(true).OrderBy(
         continue;
     }
 
+    if (RichSamples.Covered.Contains(type)) {
+        continue;  // built by hand below
+    }
+
     MinecraftPacket packet;
     try {
         packet = SampleBuilder.Build(type);
@@ -82,6 +86,20 @@ foreach ((string name, string serialiser, MinecraftPacket packet) in MetaSamples
 
 foreach (MetaFieldType uncovered in MetaSamples.Uncovered()) {
     skipped.Add($"ClientBoundSetEntityMetadataPacket[{uncovered}]: no sample in MetaSamples");
+}
+
+// Packets hanging off an abstract type, or a union whose tag has to match its payload
+foreach ((string name, MinecraftPacket packet) in RichSamples.Build()) {
+    try {
+        DataReader reader = new(packet.Serialise(ConnectionState.Play));
+        reader.ReadVarInt();
+        entries.Add(Entry(ConnectionState.Play, name,
+            reader.Read((int)(reader.Length - reader.Position))));
+        built++;
+    }
+    catch (Exception ex) {
+        skipped.Add($"{name}: {ex.GetType().Name}: {ex.Message}");
+    }
 }
 
 // Chunks likewise: the section format is bit packed, so a fabricated one proves nothing

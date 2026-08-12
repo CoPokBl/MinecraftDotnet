@@ -157,16 +157,7 @@ public class ItemStack(
         
         writer.WriteVarInt(Count);
         writer.WriteVarInt(registry.Items.GetProtocolId(Type));
-        
-        writer.WriteVarInt(_components.Count);  // components to add
-        writer.WriteVarInt(_removeComponents.Length);  // components to remove
-
-        writer.WriteArray(_components, (kvp, w) => w
-            .WriteVarInt(registry.DataComponents.GetProtocolId(kvp.Key))
-            .Write(wr => kvp.Key.WriteData(kvp.Value, wr, registry)));
-        
-        return writer.WriteArray(_removeComponents, (component, w) => w
-            .WriteVarInt(registry.DataComponents.GetProtocolId(component)));
+        return WriteComponentPatch(writer, registry);
     }
 
     public static ItemStack ReadData(DataReader reader, MinecraftRegistry registry) {
@@ -174,9 +165,40 @@ public class ItemStack(
         if (count == 0) {
             return Air;
         }
-        
+
         int itemId = reader.ReadVarInt();
-        
+        return ReadComponentPatch(reader, registry, registry.Items[itemId], count);
+    }
+
+    /// <summary>
+    /// Writes the stack in the "template" form recipe displays use. It always names an item, so
+    /// there is no encoding for an empty stack, and the item comes before the count.
+    /// </summary>
+    public DataWriter WriteTemplateData(DataWriter writer, MinecraftRegistry registry) {
+        writer.WriteVarInt(registry.Items.GetProtocolId(Type));
+        writer.WriteVarInt(Count);
+        return WriteComponentPatch(writer, registry);
+    }
+
+    public static ItemStack ReadTemplateData(DataReader reader, MinecraftRegistry registry) {
+        IItem item = registry.Items[reader.ReadVarInt()];
+        int count = reader.ReadVarInt();
+        return ReadComponentPatch(reader, registry, item, count);
+    }
+
+    private DataWriter WriteComponentPatch(DataWriter writer, MinecraftRegistry registry) {
+        writer.WriteVarInt(_components.Count);  // components to add
+        writer.WriteVarInt(_removeComponents.Length);  // components to remove
+
+        writer.WriteArray(_components, (kvp, w) => w
+            .WriteVarInt(registry.DataComponents.GetProtocolId(kvp.Key))
+            .Write(wr => kvp.Key.WriteData(kvp.Value, wr, registry)));
+
+        return writer.WriteArray(_removeComponents, (component, w) => w
+            .WriteVarInt(registry.DataComponents.GetProtocolId(component)));
+    }
+
+    private static ItemStack ReadComponentPatch(DataReader reader, MinecraftRegistry registry, IItem item, int count) {
         int addCount = reader.ReadVarInt();
         int removeCount = reader.ReadVarInt();
 
@@ -185,13 +207,13 @@ public class ItemStack(
             IDataComponent component = registry.DataComponents[netId];
             return new KeyValuePair<IDataComponent, object>(component, component.ReadData(r, registry));
         });
-        
+
         IDataComponent[] removeComponents = reader.ReadArray(removeCount, r => {
             int netId = r.ReadVarInt();
             return registry.DataComponents[netId];
         });
-        
-        return new ItemStack(registry.Items[itemId], count, new Dictionary<IDataComponent, object>(components), removeComponents);
+
+        return new ItemStack(item, count, new Dictionary<IDataComponent, object>(components), removeComponents);
     }
 
     public T GetTag<T>(Tag<T> tag) {

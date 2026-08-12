@@ -262,6 +262,11 @@ RunStep("Attributes", AttributeCodeGen.CreateAttributeEntries);
 RunStep("Argument Types", ArgumentTypeCodeGen.CreateArgumentTypeEntries);
 RunStep("Statistic Types", StatisticTypeCodeGen.CreateStatisticTypes);
 RunStep("Custom Statistics", CustomStatisticCodeGen.CreateCustomStatistics);
+RunStep("Debug Subscriptions", DebugSubscriptionCodeGen.CreateDebugSubscriptions);
+RunStep("Map Decoration Types", MapDecorationTypeCodeGen.CreateMapDecorationTypes);
+RunStep("Slot Display Types", SlotDisplayTypeCodeGen.CreateSlotDisplayTypes);
+RunStep("Recipe Display Types", RecipeDisplayTypeCodeGen.CreateRecipeDisplayTypes);
+RunStep("Recipe Book Categories", RecipeBookCategoryCodeGen.CreateRecipeBookCategories);
 RunStep("Environment Attributes", EnvironmentAttributeCodeGen.CreateEnvironmentAttributes);
 RunStep("Tags", TagsCodeGen.CreateTagEntries);
 

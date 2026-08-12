@@ -71,4 +71,23 @@ public class LightData : IWritable {
         w.WritePrefixedArray(BlockLight, (i, writer) =>
             writer.WritePrefixedArray(i, (b, dataWriter) => dataWriter.WriteUnsignedByte(b)));
     }
+
+    public static LightData Read(DataReader r) {
+        return new LightData {
+            SkyLightMask = ReadMask(r),
+            BlockLightMask = ReadMask(r),
+            EmptySkyLightMask = ReadMask(r),
+            EmptyBlockLightMask = ReadMask(r),
+            SkyLight = ReadLightArrays(r),
+            BlockLight = ReadLightArrays(r)
+        };
+
+        static BitArray ReadMask(DataReader r) {
+            return r.ReadPrefixedArray(reader => reader.ReadLong()).ToBitArray();
+        }
+
+        static byte[][] ReadLightArrays(DataReader r) {
+            return r.ReadPrefixedArray(reader => reader.Read(reader.ReadVarInt()));
+        }
+    }
 }

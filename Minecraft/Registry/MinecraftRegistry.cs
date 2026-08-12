@@ -51,6 +51,11 @@ public class MinecraftRegistry {
     public TestEnvironmentRegistry TestEnvironments { get; set; } = new();
     public TestInstanceRegistry TestInstances { get; set; } = new();
     public DialogRegistry Dialogs { get; set; } = new();
+    public DebugSubscriptionRegistry DebugSubscriptions { get; set; } = new();
+    public MapDecorationTypeRegistry MapDecorationTypes { get; set; } = new();
+    public SlotDisplayTypeRegistry SlotDisplayTypes { get; set; } = new();
+    public RecipeDisplayTypeRegistry RecipeDisplayTypes { get; set; } = new();
+    public RecipeBookCategoryRegistry RecipeBookCategories { get; set; } = new();
 
     public ISubRegistry this[Identifier id] {
         get {
@@ -109,7 +114,12 @@ public class MinecraftRegistry {
         SulfurCubeArchetypes,
         TestEnvironments,
         TestInstances,
-        Dialogs
+        Dialogs,
+        DebugSubscriptions,
+        MapDecorationTypes,
+        SlotDisplayTypes,
+        RecipeDisplayTypes,
+        RecipeBookCategories
     ];
 
     public MinecraftRegistry Clone() {
@@ -158,7 +168,12 @@ public class MinecraftRegistry {
             SulfurCubeArchetypes = SulfurCubeArchetypes.Clone(),
             TestEnvironments = TestEnvironments.Clone(),
             TestInstances = TestInstances.Clone(),
-            Dialogs = Dialogs.Clone()
+            Dialogs = Dialogs.Clone(),
+            DebugSubscriptions = DebugSubscriptions.Clone(),
+            MapDecorationTypes = MapDecorationTypes.Clone(),
+            SlotDisplayTypes = SlotDisplayTypes.Clone(),
+            RecipeDisplayTypes = RecipeDisplayTypes.Clone(),
+            RecipeBookCategories = RecipeBookCategories.Clone()
         };
     }
     

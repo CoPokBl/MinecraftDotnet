@@ -32,6 +32,23 @@ public record ChatTypeDecoration(
         return new CompoundTag(children.ToArray());
     }
 
+    /// <summary>
+    /// Writes the decoration in the form used inside packets, which sends the fields directly
+    /// rather than as the NBT the registry travels as.
+    /// </summary>
+    public void Write(DataWriter w) {
+        w.WriteString(TranslationKey)
+            .WritePrefixedArray(Parameters, (parameter, writer) => writer.WriteVarInt((int)parameter))
+            .WriteNbt(Style.ToNbt());
+    }
+
+    public static ChatTypeDecoration Read(DataReader r) {
+        return new ChatTypeDecoration(
+            r.ReadString(),
+            r.ReadPrefixedArray(reader => (ChatDecorationParameter)reader.ReadVarInt()),
+            TextStyle.FromNbt(r.ReadNbt()));
+    }
+
     public static ChatTypeDecoration FromNbt(INbtTag tag) {
         CompoundTag compound = (CompoundTag)tag;
         return new ChatTypeDecoration(
