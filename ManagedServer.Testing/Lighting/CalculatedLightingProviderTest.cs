@@ -1,5 +1,6 @@
 using ManagedServer.Worlds.Lighting;
 using Minecraft.Data.Generated;
+using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
 
@@ -431,5 +432,141 @@ public class CalculatedLightingProviderTest {
 
         Assert.That(secondBorder, Is.GreaterThan(firstBorder),
             "Result without neighbors should not be cached; recompute should pick up neighbor light");
+    }
+
+    // ── Dampening ────────────────────────────────────────────────────────────
+    //
+    // A block costs max(1, lightDampening) of the level crossing into it, and a sky source column
+    // stops at the first block that dampens at all. Neither is visible in the occlusion shape,
+    // which is why these are the cases a shape only engine gets wrong.
+
+    [Test]
+    public void SkyLight_AttenuatesThroughWater() {
+        ChunkData chunk = AirChunk();
+        for (int x = 0; x < 16; x++)
+        for (int z = 0; z < 16; z++)
+        for (int y = 190; y <= 200; y++)
+            chunk.SetBlock(x, y, z, Block.Water);
+
+        LightData light = ComputeWithSkyLight(chunk, new Vec2<int>(0, 0));
+
+        // The surface is the last source, so the water itself starts one down from fifteen.
+        Assert.That(GetSkyLight(light, 8, 201, 8), Is.EqualTo(15), "above the surface");
+        Assert.That(GetSkyLight(light, 8, 200, 8), Is.EqualTo(14), "at the surface");
+        Assert.That(GetSkyLight(light, 8, 195, 8), Is.EqualTo(9), "five deep");
+        Assert.That(GetSkyLight(light, 8, 100, 8), Is.EqualTo(0), "the bottom is dark");
+    }
+
+    [Test]
+    public void SkyLight_AttenuatesThroughLeaves() {
+        ChunkData chunk = AirChunk();
+        for (int x = 0; x < 16; x++)
+        for (int z = 0; z < 16; z++)
+            chunk.SetBlock(x, 200, z, Block.OakLeaves);
+
+        LightData light = ComputeWithSkyLight(chunk, new Vec2<int>(0, 0));
+
+        Assert.That(GetSkyLight(light, 8, 201, 8), Is.EqualTo(15));
+        Assert.That(GetSkyLight(light, 8, 200, 8), Is.EqualTo(14), "the canopy itself");
+        Assert.That(GetSkyLight(light, 8, 199, 8), Is.EqualTo(13), "under the canopy");
+    }
+
+    [Test]
+    public void TintedGlassBlocksLightWithoutAnOcclusionShape() {
+        ChunkData chunk = AirChunk();
+        for (int x = 0; x < 16; x++)
+        for (int z = 0; z < 16; z++)
+            chunk.SetBlock(x, 200, z, Block.TintedGlass);
+
+        LightData light = ComputeWithSkyLight(chunk, new Vec2<int>(0, 0));
+
+        Assert.That(GetSkyLight(light, 8, 201, 8), Is.EqualTo(15));
+        Assert.That(GetSkyLight(light, 8, 200, 8), Is.EqualTo(0), "dampening is fifteen");
+        Assert.That(GetSkyLight(light, 8, 199, 8), Is.EqualTo(0), "nothing gets past it");
+    }
+
+    [Test]
+    public void CarpetDoesNotCastAShadow() {
+        ChunkData chunk = AirChunk();
+        for (int x = 0; x < 16; x++)
+        for (int z = 0; z < 16; z++)
+            chunk.SetBlock(x, 200, z, Block.WhiteCarpet);
+
+        LightData light = ComputeWithSkyLight(chunk, new Vec2<int>(0, 0));
+
+        // A carpet covers its bottom face, but light only reads a shape off a block that uses it
+        // for occlusion, and a carpet is not one of those.
+        Assert.That(GetSkyLight(light, 8, 200, 8), Is.EqualTo(15));
+        Assert.That(GetSkyLight(light, 8, 199, 8), Is.EqualTo(15));
+        Assert.That(GetSkyLight(light, 8, 100, 8), Is.EqualTo(15));
+    }
+
+    // ── Per state light ──────────────────────────────────────────────────────
+
+    [Test]
+    public void EmissionComesFromTheStateNotTheBlock() {
+        ChunkData chunk = AirChunk();
+        chunk.SetBlock(2, 64, 2, Block.Furnace with { Lit = true });
+        chunk.SetBlock(6, 64, 6, Block.Furnace with { Lit = false });
+        chunk.SetBlock(10, 64, 10, Block.Campfire with { Lit = false });
+        chunk.SetBlock(14, 64, 14, Block.RedstoneTorch with { Lit = false });
+
+        LightData light = ComputeBlockLightOnly(chunk, new Vec2<int>(0, 0));
+
+        Assert.That(GetBlockLight(light, 2, 64, 2), Is.EqualTo(13), "lit furnace");
+        Assert.That(GetBlockLight(light, 6, 64, 6), Is.EqualTo(0), "unlit furnace");
+        Assert.That(GetBlockLight(light, 10, 64, 10), Is.EqualTo(0), "unlit campfire");
+        Assert.That(GetBlockLight(light, 14, 64, 14), Is.EqualTo(0), "unlit redstone torch");
+    }
+
+    [Test]
+    public void SourcesOfOneLightTheirOwnBlock() {
+        ChunkData chunk = AirChunk();
+        chunk.SetBlock(8, 64, 8, Block.BrownMushroom);
+
+        LightData light = ComputeBlockLightOnly(chunk, new Vec2<int>(0, 0));
+
+        Assert.That(GetBlockLight(light, 8, 64, 8), Is.EqualTo(1), "the mushroom itself");
+        Assert.That(GetBlockLight(light, 9, 64, 8), Is.EqualTo(0), "and nothing beside it");
+    }
+
+    // ── Shapes ───────────────────────────────────────────────────────────────
+
+    [Test]
+    public void TopSlabBlocksSkyLightAndBottomSlabHoldsIt() {
+        ChunkData top = AirChunk();
+        ChunkData bottom = AirChunk();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                top.SetBlock(x, 200, z, Block.OakSlab with { Type = SlabType.Top });
+                bottom.SetBlock(x, 200, z, Block.OakSlab with { Type = SlabType.Bottom });
+            }
+        }
+
+        LightData topLight = ComputeWithSkyLight(top, new Vec2<int>(0, 0));
+        LightData bottomLight = ComputeWithSkyLight(bottom, new Vec2<int>(1, 0));
+
+        // A top slab closes the boundary above itself, a bottom slab the one below, so the sky
+        // stops one block lower in the second case.
+        Assert.That(GetSkyLight(topLight, 8, 200, 8), Is.EqualTo(0), "top slab");
+        Assert.That(GetSkyLight(bottomLight, 8, 200, 8), Is.EqualTo(15), "bottom slab");
+        Assert.That(GetSkyLight(bottomLight, 8, 199, 8), Is.EqualTo(0), "under the bottom slab");
+    }
+
+    // ── Region ───────────────────────────────────────────────────────────────
+
+    [Test]
+    public void LightArrivesFromADiagonalNeighbour() {
+        ChunkData chunk = AirChunk();
+        ChunkData diagonal = AirChunk();
+        diagonal.SetBlock(15, 64, 15, Block.Glowstone);
+
+        LightData light = _provider.GetLighting(new Vec2<int>(0, 0), chunk,
+            pos => pos == new Vec2<int>(-1, -1) ? diagonal : pos == new Vec2<int>(0, 0) ? chunk : AirChunk(),
+            VanillaRegistry.Data, hasSkyLight: false);
+
+        // Two steps from the source, which is only reachable through one of the chunks between
+        // them: light exchanged along the four borders alone never gets here.
+        Assert.That(GetBlockLight(light, 0, 64, 0), Is.EqualTo(13));
     }
 }

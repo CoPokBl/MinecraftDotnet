@@ -19,6 +19,7 @@ import java.util.TreeMap;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -43,9 +44,11 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
@@ -74,9 +77,10 @@ public final class Dumper {
         write(out.resolve("block.json"), blocks());
         write(out.resolve("entity_type.json"), entityTypes());
         write(out.resolve("attribute.json"), attributes());
+        write(out.resolve("light.json"), light());
 
         reportUnknownMembers();
-        System.out.println("Dumped block.json, entity_type.json and attribute.json to " + out);
+        System.out.println("Dumped block.json, entity_type.json, attribute.json and light.json to " + out);
     }
 
     // ------------------------------------------------------- completeness
@@ -112,9 +116,12 @@ public final class Dumper {
                 "instrument", "isRandomlyTicking", "shouldSpawnTerrainParticles", "getFluidState",
                 // Reachable from what is dumped, or not data at all.
                 "getBlock", "hasBlockEntity", "hasLargeCollisionShape", "initCache", "typeHolder",
-                // Rendering, lighting and server behaviour.
-                "emissiveRendering", "getRenderShape", "hasAnalogOutputSignal", "ignitedByLava",
-                "isSolidRender", "propagatesSkylightDown", "useShapeForLightOcclusion"));
+                // Folded into light.json: the first two are what getLightDampening is derived from,
+                // and the third is what decides whether the light occlusion shape is the block's or
+                // an empty one.
+                "isSolidRender", "propagatesSkylightDown", "useShapeForLightOcclusion",
+                // Rendering and server behaviour.
+                "emissiveRendering", "getRenderShape", "hasAnalogOutputSignal", "ignitedByLava"));
 
         report("EntityType", zeroArgMethodNames(EntityType.class), Set.of(
                 // Dumped.
@@ -333,6 +340,76 @@ public final class Dumper {
 
     private static String aabbs(VoxelShape shape) {
         return shape.toAabbs().toString();
+    }
+
+    // ----------------------------------------------------------------- light
+
+    /**
+     * The order face ids are written in, which is the bit order the light engine gives them.
+     * Vanilla's own Direction order is a different one, so it isn't reused.
+     */
+    private static final Direction[] LIGHT_FACES = {
+            Direction.EAST, Direction.WEST, Direction.UP,
+            Direction.DOWN, Direction.SOUTH, Direction.NORTH};
+
+    /**
+     * What the light engine reads off a block state, which is more than the occlusion shape in
+     * block.json: light occludes through {@code LightEngine.getOcclusionShape}, and that is empty
+     * for every state that doesn't use its shape for light occlusion however solid the block is.
+     * Reading the occlusion shape instead makes carpets and repeaters cast shadows.
+     * <p>
+     * Whether light crosses a face is {@code Shapes.faceShapeOccludes} of the two faces meeting at
+     * it, so no single state carries the answer. The faces are deduplicated instead (there are
+     * around fifty distinct ones) and the whole pairwise matrix written out, which is small enough
+     * to keep resident and leaves nothing for the C# side to re-derive.
+     */
+    private static Obj light() {
+        List<VoxelShape> faceShapes = new ArrayList<>();
+        Map<String, Integer> faceShapeIds = new HashMap<>();
+        List<Object> faces = new ArrayList<>();
+        List<Object> dampening = new ArrayList<>();
+        List<Object> emission = new ArrayList<>();
+
+        int stateCount = Block.BLOCK_STATE_REGISTRY.size();
+        for (int stateId = 0; stateId < stateCount; stateId++) {
+            BlockState state = Objects.requireNonNull(Block.BLOCK_STATE_REGISTRY.byId(stateId));
+            dampening.add(state.getLightDampening());
+            emission.add(state.getLightEmission());
+
+            for (Direction face : LIGHT_FACES) {
+                VoxelShape shape = LightEngine.getOcclusionShape(state, face);
+                Integer id = faceShapeIds.get(aabbs(shape));
+                if (id == null) {
+                    id = faceShapes.size();
+                    faceShapeIds.put(aabbs(shape), id);
+                    faceShapes.add(shape);
+                }
+                faces.add(id);
+            }
+        }
+
+        List<Object> occludes = new ArrayList<>();
+        for (VoxelShape from : faceShapes) {
+            StringBuilder row = new StringBuilder();
+            for (VoxelShape to : faceShapes) {
+                row.append(Shapes.faceShapeOccludes(from, to) ? '1' : '0');
+            }
+            occludes.add(row.toString());
+        }
+
+        List<Object> shapes = new ArrayList<>();
+        for (VoxelShape shape : faceShapes) {
+            shapes.add(aabbs(shape));
+        }
+
+        Obj json = new Obj();
+        json.put("faceOrder", List.of("east", "west", "up", "down", "south", "north"));
+        json.put("faceShapes", shapes);
+        json.put("faceOccludes", occludes);
+        json.put("stateFaces", faces);
+        json.put("stateDampening", dampening);
+        json.put("stateEmission", emission);
+        return json;
     }
 
     @SuppressWarnings("unchecked")

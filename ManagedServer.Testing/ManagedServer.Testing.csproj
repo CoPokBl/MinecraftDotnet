@@ -24,4 +24,9 @@
       <ProjectReference Include="..\ManagedServer\ManagedServer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <!-- Worlds lit by the vanilla light engine, see Conformance/lighting.sh. -->
+      <None Include="Lighting\vanilla-light.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
 </Project>

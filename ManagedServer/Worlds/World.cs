@@ -692,8 +692,15 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
     }
 
+    /// <summary>
+    /// Light crosses fifteen blocks, so a change in one chunk moves the light in all eight around
+    /// it, diagonals included: a source near a corner reaches into the chunk past it.
+    /// </summary>
     private void ResendNeighborLighting(Vec2<int> chunkPos) {
-        ReadOnlySpan<Vec2<int>> offsets = [new(1, 0), new(-1, 0), new(0, 1), new(0, -1)];
+        ReadOnlySpan<Vec2<int>> offsets = [
+            new(1, 0), new(-1, 0), new(0, 1), new(0, -1),
+            new(1, 1), new(1, -1), new(-1, 1), new(-1, -1)
+        ];
         foreach (Vec2<int> offset in offsets) {
             Vec2<int> nPos = chunkPos + offset;
             ChunkData? data = TryGetLoadedChunk(nPos);
@@ -702,7 +709,26 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             _lighting.Invalidate(nPos);
             MinecraftPacket packet = BuildChunkPacket(nPos, data);
 
-            foreach (Player viewer in GetViewersOf(nPos)) viewer.SendPacket(packet);
+            EnqueueChunkResend(nPos, packet);
+        }
+    }
+
+    /// <summary>
+    /// Queues a rebuilt chunk behind whatever the player is already owed, and only for the players
+    /// that have been given that chunk. Sending it straight to the connection instead lets it
+    /// overtake the chunk it is correcting, which the queue hands out a few per tick: the client
+    /// drops light for a chunk it does not have, then takes the older packet that follows and keeps
+    /// its light for good. Anyone who has not been sent the chunk yet needs nothing, because the
+    /// invalidate above means it is built again from scratch when they are.
+    /// </summary>
+    private void EnqueueChunkResend(Vec2<int> chunkPos, MinecraftPacket packet) {
+        Player[] snap = _playersSnapshot;
+        foreach (Player player in snap) {
+            if (!_playerStates.TryGetValue(player, out PlayerWorldState? state) || state.Disconnected) continue;
+            lock (state.Lock) {
+                if (!state.LoadedChunks.Contains(chunkPos)) continue;
+                state.PendingPackets.Enqueue(packet);
+            }
         }
     }
 

@@ -213,6 +213,7 @@ StringBuilder registryEntries = new();
 
 RunStep("Particles", ParticleCodeGen.CreateParticleEntries);
 RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
+RunFileStep("Block Light", BlockLightCodeGen.GenerateBlockLightCode);
 RunStep("Packets", PacketCodeGen.CreatePacketEntries);
 RunStep("Data Components", DataComponentCodeGen.CreateComponentEntries);
 RunStep("Items", ItemCodeGen.CreateItemEntries);
@@ -303,6 +304,14 @@ void RunStep(string name, Func<JObject, string> func) {
     Console.WriteLine($"Generating {name} code...");
     Stopwatch sw = Stopwatch.StartNew();
     registryEntries.Append(func(registriesJson)).Append('\n');
+    Console.WriteLine($"{name} took {sw.Elapsed}");
+}
+
+/// <summary>For generators that write a file and add nothing to the vanilla registry.</summary>
+void RunFileStep(string name, Action<JObject> action) {
+    Console.WriteLine($"Generating {name} code...");
+    Stopwatch sw = Stopwatch.StartNew();
+    action(registriesJson);
     Console.WriteLine($"{name} took {sw.Elapsed}");
 }
 
