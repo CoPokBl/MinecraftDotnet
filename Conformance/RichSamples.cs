@@ -1,4 +1,5 @@
 using Minecraft;
+using Minecraft.Data.Dialogs;
 using Minecraft.Data.Generated;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ClientBound;
@@ -9,6 +10,7 @@ using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Recipes;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
+using NBT.Tags;
 
 namespace Conformance;
 
@@ -49,6 +51,71 @@ public static class RichSamples {
     public static IEnumerable<(string Name, MinecraftPacket Packet)> Build() {
         yield return ("ClientBoundShowDialogPacket",
             ClientBoundShowDialogPacket.Reference(Dialog.QuickActions.Identifier));
+
+        // The inline form carries the whole dialog as NBT, so this is the only check on the shape
+        // ManagedServer's dialog builder writes
+        yield return ("ClientBoundShowDialogPacket[inline]", ClientBoundShowDialogPacket.Inline(
+            new MultiActionDialog(
+                ClientBoundShowDialogPacket.InlineIdentifier,
+                new CommonDialogData(
+                    TextComponent.Text("Title"),
+                    Body: [
+                        new DialogBody.PlainMessage(TextComponent.Text("Body")),
+                        new DialogBody.ItemBody(new DialogItem(Item.DiamondSword.Identifier, 3),
+                            new DialogBody.PlainMessage(TextComponent.Text("An item")))
+                    ],
+                    Inputs: [
+                        new DialogInput("name", new InputControl.Text(TextComponent.Text("Name"))),
+                        new DialogInput("story", new InputControl.Text(TextComponent.Text("Story"),
+                            MaxLength: 200, Multiline: new MultilineOptions(4, 60))),
+                        new DialogInput("agree", new InputControl.Boolean(TextComponent.Text("Agree"))),
+                        new DialogInput("amount",
+                            new InputControl.NumberRange(TextComponent.Text("Amount"), new RangeInfo(0, 10, null, 1))),
+                        new DialogInput("colour", new InputControl.SingleOption(TextComponent.Text("Colour"),
+                            [new SingleOptionEntry("red", TextComponent.Text("Red"), true)]))
+                    ]),
+                [
+                    new DialogActionButton(TextComponent.Text("Send"),
+                        Action: new DialogAction.Custom("managedserver:dialog/sample/0", null)),
+                    // The client handles these two itself. A command template has to name at least
+                    // one input, and vanilla parses the URL, so both are more than a string check
+                    new DialogActionButton(TextComponent.Text("Run"),
+                        Action: new DialogAction.RunCommandTemplate("helloworld $(amount)")),
+                    new DialogActionButton(TextComponent.Text("Open"),
+                        Action: new DialogAction.Static("minecraft:open_url",
+                            [("url", new StringTag("https://github.com/CoPokBl/MinecraftDotnet"))]))
+                ],
+                new DialogActionButton(TextComponent.Text("Back")))));
+
+        // A dialog that stays open after a button. Vanilla refuses one that pauses the game
+        // without unpausing it again, so the pause flag has to come off with it
+        yield return ("ClientBoundShowDialogPacket[stays open]", ClientBoundShowDialogPacket.Inline(
+            new MultiActionDialog(
+                ClientBoundShowDialogPacket.InlineIdentifier,
+                new CommonDialogData(TextComponent.Text("Menu"), Pause: false,
+                    AfterAction: DialogAfterAction.None),
+                [
+                    new DialogActionButton(TextComponent.Text("One"),
+                        Action: new DialogAction.Custom("managedserver:dialog/sample/0", null)),
+                    new DialogActionButton(TextComponent.Text("Two"),
+                        Action: new DialogAction.Custom("managedserver:dialog/sample/1", null))
+                ],
+                new DialogActionButton(TextComponent.Text("Done")))));
+
+        // The other two shapes a server is likely to send inline
+        yield return ("ClientBoundShowDialogPacket[notice]", ClientBoundShowDialogPacket.Inline(
+            new NoticeDialog(ClientBoundShowDialogPacket.InlineIdentifier,
+                new CommonDialogData(TextComponent.Text("Notice"),
+                    Body: [new DialogBody.PlainMessage(TextComponent.Text("Body"))]),
+                NoticeDialog.DefaultAction)));
+
+        yield return ("ClientBoundShowDialogPacket[confirmation]", ClientBoundShowDialogPacket.Inline(
+            new ConfirmationDialog(ClientBoundShowDialogPacket.InlineIdentifier,
+                new CommonDialogData(TextComponent.Text("Sure?")),
+                new DialogActionButton(TextComponent.Translatable("gui.yes"),
+                    Action: new DialogAction.Custom("managedserver:dialog/sample/0", null)),
+                new DialogActionButton(TextComponent.Translatable("gui.no"),
+                    Action: new DialogAction.Custom("managedserver:dialog/sample/1", null)))));
 
         yield return ("ClientBoundDisguisedChatMessagePacket", new ClientBoundDisguisedChatMessagePacket {
             Message = TextComponent.Empty(),

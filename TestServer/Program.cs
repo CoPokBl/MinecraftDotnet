@@ -1,5 +1,6 @@
 ﻿using TestServer.Servers.AnvilTesting;
 using TestServer.Servers.BlockSumoFFA;
+using TestServer.Servers.Dialogs;
 using TestServer.Servers.Everything;
 using TestServer.Servers.MlgRush;
 using TestServer.Servers.SkyWarsLuckyBlock;
@@ -50,6 +51,10 @@ switch (args[0]) {
     
     case "transfer":
         await TransferTest.Start();
+        break;
+
+    case "dialogs":
+        await DialogTest.Start();
         break;
     
     default:

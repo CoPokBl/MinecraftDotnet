@@ -26,6 +26,7 @@ public partial class ManagedMinecraftServer {
         new RightClickToEquipArmourFeature(),
         new CommandsFeature(),
         new InventoryClosingFeature(),
+        new DialogFeature(),
         new AttributeModifiersFeature(true),
         new PlayerSwapItemFeature()
     );
