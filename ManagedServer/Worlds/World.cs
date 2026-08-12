@@ -80,6 +80,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     private readonly int _viewDistance;
     private readonly int _packetsPerTick;
     private readonly int _tickDelayMs;
+    private readonly int _minY;
     private readonly int _maxY;
 
     private int UnloadDistance => _viewDistance + UnloadDistanceMod;
@@ -122,7 +123,10 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             throw new ArgumentException($"Dimension {DimensionId} does not exist in the server's dimensions.");
         }
 
-        _maxY = Dimension.MinY + Dimension.Height;
+        // Cached because Dimension resolves through the registry on every access, and the physics loop
+        // bounds-checks a lot of block positions.
+        _minY = Dimension.MinY;
+        _maxY = _minY + Dimension.Height;
 
         Events = baseEventNode.CreateChild<IWorldEvent>(e => e.World == this);
         Entities = new EntityManager(Events, viewDistance * 16);
@@ -391,6 +395,21 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
     public IBlock GetBlockOr(Vec3<double> pos, IBlock def) => GetBlockOr(pos.ToBlockPos(), def);
 
+    /// <summary>
+    /// The raw block state id at a position, or <paramref name="def"/> when it is out of bounds or its
+    /// chunk isn't loaded. Skips materialising an <see cref="IBlock"/>, which allocates a record and
+    /// re-parses the block's shape strings on every property read — the collision sweep in
+    /// <c>ManagedServer.Physics.EntityPhysics</c> does far too many lookups to afford that.
+    /// </summary>
+    public uint GetBlockStateIdOr(int x, int y, int z, uint def) {
+        if (y < _minY || y >= _maxY) return def;
+
+        ChunkData? data = TryGetLoadedChunk(new Vec2<int>(x >> 4, z >> 4));
+        if (data == null) return def;
+
+        return data.GetBlock((x % 16 + 16) % 16, y - _minY, (z % 16 + 16) % 16);
+    }
+
     public BlockEntity? GetBlockData(Vec3<int> pos) {
         CheckY(pos.Y);
         Vec2<int> chunkPos = GetChunkPos(pos);
@@ -578,11 +597,11 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     public bool IsInBounds(Vec3<double> pos) {
-        return pos.Y >= Dimension.MinY && pos.Y < _maxY;
+        return pos.Y >= _minY && pos.Y < _maxY;
     }
 
     private void CheckY(int y) {
-        if (y < Dimension.MinY || y > _maxY) {
+        if (y < _minY || y > _maxY) {
             throw new ArgumentOutOfRangeException(nameof(y), "Y position is out of bounds for this dimension.");
         }
     }
@@ -779,7 +798,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     private Vec3<int> GameToProtocolPos(Vec3<int> pos) {
-        return new Vec3<int>(pos.X, pos.Y - Dimension.MinY, pos.Z);
+        return new Vec3<int>(pos.X, pos.Y - _minY, pos.Z);
     }
 
     #endregion

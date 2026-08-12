@@ -62,8 +62,7 @@ public class BlockBreakingFeature : ScopedFeature {
             return;
         }
         
-        ItemStack heldItem = player.HeldItem;
-        int breakTicks = BlockUtils.GetBreakSpeed(player.GameMode, block, heldItem, false, player.OnGround);
+        int breakTicks = BlockUtils.GetBreakSpeed(player, block);
 
         if (breakTicks == 0) {
             // instamine

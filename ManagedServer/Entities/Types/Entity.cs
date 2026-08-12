@@ -69,8 +69,33 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
 
     private Vec3<double> _lastVelocity = Vec3<double>.Zero;
     public virtual Vec3<double> Velocity { get; set; } = Vec3<double>.Zero;  // units: m/(1/20)s
-    
+
     public virtual bool OnGround { get; set; }
+
+    #region physics_state
+    // Written by PhysicsFeature via ManagedServer.Physics.EntityPhysics, mirroring the flags vanilla
+    // keeps on Entity. They stay at their defaults for an entity nothing is simulating.
+
+    /// <summary>Whether the last move was clipped on X or Z.</summary>
+    public bool HorizontalCollision { get; set; }
+
+    /// <summary>Whether the last move was clipped on Y.</summary>
+    public bool VerticalCollision { get; set; }
+
+    /// <summary>Whether the last move was clipped on Y while moving downwards, i.e. the entity landed.</summary>
+    public bool VerticalCollisionBelow { get; set; }
+
+    /// <summary>
+    /// The block the entity is standing on, which is not always the one below its centre: vanilla picks
+    /// the nearest block its feet actually rest on, which is what makes standing on the edge of an ice
+    /// block still slide. Null when the entity is not on the ground.
+    /// </summary>
+    public Vec3<int>? SupportingBlockPos { get; set; }
+
+    /// <summary>Vanilla's <c>onGroundNoBlocks</c>: on the ground with nothing found underneath.</summary>
+    internal bool OnGroundNoBlocks;
+
+    #endregion
 
     public virtual List<Player> Players => [];  // for ScopedFeature
     public ManagedMinecraftServer Server => World.ThrowIfNull().Server;
