@@ -55,7 +55,7 @@ public record ArgumentNode : ICommandNode {
         string name = reader.ReadString();
         int parserId = reader.ReadVarInt();
         IArgumentParser parser = registry.CommandArgumentTypes[parserId].ReadData(reader, registry);
-        Identifier? suggestionsType = flags.HasFlag(CommandNodeFlag.HasSuggestionsType) ? reader.Read<Identifier>(registry) : null!;
+        Identifier? suggestionsType = flags.HasFlag(CommandNodeFlag.HasSuggestionsType) ? reader.Read<Identifier>(registry) : (Identifier?)null;
 
         return new ArgumentNode(flags, childrenIndexes, redirectNode, name, parser, suggestionsType);
     }

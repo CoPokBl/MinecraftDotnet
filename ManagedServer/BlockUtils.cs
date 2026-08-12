@@ -55,7 +55,7 @@ public static class BlockUtils {
             return toolData is { CanMineInCreative: false } ? -1 : 0;
         }
 
-        float hardness = (float)block.Hardness;
+        float hardness = block.Hardness;
         if (Math.Abs(hardness + 1) < 0.0001f) {  // Good way of doing: hardness == -1
             return -1;  // unbreakable blocks
         }

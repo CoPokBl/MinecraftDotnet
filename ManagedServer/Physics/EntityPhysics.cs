@@ -29,6 +29,9 @@ public static class EntityPhysics {
     /// <summary>The offset <c>getBlockPosBelowThatAffectsMyMovement</c> looks down by.</summary>
     private const double BelowMovementOffset = 0.500001f;
 
+    /// <summary>The one <c>getOnPosLegacy</c> uses, which is what a landing is judged against.</summary>
+    private const double LegacyOnPosOffset = 0.2f;
+
     /// <summary>Movement packets quantise to 1/4096 of a block, so anything smaller is not worth sending.</summary>
     private const double PositionQuantum = 1.0 / 4096.0;
 
@@ -69,15 +72,16 @@ public static class EntityPhysics {
 
         Move(world, entity, entity.Velocity);
 
-        // The entity data stores drag as the amount lost per tick, the multiplier is what is left.
-        double airDrag = 1.0 - entity.Type.Drag;
-        double friction = entity.OnGround
+        // Vanilla multiplies the two in float and only widens the result, so this has to as well:
+        // 0.98f is 0.98000001907 as a double, and the difference compounds every tick.
+        float airDrag = entity.Type.AirDrag;
+        float friction = entity.OnGround
             ? airDrag * BlockBelowMovement(world, entity).Friction
             : airDrag;
 
-        // Vanilla halves and flips whatever downward velocity survives a landing here. It cannot fire
-        // without block bounciness, which no block in the generated data carries: landing means a
-        // vertical collision, and that has already zeroed Y.
+        // Vanilla halves and flips whatever downward velocity survives a landing here. It cannot
+        // fire: being on the ground means the last move ended in a vertical collision, which either
+        // zeroed Y or, on a block with a bounce, sent it upwards.
         Vec3<double> velocity = entity.Velocity;
         entity.Velocity = new Vec3<double>(velocity.X * friction, velocity.Y * airDrag, velocity.Z * friction);
     }
@@ -91,20 +95,22 @@ public static class EntityPhysics {
     /// input, so its velocity is whatever a feature or AI put there.
     /// </summary>
     private static void TickLiving(World world, LivingEntity entity) {
-        double frictionModifier = entity.GetAttributeValue(Attribute.FrictionModifier);
-        double blockFriction = entity.OnGround
+        // Every friction term here is a float in vanilla, and they are multiplied together before
+        // they widen, so keeping them doubles would drift from what the client works out.
+        float frictionModifier = (float)entity.GetAttributeValue(Attribute.FrictionModifier);
+        float blockFriction = entity.OnGround
             ? ModifyFriction(BlockBelowMovement(world, entity).Friction, frictionModifier)
-            : 1.0;
+            : 1.0f;
 
         Move(world, entity, entity.Velocity);
 
         Vec3<double> velocity = entity.Velocity;
         double y = velocity.Y - Gravity(entity);
 
-        double airDragModifier = entity.GetAttributeValue(Attribute.AirDragModifier);
-        double airDrag = ModifyFriction(0.91, airDragModifier);
-        double horizontal = blockFriction * airDrag;
-        double vertical = ModifyFriction(0.98, airDragModifier);
+        float airDragModifier = (float)entity.GetAttributeValue(Attribute.AirDragModifier);
+        float airDrag = ModifyFriction(0.91f, airDragModifier);
+        float horizontal = blockFriction * airDrag;
+        float vertical = ModifyFriction(0.98f, airDragModifier);
 
         entity.Velocity = new Vec3<double>(velocity.X * horizontal, y * vertical, velocity.Z * horizontal);
     }
@@ -133,20 +139,84 @@ public static class EntityPhysics {
         UpdateSupportingBlock(world, entity, movement);
 
         if ((Math.Abs(delta.Y) > 0.0 && verticalCollision) || entity.HorizontalCollision) {
-            // Vanilla restitutes a bounce here. No block in the generated data carries a bounce
-            // restitution, so this is always the zero restitution case: the collided axes stop.
-            Vec3<double> velocity = entity.Velocity;
-            if (xCollision) velocity = velocity.WithX(0);
-            if (zCollision) velocity = velocity.WithZ(0);
-            if (verticalCollision) velocity = velocity.WithY(0);
-            entity.Velocity = velocity;
+            RestituteMovementAfterCollisions(world, entity, xCollision, zCollision, movement);
         }
 
-        double speedFactor = BlockSpeedFactor(world, entity);
-        if (speedFactor != 1.0) {
+        float speedFactor = BlockSpeedFactor(world, entity);
+        if (speedFactor != 1.0f) {
             entity.Velocity = new Vec3<double>(
                 entity.Velocity.X * speedFactor, entity.Velocity.Y, entity.Velocity.Z * speedFactor);
         }
+    }
+
+    /// <summary>
+    /// <c>Entity.restituteMovementAfterCollisions</c>: what the collided axes do with the velocity
+    /// they had. Without a bounce that is stop, which is every block but slime and beds.
+    /// <p/>
+    /// The vertical case is the interesting one. Vanilla works out how much of the tick was spent
+    /// falling before the landing and gives back that much of the gravity and drag already taken, so
+    /// a slime block returns an entity to the height it fell from rather than a little below it.
+    /// </summary>
+    private static void RestituteMovementAfterCollisions(World world, Entity entity, bool xCollision,
+        bool zCollision, Vec3<double> movement) {
+        bool suppressing = entity.Crouching;
+        double restitution = suppressing ? 0.0 : EntityBounciness(entity);
+
+        Vec3<double> velocity = entity.Velocity;
+        Vec3<double> bounced = velocity;
+        if (xCollision) {
+            bounced = bounced.WithX(-velocity.X * restitution);
+        }
+        if (zCollision) {
+            bounced = bounced.WithZ(-velocity.Z * restitution);
+        }
+
+        if (!entity.VerticalCollision) {
+            entity.Velocity = bounced;
+            return;
+        }
+
+        if (entity.VerticalCollisionBelow) {
+            BlockPhysicsData.Entry landedOn = BlockLandedOn(world, entity);
+            double gravity = Gravity(entity);
+
+            restitution = -velocity.Y >= gravity && !suppressing && !landedOn.SuppressesBounce
+                ? Math.Max(restitution, BlockBounciness(entity, landedOn))
+                : 0.0;
+        }
+
+        double gravityCompensation = 0.0;
+        double drag = 1.0;
+        if (restitution > 0.0) {
+            double portionWithMovement = movement.Y / velocity.Y;
+            gravityCompensation = portionWithMovement * Gravity(entity);
+            drag = Lerp(portionWithMovement, 1.0, entity.Type.AirDrag);
+        }
+
+        entity.Velocity = bounced.WithY((gravityCompensation - velocity.Y) * drag * restitution);
+    }
+
+    /// <summary><c>Entity.getBlockBounciness</c>: everything that is not alive keeps less of it.</summary>
+    private static double BlockBounciness(Entity entity, BlockPhysicsData.Entry block) {
+        float bounciness = block.BounceRestitution;
+        if (entity is not LivingEntity) {
+            bounciness *= 0.8f;
+        }
+
+        return bounciness;
+    }
+
+    /// <summary>
+    /// <c>Entity.getEntityBounciness</c>. Living entities carry it on an attribute so that a
+    /// modifier can make one bouncy; nothing else bounces on its own.
+    /// </summary>
+    private static double EntityBounciness(Entity entity) {
+        return entity is LivingEntity ? entity.GetAttributeValue(Attribute.Bounciness) : 0.0;
+    }
+
+    /// <summary><c>Mth.lerp</c>.</summary>
+    private static double Lerp(double delta, double from, double to) {
+        return from + delta * (to - from);
     }
 
     /// <summary>
@@ -352,13 +422,13 @@ public static class EntityPhysics {
         BlockWalk walk = new(query);
 
         while (walk.MoveNext()) {
-            Box[]? boxes = CollidingBoxesAt(world, registry, walk.X, walk.Y, walk.Z, query, walk.Shell);
+            Box[]? boxes = CollidingBoxesAt(world, registry, walk.X, walk.Y, walk.Z, query, walk.Shell, out Vec3<double> offset);
             if (boxes == null) {
                 continue;
             }
 
             foreach (Box local in boxes) {
-                into.Add(local.Translate(walk.X, walk.Y, walk.Z));
+                into.Add(local.Translate(walk.X + offset.X, walk.Y + offset.Y, walk.Z + offset.Z));
             }
         }
     }
@@ -424,8 +494,14 @@ public static class EntityPhysics {
     /// The block local collision boxes at a position when the block collides with
     /// <paramref name="query"/> at all, otherwise null. Vanilla takes a shape whole or not at all,
     /// so a shape with one box in range contributes all of them.
+    /// <p/>
+    /// <paramref name="offset"/> is how far the block's shape is moved by the position it sits at,
+    /// which is what puts a stalk of bamboo off centre.
     /// </summary>
-    private static Box[]? CollidingBoxesAt(World world, MinecraftRegistry registry, int x, int y, int z, Box query, bool shell) {
+    private static Box[]? CollidingBoxesAt(World world, MinecraftRegistry registry, int x, int y, int z,
+        Box query, bool shell, out Vec3<double> offset) {
+        offset = Vec3<double>.Zero;
+
         uint state = world.GetBlockStateIdOr(x, y, z, AirStateId);
         if (state == AirStateId) {
             return null;
@@ -436,8 +512,12 @@ public static class EntityPhysics {
             return null;
         }
 
+        if (data.Offsets != null) {
+            offset = data.Offsets.ShapeOffset(new Vec3<int>(x, y, z));
+        }
+
         foreach (Box local in data.Collision) {
-            if (query.Intersects(local.Translate(x, y, z))) {
+            if (query.Intersects(local.Translate(x + offset.X, y + offset.Y, z + offset.Z))) {
                 return data.Collision;
             }
         }
@@ -484,7 +564,7 @@ public static class EntityPhysics {
         double bestDistance = double.MaxValue;
 
         while (walk.MoveNext()) {
-            if (CollidingBoxesAt(world, registry, walk.X, walk.Y, walk.Z, feet, walk.Shell) == null) {
+            if (CollidingBoxesAt(world, registry, walk.X, walk.Y, walk.Z, feet, walk.Shell, out _) == null) {
                 continue;
             }
 
@@ -515,9 +595,25 @@ public static class EntityPhysics {
     /// the entity inherits.
     /// </summary>
     private static BlockPhysicsData.Entry BlockBelowMovement(World world, Entity entity) {
+        return OnPosBlock(world, entity, BelowMovementOffset);
+    }
+
+    /// <summary>
+    /// <c>Entity.getOnPosLegacy</c>: the block an entity is treated as standing on for the things
+    /// that care about which block it is rather than how far down it is, landing included.
+    /// </summary>
+    private static BlockPhysicsData.Entry BlockLandedOn(World world, Entity entity) {
+        return OnPosBlock(world, entity, LegacyOnPosOffset);
+    }
+
+    /// <summary>
+    /// <c>Entity.getOnPos</c>: the block the given distance under the entity, taken from where its
+    /// feet actually rest rather than from under its centre.
+    /// </summary>
+    private static BlockPhysicsData.Entry OnPosBlock(World world, Entity entity, double offset) {
         MinecraftRegistry registry = world.Server.Registry;
         Vec3<double> position = entity.Position;
-        int belowY = (int)Math.Floor(position.Y - BelowMovementOffset);
+        int belowY = (int)Math.Floor(position.Y - offset);
 
         Vec3<int>? supporting = entity.SupportingBlockPos;
         if (supporting == null) {
@@ -527,20 +623,21 @@ public static class EntityPhysics {
         Vec3<int> below = supporting.Value;
         BlockPhysicsData.Entry supportingData = StateAt(world, registry, below.X, below.Y, below.Z);
 
-        // Walls and fence gates stand taller than their own block, so dropping half a block from the
-        // entity would look past them.
-        return supportingData.WallLike ? supportingData : StateAt(world, registry, below.X, belowY, below.Z);
+        // Walls and fence gates stand taller than their own block, so dropping down from the entity
+        // would look past them. Fences only count when the drop is small enough to stay inside one.
+        bool tallerThanTheDrop = supportingData.WallLike || (offset <= 0.5 && supportingData.FenceLike);
+        return tallerThanTheDrop ? supportingData : StateAt(world, registry, below.X, belowY, below.Z);
     }
 
     /// <summary><c>Entity.getBlockSpeedFactor</c>: the block the entity is in, falling back to the one below.</summary>
-    private static double BlockSpeedFactor(World world, Entity entity) {
+    private static float BlockSpeedFactor(World world, Entity entity) {
         MinecraftRegistry registry = world.Server.Registry;
         Vec3<double> position = entity.Position;
 
         BlockPhysicsData.Entry here = StateAt(world, registry,
             (int)Math.Floor(position.X), (int)Math.Floor(position.Y), (int)Math.Floor(position.Z));
 
-        if (here.WaterLike || here.SpeedFactor != 1.0) {
+        if (here.WaterLike || here.SpeedFactor != 1.0f) {
             return here.SpeedFactor;
         }
 
@@ -574,8 +671,8 @@ public static class EntityPhysics {
     }
 
     /// <summary><c>LivingEntity.computeModifiedFriction</c>.</summary>
-    private static double ModifyFriction(double friction, double modifier) {
-        return Math.Clamp(1.0 - (1.0 - friction) * modifier, 0.0, 1.0);
+    private static float ModifyFriction(float friction, float modifier) {
+        return Math.Clamp(1.0f - (1.0f - friction) * modifier, 0.0f, 1.0f);
     }
 
     private static List<Box> Colliders => _colliders ??= new List<Box>(32);

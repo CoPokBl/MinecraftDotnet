@@ -10,33 +10,51 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MovingPistonBlock(Identifier Identifier, MovingPistonBlock.Type TypeValue, Cardinal Facing) : IBlock {
-    public Identifier Category => "minecraft:moving_piston";
-    public double Hardness => -1;
-    public double ExplosionResistance => 0;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => "minecraft:piston";
-    public Identifier? Item => null;
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Block;
-    public int MapColorId => 11;
-    public string TranslationKey => "block.minecraft.moving_piston";
-    public bool CanRespawnIn => false;
+    private static readonly BlockInfo Data = new("minecraft:moving_piston", "block.minecraft.moving_piston", 0f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.None, 0f, 0f, "minecraft:piston", null, BlockInfo.VanillaOnly);
+    private static readonly BlockStateInfo I0 = new(-1f, 0, 0, PushReaction.Block, 11, "stone", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, [], null, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public Identifier Category => Data.Category;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public bool BlocksMotion => StateInfo.BlocksMotion;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
 
 
     public uint StateId {

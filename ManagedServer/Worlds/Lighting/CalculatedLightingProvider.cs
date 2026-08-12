@@ -148,19 +148,24 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
         faceOcclusion = new byte[maxId + 1];
         emission = new byte[maxId + 1];
 
-        Dictionary<IBlock, byte> blockFaceCache = new(ReferenceEqualityComparer.Instance);
+        // The map hands back each block's default state, so the state has to be resolved: an unlit
+        // redstone torch would otherwise glow like a lit one, and a top slab occlude like a bottom
+        // one. Two states describing the same thing share one BlockStateInfo, which is what makes
+        // caching the mask on it worthwhile.
+        Dictionary<BlockStateInfo, byte> stateFaceCache = new(ReferenceEqualityComparer.Instance);
 
         foreach ((uint id, IBlock block) in stateMap) {
-            emission[id] = (byte)block.LightEmission;
+            BlockStateInfo state = block.WithState(id).StateInfo;
+            emission[id] = (byte)state.LightEmission;
 
-            if (!block.Occludes) {
+            if (!state.Occludes) {
                 faceOcclusion[id] = 0;
                 continue;
             }
 
-            if (!blockFaceCache.TryGetValue(block, out byte faceMask)) {
-                faceMask = ComputeFaceOcclusion(block.OcclusionShape);
-                blockFaceCache[block] = faceMask;
+            if (!stateFaceCache.TryGetValue(state, out byte faceMask)) {
+                faceMask = ComputeFaceOcclusion(state.OcclusionShape);
+                stateFaceCache[state] = faceMask;
             }
             faceOcclusion[id] = faceMask;
         }

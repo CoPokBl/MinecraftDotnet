@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO.Compression;
 using System.Text;
 using CodeGen;
 using CodeGen.Generators;
@@ -144,94 +143,59 @@ Console.WriteLine("Loading registries.json...");
 JObject registriesJson = JObject.Parse(CodeGenUtils.ReadVanillaDataFile("reports", "registries.json"));
 
 // --------------------------------------------
-// |             Minestom Data                |
+// |              Vanilla Dump                |
 // --------------------------------------------
-if (!Directory.Exists($"MinestomDataGenerator{mcVersion}")) {
-    // Don't use git, download the release zip from GitHub
-    // so we can choose a specific version
-    const string urlTemplate = "https://github.com/Minestom/MinestomDataGenerator/archive/refs/tags/{mcver}-rv1.zip";
-    string minestomUrl = urlTemplate.Replace("{mcver}", mcVersion);
-    Console.WriteLine("Downloading MinestomDataGenerator from " + minestomUrl);
-    using HttpClient client = new();
-    HttpResponseMessage response = client.GetAsync(minestomUrl).Result;
-    if (!response.IsSuccessStatusCode) {
-        Console.WriteLine($"Failed to download MinestomDataGenerator: {response.StatusCode}");
-        return 1;
-    }
-    Console.WriteLine("Extracting MinestomDataGenerator...");
-    using MemoryStream stream = new(response.Content.ReadAsByteArrayAsync().Result);
-    using ZipArchive archive = new(stream);
-    archive.ExtractToDirectory($"MinestomDataGenerator{mcVersion}");
-    
-    // It extracts to MinestomDataGenerator/MinestomDataGenerator-<version>
-    // so move it up one level
-    string extractedDir = Directory.GetDirectories($"MinestomDataGenerator{mcVersion}").First();
-    foreach (string dir in Directory.GetDirectories(extractedDir)) {
-        string dirName = Path.GetFileName(dir);
-        Directory.Move(dir, Path.Combine($"MinestomDataGenerator{mcVersion}", dirName));
-    }
-    foreach (string file in Directory.GetFiles(extractedDir)) {
-        string fileName = Path.GetFileName(file);
-        File.Move(file, Path.Combine($"MinestomDataGenerator{mcVersion}", fileName));
-    }
-    Directory.Delete(extractedDir);
-    
-    Console.WriteLine("Done!");
-}
+// Block physics and shapes, entity dimensions and attribute ranges live as fields on objects the
+// reports never touch, so they come out of a small Java program run against the server jar the
+// bundler unpacked above. Everything else the generator needs is already a report.
 
-if (!Directory.Exists($"MinestomData{mcVersion}")) {
-    // We need to run the project
-    // to do that we need to run the gradle wrapper
-    // but that is platform specific
-    Console.WriteLine("Running MinestomDataGenerator...");
-    
-    string procName = Environment.OSVersion.Platform == PlatformID.Win32NT ? 
-        "gradlew.bat" : 
-        "./gradlew";
-    
-    Process process = new() {
-        StartInfo = new ProcessStartInfo {
-            Environment = { { "EULA", "true" } },
-            WorkingDirectory = $"MinestomDataGenerator{mcVersion}",
-            FileName = Path.Combine($"MinestomDataGenerator{mcVersion}", procName),
-            Arguments = "run",
-            RedirectStandardOutput = false,
-            RedirectStandardError = false,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        }
-    };
-    process.Start();
-    process.WaitForExit();
-    
-    if (process.ExitCode != 0) {
-        Console.WriteLine("Failed to run MinestomDataGenerator. Check the output above for errors.");
-        return 1;
+string serverJar = Path.Combine("versions", mcVersion, $"server-{mcVersion}.jar");
+if (!File.Exists(serverJar) || !Directory.Exists("libraries")) {
+    Console.WriteLine($"The unpacked server jar or its libraries are missing ({serverJar}).");
+    Console.WriteLine($"Delete {vanillaDataDir} and rerun so the bundler unpacks them again.");
+    return 1;
+}
+CodeGenUtils.ServerJarPath = Path.GetFullPath(serverJar);
+
+string dumpDir = $"dump{mcVersion}";
+if (!Directory.Exists(dumpDir)) {
+    string classpath = string.Join(Path.PathSeparator,
+        Directory.EnumerateFiles("libraries", "*.jar", SearchOption.AllDirectories).Prepend(serverJar));
+
+    // Staged so a failed run doesn't leave a half written dump that the next one takes for cached.
+    string staging = dumpDir + "_partial";
+    if (Directory.Exists(staging)) {
+        Directory.Delete(staging, true);
     }
-    
-    // Move all the generated files to MinestomData for easier access.
-    // Older generators wrote them to MinestomDataGenerator/MinestomData, newer
-    // ones write them straight into the generator's resources directory.
-    string[] candidateOutputDirs = [
-        Path.Combine($"MinestomDataGenerator{mcVersion}", "MinestomData"),
-        Path.Combine($"MinestomDataGenerator{mcVersion}", "src", "main", "resources", "net", "minestom", "data")
-    ];
-    string? generatedDir = candidateOutputDirs.FirstOrDefault(Directory.Exists);
-    if (generatedDir == null) {
-        Console.WriteLine("Could not find the MinestomDataGenerator output in any of: " +
-                          string.Join(", ", candidateOutputDirs));
+    Directory.CreateDirectory(staging);
+
+    string source = Path.Combine(staging, "Dumper.java");
+    File.WriteAllText(source, CodeGenUtils.ReadEmbeddedFile("Dumper.java"));
+
+    Console.WriteLine("Compiling the dumper...");
+    if (!RunJavaTool("javac", ["-nowarn", "-cp", classpath, "-d", staging, source])) {
+        Console.WriteLine("Failed to compile Dumper.java. A JDK at least as new as the server jar " +
+                          "needs to be on PATH.");
         return 1;
     }
 
-    if (Directory.Exists($"MinestomData{mcVersion}")) {
-        Directory.Delete($"MinestomData{mcVersion}", true);
-        Console.WriteLine("Deleted existing MinestomData directory.");
+    Console.WriteLine("Running the dumper...");
+    if (!RunJavaTool("java", ["-cp", classpath + Path.PathSeparator + staging, "Dumper", staging])) {
+        Console.WriteLine("Failed to run the dumper. Check the output above for errors.");
+        return 1;
     }
-    Directory.Move(generatedDir, $"MinestomData{mcVersion}");
-    
+
+    foreach (string leftover in Directory.EnumerateFiles(staging, "*.class").Append(source)) {
+        File.Delete(leftover);
+    }
+    Directory.Move(staging, dumpDir);
     Console.WriteLine("Done!");
 }
-CodeGenUtils.MinestomDataDir = Path.Combine(Directory.GetCurrentDirectory(), $"MinestomData{mcVersion}");
+else {
+    Console.WriteLine("Found existing dump directory: " + dumpDir + ". Skipping generation.");
+}
+
+CodeGenUtils.DumpDir = Path.Combine(Directory.GetCurrentDirectory(), dumpDir);
 
 // --------------------------------------------
 // |             Generate Code                |
@@ -313,6 +277,27 @@ string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.
 File.WriteAllText("VanillaRegistry.cs", vanillaRegistryCode);
 Console.WriteLine("Done! Generated VanillaRegistry.cs in " + codeDir);
 return 0;
+
+bool RunJavaTool(string tool, string[] arguments) {
+    ProcessStartInfo startInfo = new() {
+        FileName = tool,
+        UseShellExecute = false,
+        CreateNoWindow = true
+    };
+    foreach (string argument in arguments) {
+        startInfo.ArgumentList.Add(argument);
+    }
+
+    try {
+        using Process process = Process.Start(startInfo)!;
+        process.WaitForExit();
+        return process.ExitCode == 0;
+    }
+    catch (System.ComponentModel.Win32Exception) {
+        Console.WriteLine($"Could not run '{tool}'. It comes with the JDK, which has to be on PATH.");
+        return false;
+    }
+}
 
 void RunStep(string name, Func<JObject, string> func) {
     Console.WriteLine($"Generating {name} code...");

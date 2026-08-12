@@ -5,6 +5,7 @@ using ManagedServer.Worlds.Lighting;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Terrain.Providers;
+using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Testing.Physics;
@@ -45,13 +46,14 @@ public class EntityPhysicsTickTest {
 
     /// <summary>
     /// Positions vanilla's <c>ItemEntity.tick</c> produces for an item dropped from y=70 onto stone,
-    /// computed from the decompiled loop: gravity, move, drag, then the landing damp.
+    /// run out of the decompiled loop in Java so that its float terms stay floats: air drag is
+    /// 0.98f, which is 0.98000001907 once widened, and the difference compounds every tick.
     /// </summary>
     private static readonly double[] ExpectedFall = [
-        69.96, 69.8808, 69.763184, 69.60792031999999, 69.4157619136, 69.18744667532799,
-        68.92369774182143, 68.625223786985, 68.2927193112453, 67.9268649250204, 67.52832762651998,
-        67.09776107398959, 66.63580585250979, 66.1430897354596, 65.62022794075041, 65.0678233819354,
-        65.0, 65.0, 65.0, 65.0
+        69.96, 69.88079999923706, 69.76318399697875, 69.60792031252227, 69.41576189879349,
+        69.18744664967416, 68.92369770118245, 68.62522372662995, 68.29271922587557,
+        67.92686480879426, 67.52832747307646, 67.09776087647151, 66.63580560358626,
+        66.14308942734762, 65.62022756523594, 65.06782293039369, 65.0, 65.0, 65.0, 65.0
     ];
 
     [Test]
@@ -96,8 +98,9 @@ public class EntityPhysicsTickTest {
         EntityPhysics.Tick(iceWorld, onIce);
 
         Assert.Multiple(() => {
-            Assert.That(onStone.Velocity.X, Is.EqualTo(0.5 * 0.98 * Block.Stone.Friction));
-            Assert.That(onIce.Velocity.X, Is.EqualTo(0.5 * 0.98 * Block.Ice.Friction));
+            // Vanilla multiplies the drag by the block friction in float before it widens.
+            Assert.That(onStone.Velocity.X, Is.EqualTo(0.5 * (0.98f * Block.Stone.Friction)));
+            Assert.That(onIce.Velocity.X, Is.EqualTo(0.5 * (0.98f * Block.Ice.Friction)));
             Assert.That(Block.Ice.Friction, Is.GreaterThan(Block.Stone.Friction));
         });
 
@@ -124,6 +127,63 @@ public class EntityPhysicsTickTest {
             // Z is untouched by the X collision, only slowed by friction.
             Assert.That(item.Position.Z, Is.EqualTo(8.6));
             Assert.That(item.Velocity.Z, Is.Not.Zero);
+        });
+
+        server.Stop();
+    }
+
+    /// <summary>
+    /// A slab collides where its own state says, not where the block's default state does. Two
+    /// thirds of the block states in the game differ from their default in at least their shape, and
+    /// the client predicts against the real one.
+    /// </summary>
+    [Test]
+    public void TestSlabHalvesCollideWhereTheySit() {
+        World world = CreateWorld(Block.Stone.StateId, out ManagedMinecraftServer server);
+        world.SetBlock(new Vec3<int>(8, FloorTop, 8), Block.StoneSlab with { Type = SlabType.Bottom });
+        world.SetBlock(new Vec3<int>(12, FloorTop, 8), Block.StoneSlab with { Type = SlabType.Top });
+
+        Entity onBottom = Spawn(world, EntityType.Item, new Vec3<double>(8.5, 70, 8.5));
+        Entity onTop = Spawn(world, EntityType.Item, new Vec3<double>(12.5, 70, 8.5));
+
+        for (int tick = 0; tick < 25; tick++) {
+            EntityPhysics.Tick(world, onBottom);
+            EntityPhysics.Tick(world, onTop);
+        }
+
+        Assert.Multiple(() => {
+            Assert.That(onBottom.Position.Y, Is.EqualTo(FloorTop + 0.5), "bottom slab");
+            Assert.That(onTop.Position.Y, Is.EqualTo(FloorTop + 1.0), "top slab");
+        });
+
+        server.Stop();
+    }
+
+    /// <summary>
+    /// Bamboo is placed off centre by a hash of the position it sits at, and the shape in the data
+    /// has that taken back out of it, so the collision has to put it back.
+    /// </summary>
+    [Test]
+    public void TestBambooCollidesWhereItsOffsetPutsIt() {
+        World world = CreateWorld(Block.Stone.StateId, out ManagedMinecraftServer server);
+        Vec3<int> stalk = new(7, FloorTop, 13);
+        world.SetBlock(stalk, Block.Bamboo);
+
+        // The stalk is 0.1875 wide around the centre of its block, and then moved by its offset.
+        Vec3<double> offset = Block.Bamboo.Info.ShapeOffset(stalk);
+        Assert.That(offset.X, Is.Not.Zero);
+
+        Entity item = Spawn(world, EntityType.Item, new Vec3<double>(5.5, FloorTop, 13.5 + offset.Z));
+        EntityPhysics.Tick(world, item);
+
+        item.Velocity = new Vec3<double>(2.0, 0, 0);
+        EntityPhysics.Tick(world, item);
+
+        Assert.Multiple(() => {
+            // Flush against the offset stalk's west face, which is 0.1833 further east than the
+            // shape in the data says on its own.
+            Assert.That(item.Position.X, Is.EqualTo(7.40625 + offset.X - 0.125));
+            Assert.That(item.HorizontalCollision, Is.True);
         });
 
         server.Stop();

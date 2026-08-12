@@ -9,9 +9,9 @@ namespace ManagedServer.Physics;
 /// <summary>
 /// Everything the physics loop reads off a block, resolved once per block state.
 /// <p/>
-/// The generated block types expose their shapes as <c>ICollisionBox.ParseAabbArrayString("…")</c>
-/// and their identifiers as string literals, so every property access re-parses a string and
-/// allocates. That is fine for the occasional lookup and ruinous inside a collision sweep.
+/// A block state's own properties are cheap to read now that the generated types share one
+/// <c>BlockStateInfo</c> per state, but flattening a shape into boxes and resolving a tag are not,
+/// and a collision sweep does that for every block it passes through.
 /// </summary>
 public static class BlockPhysicsData {
     /// <param name="Collision">Block local collision boxes; empty when the block has no collision.</param>
@@ -19,9 +19,23 @@ public static class BlockPhysicsData {
     /// Whether the shape leaves its own cube, as fences and walls do. Vanilla scans one block
     /// further out for these, see <see cref="EntityPhysics"/>.
     /// </param>
+    /// <param name="Offsets">
+    /// The block's offset bounds when its shape is moved by a hash of the position it sits at, and
+    /// null for everything else. Bamboo and dripstone are the two that collide.
+    /// </param>
+    /// <param name="BounceRestitution">
+    /// How much velocity a landing on this block keeps, before the 0.8 non living entities take.
+    /// </param>
+    /// <param name="SuppressesBounce">
+    /// Whether the block is in <c>minecraft:suppresses_bounce</c>, which is how a honey block stops
+    /// a bounce that a slime block underneath would otherwise cause.
+    /// </param>
     /// <param name="WallLike">
     /// Walls and fence gates, which vanilla refuses to step down from when it looks for the block
     /// that governs an entity's movement.
+    /// </param>
+    /// <param name="FenceLike">
+    /// The same for fences, which only count when the block is being looked up for a small drop.
     /// </param>
     /// <param name="WaterLike">
     /// Water and bubble columns, which vanilla never lets defer their speed factor downwards.
@@ -29,15 +43,21 @@ public static class BlockPhysicsData {
     public readonly record struct Entry(
         Box[] Collision,
         bool LargeCollisionShape,
-        double Friction,
-        double SpeedFactor,
+        BlockInfo? Offsets,
+        float Friction,
+        float SpeedFactor,
+        float BounceRestitution,
+        bool SuppressesBounce,
         bool WallLike,
+        bool FenceLike,
         bool WaterLike);
 
-    private static readonly Entry Missing = new([], false, 0.6, 1.0, false, false);
+    private static readonly Entry Missing = new([], false, null, 0.6f, 1.0f, 0.0f, false, false, false, false);
 
     private static readonly Identifier WallCategory = "minecraft:wall";
     private static readonly Identifier FenceGateCategory = "minecraft:fence_gate";
+    private static readonly Identifier FenceTag = "minecraft:fences";
+    private static readonly Identifier SuppressesBounceTag = "minecraft:suppresses_bounce";
     private static readonly Identifier Water = "minecraft:water";
     private static readonly Identifier BubbleColumn = "minecraft:bubble_column";
 
@@ -46,11 +66,11 @@ public static class BlockPhysicsData {
     public static Entry Get(MinecraftRegistry registry, uint stateId) {
         return Cache.GetOrAdd(stateId, static (state, reg) =>
             reg.Blocks.StatesByStateId.TryGetValue(state, out IBlock? block)
-                ? Build(block.WithState(state))
+                ? Build(reg, block.WithState(state))
                 : Missing, registry);
     }
 
-    private static Entry Build(IBlock block) {
+    private static Entry Build(MinecraftRegistry registry, IBlock block) {
         Box[] boxes = CollisionBoxesOf(block.CollisionShape);
 
         bool large = false;
@@ -67,10 +87,28 @@ public static class BlockPhysicsData {
         return new Entry(
             boxes,
             large,
+            block.Info.OffsetType == BlockOffsetType.None ? null : block.Info,
             block.Friction,
             block.SpeedFactor,
+            block.BounceRestitution,
+            InTag(registry, SuppressesBounceTag, identifier),
             category.Equals(WallCategory) || category.Equals(FenceGateCategory),
+            InTag(registry, FenceTag, identifier),
             identifier.Equals(Water) || identifier.Equals(BubbleColumn));
+    }
+
+    private static bool InTag(MinecraftRegistry registry, Identifier tag, Identifier block) {
+        if (!registry.Blocks.Tags.Contains(tag)) {
+            return false;
+        }
+
+        foreach (Identifier value in registry.Blocks.Tags[tag].GetValueIds(registry)) {
+            if (value.Equals(block)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>

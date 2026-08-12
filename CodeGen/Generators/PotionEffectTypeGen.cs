@@ -6,7 +6,8 @@ public static class PotionEffectTypeGen {
     
     public static string CreatePotionEffectTypes(JObject registriesJson) {
         return CodeGenUtils.CreateSimpleRegistryEntries(
-            CodeGenUtils.GetFileRegEntries("potion_effect.json"),
+            registriesJson,
+            "minecraft:mob_effect",
             "SimplePotionEffectType", 
             "PotionEffectType",
             "PotionEffectTypes",

@@ -63,11 +63,36 @@ public class ChunkSectionCountsTest {
         section.Fill(Block.Stone.StateId);
         section.SetBlock(0, 0, 0, Block.Water.StateId);
         section.SetBlock(1, 0, 0, Block.Lava.StateId);
+
+        Assert.That(FluidCount(section), Is.EqualTo(2));
+    }
+
+    /// <summary>
+    /// A waterlogged block holds water without being a fluid itself, which is what vanilla's
+    /// <c>getFluidState</c> reports and what the client expects the count to include.
+    /// </summary>
+    [Test]
+    public void FluidCountsWaterloggedBlocks() {
+        ChunkSection section = new();
+        section.Fill(Block.Stone.StateId);
+        section.SetBlock(0, 0, 0, (Block.OakSlab with { Waterlogged = true }).StateId);
+        section.SetBlock(1, 0, 0, (Block.OakStairs with { Waterlogged = true }).StateId);
+        section.SetBlock(2, 0, 0, Block.Kelp.StateId);
+        // The same blocks dry, which the block's own default state cannot tell apart.
+        section.SetBlock(3, 0, 0, (Block.OakSlab with { Waterlogged = false }).StateId);
+        section.SetBlock(4, 0, 0, (Block.OakStairs with { Waterlogged = false }).StateId);
+
+        Assert.That(FluidCount(section), Is.EqualTo(3));
+    }
+
+    /// <summary>The count the section puts on the wire, which is the second short it writes.</summary>
+    private static int FluidCount(ChunkSection section) {
         section.PackData();
 
-        int fluid = section.Palette.Count(state =>
-            VanillaRegistry.Data.Blocks.StatesByStateId.TryGetValue(state, out var block) && block.Liquid);
+        DataWriter writer = new();
+        section.Write(writer, VanillaRegistry.Data);
+        byte[] bytes = writer.ToArray();
 
-        Assert.That(fluid, Is.EqualTo(2));
+        return (bytes[2] << 8) | bytes[3];
     }
 }

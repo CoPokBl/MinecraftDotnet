@@ -40,8 +40,8 @@ public static class Item {
             }
         }
 
-        JObject itemData = JObject.Parse(CodeGenUtils.ReadMinestomDataFile("item.json"));
-        
+        Dictionary<string, string> blockByItem = BlockByItem();
+
         StringBuilder registryAdditions = new();
         StringBuilder file = new(Header);
 
@@ -54,14 +54,18 @@ public static class Item {
             int protocolId = value!["protocol_id"]!.Value<int>();
             string pascalName = CodeGenUtils.NamespacedIdToPascalName(key);
             
-            JObject itemDataEntry = itemData[key]!.ToObject<JObject>()!;
             Func<string?, string> toCsStr = str => str == null ? "null" : $"\"{str}\"";
-            
-            string? block = itemDataEntry["correspondingBlock"]?.Value<string>();
-            string translationKey = itemDataEntry["translationKey"]!.Value<string>()!;
-            
-            // Get default components
-            JObject defaultComponents = itemDataEntry["components"]!.ToObject<JObject>()!;
+
+            blockByItem.TryGetValue(key, out string? block);
+
+            // The vanilla data generator writes an item's default components one file per item.
+            JObject defaultComponents = JObject.Parse(CodeGenUtils.ReadVanillaDataFile(
+                "reports", "minecraft", "components", "item", key.Split(':')[1] + ".json"))["components"]!
+                .ToObject<JObject>()!;
+
+            // Vanilla's description id is not reported on its own, but item_name is always the
+            // translatable text built from it.
+            string translationKey = defaultComponents["minecraft:item_name"]!["translate"]!.Value<string>()!;
             List<string> defaultComponentConstructors = [];
             foreach ((string componentId, JToken? componentToken) in defaultComponents) {
                 if (!DataComponentCodeGen.ComponentClasses.ContainsKey(componentId)) {
@@ -102,6 +106,30 @@ public static class Item {
         File.WriteAllText("Item.cs", file.ToString().Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
 
         return registryAdditions.ToString();
+    }
+
+    /// <summary>
+    /// The block each item places, which is the inverse of the block dump's <c>correspondingItem</c>.
+    /// Several blocks can share one item (a torch and a wall torch, a sign and its wall variant), and
+    /// vanilla's <c>Item.BY_BLOCK</c> keeps the first block registered, ie. the lowest id.
+    /// </summary>
+    private static Dictionary<string, string> BlockByItem() {
+        JObject blocks = JObject.Parse(CodeGenUtils.ReadDumpFile("block.json"));
+
+        Dictionary<string, (int Id, string Block)> byItem = [];
+        foreach ((string blockId, JToken? block) in blocks) {
+            string? item = block!["correspondingItem"]?.Value<string>();
+            if (item == null) {
+                continue;
+            }
+
+            int id = block["id"]!.Value<int>();
+            if (!byItem.TryGetValue(item, out (int Id, string Block) existing) || id < existing.Id) {
+                byItem[item] = (id, blockId);
+            }
+        }
+
+        return byItem.ToDictionary(entry => entry.Key, entry => entry.Value.Block);
     }
 
     /// <summary>

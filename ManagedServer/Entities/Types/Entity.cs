@@ -279,7 +279,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     public void AddAttributeModifier(IAttribute attribute, AttributeModifier modifier) {
         if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
-            value = (attribute.Default, []);
+            value = (Type.DefaultAttributeValue(attribute), []);
             _attributes[attribute] = value;
         }
         
@@ -327,7 +327,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     public void SetAttributeBaseValue(IAttribute attribute, double baseValue) {
         if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
-            value = (attribute.Default, []);
+            value = (Type.DefaultAttributeValue(attribute), []);
             _attributes[attribute] = value;
         }
         
@@ -337,7 +337,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     public double GetAttributeBaseValue(IAttribute attribute) {
         if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
-            return attribute.Default;
+            return Type.DefaultAttributeValue(attribute);
         }
         
         return value.Base;
@@ -345,7 +345,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     
     public double GetAttributeValue(IAttribute attribute) {
         if (!_attributes.TryGetValue(attribute, out (double Base, List<AttributeModifier> Modifiers) value)) {
-            return attribute.Default;
+            return Type.DefaultAttributeValue(attribute);
         }
         
         double total = value.Base;

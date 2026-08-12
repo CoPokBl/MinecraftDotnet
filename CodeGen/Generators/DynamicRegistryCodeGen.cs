@@ -12,9 +12,8 @@ namespace CodeGen.Generators;
 public static class DynamicRegistryCodeGen {
 
     /// <param name="dataFile">
-    /// The Minestom data file holding the registry, e.g. <c>damage_type.json</c>. When Minestom
-    /// doesn't dump the registry, the same path without <c>.json</c> is used as a folder under the
-    /// vanilla data instead.
+    /// The file naming the registry, e.g. <c>damage_type.json</c>. The same path without
+    /// <c>.json</c> is the folder the vanilla data generator writes its elements to.
     /// </param>
     /// <param name="interfaceName">The element interface, e.g. <c>IDamageType</c>.</param>
     /// <param name="className">
@@ -78,21 +77,14 @@ public static class DynamicRegistryCodeGen {
     /// Reads the registry's elements, keyed by namespaced id.
     /// </summary>
     /// <remarks>
-    /// Minestom's generator doesn't dump every synchronised registry; the game test ones are
-    /// missing, so those fall back to the vanilla data generator's own output, which is the same
-    /// data one file per element.
+    /// The vanilla data generator writes these as a datapack, one file per element, so they get
+    /// stitched back into the object the rest of the generator expects.
     /// </remarks>
     private static JObject ReadRegistryData(string dataFile) {
-        string minestomPath = Path.Combine(CodeGenUtils.MinestomDataDir, dataFile);
-        if (File.Exists(minestomPath)) {
-            return JObject.Parse(File.ReadAllText(minestomPath));
-        }
-
         string folder = Path.Combine(CodeGenUtils.VanillaDataDir, "data", "minecraft",
             dataFile[..^".json".Length].Replace('/', Path.DirectorySeparatorChar));
         if (!Directory.Exists(folder)) {
-            throw new DirectoryNotFoundException(
-                $"No registry data for '{dataFile}': not in the Minestom dump and no {folder} either.");
+            throw new DirectoryNotFoundException($"No registry data for '{dataFile}': no {folder}.");
         }
 
         JObject result = new();

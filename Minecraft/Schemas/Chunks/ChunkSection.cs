@@ -310,7 +310,8 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     }
 
     /// <summary>
-    /// Whether a block state carries a fluid, either by being one or by being waterlogged.
+    /// Whether a block state carries a fluid, either by being one or by being waterlogged. This is
+    /// vanilla's <c>!state.getFluidState().isEmpty()</c>, which is what its own count comes from.
     /// </summary>
     private static bool IsFluid(MinecraftRegistry reg, uint state) {
         // Chunks can carry state ids we don't know, and a section that won't serialise is worse
@@ -319,7 +320,9 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
             return false;
         }
 
-        return block.Liquid || block.WithState(state) is WaterloggableBlock { Waterlogged: true };
+        // The registry hands back the block's default state, so the fluid has to come off this one:
+        // waterlogging is a property, and every block with the property shares a default.
+        return block.WithState(state).Fluid is not null;
     }
 
     public ChunkSection Read(DataReader r) {

@@ -10,33 +10,65 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PointedDripstoneBlock(Identifier Identifier, PointedDripstoneBlock.Thickness ThicknessValue, PointedDripstoneBlock.VerticalDirection VerticalDirectionValue, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:pointed_dripstone";
-    public double Hardness => 1.5;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "pointed_dripstone";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:pointed_dripstone";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.5625, 0.6875, 0.5625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.5625, 0.6875, 0.5625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.5625, 0.6875, 0.5625]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 48;
-    public string TranslationKey => "block.minecraft.pointed_dripstone";
-    public bool CanRespawnIn => false;
+    private static readonly BlockInfo Data = new("minecraft:pointed_dripstone", "block.minecraft.pointed_dripstone", 3f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.Xz, 0.125f, 0f, null, "minecraft:pointed_dripstone", BlockInfo.VanillaOnly);
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Destroy, 48, "pointed_dripstone", NoteBlockInstrument.Basedrum, false, false, false, true, false, false, false, false, true, false, false, true, false, false, true, [], "minecraft:water", BlockShapes.S328, BlockShapes.S328, BlockShapes.S1, BlockShapes.S1, BlockShapes.S328);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S823, CollisionShape = BlockShapes.S823, VisualShape = BlockShapes.S823 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S823, CollisionShape = BlockShapes.S823, VisualShape = BlockShapes.S823 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S824, CollisionShape = BlockShapes.S824, VisualShape = BlockShapes.S824 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S824, CollisionShape = BlockShapes.S824, VisualShape = BlockShapes.S824 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, VisualShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, VisualShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S75, CollisionShape = BlockShapes.S75, VisualShape = BlockShapes.S75 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S75, CollisionShape = BlockShapes.S75, VisualShape = BlockShapes.S75 };
+    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S825, CollisionShape = BlockShapes.S825, VisualShape = BlockShapes.S825 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S825, CollisionShape = BlockShapes.S825, VisualShape = BlockShapes.S825 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I4, I5, I6, I7, I6, I7, I8, I9, I8, I9, I10, I11, I10, I11
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 30209];
+
+    public BlockInfo Info => Data;
+    public Identifier Category => Data.Category;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public bool BlocksMotion => StateInfo.BlocksMotion;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
 
 
     public uint StateId {

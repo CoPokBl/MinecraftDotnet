@@ -8,7 +8,10 @@ public static class CodeGenUtils {
     private const string IdentSearch = "Identifier Identifier => \"";
 
     public static string VanillaDataDir = "";
-    public static string MinestomDataDir = "";
+    public static string DumpDir = "";
+
+    /// <summary>The unpacked server jar, ie. the real one rather than the bundler.</summary>
+    public static string ServerJarPath = "";
 
     public static string NamespacedIdToPascalName(string namespacedId) {
         if (namespacedId.Contains(':')) {
@@ -33,8 +36,9 @@ public static class CodeGenUtils {
         return reader.ReadToEnd();
     }
     
-    public static string ReadMinestomDataFile(string fileName) {
-        return File.ReadAllText(Path.Combine(MinestomDataDir, fileName));
+    /// <summary>Reads one of the files <c>Data/Dumper.java</c> writes, see Program.cs.</summary>
+    public static string ReadDumpFile(string fileName) {
+        return File.ReadAllText(Path.Combine(DumpDir, fileName));
     }
     
     public static string ReadVanillaDataFile(params string[] path) {
@@ -103,23 +107,6 @@ public static class CodeGenUtils {
             entries.Add((key, protocolId));
         }
 
-        return entries.ToArray();
-    }
-
-    public static (string, int)[] GetFileRegEntries(string resFile) {
-        JObject obj = JObject.Parse(ReadMinestomDataFile(resFile));
-        List<(string, int)> entries = [];
-        foreach (KeyValuePair<string, JToken?> entry in obj) {
-            if (entry.Key == "minecraft:intentionally_empty") {
-                continue;  // for some reason, this is in the registry
-            }
-            if (entry.Value is JObject entryObj) {
-                int protocolId = entryObj["id"]!.Value<int>();
-                entries.Add((entry.Key, protocolId));
-            } else {
-                throw new InvalidOperationException($"Expected a JObject for entry '{entry.Key}' in {resFile}.");
-            }
-        }
         return entries.ToArray();
     }
 

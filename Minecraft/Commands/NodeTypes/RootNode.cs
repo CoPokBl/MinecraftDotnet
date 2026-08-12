@@ -43,7 +43,7 @@ public record RootNode : ICommandNode {
     public static ICommandNode ReadAfterFlags(CommandNodeFlag flags, DataReader reader, MinecraftRegistry registry) {
         int[] childrenIndexes = reader.ReadPrefixedArray(r => r.ReadVarInt());
         int? redirectNode = flags.HasFlag(CommandNodeFlag.HasRedirect) ? reader.ReadVarInt() : null;
-        Identifier? suggestionsType = flags.HasFlag(CommandNodeFlag.HasSuggestionsType) ? reader.Read<Identifier>(registry) : null!;
+        Identifier? suggestionsType = flags.HasFlag(CommandNodeFlag.HasSuggestionsType) ? reader.Read<Identifier>(registry) : (Identifier?)null;
 
         return new RootNode(flags, childrenIndexes, redirectNode, suggestionsType);
     }

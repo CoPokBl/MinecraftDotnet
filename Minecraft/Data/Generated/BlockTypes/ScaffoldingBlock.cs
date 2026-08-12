@@ -10,33 +10,57 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:scaffolding";
-    public double Hardness => 0;
-    public double ExplosionResistance => 0;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "scaffolding";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:scaffolding";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [0.125, 1.0, 0.125], AABB[0.0, 0.0, 0.875] -> [0.125, 1.0, 1.0], AABB[0.875, 0.0, 0.0] -> [1.0, 1.0, 0.125], AABB[0.875, 0.0, 0.875] -> [1.0, 1.0, 1.0], AABB[0.0, 0.875, 0.125] -> [1.0, 1.0, 0.875], AABB[0.125, 0.875, 0.0] -> [0.875, 1.0, 0.125], AABB[0.125, 0.875, 0.875] -> [0.875, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [0.125, 1.0, 0.125], AABB[0.0, 0.0, 0.875] -> [0.125, 1.0, 1.0], AABB[0.875, 0.0, 0.0] -> [1.0, 1.0, 0.125], AABB[0.875, 0.0, 0.875] -> [1.0, 1.0, 1.0], AABB[0.0, 0.875, 0.125] -> [1.0, 1.0, 0.875], AABB[0.125, 0.875, 0.0] -> [0.875, 1.0, 0.125], AABB[0.125, 0.875, 0.875] -> [0.875, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [0.125, 1.0, 0.125], AABB[0.0, 0.0, 0.875] -> [0.125, 1.0, 1.0], AABB[0.875, 0.0, 0.0] -> [1.0, 1.0, 0.125], AABB[0.875, 0.0, 0.875] -> [1.0, 1.0, 1.0], AABB[0.0, 0.875, 0.125] -> [1.0, 1.0, 0.875], AABB[0.125, 0.875, 0.0] -> [0.875, 1.0, 0.125], AABB[0.125, 0.875, 0.875] -> [0.875, 1.0, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 2;
-    public string TranslationKey => "block.minecraft.scaffolding";
-    public bool CanRespawnIn => true;
+    private static readonly BlockInfo Data = new("minecraft:scaffolding", "block.minecraft.scaffolding", 0f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.None, 0f, 0f, null, "minecraft:scaffolding", BlockInfo.VanillaOnly);
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 2, "scaffolding", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, [], "minecraft:water", BlockShapes.S907, BlockShapes.S908, BlockShapes.S77, BlockShapes.S1, BlockShapes.S908);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S908 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S908 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 20706];
+
+    public BlockInfo Info => Data;
+    public Identifier Category => Data.Category;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public bool BlocksMotion => StateInfo.BlocksMotion;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
 
 
     public uint StateId {
