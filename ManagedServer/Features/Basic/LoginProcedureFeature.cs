@@ -15,9 +15,6 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
 using Minecraft.Text;
-using NBT;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ManagedServer.Features.Basic;
 
@@ -37,117 +34,6 @@ public class LoginProcedureFeature(
     // Vanilla generates this once per server start and sends the same one to every client,
     // and a feature instance is per server, so matching that is just a field
     private readonly Guid _sessionId = Guid.NewGuid();
-
-    // Registries the client needs element data for that we can't produce ourselves yet. It
-    // resolves individual elements by key, so these have to carry the real vanilla data.
-    // Generated from the vanilla data by the CodeGen project, see ClientRegistryCodeGen.
-    private static readonly Lazy<(ClientBoundRegistryDataPacket[] Registries,
-        ClientBoundUpdateTagsPacket.TagSet[] Tags)> ClientSideRegistries = new(() => {
-        using Stream stream = typeof(LoginProcedureFeature).Assembly
-            .GetManifestResourceStream("ManagedServer.Resources.ClientRegistries.json")
-            ?? throw new InvalidOperationException("ClientRegistries.json is missing from the assembly.");
-        using StreamReader reader = new(stream);
-
-        JObject registries = JObject.Parse(reader.ReadToEnd());
-        List<ClientBoundRegistryDataPacket> packets = [];
-        List<ClientBoundUpdateTagsPacket.TagSet> tagSets = [];
-        List<string> unconvertible = [];
-
-        foreach ((string registryId, JToken? registry) in registries) {
-            JObject entries = (JObject)registry!["entries"]!;
-
-            Dictionary<string, INbtTag?> data = [];
-            List<string> order = [];
-            foreach ((string entryId, JToken? element) in entries) {
-                try {
-                    data[entryId] = INbtTag.FromJson(element!.ToString(Formatting.None));
-                    order.Add(entryId);
-                }
-                catch (Exception ex) {
-                    // Some vanilla elements use mixed type arrays, which don't map onto an
-                    // NBT list. Skip them rather than losing the whole registry, the client
-                    // only complains if it actually looks the element up.
-                    unconvertible.Add($"{registryId}/{entryId} ({ex.Message})");
-                }
-            }
-
-            packets.Add(new ClientBoundRegistryDataPacket {
-                RegistryId = registryId,
-                Entries = data
-            });
-
-            JObject tags = (JObject)registry["tags"]!;
-            if (tags.Count == 0) {
-                continue;
-            }
-
-            // Tags are sent as indexes into the entries we just wrote out
-            List<ClientBoundUpdateTagsPacket.Tag> registryTags = [];
-            foreach ((string tagId, JToken? values) in tags) {
-                registryTags.Add(new ClientBoundUpdateTagsPacket.Tag(
-                    tagId, ResolveTagValues(values!, tags, order)));
-            }
-            tagSets.Add(new ClientBoundUpdateTagsPacket.TagSet(registryId, registryTags.ToArray()));
-        }
-
-        if (unconvertible.Count > 0) {
-            Console.WriteLine($"Skipped {unconvertible.Count} registry entries that could not be " +
-                              $"converted to NBT: {string.Join(", ", unconvertible)}");
-        }
-
-        return (packets.ToArray(), tagSets.ToArray());
-    });
-
-    /// <summary>
-    /// Looks up the protocol id an element of one of the generated client side registries will
-    /// have, which is just its position in the registry data packet we send.
-    /// </summary>
-    /// <returns>The id, or -1 if the registry or element isn't one we send.</returns>
-    /// <remarks>
-    /// Packets that reference these registries (world clocks in
-    /// <see cref="ClientBoundUpdateTimePacket"/>, for instance) travel as ids, so they have to
-    /// agree with the order used here rather than with any vanilla ordering.
-    /// </remarks>
-    public static int GetClientRegistryEntryId(Identifier registry, Identifier element) {
-        ClientBoundRegistryDataPacket? packet = ClientSideRegistries.Value.Registries
-            .FirstOrDefault(p => p.RegistryId == registry);
-        if (packet == null) {
-            return -1;
-        }
-
-        int id = 0;
-        foreach (string entry in packet.Entries.Keys) {
-            if (entry == element) {
-                return id;
-            }
-            id++;
-        }
-
-        return -1;
-    }
-
-    private static int[] ResolveTagValues(JToken values, JObject allTags, List<string> order) {
-        List<int> ids = [];
-        foreach (JToken value in values) {
-            string name = value.Value<string>()!;
-
-            // Tags can pull in other tags, so flatten those into the same list
-            if (name.StartsWith('#')) {
-                if (allTags.TryGetValue(name[1..], out JToken? referenced)) {
-                    ids.AddRange(ResolveTagValues(referenced, allTags, order));
-                }
-                continue;
-            }
-
-            int index = order.IndexOf(name);
-            if (index != -1) {
-                ids.Add(index);
-            }
-        }
-
-        return ids.Distinct().ToArray();
-    }
-
 
     public override void Register() {
         if (Scope is not ManagedMinecraftServer) {
@@ -268,10 +154,8 @@ public class LoginProcedureFeature(
             }
             
             case ServerBoundKnownPacksPacket: {
-                // compile all the registries that we actually have
-                // and then manually send the other required ones
-                // that aren't implemented yet
-                
+                // Send every registry we have, which is every registry the client synchronises
+
                 // Turns out we have to send tags first
                 List<ClientBoundUpdateTagsPacket.TagSet> tags = [];
                 foreach (ISubRegistry subReg in Scope.Server.Registry.SubRegistries) {
@@ -286,29 +170,16 @@ public class LoginProcedureFeature(
                 };
                 e.Connection.SendPacket(tagsPacket);
 
-                HashSet<Identifier> sentRegistries = [];
                 List<ClientBoundRegistryDataPacket> registryPackets = [];
                 foreach (ISubRegistry reg in Scope.Server.Registry.SubRegistries) {
-                    sentRegistries.Add(reg.RegistryId);
                     if (reg is not INbtSerialisableRegistry nbtReg) {
                         continue;
                     }
-                    
+
                     registryPackets.Add(new ClientBoundRegistryDataPacket(nbtReg));
                 }
                 e.Connection.SendPackets(registryPackets);
-            
-                // Fill in the rest from the generated vanilla data, skipping anything a real
-                // registry already covered
-                e.Connection.SendPackets(ClientSideRegistries.Value.Registries
-                    .Where(packet => !sentRegistries.Contains(packet.RegistryId)));
 
-                ClientBoundUpdateTagsPacket.TagSet[] extraTags = ClientSideRegistries.Value.Tags
-                    .Where(set => !sentRegistries.Contains(set.Registry))
-                    .ToArray();
-                if (extraTags.Length > 0) {
-                    e.Connection.SendPacket(new ClientBoundUpdateTagsPacket { Tags = extraTags });
-                }
                 e.Connection.SendPacket(new ClientBoundFinishConfigurationPacket());
                 break;
             }

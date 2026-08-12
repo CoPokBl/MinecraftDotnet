@@ -17,6 +17,8 @@
       <EmbeddedResource Include="Data\complex_particles.json" />
       <None Remove="Data\complex_consume_effects.json" />
       <EmbeddedResource Include="Data\complex_consume_effects.json" />
+      <None Remove="Data\environment_attributes.json" />
+      <EmbeddedResource Include="Data\environment_attributes.json" />
     </ItemGroup>
 
 </Project>

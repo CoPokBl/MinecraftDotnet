@@ -41,12 +41,12 @@ public interface IPaintingVariant : IProtocolType, INetworkType<IPaintingVariant
     }
 
     public static IPaintingVariant FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
-        Identifier assetId = tag["asset_id"].GetString();
-        int width = tag["width"].GetInteger();
-        int height = tag["height"].GetInteger();
+        Identifier assetId = tag["asset_id"]!.GetString();
+        int width = tag["width"]!.GetInteger();
+        int height = tag["height"]!.GetInteger();
 
-        TextComponent? title = tag.Contains("title") ? TextComponent.FromTag(tag["title"]) : null;
-        TextComponent? author = tag.Contains("author") ? TextComponent.FromTag(tag["author"]) : null;
+        TextComponent? title = tag.Contains("title") ? TextComponent.FromTag(tag["title"]!) : null;
+        TextComponent? author = tag.Contains("author") ? TextComponent.FromTag(tag["author"]!) : null;
 
         return new SimplePaintingVariant(ident, assetId, width, height, title, author);
     }

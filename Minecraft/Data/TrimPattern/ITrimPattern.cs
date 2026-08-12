@@ -21,8 +21,8 @@ public interface ITrimPattern : IProtocolType {
     public static ITrimPattern FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
         return new SimpleTrimPattern(
             ident,
-            tag["asset_id"].GetString(),
-            TextComponent.FromTag(tag["description"]),
-            tag.Contains("decal") && tag["decal"].GetBoolean());
+            tag["asset_id"]!.GetString(),
+            TextComponent.FromTag(tag["description"]!),
+            tag.Contains("decal") && tag["decal"]!.GetBoolean());
     }
 }

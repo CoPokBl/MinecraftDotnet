@@ -32,6 +32,25 @@ public class MinecraftRegistry {
     public InstrumentRegistry Instruments { get; set; } = new();
     public CowSoundVariantRegistry CowSoundVariants { get; set; } = new();
     public WorldClockRegistry WorldClocks { get; set; } = new();
+    public EnvironmentAttributeRegistry EnvironmentAttributes { get; set; } = new();
+    public BiomeRegistry Biomes { get; set; } = new();
+    public ChatTypeRegistry ChatTypes { get; set; } = new();
+    public TrimMaterialRegistry TrimMaterials { get; set; } = new();
+    public WolfVariantRegistry WolfVariants { get; set; } = new();
+    public WolfSoundVariantRegistry WolfSoundVariants { get; set; } = new();
+    public PigVariantRegistry PigVariants { get; set; } = new();
+    public PigSoundVariantRegistry PigSoundVariants { get; set; } = new();
+    public FrogVariantRegistry FrogVariants { get; set; } = new();
+    public CatVariantRegistry CatVariants { get; set; } = new();
+    public CatSoundVariantRegistry CatSoundVariants { get; set; } = new();
+    public CowVariantRegistry CowVariants { get; set; } = new();
+    public ChickenVariantRegistry ChickenVariants { get; set; } = new();
+    public ChickenSoundVariantRegistry ChickenSoundVariants { get; set; } = new();
+    public ZombieNautilusVariantRegistry ZombieNautilusVariants { get; set; } = new();
+    public SulfurCubeArchetypeRegistry SulfurCubeArchetypes { get; set; } = new();
+    public TestEnvironmentRegistry TestEnvironments { get; set; } = new();
+    public TestInstanceRegistry TestInstances { get; set; } = new();
+    public DialogRegistry Dialogs { get; set; } = new();
 
     public ISubRegistry this[Identifier id] {
         get {
@@ -71,7 +90,26 @@ public class MinecraftRegistry {
         JukeboxSongs,
         Instruments,
         CowSoundVariants,
-        WorldClocks
+        WorldClocks,
+        EnvironmentAttributes,
+        Biomes,
+        ChatTypes,
+        TrimMaterials,
+        WolfVariants,
+        WolfSoundVariants,
+        PigVariants,
+        PigSoundVariants,
+        FrogVariants,
+        CatVariants,
+        CatSoundVariants,
+        CowVariants,
+        ChickenVariants,
+        ChickenSoundVariants,
+        ZombieNautilusVariants,
+        SulfurCubeArchetypes,
+        TestEnvironments,
+        TestInstances,
+        Dialogs
     ];
 
     public MinecraftRegistry Clone() {
@@ -101,7 +139,26 @@ public class MinecraftRegistry {
             JukeboxSongs = JukeboxSongs.Clone(),
             Instruments = Instruments.Clone(),
             CowSoundVariants = CowSoundVariants.Clone(),
-            WorldClocks = WorldClocks.Clone()
+            WorldClocks = WorldClocks.Clone(),
+            EnvironmentAttributes = EnvironmentAttributes.Clone(),
+            Biomes = Biomes.Clone(),
+            ChatTypes = ChatTypes.Clone(),
+            TrimMaterials = TrimMaterials.Clone(),
+            WolfVariants = WolfVariants.Clone(),
+            WolfSoundVariants = WolfSoundVariants.Clone(),
+            PigVariants = PigVariants.Clone(),
+            PigSoundVariants = PigSoundVariants.Clone(),
+            FrogVariants = FrogVariants.Clone(),
+            CatVariants = CatVariants.Clone(),
+            CatSoundVariants = CatSoundVariants.Clone(),
+            CowVariants = CowVariants.Clone(),
+            ChickenVariants = ChickenVariants.Clone(),
+            ChickenSoundVariants = ChickenSoundVariants.Clone(),
+            ZombieNautilusVariants = ZombieNautilusVariants.Clone(),
+            SulfurCubeArchetypes = SulfurCubeArchetypes.Clone(),
+            TestEnvironments = TestEnvironments.Clone(),
+            TestInstances = TestInstances.Clone(),
+            Dialogs = Dialogs.Clone()
         };
     }
     

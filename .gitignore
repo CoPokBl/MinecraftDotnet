@@ -11,3 +11,5 @@ riderModule.iml
 
 # Compiled output of the protocol conformance harness
 ProtocolConformance/build/
+
+logs/

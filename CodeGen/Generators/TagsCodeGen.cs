@@ -14,41 +14,38 @@ public static class TagsCodeGen {
         { "painting_variant", "IPaintingVariant" },
         { "banner_pattern", "IBannerPattern" },
         { "instrument", "IInstrument" },
+        { "dialog", "IDialog" },
+        { "worldgen/biome", "IBiome" },
     };
-    
+
+    /// <summary>
+    /// Registries whose tag folder is nested a level down. The folder layout mirrors the registry
+    /// id, so these are the ones whose id has a slash in it.
+    /// </summary>
+    private static readonly string[] NestedTagFolders = ["worldgen"];
+
     public static string CreateTagEntries(JObject registriesJson) {
         string tagsFolder = Path.Combine(CodeGenUtils.VanillaDataDir, "data", "minecraft", "tags");
-        
+
         StringBuilder tagEntries = new("\n");
 
-        void SearchDirectory(string regName, string dir) {
+        void SearchDirectory(string regName, string rootDir, string dir) {
             if (!RegistryTypeMap.ContainsKey(regName)) {
                 Console.WriteLine("Tags cannot be saved for registry: " + regName);
                 return;  // Not a registry we have set up
             }
-            
+
             foreach (string subDir in Directory.EnumerateDirectories(dir)) {
-                SearchDirectory(regName, subDir);
+                SearchDirectory(regName, rootDir, subDir);
             }
-            
+
             string regId = $"minecraft:{regName}";
             foreach (string file in Directory.EnumerateFiles(dir)) {
-                // get a list of all directories taken from the 'tags' folder
-                // for example /some/path/to/data/minecraft/tags/blocks/mineable/wood.json
-                // would give ["blocks","mineable"]
-                string[] pathParts = file.Split(Path.DirectorySeparatorChar);
-                int tagsIndex = Array.IndexOf(pathParts, regName);
-                if (tagsIndex == -1 || pathParts.Length <= tagsIndex + 1) {
-                    Console.WriteLine($"Invalid tag file path ({pathParts.Length} <= {tagsIndex} + 1): " + file);
-                    continue; // Not a valid tag file
-                }
-                
-                string[] tagPath = pathParts[(tagsIndex + 1)..^1]; // Get the path after the reg name
+                // The tag id is the path below the registry's own folder, so
+                // .../tags/block/mineable/axe.json becomes minecraft:mineable/axe
+                string tagId = Path.GetRelativePath(rootDir, file).Replace(Path.DirectorySeparatorChar, '/');
+                tagId = tagId[..^".json".Length];
 
-                // The tag ID will look like minecraft:path/to/sometag
-                string tagId = tagPath.Aggregate("", (current, part) => current + part + "/");
-                tagId += Path.GetFileNameWithoutExtension(file);
-                
                 JObject tagData = JObject.Parse(File.ReadAllText(file));
                 JArray values = tagData["values"]?.ToObject<JArray>() ?? [];
 
@@ -58,7 +55,7 @@ public static class TagsCodeGen {
                         : $"RegistryTagValue.Direct(\"{v}\")")
                     .ToArray();
                 string valuesString = $"[{string.Join(", ", valueEntries)}]";
-                
+
                 string entry = $"{CodeGenUtils.GetIndentation(2)}Data[\"{regId}\"].Tags.Add(" +
                         $"new RegistryTag<{RegistryTypeMap[regName]}>(\"{regId}\", \"{tagId}\", {valuesString}));";
                 tagEntries.AppendLine(entry);
@@ -68,9 +65,19 @@ public static class TagsCodeGen {
         // each of these is a directory containing tag files for
         // the registry that the subfolder is called
         foreach (string regDir in Directory.EnumerateDirectories(tagsFolder)) {
-            SearchDirectory(regDir.Split(Path.DirectorySeparatorChar)[^1], regDir);
+            string name = regDir.Split(Path.DirectorySeparatorChar)[^1];
+
+            if (NestedTagFolders.Contains(name)) {
+                foreach (string nestedDir in Directory.EnumerateDirectories(regDir)) {
+                    string nestedName = nestedDir.Split(Path.DirectorySeparatorChar)[^1];
+                    SearchDirectory($"{name}/{nestedName}", nestedDir, nestedDir);
+                }
+                continue;
+            }
+
+            SearchDirectory(name, regDir, regDir);
         }
-        
+
         return tagEntries.ToString();
     }
 }

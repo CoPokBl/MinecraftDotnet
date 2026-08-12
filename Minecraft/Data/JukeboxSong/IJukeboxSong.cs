@@ -24,9 +24,9 @@ public interface IJukeboxSong : IProtocolType {
     public static IJukeboxSong FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
         return new SimpleJukeboxSong(
             ident,
-            SoundEvent.FromNbt(tag["sound_event"], reg),
-            TextComponent.FromTag(tag["description"]),
-            tag["length_in_seconds"].GetFloat(),
-            tag["comparator_output"].GetInteger());
+            SoundEvent.FromNbt(tag["sound_event"]!, reg),
+            TextComponent.FromTag(tag["description"]!),
+            tag["length_in_seconds"]!.GetFloat(),
+            tag["comparator_output"]!.GetInteger());
     }
 }

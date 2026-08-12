@@ -23,9 +23,9 @@ public interface ICowSoundVariant : IProtocolType {
     public static ICowSoundVariant FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
         return new SimpleCowSoundVariant(
             ident,
-            SoundEvent.FromNbt(tag["ambient_sound"], reg),
-            SoundEvent.FromNbt(tag["hurt_sound"], reg),
-            SoundEvent.FromNbt(tag["death_sound"], reg),
-            SoundEvent.FromNbt(tag["step_sound"], reg));
+            SoundEvent.FromNbt(tag["ambient_sound"]!, reg),
+            SoundEvent.FromNbt(tag["hurt_sound"]!, reg),
+            SoundEvent.FromNbt(tag["death_sound"]!, reg),
+            SoundEvent.FromNbt(tag["step_sound"]!, reg));
     }
 }

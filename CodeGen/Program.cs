@@ -24,6 +24,24 @@ using Minecraft.Data.TrimPattern;
 using Minecraft.Data.JukeboxSong;
 using Minecraft.Data.Instrument;
 using Minecraft.Data.CowSoundVariant;
+using Minecraft.Data.CowVariant;
+using Minecraft.Data.CatSoundVariant;
+using Minecraft.Data.CatVariant;
+using Minecraft.Data.ChickenSoundVariant;
+using Minecraft.Data.ChickenVariant;
+using Minecraft.Data.FrogVariant;
+using Minecraft.Data.PigSoundVariant;
+using Minecraft.Data.PigVariant;
+using Minecraft.Data.WolfSoundVariant;
+using Minecraft.Data.WolfVariant;
+using Minecraft.Data.ZombieNautilusVariant;
+using Minecraft.Data.Biomes;
+using Minecraft.Data.ChatType;
+using Minecraft.Data.Dialogs;
+using Minecraft.Data.EnvironmentAttributes;
+using Minecraft.Data.GameTests;
+using Minecraft.Data.SulfurCubeArchetype;
+using Minecraft.Data.TrimMaterial;
 using Minecraft.Data.WorldClock;
 using Minecraft.Data.Enchantments;
 using Minecraft.Data.Entities;
@@ -244,8 +262,8 @@ RunStep("Attributes", AttributeCodeGen.CreateAttributeEntries);
 RunStep("Argument Types", ArgumentTypeCodeGen.CreateArgumentTypeEntries);
 RunStep("Statistic Types", StatisticTypeCodeGen.CreateStatisticTypes);
 RunStep("Custom Statistics", CustomStatisticCodeGen.CreateCustomStatistics);
+RunStep("Environment Attributes", EnvironmentAttributeCodeGen.CreateEnvironmentAttributes);
 RunStep("Tags", TagsCodeGen.CreateTagEntries);
-RunStep("Client Registry Data", ClientRegistryCodeGen.CreateClientRegistryData);
 
 // Do dynamic registries last because they might use other vanilla registries
 RunDynamicRegistry("Enchantments", "enchantment.json", "IEnchantment", "Enchantment", "Enchantments", "Enchantments");
@@ -255,10 +273,33 @@ RunDynamicRegistry("Damage Types", "damage_type.json", "IDamageType", "DamageTyp
 RunDynamicRegistry("Painting Variants", "painting_variant.json", "IPaintingVariant", "PaintingVariant", "PaintingVariants");
 RunDynamicRegistry("Banner Patterns", "banner_pattern.json", "IBannerPattern", "BannerPattern", "BannerPatterns");
 RunDynamicRegistry("Trim Patterns", "trim_pattern.json", "ITrimPattern", "TrimPattern", "TrimPatterns");
+RunDynamicRegistry("Trim Materials", "trim_material.json", "ITrimMaterial", "TrimMaterial", "TrimMaterials");
 RunDynamicRegistry("Jukebox Songs", "jukebox_song.json", "IJukeboxSong", "JukeboxSong", "JukeboxSongs");
 RunDynamicRegistry("Instruments", "instrument.json", "IInstrument", "Instrument", "Instruments");
-RunDynamicRegistry("Cow Sound Variants", "cow_sound_variant.json", "ICowSoundVariant", "CowSoundVariant", "CowSoundVariants");
 RunDynamicRegistry("World Clocks", "world_clock.json", "IWorldClock", "WorldClock", "WorldClocks");
+RunDynamicRegistry("Chat Types", "chat_type.json", "IChatType", "ChatType", "ChatTypes");
+RunDynamicRegistry("Cat Variants", "cat_variant.json", "ICatVariant", "CatVariant", "CatVariants");
+RunDynamicRegistry("Cat Sound Variants", "cat_sound_variant.json", "ICatSoundVariant", "CatSoundVariant", "CatSoundVariants");
+RunDynamicRegistry("Chicken Variants", "chicken_variant.json", "IChickenVariant", "ChickenVariant", "ChickenVariants");
+RunDynamicRegistry("Chicken Sound Variants", "chicken_sound_variant.json", "IChickenSoundVariant", "ChickenSoundVariant", "ChickenSoundVariants");
+RunDynamicRegistry("Cow Variants", "cow_variant.json", "ICowVariant", "CowVariant", "CowVariants");
+RunDynamicRegistry("Cow Sound Variants", "cow_sound_variant.json", "ICowSoundVariant", "CowSoundVariant", "CowSoundVariants");
+RunDynamicRegistry("Frog Variants", "frog_variant.json", "IFrogVariant", "FrogVariant", "FrogVariants");
+RunDynamicRegistry("Pig Variants", "pig_variant.json", "IPigVariant", "PigVariant", "PigVariants");
+RunDynamicRegistry("Pig Sound Variants", "pig_sound_variant.json", "IPigSoundVariant", "PigSoundVariant", "PigSoundVariants");
+RunDynamicRegistry("Wolf Variants", "wolf_variant.json", "IWolfVariant", "WolfVariant", "WolfVariants");
+RunDynamicRegistry("Wolf Sound Variants", "wolf_sound_variant.json", "IWolfSoundVariant", "WolfSoundVariant", "WolfSoundVariants");
+RunDynamicRegistry("Zombie Nautilus Variants", "zombie_nautilus_variant.json", "IZombieNautilusVariant", "ZombieNautilusVariant", "ZombieNautilusVariants");
+RunDynamicRegistry("Sulfur Cube Archetypes", "sulfur_cube_archetype.json", "ISulfurCubeArchetype", "SulfurCubeArchetype", "SulfurCubeArchetypes");
+RunDynamicRegistry("Dialogs", "dialog.json", "IDialog", "Dialog", "Dialogs", "Dialogs");
+RunDynamicRegistry("Test Environments", "test_environment.json", "ITestEnvironment", "TestEnvironment", "TestEnvironments", "GameTests");
+RunDynamicRegistry("Test Instances", "test_instance.json", "ITestInstance", "TestInstance", "TestInstances", "GameTests");
+
+// The client hard requires minecraft:plains to exist and our chunk sections default their biome
+// palette to id 0, so plains goes first rather than wherever it lands alphabetically. The
+// terrain generation half is dropped because Biome.NETWORK_CODEC doesn't read it.
+RunDynamicRegistry("Biomes", "worldgen/biome.json", "IBiome", "Biome", "Biomes", "Biomes",
+    "minecraft:plains", ["carvers", "features", "spawners", "spawn_costs"]);
 
 Console.WriteLine("Generating VanillaRegistry.cs...");
 string vanillaRegistryCode = vanillaRegistryFile.Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd"))
@@ -276,7 +317,8 @@ void RunStep(string name, Func<JObject, string> func) {
 }
 
 void RunDynamicRegistry(string name, string dataFile, string interfaceName, string className,
-    string registryProperty, string? typeNamespace = null) {
+    string registryProperty, string? typeNamespace = null, string? firstEntry = null,
+    string[]? dropFields = null) {
     RunStep(name, _ => DynamicRegistryCodeGen.CreateEntries(dataFile, interfaceName, className,
-        registryProperty, typeNamespace));
+        registryProperty, typeNamespace, firstEntry, dropFields));
 }

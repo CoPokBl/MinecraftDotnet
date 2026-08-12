@@ -24,9 +24,9 @@ public interface IInstrument : IProtocolType {
     public static IInstrument FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
         return new SimpleInstrument(
             ident,
-            SoundEvent.FromNbt(tag["sound_event"], reg),
-            tag["use_duration"].GetFloat(),
-            tag["range"].GetFloat(),
-            TextComponent.FromTag(tag["description"]));
+            SoundEvent.FromNbt(tag["sound_event"]!, reg),
+            tag["use_duration"]!.GetFloat(),
+            tag["range"]!.GetFloat(),
+            TextComponent.FromTag(tag["description"]!));
     }
 }
