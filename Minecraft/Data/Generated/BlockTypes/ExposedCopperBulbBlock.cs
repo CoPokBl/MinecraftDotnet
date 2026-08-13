@@ -3,15 +3,16 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record ExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : IBlock {
+public record ExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : IBlock, ILit, IPowered {
     private static readonly BlockInfo Data = new("minecraft:weathering_copper_bulb", "block.minecraft.exposed_copper_bulb", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:exposed_copper_bulb", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(3f, 12, 15, PushReaction.Normal, 44, "copper_bulb", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, true, true, true, true, null, null, BlockShapes.S77, BlockShapes.S77, BlockShapes.S1, BlockShapes.S77, BlockShapes.S77);
+    private static readonly BlockStateInfo I0 = new(3f, 12, 15, PushReaction.Normal, 44, "copper_bulb", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, true, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I1, I1
@@ -47,6 +48,7 @@ public record ExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool Power
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -57,8 +59,15 @@ public record ExposedCopperBulbBlock(Identifier Identifier, bool Lit, bool Power
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithLit(bool lit) => this with { Lit = lit };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
 
 
     public uint StateId {

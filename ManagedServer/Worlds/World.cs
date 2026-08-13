@@ -5,6 +5,8 @@ using ManagedServer.Events;
 using ManagedServer.Events.Types;
 using ManagedServer.Features.Basic;
 using ManagedServer.Features;
+using ManagedServer.Fluids;
+using ManagedServer.Pathfinding;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds.Lighting;
 using Minecraft;
@@ -83,6 +85,36 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     private readonly int _minY;
     private readonly int _maxY;
 
+    /// <summary>The lowest block a position can be at, the dimension's <c>MinY</c>.</summary>
+    public int MinY => _minY;
+
+    /// <summary>One past the highest block a position can be at.</summary>
+    public int MaxY => _maxY;
+
+    /// <summary>
+    /// What the pathfinder made of each block position, vanilla's <c>ServerLevel.getPathTypeCache</c>.
+    /// One per world because it is keyed by position and invalidated by block changes; the per state
+    /// half of the same answer is in <c>BlockPathData</c> and is global.
+    /// </summary>
+    public PathTypeCache PathTypes { get; } = new();
+
+    /// <summary>
+    /// The shape update cascade, vanilla's <c>Level.neighborUpdater</c>. Driven from
+    /// <see cref="SetBlock(Vec3{int},IBlock,IBlockEntityType?,INbtTag?,int,int)"/> and holds the queue
+    /// across a whole cascade, so it is per world and not static.
+    /// </summary>
+    private readonly NeighbourUpdater _neighbours;
+
+    /// <summary>
+    /// Whether a block write tells its neighbours, vanilla's <c>updateNeighbourShapes</c> pass. On by
+    /// default, and already inert while <see cref="ManagedMinecraftServer.BlockPlacementRules"/> is
+    /// empty, so this is mostly for a world that has rules and wants its writes left alone anyway: a
+    /// schematic being streamed in, or a generator writing gameplay blocks.
+    /// <p/>
+    /// Per write, <see cref="BlockUpdateFlags.KnownShape"/> says the same thing for one call.
+    /// </summary>
+    public bool ShapeUpdates { get; set; } = true;
+
     private int UnloadDistance => _viewDistance + UnloadDistanceMod;
     private const int UnloadDistanceMod = 1;  // Reduces packet churn when players travel back and forth.
 
@@ -131,6 +163,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         Events = baseEventNode.CreateChild<IWorldEvent>(e => e.World == this);
         Entities = new EntityManager(Events, viewDistance * 16);
         FeatureHandler = new FeatureHandler(this);
+        _neighbours = new NeighbourUpdater(this);
 
         Events.AddListener<ServerTickEvent>(_ => Tick());
     }
@@ -420,7 +453,22 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         return data.BlockEntities.GetValueOrDefault(ToChunkLocalPos(pos));
     }
 
-    public void SetBlock(Vec3<int> pos, IBlock block, IBlockEntityType? blockEntityType = null, INbtTag? blockEntityData = null) {
+    /// <summary>
+    /// <c>Level.setBlock</c>. The defaults are <c>setBlockAndUpdate</c>'s: tell the clients and run the
+    /// neighbour passes, which is what a caller that just wants a block somewhere means.
+    /// <p/>
+    /// The shape pass is why a fence lets go when its neighbour is broken, and why the second half of a
+    /// two cell block goes with the first. A caller that has already worked out the surrounding states
+    /// passes <see cref="BlockUpdateFlags.KnownShape"/> to keep the pass from undoing it.
+    /// </summary>
+    /// <param name="flags"><see cref="BlockUpdateFlags"/>, vanilla's <c>Block.UpdateFlags</c>.</param>
+    /// <param name="updateLimit">
+    /// How much further a shape cascade may go. Vanilla's re-entrancy guard, and the only one: leave
+    /// it alone unless transcribing something that passes its own.
+    /// </param>
+    public void SetBlock(Vec3<int> pos, IBlock block, IBlockEntityType? blockEntityType = null,
+        INbtTag? blockEntityData = null, int flags = BlockUpdateFlags.Default,
+        int updateLimit = BlockUpdateFlags.UpdateLimit) {
         if (Immutable) throw new InvalidOperationException("World is immutable, cannot set block.");
         CheckY(pos.Y);
 
@@ -450,12 +498,45 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             );
         }
         _lighting.Invalidate(chunkPos);
+        PathTypes.Invalidate(pos.X, pos.Y, pos.Z);
 
-        SendBlockUpdate(pos, this);
+        if ((flags & BlockUpdateFlags.Clients) != 0) {
+            SendBlockUpdate(pos, this);
+        }
+
+        // Vanilla clears UPDATE_NEIGHBORS and UPDATE_SUPPRESS_DROPS out of the flags it passes on, so
+        // a cascade does not re-run the redstone pass at every step and does not carry a "do not drop"
+        // from the write that started it into the blocks it knocks down.
+        if (ShapeUpdates && !Server.BlockPlacementRules.IsEmpty
+            && (flags & BlockUpdateFlags.KnownShape) == 0 && updateLimit > 0) {
+            int cascade = flags & ~(BlockUpdateFlags.SuppressDrops | BlockUpdateFlags.NeighborUpdates);
+            _neighbours.UpdateNeighbourShapes(pos, block, cascade, updateLimit - 1);
+        }
     }
 
-    public void SetBlock(Vec3<double> pos, IBlock block, IBlockEntityType? blockEntityType = null, INbtTag? blockEntityData = null) =>
-        SetBlock(pos.ToBlockPos(), block, blockEntityType, blockEntityData);
+    /// <summary>
+    /// <c>Level.destroyBlock</c>: what a shape update means when a rule answers air. Leaves the fluid
+    /// that was in the block behind, so breaking a waterlogged fence leaves water rather than a hole.
+    /// <p/>
+    /// <paramref name="dropResources"/> is accepted and ignored. There is no loot table layer, and
+    /// <c>BlockBreakingFeature</c> does not drop either, so this is the same gap rather than a new one.
+    /// </summary>
+    public bool DestroyBlock(Vec3<int> pos, bool dropResources,
+        int updateLimit = BlockUpdateFlags.UpdateLimit) {
+        IBlock existing = GetBlockOr(pos, Block.Air);
+        if (existing.Air) {
+            return false;
+        }
+
+        SetBlock(pos, FluidState.Of(existing).ToBlock(), flags: BlockUpdateFlags.Default,
+            updateLimit: updateLimit);
+        return true;
+    }
+
+    public void SetBlock(Vec3<double> pos, IBlock block, IBlockEntityType? blockEntityType = null,
+        INbtTag? blockEntityData = null, int flags = BlockUpdateFlags.Default,
+        int updateLimit = BlockUpdateFlags.UpdateLimit) =>
+        SetBlock(pos.ToBlockPos(), block, blockEntityType, blockEntityData, flags, updateLimit);
 
     public void SetBlockData(Vec3<int> pos, BlockEntity? data) {
         if (Immutable) throw new InvalidOperationException("World is immutable, cannot set block data.");
@@ -524,6 +605,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
                 Vec3<int> local = localPositions[idx];
                 data.SetBlock(GameToProtocolPos(local), blockUpdates[idx].Block);
+                PathTypes.Invalidate(local.X, local.Y, local.Z);
                 anyWritten = true;
 
                 int section = data.GetYSection(local.Y, out _);
@@ -586,6 +668,32 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     #endregion
 
     #region predicates
+
+    /// <summary>
+    /// Whether nothing stands between a position and the sky, vanilla's <c>canSeeSky</c>.
+    /// <p/>
+    /// Upstream this is <c>getBrightness(SKY, pos) &gt;= 15</c>, read out of the light arrays.
+    /// Computed directly here instead, because it is the same question: a sky source column stops at
+    /// the first block that dampens at all, so an undimmed column and a sky level of fifteen are the
+    /// same condition. Doing it this way avoids driving the lighting provider, which works a chunk
+    /// at a time and would recompute a nine chunk region to answer one position.
+    /// <p/>
+    /// Time of day does not come into it, upstream either: stored sky light is what the sky would
+    /// give at noon.
+    /// </summary>
+    public bool CanSeeSky(Vec3<int> pos) {
+        if (!Dimension.HasSkyLight || !IsInBounds(pos)) {
+            return false;
+        }
+
+        for (int y = pos.Y + 1; y < _maxY; y++) {
+            if (GetBlockOr(new Vec3<int>(pos.X, y, pos.Z), Block.Air).LightDampening > 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     public bool IsBlockLoaded(Vec3<int> pos) {
         CheckY(pos.Y);

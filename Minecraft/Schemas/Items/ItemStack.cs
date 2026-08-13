@@ -37,7 +37,21 @@ public class ItemStack(
         Dictionary<IDataComponent, object> newComponents = new(_components) {
             [component] = value
         };
-        return new ItemStack(Type, Count, newComponents, _removeComponents);
+        // A patch says either what a component is or that it is gone, never both, so setting one that
+        // had been removed takes the removal back off.
+        return new ItemStack(Type, Count, newComponents,
+            _removeComponents.Where(c => !c.Equals(component)).ToArray());
+    }
+
+    /// <summary>
+    /// The stack without <paramref name="component"/>, including without the one its item type carries
+    /// by default. That is the difference from never setting it: the removal travels to the client, so
+    /// a shield with <c>minecraft:blocks_attacks</c> taken off stops blocking there as well as here.
+    /// </summary>
+    public ItemStack Without<T>(IDataComponent<T> component) {
+        return new ItemStack(Type, Count,
+            _components.Where(kvp => !kvp.Key.Equals(component)).ToDictionary(),
+            _removeComponents.Contains(component) ? _removeComponents : [.._removeComponents, component]);
     }
     
     public ItemStack WithCount(int count) {
@@ -121,9 +135,9 @@ public class ItemStack(
         if (component == null && ignoreDefaults) {
             throw new KeyNotFoundException($"Component {type.Identifier} not found in ItemStack.");
         }
-        
-        // Look for default value
-        if (Type.DefaultComponents.TryGetValue(type, out object? defaultComponent)) {
+
+        // Look for default value, unless the stack says the item's default is gone
+        if (!_removeComponents.Contains(type) && Type.DefaultComponents.TryGetValue(type, out object? defaultComponent)) {
             return (T)defaultComponent;
         }
         
@@ -139,7 +153,11 @@ public class ItemStack(
     }
     
     public bool Has<T>(IDataComponent<T> type) {
-        return _components.ContainsKey(type) || Type.DefaultComponents.ContainsKey(type);
+        if (_components.ContainsKey(type)) {
+            return true;
+        }
+
+        return !_removeComponents.Contains(type) && Type.DefaultComponents.ContainsKey(type);
     }
 
     public T? GetStructOrNull<T>(IDataComponent<T> type) where T : struct {

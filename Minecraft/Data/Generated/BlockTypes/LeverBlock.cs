@@ -3,22 +3,23 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record LeverBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock {
+public record LeverBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock, IAttachFaced, IHorizontalFacing, IPowered {
     private static readonly BlockInfo Data = new("minecraft:lever", "block.minecraft.lever", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:lever", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, [], null, BlockShapes.S628, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S629 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S630 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S631 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S632 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S633 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S634 };
-    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S635 };
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S630, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S631 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S632 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S633 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S634 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S635 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S636 };
+    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S637 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I0, I0, I1, I1, I1, I1, I2, I2, I3, I3, I4, I4, I5, I5, I6, I6, I6, I6, I7, I7, I7, I7
     ];
@@ -53,6 +54,7 @@ public record LeverBlock(Identifier Identifier, AttachDirection Face, Direction 
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -63,8 +65,17 @@ public record LeverBlock(Identifier Identifier, AttachDirection Face, Direction 
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFace(AttachDirection face) => this with { Face = face };
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
 
 
     public uint StateId {

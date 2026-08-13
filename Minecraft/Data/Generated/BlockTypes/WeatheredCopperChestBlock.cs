@@ -3,24 +3,25 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperChestBlock.Type TypeValue, Direction Facing, bool Waterlogged) : IBlock {
+public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperChestBlock.Type TypeValue, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
     private static readonly BlockInfo Data = new("minecraft:weathering_copper_chest", "block.minecraft.weathered_copper_chest", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chest", "minecraft:weathered_copper_chest", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 56, "copper", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, true, false, false, true, [], "minecraft:water", BlockShapes.S414, BlockShapes.S414, BlockShapes.S1, BlockShapes.S414, BlockShapes.S414);
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 56, "copper", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S415, CollisionShape = BlockShapes.S415, OcclusionShape = BlockShapes.S415, VisualShape = BlockShapes.S415 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S415, CollisionShape = BlockShapes.S415, OcclusionShape = BlockShapes.S415, VisualShape = BlockShapes.S415 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S416, CollisionShape = BlockShapes.S416, OcclusionShape = BlockShapes.S416, VisualShape = BlockShapes.S416 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S416, CollisionShape = BlockShapes.S416, OcclusionShape = BlockShapes.S416, VisualShape = BlockShapes.S416 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417 };
-    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S418, CollisionShape = BlockShapes.S418, OcclusionShape = BlockShapes.S418, VisualShape = BlockShapes.S418 };
-    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S418, CollisionShape = BlockShapes.S418, OcclusionShape = BlockShapes.S418, VisualShape = BlockShapes.S418 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S418, CollisionShape = BlockShapes.S418, OcclusionShape = BlockShapes.S418, VisualShape = BlockShapes.S418, SupportShape = BlockShapes.S418 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S418, CollisionShape = BlockShapes.S418, OcclusionShape = BlockShapes.S418, VisualShape = BlockShapes.S418, SupportShape = BlockShapes.S418 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S419, CollisionShape = BlockShapes.S419, OcclusionShape = BlockShapes.S419, VisualShape = BlockShapes.S419, SupportShape = BlockShapes.S419 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S419, CollisionShape = BlockShapes.S419, OcclusionShape = BlockShapes.S419, VisualShape = BlockShapes.S419, SupportShape = BlockShapes.S419 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S420, CollisionShape = BlockShapes.S420, OcclusionShape = BlockShapes.S420, VisualShape = BlockShapes.S420, SupportShape = BlockShapes.S420 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S420, CollisionShape = BlockShapes.S420, OcclusionShape = BlockShapes.S420, VisualShape = BlockShapes.S420, SupportShape = BlockShapes.S420 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I0, I1, I4, I5, I2, I3, I0, I1, I6, I7, I8, I9, I0, I1, I8, I9, I6, I7
     ];
@@ -55,6 +56,7 @@ public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperCh
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -65,8 +67,15 @@ public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperCh
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {

@@ -3,20 +3,25 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record AcaciaDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock {
+public record AcaciaDoorBlock(Identifier Identifier, Direction Facing, BlockHalf Half, LeftRight Hinge, bool Open, bool Powered) : IBlock, IHorizontalFacing, IDoubleHalved, IHinged, IOpenable, IPowered {
     private static readonly BlockInfo Data = new("minecraft:door", "block.minecraft.acacia_door", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_door", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(3f, 0, 0, PushReaction.Destroy, 15, "wood", NoteBlockInstrument.Bass, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, [], null, BlockShapes.S17, BlockShapes.S17, BlockShapes.S1, BlockShapes.S1, BlockShapes.S17);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S18, CollisionShape = BlockShapes.S18, VisualShape = BlockShapes.S18 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S19, CollisionShape = BlockShapes.S19, VisualShape = BlockShapes.S19 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S20, CollisionShape = BlockShapes.S20, VisualShape = BlockShapes.S20 };
+    private static readonly BlockStateInfo I0 = new(3f, 0, 0, PushReaction.Destroy, 15, "wood", NoteBlockInstrument.Bass, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S17, BlockShapes.S17, BlockShapes.S1, BlockShapes.S1, BlockShapes.S17, BlockShapes.S17);
+    private static readonly BlockStateInfo I1 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S18, CollisionShape = BlockShapes.S18, VisualShape = BlockShapes.S18, SupportShape = BlockShapes.S18 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S19, CollisionShape = BlockShapes.S19, VisualShape = BlockShapes.S19, SupportShape = BlockShapes.S19 };
+    private static readonly BlockStateInfo I3 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S20, CollisionShape = BlockShapes.S20, VisualShape = BlockShapes.S20, SupportShape = BlockShapes.S20 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S18, CollisionShape = BlockShapes.S18, VisualShape = BlockShapes.S18, SupportShape = BlockShapes.S18 };
+    private static readonly BlockStateInfo I5 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S19, CollisionShape = BlockShapes.S19, VisualShape = BlockShapes.S19, SupportShape = BlockShapes.S19 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S20, CollisionShape = BlockShapes.S20, VisualShape = BlockShapes.S20, SupportShape = BlockShapes.S20 };
+    private static readonly BlockStateInfo I7 = I0 with { PathfindableLand = false, PathfindableAir = false };
     private static readonly BlockStateInfo[] States = [
-        I0, I0, I1, I1, I2, I2, I1, I1, I0, I0, I1, I1, I2, I2, I1, I1, I2, I2, I3, I3, I0, I0, I3, I3, I2, I2, I3, I3, I0, I0, I3, I3, I1, I1, I2, I2, I3, I3, I2, I2, I1, I1, I2, I2, I3, I3, I2, I2, I3, I3, I0, I0, I1, I1, I0, I0, I3, I3, I0, I0, I1, I1, I0, I0
+        I0, I0, I1, I1, I2, I2, I1, I1, I0, I0, I1, I1, I2, I2, I1, I1, I2, I2, I3, I3, I0, I0, I3, I3, I2, I2, I3, I3, I0, I0, I3, I3, I4, I4, I5, I5, I6, I6, I5, I5, I4, I4, I5, I5, I6, I6, I5, I5, I6, I6, I7, I7, I4, I4, I7, I7, I6, I6, I7, I7, I4, I4, I7, I7
     ];
 
     public BlockStateInfo StateInfo => States[StateId - 14252];
@@ -49,6 +54,7 @@ public record AcaciaDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -59,8 +65,21 @@ public record AcaciaDoorBlock(Identifier Identifier, Direction Facing, BlockHalf
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithHalf(BlockHalf half) => this with { Half = half };
+
+    public IBlock WithHinge(LeftRight hinge) => this with { Hinge = hinge };
+
+    public IBlock WithOpen(bool open) => this with { Open = open };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
 
 
     public uint StateId {

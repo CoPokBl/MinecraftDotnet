@@ -3,6 +3,8 @@ using TestServer.Servers.BlockSumoFFA;
 using TestServer.Servers.Dialogs;
 using TestServer.Servers.Everything;
 using TestServer.Servers.MlgRush;
+using TestServer.Servers.MobAi;
+using TestServer.Servers.Placement;
 using TestServer.Servers.SkyWarsLuckyBlock;
 using TestServer.Servers.Transferer;
 
@@ -55,6 +57,14 @@ switch (args[0]) {
 
     case "dialogs":
         await DialogTest.Start();
+        break;
+
+    case "mobai":
+        await MobAiTest.Start();
+        break;
+
+    case "placement":
+        await PlacementTest.Start();
         break;
     
     default:

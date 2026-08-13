@@ -46,6 +46,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -78,9 +80,11 @@ public final class Dumper {
         write(out.resolve("entity_type.json"), entityTypes());
         write(out.resolve("attribute.json"), attributes());
         write(out.resolve("light.json"), light());
+        write(out.resolve("path_type.json"), pathTypes());
 
         reportUnknownMembers();
-        System.out.println("Dumped block.json, entity_type.json, attribute.json and light.json to " + out);
+        System.out.println("Dumped block.json, entity_type.json, attribute.json, light.json and " +
+                "path_type.json to " + out);
     }
 
     // ------------------------------------------------------- completeness
@@ -190,6 +194,14 @@ public final class Dumper {
             json.put("defaultStateId", Block.BLOCK_STATE_REGISTRY.getId(defaultState));
             json.put("gravity", block instanceof net.minecraft.world.level.block.FallingBlock);
             json.put("dynamicShape", getBoolean(Hidden.DYNAMIC_SHAPE, block));
+            json.put("blockClassChain", classChain(block.getClass()));
+
+            // Only DoorBlock has one, and it is the whole difference between a closed door a mob
+            // can decide to open and one it treats as a wall. It hangs off the block set type,
+            // which nothing else in the dump reaches.
+            if (block instanceof net.minecraft.world.level.block.DoorBlock door) {
+                json.put("doorOpensByHand", door.type().canOpenByHand());
+            }
 
             // Everything is vanilla apart from the handful an experiment gates, so only those are
             // worth writing out.
@@ -214,6 +226,7 @@ public final class Dumper {
                 json.put("offsetType", vertical ? "xyz" : "xz");
                 json.put("maxHorizontalOffset", invoke(Hidden.MAX_HORIZONTAL_OFFSET, block));
                 json.put("maxVerticalOffset", vertical ? invoke(Hidden.MAX_VERTICAL_OFFSET, block) : 0.0f);
+                json.put("shapeOffsets", shapeOffsets(block));
             }
 
             Obj properties = new Obj();
@@ -280,6 +293,12 @@ public final class Dumper {
         json.put("viewBlocking", blockState.isViewBlocking(EmptyBlockGetter.INSTANCE, BlockPos.ZERO));
         json.put("spawnTerrainParticles", blockState.shouldSpawnTerrainParticles());
         json.put("validSpawn", validSpawn(blockState));
+        // What the node evaluator asks first of every candidate block. It takes an argument, so
+        // reportUnknownMembers cannot see it: it only walks zero arg methods. An upstream change to
+        // the signature is still a compile error here, which is the guard that matters.
+        json.put("pathfindableLand", blockState.isPathfindable(PathComputationType.LAND));
+        json.put("pathfindableWater", blockState.isPathfindable(PathComputationType.WATER));
+        json.put("pathfindableAir", blockState.isPathfindable(PathComputationType.AIR));
         // A waterlogged block carries water without being it, and the client counts the states with
         // a fluid in a chunk section off this rather than off the block. Written even when there is
         // none: a state only lists what it disagrees with the default about, and a missing key would
@@ -292,6 +311,13 @@ public final class Dumper {
         json.put("occlusionShape", shape(blockState, pos -> blockState.getOcclusionShape()));
         json.put("visualShape", shape(blockState, pos -> blockState.getVisualShape(
                 EmptyBlockGetter.INSTANCE, pos, CollisionContext.empty())));
+        // What everything that attaches to a surface is really asking about, through isFaceSturdy.
+        // It is the collision shape for most blocks and deliberately not for ten of them: leaves
+        // support nothing, mud and soul sand support as if they were full cubes despite collision
+        // shapes that are not, an open fence gate supports nothing, and a shulker box answers off
+        // its block entity, which EmptyBlockGetter reports as closed and therefore a full cube.
+        json.put("supportShape", shape(blockState,
+                pos -> blockState.getBlockSupportShape(EmptyBlockGetter.INSTANCE, pos)));
         return json;
     }
 
@@ -327,12 +353,69 @@ public final class Dumper {
      */
     private static String shape(BlockState blockState, java.util.function.Function<BlockPos, VoxelShape> shapeAt) {
         String atOrigin = aabbs(shapeAt.apply(BlockPos.ZERO));
-        if (!blockState.hasOffsetFunction() || atOrigin.equals(aabbs(shapeAt.apply(OFFSET_PROBE)))) {
+        if (!moves(blockState, shapeAt)) {
             return atOrigin;
         }
 
         Vec3 offset = blockState.getOffset(BlockPos.ZERO);
         return aabbs(shapeAt.apply(BlockPos.ZERO).move(-offset.x, -offset.y, -offset.z));
+    }
+
+    /**
+     * Whether this particular shape of the state is one vanilla moves by the position hash.
+     * <p>
+     * Having an offset function is not the same as every shape using it: {@code short_grass} has one,
+     * {@code getOffset} returns a real vector for it, and {@code getShape} hands back the unmoved shape
+     * regardless, because only some blocks' overrides call {@code .move(state.getOffset(pos))}. Asking
+     * the shape at two positions is what tells the two apart.
+     */
+    private static boolean moves(BlockState blockState, java.util.function.Function<BlockPos, VoxelShape> shapeAt) {
+        return blockState.hasOffsetFunction()
+                && !aabbs(shapeAt.apply(BlockPos.ZERO)).equals(aabbs(shapeAt.apply(OFFSET_PROBE)));
+    }
+
+    /**
+     * Which of a block's shapes move with the position it sits at, a bit per shape in the order the
+     * shapes are dumped. The consumer has to put the offset back for exactly these and no others, which
+     * it cannot work out for itself: a moved shape and an unmoved one are dumped identically.
+     * <p>
+     * The answer is a property of the block's overrides rather than of a state, so the states have to
+     * agree; a block whose states disagreed would need this per state instead, and saying so loudly
+     * beats picking one of them.
+     */
+    private static int shapeOffsets(Block block) {
+        Integer agreed = null;
+
+        for (BlockState state : block.getStateDefinition().getPossibleStates()) {
+            int mask = 0;
+            if (moves(state, pos -> state.getShape(EmptyBlockGetter.INSTANCE, pos))) {
+                mask |= 1;
+            }
+            if (moves(state, pos -> state.getCollisionShape(EmptyBlockGetter.INSTANCE, pos))) {
+                mask |= 2;
+            }
+            if (moves(state, pos -> state.getInteractionShape(EmptyBlockGetter.INSTANCE, pos))) {
+                mask |= 4;
+            }
+            if (moves(state, pos -> state.getOcclusionShape())) {
+                mask |= 8;
+            }
+            if (moves(state, pos -> state.getVisualShape(EmptyBlockGetter.INSTANCE, pos, CollisionContext.empty()))) {
+                mask |= 16;
+            }
+            if (moves(state, pos -> state.getBlockSupportShape(EmptyBlockGetter.INSTANCE, pos))) {
+                mask |= 32;
+            }
+
+            if (agreed == null) {
+                agreed = mask;
+            } else if (agreed != mask) {
+                throw new IllegalStateException("States of " + block + " disagree about which shapes are offset: "
+                        + agreed + " and " + mask + ". This has to move to BlockStateInfo.");
+            }
+        }
+
+        return agreed == null ? 0 : agreed;
     }
 
     /** Any position whose offset differs from the origin's, which is what makes an offset visible. */
@@ -514,6 +597,7 @@ public final class Dumper {
             // Gravity and air drag are constants returned by overrides on the entity class rather
             // than anything hanging off EntityType, so CodeGen reads them out of the class file.
             json.put("entityClass", classNames.get(type));
+            json.put("entityClassChain", classChain(classNames.get(type)));
 
             if (DefaultAttributes.hasSupplier(type)) {
                 json.put("attributes", defaultAttributes(type));
@@ -583,6 +667,36 @@ public final class Dumper {
      * EntityType does not know its own entity class, but every one of them is declared as an
      * {@code EntityType<TheClass>} field on EntityTypes, so the generic parameter names it.
      */
+    /**
+     * A Java class and everything it inherits from, nearest first, stopping at {@code Object}.
+     * <p>
+     * Vanilla's behaviour is written against these classes rather than against registry entries:
+     * {@code AvoidEntityGoal<Ocelot>}, {@code NearestAttackableTargetGoal<Raider>},
+     * {@code block instanceof DoorBlock}, {@code block instanceof BaseRailBlock}. There is one
+     * entity class and one block record per behaviour on the C# side, not one per vanilla class, so
+     * an {@code instanceof} has nothing to test against without this.
+     * <p>
+     * Simple names, because that is what the code being ported names and a package move upstream is
+     * not a behaviour change. The alternative, a hand written table of which block counts as a
+     * door, is exactly the sort of thing that goes quietly wrong on a version bump.
+     */
+    private static List<String> classChain(Class<?> from) {
+        List<String> chain = new ArrayList<>();
+        for (Class<?> current = from; current != null && current != Object.class;
+                current = current.getSuperclass()) {
+            chain.add(current.getSimpleName());
+        }
+        return chain;
+    }
+
+    private static List<String> classChain(String className) {
+        try {
+            return classChain(Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Class " + className + " is not loadable", e);
+        }
+    }
+
     private static Map<EntityType<?>, String> entityClassNames() {
         Map<EntityType<?>, String> names = new IdentityHashMap<>();
         for (Field declared : EntityTypes.class.getDeclaredFields()) {
@@ -599,6 +713,23 @@ public final class Dumper {
             }
         }
         return names;
+    }
+
+    // ------------------------------------------------------------- pathfinding
+
+    /**
+     * What each kind of block costs a mob to path through. The values are enum constructor
+     * constants, so nothing but the enum itself knows them, and a rebalance upstream would
+     * otherwise have to be noticed by hand.
+     * <p>
+     * Order is the enum's own, which is also the order the values travel in the debug path packet.
+     */
+    private static Obj pathTypes() {
+        Obj json = new Obj();
+        for (PathType type : PathType.values()) {
+            json.put(type.name(), type.getMalus());
+        }
+        return json;
     }
 
     // ------------------------------------------------------------ attributes

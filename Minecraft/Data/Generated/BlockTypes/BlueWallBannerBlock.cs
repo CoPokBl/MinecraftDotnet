@@ -3,18 +3,19 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BlueWallBannerBlock(Identifier Identifier, Direction Facing) : IBlock {
+public record BlueWallBannerBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
     private static readonly BlockInfo Data = new("minecraft:wall_banner", "block.minecraft.blue_banner", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:banner", "minecraft:blue_banner", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, [], null, BlockShapes.S386, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S387 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S388 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S389 };
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S388, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S389 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S390 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S391 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3
     ];
@@ -49,6 +50,7 @@ public record BlueWallBannerBlock(Identifier Identifier, Direction Facing) : IBl
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -59,8 +61,13 @@ public record BlueWallBannerBlock(Identifier Identifier, Direction Facing) : IBl
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
 
     public uint StateId {

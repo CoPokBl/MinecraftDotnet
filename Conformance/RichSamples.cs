@@ -1,4 +1,5 @@
 using Minecraft;
+using Minecraft.Data.Components.Types;
 using Minecraft.Data.Dialogs;
 using Minecraft.Data.Generated;
 using Minecraft.Packets;
@@ -8,6 +9,8 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Chat;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Recipes;
+using Minecraft.Schemas.Sound;
+using Minecraft.Schemas.Tags;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
 using NBT.Tags;
@@ -117,6 +120,28 @@ public static class RichSamples {
                 new DialogActionButton(TextComponent.Translatable("gui.no"),
                     Action: new DialogAction.Custom("managedserver:dialog/sample/1", null)))));
 
+        // Item components only reach the wire as a stack's own patch, so nothing built by reflection
+        // carries one. These two are the fiddly ones: a list of records, two optional holder sets and
+        // two optional sounds each written as an id or inline.
+        yield return ("ClientBoundSetContainerSlotPacket[blocks_attacks]", Slot(
+            new Minecraft.Schemas.Items.ItemStack(Item.Shield)
+                .With(DataComponent.BlocksAttacks, new BlocksAttacksComponent.Data(
+                    0.25f, 1f,
+                    [
+                        BlocksAttacksComponent.DamageReduction.Everything,
+                        // A reduction scoped to damage types, which is the other branch of the optional
+                        // holder set. Ids rather than a tag, since the harness has no tags loaded.
+                        new BlocksAttacksComponent.DamageReduction(45f, new IdSet.Ids([0, 1]), 2f, 0.5f)
+                    ],
+                    new BlocksAttacksComponent.ItemDamage(3f, 1f, 1f),
+                    new IdSet.Ids([2]),
+                    SoundType.ShieldBlock,
+                    new SoundEvent(SoundType.ShieldBreak, 12f)))));
+
+        yield return ("ClientBoundSetContainerSlotPacket[weapon]", Slot(
+            new Minecraft.Schemas.Items.ItemStack(Item.DiamondAxe)
+                .With(DataComponent.Weapon, new WeaponComponent.Data(2, 5f))));
+
         yield return ("ClientBoundDisguisedChatMessagePacket", new ClientBoundDisguisedChatMessagePacket {
             Message = TextComponent.Empty(),
             ChatType = BoundChatType.Reference(ChatType.Chat.Identifier, TextComponent.Empty())
@@ -203,6 +228,16 @@ public static class RichSamples {
             Subscription = VanillaRegistry.Data.DebugSubscriptions[ValuedSubscription],
             Value = SubscriptionValue
         });
+    }
+
+    /// <summary>A stack in a container, which is the shortest packet that carries item components.</summary>
+    private static ClientBoundSetContainerSlotPacket Slot(Minecraft.Schemas.Items.ItemStack item) {
+        return new ClientBoundSetContainerSlotPacket {
+            WindowId = 0,
+            StateId = 1,
+            SlotId = 0,
+            Data = item
+        };
     }
 
     private static ClientBoundWaypointPacket Waypoint(TrackedWaypoint waypoint) {

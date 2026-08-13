@@ -3,18 +3,19 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance, bool Waterlogged) : IBlock {
+public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance, bool Waterlogged) : IBlock, IWaterlogged {
     private static readonly BlockInfo Data = new("minecraft:scaffolding", "block.minecraft.scaffolding", 0f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.None, 0f, 0f, null, "minecraft:scaffolding", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 2, "scaffolding", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, [], "minecraft:water", BlockShapes.S907, BlockShapes.S908, BlockShapes.S77, BlockShapes.S1, BlockShapes.S908);
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 2, "scaffolding", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S909, BlockShapes.S910, BlockShapes.S79, BlockShapes.S1, BlockShapes.S910, BlockShapes.S910);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S908 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S908 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S910 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S910 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3
     ];
@@ -49,6 +50,7 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -59,8 +61,13 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {

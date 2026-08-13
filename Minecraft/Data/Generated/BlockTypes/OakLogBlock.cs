@@ -3,15 +3,16 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record OakLogBlock(Identifier Identifier, Axis Axis) : IBlock {
+public record OakLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
     private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.oak_log", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:oak_log", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.Normal, 34, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, true, false, false, true, true, true, null, null, BlockShapes.S77, BlockShapes.S77, BlockShapes.S1, BlockShapes.S77, BlockShapes.S77);
+    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.Normal, 34, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { MapColorId = 13 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0
@@ -47,6 +48,7 @@ public record OakLogBlock(Identifier Identifier, Axis Axis) : IBlock {
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -57,8 +59,13 @@ public record OakLogBlock(Identifier Identifier, Axis Axis) : IBlock {
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAxis(Axis axis) => this with { Axis = axis };
 
 
     public uint StateId {

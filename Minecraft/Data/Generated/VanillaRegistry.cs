@@ -53,7 +53,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2026-08-12
+// Last updated: 2026-08-13
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -1648,6 +1648,7 @@ public static class VanillaRegistry {
         Data.Packets.Add(ConnectionState.Status, true, 0x00, typeof(ClientBoundStatusResponsePacket), ClientBoundStatusResponsePacket.Deserialiser);
 
         Data.DataComponents.Add(16, DataComponent.AttributeModifiers);
+        Data.DataComponents.Add(37, DataComponent.BlocksAttacks);
         Data.DataComponents.Add(15, DataComponent.CanBreak);
         Data.DataComponents.Add(14, DataComponent.CanPlaceOn);
         Data.DataComponents.Add(49, DataComponent.ChargedProjectiles);
@@ -1676,6 +1677,7 @@ public static class VanillaRegistry {
         Data.DataComponents.Add(4, DataComponent.Unbreakable);
         Data.DataComponents.Add(26, DataComponent.UseCooldown);
         Data.DataComponents.Add(25, DataComponent.UseRemainder);
+        Data.DataComponents.Add(29, DataComponent.Weapon);
         Data.DataComponents.Add(54, DataComponent.WritableBookContent);
 
         Data.Items.Add(899, Item.AcaciaBoat);

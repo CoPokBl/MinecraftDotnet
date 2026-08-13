@@ -3,21 +3,22 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) : IBlock {
+public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) : IBlock, IDoubleHalved {
     private static readonly BlockInfo Data = new("minecraft:pitcher_crop", "block.minecraft.pitcher_crop", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pitcher_pod", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "crop", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, [], null, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S817, CollisionShape = BlockShapes.S817, VisualShape = BlockShapes.S817 };
-    private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S818, CollisionShape = BlockShapes.S819, VisualShape = BlockShapes.S819 };
-    private static readonly BlockStateInfo I3 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S820, CollisionShape = BlockShapes.S819, VisualShape = BlockShapes.S819 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S821 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S822 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S820, CollisionShape = BlockShapes.S819, VisualShape = BlockShapes.S819 };
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "crop", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S819, CollisionShape = BlockShapes.S819, VisualShape = BlockShapes.S819, SupportShape = BlockShapes.S819 };
+    private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S820, CollisionShape = BlockShapes.S821, VisualShape = BlockShapes.S821, SupportShape = BlockShapes.S821 };
+    private static readonly BlockStateInfo I3 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S822, CollisionShape = BlockShapes.S821, VisualShape = BlockShapes.S821, SupportShape = BlockShapes.S821 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S823 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S824 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S822, CollisionShape = BlockShapes.S821, VisualShape = BlockShapes.S821, SupportShape = BlockShapes.S821 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I2, I0, I3, I4, I3, I5, I6
     ];
@@ -52,6 +53,7 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -62,8 +64,13 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithHalf(BlockHalf half) => this with { Half = half };
 
 
     public uint StateId {

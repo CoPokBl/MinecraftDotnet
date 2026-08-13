@@ -3,17 +3,18 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock {
+public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock, IDirectional {
     private static readonly BlockInfo Data = new("minecraft:end_rod", "block.minecraft.end_rod", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:end_rod", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0f, 14, 0, PushReaction.Normal, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, [], null, BlockShapes.S525, BlockShapes.S525, BlockShapes.S1, BlockShapes.S1, BlockShapes.S525);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S526, CollisionShape = BlockShapes.S526, VisualShape = BlockShapes.S526 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S66, VisualShape = BlockShapes.S66 };
+    private static readonly BlockStateInfo I0 = new(0f, 14, 0, PushReaction.Normal, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S527, BlockShapes.S527, BlockShapes.S1, BlockShapes.S1, BlockShapes.S527, BlockShapes.S527);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S528, CollisionShape = BlockShapes.S528, VisualShape = BlockShapes.S528, SupportShape = BlockShapes.S528 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S66 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I2, I2
     ];
@@ -48,6 +49,7 @@ public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -58,8 +60,13 @@ public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Cardinal facing) => this with { Facing = facing };
 
 
     public uint StateId {

@@ -3,22 +3,23 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PinkBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock {
+public record PinkBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock, IHorizontalFacing, IBedParted {
     private static readonly BlockInfo Data = new("minecraft:bed", "block.minecraft.pink_bed", 0.2f, 0.6f, 1f, 1f, 0.75f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pink_bed", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Destroy, 3, "wood", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, [], null, BlockShapes.S360, BlockShapes.S360, BlockShapes.S1, BlockShapes.S1, BlockShapes.S360);
-    private static readonly BlockStateInfo I1 = I0 with { MapColorId = 20, BlockShape = BlockShapes.S361, CollisionShape = BlockShapes.S361, VisualShape = BlockShapes.S361 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S361, CollisionShape = BlockShapes.S361, VisualShape = BlockShapes.S361 };
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Destroy, 3, "wood", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S362, BlockShapes.S362, BlockShapes.S1, BlockShapes.S1, BlockShapes.S362, BlockShapes.S362);
+    private static readonly BlockStateInfo I1 = I0 with { MapColorId = 20, BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363, SupportShape = BlockShapes.S363 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363, SupportShape = BlockShapes.S363 };
     private static readonly BlockStateInfo I3 = I0 with { MapColorId = 20 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S362, CollisionShape = BlockShapes.S362, VisualShape = BlockShapes.S362 };
-    private static readonly BlockStateInfo I5 = I0 with { MapColorId = 20, BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363 };
-    private static readonly BlockStateInfo I7 = I0 with { MapColorId = 20, BlockShape = BlockShapes.S362, CollisionShape = BlockShapes.S362, VisualShape = BlockShapes.S362 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S364, CollisionShape = BlockShapes.S364, VisualShape = BlockShapes.S364, SupportShape = BlockShapes.S364 };
+    private static readonly BlockStateInfo I5 = I0 with { MapColorId = 20, BlockShape = BlockShapes.S365, CollisionShape = BlockShapes.S365, VisualShape = BlockShapes.S365, SupportShape = BlockShapes.S365 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S365, CollisionShape = BlockShapes.S365, VisualShape = BlockShapes.S365, SupportShape = BlockShapes.S365 };
+    private static readonly BlockStateInfo I7 = I0 with { MapColorId = 20, BlockShape = BlockShapes.S364, CollisionShape = BlockShapes.S364, VisualShape = BlockShapes.S364, SupportShape = BlockShapes.S364 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I2, I3, I2, I3, I4, I5, I4, I5, I6, I7, I6, I7
     ];
@@ -53,6 +54,7 @@ public record PinkBedBlock(Identifier Identifier, Direction Facing, bool Occupie
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -63,8 +65,15 @@ public record PinkBedBlock(Identifier Identifier, Direction Facing, bool Occupie
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPart(BedPart part) => this with { Part = part };
 
 
     public uint StateId {

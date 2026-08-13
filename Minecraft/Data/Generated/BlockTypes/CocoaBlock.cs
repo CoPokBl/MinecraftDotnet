@@ -3,26 +3,27 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBlock {
+public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBlock, IHorizontalFacing {
     private static readonly BlockInfo Data = new("minecraft:cocoa", "block.minecraft.cocoa", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cocoa_beans", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Destroy, 7, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, [], null, BlockShapes.S482, BlockShapes.S482, BlockShapes.S1, BlockShapes.S1, BlockShapes.S482);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S483, CollisionShape = BlockShapes.S483, VisualShape = BlockShapes.S483 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S484, CollisionShape = BlockShapes.S484, VisualShape = BlockShapes.S484 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S485, CollisionShape = BlockShapes.S485, VisualShape = BlockShapes.S485 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S486, CollisionShape = BlockShapes.S486, VisualShape = BlockShapes.S486 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S487, CollisionShape = BlockShapes.S487, VisualShape = BlockShapes.S487 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S488, CollisionShape = BlockShapes.S488, VisualShape = BlockShapes.S488 };
-    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S489, CollisionShape = BlockShapes.S489, VisualShape = BlockShapes.S489 };
-    private static readonly BlockStateInfo I8 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S490, CollisionShape = BlockShapes.S490, VisualShape = BlockShapes.S490 };
-    private static readonly BlockStateInfo I9 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S491, CollisionShape = BlockShapes.S491, VisualShape = BlockShapes.S491 };
-    private static readonly BlockStateInfo I10 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S492, CollisionShape = BlockShapes.S492, VisualShape = BlockShapes.S492 };
-    private static readonly BlockStateInfo I11 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S493, CollisionShape = BlockShapes.S493, VisualShape = BlockShapes.S493 };
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Destroy, 7, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false, false, [], null, BlockShapes.S484, BlockShapes.S484, BlockShapes.S1, BlockShapes.S1, BlockShapes.S484, BlockShapes.S484);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S485, CollisionShape = BlockShapes.S485, VisualShape = BlockShapes.S485, SupportShape = BlockShapes.S485 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S486, CollisionShape = BlockShapes.S486, VisualShape = BlockShapes.S486, SupportShape = BlockShapes.S486 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S487, CollisionShape = BlockShapes.S487, VisualShape = BlockShapes.S487, SupportShape = BlockShapes.S487 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S488, CollisionShape = BlockShapes.S488, VisualShape = BlockShapes.S488, SupportShape = BlockShapes.S488 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S489, CollisionShape = BlockShapes.S489, VisualShape = BlockShapes.S489, SupportShape = BlockShapes.S489 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S490, CollisionShape = BlockShapes.S490, VisualShape = BlockShapes.S490, SupportShape = BlockShapes.S490 };
+    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S491, CollisionShape = BlockShapes.S491, VisualShape = BlockShapes.S491, SupportShape = BlockShapes.S491 };
+    private static readonly BlockStateInfo I8 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S492, CollisionShape = BlockShapes.S492, VisualShape = BlockShapes.S492, SupportShape = BlockShapes.S492 };
+    private static readonly BlockStateInfo I9 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S493, CollisionShape = BlockShapes.S493, VisualShape = BlockShapes.S493, SupportShape = BlockShapes.S493 };
+    private static readonly BlockStateInfo I10 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S494, CollisionShape = BlockShapes.S494, VisualShape = BlockShapes.S494, SupportShape = BlockShapes.S494 };
+    private static readonly BlockStateInfo I11 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S495, CollisionShape = BlockShapes.S495, VisualShape = BlockShapes.S495, SupportShape = BlockShapes.S495 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11
     ];
@@ -57,6 +58,7 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -67,8 +69,13 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
 
     public uint StateId {

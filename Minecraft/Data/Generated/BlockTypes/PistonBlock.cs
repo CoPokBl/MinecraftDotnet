@@ -3,21 +3,22 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing) : IBlock {
+public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing) : IBlock, IDirectional {
     private static readonly BlockInfo Data = new("minecraft:piston_base", "block.minecraft.piston", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:piston", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 0, PushReaction.Block, 11, "stone", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, [], null, BlockShapes.S800, BlockShapes.S800, BlockShapes.S1, BlockShapes.S800, BlockShapes.S800);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S801, CollisionShape = BlockShapes.S801, OcclusionShape = BlockShapes.S801, VisualShape = BlockShapes.S801 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S802, CollisionShape = BlockShapes.S802, OcclusionShape = BlockShapes.S802, VisualShape = BlockShapes.S802 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S803, CollisionShape = BlockShapes.S803, OcclusionShape = BlockShapes.S803, VisualShape = BlockShapes.S803 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S522, CollisionShape = BlockShapes.S522, OcclusionShape = BlockShapes.S522, VisualShape = BlockShapes.S522 };
-    private static readonly BlockStateInfo I5 = I0 with { ValidSpawnFor = null, BlockShape = BlockShapes.S804, CollisionShape = BlockShapes.S804, OcclusionShape = BlockShapes.S804, VisualShape = BlockShapes.S804 };
-    private static readonly BlockStateInfo I6 = I0 with { LightDampening = 15, Suffocating = true, ViewBlocking = true, ValidSpawnFor = null, BlockShape = BlockShapes.S77, CollisionShape = BlockShapes.S77, OcclusionShape = BlockShapes.S77, VisualShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 0, PushReaction.Block, 11, "stone", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S802, BlockShapes.S802, BlockShapes.S1, BlockShapes.S802, BlockShapes.S802, BlockShapes.S802);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S803, CollisionShape = BlockShapes.S803, OcclusionShape = BlockShapes.S803, VisualShape = BlockShapes.S803, SupportShape = BlockShapes.S803 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S804, CollisionShape = BlockShapes.S804, OcclusionShape = BlockShapes.S804, VisualShape = BlockShapes.S804, SupportShape = BlockShapes.S804 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S805, CollisionShape = BlockShapes.S805, OcclusionShape = BlockShapes.S805, VisualShape = BlockShapes.S805, SupportShape = BlockShapes.S805 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S524, CollisionShape = BlockShapes.S524, OcclusionShape = BlockShapes.S524, VisualShape = BlockShapes.S524, SupportShape = BlockShapes.S524 };
+    private static readonly BlockStateInfo I5 = I0 with { ValidSpawnFor = null, BlockShape = BlockShapes.S806, CollisionShape = BlockShapes.S806, OcclusionShape = BlockShapes.S806, VisualShape = BlockShapes.S806, SupportShape = BlockShapes.S806 };
+    private static readonly BlockStateInfo I6 = I0 with { LightDampening = 15, Suffocating = true, ViewBlocking = true, ValidSpawnFor = null, BlockShape = BlockShapes.S79, CollisionShape = BlockShapes.S79, OcclusionShape = BlockShapes.S79, VisualShape = BlockShapes.S79, SupportShape = BlockShapes.S79 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I6, I6, I6, I6, I6
     ];
@@ -52,6 +53,7 @@ public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing)
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -62,8 +64,13 @@ public record PistonBlock(Identifier Identifier, bool Extended, Cardinal Facing)
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Cardinal facing) => this with { Facing = facing };
 
 
     public uint StateId {

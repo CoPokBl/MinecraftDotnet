@@ -3,15 +3,16 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, VaultBlock.VaultState VaultStateValue) : IBlock {
+public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, VaultBlock.VaultState VaultStateValue) : IBlock, IHorizontalFacing {
     private static readonly BlockInfo Data = new("minecraft:vault", "block.minecraft.vault", 50f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:vault", "minecraft:vault", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(50f, 6, 1, PushReaction.Normal, 11, "vault", NoteBlockInstrument.Basedrum, false, false, false, true, false, false, false, false, true, true, false, false, true, false, true, null, null, BlockShapes.S77, BlockShapes.S77, BlockShapes.S1, BlockShapes.S1, BlockShapes.S77);
+    private static readonly BlockStateInfo I0 = new(50f, 6, 1, PushReaction.Normal, 11, "vault", NoteBlockInstrument.Basedrum, false, false, false, true, false, false, false, false, true, true, false, false, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 12 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I1, I1, I0, I1, I1, I1, I0, I1, I1, I1, I0, I1, I1, I1, I0, I1, I1, I1, I0, I1, I1, I1, I0, I1, I1, I1, I0, I1, I1, I1
@@ -47,6 +48,7 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -57,8 +59,13 @@ public record VaultBlock(Identifier Identifier, Direction Facing, bool Ominous, 
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
 
     public uint StateId {

@@ -3,6 +3,25 @@ using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Data.Blocks;
 
+/// <summary>
+/// Which of a block's shapes move with the position it sits at, as flags on
+/// <see cref="BlockInfo.ShapeOffsets"/>.
+/// <p/>
+/// Having an offset at all is not the same as every shape using it: <c>short_grass</c> has an offset
+/// function, <c>getOffset</c> returns a real vector for it, and <c>getShape</c> hands back the unmoved
+/// shape anyway, because only some blocks' overrides call <c>.move(state.getOffset(pos))</c>. A moved
+/// shape and an unmoved one look the same in the data, so which is which has to be recorded.
+/// </summary>
+[Flags]
+public enum BlockShapeOffsets {
+    None = 0,
+    Block = 1,
+    Collision = 2,
+    Interaction = 4,
+    Occlusion = 8,
+    Visual = 16
+}
+
 /// <summary>How a block's shape is moved by the position it sits at.</summary>
 public enum BlockOffsetType {
     None,
@@ -53,6 +72,19 @@ public sealed record BlockInfo(
 
     /// <summary>The flags every block that is not behind an experiment needs, which is all of them.</summary>
     public static readonly Identifier[] VanillaOnly = ["minecraft:vanilla"];
+
+    /// <summary>
+    /// Which shapes <see cref="ShapeOffset"/> applies to. Not a constructor argument because it is
+    /// <see cref="BlockShapeOffsets.None"/> for all but the forty odd blocks that have an offset at all.
+    /// </summary>
+    public BlockShapeOffsets ShapeOffsets { get; init; }
+
+    /// <summary>
+    /// Whether the given shape of this block is one the generated data has taken the offset out of, so
+    /// the caller has to put it back. Asking this rather than <see cref="OffsetType"/> is the
+    /// difference between bamboo, whose outline moves, and short grass, whose does not.
+    /// </summary>
+    public bool Offsets(BlockShapeOffsets shape) => (ShapeOffsets & shape) != 0;
 
     /// <summary>
     /// How far the block's shapes are moved at <paramref name="position"/>, from

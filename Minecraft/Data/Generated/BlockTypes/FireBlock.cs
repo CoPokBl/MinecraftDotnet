@@ -3,46 +3,47 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record FireBlock(Identifier Identifier, int Age, bool East, bool North, bool South, bool Up, bool West) : IBlock {
+public record FireBlock(Identifier Identifier, int Age, bool East, bool North, bool South, bool Up, bool West) : IBlock, IFaceConnected {
     private static readonly BlockInfo Data = new("minecraft:fire", "block.minecraft.fire", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, null, BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0f, 15, 0, PushReaction.Destroy, 4, "wool", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, [], null, BlockShapes.S527, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S528 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S529 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S530 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S531 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S532 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S533 };
-    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S534 };
-    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S535 };
-    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S536 };
-    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S537 };
-    private static readonly BlockStateInfo I11 = I0 with { BlockShape = BlockShapes.S538 };
-    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S539 };
-    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S540 };
-    private static readonly BlockStateInfo I14 = I0 with { BlockShape = BlockShapes.S541 };
-    private static readonly BlockStateInfo I15 = I0 with { BlockShape = BlockShapes.S542 };
-    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S543 };
-    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S544 };
-    private static readonly BlockStateInfo I18 = I0 with { BlockShape = BlockShapes.S545 };
-    private static readonly BlockStateInfo I19 = I0 with { BlockShape = BlockShapes.S546 };
-    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S547 };
-    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S548 };
-    private static readonly BlockStateInfo I22 = I0 with { BlockShape = BlockShapes.S549 };
-    private static readonly BlockStateInfo I23 = I0 with { BlockShape = BlockShapes.S550 };
-    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S551 };
-    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S552 };
-    private static readonly BlockStateInfo I26 = I0 with { BlockShape = BlockShapes.S553 };
-    private static readonly BlockStateInfo I27 = I0 with { BlockShape = BlockShapes.S554 };
-    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S555 };
-    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S556 };
-    private static readonly BlockStateInfo I30 = I0 with { BlockShape = BlockShapes.S557 };
-    private static readonly BlockStateInfo I31 = I0 with { BlockShape = BlockShapes.S369 };
+    private static readonly BlockStateInfo I0 = new(0f, 15, 0, PushReaction.Destroy, 4, "wool", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S529, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S530 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S531 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S532 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S533 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S534 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S535 };
+    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S536 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S537 };
+    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S538 };
+    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S539 };
+    private static readonly BlockStateInfo I11 = I0 with { BlockShape = BlockShapes.S540 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S541 };
+    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S542 };
+    private static readonly BlockStateInfo I14 = I0 with { BlockShape = BlockShapes.S543 };
+    private static readonly BlockStateInfo I15 = I0 with { BlockShape = BlockShapes.S544 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S545 };
+    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S546 };
+    private static readonly BlockStateInfo I18 = I0 with { BlockShape = BlockShapes.S547 };
+    private static readonly BlockStateInfo I19 = I0 with { BlockShape = BlockShapes.S548 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S549 };
+    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S550 };
+    private static readonly BlockStateInfo I22 = I0 with { BlockShape = BlockShapes.S551 };
+    private static readonly BlockStateInfo I23 = I0 with { BlockShape = BlockShapes.S552 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S553 };
+    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S554 };
+    private static readonly BlockStateInfo I26 = I0 with { BlockShape = BlockShapes.S555 };
+    private static readonly BlockStateInfo I27 = I0 with { BlockShape = BlockShapes.S556 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S557 };
+    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S558 };
+    private static readonly BlockStateInfo I30 = I0 with { BlockShape = BlockShapes.S559 };
+    private static readonly BlockStateInfo I31 = I0 with { BlockShape = BlockShapes.S371 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
     ];
@@ -77,6 +78,7 @@ public record FireBlock(Identifier Identifier, int Age, bool East, bool North, b
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -87,8 +89,31 @@ public record FireBlock(Identifier Identifier, int Age, bool East, bool North, b
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public bool HasFace(BlockFace face) => face is BlockFace.PosY or BlockFace.NegZ or BlockFace.PosZ or BlockFace.NegX or BlockFace.PosX;
+
+    public bool Connected(BlockFace face) => face switch {
+        BlockFace.PosY => Up,
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => false
+    };
+
+    public IBlock WithConnection(BlockFace face, bool connected) => face switch {
+        BlockFace.PosY => this with { Up = connected },
+        BlockFace.NegZ => this with { North = connected },
+        BlockFace.PosZ => this with { South = connected },
+        BlockFace.NegX => this with { West = connected },
+        BlockFace.PosX => this with { East = connected },
+        _ => this
+    };
 
 
     public uint StateId {

@@ -3,6 +3,7 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
@@ -11,9 +12,9 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock {
     private static readonly BlockInfo Data = new("minecraft:sweet_berry_bush", "block.minecraft.sweet_berry_bush", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sweet_berries", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "sweet_berry_bush", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, false, false, false, false, true, false, false, true, [], null, BlockShapes.S787, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S399 };
-    private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "sweet_berry_bush", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, false, false, false, false, true, false, false, true, true, false, true, [], null, BlockShapes.S789, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S401 };
+    private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S79 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I1, I2
     ];
@@ -48,6 +49,7 @@ public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock {
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -58,6 +60,9 @@ public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock {
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 

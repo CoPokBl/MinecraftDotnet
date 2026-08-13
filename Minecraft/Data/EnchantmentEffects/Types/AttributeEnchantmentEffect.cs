@@ -9,7 +9,7 @@ namespace Minecraft.Data.EnchantmentEffects.Types;
 public record AttributeEnchantmentEffect(AttributeEnchantmentEffect.Effect[] Effects) : IEnchantmentEffectImpl {
     public string Id => "minecraft:attributes";
     
-    public static AttributeEnchantmentEffect ParseData(INbtTag tag, MinecraftRegistry reg) {
+    public static IEnchantmentEffect ParseData(INbtTag tag, MinecraftRegistry reg) {
         ListTag tags = tag.GetList();
         return new AttributeEnchantmentEffect(tags.Tags
             .ToArray()

@@ -3,26 +3,27 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record LargeAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool Waterlogged) : IBlock {
+public record LargeAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool Waterlogged) : IBlock, IDirectional, IWaterlogged {
     private static readonly BlockInfo Data = new("minecraft:amethyst_cluster", "block.minecraft.large_amethyst_bud", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:large_amethyst_bud", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(1.5f, 4, 1, PushReaction.Destroy, 24, "medium_amethyst_bud", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, [], "minecraft:water", BlockShapes.S609, BlockShapes.S609, BlockShapes.S1, BlockShapes.S1, BlockShapes.S609);
+    private static readonly BlockStateInfo I0 = new(1.5f, 4, 1, PushReaction.Destroy, 24, "medium_amethyst_bud", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S611, BlockShapes.S611, BlockShapes.S1, BlockShapes.S1, BlockShapes.S611, BlockShapes.S611);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S610, CollisionShape = BlockShapes.S610, VisualShape = BlockShapes.S610 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S610, CollisionShape = BlockShapes.S610, VisualShape = BlockShapes.S610 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S611, CollisionShape = BlockShapes.S611, VisualShape = BlockShapes.S611 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S611, CollisionShape = BlockShapes.S611, VisualShape = BlockShapes.S611 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S612, CollisionShape = BlockShapes.S612, VisualShape = BlockShapes.S612 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S612, CollisionShape = BlockShapes.S612, VisualShape = BlockShapes.S612 };
-    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S613, CollisionShape = BlockShapes.S613, VisualShape = BlockShapes.S613 };
-    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S613, CollisionShape = BlockShapes.S613, VisualShape = BlockShapes.S613 };
-    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S614, CollisionShape = BlockShapes.S614, VisualShape = BlockShapes.S614 };
-    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S614, CollisionShape = BlockShapes.S614, VisualShape = BlockShapes.S614 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S612, CollisionShape = BlockShapes.S612, VisualShape = BlockShapes.S612, SupportShape = BlockShapes.S612 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S612, CollisionShape = BlockShapes.S612, VisualShape = BlockShapes.S612, SupportShape = BlockShapes.S612 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S613, CollisionShape = BlockShapes.S613, VisualShape = BlockShapes.S613, SupportShape = BlockShapes.S613 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S613, CollisionShape = BlockShapes.S613, VisualShape = BlockShapes.S613, SupportShape = BlockShapes.S613 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S614, CollisionShape = BlockShapes.S614, VisualShape = BlockShapes.S614, SupportShape = BlockShapes.S614 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S614, CollisionShape = BlockShapes.S614, VisualShape = BlockShapes.S614, SupportShape = BlockShapes.S614 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S615, CollisionShape = BlockShapes.S615, VisualShape = BlockShapes.S615, SupportShape = BlockShapes.S615 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S615, CollisionShape = BlockShapes.S615, VisualShape = BlockShapes.S615, SupportShape = BlockShapes.S615 };
+    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S616, CollisionShape = BlockShapes.S616, VisualShape = BlockShapes.S616, SupportShape = BlockShapes.S616 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S616, CollisionShape = BlockShapes.S616, VisualShape = BlockShapes.S616, SupportShape = BlockShapes.S616 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11
     ];
@@ -57,6 +58,7 @@ public record LargeAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -67,8 +69,15 @@ public record LargeAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Cardinal facing) => this with { Facing = facing };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {

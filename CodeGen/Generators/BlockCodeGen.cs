@@ -52,13 +52,14 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record {name}(Identifier Identifier, {args}) : IBlock {
+public record {name}(Identifier Identifier, {args}) : IBlock{interfaces} {
 {stateinfos}
 {reginfo}
 
@@ -121,6 +122,7 @@ public record {name}(Identifier Identifier, {args}) : IBlock {
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -131,6 +133,9 @@ public record {name}(Identifier Identifier, {args}) : IBlock {
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 
@@ -173,6 +178,13 @@ public static class Block {
     private static readonly HashSet<string> SlabTypeValues = ["top", "bottom", "double"];
     private static readonly HashSet<string> AttachDirectionValues = ["floor", "wall", "ceiling"];
     private static readonly HashSet<string> BlockHalfValues = ["upper", "lower"];
+
+    /// <summary>
+    /// Vanilla's <c>Half</c>, as opposed to <see cref="BlockHalfValues"/> which is its
+    /// <c>DoubleBlockHalf</c>. Only <c>half</c> takes these two values, over the 85 stairs and
+    /// trapdoors, so it is unambiguous to share the enum.
+    /// </summary>
+    private static readonly HashSet<string> TopBottomValues = ["top", "bottom"];
     private static readonly HashSet<string> LeftRightValues = ["left", "right"];
     private static readonly HashSet<string> AxisValues = ["x", "y", "z"];
     private static readonly HashSet<string> RailDirectionValues = ["north_south", "east_west", "ascending_east", "ascending_west", "ascending_north", "ascending_south"];
@@ -216,6 +228,118 @@ public static class Block {
         return prop is EnumProperty || ReservedPropNames.Contains(name) ? name + "Value" : name;
     }
 
+    /// <summary>
+    /// The <c>BlockFace</c> each per direction connection property stands for, in the order
+    /// vanilla's <c>PROPERTY_BY_DIRECTION</c> is built from <c>Direction.values()</c>.
+    /// </summary>
+    /// <summary>
+    /// The counting properties that stack in place when the same item is used on them. All six count
+    /// from one. See <c>IStackable</c>.
+    /// </summary>
+    private static readonly HashSet<string> StackableProps =
+        ["candles", "layers", "pickles", "eggs", "flower_amount", "segment_amount"];
+
+    private static readonly (string Name, string Face)[] ConnectionFaces = [
+        ("down", "NegY"), ("up", "PosY"), ("north", "NegZ"),
+        ("south", "PosZ"), ("west", "NegX"), ("east", "PosX")
+    ];
+
+    /// <summary>
+    /// The property interfaces a block implements because of the state properties it has, and the
+    /// typed setters that come with them. See <c>Minecraft/Data/Blocks/Properties/README.md</c>.
+    /// <p/>
+    /// Matched on property name <b>and</b> resolved type, not on name alone, because two properties
+    /// share a name and mean different things: <c>half</c> is vanilla's <c>Half</c> on a stair and
+    /// its <c>DoubleBlockHalf</c> on a door, and a wall's <c>north</c> has a height where a fence's
+    /// is a flag. Getting those the same way round as vanilla is the whole point of the exercise, so
+    /// they get separate interfaces rather than one loose one.
+    /// <p/>
+    /// The getters are the record's own positional properties, so only the setters are written here.
+    /// That only holds while <see cref="GetPascalPropName"/> leaves these names alone; a property
+    /// that started taking the <c>Value</c> suffix would stop implementing its interface and fail to
+    /// compile, which is the intended way to find out.
+    /// </summary>
+    private static (string Interfaces, string Methods) PropertyInterfaces(string typeName, List<IProperty> props) {
+        List<string> interfaces = [];
+        StringBuilder methods = new();
+
+        void Setter(IProperty prop, string face, string method, string arg) {
+            interfaces.Add(face);
+            methods.Append($"\n    public IBlock {method}({GetCSharpType(typeName, prop)} {arg}) " +
+                           $"=> this with {{ {GetPascalPropName(prop)} = {arg} }};\n");
+        }
+
+        foreach (IProperty prop in props) {
+            string type = GetCSharpType(typeName, prop);
+            bool boolean = prop.Type == PropertyType.Boolean;
+            switch (prop.Name) {
+                case "waterlogged" when boolean: Setter(prop, "IWaterlogged", "WithWaterlogged", "waterlogged"); break;
+                case "powered" when boolean: Setter(prop, "IPowered", "WithPowered", "powered"); break;
+                case "open" when boolean: Setter(prop, "IOpenable", "WithOpen", "open"); break;
+                case "lit" when boolean: Setter(prop, "ILit", "WithLit", "lit"); break;
+                case "facing" when type == "Direction": Setter(prop, "IHorizontalFacing", "WithFacing", "facing"); break;
+                case "facing" when type == "Cardinal": Setter(prop, "IDirectional", "WithFacing", "facing"); break;
+                case "axis" when type == "Axis": Setter(prop, "IAxisAligned", "WithAxis", "axis"); break;
+                case "face" when type == "AttachDirection": Setter(prop, "IAttachFaced", "WithFace", "face"); break;
+                case "rotation" when prop.Type == PropertyType.Integer: Setter(prop, "IRotated", "WithRotation", "rotation"); break;
+                case "half" when type == "TopBottom": Setter(prop, "IHalved", "WithHalf", "half"); break;
+                case "half" when type == "BlockHalf": Setter(prop, "IDoubleHalved", "WithHalf", "half"); break;
+                case "type" when type == "SlabType": Setter(prop, "ISlabTyped", "WithType", "type"); break;
+                case "shape" when type == "StairShape": Setter(prop, "IStairShaped", "WithShape", "shape"); break;
+                case "part" when type == "BedPart": Setter(prop, "IBedParted", "WithPart", "part"); break;
+                case "hinge" when type == "LeftRight": Setter(prop, "IHinged", "WithHinge", "hinge"); break;
+            }
+
+            // The six counting properties that stack in place. Grouped into one interface because the
+            // property name is the only thing that differs between the six placement bodies upstream.
+            if (StackableProps.Contains(prop.Name) && prop is IntegerProperty counted) {
+                interfaces.Add("IStackable");
+                string name = GetPascalPropName(prop);
+                methods.Append($"\n    public int Count => {name};\n")
+                       .Append($"\n    public int MaxCount => {counted.Max};\n")
+                       .Append($"\n    public IBlock WithCount(int count) => this with {{ {name} = count }};\n");
+            }
+        }
+
+        // Per direction connections. A wall has both: WallSide horizontals and a boolean up.
+        (string Face, string Prop)[] flags = ConnectionFaces
+            .Select(f => (f.Face, Prop: props.FirstOrDefault(p => p.Name == f.Name && p.Type == PropertyType.Boolean)))
+            .Where(f => f.Prop is not null)
+            .Select(f => (f.Face, GetPascalPropName(f.Prop!)))
+            .ToArray();
+
+        (string Face, string Prop)[] sides = ConnectionFaces
+            .Select(f => (f.Face, Prop: props.FirstOrDefault(p =>
+                p.Name == f.Name && p is ExistingEnumProperty { ExistingEnum: "WallSide" })))
+            .Where(f => f.Prop is not null)
+            .Select(f => (f.Face, GetPascalPropName(f.Prop!)))
+            .ToArray();
+
+        if (flags.Length > 0) {
+            interfaces.Add("IFaceConnected");
+            string has = string.Join(" or ", flags.Select(f => $"BlockFace.{f.Face}"));
+            methods.Append($"\n    public bool HasFace(BlockFace face) => face is {has};\n")
+                   .Append("\n    public bool Connected(BlockFace face) => face switch {\n")
+                   .Append(string.Join("", flags.Select(f => $"        BlockFace.{f.Face} => {f.Prop},\n")))
+                   .Append("        _ => false\n    };\n")
+                   .Append("\n    public IBlock WithConnection(BlockFace face, bool connected) => face switch {\n")
+                   .Append(string.Join("", flags.Select(f => $"        BlockFace.{f.Face} => this with {{ {f.Prop} = connected }},\n")))
+                   .Append("        _ => this\n    };\n");
+        }
+
+        if (sides.Length > 0) {
+            interfaces.Add("IWallConnected");
+            methods.Append("\n    public WallSide Side(BlockFace face) => face switch {\n")
+                   .Append(string.Join("", sides.Select(s => $"        BlockFace.{s.Face} => {s.Prop},\n")))
+                   .Append("        _ => WallSide.None\n    };\n")
+                   .Append("\n    public IBlock WithSide(BlockFace face, WallSide side) => face switch {\n")
+                   .Append(string.Join("", sides.Select(s => $"        BlockFace.{s.Face} => this with {{ {s.Prop} = side }},\n")))
+                   .Append("        _ => this\n    };\n");
+        }
+
+        return (interfaces.Count == 0 ? "" : ", " + string.Join(", ", interfaces), methods.ToString());
+    }
+
     private static bool SameValues<T>(T[] set1, HashSet<T> set2) {
         return set1.Length == set2.Count && set1.All(set2.Contains);
     }
@@ -252,7 +376,7 @@ public static class Block {
 
                 registryData.Append($"{CodeGenUtils.GetIndentation(2)}Data.Blocks.Add({protocolId}, Block.{staticVarName}, {stateId});\n");
                 blocksFileEntries.Append($"{CodeGenUtils.GetIndentation(1)}public static readonly SimpleBlock {staticVarName} = " +
-                                         $"new(\"{id}\", {stateId}, new({blockInfo}), new({string.Join(", ", stateValues[stateId])}));\n");
+                                         $"new(\"{id}\", {stateId}, {blockInfo}, new({string.Join(", ", stateValues[stateId])}));\n");
                 continue;  // they don't need a record class, just a simple block
             }
 
@@ -275,7 +399,7 @@ public static class Block {
                 blocksFileEntries.Append(
                     $"{CodeGenUtils.GetIndentation(1)}public static readonly WaterloggableBlock {staticVarName} = " +
                     $"new(\"{id}\", {airLoggedState}, {waterloggedState}, {defaultIsWaterlogged.ToString().ToLower()}, " +
-                    $"new({blockInfo}), new({string.Join(", ", stateValues[airLoggedState])}), " +
+                    $"{blockInfo}, new({string.Join(", ", stateValues[airLoggedState])}), " +
                     $"new({string.Join(", ", stateValues[waterloggedState])}));\n");
                 continue;  // they don't need a record class, just a simple block
             }
@@ -331,6 +455,11 @@ public static class Block {
 
                 if (SameValues(propAllowedValues, BlockHalfValues)) {
                     props.Add(new ExistingEnumProperty(propAllowedValues, propName, "BlockHalf", BlockHalfValues));
+                    continue;
+                }
+
+                if (SameValues(propAllowedValues, TopBottomValues)) {
+                    props.Add(new ExistingEnumProperty(propAllowedValues, propName, "TopBottom", TopBottomValues));
                     continue;
                 }
 
@@ -403,7 +532,12 @@ public static class Block {
             
             // okay we have the arguments, now we need to build actual arguments code
             string argsCode = string.Join(", ", props.Select(p => GetCSharpType(pascalName, p) + " " + GetPascalPropName(p)));
-            
+
+            // What the properties make this block, for anything holding an IBlock. See
+            // Minecraft/Data/Blocks/Properties/README.md.
+            (string interfacesCode, string withMethods) = PropertyInterfaces(pascalName, props);
+            staticData.Append(withMethods);
+
             // =====================================================
             //                        ENUMs
             // =====================================================
@@ -588,6 +722,7 @@ public static class Block {
             string file = TemplateFile.Replace("{name}", pascalName)
                 .Replace("{stateinfos}", StateInfosCode(blockInfo, stateIds, stateValues))
                 .Replace("{args}", argsCode)
+                .Replace("{interfaces}", interfacesCode)
                 .Replace("{to_state_logic}", toStateLogic.ToString())
                 .Replace("{from_state_logic}", fromStateLogic)
                 .Replace("{enums}", enumsCode.ToString())
@@ -656,8 +791,28 @@ public static class Block {
         }
     }
 
-    /// <summary>The arguments of a <c>BlockInfo</c>, in constructor order.</summary>
+    /// <summary>
+    /// A whole <c>BlockInfo</c> expression: the constructor call, and an initialiser for the members
+    /// that are not constructor arguments.
+    /// <p/>
+    /// <c>ShapeOffsets</c> is not a constructor argument on purpose. It is zero for all but the forty
+    /// odd blocks whose shapes move with their position, and leaving it off keeps it out of every other
+    /// block's generated line.
+    /// </summary>
     private static string BlockInfoCode(JObject dataEntry, string category) {
+        int shapeOffsets = dataEntry["shapeOffsets"]?.ToObject<int>() ?? 0;
+        string init = shapeOffsets == 0 ? "" : $" {{ ShapeOffsets = {ShapeOffsetsCode(shapeOffsets)} }}";
+        return $"new({BlockInfoArguments(dataEntry, category)}){init}";
+    }
+
+    /// <summary>The dumper's bitmask as named flags, in the same order it sets them.</summary>
+    private static string ShapeOffsetsCode(int mask) {
+        string[] names = ["Block", "Collision", "Interaction", "Occlusion", "Visual"];
+        IEnumerable<string> set = names.Where((_, i) => (mask & (1 << i)) != 0).Select(n => $"BlockShapeOffsets.{n}");
+        return string.Join(" | ", set);
+    }
+
+    private static string BlockInfoArguments(JObject dataEntry, string category) {
         string offsetType = dataEntry["offsetType"]?.ToObject<string>() switch {
             null => "None",
             "xz" => "Xz",
@@ -685,8 +840,9 @@ public static class Block {
         "Hardness", "LightEmission", "LightDampening", "PushReaction", "MapColorId", "SoundType", "Instrument",
         "CanRespawnIn", "Occludes", "RequiresTool", "BlocksMotion", "Flammable", "Air", "Liquid",
         "Replaceable", "Solid", "RedstoneConductor", "SignalSource", "RandomlyTicking", "Suffocating",
-        "ViewBlocking", "SpawnTerrainParticles", "ValidSpawnFor", "Fluid", "BlockShape", "CollisionShape",
-        "InteractionShape", "OcclusionShape", "VisualShape"
+        "ViewBlocking", "SpawnTerrainParticles", "PathfindableLand", "PathfindableWater", "PathfindableAir",
+        "ValidSpawnFor", "Fluid", "BlockShape", "CollisionShape",
+        "InteractionShape", "OcclusionShape", "VisualShape", "SupportShape"
     ];
 
     /// <summary>
@@ -742,13 +898,17 @@ public static class Block {
             Bool(state("suffocating")),
             Bool(state("viewBlocking")),
             Bool(state("spawnTerrainParticles")),
+            Bool(state("pathfindableLand")),
+            Bool(state("pathfindableWater")),
+            Bool(state("pathfindableAir")),
             validSpawnFor,
             Str(state("fluid")?.ToObject<string>()),
             shapes.Reference(state("shape")!.ToObject<string>()!),
             shapes.Reference(state("collisionShape")!.ToObject<string>()!),
             shapes.Reference(state("interactionShape")!.ToObject<string>()!),
             shapes.Reference(state("occlusionShape")!.ToObject<string>()!),
-            shapes.Reference(state("visualShape")!.ToObject<string>()!)
+            shapes.Reference(state("visualShape")!.ToObject<string>()!),
+            shapes.Reference(state("supportShape")!.ToObject<string>()!)
         ];
     }
 
@@ -768,7 +928,7 @@ public static class Block {
         }
 
         string[] defaults = stateValues[firstStateId];
-        StringBuilder code = new($"{CodeGenUtils.GetIndentation(1)}private static readonly BlockInfo Data = new({blockInfo});\n");
+        StringBuilder code = new($"{CodeGenUtils.GetIndentation(1)}private static readonly BlockInfo Data = {blockInfo};\n");
 
         // One field per distinct state, keyed by the values so identical states share one.
         Dictionary<string, string> names = [];

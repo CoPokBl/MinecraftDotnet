@@ -28,9 +28,42 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     public Vec3<double> Position = Vec3<double>.Zero;
     public Angle Pitch = Angle.Zero;
     public Angle Yaw = Angle.Zero;
-    public Angle HeadYaw = Angle.Zero;
-    
+
+    /// <summary>
+    /// Where the entity is looking, vanilla's <c>yHeadRot</c>, as opposed to <see cref="Yaw"/> which is
+    /// where its body points. They differ only for something that turns its head separately: a mob's
+    /// look control writes this and its body rotation control drags <see cref="Yaw"/> after it.
+    /// <p/>
+    /// Unset it reads as <see cref="Yaw"/>, which is what a player is. Their client reports one
+    /// rotation and vanilla keeps it as both, so nothing on the player path has to maintain this.
+    /// </summary>
+    public Angle HeadYaw {
+        get => _headYaw ?? Yaw;
+        set => _headYaw = value;
+    }
+
+    private Angle? _headYaw;
+
+    /// <summary>
+    /// The wire form of the rotation last sent to viewers, or null if none has been. <c>ServerEntity</c>
+    /// upstream decides which movement packet to send by diffing against what it last sent rather than
+    /// from what the mover passed it, and <see cref="IEntityManager.MoveEntity"/> does the same, so
+    /// these are written wherever a rotation goes out.
+    /// </summary>
+    internal byte? LastSentYaw, LastSentPitch, LastSentHeadYaw;
+
+
     public Aabb BoundingBox { get; init; }
+
+    /// <summary>
+    /// <c>Entity.getBbWidth</c>. A float, because vanilla's is: the pathfinder does
+    /// <c>floor(width + 1)</c> and <c>width / 2</c> in float, and the AI compares against float
+    /// literals like 0.5 and 1.0.
+    /// </summary>
+    public float BbWidth => (float)Type.Width;
+
+    /// <summary><c>Entity.getBbHeight</c>, a float for the same reason.</summary>
+    public float BbHeight => (float)Type.Height;
 
     public Func<Player, bool> ViewableRule {
         get;
@@ -67,6 +100,56 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         }
     }
 
+    /// <summary>
+    /// Vanilla's <c>isSprinting</c>/<c>setSprinting</c>, the <see cref="EntityStatus.Sprinting"/> bit.
+    /// It is what decides whether a jump gets its forward nudge.
+    /// <p/>
+    /// Unlike <see cref="Crouching"/> above, this keeps the other status bits: clearing it does not
+    /// put out a burning entity.
+    /// </summary>
+    public bool Sprinting {
+        get => ((Meta.Status ?? EntityStatus.None) & EntityStatus.Sprinting) != 0;
+
+        set {
+            EntityStatus status = Meta.Status ?? EntityStatus.None;
+            EntityStatus updated = value ? status | EntityStatus.Sprinting : status & ~EntityStatus.Sprinting;
+            if (updated == status) {
+                return;
+            }
+
+            Meta = Meta with {
+                Status = updated
+            };
+        }
+    }
+
+    /// <summary>
+    /// How many ticks this entity has been ticked for, vanilla's <c>tickCount</c>. Vanilla increments
+    /// it in <c>ServerLevel.tickNonPassenger</c> <b>before</b> <c>Entity.tick</c>, so it reads one on
+    /// the first tick rather than zero, and <see cref="Tick"/> does the same.
+    /// <p/>
+    /// It is not decoration: mob AI reselects its goals on <c>(TickCount + NetId) % 2</c> with a
+    /// <c>TickCount &gt; 1</c> guard, so the offset by entity id is what spreads that cost across
+    /// ticks, and a timestamp compared against it (<see cref="LivingEntity.LastHurtByMobTimestamp"/>)
+    /// is how vanilla asks whether something happened again rather than how long ago it happened.
+    /// </summary>
+    public int TickCount { get; set; }
+
+    /// <summary>
+    /// The entity's own randomness, vanilla's <c>Entity.random</c>. It is a
+    /// <see cref="LegacyRandomSource"/> rather than <see cref="Random"/> so that a sequence can be
+    /// reproduced from a seed and diffed against the jar; set it to one with a known seed to make
+    /// anything random driven deterministic in a test.
+    /// </summary>
+    public RandomSource Random { get; set; } = LegacyRandomSource.Create();
+
+    /// <summary>
+    /// Where the entity was at the start of the tick, vanilla's <c>xo</c>/<c>yo</c>/<c>zo</c>. Written
+    /// by <c>EntityPhysics.Tick</c> before anything moves, which is where vanilla's
+    /// <c>setOldPosAndRot</c> runs. Anything asking "did it move this tick" measures against this.
+    /// </summary>
+    public Vec3<double> LastTickPosition { get; set; } = Vec3<double>.Zero;
+
     private Vec3<double> _lastVelocity = Vec3<double>.Zero;
     public virtual Vec3<double> Velocity { get; set; } = Vec3<double>.Zero;  // units: m/(1/20)s
 
@@ -94,6 +177,14 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
 
     /// <summary>Vanilla's <c>onGroundNoBlocks</c>: on the ground with nothing found underneath.</summary>
     internal bool OnGroundNoBlocks;
+
+    /// <summary>
+    /// Vanilla's <c>fallDistance</c>: how far the entity has fallen since it was last on the ground,
+    /// in blocks. <c>EntityPhysics.CheckFallDamage</c> keeps it, from the movement it works out for a
+    /// simulated entity and from the movement its client reports for a player, and clears it on the
+    /// landing that ends a fall. What that landing costs is <c>FallDamageFeature</c>'s business.
+    /// </summary>
+    public double FallDistance { get; set; }
 
     #endregion
 
@@ -177,6 +268,10 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     }
 
     protected virtual void Tick() {
+        // Vanilla counts the tick before running it, in ServerLevel.tickNonPassenger rather than in
+        // Entity.tick, so anything reading TickCount during a tick sees the number of that tick.
+        TickCount++;
+
         // Check for changed properties
         if (_lastVelocity != Velocity) {
             SendToViewers(new ClientBoundSetEntityVelocityPacket {
@@ -258,7 +353,28 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
                 _ => true
             };
         });
+
+        if (world == null) {
+            return;
+        }
+
+        AfterEnteringWorld(world);
+
+        // Announced last, so a listener sees a fully wired entity: registered with the manager, World
+        // and Manager set, its event node attached, and whatever the subclass needed to build already
+        // built.
+        world.Events.CallEvent(new EntitySpawnEvent {
+            Entity = this,
+            World = world
+        });
     }
+
+    /// <summary>
+    /// Where a subclass builds whatever it needs a world for. It runs after the entity is wired up
+    /// and before <see cref="EntitySpawnEvent"/>, which is what lets a feature listening for that
+    /// event find a mob's navigation already there.
+    /// </summary>
+    protected virtual void AfterEnteringWorld(World world) { }
 
     public void Despawn() {
         Manager!.BaseEventNode.RemoveChild(Events);

@@ -1,4 +1,5 @@
 using ManagedServer.Entities.Types;
+using ManagedServer.Physics;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -22,12 +23,34 @@ public interface IEntityManager {
     Entity[] GetNearbyEntities(Vec3<double> pos, double distance);
     Entity[] GetEntitiesInChunk(Vec2<int> chunkPos);
 
+    /// <summary>
+    /// Everything whose bounding box intersects <paramref name="box"/>, vanilla's
+    /// <c>getEntitiesOfClass(AABB, predicate)</c>. This is the query target selection wants: it is
+    /// what a mob's follow range actually describes, and unlike
+    /// <see cref="GetNearbyEntities"/> the filter runs before anything is collected.
+    /// </summary>
+    Entity[] GetEntitiesInBox(Box box, Func<Entity, bool>? filter = null);
+
+    /// <summary>
+    /// Everything within <paramref name="radius"/> of a point, compared as squared distances so no
+    /// square root is taken per candidate. A target goal asks this of every mob every few ticks, which
+    /// is why it exists separately from <see cref="GetNearbyEntities"/>.
+    /// </summary>
+    Entity[] GetEntitiesWithin(Vec3<double> pos, double radius, Func<Entity, bool>? filter = null);
+
+    /// <summary>
+    /// The closest entity within <paramref name="radius"/> that passes the filter, or null. Vanilla's
+    /// <c>getNearestEntity</c>, which is what every "nearest attackable target" goal ends at.
+    /// </summary>
+    Entity? GetNearestEntity(Vec3<double> pos, double radius, Func<Entity, bool>? filter = null);
+
     void Register(Entity entity, int? id = null);
     void Despawn(Entity entity);
     void RefreshViewers(Entity entity);
     void RefreshPlayerVisibleEntities(Player player);
     void MoveEntity(Entity entity, Vec3<double> newPos, Angle? yaw = null, Angle? pitch = null);
     void TeleportEntity(Entity entity, Vec3<double> newPos, Angle yaw, Angle pitch);
+    void SyncRotation(Entity entity);
 
     void SendSpawnPackets(Entity entity, Player player);
     void SendDespawnPackets(Entity entity, Player player);

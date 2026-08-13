@@ -3,15 +3,16 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shrieking, bool Waterlogged) : IBlock {
+public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shrieking, bool Waterlogged) : IBlock, IWaterlogged {
     private static readonly BlockInfo Data = new("minecraft:sculk_shrieker", "block.minecraft.sculk_shrieker", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sculk_shrieker", "minecraft:sculk_shrieker", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 29, "sculk_shrieker", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, [], "minecraft:water", BlockShapes.S77, BlockShapes.S87, BlockShapes.S1, BlockShapes.S87, BlockShapes.S87);
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 29, "sculk_shrieker", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S79, BlockShapes.S89, BlockShapes.S1, BlockShapes.S89, BlockShapes.S89, BlockShapes.S89);
     private static readonly BlockStateInfo I1 = I0 with { Fluid = null };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1
@@ -47,6 +48,7 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -57,8 +59,13 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {

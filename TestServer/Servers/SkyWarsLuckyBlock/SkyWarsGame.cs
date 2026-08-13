@@ -38,16 +38,18 @@ public class SkyWarsGame(ManagedMinecraftServer server, Player[] players, Action
     public readonly List<Player> RemainingPlayers = [];
     public World World { get; private set; } = null!;
     public bool HasEnded { get; private set; }
-    
+
     private static FeatureBundle SkyWarsFeatures => new(
         new SkyWarsChestsFeature(),
         new DropItemsOnGroundFeature(),
         new ItemPickupFeature(),
         new LuckyBlocksFeature(),
         new SkyWarsItemsFeature(),
-        new RespawnFeature(),
         new AttributeModifiersFeature(),
-        new ArmourSlotEnforcementFeature()
+        new ArmourSlotEnforcementFeature(),
+        // The lucky blocks hand out a real shield and the chests hand out axes to take it away. The
+        // cosmetic shield has its blocks_attacks component removed, so this leaves it alone.
+        new ShieldFeature()
     );
 
     internal static void LoadWorld() {
@@ -71,11 +73,16 @@ public class SkyWarsGame(ManagedMinecraftServer server, Player[] players, Action
         return spawns;
     }
     
-    private void Die(Player player) {
-        if (HasEnded) {
-            return;
+    public void Die(Player player) {
+        // Death reaches here from several places (combat, falling, burning, the void, a disconnect), so
+        // taking the player out of the running is what decides whose death this is to handle. Checking
+        // any later counts one player twice and hands the win out a kill early.
+        lock (RemainingPlayers) {
+            if (HasEnded || !RemainingPlayers.Remove(player)) {
+                return;
+            }
         }
-        
+
         World.SendMessage(TextComponent.FromLegacyString($"&6{player.Name} &chas been killed!"));
         player.GameMode = GameMode.Spectator;
 
@@ -85,9 +92,8 @@ public class SkyWarsGame(ManagedMinecraftServer server, Player[] players, Action
         
         player.Teleport(SpecSpawn);
         lock (RemainingPlayers) {
-            RemainingPlayers.Remove(player);
             if (RemainingPlayers.Count != 1) return;
-            
+
             // Winner
             HasEnded = true;
             Player winner = RemainingPlayers[0];
@@ -104,7 +110,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, Player[] players, Action
     public void Start() {
         World = server.CreateWorld(Maps[0], "skywars:game");
         World.AddFeatures(SkyWarsFeatures);
-        
+
         Queue<Vec3<double>> spawns = CreateRandomSpawns();
         
         foreach (Player player in players) {
@@ -118,8 +124,17 @@ public class SkyWarsGame(ManagedMinecraftServer server, Player[] players, Action
             player.GameMode = GameMode.Survival;
         }
         
-        World.AddFeature(new SkyWarsCombatFeature(p => Die(p)));
-        
+        World.AddFeature(new SkyWarsCombatFeature());
+        World.AddFeature(new FallDamageFeature());
+
+        // Whatever ran a player out of health (combat, a fall, lava, a lucky block) arrives here, so
+        // there is nothing left for the individual damage sources to report. Cancelling drops the death
+        // screen, since a dead player watches the rest of the game instead of respawning.
+        World.Events.AddListener<PlayerDeathEvent>(e => {
+            e.Cancelled = true;
+            Die(e.Player);
+        });
+
         World.Events.AddListener<EntityMoveEvent>(e => {
             if (e.NewPos.Y > -10) {
                 return;

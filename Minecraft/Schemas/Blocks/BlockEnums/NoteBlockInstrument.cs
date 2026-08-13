@@ -35,6 +35,15 @@ public enum NoteBlockInstrument {
 }
 
 public static class NoteBlockInstrumentExtensions {
+    /// <summary>
+    /// <c>NoteBlockInstrument.worksAboveNoteBlock()</c>: whether a note block sitting on this one
+    /// takes its instrument from it. True for everything that is not a <c>BASE_BLOCK</c> instrument,
+    /// which is the six mob heads and the custom head, so the test is a range rather than a list.
+    /// </summary>
+    public static bool WorksAboveNoteBlock(this NoteBlockInstrument instrument) {
+        return instrument >= NoteBlockInstrument.Zombie;
+    }
+
     public static NoteBlockInstrument FromString(string value) {
         return value switch {
             "harp" => NoteBlockInstrument.Harp,

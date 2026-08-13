@@ -3,20 +3,21 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WeatheredCopperChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock {
+public record WeatheredCopperChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock, IAxisAligned, IWaterlogged {
     private static readonly BlockInfo Data = new("minecraft:weathering_copper_chain", "block.minecraft.weathered_copper_chain", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:weathered_copper_chain", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.Normal, 0, "chain", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, true, false, false, true, [], "minecraft:water", BlockShapes.S503, BlockShapes.S503, BlockShapes.S1, BlockShapes.S1, BlockShapes.S503);
+    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.Normal, 0, "chain", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S505, BlockShapes.S505, BlockShapes.S1, BlockShapes.S1, BlockShapes.S505, BlockShapes.S505);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S329, CollisionShape = BlockShapes.S329, VisualShape = BlockShapes.S329 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S329, CollisionShape = BlockShapes.S329, VisualShape = BlockShapes.S329 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S504, CollisionShape = BlockShapes.S504, VisualShape = BlockShapes.S504 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S504, CollisionShape = BlockShapes.S504, VisualShape = BlockShapes.S504 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S331, CollisionShape = BlockShapes.S331, VisualShape = BlockShapes.S331, SupportShape = BlockShapes.S331 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S331, CollisionShape = BlockShapes.S331, VisualShape = BlockShapes.S331, SupportShape = BlockShapes.S331 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S506, CollisionShape = BlockShapes.S506, VisualShape = BlockShapes.S506, SupportShape = BlockShapes.S506 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S506, CollisionShape = BlockShapes.S506, VisualShape = BlockShapes.S506, SupportShape = BlockShapes.S506 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5
     ];
@@ -51,6 +52,7 @@ public record WeatheredCopperChainBlock(Identifier Identifier, Axis Axis, bool W
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -61,8 +63,15 @@ public record WeatheredCopperChainBlock(Identifier Identifier, Axis Axis, bool W
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAxis(Axis axis) => this with { Axis = axis };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {

@@ -3,23 +3,24 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentValue, Direction Facing, bool Powered) : IBlock {
+public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentValue, Direction Facing, bool Powered) : IBlock, IHorizontalFacing, IPowered {
     private static readonly BlockInfo Data = new("minecraft:bell", "block.minecraft.bell", 5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:bell", "minecraft:bell", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(5f, 0, 0, PushReaction.Destroy, 30, "anvil", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, [], null, BlockShapes.S333, BlockShapes.S333, BlockShapes.S1, BlockShapes.S333, BlockShapes.S333);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S334, CollisionShape = BlockShapes.S334, OcclusionShape = BlockShapes.S334, VisualShape = BlockShapes.S334 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S335, CollisionShape = BlockShapes.S335, OcclusionShape = BlockShapes.S335, VisualShape = BlockShapes.S335 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S336, CollisionShape = BlockShapes.S336, OcclusionShape = BlockShapes.S336, VisualShape = BlockShapes.S336 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S337, CollisionShape = BlockShapes.S337, OcclusionShape = BlockShapes.S337, VisualShape = BlockShapes.S337 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S338, CollisionShape = BlockShapes.S338, OcclusionShape = BlockShapes.S338, VisualShape = BlockShapes.S338 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S339, CollisionShape = BlockShapes.S339, OcclusionShape = BlockShapes.S339, VisualShape = BlockShapes.S339 };
-    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S340, CollisionShape = BlockShapes.S340, OcclusionShape = BlockShapes.S340, VisualShape = BlockShapes.S340 };
-    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S341, CollisionShape = BlockShapes.S341, OcclusionShape = BlockShapes.S341, VisualShape = BlockShapes.S341 };
+    private static readonly BlockStateInfo I0 = new(5f, 0, 0, PushReaction.Destroy, 30, "anvil", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S335, BlockShapes.S335, BlockShapes.S1, BlockShapes.S335, BlockShapes.S335, BlockShapes.S335);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S336, CollisionShape = BlockShapes.S336, OcclusionShape = BlockShapes.S336, VisualShape = BlockShapes.S336, SupportShape = BlockShapes.S336 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S337, CollisionShape = BlockShapes.S337, OcclusionShape = BlockShapes.S337, VisualShape = BlockShapes.S337, SupportShape = BlockShapes.S337 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S338, CollisionShape = BlockShapes.S338, OcclusionShape = BlockShapes.S338, VisualShape = BlockShapes.S338, SupportShape = BlockShapes.S338 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S339, CollisionShape = BlockShapes.S339, OcclusionShape = BlockShapes.S339, VisualShape = BlockShapes.S339, SupportShape = BlockShapes.S339 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S340, CollisionShape = BlockShapes.S340, OcclusionShape = BlockShapes.S340, VisualShape = BlockShapes.S340, SupportShape = BlockShapes.S340 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S341, CollisionShape = BlockShapes.S341, OcclusionShape = BlockShapes.S341, VisualShape = BlockShapes.S341, SupportShape = BlockShapes.S341 };
+    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S342, CollisionShape = BlockShapes.S342, OcclusionShape = BlockShapes.S342, VisualShape = BlockShapes.S342, SupportShape = BlockShapes.S342 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S343, CollisionShape = BlockShapes.S343, OcclusionShape = BlockShapes.S343, VisualShape = BlockShapes.S343, SupportShape = BlockShapes.S343 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I0, I0, I1, I1, I1, I1, I2, I2, I2, I2, I2, I2, I2, I2, I3, I3, I4, I4, I5, I5, I6, I6, I7, I7, I7, I7, I8, I8, I8, I8
     ];
@@ -54,6 +55,7 @@ public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentVa
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -64,8 +66,15 @@ public record BellBlock(Identifier Identifier, BellBlock.Attachment AttachmentVa
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
 
 
     public uint StateId {

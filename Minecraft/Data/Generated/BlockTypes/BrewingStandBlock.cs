@@ -3,6 +3,7 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
@@ -11,7 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool HasBottle1, bool HasBottle2) : IBlock {
     private static readonly BlockInfo Data = new("minecraft:brewing_stand", "block.minecraft.brewing_stand", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:brewing_stand", "minecraft:brewing_stand", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0.5f, 1, 0, PushReaction.Normal, 6, "stone", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, [], null, BlockShapes.S396, BlockShapes.S396, BlockShapes.S1, BlockShapes.S1, BlockShapes.S396);
+    private static readonly BlockStateInfo I0 = new(0.5f, 1, 0, PushReaction.Normal, 6, "stone", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S398, BlockShapes.S398, BlockShapes.S1, BlockShapes.S1, BlockShapes.S398, BlockShapes.S398);
 
     public BlockStateInfo StateInfo => I0;
 
@@ -43,6 +44,7 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -53,6 +55,9 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 

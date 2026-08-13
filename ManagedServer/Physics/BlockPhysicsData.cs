@@ -23,6 +23,11 @@ public static class BlockPhysicsData {
     /// The block's offset bounds when its shape is moved by a hash of the position it sits at, and
     /// null for everything else. Bamboo and dripstone are the two that collide.
     /// </param>
+    /// <param name="JumpFactor">
+    /// What a jump off this block is worth, <c>Block.getJumpFactor</c>. Honey is the one that is not
+    /// one. Read through <c>EntityPhysics.BlockJumpFactor</c>, which defers to the block below when
+    /// the block the entity stands in has nothing to say.
+    /// </param>
     /// <param name="BounceRestitution">
     /// How much velocity a landing on this block keeps, before the 0.8 non living entities take.
     /// </param>
@@ -40,23 +45,33 @@ public static class BlockPhysicsData {
     /// <param name="WaterLike">
     /// Water and bubble columns, which vanilla never lets defer their speed factor downwards.
     /// </param>
+    /// <param name="FallDamageResetting">
+    /// Whether being in the block ends a fall, <c>minecraft:fall_damage_resetting</c>: the climbables,
+    /// cobweb and sweet berry bushes. Vanilla reaches the same answer three ways, a clip through the
+    /// block in <c>Entity.move</c>, <c>LivingEntity.handleOnClimbable</c> and
+    /// <c>Entity.makeStuckInBlock</c>, and all three come down to the entity being inside one.
+    /// </param>
     public readonly record struct Entry(
         Box[] Collision,
         bool LargeCollisionShape,
         BlockInfo? Offsets,
         float Friction,
         float SpeedFactor,
+        float JumpFactor,
         float BounceRestitution,
         bool SuppressesBounce,
         bool WallLike,
         bool FenceLike,
-        bool WaterLike);
+        bool WaterLike,
+        bool FallDamageResetting);
 
-    private static readonly Entry Missing = new([], false, null, 0.6f, 1.0f, 0.0f, false, false, false, false);
+    private static readonly Entry Missing =
+        new([], false, null, 0.6f, 1.0f, 1.0f, 0.0f, false, false, false, false, false);
 
     private static readonly Identifier WallCategory = "minecraft:wall";
     private static readonly Identifier FenceGateCategory = "minecraft:fence_gate";
     private static readonly Identifier FenceTag = "minecraft:fences";
+    private static readonly Identifier FallDamageResettingTag = "minecraft:fall_damage_resetting";
     private static readonly Identifier SuppressesBounceTag = "minecraft:suppresses_bounce";
     private static readonly Identifier Water = "minecraft:water";
     private static readonly Identifier BubbleColumn = "minecraft:bubble_column";
@@ -90,11 +105,13 @@ public static class BlockPhysicsData {
             block.Info.OffsetType == BlockOffsetType.None ? null : block.Info,
             block.Friction,
             block.SpeedFactor,
+            block.JumpFactor,
             block.BounceRestitution,
             InTag(registry, SuppressesBounceTag, identifier),
             category.Equals(WallCategory) || category.Equals(FenceGateCategory),
             InTag(registry, FenceTag, identifier),
-            identifier.Equals(Water) || identifier.Equals(BubbleColumn));
+            identifier.Equals(Water) || identifier.Equals(BubbleColumn),
+            InTag(registry, FallDamageResettingTag, identifier));
     }
 
     private static bool InTag(MinecraftRegistry registry, Identifier tag, Identifier block) {
@@ -120,6 +137,34 @@ public static class BlockPhysicsData {
         List<Box> boxes = [];
         Flatten(shape, boxes);
         return boxes.Count == 0 ? [] : boxes.ToArray();
+    }
+
+    /// <summary>
+    /// The shape's boxes as they are, without the voxel grid split <see cref="CollisionBoxesOf"/> does.
+    /// <p/>
+    /// Clipping a ray wants these and colliding wants the split ones, because vanilla reaches for the
+    /// shape differently in the two places: <c>AABB.clip</c> iterates <c>VoxelShape.toAabbs</c>, which
+    /// merges the grid back into as few boxes as cover it, so a ray never meets the faces between two
+    /// cells of one box. A collision sweep works on the grid itself and does. Splitting for a clip puts
+    /// a face in the middle of a bamboo stalk, which a ray starting inside one then hits.
+    /// </summary>
+    public static Box[] ShapeBoxesOf(ICollisionBox shape) {
+        List<Box> boxes = [];
+        Unsplit(shape, boxes);
+        return boxes.Count == 0 ? [] : boxes.ToArray();
+    }
+
+    private static void Unsplit(ICollisionBox shape, List<Box> into) {
+        switch (shape) {
+            case Aabb aabb:
+                into.Add(new Box(aabb));
+                break;
+            case CompositeBox composite:
+                foreach (ICollisionBox child in composite.Children) {
+                    Unsplit(child, into);
+                }
+                break;
+        }
     }
 
     private static void Flatten(ICollisionBox shape, List<Box> into) {

@@ -24,6 +24,10 @@ public class SkyWarsChestsFeature : ScopedFeature {
         new(SkyWarsItemsFeature.CreateItem(typeof(GoldenAppleItem)), 0.5f, 1, 8),
         new(LuckyBlocksFeature.GetLuckyBlock(), 1f, 1, 32),
         
+        // buckets, for bridging and for dropping on someone
+        new(new ItemStack(Item.WaterBucket), 0.5f, 1, 1),
+        new(new ItemStack(Item.LavaBucket), 0.3f, 1, 1),
+
         // tools
         new(new ItemStack(Item.DiamondPickaxe).With(DataComponent.Enchantments, [
             (Enchantment.Efficiency, 10)
@@ -37,6 +41,12 @@ public class SkyWarsChestsFeature : ScopedFeature {
         new(new ItemStack(Item.StoneSword).WithTag(SkyWarsCombatFeature.DamageTag, 6f), 0.8f, 1, 1),
         new(new ItemStack(Item.IronSword).WithTag(SkyWarsCombatFeature.DamageTag, 8f), 0.3f, 1, 1),
         new(new ItemStack(Item.DiamondSword).WithTag(SkyWarsCombatFeature.DamageTag, 10f), 0.1f, 1, 1),
+
+        // Axes hit for a little less than the sword of the same tier and take a shield away for five
+        // seconds, which they carry themselves in their weapon component
+        new(new ItemStack(Item.StoneAxe).WithTag(SkyWarsCombatFeature.DamageTag, 5f), 0.5f, 1, 1),
+        new(new ItemStack(Item.IronAxe).WithTag(SkyWarsCombatFeature.DamageTag, 7f), 0.25f, 1, 1),
+        new(new ItemStack(Item.DiamondAxe).WithTag(SkyWarsCombatFeature.DamageTag, 9f), 0.1f, 1, 1),
         
         // armour
         new(new ItemStack(Item.GoldenChestplate).WithTag(SkyWarsCombatFeature.DamageReductionTag, 0.05f), 0.2f, 1, 1),
@@ -105,13 +115,14 @@ public class SkyWarsChestsFeature : ScopedFeature {
             
             foreach (LootTableEntry entry in LootTable) {
                 if (!(Random.Shared.NextDouble() < entry.Chance)) continue;
-                
-                // Add to loot
-                int count = Random.Shared.Next(entry.MinCount, entry.MaxCount);
+
+                // Add to loot. Both bounds are inclusive, so an entry that wants exactly one of
+                // something gets one rather than none.
+                int count = Random.Shared.Next(entry.MinCount, entry.MaxCount + 1);
                 int itemMaxStack = entry.Item.GetMaxStackSize();
 
-                while (count > 0) {
-                    int effectiveMax = Random.Shared.Next(1, itemMaxStack);
+                while (count > 0 && emptySlots.Count > 0) {
+                    int effectiveMax = Random.Shared.Next(1, itemMaxStack + 1);
                     int amount = Math.Min(count, effectiveMax);
                     inv[emptySlots.Dequeue()] = entry.Item.WithCount(amount);
                     count -= amount;

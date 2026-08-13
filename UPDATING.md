@@ -21,5 +21,8 @@ block property gets noticed instead of silently missing.
 - Run `./Conformance/run.sh <version>` and fix everything it reports. Packets whose *fields*
 changed don't fail to compile and still round-trip through our own deserialiser, so this is
 what catches them — it decodes our packets with the vanilla codecs the client uses.
+- Regenerate the other fixtures too: `registries.sh`, `lighting.sh`, `clip.sh`, `fluid-wall.sh`
+and `pathtype.sh`, each with the same version. They are committed answers from the old jar, so
+until they are regenerated they pin last version's behaviour.
 - Run `dotnet test`. The physics fixtures carry numbers taken from vanilla, so a change in
 how it moves entities shows up as a failure there rather than as a client desync.

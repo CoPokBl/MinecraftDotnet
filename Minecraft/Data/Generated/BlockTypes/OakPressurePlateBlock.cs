@@ -3,16 +3,17 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record OakPressurePlateBlock(Identifier Identifier, bool Powered) : IBlock {
+public record OakPressurePlateBlock(Identifier Identifier, bool Powered) : IBlock, IPowered {
     private static readonly BlockInfo Data = new("minecraft:pressure_plate", "block.minecraft.oak_pressure_plate", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:oak_pressure_plate", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 13, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, true, false, false, false, true, [], null, BlockShapes.S78, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S79 };
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 13, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S80, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S81 };
     private static readonly BlockStateInfo[] States = [
         I0, I1
     ];
@@ -47,6 +48,7 @@ public record OakPressurePlateBlock(Identifier Identifier, bool Powered) : IBloc
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -57,8 +59,13 @@ public record OakPressurePlateBlock(Identifier Identifier, bool Powered) : IBloc
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
 
 
     public uint StateId {

@@ -11,6 +11,7 @@ using System.Collections.Frozen;
 using Minecraft.Data.Items;
 using Minecraft.Data.Components;
 using Minecraft.Data.Components.Types;
+using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Tags;
@@ -77,12 +78,18 @@ public static class Item {
                 // eg. IDataComponent<THIS_THING>
                 string componentType = DataComponentCodeGen.ComponentTypes[componentId];
 
-                if (!Deserialisers.TryGetValue(componentType, out Func<JToken, string>? deserialiser)) {
+                if (!Deserialisers.TryGetValue(componentType, out Func<JToken, string?>? deserialiser)) {
                     Console.WriteLine("WARNING: No deserializer found for component type " + componentType + ", to create item default component.");
                     continue;
                 }
-                string inlineDefinition = deserialiser(componentToken!);
-                
+
+                // Null means the component is at its own default, eg. an item with no attribute
+                // modifiers, and is left off rather than written out empty for every item there is.
+                string? inlineDefinition = deserialiser(componentToken!);
+                if (inlineDefinition == null) {
+                    continue;
+                }
+
                 // Remove the "Component" suffix from the class name
                 int suffixLength = "Component".Length;
                 string componentVarName = DataComponentCodeGen.ComponentClasses[componentId][..^suffixLength];
@@ -203,7 +210,40 @@ public static class Item {
         return found;
     }
 
-    private static readonly Dictionary<string, Func<JToken, string>> Deserialisers = new() {
+    /// <summary>
+    /// Both maps throw on a name they do not know rather than guessing one, so an operation or slot
+    /// group added upstream stops the generator instead of silently dropping the modifier.
+    /// </summary>
+    private static readonly Dictionary<string, string> AttributeOperations = new() {
+        { "add_value", "Add" },
+        { "add_multiplied_base", "AddMultipliedBase" },
+        { "add_multiplied_total", "AddMultipliedTotal" }
+    };
+
+    private static readonly Dictionary<string, string> SlotGroups = new() {
+        { "any", "Any" }, { "mainhand", "MainHand" }, { "offhand", "OffHand" }, { "hand", "Hand" },
+        { "feet", "Feet" }, { "legs", "Legs" }, { "chest", "Chest" }, { "head", "Head" },
+        { "armor", "Armor" }, { "body", "Body" }, { "saddle", "Saddle" }
+    };
+
+    /// <summary>
+    /// Only the hidden mode appears in vanilla's item defaults, on the wearable heads. Override
+    /// carries a text component and throws here rather than being guessed at.
+    /// </summary>
+    private static string DisplayMode(JObject display) {
+        string type = display["type"]!.Value<string>()!;
+        return type switch {
+            "default" => "ItemAttributeModifier.Display.DefaultMode()",
+            "hidden" => "ItemAttributeModifier.Display.HiddenMode()",
+            _ => throw new Exception("Unsupported attribute modifier display mode " + type)
+        };
+    }
+
+    /// <summary>
+    /// Turns a component's reported default into the C# that builds it. Returning null leaves the
+    /// component off the item entirely, for a value that is already the default.
+    /// </summary>
+    private static readonly Dictionary<string, Func<JToken, string?>> Deserialisers = new() {
         { "int", token => token.ToObject<int>().ToString() },
         { "FoodComponent.Info", token => {
             JObject obj = token.ToObject<JObject>()!;
@@ -221,6 +261,35 @@ public static class Item {
             
             string translationKey = obj["translate"]!.Value<string>()!;
             return $"TextComponent.Translatable(\"{translationKey}\")";
+        } },
+        // Armour points, attack damage and the rest of what an item is worth while it is worn or held.
+        // The attributes are referenced through the generated Attribute class rather than the registry,
+        // because these run during the registry's own initialisation.
+        { "ItemAttributeModifier[]", token => {
+            List<string> modifiers = [];
+            foreach (JToken entry in token.ToObject<JArray>()!) {
+                JObject obj = entry.ToObject<JObject>()!;
+                string attribute = CodeGenUtils.NamespacedIdToPascalName(obj["type"]!.Value<string>()!);
+                string id = obj["id"]!.Value<string>()!;
+                double amount = obj["amount"]!.Value<double>();
+                string operation = AttributeOperations[obj["operation"]!.Value<string>()!];
+
+                // Vanilla defaults a missing slot to "any", though every item currently names one.
+                string slot = SlotGroups[obj["slot"]?.Value<string>() ?? "any"];
+
+                string display = obj["display"] is { } displayToken
+                    ? DisplayMode(displayToken.ToObject<JObject>()!)
+                    : "ItemAttributeModifier.Display.DefaultMode()";
+
+                modifiers.Add($"new(Attribute.{attribute}, \"{id}\", " +
+                              $"{amount.ToString("R", CultureInfo.InvariantCulture)}, " +
+                              $"AttributeOperation.{operation}, EquipmentSlotGroup.{slot}, {display})");
+            }
+
+            // Every item's report carries the key, empty for the great majority of them.
+            return modifiers.Count == 0
+                ? null
+                : $"new ItemAttributeModifier[] {{ {string.Join(", ", modifiers)} }}";
         } },
         { "Identifier", token => $"\"{token.ToObject<string>()!}\"" },
         { "ItemRarity", token => {
@@ -362,6 +431,53 @@ public static class Item {
 
             return $"new UseCooldownComponent.Data({seconds}, {cooldownGroup})";
         } },
+        // What a shield is. Every field is optional in the codec, and the defaults are vanilla's own
+        // rather than zeroes, so an item reported as {} still blocks everything in a ninety degree arc.
+        { "BlocksAttacksComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            float blockDelay = obj["block_delay_seconds"]?.Value<float>() ?? 0f;
+            float disableCooldownScale = obj["disable_cooldown_scale"]?.Value<float>() ?? 1f;
+
+            List<string> reductions = [];
+            foreach (JToken entry in obj["damage_reductions"]?.ToObject<JArray>() ?? []) {
+                JObject reduction = entry.ToObject<JObject>()!;
+                float angle = reduction["horizontal_blocking_angle"]?.Value<float>() ?? 90f;
+                string type = reduction.TryGetValue("type", out JToken? typeToken)
+                    ? DamageTypeSet(typeToken)
+                    : "null";
+                float baseAmount = reduction["base"]!.Value<float>();
+                float factor = reduction["factor"]!.Value<float>();
+                reductions.Add($"new BlocksAttacksComponent.DamageReduction({Float(angle)}, {type}, " +
+                               $"{Float(baseAmount)}, {Float(factor)})");
+            }
+
+            string reductionList = reductions.Count == 0
+                ? "[BlocksAttacksComponent.DamageReduction.Everything]"
+                : $"[{string.Join(", ", reductions)}]";
+
+            string itemDamage = "BlocksAttacksComponent.ItemDamage.Default";
+            if (obj["item_damage"] is { } damageToken) {
+                JObject damage = damageToken.ToObject<JObject>()!;
+                itemDamage = $"new BlocksAttacksComponent.ItemDamage({Float(damage["threshold"]!.Value<float>())}, " +
+                             $"{Float(damage["base"]!.Value<float>())}, {Float(damage["factor"]!.Value<float>())})";
+            }
+
+            string bypassedBy = obj.TryGetValue("bypassed_by", out JToken? bypassToken)
+                ? DamageTypeSet(bypassToken)
+                : "null";
+
+            return $"new BlocksAttacksComponent.Data({Float(blockDelay)}, {Float(disableCooldownScale)}, " +
+                   $"{reductionList}, {itemDamage}, {bypassedBy}, {Sound(obj["block_sound"])}, " +
+                   $"{Sound(obj["disabled_sound"])})";
+        } },
+        // Emitted even when it is all defaults, since carrying the component at all is what makes an
+        // item a weapon, and none of this reaches the wire: only a stack's own patch is sent.
+        { "WeaponComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            int itemDamage = obj["item_damage_per_attack"]?.Value<int>() ?? 1;
+            float disableBlocking = obj["disable_blocking_for_seconds"]?.Value<float>() ?? 0f;
+            return $"new WeaponComponent.Data({itemDamage}, {Float(disableBlocking)})";
+        } },
         { "TextColor", token => {
             // integer with rgb bitshifted
             if (token.Type == JTokenType.Integer) {
@@ -397,6 +513,33 @@ public static class Item {
             });
 
         return $"new IdSet.Ids([{string.Join(", ", ids)}])";
+    }
+
+    /// <summary>
+    /// A float literal that round trips, since a value written as <c>0.25</c> has to come out of the
+    /// generator as <c>0.25f</c> rather than as the current culture's decimal separator.
+    /// </summary>
+    private static string Float(float value) {
+        return value.ToString("R", CultureInfo.InvariantCulture) + "f";
+    }
+
+    /// <summary>
+    /// A <c>HolderSet&lt;DamageType&gt;</c>, which vanilla only ever writes as a tag reference.
+    /// Damage types are a datapack registry, so their ids are not knowable here, and a list of them
+    /// throws rather than being written out as ids that would mean something else.
+    /// </summary>
+    private static string DamageTypeSet(JToken token) {
+        string? id = token.Type == JTokenType.String ? token.ToObject<string>() : null;
+        if (id == null || !id.StartsWith('#')) {
+            throw new Exception("Damage type set " + token + " is not a tag, which is not supported.");
+        }
+
+        return $"new IdSet.Tag(\"{id[1..]}\")";
+    }
+
+    /// <summary>A <c>Holder&lt;SoundEvent&gt;</c> field that may be absent, as a sound registry entry.</summary>
+    private static string Sound(JToken? token) {
+        return token == null ? "null" : "SoundType." + SoundCodeGen.GetVariableName(token.ToObject<string>()!);
     }
 
     private static string ParseOptionalFloat(JToken? obj) {

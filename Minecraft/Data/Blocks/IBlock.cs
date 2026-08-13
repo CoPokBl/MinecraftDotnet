@@ -42,6 +42,7 @@ public interface IBlock : IProtocolType {
     public ICollisionBox OcclusionShape { get; }
     public ICollisionBox InteractionShape { get; }
     public ICollisionBox VisualShape { get; }
+    public ICollisionBox SupportShape { get; }
     public bool RedstoneConductor { get; }
     public bool SignalSource { get; }
     public bool Flammable { get; }
@@ -52,6 +53,9 @@ public interface IBlock : IProtocolType {
     public bool Suffocating { get; }
     public bool ViewBlocking { get; }
     public bool SpawnTerrainParticles { get; }
+    public bool PathfindableLand { get; }
+    public bool PathfindableWater { get; }
+    public bool PathfindableAir { get; }
     public NoteBlockInstrument Instrument { get; }
     public Identifier? Fluid { get; }
 

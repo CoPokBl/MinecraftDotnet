@@ -3,38 +3,39 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripleafBlock.Tilt TiltValue, bool Waterlogged) : IBlock {
+public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripleafBlock.Tilt TiltValue, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
     private static readonly BlockInfo Data = new("minecraft:big_dripleaf", "block.minecraft.big_dripleaf", 0.1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:big_dripleaf", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0.1f, 0, 1, PushReaction.Destroy, 7, "big_dripleaf", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, [], "minecraft:water", BlockShapes.S342, BlockShapes.S343, BlockShapes.S1, BlockShapes.S342, BlockShapes.S343);
+    private static readonly BlockStateInfo I0 = new(0.1f, 0, 1, PushReaction.Destroy, 7, "big_dripleaf", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S344, BlockShapes.S345, BlockShapes.S1, BlockShapes.S344, BlockShapes.S345, BlockShapes.S345);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S344, CollisionShape = BlockShapes.S345, OcclusionShape = BlockShapes.S344, VisualShape = BlockShapes.S345 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S344, CollisionShape = BlockShapes.S345, OcclusionShape = BlockShapes.S344, VisualShape = BlockShapes.S345 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S346, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S346, VisualShape = BlockShapes.S1 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S346, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S346, VisualShape = BlockShapes.S1 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S347, OcclusionShape = BlockShapes.S347 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S347, OcclusionShape = BlockShapes.S347 };
-    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S348, CollisionShape = BlockShapes.S345, OcclusionShape = BlockShapes.S348, VisualShape = BlockShapes.S345 };
-    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S348, CollisionShape = BlockShapes.S345, OcclusionShape = BlockShapes.S348, VisualShape = BlockShapes.S345 };
-    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S349, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S349, VisualShape = BlockShapes.S1 };
-    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S349, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S349, VisualShape = BlockShapes.S1 };
-    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S350, OcclusionShape = BlockShapes.S350 };
-    private static readonly BlockStateInfo I13 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S350, OcclusionShape = BlockShapes.S350 };
-    private static readonly BlockStateInfo I14 = I0 with { BlockShape = BlockShapes.S351, CollisionShape = BlockShapes.S345, OcclusionShape = BlockShapes.S351, VisualShape = BlockShapes.S345 };
-    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S351, CollisionShape = BlockShapes.S345, OcclusionShape = BlockShapes.S351, VisualShape = BlockShapes.S345 };
-    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S352, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S352, VisualShape = BlockShapes.S1 };
-    private static readonly BlockStateInfo I17 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S352, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S352, VisualShape = BlockShapes.S1 };
-    private static readonly BlockStateInfo I18 = I0 with { BlockShape = BlockShapes.S353, OcclusionShape = BlockShapes.S353 };
-    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S353, OcclusionShape = BlockShapes.S353 };
-    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S354, CollisionShape = BlockShapes.S345, OcclusionShape = BlockShapes.S354, VisualShape = BlockShapes.S345 };
-    private static readonly BlockStateInfo I21 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S354, CollisionShape = BlockShapes.S345, OcclusionShape = BlockShapes.S354, VisualShape = BlockShapes.S345 };
-    private static readonly BlockStateInfo I22 = I0 with { BlockShape = BlockShapes.S355, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S355, VisualShape = BlockShapes.S1 };
-    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S355, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S355, VisualShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S346, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S346, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S346, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S346, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S348, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S348, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S348, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S348, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S349, OcclusionShape = BlockShapes.S349 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S349, OcclusionShape = BlockShapes.S349 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S350, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S350, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S350, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S350, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S351, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S351, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S351, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S351, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S352, OcclusionShape = BlockShapes.S352 };
+    private static readonly BlockStateInfo I13 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S352, OcclusionShape = BlockShapes.S352 };
+    private static readonly BlockStateInfo I14 = I0 with { BlockShape = BlockShapes.S353, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S353, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S353, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S353, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S354, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S354, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I17 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S354, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S354, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I18 = I0 with { BlockShape = BlockShapes.S355, OcclusionShape = BlockShapes.S355 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S355, OcclusionShape = BlockShapes.S355 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S356, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S356, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I21 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S356, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S356, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I22 = I0 with { BlockShape = BlockShapes.S357, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S357, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S357, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S357, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I2, I3, I4, I5, I6, I7, I6, I7, I8, I9, I10, I11, I12, I13, I12, I13, I14, I15, I16, I17, I18, I19, I18, I19, I20, I21, I22, I23
     ];
@@ -69,6 +70,7 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -79,8 +81,15 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {

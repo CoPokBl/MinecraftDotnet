@@ -1,4 +1,5 @@
 using ManagedServer.Entities.Types;
+using ManagedServer.Physics;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
@@ -215,52 +216,166 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         return entities.ToArray();
     }
 
+    public Entity[] GetEntitiesInBox(Box box, Func<Entity, bool>? filter = null) {
+        List<Entity> found = [];
+
+        // The chunk grid is the only index there is, so the box is turned into the chunks it covers and
+        // the boxes themselves are only tested inside those. One chunk of slack on each side, because
+        // an entity is stored by its position and its box reaches past it.
+        Vec2<int> min = World.GetChunkPos(new Vec3<double>(box.MinX, box.MinY, box.MinZ));
+        Vec2<int> max = World.GetChunkPos(new Vec3<double>(box.MaxX, box.MaxY, box.MaxZ));
+
+        for (int x = min.X - 1; x <= max.X + 1; x++) {
+            for (int z = min.Y - 1; z <= max.Y + 1; z++) {
+                if (!_entitiesByChunk.TryGetValue(new Vec2<int>(x, z), out List<Entity>? chunkEntities)) {
+                    continue;
+                }
+
+                foreach (Entity entity in chunkEntities) {
+                    if (!new Box(entity.BoundingBox).Translate(entity.Position).Intersects(box)) {
+                        continue;
+                    }
+
+                    if (filter != null && !filter(entity)) {
+                        continue;
+                    }
+
+                    found.Add(entity);
+                }
+            }
+        }
+
+        return found.ToArray();
+    }
+
+    public Entity[] GetEntitiesWithin(Vec3<double> pos, double radius, Func<Entity, bool>? filter = null) {
+        double radiusSqr = radius * radius;
+        List<Entity> found = [];
+
+        foreach (Entity entity in CandidatesAround(pos, radius)) {
+            if (SquaredDistance(entity.Position, pos) > radiusSqr) {
+                continue;
+            }
+
+            if (filter != null && !filter(entity)) {
+                continue;
+            }
+
+            found.Add(entity);
+        }
+
+        return found.ToArray();
+    }
+
+    public Entity? GetNearestEntity(Vec3<double> pos, double radius, Func<Entity, bool>? filter = null) {
+        double bestSqr = radius * radius;
+        Entity? best = null;
+
+        foreach (Entity entity in CandidatesAround(pos, radius)) {
+            double distanceSqr = SquaredDistance(entity.Position, pos);
+            if (distanceSqr > bestSqr) {
+                continue;
+            }
+
+            if (filter != null && !filter(entity)) {
+                continue;
+            }
+
+            bestSqr = distanceSqr;
+            best = entity;
+        }
+
+        return best;
+    }
+
+    /// <summary>
+    /// Everything in the chunks a radius around a point could reach into. It yields rather than
+    /// collecting, so a caller that rejects most of what it sees never builds the list.
+    /// </summary>
+    private IEnumerable<Entity> CandidatesAround(Vec3<double> pos, double radius) {
+        int chunkRadius = (int)Math.Ceiling(radius / 16) + 1;
+
+        foreach (Vec2<int> chunk in IEntityManager.GetChunksInRadius(World.GetChunkPos(pos), chunkRadius)) {
+            if (!_entitiesByChunk.TryGetValue(chunk, out List<Entity>? chunkEntities)) {
+                continue;
+            }
+
+            foreach (Entity entity in chunkEntities) {
+                yield return entity;
+            }
+        }
+    }
+
+    private static double SquaredDistance(Vec3<double> a, Vec3<double> b) {
+        double dx = a.X - b.X;
+        double dy = a.Y - b.Y;
+        double dz = a.Z - b.Z;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
     // uses the most appropriate packet type
     public void MoveEntity(Entity entity, Vec3<double> newPos, Angle? yaw = null, Angle? pitch = null) {
         double deltaX = Math.Abs(newPos.X - entity.Position.X);
         double deltaY = Math.Abs(newPos.Y - entity.Position.Y);
         double deltaZ = Math.Abs(newPos.Z - entity.Position.Z);
 
-        if (deltaX == 0 && deltaY == 0 && deltaZ == 0 && yaw != null && pitch != null) {
-            RotateEntity(entity, yaw.Value, pitch.Value);
+        // Which packet to send is decided from what was last sent rather than from what the caller
+        // named, the way vanilla's ServerEntity.sendChanges does. That is what gets a simulated
+        // entity's rotation out at all: a mob turns by writing Yaw and nothing passes it through here,
+        // so a mover that names neither half used to walk it around still facing where it spawned.
+        Angle wantedYaw = yaw ?? entity.Yaw;
+        Angle wantedPitch = pitch ?? entity.Pitch;
+        bool rotated = wantedYaw.ByteValue != entity.LastSentYaw || wantedPitch.ByteValue != entity.LastSentPitch;
+
+        if (deltaX == 0 && deltaY == 0 && deltaZ == 0) {
+            if (rotated) {
+                RotateEntity(entity, wantedYaw, wantedPitch);
+            }
+            else {
+                // A head can turn on its own, and often does: a mob watching a player walk past
+                // tracks it with its head long before its body catches up.
+                SendHeadRotation(entity);
+            }
+
             return;
         }
-        
+
         if (deltaX > 7.5 || deltaY > 7.5 || deltaZ > 7.5) {  // This packet can't support high values, use teleport
-            TeleportEntity(entity, newPos, yaw ?? entity.Yaw, pitch ?? entity.Pitch);
+            TeleportEntity(entity, newPos, wantedYaw, wantedPitch);
             return;
         }
-        
+
         MoveEntityInStorage(entity, entity.Position, newPos);
-        
+
         Vec3<float> deltaPos = new(
-            (float)newPos.X - (float)entity.Position.X, 
-            (float)newPos.Y - (float)entity.Position.Y, 
+            (float)newPos.X - (float)entity.Position.X,
+            (float)newPos.Y - (float)entity.Position.Y,
             (float)newPos.Z - (float)entity.Position.Z);
-        
-        MinecraftPacket[] packets = yaw == null || pitch == null
-            ? [new ClientBoundUpdateEntityPositionPacket {
+
+        if (rotated) {
+            SendPacketsToViewers(entity, new ClientBoundUpdateEntityPosAndRotPacket {
+                EntityId = entity.NetId,
+                Delta = deltaPos,
+                Yaw = wantedYaw,
+                Pitch = wantedPitch,
+                OnGround = true
+            });
+            RecordSentRotation(entity, wantedYaw, wantedPitch);
+        }
+        else {
+            SendPacketsToViewers(entity, new ClientBoundUpdateEntityPositionPacket {
                 EntityId = entity.NetId,
                 Delta = deltaPos,
                 OnGround = false
-            }]
-            : [
-                new ClientBoundUpdateEntityPosAndRotPacket {
-                    EntityId = entity.NetId,
-                    Delta = deltaPos,
-                    Yaw = yaw.Value,
-                    Pitch = pitch.Value,
-                    OnGround = true
-                },
-                HeadRotPacket(entity.NetId, yaw.Value)
-            ];
-        
-        SendPacketsToViewers(entity, packets);
+            });
+        }
+
+        SendHeadRotation(entity);
     }
 
     public void TeleportEntity(Entity entity, Vec3<double> newPos, Angle yaw, Angle pitch) {
         MoveEntityInStorage(entity, entity.Position, newPos);
-        
+
         MinecraftPacket packet =
             new ClientBoundTeleportEntityPacket {
                 EntityId = entity.NetId,
@@ -270,8 +385,24 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
                 Yaw = yaw,
                 OnGround = true
             };
-        
-        SendPacketsToViewers(entity, packet, HeadRotPacket(entity.NetId, yaw));
+
+        SendPacketsToViewers(entity, packet);
+        RecordSentRotation(entity, yaw, pitch);
+        SendHeadRotation(entity);
+    }
+
+    /// <summary>
+    /// Sends whatever of the entity's rotation has changed since it was last sent, and nothing if
+    /// none of it has. This is what covers an entity that turned without moving, since
+    /// <see cref="MoveEntity"/> is only reached by one that moved.
+    /// </summary>
+    public void SyncRotation(Entity entity) {
+        if (entity.Yaw.ByteValue != entity.LastSentYaw || entity.Pitch.ByteValue != entity.LastSentPitch) {
+            RotateEntity(entity, entity.Yaw, entity.Pitch);
+            return;
+        }
+
+        SendHeadRotation(entity);
     }
 
     public void SendSpawnPackets(Entity entity, Player player) {
@@ -296,16 +427,36 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             Yaw = yaw,
             OnGround = true
         };
-        SendPacketsToViewers(entity, packet, HeadRotPacket(entity.NetId, yaw));
+        SendPacketsToViewers(entity, packet);
+        RecordSentRotation(entity, yaw, pitch);
+        SendHeadRotation(entity);
     }
 
-    private static ClientBoundSetHeadRotationPacket HeadRotPacket(int id, Angle yaw) {
-        return new ClientBoundSetHeadRotationPacket {
-            EntityId = id,
-            Yaw = yaw
-        };
+    /// <summary>
+    /// The head's own packet, which carries <see cref="Entity.HeadYaw"/> and not the body yaw. They are
+    /// the same thing for a player, whose client reports one rotation, and they are not for a mob:
+    /// its look control turns its head and its body rotation control follows behind, so feeding this
+    /// the body yaw would throw away the difference the two controls exist to create.
+    /// </summary>
+    private void SendHeadRotation(Entity entity) {
+        Angle headYaw = entity.HeadYaw;
+        if (headYaw.ByteValue == entity.LastSentHeadYaw) {
+            return;
+        }
+
+        SendPacketsToViewers(entity, new ClientBoundSetHeadRotationPacket {
+            EntityId = entity.NetId,
+            Yaw = headYaw
+        });
+        entity.LastSentHeadYaw = headYaw.ByteValue;
     }
-    
+
+    private static void RecordSentRotation(Entity entity, Angle yaw, Angle pitch) {
+        entity.LastSentYaw = yaw.ByteValue;
+        entity.LastSentPitch = pitch.ByteValue;
+    }
+
+
     private static void AddViewedEntity(Player player, int entityId) {
         if (!player.HasTag(VisibleEntitiesTag)) {
             player.SetTag(VisibleEntitiesTag, []);

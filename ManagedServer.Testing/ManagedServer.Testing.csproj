@@ -27,6 +27,14 @@
     <ItemGroup>
       <!-- Worlds lit by the vanilla light engine, see Conformance/lighting.sh. -->
       <None Include="Lighting\vanilla-light.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Fluid boundaries decided by the vanilla shape code, see Conformance/fluid-wall.sh. -->
+      <None Include="Fluids\vanilla-fluid-wall.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Rays clipped by the vanilla block clip, see Conformance/clip.sh. -->
+      <None Include="Fluids\vanilla-clip.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Blocks classified by the vanilla node evaluator, see Conformance/pathtype.sh. -->
+      <None Include="Pathfinding\vanilla-pathtype.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- canSurvive and updateShape as the vanilla blocks answer them, see Conformance/placement.sh. -->
+      <None Include="Placement\vanilla-placement.bin.gz" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>

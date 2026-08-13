@@ -3,18 +3,19 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
+public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock, IHorizontalFacing, IPowered {
     private static readonly BlockInfo Data = new("minecraft:piglinwallskull", "block.minecraft.piglin_head", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:piglin_head", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, [], null, BlockShapes.S788, BlockShapes.S788, BlockShapes.S1, BlockShapes.S788, BlockShapes.S788);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S789, CollisionShape = BlockShapes.S789, OcclusionShape = BlockShapes.S789, VisualShape = BlockShapes.S789 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S790, CollisionShape = BlockShapes.S790, OcclusionShape = BlockShapes.S790, VisualShape = BlockShapes.S790 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S791, CollisionShape = BlockShapes.S791, OcclusionShape = BlockShapes.S791, VisualShape = BlockShapes.S791 };
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S790, BlockShapes.S790, BlockShapes.S1, BlockShapes.S790, BlockShapes.S790, BlockShapes.S790);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S791, CollisionShape = BlockShapes.S791, OcclusionShape = BlockShapes.S791, VisualShape = BlockShapes.S791, SupportShape = BlockShapes.S791 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S792, CollisionShape = BlockShapes.S792, OcclusionShape = BlockShapes.S792, VisualShape = BlockShapes.S792, SupportShape = BlockShapes.S792 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S793, CollisionShape = BlockShapes.S793, OcclusionShape = BlockShapes.S793, VisualShape = BlockShapes.S793, SupportShape = BlockShapes.S793 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I1, I1, I2, I2, I3, I3
     ];
@@ -49,6 +50,7 @@ public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -59,8 +61,15 @@ public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
 
 
     public uint StateId {

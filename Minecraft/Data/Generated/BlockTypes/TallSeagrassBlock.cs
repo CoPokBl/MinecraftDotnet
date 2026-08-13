@@ -3,15 +3,16 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock {
+public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock, IDoubleHalved {
     private static readonly BlockInfo Data = new("minecraft:tall_seagrass", "block.minecraft.tall_seagrass", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, null, BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 12, "wet_grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, [], "minecraft:water", BlockShapes.S825, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 12, "wet_grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S827, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
 
     public BlockStateInfo StateInfo => I0;
 
@@ -43,6 +44,7 @@ public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock 
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -53,8 +55,13 @@ public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock 
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithHalf(BlockHalf half) => this with { Half = half };
 
 
     public uint StateId {

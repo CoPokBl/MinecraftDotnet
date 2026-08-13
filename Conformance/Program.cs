@@ -5,8 +5,10 @@ using Conformance;
 using Minecraft;
 using Minecraft.Data.Generated;
 using Minecraft.Packets;
+using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities.Meta;
+using NBT;
 
 // Writes every client bound packet we implement to a corpus file, which Harness.java then
 // feeds through the vanilla stream codecs. See Conformance/run.sh.
@@ -124,6 +126,30 @@ json.AppendLine("]");
 File.WriteAllText(outputPath, json.ToString());
 
 Console.WriteLine($"Wrote {built} packets to {outputPath}");
+
+// The datapack driven registries travel as NBT the client parses with the element codec rather
+// than a stream codec, so decoding the packet they arrive in proves nothing about them.
+// RegistryHarness.java runs those codecs. See Conformance/registries.sh.
+if (args.Length > 1) {
+    List<string> registries = [];
+    int elements = 0;
+    foreach (ISubRegistry sub in VanillaRegistry.Data.SubRegistries) {
+        if (sub is not INbtSerialisableRegistry serialisable) {
+            continue;
+        }
+
+        List<string> written = [];
+        foreach ((string id, INbtTag element) in serialisable.ToNbt()) {
+            written.Add($"    \"{id}\": {INbtTag.ToJsonString(element)}");
+            elements++;
+        }
+
+        registries.Add($"  \"{sub.RegistryId}\": {{\n{string.Join(",\n", written)}\n  }}");
+    }
+
+    File.WriteAllText(args[1], "{\n" + string.Join(",\n", registries) + "\n}\n");
+    Console.WriteLine($"Wrote {elements} elements across {registries.Count} registries to {args[1]}");
+}
 if (skipped.Count > 0) {
     Console.WriteLine($"Skipped {skipped.Count}:");
     foreach (string reason in skipped) {

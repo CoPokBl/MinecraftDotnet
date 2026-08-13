@@ -16,6 +16,8 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponentInitializers;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.ProtocolInfo;
@@ -234,6 +236,12 @@ public class Harness {
         // lookup provider rather than as registries. It overlaps the static set, and a
         // duplicate key blows up ImmutableRegistryAccess.
         HolderLookup.Provider vanilla = VanillaRegistries.createLookup();
+
+        // An item's default components are data driven now, and ItemStack's own decoding walks them, so
+        // any packet carrying a stack throws "Components not bound yet" until these are baked.
+        BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(vanilla)
+            .forEach(DataComponentInitializers.PendingComponents::apply);
+
         vanilla.listRegistryKeys().filter(key -> !seen.contains(key)).forEach(key -> {
             HolderLookup.RegistryLookup lookup = vanilla.lookupOrThrow((ResourceKey) key);
             MappedRegistry registry = new MappedRegistry((ResourceKey) key, com.mojang.serialization.Lifecycle.stable());

@@ -3,16 +3,17 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Facing) : IBlock {
+public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Facing) : IBlock, IHorizontalFacing {
     private static readonly BlockInfo Data = new("minecraft:end_portal_frame", "block.minecraft.end_portal_frame", 3600000f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:end_portal_frame", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(-1f, 1, 0, PushReaction.Normal, 27, "glass", NoteBlockInstrument.Basedrum, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, [], null, BlockShapes.S524, BlockShapes.S524, BlockShapes.S1, BlockShapes.S524, BlockShapes.S524);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S398, CollisionShape = BlockShapes.S398, OcclusionShape = BlockShapes.S398, VisualShape = BlockShapes.S398 };
+    private static readonly BlockStateInfo I0 = new(-1f, 1, 0, PushReaction.Normal, 27, "glass", NoteBlockInstrument.Basedrum, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S526, BlockShapes.S526, BlockShapes.S1, BlockShapes.S526, BlockShapes.S526, BlockShapes.S526);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S400, CollisionShape = BlockShapes.S400, OcclusionShape = BlockShapes.S400, VisualShape = BlockShapes.S400, SupportShape = BlockShapes.S400 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I0, I0, I1, I1, I1, I1
     ];
@@ -47,6 +48,7 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -57,8 +59,13 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
 
     public uint StateId {

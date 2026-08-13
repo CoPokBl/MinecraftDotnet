@@ -3,18 +3,19 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
+public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
     private static readonly BlockInfo Data = new("minecraft:wall_hanging_sign", "block.minecraft.mangrove_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:mangrove_hanging_sign", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 28, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, [], "minecraft:water", BlockShapes.S114, BlockShapes.S115, BlockShapes.S1, BlockShapes.S1, BlockShapes.S115);
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 28, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S116, CollisionShape = BlockShapes.S117, VisualShape = BlockShapes.S117 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S116, CollisionShape = BlockShapes.S117, VisualShape = BlockShapes.S117 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I2, I3, I2, I3
     ];
@@ -49,6 +50,7 @@ public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Faci
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -59,8 +61,15 @@ public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Faci
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {

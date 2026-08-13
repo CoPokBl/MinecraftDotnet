@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using ManagedServer.Commands;
+using ManagedServer.Damage;
 using Minecraft.Implementations.Events;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
@@ -9,6 +10,7 @@ using ManagedServer.Features;
 using ManagedServer.Login;
 using ManagedServer.Permissions;
 using ManagedServer.Permissions.ContainerImpl;
+using ManagedServer.Placement;
 using ManagedServer.Scheduling;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
@@ -33,6 +35,22 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public FeatureHandler FeatureHandler { get; }
     public ServerScheduler Scheduler { get; }
     public ulong CurrentTick { get; private set; }
+
+    /// <summary>
+    /// What every hit is reduced by, before it reaches an entity's health. Always present, but empty
+    /// until a feature puts something in it, so hits land whole by default. See
+    /// <see cref="Damage.DamagePipeline"/>.
+    /// </summary>
+    public DamagePipeline DamagePipeline { get; } = new();
+
+    /// <summary>
+    /// Which rule decides the state a block is placed in, and how it reacts to its neighbours. Always
+    /// present and, like <see cref="DamagePipeline"/>, <b>empty</b> until something fills it: every
+    /// block places its default state and reacts to nothing. Register
+    /// <see cref="Features.Basic.VanillaPlacementRulesFeature"/> for vanilla's answers, all of them or
+    /// the ones you want. See <see cref="Placement.BlockPlacementRules"/>.
+    /// </summary>
+    public BlockPlacementRules BlockPlacementRules { get; } = new();
     public string ServerId { get; set; } = Random.Shared.Next(int.MaxValue).ToString();  // must be <=20 chars
     public Func<Player, IPermissionContainer> PermissionsProvider { get; set; } = _ => new MapPermissionContainer();
     

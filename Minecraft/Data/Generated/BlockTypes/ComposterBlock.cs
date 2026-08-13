@@ -3,6 +3,7 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
@@ -11,14 +12,14 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
     private static readonly BlockInfo Data = new("minecraft:composter", "block.minecraft.composter", 0.6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:composter", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0.6f, 0, 0, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, false, false, false, false, false, true, [], null, BlockShapes.S494, BlockShapes.S494, BlockShapes.S77, BlockShapes.S494, BlockShapes.S494);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S495, OcclusionShape = BlockShapes.S495 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S496, OcclusionShape = BlockShapes.S496 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S497, OcclusionShape = BlockShapes.S497 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S498, OcclusionShape = BlockShapes.S498 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S499, OcclusionShape = BlockShapes.S499 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S500, OcclusionShape = BlockShapes.S500 };
-    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S501, OcclusionShape = BlockShapes.S501 };
+    private static readonly BlockStateInfo I0 = new(0.6f, 0, 0, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S496, BlockShapes.S496, BlockShapes.S79, BlockShapes.S496, BlockShapes.S496, BlockShapes.S496);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S497, OcclusionShape = BlockShapes.S497 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S498, OcclusionShape = BlockShapes.S498 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S499, OcclusionShape = BlockShapes.S499 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S500, OcclusionShape = BlockShapes.S500 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S501, OcclusionShape = BlockShapes.S501 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S502, OcclusionShape = BlockShapes.S502 };
+    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S503, OcclusionShape = BlockShapes.S503 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7, I7
     ];
@@ -53,6 +54,7 @@ public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -63,6 +65,9 @@ public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 

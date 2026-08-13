@@ -18,7 +18,8 @@ namespace TestServer.Servers.AnvilTesting;
 public static class AnvilTesting {
 
     public static async Task Start() {
-        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsBundle);
+        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsBundle,
+            ManagedMinecraftServer.BlockRulesBundle);
         server.AddFeature(new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
             VersionName = "dotnet",
             VersionProtocol = connection.Handshake!.ProtocolVersion,

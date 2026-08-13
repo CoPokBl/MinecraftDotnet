@@ -3,6 +3,7 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
@@ -11,7 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawnerBlock.TrialSpawnerState TrialSpawnerStateValue) : IBlock {
     private static readonly BlockInfo Data = new("minecraft:trial_spawner", "block.minecraft.trial_spawner", 50f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:trial_spawner", "minecraft:trial_spawner", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(50f, 0, 1, PushReaction.Normal, 11, "trial_spawner", NoteBlockInstrument.Basedrum, false, false, false, true, false, false, false, false, true, true, false, false, true, false, true, null, null, BlockShapes.S77, BlockShapes.S77, BlockShapes.S1, BlockShapes.S1, BlockShapes.S77);
+    private static readonly BlockStateInfo I0 = new(50f, 0, 1, PushReaction.Normal, 11, "trial_spawner", NoteBlockInstrument.Basedrum, false, false, false, true, false, false, false, false, true, true, false, false, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 4 };
     private static readonly BlockStateInfo I2 = I0 with { LightEmission = 8 };
     private static readonly BlockStateInfo[] States = [
@@ -48,6 +49,7 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -58,6 +60,9 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 

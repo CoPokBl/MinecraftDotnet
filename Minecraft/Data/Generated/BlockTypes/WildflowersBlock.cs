@@ -3,23 +3,24 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WildflowersBlock(Identifier Identifier, Direction Facing, int FlowerAmount) : IBlock {
+public record WildflowersBlock(Identifier Identifier, Direction Facing, int FlowerAmount) : IBlock, IHorizontalFacing, IStackable {
     private static readonly BlockInfo Data = new("minecraft:flower_bed", "block.minecraft.wildflowers", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:wildflowers", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "pink_petals", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, false, false, false, false, false, false, false, true, [], null, BlockShapes.S792, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S793 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S113 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S794 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S795 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S796 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S797 };
-    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S798 };
-    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S799 };
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "pink_petals", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S794, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S795 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S115 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S796 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S797 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S798 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S799 };
+    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S800 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S801 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I2, I3, I4, I2, I2, I5, I6, I2, I2, I7, I8, I2, I2
     ];
@@ -54,6 +55,7 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -64,8 +66,19 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public int Count => FlowerAmount;
+
+    public int MaxCount => 4;
+
+    public IBlock WithCount(int count) => this with { FlowerAmount = count };
 
 
     public uint StateId {

@@ -3,6 +3,7 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
@@ -11,7 +12,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CactusBlock(Identifier Identifier, int Age) : IBlock {
     private static readonly BlockInfo Data = new("minecraft:cactus", "block.minecraft.cactus", 0.4f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cactus", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0.4f, 0, 0, PushReaction.Destroy, 7, "wool", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, true, false, false, true, [], null, BlockShapes.S399, BlockShapes.S400, BlockShapes.S1, BlockShapes.S399, BlockShapes.S400);
+    private static readonly BlockStateInfo I0 = new(0.4f, 0, 0, PushReaction.Destroy, 7, "wool", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, [], null, BlockShapes.S401, BlockShapes.S402, BlockShapes.S1, BlockShapes.S401, BlockShapes.S402, BlockShapes.S402);
 
     public BlockStateInfo StateInfo => I0;
 
@@ -43,6 +44,7 @@ public record CactusBlock(Identifier Identifier, int Age) : IBlock {
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -53,6 +55,9 @@ public record CactusBlock(Identifier Identifier, int Age) : IBlock {
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 

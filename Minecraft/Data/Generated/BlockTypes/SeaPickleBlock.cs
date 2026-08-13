@@ -3,22 +3,23 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogged) : IBlock {
+public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogged) : IBlock, IStackable, IWaterlogged {
     private static readonly BlockInfo Data = new("minecraft:sea_pickle", "block.minecraft.sea_pickle", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sea_pickle", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0f, 6, 1, PushReaction.Destroy, 27, "slime_block", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, [], "minecraft:water", BlockShapes.S909, BlockShapes.S909, BlockShapes.S1, BlockShapes.S1, BlockShapes.S909);
+    private static readonly BlockStateInfo I0 = new(0f, 6, 1, PushReaction.Destroy, 27, "slime_block", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S911, BlockShapes.S911, BlockShapes.S1, BlockShapes.S1, BlockShapes.S911, BlockShapes.S911);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null };
-    private static readonly BlockStateInfo I2 = I0 with { LightEmission = 9, BlockShape = BlockShapes.S910, CollisionShape = BlockShapes.S910, VisualShape = BlockShapes.S910 };
-    private static readonly BlockStateInfo I3 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S910, CollisionShape = BlockShapes.S910, VisualShape = BlockShapes.S910 };
-    private static readonly BlockStateInfo I4 = I0 with { LightEmission = 12, BlockShape = BlockShapes.S911, CollisionShape = BlockShapes.S911, VisualShape = BlockShapes.S911 };
-    private static readonly BlockStateInfo I5 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S911, CollisionShape = BlockShapes.S911, VisualShape = BlockShapes.S911 };
-    private static readonly BlockStateInfo I6 = I0 with { LightEmission = 15, BlockShape = BlockShapes.S912, CollisionShape = BlockShapes.S912, VisualShape = BlockShapes.S912 };
-    private static readonly BlockStateInfo I7 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S912, CollisionShape = BlockShapes.S912, VisualShape = BlockShapes.S912 };
+    private static readonly BlockStateInfo I2 = I0 with { LightEmission = 9, BlockShape = BlockShapes.S912, CollisionShape = BlockShapes.S912, VisualShape = BlockShapes.S912, SupportShape = BlockShapes.S912 };
+    private static readonly BlockStateInfo I3 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S912, CollisionShape = BlockShapes.S912, VisualShape = BlockShapes.S912, SupportShape = BlockShapes.S912 };
+    private static readonly BlockStateInfo I4 = I0 with { LightEmission = 12, BlockShape = BlockShapes.S913, CollisionShape = BlockShapes.S913, VisualShape = BlockShapes.S913, SupportShape = BlockShapes.S913 };
+    private static readonly BlockStateInfo I5 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S913, CollisionShape = BlockShapes.S913, VisualShape = BlockShapes.S913, SupportShape = BlockShapes.S913 };
+    private static readonly BlockStateInfo I6 = I0 with { LightEmission = 15, BlockShape = BlockShapes.S914, CollisionShape = BlockShapes.S914, VisualShape = BlockShapes.S914, SupportShape = BlockShapes.S914 };
+    private static readonly BlockStateInfo I7 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S914, CollisionShape = BlockShapes.S914, VisualShape = BlockShapes.S914, SupportShape = BlockShapes.S914 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
@@ -53,6 +54,7 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -63,8 +65,19 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public int Count => Pickles;
+
+    public int MaxCount => 4;
+
+    public IBlock WithCount(int count) => this with { Pickles = count };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {

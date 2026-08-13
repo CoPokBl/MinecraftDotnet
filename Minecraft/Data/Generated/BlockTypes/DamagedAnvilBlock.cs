@@ -3,16 +3,17 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record DamagedAnvilBlock(Identifier Identifier, Direction Facing) : IBlock {
+public record DamagedAnvilBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
     private static readonly BlockInfo Data = new("minecraft:anvil", "block.minecraft.damaged_anvil", 1200f, 0.6f, 1f, 1f, 0f, true, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:damaged_anvil", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(5f, 0, 0, PushReaction.Block, 6, "anvil", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, [], null, BlockShapes.S321, BlockShapes.S321, BlockShapes.S1, BlockShapes.S321, BlockShapes.S321);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S322, CollisionShape = BlockShapes.S322, OcclusionShape = BlockShapes.S322, VisualShape = BlockShapes.S322 };
+    private static readonly BlockStateInfo I0 = new(5f, 0, 0, PushReaction.Block, 6, "anvil", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S323, BlockShapes.S323, BlockShapes.S1, BlockShapes.S323, BlockShapes.S323, BlockShapes.S323);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S324, CollisionShape = BlockShapes.S324, OcclusionShape = BlockShapes.S324, VisualShape = BlockShapes.S324, SupportShape = BlockShapes.S324 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I1, I1
     ];
@@ -47,6 +48,7 @@ public record DamagedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -57,8 +59,13 @@ public record DamagedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
 
     public uint StateId {

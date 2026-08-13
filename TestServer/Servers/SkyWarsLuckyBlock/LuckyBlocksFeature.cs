@@ -43,8 +43,18 @@ public class LuckyBlocksFeature : ScopedFeature {
         (10, new ItemBlockResult(typeof(OneUpItem))),
         (5, new JacobBlockResult()),
         (1, new NukeBlockResult()),
-        (10, new ItemBlockResult(new ItemStack(Item.Shield).With(DataComponent.ItemName, "Cosmetic Shield")
+        // Blocking lives in the item's blocks_attacks component, so taking it off is what makes this
+        // one cosmetic: the client stops predicting a block with it as well.
+        (10, new ItemBlockResult(new ItemStack(Item.Shield)
+            .Without(DataComponent.BlocksAttacks)
+            .With(DataComponent.ItemName, "Cosmetic Shield")
             .With(DataComponent.Lore, [TextComponent.FromLegacyString("&7A shield that does nothing, but looks cool!")]))),
+        (7, new ItemBlockResult(new ItemStack(Item.Shield)
+            .With(DataComponent.ItemName, TextComponent.FromLegacyString("&bReal Shield"))
+            .With(DataComponent.Lore, [
+                TextComponent.FromLegacyString("&7Hold it up to block what is in front of you."),
+                TextComponent.FromLegacyString("&7An axe takes it away for five seconds.")
+            ]))),
         (5, new ItemBlockResult(new ItemStack(Item.LeatherBoots).With(DataComponent.ItemName, "Boots of Jumping")
             .With(DataComponent.Lore, [
                 TextComponent.FromLegacyString("&7These boots allow you to jump higher!"),

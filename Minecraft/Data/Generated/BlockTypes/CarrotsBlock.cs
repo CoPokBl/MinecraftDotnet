@@ -3,6 +3,7 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
@@ -11,14 +12,14 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // See Block.cs for last updated date.
 public record CarrotsBlock(Identifier Identifier, int Age) : IBlock {
     private static readonly BlockInfo Data = new("minecraft:carrot", "block.minecraft.carrots", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:carrot", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "crop", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, [], null, BlockShapes.S122, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S113 };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S331 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S410 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S332 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S409 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S87 };
-    private static readonly BlockStateInfo I7 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S411 };
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "crop", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, true, false, true, [], null, BlockShapes.S124, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S115 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S333 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S412 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S334 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S411 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S89 };
+    private static readonly BlockStateInfo I7 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S413 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
@@ -53,6 +54,7 @@ public record CarrotsBlock(Identifier Identifier, int Age) : IBlock {
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -63,6 +65,9 @@ public record CarrotsBlock(Identifier Identifier, int Age) : IBlock {
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 

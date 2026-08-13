@@ -25,6 +25,21 @@ namespace Minecraft.Data.Blocks;
 /// The entity types that can spawn on this state, or null when every type can. Vanilla's predicate
 /// takes the type and leaves use that, so a plain flag would not be the truth.
 /// </param>
+/// <param name="PathfindableLand">
+/// <c>BlockState.isPathfindable(LAND)</c>, the first thing the node evaluator asks of a block and
+/// the difference between a route through it and a wall. It is not the same as having no collision
+/// shape: a closed door has one and is pathfindable through for a mob that can open it, and a lily
+/// pad has one and is walked on.
+/// </param>
+/// <param name="PathfindableWater">The same for <c>WATER</c>, which is what a swimming mob asks.</param>
+/// <param name="PathfindableAir">The same for <c>AIR</c>, which is what a flying mob asks.</param>
+/// <param name="SupportShape">
+/// <c>BlockState.getBlockSupportShape</c>, what <c>isFaceSturdy</c> measures and therefore what
+/// decides whether a ladder, a door, a torch or a fence connection can attach here. It is the
+/// collision shape for almost everything and deliberately not for a handful: leaves support
+/// nothing, mud and soul sand support as full cubes though they do not collide as one, and an open
+/// fence gate supports nothing.
+/// </param>
 public sealed record BlockStateInfo(
     float Hardness,
     int LightEmission,
@@ -48,13 +63,17 @@ public sealed record BlockStateInfo(
     bool Suffocating,
     bool ViewBlocking,
     bool SpawnTerrainParticles,
+    bool PathfindableLand,
+    bool PathfindableWater,
+    bool PathfindableAir,
     Identifier[]? ValidSpawnFor,
     Identifier? Fluid,
     ICollisionBox BlockShape,
     ICollisionBox CollisionShape,
     ICollisionBox InteractionShape,
     ICollisionBox OcclusionShape,
-    ICollisionBox VisualShape) {
+    ICollisionBox VisualShape,
+    ICollisionBox SupportShape) {
 
     /// <summary><c>BlockState.isValidSpawn</c>: whether the given entity type can spawn on this state.</summary>
     public bool IsValidSpawn(IEntityType type) {

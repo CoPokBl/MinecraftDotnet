@@ -2,6 +2,8 @@ using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features.Basic;
+using ManagedServer.Features.Bundles;
+using ManagedServer.Features.Impl;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using ManagedServer.Worlds.Lighting;
@@ -23,7 +25,9 @@ public static class SkyWarsLuckyBlock {
     
     public static async Task Start() {
         ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsBundle
-            .With(new PhysicsFeature()));
+            .With(new PhysicsFeature())
+            .With(ManagedMinecraftServer.LiquidsBundle)
+            .With(ManagedMinecraftServer.BlockRulesBundle));
         server.AddFeatures(new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
             VersionName = "dotnet",
             VersionProtocol = connection.Handshake!.ProtocolVersion,

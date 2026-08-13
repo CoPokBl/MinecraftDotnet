@@ -3,9 +3,11 @@ using ManagedServer.Events;
 using ManagedServer.Inventories;
 using ManagedServer.Permissions;
 using ManagedServer.Permissions.ContainerImpl;
+using ManagedServer.Physics;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
+using Minecraft.Data.Attributes;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
@@ -15,6 +17,7 @@ using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities;
+using Minecraft.Schemas.Entities.Attributes;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
@@ -84,6 +87,14 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
             UpdateGameMode();
         }
     }
+
+    /// <summary>
+    /// A creative or spectating player is not a target. Vanilla arrives here by a different route
+    /// (<c>canBeSeenAsEnemy</c> asks <c>isInvulnerable</c>, which creative sets), but the answer and
+    /// the reason are the same: mobs must not pick a fight with somebody who cannot be hurt.
+    /// </summary>
+    public override bool CanBeSeenAsEnemy =>
+        GameMode is not (GameMode.Creative or GameMode.Spectator) && base.CanBeSeenAsEnemy;
 
     public int Level {
         get;
@@ -218,6 +229,15 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     }
 
     private void HandlePacket(MinecraftPacket packet) {
+        // ServerGamePacketListenerImpl.handleUseItem snaps the rotation to the packet's before running
+        // the item. The client turns every frame but only reports its rotation once a tick, from the
+        // level tick, which runs after the click that this packet is: mid turn, our rotation is always
+        // the previous tick's. Anything raycasting off use_item aims a tick behind without this, and it
+        // has to happen before the event, because that is where those features run.
+        if (packet is ServerBoundUseItemPacket use) {
+            SnapRotationTo(use.Yaw, use.Pitch);
+        }
+
         PlayerPacketHandleEvent playerEvent = new() {
             Player = this,
             Packet = packet,
@@ -229,22 +249,22 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
             case ServerBoundSetPlayerPositionPacket sp: {
                 if (_waitingTeleport != -1) return;
                 OnGround = sp.Flags.HasFlag(MovePlayerFlags.OnGround);
-                Move(sp.Position);
+                MoveFromClient(sp.Position);
                 break;
             }
 
             case ServerBoundSetPlayerPosAndRotPacket sp: {
                 if (_waitingTeleport != -1) return;
                 OnGround = sp.Flags.HasFlag(MovePlayerFlags.OnGround);
-                Move(sp.Position, Angle.FromDegrees(sp.Yaw), Angle.FromDegrees(sp.Pitch));
+                MoveFromClient(sp.Position, Angle.FromDegrees(sp.Yaw), Angle.FromDegrees(sp.Pitch));
                 break;
             }
 
             case ServerBoundSetPlayerRotationPacket sr: {
                 if (_waitingTeleport != -1) return;
                 OnGround = sr.Flags.HasFlag(MovePlayerFlags.OnGround);
-                
-                Move(Position, Angle.FromDegrees(sr.Yaw), Angle.FromDegrees(sr.Pitch));
+
+                MoveFromClient(Position, Angle.FromDegrees(sr.Yaw), Angle.FromDegrees(sr.Pitch));
                 break;
             }
 
@@ -306,15 +326,38 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
         }
     }
     
-    public ItemStack GetItemInHand(Hand hand) {
+    /// <summary>
+    /// A movement the client reported. Vanilla runs the same one through <c>Entity.move</c> and takes
+    /// the fall out of what came back (<c>ServerGamePacketListenerImpl.handleMovePlayer</c>); a player's
+    /// client owns their movement, so the position it sent is what that is here.
+    /// </summary>
+    private void MoveFromClient(Vec3<double> newPos, Angle? yaw = null, Angle? pitch = null) {
+        double startY = Position.Y;
+        Move(newPos, yaw, pitch);
+
+        if (World == null) {
+            return;
+        }
+
+        double dy = Position.Y - startY;
+        EntityPhysics.CheckFallDamage(World, this, dy, OnGround);
+
+        // Vanilla clears a player's fall whenever they move upwards at all, which is what stops a jump
+        // taken part way down a fall from landing with the whole of it.
+        if (dy > 0.0) {
+            FallDistance = 0.0;
+        }
+    }
+
+    public override ItemStack GetItemInHand(Hand hand) {
         return hand switch {
             Hand.MainHand => HeldItem,
             Hand.OffHand => Inventory.Offhand,
             _ => throw new ArgumentOutOfRangeException(nameof(hand), "Invalid hand specified.")
         };
     }
-    
-    public void SetItemInHand(Hand hand, ItemStack item) {
+
+    public override void SetItemInHand(Hand hand, ItemStack item) {
         switch (hand) {
             case Hand.MainHand:
                 HeldItem = item;
@@ -380,7 +423,7 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
 
     public void SetVelocity(Vec3<double> velocity) {
         Connection.SendPacket(new ClientBoundSynchronisePlayerPositionPacket {
-            TeleportId = Random.Shared.Next(),
+            TeleportId = System.Random.Shared.Next(),
             Position = Vec3<double>.Zero,
             Velocity = velocity,
             Pitch = Angle.Zero,
@@ -389,7 +432,88 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
         });
     }
     
+    /// <summary>
+    /// <c>ServerPlayer.absSnapRotationTo</c> behind vanilla's own "only if it changed" guard. The
+    /// wrapping is <c>Mth.wrapDegrees</c> and is in float, as it is upstream, because that is what the
+    /// comparison against the current rotation is made in.
+    /// </summary>
+    private void SnapRotationTo(Angle yaw, Angle pitch) {
+        float wrappedYaw = WrapDegrees(yaw.DegreesF);
+        float wrappedPitch = WrapDegrees(pitch.DegreesF);
+
+        if (wrappedPitch == Pitch.DegreesF && wrappedYaw == Yaw.DegreesF) {
+            return;
+        }
+
+        Move(Position, Angle.FromDegrees(wrappedYaw), Angle.FromDegrees(wrappedPitch));
+    }
+
+    /// <summary><c>Mth.wrapDegrees</c>.</summary>
+    private static float WrapDegrees(float angle) {
+        float wrapped = angle % 360.0f;
+        if (wrapped >= 180.0f) {
+            wrapped -= 360.0f;
+        }
+
+        if (wrapped < -180.0f) {
+            wrapped += 360.0f;
+        }
+
+        return wrapped;
+    }
+
+    /// <summary>
+    /// Vanilla runs <see cref="UpdatePlayerAttributes"/> at the end of <c>ServerPlayer.tick</c>, which
+    /// is what keeps the crouch driven one in step, so it is driven off the tick here too.
+    /// </summary>
+    protected override void Tick() {
+        base.Tick();
+        UpdatePlayerAttributes();
+    }
+
+    /// <summary>
+    /// <c>ServerPlayer.updatePlayerAttributes</c>, the three attributes vanilla keeps in step with the
+    /// game mode and the crouch rather than with anything a feature does. It runs every tick upstream
+    /// and is idempotent there; here each modifier is only touched when it actually has to change,
+    /// because adding one sends the attribute to every viewer.
+    /// </summary>
+    private void UpdatePlayerAttributes() {
+        bool creative = GameMode == GameMode.Creative;
+        SetTransientModifier(Attribute.BlockInteractionRange, CreativeBlockRange, creative, ref _creativeBlockRange);
+        SetTransientModifier(Attribute.EntityInteractionRange, CreativeEntityRange, creative, ref _creativeEntityRange);
+        SetTransientModifier(Attribute.WaypointTransmitRange, WaypointCrouch, Crouching, ref _waypointCrouch);
+    }
+
+    private void SetTransientModifier(IAttribute attribute, AttributeModifier modifier, bool wanted, ref bool applied) {
+        if (wanted == applied) {
+            return;
+        }
+
+        if (wanted) {
+            AddAttributeModifier(attribute, modifier);
+        }
+        else {
+            RemoveAttributeModifier(attribute, modifier.Id);
+        }
+
+        applied = wanted;
+    }
+
+    private static readonly AttributeModifier CreativeBlockRange =
+        new("minecraft:creative_mode_block_range", 0.5, AttributeOperation.Add);
+
+    private static readonly AttributeModifier CreativeEntityRange =
+        new("minecraft:creative_mode_entity_range", 2.0, AttributeOperation.Add);
+
+    private static readonly AttributeModifier WaypointCrouch =
+        new("minecraft:waypoint_transmit_range_crouch", -1.0, AttributeOperation.AddMultipliedTotal);
+
+    private bool _creativeBlockRange;
+    private bool _creativeEntityRange;
+    private bool _waypointCrouch;
+
     public void UpdateGameMode() {
+        UpdatePlayerAttributes();
         Connection.SendPacket(ClientBoundGameEventPacket.ChangeGameMode(GameMode));
         SendToSelfAndViewers(new ClientBoundPlayerInfoUpdatePacket {
             Data = new ClientBoundPlayerInfoUpdatePacket.PlayerData(ClientBoundPlayerInfoUpdatePacket.PlayerActions.UpdateGameMode)
@@ -436,7 +560,7 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     }
 
     public override void Teleport(Vec3<double> pos, Angle? yaw = null, Angle? pitch = null) {
-        _waitingTeleport = Random.Shared.Next();
+        _waitingTeleport = System.Random.Shared.Next();
         TeleportFlags teleportFlags = TeleportFlags.None;
         if (yaw == null) {
             teleportFlags |= TeleportFlags.RelativeYaw;

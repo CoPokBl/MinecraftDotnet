@@ -1,7 +1,10 @@
 using ManagedServer.Entities.Types;
+using ManagedServer.Events;
+using ManagedServer.Fluids;
 using ManagedServer.Worlds;
 using Minecraft.Data.Generated;
 using Minecraft.Registry;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 using Attribute = Minecraft.Data.Generated.Attribute;
 
@@ -35,11 +38,15 @@ public static class EntityPhysics {
     /// <summary>Movement packets quantise to 1/4096 of a block, so anything smaller is not worth sending.</summary>
     private const double PositionQuantum = 1.0 / 4096.0;
 
+    /// <summary><c>Entity.MIN_MOVEMENT_DISTANCE</c>: velocity below this on an axis is thrown away.</summary>
+    private const double MinMovementDistance = 0.003;
+
     private static readonly uint AirStateId = Block.Air.StateId;
 
     // Physics runs on the tick thread, but one scratch buffer per thread costs nothing and keeps
     // this safe if a caller ever drives an entity from elsewhere.
     [ThreadStatic] private static List<Box>? _colliders;
+    [ThreadStatic] private static List<Box>? _queryColliders;
     [ThreadStatic] private static List<float>? _stepHeights;
 
     /// <summary>
@@ -52,12 +59,27 @@ public static class EntityPhysics {
             return;
         }
 
+        // Vanilla's setOldPosAndRot, which ServerLevel.tickNonPassenger runs before anything else.
+        // The body rotation control is what reads it, to tell walking from standing still.
+        entity.LastTickPosition = entity.Position;
+
         if (entity is LivingEntity living) {
-            TickLiving(world, living);
+            AiStep(world, living);
         }
         else {
             TickGeneric(world, entity);
         }
+
+        // Mob.tickHeadTurn, which vanilla runs from LivingEntity.tick after aiStep rather than inside
+        // it, because the body follows how far the mob actually got rather than where it aimed.
+        if (entity is Mob headTurner) {
+            headTurner.TickHeadTurn();
+        }
+
+        // Whatever turned the entity this tick wrote Yaw, Pitch or HeadYaw and sent nothing. The move
+        // above carries a rotation with it when there was one, so this only has anything to do for an
+        // entity that turned on the spot, which is most of what a mob watching something does.
+        entity.Manager?.SyncRotation(entity);
     }
 
     /// <summary>
@@ -91,8 +113,9 @@ public static class EntityPhysics {
     /// rather than the entity type, take horizontal drag before vertical, and have gravity applied
     /// after the move rather than before it.
     /// <p/>
-    /// Vanilla accelerates from the entity's movement input first; a server driven entity has no
-    /// input, so its velocity is whatever a feature or AI put there.
+    /// The movement input (<see cref="LivingEntity.Xxa"/> and friends) is accelerated first, the way
+    /// vanilla does. An entity nothing writes those on leaves them at zero, which contributes nothing
+    /// and leaves it moving on whatever velocity something else gave it.
     /// </summary>
     private static void TickLiving(World world, LivingEntity entity) {
         // Every friction term here is a float in vanilla, and they are multiplied together before
@@ -101,6 +124,10 @@ public static class EntityPhysics {
         float blockFriction = entity.OnGround
             ? ModifyFriction(BlockBelowMovement(world, entity).Friction, frictionModifier)
             : 1.0f;
+
+        // Vanilla's handleRelativeFrictionAndCalculateMovement: accelerate from the input, then move.
+        MoveRelative(entity, FrictionInfluencedSpeed(entity, blockFriction),
+            new Vec3<double>(entity.Xxa, entity.Yya, entity.Zza));
 
         Move(world, entity, entity.Velocity);
 
@@ -114,6 +141,168 @@ public static class EntityPhysics {
 
         entity.Velocity = new Vec3<double>(velocity.X * horizontal, y * vertical, velocity.Z * horizontal);
     }
+
+    #region movement_input
+
+    /// <summary>
+    /// <c>LivingEntity.aiStep</c>, the tick a living entity runs around <see cref="TickLiving"/>.
+    /// It is where the movement input is trimmed, where a jump is spent, and where vanilla calls
+    /// <c>serverAiStep</c>, so anything driving a mob has to go through here rather than calling
+    /// <see cref="Tick"/> directly.
+    /// <p/>
+    /// Called by <see cref="Tick"/> for every living entity, mob or not, because vanilla runs it for
+    /// every living entity: the input damping and the tiny velocity clamp apply either way.
+    /// </summary>
+    private static void AiStep(World world, LivingEntity entity) {
+        if (entity.NoJumpDelay > 0) {
+            entity.NoJumpDelay--;
+        }
+
+        ClampTinyVelocity(entity);
+
+        // applyInput: the input decays rather than being cleared, so a control that stops writing
+        // leaves the entity coasting to a stop instead of stopping dead.
+        entity.Xxa *= 0.98f;
+        entity.Zza *= 0.98f;
+
+        if (entity.IsImmobile) {
+            entity.Jumping = false;
+            entity.Xxa = 0.0f;
+            entity.Zza = 0.0f;
+        }
+
+        // The AI system's only call site, at vanilla's position. Everything a goal decides is written
+        // into Xxa/Zza/Speed/Yaw here and spent by TickLiving below, on this same tick.
+        if (entity is Mob { NoAi: false } mob) {
+            mob.ServerAiStep(world);
+        }
+
+        if (entity.Jumping) {
+            // Vanilla checks for a fluid jump first. Neither swimming nor lava jumping is modelled
+            // here yet, so this is the ground branch alone; see ManagedServer/Fluids for what exists.
+            if (entity.OnGround && entity.NoJumpDelay == 0) {
+                entity.JumpFromGround(BlockJumpFactor(world, entity));
+                entity.NoJumpDelay = 10;
+            }
+        }
+        else {
+            entity.NoJumpDelay = 0;
+        }
+
+        TickLiving(world, entity);
+    }
+
+    /// <summary>
+    /// The <c>Entity.MIN_MOVEMENT_DISTANCE</c> clamp at the top of <c>aiStep</c>: velocity smaller
+    /// than 0.003 on an axis is thrown away rather than decayed forever. Without it an entity that
+    /// stopped being pushed slides for hundreds of ticks on a number too small to see.
+    /// <p/>
+    /// A player is judged on horizontal distance as a whole rather than per axis, which is a slightly
+    /// larger threshold on a diagonal.
+    /// </summary>
+    private static void ClampTinyVelocity(LivingEntity entity) {
+        Vec3<double> velocity = entity.Velocity;
+        double x = velocity.X;
+        double y = velocity.Y;
+        double z = velocity.Z;
+
+        if (entity is Player) {
+            if (HorizontalLengthSquared(velocity) < 9.0E-6) {
+                x = 0.0;
+                z = 0.0;
+            }
+        }
+        else {
+            if (Math.Abs(x) < MinMovementDistance) {
+                x = 0.0;
+            }
+
+            if (Math.Abs(z) < MinMovementDistance) {
+                z = 0.0;
+            }
+        }
+
+        if (Math.Abs(y) < MinMovementDistance) {
+            y = 0.0;
+        }
+
+        entity.Velocity = new Vec3<double>(x, y, z);
+    }
+
+    /// <summary>
+    /// <c>Entity.moveRelative</c>: turn a movement input into velocity, pointed by the entity's yaw
+    /// and scaled by <paramref name="amount"/>. Adds to the velocity rather than replacing it, so
+    /// gravity and knockback survive a walking mob.
+    /// </summary>
+    public static void MoveRelative(Entity entity, float amount, Vec3<double> input) {
+        Vec3<double> movement = InputVector(input, amount, entity.Yaw.DegreesF);
+        if (movement == Vec3<double>.Zero) {
+            return;
+        }
+
+        entity.Velocity += movement;
+    }
+
+    /// <summary>
+    /// <c>Entity.getInputVector</c>. The short circuit below one part in ten million is vanilla's and
+    /// is what keeps a zero input from normalising to a NaN.
+    /// </summary>
+    private static Vec3<double> InputVector(Vec3<double> input, float scale, float yawDegrees) {
+        double lengthSquared = LengthSquared(input);
+        if (lengthSquared < 1.0E-7) {
+            return Vec3<double>.Zero;
+        }
+
+        Vec3<double> scaled = (lengthSquared > 1.0 ? Normalise(input) : input) * scale;
+
+        // The table, not Math: this is the same rotation the client applies to its own input.
+        float sin = Mth.Sin(yawDegrees * ((float)Math.PI / 180f));
+        float cos = Mth.Cos(yawDegrees * ((float)Math.PI / 180f));
+
+        return new Vec3<double>(
+            scaled.X * cos - scaled.Z * sin,
+            scaled.Y,
+            scaled.Z * cos + scaled.X * sin);
+    }
+
+    private static Vec3<double> Normalise(Vec3<double> v) {
+        double length = Math.Sqrt(LengthSquared(v));
+        return length < 1.0E-4 ? Vec3<double>.Zero : v / length;
+    }
+
+    /// <summary>
+    /// <c>LivingEntity.getFrictionInfluencedSpeed</c>. Note the shape: since 26.2 the friction
+    /// division only applies on a block slipperier than 0.6, so ordinary ground returns the speed
+    /// untouched. A port that divides unconditionally is right on stone by accident and wrong on ice.
+    /// <p/>
+    /// The comparison against 0.6 is done in double upstream and the arithmetic in float, so both are
+    /// kept as they are.
+    /// </summary>
+    private static float FrictionInfluencedSpeed(LivingEntity entity, float friction) {
+        if (!entity.OnGround) {
+            return entity.FlyingSpeed;
+        }
+
+        return (double)friction > 0.6
+            ? entity.Speed * (0.21600002f / (friction * friction * friction))
+            : entity.Speed;
+    }
+
+    /// <summary>
+    /// <c>Entity.getBlockJumpFactor</c>: the block the entity stands in, falling back to the one that
+    /// governs its movement when that block has nothing to say. Honey is the one that is not one.
+    /// </summary>
+    private static float BlockJumpFactor(World world, Entity entity) {
+        MinecraftRegistry registry = world.Server.Registry;
+        Vec3<double> position = entity.Position;
+
+        float here = StateAt(world, registry,
+            (int)Math.Floor(position.X), (int)Math.Floor(position.Y), (int)Math.Floor(position.Z)).JumpFactor;
+
+        return (double)here == 1.0 ? BlockBelowMovement(world, entity).JumpFactor : here;
+    }
+
+    #endregion
 
     /// <summary>
     /// <c>Entity.move(MoverType.SELF, delta)</c>: resolve the movement against the world, commit it,
@@ -137,6 +326,8 @@ public static class EntityPhysics {
         entity.VerticalCollisionBelow = verticalCollision && delta.Y < 0.0;
         entity.OnGround = entity.VerticalCollisionBelow;
         UpdateSupportingBlock(world, entity, movement);
+
+        CheckFallDamage(world, entity, movement.Y, entity.OnGround);
 
         if ((Math.Abs(delta.Y) > 0.0 && verticalCollision) || entity.HorizontalCollision) {
             RestituteMovementAfterCollisions(world, entity, xCollision, zCollision, movement);
@@ -217,6 +408,64 @@ public static class EntityPhysics {
     /// <summary><c>Mth.lerp</c>.</summary>
     private static double Lerp(double delta, double from, double to) {
         return from + delta * (to - from);
+    }
+
+    /// <summary>
+    /// <c>Entity.checkFallDamage</c> without the damage: it keeps <see cref="Entity.FallDistance"/> as
+    /// the entity moves and hands a finished fall to <see cref="EntityLandEvent"/>, which is what
+    /// <c>FallDamageFeature</c> listens to. A server with no fall damage still gets the distance,
+    /// which is what vanilla does with it too.
+    /// <p/>
+    /// <paramref name="ya"/> is the movement that actually happened rather than the one that was asked
+    /// for, so a fall that ends against a block only counts as far as the block.
+    /// <p/>
+    /// Water and lava are asked of the whole bounding box, as <c>isInWater</c> and <c>isInLava</c> are:
+    /// landing with only part of the box in a pool still lands in water.
+    /// <p/>
+    /// Two simplifications remain. Vanilla clips the movement against the fall damage resetting blocks
+    /// it passed through; that is answered here from the block the entity's feet ended in, which agrees
+    /// for anything that ends up standing in one. And lava halves the distance here rather than in
+    /// <c>baseTick</c>, so an entity that stops moving in lava stops halving it.
+    /// </summary>
+    public static void CheckFallDamage(World world, Entity entity, double ya, bool onGround) {
+        // Neither branch below can change a fall of zero that is not still falling, so the box scan is
+        // worth skipping for everything standing still, which is most entities most of the time.
+        if (entity.FallDistance > 0.0 || ya < 0.0) {
+            MinecraftRegistry registry = world.Server.Registry;
+            Vec3<int> feet = entity.Position.ToBlockPos();
+            uint feetState = world.GetBlockStateIdOr(feet.X, feet.Y, feet.Z, AirStateId);
+
+            if (EntityFluids.IsIn(world, entity, FluidKind.Water)
+                || BlockPhysicsData.Get(registry, feetState).FallDamageResetting) {
+                // Water ends the fall outright, and so does a ladder or a cobweb; nothing accumulates
+                // while the entity is still in one.
+                entity.FallDistance = 0.0;
+            }
+            else {
+                if (EntityFluids.IsIn(world, entity, FluidKind.Lava)) {
+                    entity.FallDistance *= 0.5;
+                }
+
+                if (ya < 0.0) {
+                    entity.FallDistance -= ya;
+                }
+            }
+        }
+
+        if (!onGround) {
+            return;
+        }
+
+        if (entity.FallDistance > 0.0) {
+            entity.Events.CallEvent(new EntityLandEvent {
+                Entity = entity,
+                World = world,
+                FallDistance = entity.FallDistance,
+                LandedOn = OnPos(world, entity, LegacyOnPosOffset).Pos
+            });
+        }
+
+        entity.FallDistance = 0.0;
     }
 
     /// <summary>
@@ -409,6 +658,29 @@ public static class EntityPhysics {
     }
 
     /// <summary>
+    /// Whether any block collision box overlaps <paramref name="query"/>, vanilla's
+    /// <c>CollisionGetter.noCollision</c> inverted.
+    /// <p/>
+    /// Entities are not considered, matching the <c>noBlockCollision</c> half that the pathfinder
+    /// asks for: a route is planned through terrain, not around whoever happens to be standing in
+    /// the way.
+    /// </summary>
+    public static bool HasBlockCollision(World world, Box query) {
+        // Its own list rather than the one the sweep uses, since the pathfinder asks this while a
+        // move is not in progress but nothing in the type's shape says so.
+        List<Box> colliders = _queryColliders ??= [];
+        CollectColliders(world, query, colliders);
+
+        foreach (Box collider in colliders) {
+            if (collider.Intersects(query)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Every block collision box reaching into <paramref name="query"/>.
     /// <p/>
     /// Vanilla walks one block further out than the query box on each side and only lets blocks whose
@@ -595,7 +867,7 @@ public static class EntityPhysics {
     /// the entity inherits.
     /// </summary>
     private static BlockPhysicsData.Entry BlockBelowMovement(World world, Entity entity) {
-        return OnPosBlock(world, entity, BelowMovementOffset);
+        return OnPos(world, entity, BelowMovementOffset).Data;
     }
 
     /// <summary>
@@ -603,21 +875,23 @@ public static class EntityPhysics {
     /// that care about which block it is rather than how far down it is, landing included.
     /// </summary>
     private static BlockPhysicsData.Entry BlockLandedOn(World world, Entity entity) {
-        return OnPosBlock(world, entity, LegacyOnPosOffset);
+        return OnPos(world, entity, LegacyOnPosOffset).Data;
     }
 
     /// <summary>
     /// <c>Entity.getOnPos</c>: the block the given distance under the entity, taken from where its
-    /// feet actually rest rather than from under its centre.
+    /// feet actually rest rather than from under its centre. Both halves come back because a landing
+    /// needs the position and everything else needs the block.
     /// </summary>
-    private static BlockPhysicsData.Entry OnPosBlock(World world, Entity entity, double offset) {
+    private static (Vec3<int> Pos, BlockPhysicsData.Entry Data) OnPos(World world, Entity entity, double offset) {
         MinecraftRegistry registry = world.Server.Registry;
         Vec3<double> position = entity.Position;
         int belowY = (int)Math.Floor(position.Y - offset);
 
         Vec3<int>? supporting = entity.SupportingBlockPos;
         if (supporting == null) {
-            return StateAt(world, registry, (int)Math.Floor(position.X), belowY, (int)Math.Floor(position.Z));
+            Vec3<int> under = new((int)Math.Floor(position.X), belowY, (int)Math.Floor(position.Z));
+            return (under, StateAt(world, registry, under.X, under.Y, under.Z));
         }
 
         Vec3<int> below = supporting.Value;
@@ -626,7 +900,12 @@ public static class EntityPhysics {
         // Walls and fence gates stand taller than their own block, so dropping down from the entity
         // would look past them. Fences only count when the drop is small enough to stay inside one.
         bool tallerThanTheDrop = supportingData.WallLike || (offset <= 0.5 && supportingData.FenceLike);
-        return tallerThanTheDrop ? supportingData : StateAt(world, registry, below.X, belowY, below.Z);
+        if (tallerThanTheDrop) {
+            return (below, supportingData);
+        }
+
+        Vec3<int> dropped = below.WithY(belowY);
+        return (dropped, StateAt(world, registry, dropped.X, dropped.Y, dropped.Z));
     }
 
     /// <summary><c>Entity.getBlockSpeedFactor</c>: the block the entity is in, falling back to the one below.</summary>

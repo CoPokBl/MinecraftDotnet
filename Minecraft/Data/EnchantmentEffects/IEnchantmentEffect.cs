@@ -15,7 +15,8 @@ public interface IEnchantmentEffect {
     public static IEnchantmentEffect FromNbt(string id, INbtTag tag, MinecraftRegistry reg) {
         return id switch {
             "minecraft:attributes" => AttributeEnchantmentEffect.ParseData(tag, reg),
-            
+            "minecraft:damage_protection" => DamageProtectionEnchantmentEffect.ParseData(tag, reg),
+
             // TODO: The rest of them, see Minestom's implementation for reference
             _ => throw new ArgumentOutOfRangeException()
         };
@@ -29,5 +30,5 @@ public interface IEnchantmentEffect {
 /// be used as a generic.
 /// </summary>
 public interface IEnchantmentEffectImpl : IEnchantmentEffect {
-    static abstract AttributeEnchantmentEffect ParseData(INbtTag tag, MinecraftRegistry reg);
+    static abstract IEnchantmentEffect ParseData(INbtTag tag, MinecraftRegistry reg);
 }

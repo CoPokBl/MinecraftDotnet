@@ -6,6 +6,7 @@ namespace Minecraft.Data.Generated;
 // Generated using the CodeGen project. Do not edit manually.
 public static class DataComponent {
     public static readonly AttributeModifiersComponent AttributeModifiers = new();
+    public static readonly BlocksAttacksComponent BlocksAttacks = new();
     public static readonly CanBreakComponent CanBreak = new();
     public static readonly CanPlaceOnComponent CanPlaceOn = new();
     public static readonly ChargedProjectilesComponent ChargedProjectiles = new();
@@ -34,5 +35,6 @@ public static class DataComponent {
     public static readonly UnbreakableComponent Unbreakable = new();
     public static readonly UseCooldownComponent UseCooldown = new();
     public static readonly UseRemainderComponent UseRemainder = new();
+    public static readonly WeaponComponent Weapon = new();
     public static readonly WritableBookContentComponent WritableBookContent = new();
 }

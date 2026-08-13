@@ -1,3 +1,4 @@
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Shapes;
@@ -11,7 +12,8 @@ namespace Minecraft.Data.Blocks;
 /// <see cref="BlockStateInfo"/> because waterlogging changes how much light the block takes.
 /// </summary>
 public record WaterloggableBlock(Identifier Identifier, uint StateIdAirLogged, uint StateIdWaterlogged,
-    bool Waterlogged, BlockInfo Info, BlockStateInfo AirLoggedInfo, BlockStateInfo WaterloggedInfo) : IBlock {
+    bool Waterlogged, BlockInfo Info, BlockStateInfo AirLoggedInfo, BlockStateInfo WaterloggedInfo)
+    : IBlock, IWaterlogged {
 
     public uint StateId => Waterlogged ? StateIdWaterlogged : StateIdAirLogged;
     public BlockStateInfo StateInfo => Waterlogged ? WaterloggedInfo : AirLoggedInfo;
@@ -43,6 +45,7 @@ public record WaterloggableBlock(Identifier Identifier, uint StateIdAirLogged, u
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -53,6 +56,9 @@ public record WaterloggableBlock(Identifier Identifier, uint StateIdAirLogged, u
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 
@@ -80,4 +86,6 @@ public record WaterloggableBlock(Identifier Identifier, uint StateIdAirLogged, u
         return new CompoundTag(
             ("waterlogged", new StringTag(Waterlogged.ToString().ToLower())));
     }
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 }

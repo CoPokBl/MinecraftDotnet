@@ -3,16 +3,17 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBlock {
+public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBlock, IStackable {
     private static readonly BlockInfo Data = new("minecraft:turtle_egg", "block.minecraft.turtle_egg", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:turtle_egg", BlockInfo.VanillaOnly);
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 2, "metal", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, true, false, false, true, [], null, BlockShapes.S928, BlockShapes.S928, BlockShapes.S1, BlockShapes.S1, BlockShapes.S928);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S929, CollisionShape = BlockShapes.S929, VisualShape = BlockShapes.S929 };
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 2, "metal", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, true, false, false, true, true, false, true, [], null, BlockShapes.S930, BlockShapes.S930, BlockShapes.S1, BlockShapes.S1, BlockShapes.S930, BlockShapes.S930);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S931, CollisionShape = BlockShapes.S931, VisualShape = BlockShapes.S931, SupportShape = BlockShapes.S931 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I0, I1, I1, I1, I1, I1, I1, I1, I1, I1
     ];
@@ -47,6 +48,7 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
     public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
     public ICollisionBox InteractionShape => StateInfo.InteractionShape;
     public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
     public bool RedstoneConductor => StateInfo.RedstoneConductor;
     public bool SignalSource => StateInfo.SignalSource;
     public bool Flammable => StateInfo.Flammable;
@@ -57,8 +59,17 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public int Count => Eggs;
+
+    public int MaxCount => 4;
+
+    public IBlock WithCount(int count) => this with { Eggs = count };
 
 
     public uint StateId {
