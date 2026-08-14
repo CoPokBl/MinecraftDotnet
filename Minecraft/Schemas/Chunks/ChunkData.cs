@@ -40,6 +40,25 @@ public class ChunkData {
         return clone;
     }
 
+    /// <summary>
+    /// A frozen copy safe to hand to another thread, which is what a chunk packet must carry.
+    /// <p/>
+    /// <see cref="Write"/> is not a read: it reaches the sections through
+    /// <see cref="ChunkSection.Palette"/>, whose getter calls <see cref="ChunkSection.PackData"/> and
+    /// swaps the section's representation. So two threads serialising the same live section race with
+    /// each other, and either races with a <see cref="SetBlock"/> going the other way through
+    /// <see cref="ChunkSection.Blocks"/>. Packing first and then cloning settles the representation
+    /// while the caller still holds the write lock, after which the copy is read only in practice and
+    /// the original can be edited freely.
+    /// <p/>
+    /// Cheap for the common case: <see cref="PackData"/> is a no-op for sections nobody has edited,
+    /// and a packed section clones by sharing its immutable palette.
+    /// </summary>
+    public ChunkData Snapshot() {
+        PackData();
+        return Clone();
+    }
+
     private ChunkSection[] GenerateEmptySections() {
         ChunkSection[] vals = new ChunkSection[ChunkSections];
         for (int i = 0; i < ChunkSections; i++) {

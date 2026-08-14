@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WaxedCopperGolemStatueBlock(Identifier Identifier, WaxedCopperGolemStatueBlock.CopperGolemPose CopperGolemPoseValue, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:copper_golem_statue", "block.minecraft.waxed_copper_golem_statue", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:copper_golem_statue", "minecraft:waxed_copper_golem_statue", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:copper_golem_statue", "block.minecraft.waxed_copper_golem_statue", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:copper_golem_statue", "minecraft:waxed_copper_golem_statue", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_copper_golem_statue");
     private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Destroy, 15, "copper_golem_statue", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S507, BlockShapes.S507, BlockShapes.S1, BlockShapes.S1, BlockShapes.S507, BlockShapes.S507);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record WaxedCopperGolemStatueBlock(Identifier Identifier, WaxedCopperGole
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

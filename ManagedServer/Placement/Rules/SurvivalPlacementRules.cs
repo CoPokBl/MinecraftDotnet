@@ -236,7 +236,7 @@ public sealed class HangingMossPlacementRule : IBlockPlacementRule {
     public IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
         Vec3<int> neighbourPos, IBlock neighbourState) {
         bool tip = !IBlock.SimilarTo(world.GetBlock(pos.WithY(pos.Y - 1)), block);
-        return PlacementHelpers.WithProperty(block, "tip", tip);
+        return block is ITipped strand ? strand.WithTip(tip) : block;
     }
 }
 

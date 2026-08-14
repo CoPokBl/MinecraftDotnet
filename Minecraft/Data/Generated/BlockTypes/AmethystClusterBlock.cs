@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AmethystClusterBlock(Identifier Identifier, Cardinal Facing, bool Waterlogged) : IBlock, IDirectional, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:amethyst_cluster", "block.minecraft.amethyst_cluster", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:amethyst_cluster", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:amethyst_cluster", "block.minecraft.amethyst_cluster", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:amethyst_cluster", BlockInfo.VanillaOnly, "minecraft:blocks/amethyst_cluster");
     private static readonly BlockStateInfo I0 = new(1.5f, 5, 1, PushReaction.Destroy, 24, "amethyst_cluster", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S126, BlockShapes.S126, BlockShapes.S1, BlockShapes.S1, BlockShapes.S126, BlockShapes.S126);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S127, CollisionShape = BlockShapes.S127, VisualShape = BlockShapes.S127, SupportShape = BlockShapes.S127 };
@@ -41,6 +41,8 @@ public record AmethystClusterBlock(Identifier Identifier, Cardinal Facing, bool 
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

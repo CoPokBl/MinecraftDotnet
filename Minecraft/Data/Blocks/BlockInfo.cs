@@ -53,6 +53,15 @@ public enum BlockOffsetType {
 /// The feature flags a world has to have on for the block to exist at all. Everything in 26.2 is
 /// plain <c>minecraft:vanilla</c>; an experiment gated block would carry its flag here.
 /// </param>
+/// <param name="LootTable">
+/// Which loot table the block drops from, <c>Block.getLootTable</c>. Null for the blocks vanilla
+/// gives <c>noLootTable()</c>: air, bedrock, barriers, the command blocks, the fluids.
+/// <p/>
+/// <b>Not derivable from the block's name.</b> 83 blocks have no table named after them, and they
+/// are two different things: a wall sign <c>dropsLike</c> its standing form and lands on
+/// <c>minecraft:blocks/oak_sign</c>, while bedrock has no table at all. Reading the key is what
+/// keeps those apart.
+/// </param>
 public sealed record BlockInfo(
     Identifier Category,
     string TranslationKey,
@@ -68,10 +77,22 @@ public sealed record BlockInfo(
     float MaxVerticalOffset,
     Identifier? BlockEntity,
     Identifier? Item,
-    Identifier[] RequiredFeatures) {
+    Identifier[] RequiredFeatures,
+    Identifier? LootTable = null) {
 
     /// <summary>The flags every block that is not behind an experiment needs, which is all of them.</summary>
     public static readonly Identifier[] VanillaOnly = ["minecraft:vanilla"];
+
+    /// <summary>
+    /// How much experience the block drops when broken, <c>DropExperienceBlock</c>'s <c>xpRange</c>,
+    /// inclusive at both ends. Null for everything that is not one of the seventeen ores or
+    /// <c>sculk</c>.
+    /// <p/>
+    /// Not a constructor argument because it is null for all but eighteen blocks. The other five
+    /// classes that drop experience pass a literal inside <c>spawnAfterBreak</c> with no field behind
+    /// it, so they are a table in <c>BlockExperienceFeature</c> rather than data.
+    /// </summary>
+    public (int Min, int Max)? Experience { get; init; }
 
     /// <summary>
     /// Which shapes <see cref="ShapeOffset"/> applies to. Not a constructor argument because it is

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeValue, Cardinal Facing, bool Short) : IBlock, IDirectional {
-    private static readonly BlockInfo Data = new("minecraft:piston_head", "block.minecraft.piston_head", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, null, BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:piston_head", "block.minecraft.piston_head", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, null, BlockInfo.VanillaOnly, null);
     private static readonly BlockStateInfo I0 = new(1.5f, 0, 0, PushReaction.Block, 11, "stone", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S807, BlockShapes.S807, BlockShapes.S1, BlockShapes.S807, BlockShapes.S807, BlockShapes.S807);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S808, CollisionShape = BlockShapes.S808, OcclusionShape = BlockShapes.S808, VisualShape = BlockShapes.S808, SupportShape = BlockShapes.S808 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S809, CollisionShape = BlockShapes.S809, OcclusionShape = BlockShapes.S809, VisualShape = BlockShapes.S809, SupportShape = BlockShapes.S809 };
@@ -41,6 +41,8 @@ public record PistonHeadBlock(Identifier Identifier, PistonHeadBlock.Type TypeVa
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance, bool Waterlogged) : IBlock, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:scaffolding", "block.minecraft.scaffolding", 0f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.None, 0f, 0f, null, "minecraft:scaffolding", BlockInfo.VanillaOnly);
+public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance, bool Waterlogged) : IBlock, IBottomed, IDistanced, IWaterlogged {
+    private static readonly BlockInfo Data = new("minecraft:scaffolding", "block.minecraft.scaffolding", 0f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.None, 0f, 0f, null, "minecraft:scaffolding", BlockInfo.VanillaOnly, "minecraft:blocks/scaffolding");
     private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 2, "scaffolding", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S909, BlockShapes.S910, BlockShapes.S79, BlockShapes.S1, BlockShapes.S910, BlockShapes.S910);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S910 };
@@ -33,6 +33,8 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -66,6 +68,10 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithBottom(bool bottom) => this with { Bottom = bottom };
+
+    public IBlock WithDistance(int distance) => this with { Distance = distance };
 
     public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 

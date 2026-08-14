@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hanging, int Stage, bool Waterlogged) : IBlock, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:mangrove_propagule", "block.minecraft.mangrove_propagule", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:mangrove_propagule", BlockInfo.VanillaOnly) { ShapeOffsets = BlockShapeOffsets.Block };
+public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hanging, int Stage, bool Waterlogged) : IBlock, IAged, IHanging, IWaterlogged {
+    private static readonly BlockInfo Data = new("minecraft:mangrove_propagule", "block.minecraft.mangrove_propagule", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:mangrove_propagule", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_propagule") { ShapeOffsets = BlockShapeOffsets.Block };
     private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 7, "grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S639, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S387 };
@@ -39,6 +39,8 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -72,6 +74,10 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAge(int age) => this with { Age = age };
+
+    public IBlock WithHanging(bool hanging) => this with { Hanging = hanging };
 
     public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 

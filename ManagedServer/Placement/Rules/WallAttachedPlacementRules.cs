@@ -49,7 +49,7 @@ public sealed class CeilingHangingSignPlacementRule : IBlockPlacementRule {
             ? PlacementHelpers.SegmentOfDirection(direction.Opposite())
             : PlacementHelpers.RotationSegment(context.Rotation + 180.0f);
 
-        IBlock state = PlacementHelpers.WithProperty(block, "attached", attachedToMiddle);
+        IBlock state = block is IAttached sign ? sign.WithAttached(attachedToMiddle) : block;
         state = state is IRotated rotated ? rotated.WithRotation(rotationSegment) : state;
         return PlacementHelpers.Waterlog(state, context);
     }

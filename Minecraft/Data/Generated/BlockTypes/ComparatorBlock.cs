@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ComparatorBlock(Identifier Identifier, Direction Facing, ComparatorBlock.Mode ModeValue, bool Powered) : IBlock, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:comparator", "block.minecraft.comparator", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:comparator", "minecraft:comparator", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:comparator", "block.minecraft.comparator", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:comparator", "minecraft:comparator", BlockInfo.VanillaOnly, "minecraft:blocks/comparator");
     private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S124, BlockShapes.S124, BlockShapes.S1, BlockShapes.S124, BlockShapes.S124, BlockShapes.S124);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record ComparatorBlock(Identifier Identifier, Direction Facing, Comparato
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

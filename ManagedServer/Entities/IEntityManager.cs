@@ -54,6 +54,15 @@ public interface IEntityManager {
 
     void SendSpawnPackets(Entity entity, Player player);
     void SendDespawnPackets(Entity entity, Player player);
+
+    /// <summary>
+    /// The same bookkeeping as <see cref="SendSpawnPackets"/> and <see cref="SendDespawnPackets"/>,
+    /// but handing the packets back rather than writing them, so a caller streaming a viewport can
+    /// put them in its own ordered queue instead of blocking on a socket.
+    /// </summary>
+    MinecraftPacket[] TrackSpawn(Entity entity, Player player);
+
+    MinecraftPacket[] TrackDespawn(Entity entity, Player player);
     
     public static IEnumerable<Vec2<int>> GetChunksInRadius(Vec2<int> baseChunk, int chunkRadius) {
         for (int dx = -chunkRadius; dx <= chunkRadius; dx++) {

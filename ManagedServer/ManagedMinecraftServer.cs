@@ -2,11 +2,13 @@ using System.Diagnostics;
 using System.Reflection;
 using ManagedServer.Commands;
 using ManagedServer.Damage;
+using Minecraft.Implementations;
 using Minecraft.Implementations.Events;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using ManagedServer.Features;
+using ManagedServer.Interaction;
 using ManagedServer.Login;
 using ManagedServer.Permissions;
 using ManagedServer.Permissions.ContainerImpl;
@@ -30,7 +32,7 @@ namespace ManagedServer;
 // TODO: Remove MinecraftServer inheritance
 public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience, IFeatureScope {
     public List<World> Worlds { get; } = [];
-    public List<Player> Players { get; } = [];
+    public SnapshotList<Player> Players { get; } = new();
     public ManagedMinecraftServer Server => this;
     public FeatureHandler FeatureHandler { get; }
     public ServerScheduler Scheduler { get; }
@@ -51,6 +53,16 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     /// the ones you want. See <see cref="Placement.BlockPlacementRules"/>.
     /// </summary>
     public BlockPlacementRules BlockPlacementRules { get; } = new();
+
+    /// <summary>
+    /// What a block does when it is right clicked. Always present and, like
+    /// <see cref="BlockPlacementRules"/>, <b>empty</b> until something fills it: every block is inert
+    /// and the click falls straight through to the held item. Register
+    /// <see cref="Features.Basic.VanillaBlockInteractionsFeature"/> for vanilla's answers, all of them
+    /// or the ones you want. See <see cref="Interaction.BlockInteractionRules"/>.
+    /// </summary>
+    public BlockInteractionRules BlockInteractionRules { get; } = new();
+
     public string ServerId { get; set; } = Random.Shared.Next(int.MaxValue).ToString();  // must be <=20 chars
     public Func<Player, IPermissionContainer> PermissionsProvider { get; set; } = _ => new MapPermissionContainer();
     
@@ -71,8 +83,21 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     // Configurable stuff
     public List<Command> Commands { get; set; } = [];
     public int ViewDistance { get; set; } = 8;
+    /// <summary>
+    /// How many chunks a world will hand one player in a single flush. The real throttle: a player
+    /// owed more than this gets the rest on later ticks, nearest first.
+    /// </summary>
     public int WorldPacketsPerTick { get; set; } = 3000;
-    public int WorldTickDelayMs { get; set; } = 50;
+
+    /// <summary>
+    /// A floor on the gap between two flushes of the same world, on top of the tick rate. Zero, so
+    /// the tick rate is the only pacing.
+    /// <p/>
+    /// It used to default to 50 against a 50ms tick, which meant ordinary jitter in
+    /// <see cref="Environment.TickCount64"/> pushed roughly every other flush under the threshold and
+    /// halved streaming throughput for no stated reason.
+    /// </summary>
+    public int WorldTickDelayMs { get; set; }
     public bool AllowListeningToUnCalledEvents { get; set; } = false;
     public int TargetTicksPerSecond { get; set; } = 20;
     
@@ -280,7 +305,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     }
 
     public Player[] GetViewers() {
-        return Players.ToArray();
+        return Players.Snapshot;
     }
 
     public void SendPacket(MinecraftPacket packet) {

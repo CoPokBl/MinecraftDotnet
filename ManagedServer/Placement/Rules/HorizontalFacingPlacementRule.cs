@@ -25,7 +25,7 @@ public abstract class HorizontalFacingPlacementRule : IBlockPlacementRule {
     /// <summary>Whether the block faces away from the placer, vanilla's <c>.getOpposite()</c>.</summary>
     protected abstract bool Opposite { get; }
 
-    public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
+    public virtual IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
         if (block is not IHorizontalFacing facing) {
             return block;
         }
@@ -62,8 +62,42 @@ public sealed class AnvilPlacementRule : FacesPlacer {
     public override BlockClass VanillaClass => BlockClass.AnvilBlock;
 }
 
+/// <summary>
+/// <c>CampfireBlock</c>. Faces the player, and reads the block below for <c>signal_fire</c>: a
+/// campfire over a hay bale sends its smoke ten times as high.
+/// <p/>
+/// It does not go through the shared waterlog line either. A campfire placed into water comes out
+/// waterlogged <b>and unlit</b>, which is one expression rather than two independent ones.
+/// </summary>
 public sealed class CampfirePlacementRule : FacesPlacer {
+    private static readonly Identifier HayBlock = "minecraft:hay_block";
+
     public override BlockClass VanillaClass => BlockClass.CampfireBlock;
+
+    public override IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
+        bool replacedWater = PlacementHelpers.IsWaterAt(context.World, context.PlacePos);
+
+        IBlock state = block is IWaterlogged waterloggable
+            ? waterloggable.WithWaterlogged(replacedWater)
+            : block;
+        state = WithSignalFire(state, context.World.GetBlock(context.PlacePos.WithY(context.PlacePos.Y - 1)));
+        state = state is ILit campfireLit ? campfireLit.WithLit(!replacedWater) : state;
+
+        return state is IHorizontalFacing campfire
+            ? campfire.WithFacing(context.HorizontalDirection)
+            : state;
+    }
+
+    /// <summary>Only the block below can change it, and nothing else about the state moves.</summary>
+    public override IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
+        Vec3<int> neighbourPos, IBlock neighbourState) {
+        return toNeighbour == BlockFace.NegY ? WithSignalFire(block, neighbourState) : block;
+    }
+
+    /// <summary><c>isSmokeSource</c>, which is the hay block and nothing else.</summary>
+    private static IBlock WithSignalFire(IBlock block, IBlock below) {
+        return block is ISignalFire smoke ? smoke.WithSignalFire(below.Identifier == HayBlock) : block;
+    }
 }
 
 public sealed class DecoratedPotPlacementRule : FacesPlacer {

@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using ManagedServer.Events;
+using ManagedServer.Interaction;
 using ManagedServer.Inventories;
 using ManagedServer.Permissions;
 using ManagedServer.Permissions.ContainerImpl;
@@ -9,6 +10,7 @@ using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Attributes;
 using Minecraft.Data.Generated;
+using Minecraft.Implementations;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -33,7 +35,8 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     public readonly PlayerConnection Connection;
     public readonly PlayerInventory Inventory;
 
-    public override List<Player> Players => [this];
+    /// <summary>The feature scope of a single player, which is themselves.</summary>
+    public override SnapshotList<Player> Players { get; } = new();
 
     public IPermissionContainer PermissionContainer { get; set; } = new DummyPermissionContainer();
     public EventNode<IServerEvent> EventNode => Events;
@@ -96,16 +99,92 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     public override bool CanBeSeenAsEnemy =>
         GameMode is not (GameMode.Creative or GameMode.Spectator) && base.CanBeSeenAsEnemy;
 
+    /// <summary>
+    /// <c>Player.experienceLevel</c>. Setting it moves the level and leaves the bar where it is, which
+    /// is what <c>giveExperienceLevels</c> does; <see cref="GiveExperiencePoints"/> is the other way in
+    /// and is what an orb uses.
+    /// </summary>
     public int Level {
         get;
         set {
             field = value;
-            SendPacket(new ClientBoundSetExperiencePacket {
-                ExperienceProgress = 0f,
-                Level = field,
-                TotalExperience = 0
-            });
+            if (field < 0) {
+                field = 0;
+                ExperienceProgress = 0f;
+                TotalExperience = 0;
+            }
+
+            SendExperience();
         }
+    }
+
+    /// <summary>
+    /// <c>Player.experienceProgress</c>, how far along the bar is between this level and the next, in
+    /// [0, 1). Not a count of points: how many points a bar is worth grows with the level, which is
+    /// what <see cref="XpNeededForNextLevel"/> answers.
+    /// </summary>
+    public float ExperienceProgress {
+        get;
+        set {
+            field = value;
+            SendExperience();
+        }
+    }
+
+    /// <summary><c>Player.totalExperience</c>, everything ever collected, which is the score.</summary>
+    public int TotalExperience {
+        get;
+        set {
+            field = value;
+            SendExperience();
+        }
+    }
+
+    /// <summary>
+    /// <c>Player.getXpNeededForNextLevel</c>: seven plus two a level to fifteen, then five a level to
+    /// thirty, then nine. The three segments are why a level near thirty is worth four times one near
+    /// zero.
+    /// </summary>
+    public int XpNeededForNextLevel => Level >= 30
+        ? 112 + (Level - 30) * 9
+        : Level >= 15
+            ? 37 + (Level - 15) * 5
+            : 7 + Level * 2;
+
+    /// <summary>
+    /// <c>Player.giveExperiencePoints</c>. Points are added to the bar and the bar carries into levels,
+    /// so the loops here are the levelling curve rather than a rounding detail: taking points away can
+    /// walk back down through several levels, and adding them can walk up through several.
+    /// </summary>
+    public void GiveExperiencePoints(int amount) {
+        float progress = ExperienceProgress + (float)amount / XpNeededForNextLevel;
+        int total = (int)Math.Clamp((long)TotalExperience + amount, 0, int.MaxValue);
+
+        while (progress < 0.0f) {
+            float remaining = progress * XpNeededForNextLevel;
+            bool hadLevels = Level > 0;
+            Level--;
+            progress = hadLevels ? 1.0f + remaining / XpNeededForNextLevel : 0.0f;
+        }
+
+        while (progress >= 1.0f) {
+            progress = (progress - 1.0f) * XpNeededForNextLevel;
+            Level++;
+            progress /= XpNeededForNextLevel;
+        }
+
+        // Written last and in one go: each of these setters sends the packet on its own, and setting
+        // the level inside the loops above has already sent several.
+        TotalExperience = total;
+        ExperienceProgress = progress;
+    }
+
+    private void SendExperience() {
+        SendPacket(new ClientBoundSetExperiencePacket {
+            ExperienceProgress = ExperienceProgress,
+            Level = Level,
+            TotalExperience = TotalExperience
+        });
     }
 
     public ItemStack HeldItem {
@@ -152,6 +231,14 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     // 1.27 seems to be the sqrt of 1.62 (the eye height of player while not crouching)
     public double EyeHeight => Crouching ? 1.27 : EntityType.Player.EyeHeight;
 
+    /// <summary>
+    /// <c>Player.isSecondaryUseActive</c>, which upstream is just "is crouching". It decides whether
+    /// a right click reaches the block at all (see <c>BlockInteraction.UseItemOn</c>) and it is what
+    /// several placement rules branch on, so there is one definition of it here rather than a
+    /// <c>Crouching</c> read at each site.
+    /// </summary>
+    public virtual bool IsSecondaryUseActive => Crouching;
+
     public new ManagedMinecraftServer Server;
 
     private int _waitingTeleport = -1;
@@ -159,8 +246,14 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     // backend fields
     private int _activeHotbarSlot;
 
-    private readonly ConcurrentQueue<MinecraftPacket> _packetSendingQueue = new();
     private readonly ConcurrentQueue<MinecraftPacket> _packetProcessQueue = new();
+
+    /// <summary>
+    /// Drops this player's per tick listener. Registered for the life of the connection and, without
+    /// this, never removed: every player who had ever joined kept costing a delegate call on every
+    /// tick of the server for as long as it ran.
+    /// </summary>
+    private Action? _cancelTickListener;
 
     // Listen to movement packets so we can do stuff
     public Player(ManagedMinecraftServer server, PlayerConnection connection, string name, PlayerMeta? meta = null) 
@@ -169,6 +262,7 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
         Name = name;
         Connection = connection;
         Inventory = new PlayerInventory(server, this);
+        Players.Add(this);
         
         // There doesn't seem to be a good way to get this default value
         // and Minestom hardcodes it, so I guess we will too
@@ -180,8 +274,11 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
                 World = World!
             };
             Events.CallEvent(disconnectEvent);
-            
+
             Despawn();
+
+            _cancelTickListener?.Invoke();
+            _cancelTickListener = null;
         };
 
         connection.Events.AddListener<PacketSendingEvent>(e => {
@@ -215,20 +312,22 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
             // HandlePacket(e.Packet);
         });
 
-        Server.Events.AddListener<ServerTickEvent>(_ => {
-            // Drain the packet queue
-            while (_packetSendingQueue.TryDequeue(out MinecraftPacket? packet)) {
-                Connection.SendPacket(packet);
-            }
-            
-            // Process packets that were received
+        // Received packets are handled on the tick rather than on the network thread they arrived on,
+        // which is what puts a player's movement, and therefore their viewport, in the same order as
+        // everything else the tick does.
+        _cancelTickListener = Server.Events.AddListener<ServerTickEvent>(_ => {
             while (_packetProcessQueue.TryDequeue(out MinecraftPacket? processPacket)) {
                 HandlePacket(processPacket);
             }
         });
     }
 
-    private void HandlePacket(MinecraftPacket packet) {
+    /// <summary>
+    /// Runs a received packet as though it had come off the queue this tick. Public so a test can
+    /// drive one at the point in the tick the queue would have, rather than firing
+    /// <see cref="PlayerPacketHandleEvent"/> by hand, which no longer represents the whole path.
+    /// </summary>
+    public void HandlePacket(MinecraftPacket packet) {
         // ServerGamePacketListenerImpl.handleUseItem snaps the rotation to the packet's before running
         // the item. The client turns every frame but only reports its rotation once a tick, from the
         // level tick, which runs after the click that this packet is: mid turn, our rotation is always
@@ -296,6 +395,16 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
                     World = World!
                 };
                 Events.CallEvent(attackEvent);
+                break;
+            }
+
+            // Right clicking a block runs a sequence, not a broadcast: the block's own interaction
+            // first, then the held item. See BlockInteraction. Note that PlayerPacketHandleEvent has
+            // already fired by the time this runs, so anything filtering that event for use_item_on
+            // jumps ahead of the whole sequence and cannot be ordered against it. That is what
+            // PlayerBlockInteractEvent and PlayerUseItemOnBlockEvent exist to replace.
+            case ServerBoundUseItemOnPacket useOn: {
+                BlockInteraction.HandleUseItemOn(this, useOn);
                 break;
             }
 
@@ -614,5 +723,23 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
 
     public void SendPacket(MinecraftPacket packet) {
         Connection.SendPacket(packet);
+    }
+
+    /// <summary>
+    /// <c>ServerPlayer.swing(hand, true)</c>: play the swing animation for everyone, this player
+    /// included.
+    /// <p/>
+    /// Most swings need nothing from the server, because the client animates its own and
+    /// <c>ArmSwingFeature</c> only relays it to onlookers. This is for the case where the server
+    /// decided: an interaction answering <c>InteractionResult.SuccessServer</c> has to be shown to the
+    /// player who did it, since their client had no reason to think anything happened.
+    /// </summary>
+    public void SwingArm(Hand hand) {
+        SendToSelfAndViewers(new ClientBoundEntityAnimationPacket {
+            EntityId = NetId,
+            Animation = hand == Hand.OffHand
+                ? ClientBoundEntityAnimationPacket.AnimationType.SwingOffhand
+                : ClientBoundEntityAnimationPacket.AnimationType.SwingMainArm
+        });
     }
 }

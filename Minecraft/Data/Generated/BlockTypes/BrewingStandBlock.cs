@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool HasBottle1, bool HasBottle2) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:brewing_stand", "block.minecraft.brewing_stand", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:brewing_stand", "minecraft:brewing_stand", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:brewing_stand", "block.minecraft.brewing_stand", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:brewing_stand", "minecraft:brewing_stand", BlockInfo.VanillaOnly, "minecraft:blocks/brewing_stand");
     private static readonly BlockStateInfo I0 = new(0.5f, 1, 0, PushReaction.Normal, 6, "stone", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S398, BlockShapes.S398, BlockShapes.S1, BlockShapes.S1, BlockShapes.S398, BlockShapes.S398);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

@@ -34,7 +34,7 @@ namespace ManagedServer.Placement;
 /// <item><c>NetherPortalBlock</c>: needs <c>PortalShape</c>, and there are no portals.</item>
 /// <item><c>TestBlock</c>: reads the <c>block_state</c> item component, which the place path applies
 /// after writing in any case.</item>
-/// <item><c>RedstoneWallTorchBlock</c>, <c>CoralPlantBlock</c>, <c>CoralFanBlock</c>,
+/// <item><c>CoralPlantBlock</c>, <c>CoralFanBlock</c>,
 /// <c>CoralWallFanBlock</c>, <c>KelpBlock</c>, <c>GrowingPlantBlock</c>: their override is the
 /// parent's answer plus a scheduled tick, so the chain resolving to the parent's rule is right
 /// rather than approximate.</item>
@@ -53,6 +53,7 @@ public static class VanillaPlacementRules {
         // The attachment search.
         new FaceAttachedPlacementRule(),
         new WallTorchPlacementRule(),
+        new RedstoneWallTorchPlacementRule(),
         new LadderPlacementRule(),
 
         // Two cell blocks.
@@ -178,7 +179,7 @@ public static class VanillaPlacementRules {
         new LilyPadPlacementRule(),
         new CactusFlowerPlacementRule(),
         new GrownFromTagPlacementRule(BlockClass.StemBlock),
-        new GrownFromTagPlacementRule(BlockClass.AttachedStemBlock),
+        new AttachedStemPlacementRule(),
         new GrownFromTagPlacementRule(BlockClass.NetherFungusBlock),
         new GrownFromTagPlacementRule(BlockClass.NetherRootsBlock),
 

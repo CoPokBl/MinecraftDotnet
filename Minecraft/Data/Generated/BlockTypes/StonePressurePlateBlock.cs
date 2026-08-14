@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record StonePressurePlateBlock(Identifier Identifier, bool Powered) : IBlock, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:pressure_plate", "block.minecraft.stone_pressure_plate", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stone_pressure_plate", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:pressure_plate", "block.minecraft.stone_pressure_plate", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stone_pressure_plate", BlockInfo.VanillaOnly, "minecraft:blocks/stone_pressure_plate");
     private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 11, "stone", NoteBlockInstrument.Basedrum, true, false, false, true, false, false, false, false, true, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S80, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S81 };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record StonePressurePlateBlock(Identifier Identifier, bool Powered) : IBl
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

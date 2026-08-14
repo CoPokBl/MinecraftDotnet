@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record VineBlock(Identifier Identifier, bool East, bool North, bool South, bool Up, bool West) : IBlock, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:vine", "block.minecraft.vine", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:vine", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:vine", "block.minecraft.vine", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:vine", BlockInfo.VanillaOnly, "minecraft:blocks/vine");
     private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Destroy, 7, "vine", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, true, false, false, false, true, false, false, true, true, false, true, [], null, BlockShapes.S529, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S530 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S531 };
@@ -61,6 +61,8 @@ public record VineBlock(Identifier Identifier, bool East, bool North, bool South
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

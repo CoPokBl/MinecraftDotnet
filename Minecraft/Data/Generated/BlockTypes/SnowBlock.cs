@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SnowBlock(Identifier Identifier, int Layers) : IBlock, IStackable {
-    private static readonly BlockInfo Data = new("minecraft:snow_layer", "block.minecraft.snow", 0.1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:snow", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:snow_layer", "block.minecraft.snow", 0.1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:snow", BlockInfo.VanillaOnly, "minecraft:blocks/snow");
     private static readonly BlockStateInfo I0 = new(0.1f, 0, 0, PushReaction.Destroy, 8, "snow", NoteBlockInstrument.Harp, true, true, true, false, false, false, false, true, false, false, false, true, false, false, true, true, false, false, [], null, BlockShapes.S124, BlockShapes.S1, BlockShapes.S1, BlockShapes.S124, BlockShapes.S124, BlockShapes.S124);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S333, CollisionShape = BlockShapes.S124, OcclusionShape = BlockShapes.S333, VisualShape = BlockShapes.S333, SupportShape = BlockShapes.S333 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S334, CollisionShape = BlockShapes.S333, OcclusionShape = BlockShapes.S334, VisualShape = BlockShapes.S334, SupportShape = BlockShapes.S334 };
@@ -37,6 +37,8 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock, IStackable 
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

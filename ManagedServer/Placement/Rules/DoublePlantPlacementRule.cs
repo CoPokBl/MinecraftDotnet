@@ -15,18 +15,23 @@ namespace ManagedServer.Placement.Rules;
 /// <p/>
 /// The same two cell shape as a door, without the facing: refuse unless the cell above can be
 /// replaced, place the lower half, write the upper half afterwards.
+/// <p/>
+/// It extends <c>VegetationBlock</c>, so it is a <see cref="VegetationPlacementRuleBase"/> and not a
+/// bare rule. That is what its <c>updateShape</c> falls through to, and reading only its own body
+/// misses the half of the behaviour that lives up there.
 /// </summary>
-public sealed class DoublePlantPlacementRule : IBlockPlacementRule {
-    public BlockClass VanillaClass => BlockClass.DoublePlantBlock;
+public class DoublePlantPlacementRule()
+    : TagVegetationPlacementRule("minecraft:supports_vegetation") {
+    public override BlockClass VanillaClass => BlockClass.DoublePlantBlock;
 
-    public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
+    public override IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
         Vec3<int> pos = context.PlacePos;
         return pos.Y < PlacementHelpers.MaxY(context.World) && context.CanReplaceAt(pos.WithY(pos.Y + 1))
             ? block
             : null;
     }
 
-    public void OnPlaced(IBlock placed, IBlockPlaceContext context) {
+    public override void OnPlaced(IBlock placed, IBlockPlaceContext context) {
         if (placed is not IDoubleHalved halved) {
             return;
         }
@@ -46,12 +51,16 @@ public sealed class DoublePlantPlacementRule : IBlockPlacementRule {
     /// <summary>
     /// Two different questions by half. The upper half only wants its own lower half underneath it,
     /// which is what stops a stray top of a sunflower existing. The lower half falls through to
-    /// <c>VegetationBlock.canSurvive</c>, the <c>supports_vegetation</c> tag, which is what stops a
+    /// <c>VegetationBlock.canSurvive</c>, ie. this rule's <c>mayPlaceOn</c>, which is what stops a
     /// sunflower being planted on stone.
+    /// <p/>
+    /// The fall through is what a subclass changes: every one of them overrides
+    /// <see cref="VegetationPlacementRuleBase.MayPlaceOn"/> and leaves the upper half's question
+    /// alone.
     /// </summary>
-    public bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
+    public override bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
         if (block is not IDoubleHalved { Half: BlockHalf.Upper }) {
-            return PlacementHelpers.SupportsVegetation(world, pos);
+            return base.CanSurvive(block, world, pos);
         }
 
         IBlock below = world.GetBlock(pos.WithY(pos.Y - 1));
@@ -63,10 +72,14 @@ public sealed class DoublePlantPlacementRule : IBlockPlacementRule {
     /// <p/>
     /// Written as vanilla writes it, which is inside out: the interesting case is the <b>else</b>.
     /// A half whose partner's cell has just changed, and no longer holds the opposite half of the
-    /// same plant, dies. Everything else falls through, except a lower half that has lost the ground
-    /// under it, which dies for the other reason.
+    /// same plant, dies.
+    /// <p/>
+    /// Everything else falls through to <c>VegetationBlock.updateShape</c>, which kills the block the
+    /// moment it cannot survive, whichever neighbour changed. Vanilla writes a "lower half that lost
+    /// its ground" test in front of that <c>super</c> call, and it is a special case of it, so the
+    /// base rule answers both.
     /// </summary>
-    public IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
+    public override IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
         Vec3<int> neighbourPos, IBlock neighbourState) {
         if (block is not IDoubleHalved halved) {
             return block;
@@ -78,13 +91,9 @@ public sealed class DoublePlantPlacementRule : IBlockPlacementRule {
         bool partnerIntact = IBlock.SimilarTo(neighbourState, block)
                              && neighbourState is IDoubleHalved partner && partner.Half != halved.Half;
 
-        if (towardsPartner && !partnerIntact) {
-            return Block.Air;
-        }
-
-        return lower && toNeighbour == BlockFace.NegY && !CanSurvive(block, world, pos)
+        return towardsPartner && !partnerIntact
             ? Block.Air
-            : block;
+            : base.UpdateShape(block, world, pos, toNeighbour, neighbourPos, neighbourState);
     }
 
     private static readonly Identifier Water = "minecraft:water";

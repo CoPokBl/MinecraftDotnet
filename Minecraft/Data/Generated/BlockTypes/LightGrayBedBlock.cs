@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record LightGrayBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock, IHorizontalFacing, IBedParted {
-    private static readonly BlockInfo Data = new("minecraft:bed", "block.minecraft.light_gray_bed", 0.2f, 0.6f, 1f, 1f, 0.75f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:light_gray_bed", BlockInfo.VanillaOnly);
+public record LightGrayBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock, IHorizontalFacing, IOccupied, IBedParted {
+    private static readonly BlockInfo Data = new("minecraft:bed", "block.minecraft.light_gray_bed", 0.2f, 0.6f, 1f, 1f, 0.75f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:light_gray_bed", BlockInfo.VanillaOnly, "minecraft:blocks/light_gray_bed");
     private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Destroy, 3, "wood", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S362, BlockShapes.S362, BlockShapes.S1, BlockShapes.S1, BlockShapes.S362, BlockShapes.S362);
     private static readonly BlockStateInfo I1 = I0 with { MapColorId = 22, BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363, SupportShape = BlockShapes.S363 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363, SupportShape = BlockShapes.S363 };
@@ -37,6 +37,8 @@ public record LightGrayBedBlock(Identifier Identifier, Direction Facing, bool Oc
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -72,6 +74,8 @@ public record LightGrayBedBlock(Identifier Identifier, Direction Facing, bool Oc
     public Identifier? Fluid => StateInfo.Fluid;
 
     public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithOccupied(bool occupied) => this with { Occupied = occupied };
 
     public IBlock WithPart(BedPart part) => this with { Part = part };
 

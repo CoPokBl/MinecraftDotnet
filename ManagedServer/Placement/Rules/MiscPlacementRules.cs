@@ -121,7 +121,7 @@ public sealed class HopperPlacementRule : IBlockPlacementRule {
         }
 
         IBlock state = hopper.WithFacing(facing.ToCardinal());
-        return PlacementHelpers.WithProperty(state, "enabled", true);
+        return state is IEnabled switchable ? switchable.WithEnabled(true) : state;
     }
 }
 
@@ -151,8 +151,15 @@ public sealed class BaseRailPlacementRule : IBlockPlacementRule {
     public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
         Direction facing = context.HorizontalDirection;
         bool eastWest = facing is Direction.East or Direction.West;
-        IBlock state = PlacementHelpers.WithProperty(block, "shape",
-            eastWest ? "east_west" : "north_south");
+        // BaseRailBlock covers both the plain rail, whose shape includes the four curves, and the
+        // three powered ones, whose shape is vanilla's narrowed RAIL_SHAPE_STRAIGHT. Two value sets,
+        // so two generated enums and two interfaces; both are set to the same two straight values.
+        IBlock state = block switch {
+            IRailShaped rail => rail.WithShape(eastWest ? RailShape.EastWest : RailShape.NorthSouth),
+            IRailDirected rail => rail.WithShape(
+                eastWest ? RailDirection.EastWest : RailDirection.NorthSouth),
+            _ => block
+        };
         return PlacementHelpers.Waterlog(state, context);
     }
 

@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PodzolBlock(Identifier Identifier, bool Snowy) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:snowy_dirt", "block.minecraft.podzol", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:podzol", BlockInfo.VanillaOnly);
+public record PodzolBlock(Identifier Identifier, bool Snowy) : IBlock, ISnowy {
+    private static readonly BlockInfo Data = new("minecraft:snowy_dirt", "block.minecraft.podzol", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:podzol", BlockInfo.VanillaOnly, "minecraft:blocks/podzol");
     private static readonly BlockStateInfo I0 = new(0.5f, 0, 15, PushReaction.Normal, 34, "gravel", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record PodzolBlock(Identifier Identifier, bool Snowy) : IBlock {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -60,6 +62,8 @@ public record PodzolBlock(Identifier Identifier, bool Snowy) : IBlock {
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithSnowy(bool snowy) => this with { Snowy = snowy };
 
 
     public uint StateId {

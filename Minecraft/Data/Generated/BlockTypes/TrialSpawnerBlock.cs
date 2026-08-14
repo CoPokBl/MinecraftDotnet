@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawnerBlock.TrialSpawnerState TrialSpawnerStateValue) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:trial_spawner", "block.minecraft.trial_spawner", 50f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:trial_spawner", "minecraft:trial_spawner", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:trial_spawner", "block.minecraft.trial_spawner", 50f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:trial_spawner", "minecraft:trial_spawner", BlockInfo.VanillaOnly, "minecraft:blocks/trial_spawner");
     private static readonly BlockStateInfo I0 = new(50f, 0, 1, PushReaction.Normal, 11, "trial_spawner", NoteBlockInstrument.Basedrum, false, false, false, true, false, false, false, false, true, true, false, false, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 4 };
     private static readonly BlockStateInfo I2 = I0 with { LightEmission = 8 };
@@ -32,6 +32,8 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

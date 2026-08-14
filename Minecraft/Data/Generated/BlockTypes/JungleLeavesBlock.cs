@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record JungleLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:tinted_particle_leaves", "block.minecraft.jungle_leaves", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jungle_leaves", BlockInfo.VanillaOnly);
+public record JungleLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock, IDistanced, IPersistent, IWaterlogged {
+    private static readonly BlockInfo Data = new("minecraft:tinted_particle_leaves", "block.minecraft.jungle_leaves", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jungle_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_leaves");
     private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Destroy, 7, "grass", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true };
@@ -33,6 +33,8 @@ public record JungleLeavesBlock(Identifier Identifier, int Distance, bool Persis
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -66,6 +68,10 @@ public record JungleLeavesBlock(Identifier Identifier, int Distance, bool Persis
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithDistance(int distance) => this with { Distance = distance };
+
+    public IBlock WithPersistent(bool persistent) => this with { Persistent = persistent };
 
     public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 

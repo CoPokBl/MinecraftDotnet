@@ -1,14 +1,12 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
+using ManagedServer.Interaction;
 using ManagedServer.Inventories;
 using ManagedServer.Physics;
 using ManagedServer.Placement;
 using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
-using Minecraft.Packets;
-using Minecraft.Packets.Play.ClientBound;
-using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
@@ -17,6 +15,12 @@ namespace ManagedServer.Features.Basic;
 
 /// <summary>
 /// Placing a block by right clicking one, a port of <c>BlockItem.place</c>.
+/// <p/>
+/// This is the <b>item</b> half of a right click, <c>ItemStack.useOn</c>, so it listens to
+/// <see cref="PlayerUseItemOnBlockEvent"/> rather than to the packet. Core only fires that once the
+/// block's own interaction has passed on the click (see <see cref="BlockInteraction"/>), which is
+/// what stops a block being placed into a chest that is opening. Listening to the raw packet instead
+/// would put this in a race with every interaction handler, decided by registration order.
 /// <p/>
 /// The order of the checks is vanilla's and is load bearing, since each step can see what the one
 /// before it did to the world. What state the block ends up in is not decided here at all: that is
@@ -30,51 +34,41 @@ public class BlockPlacingFeature : ScopedFeature {
                                    | BlockUpdateFlags.Immediate;
 
     public override void Register() {
-        AddEventHandler<PlayerPacketHandleEvent>(e => {
-            if (e.Packet is not ServerBoundUseItemOnPacket packet) {
+        AddEventHandler<PlayerUseItemOnBlockEvent>(e => {
+            if (e.Result.ConsumesAction) {
                 return;
             }
 
-            CheckBlockPlace(e.Player, packet);
+            e.Result = Place(e);
         });
     }
 
-    private void CheckBlockPlace(Player player, ServerBoundUseItemOnPacket use) {
+    private InteractionResult Place(PlayerUseItemOnBlockEvent e) {
         // TODO: Only allow whitelisted items in adventure
+        // Spectator is not checked here: BlockInteraction.UseItemOn returns before the item stage
+        // for one, exactly as vanilla's game mode does, so duplicating it would be a second copy of
+        // a rule that already has a home.
 
-        if (player.GameMode == GameMode.Spectator) {
-            return;
-        }
+        Player player = e.Player;
+        World world = e.World;
 
-        World world = player.World!;
-        MinecraftPacket ack = new ClientBoundAcknowledgeBlockChangePacket { SequenceId = use.Sequence };
-
-        // Vanilla acts on the hand the packet named. Guessing at the main hand first places the wrong
-        // block whenever both hands hold one.
-        Hand hand = use.ActiveHand;
-        ItemStack usedItem = player.GetItemInHand(hand);
+        ItemStack usedItem = e.Item;
         if (usedItem.Type.CorrespondingBlock is not { } blockId) {
-            return;
+            return InteractionResult.Pass;
         }
 
         IBlock block = player.Server.Registry.Blocks[blockId];
         BlockPlacementRules rules = player.Server.BlockPlacementRules;
 
-        // The packet's cursor is a fraction of the clicked block; vanilla's hit location is a world
-        // point. Every rule that reads it subtracts a block position back off, so the two have to be
-        // in the same space or a stair placed at a negative coordinate comes out the wrong half.
-        Vec3<double> clickLocation = new(
-            use.Position.X + use.CursorPosition.X,
-            use.Position.Y + use.CursorPosition.Y,
-            use.Position.Z + use.CursorPosition.Z);
-
-        PlayerPlaceContext context = new(world, player, hand, usedItem, use.Position, use.Face,
-            clickLocation, use.InsideBlock, rules);
+        PlayerPlaceContext context = new(world, player, e.Hand, usedItem, e.Position, e.Face,
+            e.ClickLocation, e.InsideBlock, rules);
 
         // Whether anything at all can go there, before asking the block what it would look like.
+        // Every refusal below is BlockItem.place returning FAIL. Nothing needs to be sent to put the
+        // client's prediction back: BlockInteraction resends both the clicked block and the one
+        // across its face on every outcome, which covers both values PlacePos can take.
         if (!context.CanPlace() || !world.IsInBounds(context.PlacePos)) {
-            Reject(player, context.PlacePos, ack);
-            return;
+            return InteractionResult.Fail;
         }
 
         player.Inventory.SendSlotUpdate(player.ActiveHotbarSlot);
@@ -83,19 +77,16 @@ public class BlockPlacingFeature : ScopedFeature {
         IBlock? placed = rule is null ? block : rule.GetStateForPlacement(block, context);
         if (placed is null) {
             // The block refused: a door with no room above it, a torch with nothing to hang on.
-            Reject(player, context.PlacePos, ack);
-            return;
+            return InteractionResult.Fail;
         }
 
         // canPlace: it has to be able to survive there, and it must not be inside anything.
         if (rule is not null && !rule.CanSurvive(placed, world, context.PlacePos)) {
-            Reject(player, context.PlacePos, ack);
-            return;
+            return InteractionResult.Fail;
         }
 
         if (!IsUnobstructed(world, placed, context.PlacePos)) {
-            Reject(player, context.PlacePos, ack);
-            return;
+            return InteractionResult.Fail;
         }
 
         PlayerPlaceBlockEvent placeEvent = new() {
@@ -104,20 +95,23 @@ public class BlockPlacingFeature : ScopedFeature {
             Position = context.PlacePos,
             World = world,
             UsedItem = usedItem,
-            Hand = hand
+            Hand = e.Hand,
+            // Vanilla does this in ServerPlayerGameMode.useItemOn rather than in the item: it saves
+            // the stack's count around the call to useOn when hasInfiniteMaterials() and puts it
+            // back afterwards. The sequencer cannot do that here, because the item write belongs to
+            // this feature, so the branch lives at the consumption site instead of being dropped.
+            ConsumeItem = player.GameMode != GameMode.Creative
         };
         Scope.Events.CallEvent(placeEvent);
 
         if (placeEvent.Cancelled) {
-            Reject(player, context.PlacePos, ack);
-            return;
+            return InteractionResult.Fail;
         }
 
         // BlockItem.placeBlock's flags, 11: notify neighbours, tell the clients, re-render at once.
         // UPDATE_KNOWN_SHAPE is deliberately absent, which is what makes the fences either side of a
         // new one connect to it.
         world.SetBlock(placeEvent.Position, placeEvent.Block, flags: PlaceFlags);
-        player.SendPacket(ack);
 
         // setPlacedBy, which is where a door writes its top half, so it runs once the bottom exists.
         // Vanilla only reaches it when the block survived its own placement, so this re-reads rather
@@ -127,25 +121,15 @@ public class BlockPlacingFeature : ScopedFeature {
         }
 
         if (placeEvent.ConsumeItem) {
-            player.SetItemInHand(hand, usedItem.SubtractCount(1));
+            player.SetItemInHand(e.Hand, usedItem.SubtractCount(1));
         }
 
         // prevent ghost items by sending the item update
-        player.Inventory.SendSlotUpdate(hand == Hand.MainHand
+        player.Inventory.SendSlotUpdate(e.Hand == Hand.MainHand
             ? PlayerInventory.HotbarSlot1 + player.ActiveHotbarSlot
             : PlayerInventory.OffhandSlot);
-    }
 
-    /// <summary>
-    /// Tells the client the placement it already drew did not happen, and acknowledges the sequence
-    /// so it stops holding the prediction open.
-    /// </summary>
-    private static void Reject(Player player, Vec3<int> pos, MinecraftPacket ack) {
-        if (player.World!.IsInBounds(pos)) {
-            player.World!.SendBlockUpdate(pos, player);
-        }
-
-        player.SendPacket(ack);
+        return InteractionResult.Success;
     }
 
     /// <summary>

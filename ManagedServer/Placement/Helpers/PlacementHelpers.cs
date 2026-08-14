@@ -74,7 +74,18 @@ public static class PlacementHelpers {
     /// shape is empty.
     /// </summary>
     public static bool CanAttachTo(World world, Vec3<int> pos, BlockFace towards) {
-        IBlock neighbour = world.GetBlock(pos.GetBlockTowards(towards));
+        return CanAttachTo(world.GetBlock(pos.GetBlockTowards(towards)), towards);
+    }
+
+    /// <summary>
+    /// The four argument <c>canAttachTo</c>, which takes the neighbour instead of finding it.
+    /// <p/>
+    /// Worth having separately because two callers pass a neighbour that is <b>not</b> the one across
+    /// <paramref name="towards"/> from anywhere they hold: <c>VineBlock.getUpdatedState</c> asks the
+    /// block above about <c>DOWN</c>, meaning that block's <b>up</b> face, and going through the
+    /// position form instead quietly asks a different block about a different face.
+    /// </summary>
+    public static bool CanAttachTo(IBlock neighbour, BlockFace towards) {
         BlockFace against = towards.Opposite();
         return ShapeSupport.IsFaceFull(neighbour.SupportShape, against)
                || ShapeSupport.IsFaceFull(neighbour.CollisionShape, against);
@@ -273,32 +284,14 @@ public static class PlacementHelpers {
     };
 
     /// <summary>
-    /// Sets a state property that has no interface of its own, for the handful that only one block
-    /// family has (<c>hanging</c>, <c>in_wall</c>, <c>attached</c>).
+    /// Reads a state property by name, for a test or a diagnostic that wants an arbitrary one.
     /// <p/>
-    /// Goes through the NBT route, which normally <b>silently ignores</b> a property the block does
-    /// not have, so this checks first and throws instead. A rule that names a property wrong is a
-    /// bug, and the whole reason the interfaces exist is that the quiet version of that bug is
-    /// indistinguishable from the block simply having no rule.
-    /// </summary>
-    public static IBlock WithProperty(IBlock block, string property, string value) {
-        if (!block.ToStateNbt().Contains(property)) {
-            throw new ArgumentException(
-                $"{block.Identifier} has no '{property}' property, so setting it would do nothing.",
-                nameof(property));
-        }
-
-        return block.WithState(new CompoundTag((property, new StringTag(value))));
-    }
-
-    public static IBlock WithProperty(IBlock block, string property, bool value) {
-        return WithProperty(block, property, value ? "true" : "false");
-    }
-
-    /// <summary>
-    /// Reads one of those same properties back. Throws for the same reason <see cref="WithProperty"/>
-    /// does: a property the block does not have reads as absent rather than as wrong, so a rule that
-    /// names one wrong would quietly take its fallback branch for ever.
+    /// <b>No placement rule uses this any more, and none should.</b> Every property a rule touches
+    /// has a generated interface in <c>Minecraft/Data/Blocks/Properties</c>; the setter that used to
+    /// live beside this is gone because it round tripped the whole state through NBT on the
+    /// <c>updateShape</c> cascade. This is kept only because it reads rather than writes, and because
+    /// a test asserting on a property the block does not have wants the throw below rather than a
+    /// silently absent value.
     /// </summary>
     public static string PropertyOf(IBlock block, string property) {
         CompoundTag state = block.ToStateNbt();

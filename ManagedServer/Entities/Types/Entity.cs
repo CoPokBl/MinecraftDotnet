@@ -8,6 +8,7 @@ using Minecraft;
 using Minecraft.Data.Attributes;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Generated;
+using Minecraft.Implementations;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Tags;
@@ -73,11 +74,28 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         }
     } = _ => true;
 
+    /// <summary>
+    /// Entity data, sent to whoever is watching this entity and <b>never to the entity itself</b>.
+    /// <p/>
+    /// That is vanilla: <c>ChunkMap.TrackedEntity.updatePlayer</c> returns early for
+    /// <c>player == this.entity</c>, so a player is never in their own <c>seenBy</c> and
+    /// <c>ServerEntity.sendChanges</c> never reaches them. The one place vanilla goes out of its way
+    /// to include the entity is <c>sendToTrackingPlayersAndSelf</c>, which is the damage event and
+    /// not this.
+    /// <p/>
+    /// Sending it to the player as well is not the harmless extra it looks like. Health rides in here
+    /// (index 9), and the client's own health is read straight off this data, so a player who is told
+    /// their own health this way is already at the new value by the time
+    /// <see cref="ClientBoundSetHealthPacket"/> arrives. <c>LocalPlayer.hurtTo</c> works out the hit
+    /// from the difference, sees zero, and skips the hurt flash and camera tilt it exists to play.
+    /// That is the whole of the client's feedback for any hit that does not broadcast a damage event,
+    /// which is every hit topped up inside the invulnerable window.
+    /// </summary>
     public EntityMeta Meta {
         get;
         set {
             field = value;
-            SendToSelfAndViewers(new ClientBoundSetEntityMetadataPacket {
+            SendToViewers(new ClientBoundSetEntityMetadataPacket {
                 EntityId = NetId,
                 Meta = field
             });
@@ -188,7 +206,7 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
 
     #endregion
 
-    public virtual List<Player> Players => [];  // for ScopedFeature
+    public virtual SnapshotList<Player> Players { get; } = new();  // for ScopedFeature
     public ManagedMinecraftServer Server => World.ThrowIfNull().Server;
     public FeatureHandler FeatureHandler { get; }
     public EventNode<IServerEvent> Events { get; } = new();

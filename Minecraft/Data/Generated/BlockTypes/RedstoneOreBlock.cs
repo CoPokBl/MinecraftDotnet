@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock, ILit {
-    private static readonly BlockInfo Data = new("minecraft:redstone_ore", "block.minecraft.redstone_ore", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:redstone_ore", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:redstone_ore", "block.minecraft.redstone_ore", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:redstone_ore", BlockInfo.VanillaOnly, "minecraft:blocks/redstone_ore");
     private static readonly BlockStateInfo I0 = new(3f, 9, 15, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, true, false, true, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0, RandomlyTicking = false };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record RedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock, ILit {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

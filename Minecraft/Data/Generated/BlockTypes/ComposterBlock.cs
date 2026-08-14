@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:composter", "block.minecraft.composter", 0.6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:composter", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:composter", "block.minecraft.composter", 0.6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:composter", BlockInfo.VanillaOnly, "minecraft:blocks/composter");
     private static readonly BlockStateInfo I0 = new(0.6f, 0, 0, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S496, BlockShapes.S496, BlockShapes.S79, BlockShapes.S496, BlockShapes.S496, BlockShapes.S496);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S497, OcclusionShape = BlockShapes.S497 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S498, OcclusionShape = BlockShapes.S498 };
@@ -37,6 +37,8 @@ public record ComposterBlock(Identifier Identifier, int Level) : IBlock {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

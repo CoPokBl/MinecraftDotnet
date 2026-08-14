@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:sculk_vein", "block.minecraft.sculk_vein", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sculk_vein", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:sculk_vein", "block.minecraft.sculk_vein", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sculk_vein", BlockInfo.VanillaOnly, "minecraft:blocks/sculk_vein");
     private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Destroy, 29, "sculk_vein", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S561, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S562 };
     private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Fluid = null };
@@ -157,6 +157,8 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

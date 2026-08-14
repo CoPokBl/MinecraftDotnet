@@ -63,11 +63,11 @@ public sealed class BedPlacementRule : IBlockPlacementRule {
         }
 
         // occupied is a bed only property with no interface, so it goes through the checked route.
-        return PlacementHelpers.WithProperty(block, Occupied,
-            PlacementHelpers.PropertyOf(neighbourState, Occupied));
+        return block is IOccupied half && neighbourState is IOccupied partner
+            ? half.WithOccupied(partner.Occupied)
+            : block;
     }
 
-    private const string Occupied = "occupied";
 
     /// <summary>
     /// <c>BedBlock.getNeighbourDirection</c>: the head lies along the facing from the foot, so each

@@ -29,8 +29,13 @@ public class RightClickToEquipArmourFeature : ScopedFeature {
             ItemStack existing = e.Player.Inventory[targetSlot];
             e.Player.Inventory[targetSlot] = e.Item;
             e.Player.SetItemInHand(e.Hand, existing);
-            
-            e.StopsBlockPlacement = true;
+
+            // Nothing has to suppress block placement here, though it looks like it should. This is
+            // ItemStack.use, which only ever runs for a click that hit no block: the client sends
+            // use_item_on first and only falls through to use_item when that did not consume the
+            // click. Armour has no corresponding block, so the placement stage passes anyway. A
+            // carved pumpkin, the one item that is both placeable and equippable, therefore places
+            // rather than equips, which is also what vanilla does.
         });
     }
 }

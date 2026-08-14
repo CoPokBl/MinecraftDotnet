@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DriedGhastBlock(Identifier Identifier, Direction Facing, int Hydration, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:dried_ghast", "block.minecraft.dried_ghast", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:dried_ghast", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:dried_ghast", "block.minecraft.dried_ghast", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:dried_ghast", BlockInfo.VanillaOnly, "minecraft:blocks/dried_ghast");
     private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Normal, 21, "dried_ghast", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S523, BlockShapes.S523, BlockShapes.S1, BlockShapes.S1, BlockShapes.S523, BlockShapes.S523);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record DriedGhastBlock(Identifier Identifier, Direction Facing, int Hydra
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

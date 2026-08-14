@@ -28,6 +28,8 @@ public record WaterloggableBlock(Identifier Identifier, uint StateIdAirLogged, u
     public string TranslationKey => Info.TranslationKey;
     public Identifier? BlockEntity => Info.BlockEntity;
     public Identifier? Item => Info.Item;
+    public Identifier? LootTable => Info.LootTable;
+    public (int Min, int Max)? Experience => Info.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

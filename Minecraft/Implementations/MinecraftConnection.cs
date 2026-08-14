@@ -65,7 +65,9 @@ public abstract class MinecraftConnection : MappedTaggable {
     /// <summary>
     /// What to do with debug log messages.
     /// </summary>
-    public Action<string> DebugLog = _ => { };
+    private static readonly Action<string> NoLog = _ => { };
+
+    public Action<string> DebugLog = NoLog;
     
     /// <summary>
     /// Event that is invoked when the connection is disconnected.
@@ -112,9 +114,17 @@ public abstract class MinecraftConnection : MappedTaggable {
 #endregion
     
 #region util_methods
+    /// <summary>
+    /// Whether anything is listening. Callers on a hot path should test this before building their
+    /// message, since the argument is evaluated whether or not it goes anywhere.
+    /// </summary>
+    protected bool LoggingEnabled => DebugLog != NoLog;
+
     protected void Log(string s) {
+        if (!LoggingEnabled) {
+            return;
+        }
         DebugLog($"[{GetType().FullName}] [{State}] {s}");
-        // Console.WriteLine($"[{GetType().FullName}] [{State}] {s}");
     }
 #endregion
 

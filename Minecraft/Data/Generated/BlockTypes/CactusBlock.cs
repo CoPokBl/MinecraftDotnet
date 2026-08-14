@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record CactusBlock(Identifier Identifier, int Age) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:cactus", "block.minecraft.cactus", 0.4f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cactus", BlockInfo.VanillaOnly);
+public record CactusBlock(Identifier Identifier, int Age) : IBlock, IAged {
+    private static readonly BlockInfo Data = new("minecraft:cactus", "block.minecraft.cactus", 0.4f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cactus", BlockInfo.VanillaOnly, "minecraft:blocks/cactus");
     private static readonly BlockStateInfo I0 = new(0.4f, 0, 0, PushReaction.Destroy, 7, "wool", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, [], null, BlockShapes.S401, BlockShapes.S402, BlockShapes.S1, BlockShapes.S401, BlockShapes.S402, BlockShapes.S402);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record CactusBlock(Identifier Identifier, int Age) : IBlock {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -60,6 +62,8 @@ public record CactusBlock(Identifier Identifier, int Age) : IBlock {
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAge(int age) => this with { Age = age };
 
 
     public uint StateId {

@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facing FacingValue) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:hopper", "block.minecraft.hopper", 4.8f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hopper", "minecraft:hopper", BlockInfo.VanillaOnly);
+public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facing FacingValue) : IBlock, IEnabled {
+    private static readonly BlockInfo Data = new("minecraft:hopper", "block.minecraft.hopper", 4.8f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hopper", "minecraft:hopper", BlockInfo.VanillaOnly, "minecraft:blocks/hopper");
     private static readonly BlockStateInfo I0 = new(3f, 0, 0, PushReaction.Normal, 11, "metal", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S601, BlockShapes.S601, BlockShapes.S602, BlockShapes.S1, BlockShapes.S601, BlockShapes.S601);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S603, CollisionShape = BlockShapes.S603, InteractionShape = BlockShapes.S604, VisualShape = BlockShapes.S603, SupportShape = BlockShapes.S603 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S605, CollisionShape = BlockShapes.S605, InteractionShape = BlockShapes.S606, VisualShape = BlockShapes.S605, SupportShape = BlockShapes.S605 };
@@ -34,6 +34,8 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -67,6 +69,8 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithEnabled(bool enabled) => this with { Enabled = enabled };
 
 
     public uint StateId {

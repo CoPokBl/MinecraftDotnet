@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WaxedWeatheredCopperLanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged) : IBlock, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:lantern", "block.minecraft.waxed_weathered_copper_lantern", 3.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_weathered_copper_lantern", BlockInfo.VanillaOnly);
+public record WaxedWeatheredCopperLanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged) : IBlock, IHanging, IWaterlogged {
+    private static readonly BlockInfo Data = new("minecraft:lantern", "block.minecraft.waxed_weathered_copper_lantern", 3.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_weathered_copper_lantern", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_weathered_copper_lantern");
     private static readonly BlockStateInfo I0 = new(3.5f, 15, 1, PushReaction.Destroy, 6, "lantern", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S508, BlockShapes.S508, BlockShapes.S1, BlockShapes.S1, BlockShapes.S508, BlockShapes.S508);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S509, CollisionShape = BlockShapes.S509, VisualShape = BlockShapes.S509, SupportShape = BlockShapes.S509 };
@@ -33,6 +33,8 @@ public record WaxedWeatheredCopperLanternBlock(Identifier Identifier, bool Hangi
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -66,6 +68,8 @@ public record WaxedWeatheredCopperLanternBlock(Identifier Identifier, bool Hangi
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithHanging(bool hanging) => this with { Hanging = hanging };
 
     public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 

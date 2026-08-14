@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook, bool Powered) : IBlock, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:lectern", "block.minecraft.lectern", 2.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:lectern", "minecraft:lectern", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:lectern", "block.minecraft.lectern", 2.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:lectern", "minecraft:lectern", BlockInfo.VanillaOnly, "minecraft:blocks/lectern");
     private static readonly BlockStateInfo I0 = new(2.5f, 0, 0, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, false, true, false, false, false, true, false, false, false, [], null, BlockShapes.S625, BlockShapes.S626, BlockShapes.S1, BlockShapes.S626, BlockShapes.S626, BlockShapes.S626);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S627 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S628 };
@@ -33,6 +33,8 @@ public record LecternBlock(Identifier Identifier, Direction Facing, bool HasBook
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

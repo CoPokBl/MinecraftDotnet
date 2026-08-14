@@ -17,6 +17,8 @@ public record SimpleBlock(Identifier Identifier, uint StateId, BlockInfo Info, B
     public string TranslationKey => Info.TranslationKey;
     public Identifier? BlockEntity => Info.BlockEntity;
     public Identifier? Item => Info.Item;
+    public Identifier? LootTable => Info.LootTable;
+    public (int Min, int Max)? Experience => Info.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

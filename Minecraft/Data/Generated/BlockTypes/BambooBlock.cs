@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves LeavesValue, int Stage) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:bamboo_stalk", "block.minecraft.bamboo", 1f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:bamboo", BlockInfo.VanillaOnly) { ShapeOffsets = BlockShapeOffsets.Block | BlockShapeOffsets.Collision | BlockShapeOffsets.Visual };
+public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves LeavesValue, int Stage) : IBlock, IAged {
+    private static readonly BlockInfo Data = new("minecraft:bamboo_stalk", "block.minecraft.bamboo", 1f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:bamboo", BlockInfo.VanillaOnly, "minecraft:blocks/bamboo") { ShapeOffsets = BlockShapeOffsets.Block | BlockShapeOffsets.Collision | BlockShapeOffsets.Visual };
     private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Destroy, 7, "bamboo", NoteBlockInstrument.Harp, false, false, false, true, true, false, false, false, true, false, false, true, false, false, true, false, false, false, [], null, BlockShapes.S330, BlockShapes.S331, BlockShapes.S1, BlockShapes.S1, BlockShapes.S331, BlockShapes.S331);
     private static readonly BlockStateInfo I1 = I0 with { RandomlyTicking = false };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S77 };
@@ -33,6 +33,8 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -66,6 +68,8 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAge(int age) => this with { Age = age };
 
 
     public uint StateId {

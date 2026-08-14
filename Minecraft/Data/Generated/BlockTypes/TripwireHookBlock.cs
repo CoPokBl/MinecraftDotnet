@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction Facing, bool Powered) : IBlock, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:trip_wire_hook", "block.minecraft.tripwire_hook", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:tripwire_hook", BlockInfo.VanillaOnly);
+public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction Facing, bool Powered) : IBlock, IAttached, IHorizontalFacing, IPowered {
+    private static readonly BlockInfo Data = new("minecraft:trip_wire_hook", "block.minecraft.tripwire_hook", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:tripwire_hook", BlockInfo.VanillaOnly, "minecraft:blocks/tripwire_hook");
     private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S926, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S927 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S928 };
@@ -33,6 +33,8 @@ public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction 
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -66,6 +68,8 @@ public record TripwireHookBlock(Identifier Identifier, bool Attached, Direction 
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAttached(bool attached) => this with { Attached = attached };
 
     public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 

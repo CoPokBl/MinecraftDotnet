@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:cocoa", "block.minecraft.cocoa", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cocoa_beans", BlockInfo.VanillaOnly);
+public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBlock, IAged, IHorizontalFacing {
+    private static readonly BlockInfo Data = new("minecraft:cocoa", "block.minecraft.cocoa", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cocoa_beans", BlockInfo.VanillaOnly, "minecraft:blocks/cocoa");
     private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Destroy, 7, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false, false, [], null, BlockShapes.S484, BlockShapes.S484, BlockShapes.S1, BlockShapes.S1, BlockShapes.S484, BlockShapes.S484);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S485, CollisionShape = BlockShapes.S485, VisualShape = BlockShapes.S485, SupportShape = BlockShapes.S485 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S486, CollisionShape = BlockShapes.S486, VisualShape = BlockShapes.S486, SupportShape = BlockShapes.S486 };
@@ -41,6 +41,8 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -74,6 +76,8 @@ public record CocoaBlock(Identifier Identifier, int Age, Direction Facing) : IBl
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAge(int age) => this with { Age = age };
 
     public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 

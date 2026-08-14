@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WeepingVinesBlock(Identifier Identifier, int Age) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:weeping_vines", "block.minecraft.weeping_vines", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:weeping_vines", BlockInfo.VanillaOnly);
+public record WeepingVinesBlock(Identifier Identifier, int Age) : IBlock, IAged {
+    private static readonly BlockInfo Data = new("minecraft:weeping_vines", "block.minecraft.weeping_vines", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:weeping_vines", BlockInfo.VanillaOnly, "minecraft:blocks/weeping_vines");
     private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 35, "weeping_vines", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, true, false, true, [], null, BlockShapes.S933, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { RandomlyTicking = false };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record WeepingVinesBlock(Identifier Identifier, int Age) : IBlock {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -64,6 +66,8 @@ public record WeepingVinesBlock(Identifier Identifier, int Age) : IBlock {
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAge(int age) => this with { Age = age };
 
 
     public uint StateId {

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : IBlock, ILit, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:weathering_copper_bulb", "block.minecraft.copper_bulb", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:copper_bulb", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:weathering_copper_bulb", "block.minecraft.copper_bulb", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:copper_bulb", BlockInfo.VanillaOnly, "minecraft:blocks/copper_bulb");
     private static readonly BlockStateInfo I0 = new(3f, 15, 15, PushReaction.Normal, 15, "copper_bulb", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, true, true, true, true, false, false, false, [], null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0, ValidSpawnFor = null };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record CopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : I
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperChestBlock.Type TypeValue, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:weathering_copper_chest", "block.minecraft.weathered_copper_chest", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chest", "minecraft:weathered_copper_chest", BlockInfo.VanillaOnly);
+public record WeatheredCopperChestBlock(Identifier Identifier, ChestType Type, Direction Facing, bool Waterlogged) : IBlock, IChestTyped, IHorizontalFacing, IWaterlogged {
+    private static readonly BlockInfo Data = new("minecraft:weathering_copper_chest", "block.minecraft.weathered_copper_chest", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chest", "minecraft:weathered_copper_chest", BlockInfo.VanillaOnly, "minecraft:blocks/weathered_copper_chest");
     private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 56, "copper", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
@@ -39,6 +39,8 @@ public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperCh
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -73,6 +75,8 @@ public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperCh
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 
+    public IBlock WithType(ChestType type) => this with { Type = type };
+
     public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
     public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
@@ -80,8 +84,8 @@ public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperCh
 
     public uint StateId {
         get {
-            return TypeValue switch {
-                Type.Single => Facing switch {
+            return Type switch {
+                ChestType.Single => Facing switch {
                     Direction.North => Waterlogged switch {
                         true => 29616,
                         false => 29617,
@@ -100,7 +104,7 @@ public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperCh
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                Type.Left => Facing switch {
+                ChestType.Left => Facing switch {
                     Direction.North => Waterlogged switch {
                         true => 29618,
                         false => 29619,
@@ -119,7 +123,7 @@ public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperCh
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                Type.Right => Facing switch {
+                ChestType.Right => Facing switch {
                     Direction.North => Waterlogged switch {
                         true => 29620,
                         false => 29621,
@@ -138,44 +142,44 @@ public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperCh
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(TypeValue), TypeValue, "Unknown value for property type.")
+                _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            29616 => new WeatheredCopperChestBlock(Identifier, Type.Single, Direction.North, true),
-            29617 => new WeatheredCopperChestBlock(Identifier, Type.Single, Direction.North, false),
-            29618 => new WeatheredCopperChestBlock(Identifier, Type.Left, Direction.North, true),
-            29619 => new WeatheredCopperChestBlock(Identifier, Type.Left, Direction.North, false),
-            29620 => new WeatheredCopperChestBlock(Identifier, Type.Right, Direction.North, true),
-            29621 => new WeatheredCopperChestBlock(Identifier, Type.Right, Direction.North, false),
-            29622 => new WeatheredCopperChestBlock(Identifier, Type.Single, Direction.South, true),
-            29623 => new WeatheredCopperChestBlock(Identifier, Type.Single, Direction.South, false),
-            29624 => new WeatheredCopperChestBlock(Identifier, Type.Left, Direction.South, true),
-            29625 => new WeatheredCopperChestBlock(Identifier, Type.Left, Direction.South, false),
-            29626 => new WeatheredCopperChestBlock(Identifier, Type.Right, Direction.South, true),
-            29627 => new WeatheredCopperChestBlock(Identifier, Type.Right, Direction.South, false),
-            29628 => new WeatheredCopperChestBlock(Identifier, Type.Single, Direction.West, true),
-            29629 => new WeatheredCopperChestBlock(Identifier, Type.Single, Direction.West, false),
-            29630 => new WeatheredCopperChestBlock(Identifier, Type.Left, Direction.West, true),
-            29631 => new WeatheredCopperChestBlock(Identifier, Type.Left, Direction.West, false),
-            29632 => new WeatheredCopperChestBlock(Identifier, Type.Right, Direction.West, true),
-            29633 => new WeatheredCopperChestBlock(Identifier, Type.Right, Direction.West, false),
-            29634 => new WeatheredCopperChestBlock(Identifier, Type.Single, Direction.East, true),
-            29635 => new WeatheredCopperChestBlock(Identifier, Type.Single, Direction.East, false),
-            29636 => new WeatheredCopperChestBlock(Identifier, Type.Left, Direction.East, true),
-            29637 => new WeatheredCopperChestBlock(Identifier, Type.Left, Direction.East, false),
-            29638 => new WeatheredCopperChestBlock(Identifier, Type.Right, Direction.East, true),
-            29639 => new WeatheredCopperChestBlock(Identifier, Type.Right, Direction.East, false),
+            29616 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.North, true),
+            29617 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.North, false),
+            29618 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.North, true),
+            29619 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.North, false),
+            29620 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.North, true),
+            29621 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.North, false),
+            29622 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.South, true),
+            29623 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.South, false),
+            29624 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.South, true),
+            29625 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.South, false),
+            29626 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.South, true),
+            29627 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.South, false),
+            29628 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.West, true),
+            29629 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.West, false),
+            29630 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.West, true),
+            29631 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.West, false),
+            29632 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.West, true),
+            29633 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.West, false),
+            29634 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.East, true),
+            29635 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.East, false),
+            29636 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.East, true),
+            29637 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.East, false),
+            29638 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.East, true),
+            29639 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            TypeValue = properties.Contains("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
+            Type = properties.Contains("type") ? ChestTypeExtensions.FromString(properties["type"].GetString()) : Type,
             Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
             Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
@@ -183,33 +187,10 @@ public record WeatheredCopperChestBlock(Identifier Identifier, WeatheredCopperCh
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(
-            ("type", new StringTag(TypeToName(TypeValue))),
+            ("type", new StringTag(Type.ToName())),
             ("facing", new StringTag(Facing.ToName())),
             ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     
-    public enum Type {
-        Single,
-        Left,
-        Right,
-    }
-
-    public static Type TypeFromString(string value) {
-        return value switch {
-            "single" => Type.Single,
-            "left" => Type.Left,
-            "right" => Type.Right,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Type.")
-        };
-    }
-
-    public static string TypeToName(Type value) {
-        return value switch {
-            Type.Single => "single",
-            Type.Left => "left",
-            Type.Right => "right",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Type value.")
-        };
-    }
 }

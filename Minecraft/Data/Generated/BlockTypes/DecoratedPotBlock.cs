@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DecoratedPotBlock(Identifier Identifier, bool Cracked, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:decorated_pot", "block.minecraft.decorated_pot", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:decorated_pot", "minecraft:decorated_pot", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:decorated_pot", "block.minecraft.decorated_pot", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:decorated_pot", "minecraft:decorated_pot", BlockInfo.VanillaOnly, "minecraft:blocks/decorated_pot");
     private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 50, "decorated_pot_cracked", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S401, BlockShapes.S401, BlockShapes.S1, BlockShapes.S1, BlockShapes.S401, BlockShapes.S401);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { SoundType = "decorated_pot" };
@@ -33,6 +33,8 @@ public record DecoratedPotBlock(Identifier Identifier, bool Cracked, Direction F
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

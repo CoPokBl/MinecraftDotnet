@@ -229,7 +229,7 @@ public sealed class VinePlacementRule : IBlockPlacementRule {
         IBlock state = block;
 
         if (((IFaceConnected)state).Connected(BlockFace.PosY)) {
-            bool keep = PlacementHelpers.CanAttachTo(world, abovePos, BlockFace.NegY);
+            bool keep = PlacementHelpers.CanAttachTo(world.GetBlock(abovePos), BlockFace.NegY);
             state = ((IFaceConnected)state).WithConnection(BlockFace.PosY, keep);
         }
 
@@ -360,8 +360,7 @@ public sealed class MossyCarpetPlacementRule : IBlockPlacementRule {
             return Block.Air;
         }
 
-        IBlock tuft = PlacementHelpers.WithProperty(
-            world.Server.Registry.Blocks[carpet.Identifier], "bottom", false);
+        IBlock tuft = ((IBottomed)world.Server.Registry.Blocks[carpet.Identifier]).WithBottom(false);
         IBlock aboveState = UpdatedState(tuft, world, above, true);
 
         foreach (BlockFace face in Directions.Horizontal) {
@@ -394,7 +393,7 @@ public sealed class MossyCarpetPlacementRule : IBlockPlacementRule {
 
     /// <summary>Vanilla calls the property <c>BASE</c>; on the wire it is <c>bottom</c>.</summary>
     private static bool IsBase(IBlock block) {
-        return PlacementHelpers.PropertyOf(block, "bottom") == "true";
+        return block is IBottomed { Bottom: true };
     }
 }
 

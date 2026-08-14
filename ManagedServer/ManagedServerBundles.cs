@@ -52,6 +52,23 @@ public partial class ManagedMinecraftServer {
     );
 
     /// <summary>
+    /// Vanilla's behaviour when a block is right clicked: doors, trapdoors and fence gates open,
+    /// levers flip, buttons press, a lit candle goes out.
+    /// <p/>
+    /// Not part of <see cref="BasicsBundle"/>, on the same reasoning as <see cref="BlockRulesBundle"/>:
+    /// the click sequence itself is core and always runs, and what each block does about being
+    /// clicked is a separate choice. Without this every block is inert when clicked and the click
+    /// falls through to the held item, which is what vanilla does for a block whose class overrides
+    /// neither hook.
+    /// <p/>
+    /// For a subset, register <c>VanillaBlockInteractionsFeature</c> directly with
+    /// <c>VanillaBlockInteractions.Only</c> or <c>Except</c> instead of taking this bundle.
+    /// </summary>
+    public static FeatureBundle BlockInteractionsBundle => new(
+        new VanillaBlockInteractionsFeature()
+    );
+
+    /// <summary>
     /// Flowing water and lava, buckets that place and pick it up, and what standing in it does to an
     /// entity. Not part of <see cref="BasicsBundle"/>: a map full of water only starts moving once
     /// something simulates it, so which servers want that is theirs to say.

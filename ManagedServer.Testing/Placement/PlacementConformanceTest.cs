@@ -52,6 +52,13 @@ public class PlacementConformanceTest {
     private const int Reported = 25;
 
     /// <summary>
+    /// Set while working through the baseline: report every difference, known or not, so the next one
+    /// to fix can be read off the failure rather than guessed at.
+    /// </summary>
+    private static readonly bool Everything =
+        Environment.GetEnvironmentVariable("PLACEMENT_REPORT_ALL") == "1";
+
+    /// <summary>
     /// Differences gathered per block and per rule rather than per state.
     /// <para>
     /// A single wrong rule is thousands of differing states, and the states of one block are
@@ -82,9 +89,9 @@ public class PlacementConformanceTest {
         /// </summary>
         public string Unexpected() {
             List<string> lines = _byBlock
-                .Where(entry => KnownFor(entry.Key[..entry.Key.IndexOf(" (", StringComparison.Ordinal)]) is null)
+                .Where(entry => Everything || KnownFor(entry.Key[..entry.Key.IndexOf(" (", StringComparison.Ordinal)]) is null)
                 .OrderByDescending(entry => entry.Value.Count)
-                .Take(Reported)
+                .Take(Everything ? 500 : Reported)
                 .Select(entry => $"  {entry.Key} x{entry.Value.Count}: {entry.Value.First}")
                 .ToList();
 
@@ -129,6 +136,11 @@ public class PlacementConformanceTest {
         /// <summary>
         /// A rule that is simply wrong and has not been fixed. Every one of these is a defect with
         /// its cause already named, and the entry comes out of the list when it is fixed.
+        /// <para>
+        /// <b>There are none, and that is the state to keep the list in.</b> The distinction is the
+        /// point of the split: a divergence is a decision, a bug is a debt, and a bug that sits here
+        /// long enough starts reading like a decision.
+        /// </para>
         /// </summary>
         Bug
     }
@@ -160,62 +172,30 @@ public class PlacementConformanceTest {
         ["minecraft:potatoes"] = (Why.Divergence, "no per position light query"),
         ["minecraft:beetroots"] = (Why.Divergence, "no per position light query"),
         ["minecraft:torchflower_crop"] = (Why.Divergence, "no per position light query"),
-        ["minecraft:pitcher_crop"] = (Why.Bug, "the upper half is not destroyed with the lower, and "
-                                               + "sufficientLight wants a per position light query"),
+        ["minecraft:pitcher_crop"] = (Why.Divergence,
+            "sufficientLight wants a per position light query"),
 
-        // Defects the fixture found and nobody has fixed yet.
-        ["minecraft:redstone_wall_torch"] = (Why.Bug,
-            "RedstoneWallTorchBlock declares its own canSurvive and its class chain does not include "
-            + "WallTorchBlock, so it falls through to BaseTorchBlock's rule and asks below instead of "
-            + "behind. It needs its own rule"),
-        ["minecraft:vine"] = (Why.Bug, "canSurvive is missing the up face clause"),
-        ["minecraft:scaffolding"] = (Why.Bug, "the distance recompute disagrees below the source"),
-        ["minecraft:repeater"] = (Why.Bug, "the locked property is not recomputed"),
-        ["minecraft:small_dripleaf"] = (Why.Bug, "the two halves do not destroy each other"),
-        ["minecraft:tall_seagrass"] = (Why.Bug, "the two halves do not destroy each other"),
-        ["minecraft:campfire"] = (Why.Bug, "signal_fire is not read off the block below"),
-        ["minecraft:soul_campfire"] = (Why.Bug, "signal_fire is not read off the block below"),
-        ["minecraft:attached_melon_stem"] = (Why.Bug, "does not revert to its unattached stem"),
-        ["minecraft:attached_pumpkin_stem"] = (Why.Bug, "does not revert to its unattached stem"),
-        ["minecraft:cave_vines"] = (Why.Bug, "head and body do not convert into each other"),
-        ["minecraft:cave_vines_plant"] = (Why.Bug, "head and body do not convert into each other"),
-        ["minecraft:kelp_plant"] = (Why.Bug, "head and body do not convert into each other"),
-        ["minecraft:twisting_vines_plant"] = (Why.Bug, "head and body do not convert into each other"),
-        ["minecraft:weeping_vines_plant"] = (Why.Bug, "head and body do not convert into each other")
+        // The three rules that deliberately recompute inline what vanilla schedules a tick for, and
+        // say so where they do it. There is no block tick scheduler, and for these the scheduled
+        // recompute is the whole behaviour of the block rather than a delay on it, so the divergence
+        // is that the answer arrives a tick early. Only scaffolding's is visible in the fixture, since
+        // it is the only one of the three whose state changes rather than only breaking.
+        ["minecraft:scaffolding"] = (Why.Divergence,
+            "ScaffoldingPlacementRule recomputes the distance in updateShape; vanilla's updateShape "
+            + "hands the state straight back and does it in tick"),
+
+        // GrowingPlantBodyBlock converts with headBlock.getStateForPlacement(random), ie. the head at
+        // random.nextInt(25), and the head written here is the default age. It is the same choice the
+        // placement half makes and for the same reason: there is no growth tick to consume an age.
+        // Everything else about the conversion, the berries included, does agree.
+        ["minecraft:cave_vines_plant"] = (Why.Divergence, "the converted head's age is random"),
+        ["minecraft:kelp_plant"] = (Why.Divergence, "the converted head's age is random"),
+        ["minecraft:twisting_vines_plant"] = (Why.Divergence, "the converted head's age is random"),
+        ["minecraft:weeping_vines_plant"] = (Why.Divergence, "the converted head's age is random")
     };
-
-    /// <summary>
-    /// The double plants and the fence gates, which differ as whole families for one reason each and
-    /// would otherwise be thirty near identical rows above.
-    /// </summary>
-    private static readonly Dictionary<string, (Why Why, string Reason)> KnownFamilies = new() {
-        ["_fence_gate"] = (Why.Bug, "in_wall is not recomputed from the walls beside it"),
-        ["#double_plant"] = (Why.Bug, "the two halves do not destroy each other")
-    };
-
-    private static readonly string[] DoublePlants = [
-        "minecraft:sunflower", "minecraft:lilac", "minecraft:rose_bush", "minecraft:peony",
-        "minecraft:tall_grass", "minecraft:large_fern", "minecraft:pitcher_plant"
-    ];
-
-    private static readonly string[] FenceGates = [
-        "minecraft:oak_fence_gate", "minecraft:spruce_fence_gate", "minecraft:birch_fence_gate",
-        "minecraft:jungle_fence_gate", "minecraft:acacia_fence_gate", "minecraft:cherry_fence_gate",
-        "minecraft:dark_oak_fence_gate", "minecraft:pale_oak_fence_gate",
-        "minecraft:mangrove_fence_gate", "minecraft:bamboo_fence_gate",
-        "minecraft:crimson_fence_gate", "minecraft:warped_fence_gate"
-    ];
 
     private static (Why Why, string Reason)? KnownFor(string block) {
-        if (Known.TryGetValue(block, out (Why Why, string Reason) found)) {
-            return found;
-        }
-
-        if (block.EndsWith("_fence_gate", StringComparison.Ordinal)) {
-            return KnownFamilies["_fence_gate"];
-        }
-
-        return DoublePlants.Contains(block) ? KnownFamilies["#double_plant"] : null;
+        return Known.TryGetValue(block, out (Why Why, string Reason) found) ? found : null;
     }
 
     private readonly record struct Placed(Vec3<int> Offset, uint StateId);
@@ -295,8 +275,7 @@ public class PlacementConformanceTest {
         "minecraft:redstone_wire", "minecraft:fire", "minecraft:soul_fire", "minecraft:piston_head",
         "minecraft:bubble_column", "minecraft:brown_mushroom", "minecraft:red_mushroom",
         "minecraft:wheat", "minecraft:carrots", "minecraft:potatoes", "minecraft:beetroots",
-        "minecraft:torchflower_crop", "minecraft:pitcher_crop", "minecraft:redstone_wall_torch",
-        "minecraft:vine"
+        "minecraft:torchflower_crop", "minecraft:pitcher_crop"
     ];
 
     [Test]
@@ -354,17 +333,12 @@ public class PlacementConformanceTest {
 
     /// <summary>Which of <see cref="Known"/> differ in their shape update.</summary>
     private static readonly string[] ShapeBaseline = [
-        "minecraft:redstone_wire", "minecraft:fire", "minecraft:piston_head",
+        "minecraft:redstone_wire", "minecraft:fire", "minecraft:soul_fire", "minecraft:piston_head",
         "minecraft:nether_portal",
-        "minecraft:brown_mushroom", "minecraft:red_mushroom", "minecraft:pitcher_crop",
-        "minecraft:redstone_wall_torch", "minecraft:vine", "minecraft:scaffolding",
-        "minecraft:repeater", "minecraft:small_dripleaf", "minecraft:tall_seagrass",
-        "minecraft:campfire", "minecraft:soul_campfire",
-        "minecraft:attached_melon_stem", "minecraft:attached_pumpkin_stem",
-        "minecraft:cave_vines", "minecraft:cave_vines_plant", "minecraft:kelp_plant",
-        "minecraft:twisting_vines_plant", "minecraft:weeping_vines_plant",
-        .. DoublePlants,
-        .. FenceGates
+        "minecraft:brown_mushroom", "minecraft:red_mushroom",
+        "minecraft:scaffolding",
+        "minecraft:cave_vines_plant", "minecraft:kelp_plant",
+        "minecraft:twisting_vines_plant", "minecraft:weeping_vines_plant"
     ];
 
     /// <summary>

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogged) : IBlock, IStackable, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:sea_pickle", "block.minecraft.sea_pickle", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sea_pickle", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:sea_pickle", "block.minecraft.sea_pickle", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sea_pickle", BlockInfo.VanillaOnly, "minecraft:blocks/sea_pickle");
     private static readonly BlockStateInfo I0 = new(0f, 6, 1, PushReaction.Destroy, 27, "slime_block", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S911, BlockShapes.S911, BlockShapes.S1, BlockShapes.S1, BlockShapes.S911, BlockShapes.S911);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { LightEmission = 9, BlockShape = BlockShapes.S912, CollisionShape = BlockShapes.S912, VisualShape = BlockShapes.S912, SupportShape = BlockShapes.S912 };
@@ -37,6 +37,8 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

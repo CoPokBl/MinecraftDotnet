@@ -14,6 +14,7 @@ using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.DimensionType;
 using Minecraft.Data.Generated;
+using Minecraft.Implementations;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -38,16 +39,22 @@ namespace ManagedServer.Worlds;
 /// A Minecraft world. Owns a chunk store, a set of players, and the streaming/broadcast
 /// plumbing that keeps clients in sync.
 /// <p/>
-/// Thread-safety contract: block mutations (<see cref="SetBlock(Vec3{int},IBlock,IBlockEntityType?,INbtTag?)"/>,
-/// <see cref="SetBlockData"/>) and player lifecycle (<see cref="AddPlayer"/>, <see cref="RemovePlayer"/>) are
-/// expected to happen on the server tick thread. Block reads are safe from any thread provided no concurrent
-/// write is in flight on the same chunk. Packet broadcast (<see cref="SendPacket"/>) and audience queries are
-/// thread-safe; they iterate a lock-free snapshot of the player list.
+/// Thread-safety contract: everything here is callable from any thread, which it has to be, because
+/// <see cref="AddPlayer"/> is reached from the network thread during login and a minigame moves players
+/// between worlds from timer and pool threads. Block writes go through <c>ChunkStore.Write</c>, which
+/// holds the chunk's own lock, so they are safe against each other and against a chunk being
+/// serialised. Broadcast and audience queries iterate a lock-free snapshot of the player list.
+/// <p/>
+/// Chunk streaming is a reconcile, not a push. A player's view holds the chunks they should end up
+/// with; <see cref="HandlePlayerMove"/> only records where they are, and the tick diffs that against
+/// what they have and sends as much as is ready. A chunk that is not loaded yet stays queued and is
+/// tried again, so nothing is lost by arriving at an awkward moment. Building and writing happen off
+/// the tick, one flight per player.
 /// </summary>
 public class World : MappedTaggable, IAudience, IFeatureScope {
     #region public_properties
 
-    public List<Player> Players { get; } = [];
+    public SnapshotList<Player> Players { get; } = new();
     public EventNode<IServerEvent> Events { get; }
     public IEntityManager Entities { get; }
     public ManagedMinecraftServer Server { get; init; }
@@ -55,6 +62,17 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     public Identifier DimensionId { get; }
     public IDimensionType Dimension => Server.Registry.DimensionTypes[DimensionId];
     public bool Immutable { get; set; }
+
+    /// <summary>
+    /// <c>Level.getRandom</c>, the world's own source. What anything not acting on behalf of an
+    /// entity rolls against: where a dropped item lands, what a loot table gives when nothing broke
+    /// the block.
+    /// <p/>
+    /// Vanilla seeds the per level sequences a loot table rolls on
+    /// (<c>RandomSequences</c>, over <c>XoroshiroRandomSource</c>) and only this one is ported, so a
+    /// roll here has the same distribution as vanilla's and not the same sequence.
+    /// </summary>
+    public RandomSource Random { get; set; } = LegacyRandomSource.Create();
 
     public int Time {
         get => _time;
@@ -70,6 +88,10 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
     /// <summary>
     /// Set to <see cref="DateTime.Now"/> on item entities when they are dropped via <see cref="DropItem"/>.
+    /// <p/>
+    /// Superseded by <see cref="ItemEntity.PickupDelay"/>, which is vanilla's tick counter and is what
+    /// <c>ItemPickupFeature</c> now reads. Still stamped so anything outside the framework that keyed
+    /// off it keeps working.
     /// </summary>
     public static readonly Tag<DateTime> ItemDropTimeTag = new("minecraftdotnet:world:item_drop_time");
 
@@ -125,15 +147,25 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     private int _time;
     private long _lastFlushTickMs;
 
-    // Players list is exposed via IFeatureScope; we keep a snapshot for lock-free internal iteration.
-    private readonly Lock _playersLock = new();
-    private volatile Player[] _playersSnapshot = [];
+    // Per-player world state — chunk viewport, packet queues, move-event subscription.
+    private readonly ConcurrentDictionary<Player, PlayerChunkView> _views = new();
 
-    // Per-player world state — chunk viewport, packet queue, move-event subscription.
-    private readonly ConcurrentDictionary<Player, PlayerWorldState> _playerStates = new();
+    // Chunks, their loading, and the packet each one currently serialises to.
+    private readonly ChunkStore _chunks;
 
-    // Unified chunk store. A chunk is loaded iff its task IsCompletedSuccessfully.
-    private readonly ConcurrentDictionary<Vec2<int>, Task<ChunkData>> _chunkTasks = new();
+    /// <summary>
+    /// The viewport offsets ordered by distance from the centre, computed once because the view
+    /// distance cannot change. Nearest first is what puts the chunk the player is standing in on the
+    /// wire first, which is what ends their loading screen.
+    /// </summary>
+    private readonly Vec2<int>[] _viewportOffsets;
+
+    /// <summary>
+    /// How far down a player's queue a flush will look for a chunk that is ready. Bounded so a
+    /// player waiting on slow terrain cannot make the tick sweep their whole viewport every time;
+    /// anything past it simply waits for the next tick.
+    /// </summary>
+    private const int ScanSlack = 64;
 
     #endregion
 
@@ -165,7 +197,27 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         FeatureHandler = new FeatureHandler(this);
         _neighbours = new NeighbourUpdater(this);
 
+        _viewportOffsets = BuildViewportOffsets(viewDistance);
+        _chunks = new ChunkStore(_provider, _lighting, Server.Registry, Dimension.Height,
+            Dimension.HasSkyLight, Server.HandleError);
+        _chunks.ChunkLoaded += OnChunkLoaded;
+
         Events.AddListener<ServerTickEvent>(_ => Tick());
+    }
+
+    /// <summary>
+    /// The square viewport, ordered by squared distance so the nearest chunk is streamed first. Ties
+    /// keep their scan order, which only decides between chunks the client is equally waiting on.
+    /// </summary>
+    private static Vec2<int>[] BuildViewportOffsets(int viewDistance) {
+        List<Vec2<int>> offsets = [];
+        for (int dx = -viewDistance; dx <= viewDistance; dx++) {
+            for (int dz = -viewDistance; dz <= viewDistance; dz++) {
+                offsets.Add(new Vec2<int>(dx, dz));
+            }
+        }
+
+        return offsets.OrderBy(o => o.X * o.X + o.Y * o.Y).ToArray();
     }
 
     /// <summary>
@@ -193,43 +245,133 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     #region tick
 
     private void Tick() {
+        Player[] snap = Players.Snapshot;
+
+        // Reconcile first, so a move recorded since the last tick decides what this flush carries.
+        // Cheap by construction: a diff over the viewport, no building and no I/O.
+        foreach (Player player in snap) {
+            if (!_views.TryGetValue(player, out PlayerChunkView? view) || view.Disconnected) continue;
+            ReconcileViewport(player, view);
+        }
+
+        // Advanced by whole delays rather than snapped to now, so a flush that lands a millisecond
+        // early does not push the next one a whole tick out. Clamped so a stalled server catches up
+        // once instead of firing a burst.
         long now = Environment.TickCount64;
         if (now - _lastFlushTickMs < _tickDelayMs) return;
-        _lastFlushTickMs = now;
+        _lastFlushTickMs = _tickDelayMs > 0
+            ? Math.Max(_lastFlushTickMs + _tickDelayMs, now - _tickDelayMs)
+            : now;
 
-        Player[] snap = _playersSnapshot;
+        List<Vec2<int>> toLoad = [];
+
         foreach (Player player in snap) {
-            if (!_playerStates.TryGetValue(player, out PlayerWorldState? state) || state.Disconnected) continue;
+            if (!_views.TryGetValue(player, out PlayerChunkView? view) || view.Disconnected) continue;
 
-            // Only one send flight per player at a time — prevents socket races and
-            // controls memory pressure. If the previous batch hasn't finished being
-            // written to the socket yet, skip this flush cycle for that player.
-            if (Interlocked.CompareExchange(ref state.SendInProgress, 1, 0) != 0) continue;
+            // Only one send flight per player at a time. That keeps every send for a player strictly
+            // ordered, and keeps a slow client from stacking up batches.
+            if (Interlocked.CompareExchange(ref view.SendInProgress, 1, 0) != 0) continue;
 
-            MinecraftPacket[]? batch = null;
-            lock (state.Lock) {
-                int n = Math.Min(state.PendingPackets.Count, _packetsPerTick);
-                if (n > 0) {
-                    batch = new MinecraftPacket[n];
-                    for (int i = 0; i < n; i++) batch[i] = state.PendingPackets.Dequeue();
-                }
-            }
+            toLoad.Clear();
+            PlayerChunkView.Batch batch = view.TakeBatch(_packetsPerTick, _packetsPerTick + ScanSlack,
+                _chunks.IsLoaded, toLoad);
 
-            if (batch == null) {
-                Interlocked.Exchange(ref state.SendInProgress, 0);
+            // Anything the player is waiting on that nobody has started yet.
+            foreach (Vec2<int> pos in toLoad) _chunks.EnsureLoading(pos);
+
+            if (batch.IsEmpty) {
+                Interlocked.Exchange(ref view.SendInProgress, 0);
                 continue;
             }
 
-            // Serialise and write to the socket off the tick thread.
-            _ = Task.Run(() => {
-                try {
-                    player.SendPackets(batch);
-                } catch {
-                    // Player disconnected mid-send; RemovePlayer handles cleanup.
-                } finally {
-                    Interlocked.Exchange(ref state.SendInProgress, 0);
+            // Building and writing happen off the tick: a chunk packet is a lighting pass and a
+            // blocking socket write, neither of which any other player should be waiting behind.
+            _ = Task.Run(() => SendBatch(player, view, batch));
+        }
+    }
+
+    /// <summary>
+    /// Writes one flush for one player, building each chunk packet immediately before it goes out so
+    /// it carries the newest light available. Builds are shared between players by the chunk store,
+    /// so N players owed the same chunk cost one lighting pass rather than N.
+    /// </summary>
+    private void SendBatch(Player player, PlayerChunkView view, PlayerChunkView.Batch batch) {
+        int written = 0;
+
+        try {
+            foreach (MinecraftPacket packet in batch.Leading) {
+                if (!BatchStillValid(view, batch)) return;
+                player.SendPacket(packet);
+            }
+
+            for (; written < batch.Chunks.Length; written++) {
+                if (!BatchStillValid(view, batch)) return;
+
+                Vec2<int> pos = batch.Chunks[written];
+
+                // The centre can move while a batch is in flight. A chunk that is no longer wanted is
+                // dropped and unrecorded, so walking back into range queues it again rather than the
+                // client being left without it.
+                bool wanted;
+                lock (view.Lock) {
+                    wanted = pos.IsWithinRadiusOf(view.Centre, _viewDistance);
+                    if (!wanted) view.Sent.Remove(pos);
                 }
-            });
+                if (!wanted) continue;
+
+                MinecraftPacket? packet = _chunks.BuildPacket(pos);
+                if (packet == null) {
+                    // Unloaded underneath us, which only a load failure can do. Put it back rather
+                    // than leaving the client short of a chunk it will never be offered again.
+                    view.ReturnUnsent(new[] { pos });
+                    continue;
+                }
+
+                player.SendPacket(packet);
+            }
+
+            foreach (MinecraftPacket packet in batch.Trailing) {
+                if (!BatchStillValid(view, batch)) return;
+                player.SendPacket(packet);
+            }
+        } catch (Exception e) {
+            // Everything from the failure onwards is still owed. Without this the whole tail of the
+            // batch is lost while still recorded as delivered, which is a chunk hole for good.
+            view.ReturnUnsent(batch.Chunks.AsSpan(written));
+            if (!view.Disconnected) Server.HandleError(e);
+        } finally {
+            Interlocked.Exchange(ref view.SendInProgress, 0);
+        }
+    }
+
+    private static bool BatchStillValid(PlayerChunkView view, PlayerChunkView.Batch batch) {
+        return !view.Disconnected && Volatile.Read(ref view.Epoch) == batch.Epoch;
+    }
+
+    /// <summary>
+    /// Brings a player's wanted set in line with where they are. The diff itself is under the view's
+    /// lock; the entity packets it implies are queued rather than written, because a socket write on
+    /// the tick thread stalls every other player behind one slow client.
+    /// </summary>
+    private void ReconcileViewport(Player player, PlayerChunkView view) {
+        PlayerChunkView.Diff diff = view.Reconcile(_viewDistance, UnloadDistance, _viewportOffsets);
+        if (diff.Unloaded.Length == 0 && diff.Added.Length == 0) return;
+
+        // Despawns lead, beside the unloads they pair with. Spawns trail, because an entity belongs
+        // to a chunk the client should have been given first.
+        foreach (Vec2<int> pos in diff.Unloaded) {
+            foreach (Entity entity in Entities.GetEntitiesInChunk(pos)) {
+                if (entity == player) continue;
+                view.EnqueueLeading(Entities.TrackDespawn(entity, player));
+            }
+        }
+
+        foreach (Vec2<int> pos in diff.Added) {
+            _chunks.EnsureLoading(pos);
+            foreach (Entity entity in Entities.GetEntitiesInChunk(pos)) {
+                if (entity == player) continue;
+                view.EnqueueTrailing(Entities.TrackSpawn(entity, player));
+            }
         }
     }
 
@@ -240,8 +382,15 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     public virtual void AddPlayer(Player player) {
         Events.CallEvent(new PlayerEnteringWorldEvent { Player = player, World = this });
 
-        PlayerWorldState state = new();
-        if (!_playerStates.TryAdd(player, state)) {
+        // The centre is known before anything else, and before the player is visible to the
+        // streaming loop. This is the whole join fix: the old state had no centre until the end of a
+        // long viewport sweep, and every chunk delivered in that window was discarded for good.
+        PlayerChunkView view = new() {
+            Centre = GetChunkPos(player.Position),
+            NeedsReconcile = true
+        };
+
+        if (!_views.TryAdd(player, view)) {
             throw new InvalidOperationException($"Player {player.Name} is already in world {DimensionId}.");
         }
 
@@ -253,67 +402,59 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
         Action onDisconnect = () => RemovePlayer(player);
         player.Connection.Disconnected += onDisconnect;
-        state.DisconnectHandler = onDisconnect;
+        view.DisconnectHandler = onDisconnect;
 
-        state.CancelMoveListener = player.Events.AddListener<EntityMoveEvent>(e => {
-            if (state.Disconnected) return;
+        view.CancelMoveListener = player.Events.AddListener<EntityMoveEvent>(e => {
+            if (view.Disconnected) return;
             if (e.Entity != player) return;
             HandlePlayerMove(player, GetChunkPos(e.NewPos));
         });
 
-        lock (_playersLock) {
-            if (!Players.Contains(player)) {
-                Players.Add(player);
-                _playersSnapshot = Players.ToArray();
-            }
-        }
+        Players.Add(player);
 
-        HandlePlayerMove(player, GetChunkPos(player.Position));
+        // Terrain starts arriving now rather than at the next tick, so it overlaps the rest of the
+        // login handshake instead of following it.
+        foreach (Vec2<int> offset in _viewportOffsets) {
+            _chunks.EnsureLoading(view.Centre + offset);
+        }
     }
 
     public virtual void RemovePlayer(Player player) {
-        if (!_playerStates.TryGetValue(player, out PlayerWorldState? state)) return;
-        if (Interlocked.Exchange(ref state.RemovedFlag, 1) == 1) return;  // idempotent
+        if (!_views.TryGetValue(player, out PlayerChunkView? view)) return;
+        if (Interlocked.Exchange(ref view.RemovedFlag, 1) == 1) return;  // idempotent
 
-        state.Disconnected = true;
+        view.Disconnected = true;
+        Interlocked.Increment(ref view.Epoch);  // stop any batch already in flight
         Events.CallEvent(new PlayerLeavingWorldEvent { Player = player, World = this });
 
-        state.CancelMoveListener?.Invoke();
-        if (state.DisconnectHandler != null) {
-            try { player.Connection.Disconnected -= state.DisconnectHandler; }
+        view.CancelMoveListener?.Invoke();
+        if (view.DisconnectHandler != null) {
+            try { player.Connection.Disconnected -= view.DisconnectHandler; }
             catch { /* event may already be detached */ }
         }
 
-        _playerStates.TryRemove(player, out _);
+        _views.TryRemove(player, out _);
 
-        lock (_playersLock) {
-            if (Players.Remove(player)) {
-                _playersSnapshot = Players.ToArray();
-            }
-        }
+        Players.Remove(player);
     }
 
     public void ResetPlayer(Player player) {
-        if (!_playerStates.TryGetValue(player, out PlayerWorldState? state)) return;
+        if (!_views.TryGetValue(player, out PlayerChunkView? view)) return;
 
-        lock (state.Lock) {
-            state.LoadedChunks.Clear();
-            state.CurrentChunk = null;
-            state.PendingPackets.Clear();
-        }
+        // Bumps the epoch, so a batch dequeued before this cannot be written after the packet that
+        // told the client to throw its world away.
+        view.Reset(GetChunkPos(player.Position));
 
         player.SendPacket(new ClientBoundGameEventPacket {
             Event = GameEvent.StartWaitingForLevelChunks,
             Value = 0f
         });
-
-        HandlePlayerMove(player, GetChunkPos(player.Position));
     }
 
     public bool DoesPlayerHaveChunkLoaded(Player player, Vec2<int> chunkPos) {
-        if (!_playerStates.TryGetValue(player, out PlayerWorldState? state)) return false;
-        lock (state.Lock) {
-            return state.LoadedChunks.Contains(chunkPos);
+        if (!_views.TryGetValue(player, out PlayerChunkView? view)) return false;
+        lock (view.Lock) {
+            return view.Sent.Contains(chunkPos);
         }
     }
 
@@ -321,85 +462,26 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
     #region player_movement
 
+    /// <summary>
+    /// Records where a player is. That is all it does: the viewport diff runs on the tick, from
+    /// <see cref="ReconcileViewport"/>.
+    /// <p/>
+    /// A flag rather than a scheduled callback, because it is idempotent, because several moves
+    /// inside one tick collapse into a single diff, and because it cannot outlive a player who
+    /// leaves. It also means a join no longer streams a whole viewport around wherever the player
+    /// object was constructed and then a second one around where the consumer teleports them to
+    /// during the login event: both land before the first tick and only the final centre is used.
+    /// </summary>
     public void HandlePlayerMove(Player player, Vec2<int> chunkPos) {
-        if (!_playerStates.TryGetValue(player, out PlayerWorldState? state)) return;
-        if (state.Disconnected) return;
+        if (!_views.TryGetValue(player, out PlayerChunkView? view)) return;
+        if (view.Disconnected) return;
 
-        HashSet<Vec2<int>> loadedSnapshot;
-        lock (state.Lock) {
-            if (state.CurrentChunk == chunkPos) return;
-            loadedSnapshot = new HashSet<Vec2<int>>(state.LoadedChunks);
-        }
-
-        // Phase 1: compute the diff without holding state.Lock.
-        // Entity spawn/despawn and chunk-data retrieval may take their own locks; keep them outside our lock.
-
-        List<Vec2<int>> toUnload = [];
-        foreach (Vec2<int> loaded in loadedSnapshot) {
-            if (!loaded.IsWithinRadiusOf(chunkPos, UnloadDistance)) toUnload.Add(loaded);
-        }
-
-        List<MinecraftPacket> packets = [
-            new ClientBoundSetCenterChunkPacket { X = chunkPos.X, Z = chunkPos.Y }
-        ];
-
-        foreach (Vec2<int> pos in toUnload) {
-            packets.Add(new ClientBoundUnloadChunkPacket { X = pos.X, Z = pos.Y });
-            foreach (Entity entity in Entities.GetEntitiesInChunk(pos)) {
-                if (entity == player) continue;
-                Entities.SendDespawnPackets(entity, player);
-            }
-        }
-
-        for (int dx = -_viewDistance; dx <= _viewDistance; dx++) {
-            for (int dz = -_viewDistance; dz <= _viewDistance; dz++) {
-                Vec2<int> chunk = new(chunkPos.X + dx, chunkPos.Y + dz);
-                if (loadedSnapshot.Contains(chunk)) continue;
-
-                foreach (Entity entity in Entities.GetEntitiesInChunk(chunk)) {
-                    if (entity == player) continue;
-                    Entities.SendSpawnPackets(entity, player);
-                }
-
-                ChunkData? data = TryGetLoadedChunk(chunk);
-                if (data != null) {
-                    // Already loaded but not yet streamed to this player. BuildChunkPacket
-                    // involves expensive lighting computation, so run it off this thread and
-                    // enqueue via the normal async path. EnqueueChunkToPlayers owns the
-                    // LoadedChunks update, so we don't add to toAdd here.
-                    Vec2<int> capturedChunk = chunk;
-                    ChunkData capturedData = data;
-                    _ = Task.Run(() => {
-                        MinecraftPacket pkt = BuildChunkPacket(capturedChunk, capturedData);
-                        Server.Scheduler.ScheduleNextTick(() => EnqueueChunkToPlayers(capturedChunk, pkt));
-                    });
-                } else {
-                    // Not yet loaded; kick off an async load. The completion handler will enqueue
-                    // the chunk packet to any player still in range (including this one).
-                    _ = LoadChunk(chunk);
-                }
-            }
-        }
-
-        // packets now only contains SetCenterChunk + UnloadChunk — always send SetCenter first.
-        packets.Sort((a, b) => PacketOrderKey(a, chunkPos).CompareTo(PacketOrderKey(b, chunkPos)));
-
-        // Phase 2: commit under state.Lock.
-        lock (state.Lock) {
-            if (state.Disconnected) return;
-            // If another move raced us to the same chunk, drop this batch.
-            if (state.CurrentChunk == chunkPos) return;
-            state.CurrentChunk = chunkPos;
-            foreach (Vec2<int> c in toUnload) state.LoadedChunks.Remove(c);
-            foreach (MinecraftPacket p in packets) state.PendingPackets.Enqueue(p);
+        lock (view.Lock) {
+            if (view.Centre == chunkPos) return;
+            view.Centre = chunkPos;
+            view.NeedsReconcile = true;
         }
     }
-
-    private static double PacketOrderKey(MinecraftPacket p, Vec2<int> center) => p switch {
-        ClientBoundSetCenterChunkPacket => -1d,
-        ClientBoundChunkDataAndUpdateLightPacket c => new Vec2<int>(c.ChunkX, c.ChunkZ).DistanceTo(center),
-        _ => 1000d  // unload packets last
-    };
 
     #endregion
 
@@ -469,6 +551,11 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     public void SetBlock(Vec3<int> pos, IBlock block, IBlockEntityType? blockEntityType = null,
         INbtTag? blockEntityData = null, int flags = BlockUpdateFlags.Default,
         int updateLimit = BlockUpdateFlags.UpdateLimit) {
+        SetBlock(pos, block, blockEntityType, blockEntityData, flags, updateLimit, false);
+    }
+
+    private void SetBlock(Vec3<int> pos, IBlock block, IBlockEntityType? blockEntityType,
+        INbtTag? blockEntityData, int flags, int updateLimit, bool destroy) {
         if (Immutable) throw new InvalidOperationException("World is immutable, cannot set block.");
         CheckY(pos.Y);
 
@@ -476,7 +563,9 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             World = this,
             Position = pos,
             OldState = GetBlockOr(pos, Block.Air),
-            NewState = block
+            NewState = block,
+            Flags = flags,
+            Destroy = destroy
         };
         Events.CallEvent(changeEvent);
 
@@ -486,18 +575,22 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         }
 
         Vec2<int> chunkPos = GetChunkPos(pos);
-        ChunkData data = LoadChunkSync(chunkPos);
         Vec3<int> localPos = ToChunkLocalPos(GameToProtocolPos(pos));
 
-        data.SetBlock(localPos, block);
-        if (blockEntityType == null) {
-            data.BlockEntities.Remove(pos);
-        } else {
-            data.BlockEntities[pos] = new BlockEntity(
-                localPos.X, pos.Y, localPos.Z, blockEntityType, blockEntityData.ThrowIfNull()
-            );
-        }
-        _lighting.Invalidate(chunkPos);
+        // Through the store, which holds the chunk's write lock for the duration and then marks it
+        // and its neighbours stale. Writing the chunk directly races anything serialising it, since
+        // serialising repacks the sections in place.
+        _chunks.Write(chunkPos, data => {
+            data.SetBlock(localPos, block);
+            if (blockEntityType == null) {
+                data.BlockEntities.Remove(pos);
+            } else {
+                data.BlockEntities[pos] = new BlockEntity(
+                    localPos.X, pos.Y, localPos.Z, blockEntityType, blockEntityData.ThrowIfNull()
+                );
+            }
+        });
+
         PathTypes.Invalidate(pos.X, pos.Y, pos.Z);
 
         if ((flags & BlockUpdateFlags.Clients) != 0) {
@@ -518,8 +611,11 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     /// <c>Level.destroyBlock</c>: what a shape update means when a rule answers air. Leaves the fluid
     /// that was in the block behind, so breaking a waterlogged fence leaves water rather than a hole.
     /// <p/>
-    /// <paramref name="dropResources"/> is accepted and ignored. There is no loot table layer, and
-    /// <c>BlockBreakingFeature</c> does not drop either, so this is the same gap rather than a new one.
+    /// <paramref name="dropResources"/> is carried on the write as
+    /// <see cref="BlockUpdateFlags.SuppressDrops"/> rather than acted on here. Core has no loot layer
+    /// and is not meant to: <c>BlockDropsFeature</c> reads the flag off
+    /// <see cref="WorldChangeEvent"/> and does the dropping, so a server with no such feature
+    /// registered drops nothing whatever this is passed, which is the framework's rule.
     /// </summary>
     public bool DestroyBlock(Vec3<int> pos, bool dropResources,
         int updateLimit = BlockUpdateFlags.UpdateLimit) {
@@ -528,8 +624,11 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             return false;
         }
 
-        SetBlock(pos, FluidState.Of(existing).ToBlock(), flags: BlockUpdateFlags.Default,
-            updateLimit: updateLimit);
+        int flags = dropResources
+            ? BlockUpdateFlags.Default
+            : BlockUpdateFlags.Default | BlockUpdateFlags.SuppressDrops;
+
+        SetBlock(pos, FluidState.Of(existing).ToBlock(), null, null, flags, updateLimit, true);
         return true;
     }
 
@@ -543,11 +642,12 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         CheckY(pos.Y);
 
         Vec2<int> chunkPos = GetChunkPos(pos);
-        ChunkData chunk = LoadChunkSync(chunkPos);
         Vec3<int> localPos = ToChunkLocalPos(pos);
 
-        if (data == null) chunk.BlockEntities.Remove(localPos);
-        else chunk.BlockEntities[localPos] = data;
+        _chunks.Write(chunkPos, chunk => {
+            if (data == null) chunk.BlockEntities.Remove(localPos);
+            else chunk.BlockEntities[localPos] = data;
+        });
 
         SendBlockUpdate(pos, this);
     }
@@ -591,36 +691,36 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         List<ClientBoundSectionBlocksUpdatePacket> packets = [];
 
         foreach ((Vec2<int> chunkPos, List<int> indices) in byChunk) {
-            ChunkData data = TryGetLoadedChunk(chunkPos)
-                ?? throw new InvalidOperationException($"Chunk at {chunkPos} vanished between load and write.");
-
             indices.Sort((a, b) => localPositions[a].Y.CompareTo(localPositions[b].Y));
 
             List<BlockUpdate> current = [];
             int? currentSection = null;
-            bool anyWritten = false;
 
-            foreach (int idx in indices) {
-                if (cancelled[idx]) continue;
+            // The whole chunk's worth of writes under one hold of its write lock, rather than one
+            // hold each. This method resumes on a pool thread after awaiting its loads, so it is
+            // exactly the caller the lock exists for.
+            _chunks.Write(chunkPos, data => {
+                foreach (int idx in indices) {
+                    if (cancelled[idx]) continue;
 
-                Vec3<int> local = localPositions[idx];
-                data.SetBlock(GameToProtocolPos(local), blockUpdates[idx].Block);
-                PathTypes.Invalidate(local.X, local.Y, local.Z);
-                anyWritten = true;
+                    Vec3<int> local = localPositions[idx];
+                    data.SetBlock(GameToProtocolPos(local), blockUpdates[idx].Block);
+                    PathTypes.Invalidate(local.X, local.Y, local.Z);
 
-                int section = data.GetYSection(local.Y, out _);
-                currentSection ??= section;
-                if (currentSection != section) {
-                    packets.Add(new ClientBoundSectionBlocksUpdatePacket {
-                        ChunkSectionPosition = new Vec3<int>(chunkPos.X, currentSection.Value, chunkPos.Y),
-                        BlockUpdates = current.ToArray()
-                    });
-                    currentSection = section;
-                    current = [];
+                    int section = data.GetYSection(local.Y, out _);
+                    currentSection ??= section;
+                    if (currentSection != section) {
+                        packets.Add(new ClientBoundSectionBlocksUpdatePacket {
+                            ChunkSectionPosition = new Vec3<int>(chunkPos.X, currentSection.Value, chunkPos.Y),
+                            BlockUpdates = current.ToArray()
+                        });
+                        currentSection = section;
+                        current = [];
+                    }
+
+                    current.Add(blockUpdates[idx]);
                 }
-
-                current.Add(blockUpdates[idx]);
-            }
+            });
 
             if (currentSection != null && current.Count > 0) {
                 packets.Add(new ClientBoundSectionBlocksUpdatePacket {
@@ -628,8 +728,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
                     BlockUpdates = current.ToArray()
                 });
             }
-
-            if (anyWritten) _lighting.Invalidate(chunkPos);
         }
 
         // Broadcast updates.
@@ -657,11 +755,22 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         Server.Scheduler.ScheduleTask(Server.TargetTicksPerSecond * 2, lightning.Despawn);
     }
 
-    public Entity DropItem(Vec3<double> pos, ItemStack item) {
-        Entity itemEntity = new(EntityType.Item) { Position = pos };
+    /// <summary>
+    /// Spawns a dropped stack. Returns an <see cref="ItemEntity"/>, which is still an
+    /// <see cref="Entity"/>, so a caller that only wanted somewhere for the item to go is unaffected.
+    /// <p/>
+    /// The pickup delay starts at vanilla's default rather than at zero, so a stack cannot be
+    /// collected on the tick it appears. Nothing counts it down until <c>ItemEntityFeature</c> is
+    /// registered, and <c>ItemPickupFeature</c> falls back to the wall clock tag when it is not.
+    /// </summary>
+    public ItemEntity DropItem(Vec3<double> pos, ItemStack item) {
+        ItemEntity itemEntity = new(item) {
+            Position = pos,
+            PickupDelay = ItemEntity.DefaultPickupDelay
+        };
         itemEntity.SetTag(ItemDropTimeTag, DateTime.Now);
         Spawn(itemEntity);
-        itemEntity.Meta = new ItemMeta(item);
+        itemEntity.Item = item;
         return itemEntity;
     }
 
@@ -701,7 +810,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     public bool IsChunkLoaded(Vec2<int> pos) {
-        return _chunkTasks.TryGetValue(pos, out Task<ChunkData>? t) && t.IsCompletedSuccessfully;
+        return _chunks.IsLoaded(pos);
     }
 
     public bool IsInBounds(Vec3<double> pos) {
@@ -719,7 +828,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     #region chunk_loading
 
     public Task LoadChunk(Vec2<int> pos) {
-        return _chunkTasks.GetOrAdd(pos, static (p, self) => self.BeginLoadAsync(p), this);
+        return _chunks.Load(pos);
     }
 
     public Task LoadChunks(Vec2<int>[] poses) {
@@ -728,129 +837,36 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         return Task.WhenAll(tasks);
     }
 
-    private Task<ChunkData> BeginLoadAsync(Vec2<int> pos) {
-        Task<ChunkData> task = Task.Run(() => LoadChunkCore(pos));
-        task.ContinueWith(completed => {
-            if (completed.IsFaulted) {
-                _chunkTasks.TryRemove(pos, out _);
-                Exception err = completed.Exception?.InnerException ?? completed.Exception!;
-                Server.HandleError(err);
-                return;
-            }
-            OnChunkLoadCompletedOffTick(pos, completed.Result);
-        }, TaskContinuationOptions.ExecuteSynchronously);
-        return task;
-    }
-
     /// <summary>
-    /// Synchronously ensures the chunk is loaded and returns its data. If an async load is already in flight,
-    /// blocks on it; otherwise runs the provider inline on the calling thread.
+    /// A chunk has arrived. Light crosses chunk borders, so the eight around it are now lit wrongly
+    /// for anyone already holding them, and have to be sent again.
+    /// <p/>
+    /// The order matters and is not incidental. Versions are bumped first, inside
+    /// <c>InvalidateLightAround</c>, so that a build already running for any of these chunks can no
+    /// longer publish its result. Only then are players scanned. A player holding a neighbour gets it
+    /// queued again, at the tail, behind the copy it is correcting; a player who merely has it
+    /// pending needs nothing, because the build that eventually happens reads the new light for free.
+    /// That is what collapses a join from thousands of lighting passes into one per chunk.
     /// </summary>
-    private ChunkData LoadChunkSync(Vec2<int> pos) {
-        Task<ChunkData> task = _chunkTasks.GetOrAdd(pos, static (p, self) => self.BeginLoadSync(p), this);
-        return task.GetAwaiter().GetResult();
-    }
+    private void OnChunkLoaded(Vec2<int> pos) {
+        _chunks.InvalidateLightAround(pos);
 
-    private Task<ChunkData> BeginLoadSync(Vec2<int> pos) {
-        try {
-            ChunkData data = LoadChunkCore(pos);
-            Task<ChunkData> task = Task.FromResult(data);
-            // Schedule the post-load hook off the tick thread so it doesn't run inline under our caller
-            // (which is often holding something).
-            _ = Task.Run(() => OnChunkLoadCompletedOffTick(pos, data));
-            return task;
-        } catch {
-            // GetOrAdd won't commit on exception, so nothing to clean up.
-            throw;
-        }
-    }
-
-    private ChunkData LoadChunkCore(Vec2<int> pos) {
-        ChunkData data = new(Dimension.Height) { ChunkX = pos.X, ChunkZ = pos.Y };
-        _provider.GetChunk(ref data);
-        if (data == null!) throw new InvalidOperationException($"Terrain provider returned null for chunk {pos}.");
-        data.PackData();
-        return data;
-    }
-
-    /// <summary>
-    /// Off-tick completion hook. Builds the chunk packet (including expensive lighting compute) on the
-    /// calling (thread-pool) thread, then schedules the enqueue step onto the tick thread so that
-    /// interactions with player state are serialized with <see cref="HandlePlayerMove"/>.
-    /// Neighbor-lighting resends are run inline on the thread-pool thread: they do more expensive
-    /// lighting computations and only touch thread-safe state (chunk store, lighting cache, player
-    /// snapshot, connection send), so there's no reason to stall the tick for them.
-    /// </summary>
-    private void OnChunkLoadCompletedOffTick(Vec2<int> pos, ChunkData data) {
-        MinecraftPacket packet = BuildChunkPacket(pos, data);
-        Server.Scheduler.ScheduleNextTick(() => EnqueueChunkToPlayers(pos, packet));
-        ResendNeighborLighting(pos);
-    }
-
-    private void EnqueueChunkToPlayers(Vec2<int> pos, MinecraftPacket packet) {
-        Player[] snap = _playersSnapshot;
-        foreach (Player player in snap) {
-            if (!_playerStates.TryGetValue(player, out PlayerWorldState? state) || state.Disconnected) continue;
-            lock (state.Lock) {
-                if (state.CurrentChunk == null) continue;
-                if (!state.CurrentChunk.Value.IsWithinRadiusOf(pos, _viewDistance)) continue;
-                if (!state.LoadedChunks.Add(pos)) continue;  // already sent
-                state.PendingPackets.Enqueue(packet);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Light crosses fifteen blocks, so a change in one chunk moves the light in all eight around
-    /// it, diagonals included: a source near a corner reaches into the chunk past it.
-    /// </summary>
-    private void ResendNeighborLighting(Vec2<int> chunkPos) {
-        ReadOnlySpan<Vec2<int>> offsets = [
-            new(1, 0), new(-1, 0), new(0, 1), new(0, -1),
-            new(1, 1), new(1, -1), new(-1, 1), new(-1, -1)
+        ReadOnlySpan<Vec2<int>> neighbours = [
+            new(pos.X + 1, pos.Y), new(pos.X - 1, pos.Y),
+            new(pos.X, pos.Y + 1), new(pos.X, pos.Y - 1),
+            new(pos.X + 1, pos.Y + 1), new(pos.X + 1, pos.Y - 1),
+            new(pos.X - 1, pos.Y + 1), new(pos.X - 1, pos.Y - 1)
         ];
-        foreach (Vec2<int> offset in offsets) {
-            Vec2<int> nPos = chunkPos + offset;
-            ChunkData? data = TryGetLoadedChunk(nPos);
-            if (data == null) continue;
 
-            _lighting.Invalidate(nPos);
-            MinecraftPacket packet = BuildChunkPacket(nPos, data);
-
-            EnqueueChunkResend(nPos, packet);
-        }
-    }
-
-    /// <summary>
-    /// Queues a rebuilt chunk behind whatever the player is already owed, and only for the players
-    /// that have been given that chunk. Sending it straight to the connection instead lets it
-    /// overtake the chunk it is correcting, which the queue hands out a few per tick: the client
-    /// drops light for a chunk it does not have, then takes the older packet that follows and keeps
-    /// its light for good. Anyone who has not been sent the chunk yet needs nothing, because the
-    /// invalidate above means it is built again from scratch when they are.
-    /// </summary>
-    private void EnqueueChunkResend(Vec2<int> chunkPos, MinecraftPacket packet) {
-        Player[] snap = _playersSnapshot;
+        Player[] snap = Players.Snapshot;
         foreach (Player player in snap) {
-            if (!_playerStates.TryGetValue(player, out PlayerWorldState? state) || state.Disconnected) continue;
-            lock (state.Lock) {
-                if (!state.LoadedChunks.Contains(chunkPos)) continue;
-                state.PendingPackets.Enqueue(packet);
-            }
+            if (!_views.TryGetValue(player, out PlayerChunkView? view) || view.Disconnected) continue;
+            view.RequeueForLight(neighbours);
         }
     }
 
     private ChunkData? TryGetLoadedChunk(Vec2<int> pos) {
-        return _chunkTasks.TryGetValue(pos, out Task<ChunkData>? t) && t.IsCompletedSuccessfully ? t.Result : null;
-    }
-
-    private MinecraftPacket BuildChunkPacket(Vec2<int> pos, ChunkData data) {
-        return new ClientBoundChunkDataAndUpdateLightPacket {
-            ChunkX = pos.X,
-            ChunkZ = pos.Y,
-            Data = data,
-            Light = _lighting.GetLighting(pos, data, TryGetLoadedChunk, Server.Registry, Dimension.HasSkyLight)
-        };
+        return _chunks.TryGet(pos);
     }
 
     #endregion
@@ -868,7 +884,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     }
 
     public Player[] GetViewersOf(Vec2<int> chunkPos) {
-        Player[] snap = _playersSnapshot;
+        Player[] snap = Players.Snapshot;
         if (snap.Length == 0) return [];
 
         Player[] buffer = new Player[snap.Length];
@@ -906,16 +922,21 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         });
     }
 
+    /// <summary>
+    /// Sends a chunk straight to an audience, outside the per player queue. The packet is the shared,
+    /// snapshotted one, so this no longer races a block write, but it can still overtake chunks the
+    /// streaming loop already owes those players. Normal streaming does not go through here.
+    /// </summary>
     public void SendChunkUpdate(Vec2<int> pos, IAudience audience) {
-        ChunkData? data = TryGetLoadedChunk(pos);
-        if (data == null) {
+        MinecraftPacket? packet = _chunks.BuildPacket(pos);
+        if (packet == null) {
             throw new InvalidOperationException($"Chunk at {pos} is not loaded.");
         }
-        audience.SendPacket(BuildChunkPacket(pos, data));
+        audience.SendPacket(packet);
     }
 
     public void SendPacket(MinecraftPacket packet) {
-        Player[] snap = _playersSnapshot;
+        Player[] snap = Players.Snapshot;
         for (int i = 0; i < snap.Length; i++) snap[i].SendPacket(packet);
     }
 
@@ -933,22 +954,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
     private Vec3<int> GameToProtocolPos(Vec3<int> pos) {
         return new Vec3<int>(pos.X, pos.Y - _minY, pos.Z);
-    }
-
-    #endregion
-
-    #region player_state
-
-    private sealed class PlayerWorldState {
-        public Vec2<int>? CurrentChunk;
-        public readonly HashSet<Vec2<int>> LoadedChunks = [];
-        public readonly Queue<MinecraftPacket> PendingPackets = new();
-        public readonly Lock Lock = new();
-        public volatile bool Disconnected;
-        public Action? CancelMoveListener;
-        public Action? DisconnectHandler;
-        public int RemovedFlag;    // Interlocked
-        public int SendInProgress; // Interlocked — one socket write in flight at a time
     }
 
     #endregion

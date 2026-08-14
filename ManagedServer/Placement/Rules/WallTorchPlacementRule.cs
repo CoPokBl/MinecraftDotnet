@@ -17,8 +17,8 @@ namespace ManagedServer.Placement.Rules;
 /// item's decision rather than the block's. Until that item level split exists, a torch aimed at a
 /// wall reaches this rule only if the wall torch block itself is what is being placed.
 /// </summary>
-public sealed class WallTorchPlacementRule : IBlockPlacementRule {
-    public BlockClass VanillaClass => BlockClass.WallTorchBlock;
+public class WallTorchPlacementRule : IBlockPlacementRule {
+    public virtual BlockClass VanillaClass => BlockClass.WallTorchBlock;
 
     public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
         if (block is not IHorizontalFacing torch) {
@@ -52,4 +52,19 @@ public sealed class WallTorchPlacementRule : IBlockPlacementRule {
             ? Block.Air
             : block;
     }
+}
+
+/// <summary>
+/// <c>RedstoneWallTorchBlock</c>, which is the same three hooks as a wall torch and inherits none of
+/// them: it extends <c>RedstoneTorchBlock</c> and calls <c>WallTorchBlock</c>'s static
+/// <c>canSurvive</c> by hand.
+/// <p/>
+/// So the class chain here is <c>[RedstoneWallTorchBlock, RedstoneTorchBlock, BaseTorchBlock, ...]</c>
+/// with no <c>WallTorchBlock</c> in it, and without this rule a redstone wall torch resolves to
+/// <see cref="BaseTorchPlacementRule"/> and asks the block <b>below</b> for support instead of the
+/// one behind it. That is permissive rather than obviously broken, which is why the conformance
+/// fixture found it and reading the hierarchy did not.
+/// </summary>
+public sealed class RedstoneWallTorchPlacementRule : WallTorchPlacementRule {
+    public override BlockClass VanillaClass => BlockClass.RedstoneWallTorchBlock;
 }

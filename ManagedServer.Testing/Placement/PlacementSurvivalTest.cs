@@ -237,14 +237,14 @@ public class PlacementSurvivalTest {
 
         IBlock? twoPost = scene.StateFor(Block.Bell, west, BlockFace.PosX);
         Assert.That(twoPost, Is.Not.Null);
-        Assert.That(PlacementHelpers.PropertyOf(twoPost!, "attachment"), Is.EqualTo("double_wall"),
+        Assert.That(((IBellAttached)twoPost!).Attachment, Is.EqualTo(BellAttachType.DoubleWall),
             "walls both sides give the two post form");
 
         scene.Set(east, Block.Air);
         IBlock afterLoss = rule.UpdateShape(twoPost!, scene.World, at, BlockFace.PosX, east, Block.Air);
         Assert.Multiple(() => {
             Assert.That(afterLoss.Identifier, Is.EqualTo(Block.Bell.Identifier), "it is still a bell");
-            Assert.That(PlacementHelpers.PropertyOf(afterLoss, "attachment"), Is.EqualTo("single_wall"),
+            Assert.That(((IBellAttached)afterLoss).Attachment, Is.EqualTo(BellAttachType.SingleWall),
                 "and has dropped to one post");
         });
 
@@ -270,7 +270,7 @@ public class PlacementSurvivalTest {
         IBlock? placed = scene.StateFor(Block.Bell, wall, BlockFace.PosX);
         Assert.That(placed, Is.Not.Null);
         Assert.Multiple(() => {
-            Assert.That(PlacementHelpers.PropertyOf(placed!, "attachment"), Is.EqualTo("floor"),
+            Assert.That(((IBellAttached)placed!).Attachment, Is.EqualTo(BellAttachType.Floor),
                 "the floor below it is the stone the scene stands on");
             Assert.That(((IHorizontalFacing)placed!).Facing, Is.EqualTo(Direction.West),
                 "still facing back into the wall it was aimed at");

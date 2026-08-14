@@ -418,22 +418,33 @@ public class PolarLoader : ITerrainProvider {
         Present = 3
     }
 
+    /// <summary>
+    /// Called for a chunk the file does not contain, which is left empty. Off by default, because a
+    /// map smaller than a player's view distance is the normal case rather than an error: a four
+    /// chunk lobby at view distance eight is asked for 289 and answers 285 of them with nothing.
+    /// Logging that unconditionally put hundreds of writes, on the joining thread and under the
+    /// console lock, in the middle of every join.
+    /// </summary>
+    public Action<Vec2<int>>? MissingChunk { get; set; }
+
     public void GetChunk(ref ChunkData chunk) {
-        Chunks.TryGetValue(new Vec2<int>(chunk.ChunkX, chunk.ChunkZ), out ChunkData? data);
+        Vec2<int> pos = new(chunk.ChunkX, chunk.ChunkZ);
+        Chunks.TryGetValue(pos, out ChunkData? data);
         if (data == null) {
-            Console.WriteLine("Polar chunk not found: " + chunk.ChunkX + ", " + chunk.ChunkZ);
+            MissingChunk?.Invoke(pos);
             return;
         }
-        
+
         chunk = data.Clone();  // Update the original chunk reference with the loaded data
     }
 
     public void GetChunks(int start, int count, ChunkData[] chunks) {
         for (int i = start; i < start + count; i++) {
-            if (Chunks.TryGetValue(new Vec2<int>(chunks[i].ChunkX, chunks[i].ChunkZ), out ChunkData? data)) {
+            Vec2<int> pos = new(chunks[i].ChunkX, chunks[i].ChunkZ);
+            if (Chunks.TryGetValue(pos, out ChunkData? data)) {
                 chunks[i] = data;
             } else {
-                Console.WriteLine("Polar chunk not found: " + chunks[i].ChunkX + ", " + chunks[i].ChunkZ);
+                MissingChunk?.Invoke(pos);
             }
         }
     }

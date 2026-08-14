@@ -26,6 +26,12 @@ public interface IBlock : IProtocolType {
     public Identifier? BlockEntity { get; }
     public Identifier? Item { get; }
 
+    /// <summary><see cref="BlockInfo.LootTable"/>: which table this block drops from, if any.</summary>
+    public Identifier? LootTable { get; }
+
+    /// <summary><see cref="BlockInfo.Experience"/>: the ore experience range, if any.</summary>
+    public (int Min, int Max)? Experience { get; }
+
     public float Hardness { get; }
     public bool Solid { get; }
     public bool Liquid { get; }

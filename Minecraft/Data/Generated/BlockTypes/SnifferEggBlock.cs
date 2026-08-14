@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:sniffer_egg", "block.minecraft.sniffer_egg", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sniffer_egg", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:sniffer_egg", "block.minecraft.sniffer_egg", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sniffer_egg", BlockInfo.VanillaOnly, "minecraft:blocks/sniffer_egg");
     private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Normal, 28, "metal", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S922, BlockShapes.S922, BlockShapes.S1, BlockShapes.S1, BlockShapes.S922, BlockShapes.S922);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record SnifferEggBlock(Identifier Identifier, int Hatch) : IBlock {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

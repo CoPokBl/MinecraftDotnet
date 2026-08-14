@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:farmland", "block.minecraft.farmland", 0.6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:farmland", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:farmland", "block.minecraft.farmland", 0.6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:farmland", BlockInfo.VanillaOnly, "minecraft:blocks/farmland");
     private static readonly BlockStateInfo I0 = new(0.6f, 0, 0, PushReaction.Normal, 10, "gravel", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, true, true, true, true, false, false, false, [], null, BlockShapes.S522, BlockShapes.S522, BlockShapes.S1, BlockShapes.S522, BlockShapes.S522, BlockShapes.S522);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record FarmlandBlock(Identifier Identifier, int Moisture) : IBlock {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

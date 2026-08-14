@@ -34,15 +34,25 @@ public class SkyWarsGame(ManagedMinecraftServer server, Player[] players, Action
     
     private static readonly Vec3<double> SpecSpawn = new(0.5, 25, 0.5);
     private const int StartTimeSeconds = 5;
-    
+
+    /// <summary>How long nothing can hurt anyone after the game starts.</summary>
+    private const int SpawnGraceSeconds = 3;
+
     public readonly List<Player> RemainingPlayers = [];
     public World World { get; private set; } = null!;
     public bool HasEnded { get; private set; }
+
+    /// <summary>The tick the spawn grace runs out on, counted from <see cref="Start"/>.</summary>
+    private ulong _graceEndsAtTick;
 
     private static FeatureBundle SkyWarsFeatures => new(
         new SkyWarsChestsFeature(),
         new DropItemsOnGroundFeature(),
         new ItemPickupFeature(),
+        new BlockDropsFeature(),
+        new ItemEntityFeature(),
+        new BlockExperienceFeature(),
+        new ExperiencePickupFeature(),
         new LuckyBlocksFeature(),
         new SkyWarsItemsFeature(),
         new AttributeModifiersFeature(),
@@ -126,6 +136,18 @@ public class SkyWarsGame(ManagedMinecraftServer server, Player[] players, Action
         
         World.AddFeature(new SkyWarsCombatFeature());
         World.AddFeature(new FallDamageFeature());
+
+        // Nobody can be hurt for the first few seconds, so an island neighbour cannot be shot off theirs
+        // while the map is still arriving. Cancelling EntityDamageEvent is what makes it whole rather
+        // than a reduction: the hit never happened, so it leaves no invulnerable window behind and
+        // nothing downstream reacts to it. It runs out on a tick rather than a wall clock so a lagging
+        // server gives everyone the same three seconds of game.
+        _graceEndsAtTick = server.CurrentTick + (ulong)(SpawnGraceSeconds * server.TargetTicksPerSecond);
+        World.Events.AddListener<EntityDamageEvent>(e => {
+            if (e.LivingEntity is Player && server.CurrentTick < _graceEndsAtTick) {
+                e.Cancelled = true;
+            }
+        });
 
         // Whatever ran a player out of health (combat, a fall, lava, a lucky block) arrives here, so
         // there is nothing left for the individual damage sources to report. Cancelling drops the death

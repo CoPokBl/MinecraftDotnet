@@ -36,6 +36,31 @@ public class VegetationSupportTableTest {
     }
 
     /// <summary>
+    /// The stem and fruit an attached stem reverts to, which are the same kind of constructor
+    /// argument. A missing row here is an attached stem that stays attached to nothing after its
+    /// pumpkin is broken.
+    /// </summary>
+    [Test]
+    public void EveryAttachedStemNamesWhatItRevertsTo() {
+        Assert.That(BlocksOf([BlockClass.AttachedStemBlock]),
+            Is.EquivalentTo(AttachedStemPlacementRule.Grown.Keys));
+    }
+
+    /// <summary>Both halves of each row name blocks that exist.</summary>
+    [Test]
+    public void EveryAttachedStemsStemAndFruitExist() {
+        Assert.Multiple(() => {
+            foreach (AttachedStemPlacementRule.Attachment attachment
+                     in AttachedStemPlacementRule.Grown.Values) {
+                Assert.That(Server.Registry.Blocks.Contains(attachment.Stem), Is.True,
+                    $"{attachment.Stem} is not a block");
+                Assert.That(Server.Registry.Blocks.Contains(attachment.Fruit), Is.True,
+                    $"{attachment.Fruit} is not a block");
+            }
+        });
+    }
+
+    /// <summary>
     /// A family names both of its halves, and each half agrees which family it is in, so a typo in
     /// one of the two identifiers cannot pass by matching the other row.
     /// </summary>

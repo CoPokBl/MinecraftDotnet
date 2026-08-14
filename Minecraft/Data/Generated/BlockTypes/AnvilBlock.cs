@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AnvilBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:anvil", "block.minecraft.anvil", 1200f, 0.6f, 1f, 1f, 0f, true, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:anvil", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:anvil", "block.minecraft.anvil", 1200f, 0.6f, 1f, 1f, 0f, true, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:anvil", BlockInfo.VanillaOnly, "minecraft:blocks/anvil");
     private static readonly BlockStateInfo I0 = new(5f, 0, 0, PushReaction.Block, 6, "anvil", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S323, BlockShapes.S323, BlockShapes.S1, BlockShapes.S323, BlockShapes.S323, BlockShapes.S323);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S324, CollisionShape = BlockShapes.S324, OcclusionShape = BlockShapes.S324, VisualShape = BlockShapes.S324, SupportShape = BlockShapes.S324 };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record AnvilBlock(Identifier Identifier, Direction Facing) : IBlock, IHor
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

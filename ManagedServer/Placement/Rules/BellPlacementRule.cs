@@ -25,11 +25,6 @@ namespace ManagedServer.Placement.Rules;
 public sealed class BellPlacementRule : IBlockPlacementRule {
     public BlockClass VanillaClass => BlockClass.BellBlock;
 
-    private const string Attachment = "attachment";
-    private const string Floor = "floor";
-    private const string Ceiling = "ceiling";
-    private const string SingleWall = "single_wall";
-    private const string DoubleWall = "double_wall";
 
     public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
         if (block is not IHorizontalFacing) {
@@ -42,8 +37,8 @@ public sealed class BellPlacementRule : IBlockPlacementRule {
 
         if (!Directions.IsHorizontal(clicked)) {
             IBlock vertical = Facing(
-                PlacementHelpers.WithProperty(block, Attachment,
-                    clicked == BlockFace.NegY ? Ceiling : Floor),
+                WithAttachment(block,
+                    clicked == BlockFace.NegY ? BellAttachType.Ceiling : BellAttachType.Floor),
                 context.HorizontalDirection);
             return CanSurvive(vertical, world, pos) ? vertical : null;
         }
@@ -56,14 +51,16 @@ public sealed class BellPlacementRule : IBlockPlacementRule {
             && PlacementHelpers.FaceSturdy(world, pos.GetBlockTowards(clicked), side);
 
         IBlock wall = Facing(
-            PlacementHelpers.WithProperty(block, Attachment, doubleAttached ? DoubleWall : SingleWall),
+            WithAttachment(block,
+                doubleAttached ? BellAttachType.DoubleWall : BellAttachType.SingleWall),
             clicked.Opposite().ToDirection());
         if (CanSurvive(wall, world, pos)) {
             return wall;
         }
 
         bool standsBelow = PlacementHelpers.FaceSturdy(world, pos.WithY(pos.Y - 1), BlockFace.PosY);
-        IBlock fallback = PlacementHelpers.WithProperty(wall, Attachment, standsBelow ? Floor : Ceiling);
+        IBlock fallback = WithAttachment(wall,
+            standsBelow ? BellAttachType.Floor : BellAttachType.Ceiling);
         return CanSurvive(fallback, world, pos) ? fallback : null;
     }
 
@@ -86,9 +83,10 @@ public sealed class BellPlacementRule : IBlockPlacementRule {
             return block;
         }
 
-        string attachment = PlacementHelpers.PropertyOf(block, Attachment);
+        BellAttachType attachment = AttachmentOf(block);
         BlockFace connection = ConnectedDirection(block).Opposite();
-        if (connection == toNeighbour && attachment != DoubleWall && !CanSurvive(block, world, pos)) {
+        if (connection == toNeighbour && attachment != BellAttachType.DoubleWall
+            && !CanSurvive(block, world, pos)) {
             return Block.Air;
         }
 
@@ -101,16 +99,16 @@ public sealed class BellPlacementRule : IBlockPlacementRule {
         // first one is the face pointing away from the bell rather than back at it. Transcribed as
         // written: it makes no difference for a whole cube and every one of these neighbours is a
         // wall, but the two are not the same question and the jar picks this one.
-        if (attachment == DoubleWall
+        if (attachment == BellAttachType.DoubleWall
             && !ShapeSupport.IsFaceSturdy(neighbourState, toNeighbour)) {
-            return Facing(PlacementHelpers.WithProperty(block, Attachment, SingleWall),
+            return Facing(WithAttachment(block, BellAttachType.SingleWall),
                 toNeighbour.Opposite().ToDirection());
         }
 
-        if (attachment == SingleWall
+        if (attachment == BellAttachType.SingleWall
             && connection.Opposite() == toNeighbour
             && ShapeSupport.IsFaceSturdy(neighbourState, bell.Facing.ToFace())) {
-            return PlacementHelpers.WithProperty(block, Attachment, DoubleWall);
+            return WithAttachment(block, BellAttachType.DoubleWall);
         }
 
         return block;
@@ -122,11 +120,19 @@ public sealed class BellPlacementRule : IBlockPlacementRule {
     /// survival test above lets it off.
     /// </summary>
     private static BlockFace ConnectedDirection(IBlock block) {
-        return PlacementHelpers.PropertyOf(block, Attachment) switch {
-            Floor => BlockFace.PosY,
-            Ceiling => BlockFace.NegY,
+        return AttachmentOf(block) switch {
+            BellAttachType.Floor => BlockFace.PosY,
+            BellAttachType.Ceiling => BlockFace.NegY,
             _ => block is IHorizontalFacing facing ? facing.Facing.ToFace().Opposite() : BlockFace.PosY
         };
+    }
+
+    private static IBlock WithAttachment(IBlock block, BellAttachType attachment) {
+        return block is IBellAttached bell ? bell.WithAttachment(attachment) : block;
+    }
+
+    private static BellAttachType AttachmentOf(IBlock block) {
+        return block is IBellAttached bell ? bell.Attachment : BellAttachType.Floor;
     }
 
     private static IBlock Facing(IBlock block, Direction direction) {

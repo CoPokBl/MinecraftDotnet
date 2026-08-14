@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direction Facing) : IBlock, IAttachFaced, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:grindstone", "block.minecraft.grindstone", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:grindstone", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:grindstone", "block.minecraft.grindstone", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:grindstone", BlockInfo.VanillaOnly, "minecraft:blocks/grindstone");
     private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.Block, 6, "stone", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S592, BlockShapes.S592, BlockShapes.S1, BlockShapes.S592, BlockShapes.S592, BlockShapes.S592);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S593, CollisionShape = BlockShapes.S593, OcclusionShape = BlockShapes.S593, VisualShape = BlockShapes.S593, SupportShape = BlockShapes.S593 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S594, CollisionShape = BlockShapes.S594, OcclusionShape = BlockShapes.S594, VisualShape = BlockShapes.S594, SupportShape = BlockShapes.S594 };
@@ -37,6 +37,8 @@ public record GrindstoneBlock(Identifier Identifier, AttachDirection Face, Direc
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

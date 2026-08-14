@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BrownMushroomBlockBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool West) : IBlock, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:huge_mushroom", "block.minecraft.brown_mushroom_block", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:brown_mushroom_block", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:huge_mushroom", "block.minecraft.brown_mushroom_block", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:brown_mushroom_block", BlockInfo.VanillaOnly, "minecraft:blocks/brown_mushroom_block");
     private static readonly BlockStateInfo I0 = new(0.2f, 0, 15, PushReaction.Normal, 10, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record BrownMushroomBlockBlock(Identifier Identifier, bool Down, bool Eas
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

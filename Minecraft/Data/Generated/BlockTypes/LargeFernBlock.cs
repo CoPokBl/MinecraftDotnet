@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LargeFernBlock(Identifier Identifier, BlockHalf Half) : IBlock, IDoubleHalved {
-    private static readonly BlockInfo Data = new("minecraft:double_plant", "block.minecraft.large_fern", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:large_fern", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:double_plant", "block.minecraft.large_fern", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:large_fern", BlockInfo.VanillaOnly, "minecraft:blocks/large_fern");
     private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "grass", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record LargeFernBlock(Identifier Identifier, BlockHalf Half) : IBlock, ID
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

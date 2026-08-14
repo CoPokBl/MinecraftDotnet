@@ -102,6 +102,17 @@ public sealed class GrowingPlantPlacementRule(BlockClass vanillaClass) : IBlockP
     /// The half that converts. A body whose tip has gone becomes the head; a head that has grown a
     /// neighbour ahead of it becomes a body. Vanilla schedules the break for a plant that has lost
     /// its footing, which is the part with no equivalent here, so a severed stalk stays.
+    /// <p/>
+    /// The head has <b>two</b> paths into a body, and only one of them is told about the cell ahead.
+    /// The other fires when the block <b>behind</b> changes: a head still standing but with its own
+    /// plant now in front of it is a head in the middle of a stalk, and turns into one. Missing that
+    /// leaves a growing tip buried inside the plant.
+    /// <p/>
+    /// <b>Documented divergence in the body's answer.</b> Vanilla converts a body with
+    /// <c>headBlock.getStateForPlacement(random)</c>, ie. the head at <c>random.nextInt(25)</c>, and
+    /// the head written here is the default age instead. It is the same choice
+    /// <see cref="GetStateForPlacement"/> makes and for the same reason: there is no growth tick to
+    /// consume an age. Vanilla's own client and server roll this separately in any case.
     /// </summary>
     public IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
         Vec3<int> neighbourPos, IBlock neighbourState) {
@@ -109,23 +120,42 @@ public sealed class GrowingPlantPlacementRule(BlockClass vanillaClass) : IBlockP
             return block;
         }
 
+        bool isHead = block.Identifier == family.Head;
+        IBlock body = world.Server.Registry.Blocks[family.Body];
+
+        if (isHead && toNeighbour == family.Growth.Opposite() && CanSurvive(block, world, pos)
+            && IsPartOf(world.GetBlock(pos.GetBlockTowards(family.Growth)), family)) {
+            return CarryOver(block, body, family);
+        }
+
         if (toNeighbour != family.Growth) {
             return block;
         }
 
-        bool isHead = block.Identifier == family.Head;
         bool aheadIsPlant = IsPartOf(neighbourState, family);
 
         if (isHead && aheadIsPlant) {
-            return world.Server.Registry.Blocks[family.Body];
+            return CarryOver(block, body, family);
         }
 
         if (!isHead && !aheadIsPlant) {
-            return world.Server.Registry.Blocks[family.Head];
+            return CarryOver(block, world.Server.Registry.Blocks[family.Head], family);
         }
 
         return block;
     }
+
+    /// <summary>
+    /// <c>updateBodyAfterConvertedFromHead</c> and <c>updateHeadAfterConvertedFromBody</c>. Both are
+    /// the identity for three of the four families; cave vines override both to carry the
+    /// <c>berries</c> flag across, so a stalk converting either way keeps its glow berries.
+    /// </summary>
+    private static IBlock CarryOver(IBlock from, IBlock to, Family family) {
+        return family.Head == "minecraft:cave_vines"
+            ? ((IBerried)to).WithBerries(((IBerried)from).Berries)
+            : to;
+    }
+
 
     private static bool IsPartOf(IBlock block, Family family) {
         return block.Identifier == family.Head || block.Identifier == family.Body;
@@ -161,12 +191,12 @@ public sealed class BambooStalkPlacementRule : IBlockPlacementRule {
 
         if (IBlock.SimilarTo(below, block)) {
             // One stalk of leafless bamboo above a leafy one, so a hand planted stalk looks grown.
-            return WithAge(block, int.Parse(PlacementHelpers.PropertyOf(below, "age")) > 0 ? 1 : 0);
+            return WithAge(block, below is IAged stalk && stalk.Age > 0 ? 1 : 0);
         }
 
         IBlock above = world.GetBlock(pos.WithY(pos.Y + 1));
         if (IBlock.SimilarTo(above, block)) {
-            return WithAge(block, int.Parse(PlacementHelpers.PropertyOf(above, "age")));
+            return WithAge(block, above is IAged stalk ? stalk.Age : 0);
         }
 
         return Block.BambooSapling;
@@ -188,13 +218,13 @@ public sealed class BambooStalkPlacementRule : IBlockPlacementRule {
             return block;
         }
 
-        int age = int.Parse(PlacementHelpers.PropertyOf(block, "age"));
-        int aboveAge = int.Parse(PlacementHelpers.PropertyOf(neighbourState, "age"));
+        int age = block is IAged stalk ? stalk.Age : 0;
+        int aboveAge = neighbourState is IAged above ? above.Age : 0;
         return aboveAge > age ? WithAge(block, (age + 1) % 2) : block;
     }
 
     private static IBlock WithAge(IBlock block, int age) {
-        return PlacementHelpers.WithProperty(block, "age", age.ToString());
+        return block is IAged stalk ? stalk.WithAge(age) : block;
     }
 }
 
@@ -213,11 +243,11 @@ public sealed class MangrovePropagulePlacementRule : IBlockPlacementRule {
 
     public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
         IBlock state = PlacementHelpers.Waterlog(block, context);
-        return PlacementHelpers.WithProperty(state, "age", "4");
+        return state is IAged propagule ? propagule.WithAge(4) : state;
     }
 
     public bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
-        if (PlacementHelpers.PropertyOf(block, "hanging") == "true") {
+        if (block is IHanging { Hanging: true }) {
             return PlacementHelpers.InTag(world.Server.Registry, SupportsHanging,
                 world.GetBlock(pos.WithY(pos.Y + 1)).Identifier);
         }

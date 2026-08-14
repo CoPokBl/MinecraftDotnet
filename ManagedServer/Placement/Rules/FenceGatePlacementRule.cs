@@ -1,3 +1,5 @@
+using ManagedServer.Placement.Helpers;
+using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;
@@ -34,19 +36,32 @@ public sealed class FenceGatePlacementRule : IBlockPlacementRule {
             state = powered.WithPowered(open);
         }
 
-        return WithInWall(state, context.World.GetBlock(SideA(context.PlacePos, facing)),
-            context.World.GetBlock(SideB(context.PlacePos, facing)));
+        World world = context.World;
+        bool inWall = IsWall(world, world.GetBlock(SideA(context.PlacePos, facing)))
+                      || IsWall(world, world.GetBlock(SideB(context.PlacePos, facing)));
+
+        return state is IInWall gated ? gated.WithInWall(inWall) : state;
     }
 
     /// <summary>
-    /// A gate facing along Z looks west and east for a wall, one facing along X looks north and
-    /// south. <c>in_wall</c> is not exposed as a property interface because only this block has it,
-    /// so it goes through the state NBT.
+    /// A wall arriving or leaving beside the gate raises or drops it, and only across the gate's own
+    /// axis: the two cells the gate faces cannot change <c>in_wall</c> however they change.
+    /// <p/>
+    /// Both sides are read again rather than only the one that changed, because <c>in_wall</c> is a
+    /// single flag for the pair: a wall being broken on one side leaves the gate down if the other
+    /// side still has one.
     /// </summary>
-    private static IBlock WithInWall(IBlock state, IBlock sideA, IBlock sideB) {
-        bool inWall = IsWall(sideA) || IsWall(sideB);
-        return state.WithState(new NBT.Tags.CompoundTag(
-            ("in_wall", new NBT.Tags.StringTag(inWall ? "true" : "false"))));
+    public IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
+        Vec3<int> neighbourPos, IBlock neighbourState) {
+        if (block is not IHorizontalFacing gate || !Directions.IsHorizontal(toNeighbour)
+            || !Directions.SameAxis(gate.Facing.ClockWise(), toNeighbour.ToDirection())) {
+            return block;
+        }
+
+        bool inWall = IsWall(world, neighbourState)
+                      || IsWall(world, world.GetBlock(pos.GetBlockTowards(toNeighbour.Opposite())));
+
+        return block is IInWall gated ? gated.WithInWall(inWall) : block;
     }
 
     private static Vec3<int> SideA(Vec3<int> pos, Direction facing) {
@@ -57,6 +72,13 @@ public sealed class FenceGatePlacementRule : IBlockPlacementRule {
         return pos.GetBlockTowards(facing.CounterClockWise().ToFace());
     }
 
-    /// <summary><c>FenceGateBlock.isWall</c>, an <c>instanceof WallBlock</c> upstream.</summary>
-    private static bool IsWall(IBlock block) => BlockClasses.Is(block.Identifier, BlockClass.WallBlock);
+    /// <summary>
+    /// <c>FenceGateBlock.isWall</c>, which is <c>state.is(BlockTags.WALLS)</c> and not an
+    /// <c>instanceof WallBlock</c>: the tag is what a datapack can change.
+    /// </summary>
+    private static bool IsWall(World world, IBlock block) {
+        return PlacementHelpers.InTag(world.Server.Registry, Walls, block.Identifier);
+    }
+
+    private static readonly Identifier Walls = "minecraft:walls";
 }

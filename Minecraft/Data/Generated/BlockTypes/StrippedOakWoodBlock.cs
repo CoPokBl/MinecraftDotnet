@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record StrippedOakWoodBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
-    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.stripped_oak_wood", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stripped_oak_wood", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.stripped_oak_wood", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stripped_oak_wood", BlockInfo.VanillaOnly, "minecraft:blocks/stripped_oak_wood");
     private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record StrippedOakWoodBlock(Identifier Identifier, Axis Axis) : IBlock, I
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

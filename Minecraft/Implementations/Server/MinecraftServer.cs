@@ -1,12 +1,13 @@
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
+using Minecraft.Implementations;
 using Minecraft.Implementations.Server.Events;
 
 namespace Minecraft.Implementations.Server;
 
 public class MinecraftServer {
     public List<IServerFeature> Features { get; }
-    public List<PlayerConnection> Connections { get; } = [];
+    public SnapshotList<PlayerConnection> Connections { get; } = new();
     public EventNode<IServerEvent> Events { get; } = new();
     
     public MinecraftServer(List<IServerFeature>? features) {

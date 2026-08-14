@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type TypeValue, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:trapped_chest", "block.minecraft.trapped_chest", 2.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:trapped_chest", "minecraft:trapped_chest", BlockInfo.VanillaOnly);
+public record TrappedChestBlock(Identifier Identifier, ChestType Type, Direction Facing, bool Waterlogged) : IBlock, IChestTyped, IHorizontalFacing, IWaterlogged {
+    private static readonly BlockInfo Data = new("minecraft:trapped_chest", "block.minecraft.trapped_chest", 2.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:trapped_chest", "minecraft:trapped_chest", BlockInfo.VanillaOnly, "minecraft:blocks/trapped_chest");
     private static readonly BlockStateInfo I0 = new(2.5f, 0, 1, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, true, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
@@ -39,6 +39,8 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -73,6 +75,8 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 
+    public IBlock WithType(ChestType type) => this with { Type = type };
+
     public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
     public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
@@ -80,8 +84,8 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
 
     public uint StateId {
         get {
-            return TypeValue switch {
-                Type.Single => Facing switch {
+            return Type switch {
+                ChestType.Single => Facing switch {
                     Direction.North => Waterlogged switch {
                         true => 11207,
                         false => 11208,
@@ -100,7 +104,7 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                Type.Left => Facing switch {
+                ChestType.Left => Facing switch {
                     Direction.North => Waterlogged switch {
                         true => 11209,
                         false => 11210,
@@ -119,7 +123,7 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                Type.Right => Facing switch {
+                ChestType.Right => Facing switch {
                     Direction.North => Waterlogged switch {
                         true => 11211,
                         false => 11212,
@@ -138,44 +142,44 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(TypeValue), TypeValue, "Unknown value for property type.")
+                _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            11207 => new TrappedChestBlock(Identifier, Type.Single, Direction.North, true),
-            11208 => new TrappedChestBlock(Identifier, Type.Single, Direction.North, false),
-            11209 => new TrappedChestBlock(Identifier, Type.Left, Direction.North, true),
-            11210 => new TrappedChestBlock(Identifier, Type.Left, Direction.North, false),
-            11211 => new TrappedChestBlock(Identifier, Type.Right, Direction.North, true),
-            11212 => new TrappedChestBlock(Identifier, Type.Right, Direction.North, false),
-            11213 => new TrappedChestBlock(Identifier, Type.Single, Direction.South, true),
-            11214 => new TrappedChestBlock(Identifier, Type.Single, Direction.South, false),
-            11215 => new TrappedChestBlock(Identifier, Type.Left, Direction.South, true),
-            11216 => new TrappedChestBlock(Identifier, Type.Left, Direction.South, false),
-            11217 => new TrappedChestBlock(Identifier, Type.Right, Direction.South, true),
-            11218 => new TrappedChestBlock(Identifier, Type.Right, Direction.South, false),
-            11219 => new TrappedChestBlock(Identifier, Type.Single, Direction.West, true),
-            11220 => new TrappedChestBlock(Identifier, Type.Single, Direction.West, false),
-            11221 => new TrappedChestBlock(Identifier, Type.Left, Direction.West, true),
-            11222 => new TrappedChestBlock(Identifier, Type.Left, Direction.West, false),
-            11223 => new TrappedChestBlock(Identifier, Type.Right, Direction.West, true),
-            11224 => new TrappedChestBlock(Identifier, Type.Right, Direction.West, false),
-            11225 => new TrappedChestBlock(Identifier, Type.Single, Direction.East, true),
-            11226 => new TrappedChestBlock(Identifier, Type.Single, Direction.East, false),
-            11227 => new TrappedChestBlock(Identifier, Type.Left, Direction.East, true),
-            11228 => new TrappedChestBlock(Identifier, Type.Left, Direction.East, false),
-            11229 => new TrappedChestBlock(Identifier, Type.Right, Direction.East, true),
-            11230 => new TrappedChestBlock(Identifier, Type.Right, Direction.East, false),
+            11207 => new TrappedChestBlock(Identifier, ChestType.Single, Direction.North, true),
+            11208 => new TrappedChestBlock(Identifier, ChestType.Single, Direction.North, false),
+            11209 => new TrappedChestBlock(Identifier, ChestType.Left, Direction.North, true),
+            11210 => new TrappedChestBlock(Identifier, ChestType.Left, Direction.North, false),
+            11211 => new TrappedChestBlock(Identifier, ChestType.Right, Direction.North, true),
+            11212 => new TrappedChestBlock(Identifier, ChestType.Right, Direction.North, false),
+            11213 => new TrappedChestBlock(Identifier, ChestType.Single, Direction.South, true),
+            11214 => new TrappedChestBlock(Identifier, ChestType.Single, Direction.South, false),
+            11215 => new TrappedChestBlock(Identifier, ChestType.Left, Direction.South, true),
+            11216 => new TrappedChestBlock(Identifier, ChestType.Left, Direction.South, false),
+            11217 => new TrappedChestBlock(Identifier, ChestType.Right, Direction.South, true),
+            11218 => new TrappedChestBlock(Identifier, ChestType.Right, Direction.South, false),
+            11219 => new TrappedChestBlock(Identifier, ChestType.Single, Direction.West, true),
+            11220 => new TrappedChestBlock(Identifier, ChestType.Single, Direction.West, false),
+            11221 => new TrappedChestBlock(Identifier, ChestType.Left, Direction.West, true),
+            11222 => new TrappedChestBlock(Identifier, ChestType.Left, Direction.West, false),
+            11223 => new TrappedChestBlock(Identifier, ChestType.Right, Direction.West, true),
+            11224 => new TrappedChestBlock(Identifier, ChestType.Right, Direction.West, false),
+            11225 => new TrappedChestBlock(Identifier, ChestType.Single, Direction.East, true),
+            11226 => new TrappedChestBlock(Identifier, ChestType.Single, Direction.East, false),
+            11227 => new TrappedChestBlock(Identifier, ChestType.Left, Direction.East, true),
+            11228 => new TrappedChestBlock(Identifier, ChestType.Left, Direction.East, false),
+            11229 => new TrappedChestBlock(Identifier, ChestType.Right, Direction.East, true),
+            11230 => new TrappedChestBlock(Identifier, ChestType.Right, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            TypeValue = properties.Contains("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
+            Type = properties.Contains("type") ? ChestTypeExtensions.FromString(properties["type"].GetString()) : Type,
             Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
             Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
@@ -183,33 +187,10 @@ public record TrappedChestBlock(Identifier Identifier, TrappedChestBlock.Type Ty
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(
-            ("type", new StringTag(TypeToName(TypeValue))),
+            ("type", new StringTag(Type.ToName())),
             ("facing", new StringTag(Facing.ToName())),
             ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     
-    public enum Type {
-        Single,
-        Left,
-        Right,
-    }
-
-    public static Type TypeFromString(string value) {
-        return value switch {
-            "single" => Type.Single,
-            "left" => Type.Left,
-            "right" => Type.Right,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Type.")
-        };
-    }
-
-    public static string TypeToName(Type value) {
-        return value switch {
-            Type.Single => "single",
-            Type.Left => "left",
-            Type.Right => "right",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Type value.")
-        };
-    }
 }

@@ -81,6 +81,13 @@ public static class Directions {
     /// <summary>Whether two horizontals share an axis, ie. are equal or opposite.</summary>
     public static bool SameAxis(Direction a, Direction b) => a == b || a == b.Opposite();
 
+    /// <summary>
+    /// The same over faces, where a vertical is on the Y axis and so shares it with nothing
+    /// horizontal. Written as equal or opposite rather than through an axis enum, which there is
+    /// none of here.
+    /// </summary>
+    public static bool SameAxis(BlockFace a, BlockFace b) => a == b || a == b.Opposite();
+
     public static Direction Opposite(this Direction direction) => direction switch {
         Direction.North => Direction.South,
         Direction.South => Direction.North,

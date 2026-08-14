@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PotentSulfurBlock(Identifier Identifier, PotentSulfurBlock.PotentSulfurState PotentSulfurStateValue) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:potent_sulfur", "block.minecraft.potent_sulfur", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:potent_sulfur", "minecraft:potent_sulfur", BlockInfo.VanillaOnly);
+public record PotentSulfurBlock(Identifier Identifier, PotentSulfurState PotentSulfurState) : IBlock, IPotentSulfured {
+    private static readonly BlockInfo Data = new("minecraft:potent_sulfur", "block.minecraft.potent_sulfur", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:potent_sulfur", "minecraft:potent_sulfur", BlockInfo.VanillaOnly, "minecraft:blocks/potent_sulfur");
     private static readonly BlockStateInfo I0 = new(1.5f, 0, 15, PushReaction.Normal, 30, "potent_sulfur", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record PotentSulfurBlock(Identifier Identifier, PotentSulfurBlock.PotentS
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -61,16 +63,18 @@ public record PotentSulfurBlock(Identifier Identifier, PotentSulfurBlock.PotentS
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
 
+    public IBlock WithPotentSulfurState(PotentSulfurState potentSulfurState) => this with { PotentSulfurState = potentSulfurState };
+
 
     public uint StateId {
         get {
-            return PotentSulfurStateValue switch {
+            return PotentSulfurState switch {
                 PotentSulfurState.Dry => 24688,
                 PotentSulfurState.Wet => 24689,
                 PotentSulfurState.Dormant => 24690,
                 PotentSulfurState.Erupting => 24691,
                 PotentSulfurState.Continuous => 24692,
-                _ => throw new ArgumentOutOfRangeException(nameof(PotentSulfurStateValue), PotentSulfurStateValue, "Unknown value for property potent_sulfur_state.")
+                _ => throw new ArgumentOutOfRangeException(nameof(PotentSulfurState), PotentSulfurState, "Unknown value for property potent_sulfur_state.")
             };
         }
     }
@@ -88,43 +92,14 @@ public record PotentSulfurBlock(Identifier Identifier, PotentSulfurBlock.PotentS
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            PotentSulfurStateValue = properties.Contains("potent_sulfur_state") ? PotentSulfurStateFromString(properties["potent_sulfur_state"].GetString()) : PotentSulfurStateValue,
+            PotentSulfurState = properties.Contains("potent_sulfur_state") ? PotentSulfurStateExtensions.FromString(properties["potent_sulfur_state"].GetString()) : PotentSulfurState,
         };
     }
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(
-            ("potent_sulfur_state", new StringTag(PotentSulfurStateToName(PotentSulfurStateValue)))
+            ("potent_sulfur_state", new StringTag(PotentSulfurState.ToName()))
         );
     }
     
-    public enum PotentSulfurState {
-        Dry,
-        Wet,
-        Dormant,
-        Erupting,
-        Continuous,
-    }
-
-    public static PotentSulfurState PotentSulfurStateFromString(string value) {
-        return value switch {
-            "dry" => PotentSulfurState.Dry,
-            "wet" => PotentSulfurState.Wet,
-            "dormant" => PotentSulfurState.Dormant,
-            "erupting" => PotentSulfurState.Erupting,
-            "continuous" => PotentSulfurState.Continuous,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for PotentSulfurState.")
-        };
-    }
-
-    public static string PotentSulfurStateToName(PotentSulfurState value) {
-        return value switch {
-            PotentSulfurState.Dry => "dry",
-            PotentSulfurState.Wet => "wet",
-            PotentSulfurState.Dormant => "dormant",
-            PotentSulfurState.Erupting => "erupting",
-            PotentSulfurState.Continuous => "continuous",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown PotentSulfurState value.")
-        };
-    }
 }

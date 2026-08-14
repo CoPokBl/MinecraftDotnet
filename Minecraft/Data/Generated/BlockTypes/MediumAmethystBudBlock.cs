@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MediumAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool Waterlogged) : IBlock, IDirectional, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:amethyst_cluster", "block.minecraft.medium_amethyst_bud", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:medium_amethyst_bud", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:amethyst_cluster", "block.minecraft.medium_amethyst_bud", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:medium_amethyst_bud", BlockInfo.VanillaOnly, "minecraft:blocks/medium_amethyst_bud");
     private static readonly BlockStateInfo I0 = new(1.5f, 2, 1, PushReaction.Destroy, 24, "large_amethyst_bud", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S643, BlockShapes.S643, BlockShapes.S1, BlockShapes.S1, BlockShapes.S643, BlockShapes.S643);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S644, CollisionShape = BlockShapes.S644, VisualShape = BlockShapes.S644, SupportShape = BlockShapes.S644 };
@@ -41,6 +41,8 @@ public record MediumAmethystBudBlock(Identifier Identifier, Cardinal Facing, boo
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

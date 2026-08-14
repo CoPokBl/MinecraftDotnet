@@ -43,6 +43,14 @@ public abstract class VegetationPlacementRuleBase : IBlockPlacementRule {
     /// </summary>
     public virtual IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) => block;
 
+    /// <inheritdoc cref="GetStateForPlacement"/>
+    public virtual bool CanBeReplaced(IBlock existing, IBlockPlaceContext context) {
+        return IBlockPlacementRule.DefaultCanBeReplaced(existing, context);
+    }
+
+    /// <inheritdoc cref="GetStateForPlacement"/>
+    public virtual void OnPlaced(IBlock placed, IBlockPlaceContext context) { }
+
     public virtual bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
         Vec3<int> below = pos.WithY(pos.Y - 1);
         return MayPlaceOn(block, world.GetBlock(below), world, below);
@@ -166,14 +174,23 @@ public sealed class SeagrassPlacementRule : VegetationPlacementRuleBase {
 /// half checks its own, and placement checks the cell above as well so a two tall plant is never put
 /// half out of the water.
 /// </summary>
-public sealed class TallSeagrassPlacementRule : IBlockPlacementRule {
-    private static readonly DoublePlantPlacementRule DoublePlant = new();
-    private static readonly SeagrassPlacementRule Seagrass = new();
+public sealed class TallSeagrassPlacementRule : DoublePlantPlacementRule {
+    private static readonly Identifier CannotSupportSeagrass = "minecraft:cannot_support_seagrass";
 
-    public BlockClass VanillaClass => BlockClass.TallSeagrassBlock;
+    public override BlockClass VanillaClass => BlockClass.TallSeagrassBlock;
 
-    public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
-        IBlock? state = DoublePlant.GetStateForPlacement(block, context);
+    /// <summary>
+    /// The same question <c>SeagrassBlock</c> asks, and it is a copy upstream too: tall seagrass
+    /// extends <c>DoublePlantBlock</c> rather than <c>SeagrassBlock</c>, so the two share nothing but
+    /// the line.
+    /// </summary>
+    protected override bool MayPlaceOn(IBlock plant, IBlock below, World world, Vec3<int> belowPos) {
+        return ShapeSupport.IsFaceSturdy(below, BlockFace.PosY)
+               && !PlacementHelpers.InTag(world.Server.Registry, CannotSupportSeagrass, below.Identifier);
+    }
+
+    public override IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
+        IBlock? state = base.GetStateForPlacement(block, context);
         if (state is null) {
             return null;
         }
@@ -182,25 +199,16 @@ public sealed class TallSeagrassPlacementRule : IBlockPlacementRule {
         return PlacementHelpers.IsFullWaterAt(context.World, above) ? state : null;
     }
 
-    public void OnPlaced(IBlock placed, IBlockPlaceContext context) {
-        DoublePlant.OnPlaced(placed, context);
-    }
-
     /// <summary>
     /// The upper half wants its own lower half, exactly as any double plant does. The lower half adds
-    /// the water test to the seagrass one, which is why breaking the water column takes the plant.
+    /// the water test, which is why breaking the water column takes the plant.
     /// </summary>
-    public bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
+    public override bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
         if (block is IDoubleHalved { Half: BlockHalf.Upper }) {
-            return DoublePlant.CanSurvive(block, world, pos);
+            return base.CanSurvive(block, world, pos);
         }
 
-        return Seagrass.CanSurvive(block, world, pos) && PlacementHelpers.IsFullWaterAt(world, pos);
-    }
-
-    public IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
-        Vec3<int> neighbourPos, IBlock neighbourState) {
-        return DoublePlant.UpdateShape(block, world, pos, toNeighbour, neighbourPos, neighbourState);
+        return base.CanSurvive(block, world, pos) && PlacementHelpers.IsFullWaterAt(world, pos);
     }
 }
 
@@ -246,7 +254,7 @@ public sealed class CactusFlowerPlacementRule : VegetationPlacementRuleBase {
 /// <c>VegetationSupportTableTest</c> asserts the table covers every block of these four classes, so a
 /// fifth one added upstream fails a test rather than becoming a plant that can never be placed.
 /// </summary>
-public sealed class GrownFromTagPlacementRule(BlockClass vanillaClass) : VegetationPlacementRuleBase {
+public class GrownFromTagPlacementRule(BlockClass vanillaClass) : VegetationPlacementRuleBase {
     /// <summary>The constructor arguments from <c>Blocks.java</c>, block by block.</summary>
     public static readonly IReadOnlyDictionary<Identifier, Identifier> Tags =
         new Dictionary<Identifier, Identifier> {
@@ -280,5 +288,44 @@ public sealed class GrownFromTagPlacementRule(BlockClass vanillaClass) : Vegetat
         }
 
         return PlacementHelpers.InTag(world.Server.Registry, tag, below.Identifier);
+    }
+}
+
+/// <summary>
+/// <c>AttachedStemBlock</c>, the short stem bent towards a pumpkin or a melon. It grows the tag rule
+/// above and adds the one thing that makes it a separate class: losing its fruit turns it back into
+/// an ordinary stem.
+/// <p/>
+/// Which fruit and which stem are <b>constructor arguments</b> in <c>Blocks.java</c> for the same
+/// reason the tag is, so <see cref="Grown"/> is a table beside <see cref="GrownFromTagPlacementRule.Tags"/>
+/// and <c>VegetationSupportTableTest</c> covers it the same way.
+/// </summary>
+public sealed class AttachedStemPlacementRule()
+    : GrownFromTagPlacementRule(BlockClass.AttachedStemBlock) {
+    /// <param name="Stem">What the attached stem reverts to.</param>
+    /// <param name="Fruit">The block whose disappearance makes it revert.</param>
+    public readonly record struct Attachment(Identifier Stem, Identifier Fruit);
+
+    public static readonly IReadOnlyDictionary<Identifier, Attachment> Grown =
+        new Dictionary<Identifier, Attachment> {
+            ["minecraft:attached_pumpkin_stem"] =
+                new Attachment("minecraft:pumpkin_stem", "minecraft:pumpkin"),
+            ["minecraft:attached_melon_stem"] =
+                new Attachment("minecraft:melon_stem", "minecraft:melon")
+        };
+
+    /// <summary>
+    /// Only the cell the stem is bent towards can do it, and the stem comes back fully grown at age
+    /// seven rather than starting over, so a broken pumpkin regrows from the same stem.
+    /// </summary>
+    public override IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
+        Vec3<int> neighbourPos, IBlock neighbourState) {
+        if (Grown.TryGetValue(block.Identifier, out Attachment attachment)
+            && block is IHorizontalFacing stem && toNeighbour == stem.Facing.ToFace()
+            && neighbourState.Identifier != attachment.Fruit) {
+            return ((IAged)world.Server.Registry.Blocks[attachment.Stem]).WithAge(7);
+        }
+
+        return base.UpdateShape(block, world, pos, toNeighbour, neighbourPos, neighbourState);
     }
 }

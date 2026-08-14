@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:stonecutter", "block.minecraft.stonecutter", 3.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stonecutter", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:stonecutter", "block.minecraft.stonecutter", 3.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stonecutter", BlockInfo.VanillaOnly, "minecraft:blocks/stonecutter");
     private static readonly BlockStateInfo I0 = new(3.5f, 0, 0, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S413, BlockShapes.S413, BlockShapes.S1, BlockShapes.S413, BlockShapes.S413, BlockShapes.S413);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

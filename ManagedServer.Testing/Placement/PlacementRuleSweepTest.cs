@@ -11,15 +11,14 @@ namespace ManagedServer.Testing.Placement;
 /// nothing throws.
 /// <p/>
 /// A weak assertion on purpose, and it is not a substitute for a conformance harness. What it covers
-/// is the one failure mode the rules share and the type system cannot see: property access by name.
-/// <c>PlacementHelpers.WithProperty</c> and <c>PropertyOf</c> throw for a property the block does not
-/// have, which is deliberate, and it means a rule that names one wrong takes out every block in a
-/// whole vanilla class at runtime. That is a class of bug a rule specific test never finds, because
-/// the block it was written against is always the one with the property.
+/// is a rule registered against a class whose blocks do not all carry the state it assumes: a cast to
+/// a property interface that holds for the block the rule was written against and not for its
+/// siblings. Sea pickles and turtle eggs share a shape and not a property set, and the weathering
+/// copper families keep gaining members.
 /// <p/>
-/// It also catches the wider version: a rule registered against a class whose blocks do not all carry
-/// the state it assumes. Sea pickles and turtle eggs share a shape and not a property set, and the
-/// weathering copper families keep gaining members.
+/// It used to be aimed at property access by name, which threw for a block without the property. That
+/// route is gone: every property a rule touches now has a generated interface, so the misspelling it
+/// was guarding against does not compile. What is left is the cast, which does not.
 /// </summary>
 [TestFixture]
 public class PlacementRuleSweepTest {

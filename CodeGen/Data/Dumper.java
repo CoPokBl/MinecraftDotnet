@@ -24,6 +24,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.Bootstrap;
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityAttachment;
 import net.minecraft.world.entity.EntityAttachments;
 import net.minecraft.world.entity.EntityDimensions;
@@ -39,6 +42,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -110,7 +114,9 @@ public final class Dumper {
                 // Solidity is read off the state, which is what these two force.
                 "forceSolidOff", "forceSolidOn",
                 // Server behaviour or rendering, none of which the protocol layer models.
-                "drops", "emissiveRendering", "ignitedByLava", "postProcess"));
+                "emissiveRendering", "ignitedByLava", "postProcess",
+                // The loot table key, dumped through Block.getLootTable rather than off the field.
+                "drops"));
 
         report("BlockState", zeroArgMethodNames(BlockBehaviour.BlockStateBase.class), Set.of(
                 // Dumped.
@@ -216,6 +222,25 @@ public final class Dumper {
             Item item = Item.BY_BLOCK.get(block);
             if (item != null) {
                 json.put("correspondingItem", BuiltInRegistries.ITEM.getKey(item).toString());
+            }
+
+            // Which table the block loots from. The file name is not this: 83 blocks have no table
+            // of their own name, and they split into the wall variants that dropsLike their standing
+            // form and the ones with noLootTable(), which drop nothing. Only the key tells them apart.
+            block.getLootTable().ifPresent(key -> json.put("lootTable", key.identifier().toString()));
+
+            // The ore experience range, a constructor argument in Blocks.java rather than anything on
+            // Properties, so the reflection over Properties cannot see it. The other five classes that
+            // drop experience pass a literal inside spawnAfterBreak and have no field to read.
+            if (block instanceof DropExperienceBlock) {
+                IntProvider xpRange = (IntProvider) get(Hidden.XP_RANGE, block);
+                if (!(xpRange instanceof ConstantInt) && !(xpRange instanceof UniformInt)) {
+                    // Both are fully described by their bounds. Anything else samples differently and
+                    // would come out as a wrong number rather than a missing one.
+                    throw new IllegalStateException("Unhandled xpRange provider " + xpRange.getClass());
+                }
+                json.put("experienceMin", xpRange.minInclusive());
+                json.put("experienceMax", xpRange.maxInclusive());
             }
 
             // The shape is moved by a hash of the block position for these, so the dumped shape has
@@ -529,6 +554,9 @@ public final class Dumper {
         /** Protected, and nothing on the block or the state exposes it. */
         static final Field DYNAMIC_SHAPE = field(BlockBehaviour.class, "dynamicShape");
 
+        /** The ore experience range, a private constructor argument with no accessor. */
+        static final Field XP_RANGE = field(DropExperienceBlock.class, "xpRange");
+
         /** AttributeSupplier keeps its instances to itself, and only their base values are data. */
         static final Field ATTRIBUTE_INSTANCES = field(AttributeSupplier.class, "instances");
 
@@ -547,6 +575,14 @@ public final class Dumper {
     private static boolean getBoolean(Field field, Object target) {
         try {
             return field.getBoolean(target);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Object get(Field field, Object target) {
+        try {
+            return field.get(target);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

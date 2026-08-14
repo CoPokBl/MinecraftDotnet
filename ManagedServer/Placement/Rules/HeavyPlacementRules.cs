@@ -24,9 +24,6 @@ namespace ManagedServer.Placement.Rules;
 public sealed class SpeleothemPlacementRule : IBlockPlacementRule {
     private static readonly Identifier Speleothems = "minecraft:speleothems";
 
-    private const string TipDirection = "vertical_direction";
-    private const string Thickness = "thickness";
-
     public BlockClass VanillaClass => BlockClass.SpeleothemBlock;
 
     public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
@@ -35,17 +32,16 @@ public sealed class SpeleothemPlacementRule : IBlockPlacementRule {
 
         BlockFace preferred = context.NearestLookingVerticalDirection.Opposite();
         BlockFace? tip = TipDirectionFor(block, world, pos, preferred);
-        if (tip is null) {
+        if (tip is null || block is not IVerticallyDirected pointed) {
             return null;
         }
 
         // Sneaking is what stops two tips merging, so a player can build a column of separate points.
         bool mergeOpposingTips = !context.IsSecondaryUseActive;
-        string thickness = ThicknessFor(block, world, pos, tip.Value, mergeOpposingTips);
+        SpeleothemThickness thickness = ThicknessFor(block, world, pos, tip.Value, mergeOpposingTips);
 
-        IBlock state = PlacementHelpers.WithProperty(block, TipDirection, NameOf(tip.Value));
-        state = PlacementHelpers.WithProperty(state, Thickness, thickness);
-        return PlacementHelpers.Waterlog(state, context);
+        IBlock state = pointed.WithVerticalDirection(DirectionOf(tip.Value));
+        return PlacementHelpers.Waterlog(WithThickness(state, thickness), context);
     }
 
     public bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
@@ -68,9 +64,8 @@ public sealed class SpeleothemPlacementRule : IBlockPlacementRule {
             return block;
         }
 
-        bool mergeOpposingTips = PlacementHelpers.PropertyOf(block, Thickness) == "tip_merge";
-        return PlacementHelpers.WithProperty(block, Thickness,
-            ThicknessFor(block, world, pos, tip, mergeOpposingTips));
+        bool mergeOpposingTips = block is ISpeleothem { Thickness: SpeleothemThickness.TipMerge };
+        return WithThickness(block, ThicknessFor(block, world, pos, tip, mergeOpposingTips));
     }
 
     /// <summary>
@@ -102,40 +97,53 @@ public sealed class SpeleothemPlacementRule : IBlockPlacementRule {
     /// merge, and it is the one that reads <paramref name="mergeOpposingTips"/>: two tips facing each
     /// other either fuse into a <c>tip_merge</c> pair or stay two separate tips.
     /// </summary>
-    private static string ThicknessFor(IBlock block, World world, Vec3<int> pos, BlockFace tip,
-        bool mergeOpposingTips) {
+    private static SpeleothemThickness ThicknessFor(IBlock block, World world, Vec3<int> pos,
+        BlockFace tip, bool mergeOpposingTips) {
         BlockFace baseDirection = tip.Opposite();
         IBlock inFront = world.GetBlock(pos.GetBlockTowards(tip));
 
         if (IsSpeleothemWith(world, inFront, baseDirection) && IBlock.SimilarTo(inFront, block)) {
-            return !mergeOpposingTips && PlacementHelpers.PropertyOf(inFront, Thickness) != "tip_merge"
-                ? "tip"
-                : "tip_merge";
+            return !mergeOpposingTips && ThicknessOf(inFront) != SpeleothemThickness.TipMerge
+                ? SpeleothemThickness.Tip
+                : SpeleothemThickness.TipMerge;
         }
 
         if (!IsSpeleothemWith(world, inFront, tip)) {
-            return "tip";
+            return SpeleothemThickness.Tip;
         }
 
-        string inFrontThickness = PlacementHelpers.PropertyOf(inFront, Thickness);
-        if (inFrontThickness is "tip" or "tip_merge") {
-            return "frustum";
+        if (ThicknessOf(inFront) is SpeleothemThickness.Tip or SpeleothemThickness.TipMerge) {
+            return SpeleothemThickness.Frustum;
         }
 
         IBlock behind = world.GetBlock(pos.GetBlockTowards(baseDirection));
-        return IsSpeleothemWith(world, behind, tip) ? "middle" : "base";
+        return IsSpeleothemWith(world, behind, tip)
+            ? SpeleothemThickness.Middle
+            : SpeleothemThickness.Base;
     }
 
     private static bool IsSpeleothemWith(World world, IBlock block, BlockFace tip) {
         return PlacementHelpers.InTag(world.Server.Registry, Speleothems, block.Identifier)
-               && PlacementHelpers.PropertyOf(block, TipDirection) == NameOf(tip);
+               && block is IVerticallyDirected pointed && pointed.VerticalDirection == DirectionOf(tip);
+    }
+
+    private static IBlock WithThickness(IBlock block, SpeleothemThickness thickness) {
+        return block is ISpeleothem speleothem ? speleothem.WithThickness(thickness) : block;
+    }
+
+    private static SpeleothemThickness ThicknessOf(IBlock block) {
+        return block is ISpeleothem speleothem ? speleothem.Thickness : SpeleothemThickness.Tip;
     }
 
     private static BlockFace TipOf(IBlock block) {
-        return PlacementHelpers.PropertyOf(block, TipDirection) == "up" ? BlockFace.PosY : BlockFace.NegY;
+        return block is IVerticallyDirected { VerticalDirection: VerticalDirection.Up }
+            ? BlockFace.PosY
+            : BlockFace.NegY;
     }
 
-    private static string NameOf(BlockFace face) => face == BlockFace.PosY ? "up" : "down";
+    private static VerticalDirection DirectionOf(BlockFace face) {
+        return face == BlockFace.PosY ? VerticalDirection.Up : VerticalDirection.Down;
+    }
 }
 
 /// <summary>
@@ -167,8 +175,7 @@ public sealed class ScaffoldingPlacementRule : IBlockPlacementRule {
         int distance = DistanceAt(block, world, pos);
 
         IBlock state = PlacementHelpers.Waterlog(block, context);
-        state = PlacementHelpers.WithProperty(state, "distance", distance.ToString());
-        return PlacementHelpers.WithProperty(state, "bottom", IsBottom(block, world, pos, distance));
+        return Settle(state, world, pos, distance);
     }
 
     public bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
@@ -188,8 +195,22 @@ public sealed class ScaffoldingPlacementRule : IBlockPlacementRule {
             return Block.Air;
         }
 
-        IBlock state = PlacementHelpers.WithProperty(block, "distance", distance.ToString());
-        return PlacementHelpers.WithProperty(state, "bottom", IsBottom(block, world, pos, distance));
+        return Settle(block, world, pos, distance);
+    }
+
+    /// <summary>
+    /// The pair vanilla always writes together, <c>setValue(DISTANCE, d).setValue(BOTTOM,
+    /// isBottom(level, pos, d))</c>: <c>bottom</c> is derived from the distance that was just worked
+    /// out, so writing one without the other is never right.
+    /// </summary>
+    private static IBlock Settle(IBlock state, World world, Vec3<int> pos, int distance) {
+        if (state is IDistanced scaffold) {
+            state = scaffold.WithDistance(distance);
+        }
+
+        return state is IBottomed based
+            ? based.WithBottom(IsBottom(state, world, pos, distance))
+            : state;
     }
 
     /// <summary>
@@ -203,7 +224,7 @@ public sealed class ScaffoldingPlacementRule : IBlockPlacementRule {
 
         int distance = 7;
         if (IBlock.SimilarTo(below, block)) {
-            distance = int.Parse(PlacementHelpers.PropertyOf(below, "distance"));
+            distance = below is IDistanced scaffold ? scaffold.Distance : 7;
         }
         else if (PlacementHelpers.FaceSturdy(world, belowPos, BlockFace.PosY)) {
             return 0;
@@ -215,7 +236,8 @@ public sealed class ScaffoldingPlacementRule : IBlockPlacementRule {
                 continue;
             }
 
-            distance = Math.Min(distance, int.Parse(PlacementHelpers.PropertyOf(beside, "distance")) + 1);
+            distance = Math.Min(distance,
+                (beside is IDistanced scaffold ? scaffold.Distance : 7) + 1);
             if (distance == 1) {
                 break;
             }
@@ -243,13 +265,11 @@ public sealed class ScaffoldingPlacementRule : IBlockPlacementRule {
 public class ChestPlacementRule : IBlockPlacementRule {
     public virtual BlockClass VanillaClass => BlockClass.ChestBlock;
 
-    private const string Type = "type";
-
     public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
         World world = context.World;
         Vec3<int> pos = context.PlacePos;
 
-        string type = "single";
+        ChestType type = ChestType.Single;
         Direction facing = context.HorizontalDirection.Opposite();
         bool secondaryUse = context.IsSecondaryUseActive;
         BlockFace clickedFace = context.ClickedFace;
@@ -260,17 +280,17 @@ public class ChestPlacementRule : IBlockPlacementRule {
             if (partner is not null && !Directions.SameAxis(partner.Value, clickedFace.ToDirection())) {
                 facing = partner.Value;
                 type = partner.Value.CounterClockWise() == clickedFace.Opposite().ToDirection()
-                    ? "right"
-                    : "left";
+                    ? ChestType.Right
+                    : ChestType.Left;
             }
         }
 
-        if (type == "single" && !secondaryUse) {
+        if (type == ChestType.Single && !secondaryUse) {
             type = ChestTypeAt(block, world, pos, facing);
         }
 
         IBlock state = block is IHorizontalFacing chest ? chest.WithFacing(facing) : block;
-        state = PlacementHelpers.WithProperty(state, Type, type);
+        state = WithType(state, type);
         return PlacementHelpers.Waterlog(state, context);
     }
 
@@ -281,16 +301,16 @@ public class ChestPlacementRule : IBlockPlacementRule {
     public virtual IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
         Vec3<int> neighbourPos, IBlock neighbourState) {
         if (CanConnectTo(block, neighbourState) && Directions.IsHorizontal(toNeighbour)) {
-            string neighbourType = PlacementHelpers.PropertyOf(neighbourState, Type);
-            if (PlacementHelpers.PropertyOf(block, Type) == "single"
-                && neighbourType != "single"
+            ChestType neighbourType = TypeOf(neighbourState);
+            if (TypeOf(block) == ChestType.Single
+                && neighbourType != ChestType.Single
                 && SameFacing(block, neighbourState)
                 && ConnectedDirection(neighbourState) == toNeighbour.Opposite()) {
-                return PlacementHelpers.WithProperty(block, Type, Opposite(neighbourType));
+                return WithType(block, Opposite(neighbourType));
             }
         }
         else if (ConnectedDirection(block) == toNeighbour) {
-            return PlacementHelpers.WithProperty(block, Type, "single");
+            return WithType(block, ChestType.Single);
         }
 
         return block;
@@ -300,20 +320,20 @@ public class ChestPlacementRule : IBlockPlacementRule {
     /// <c>getChestType</c>: clockwise first, so a chest placed between two candidates pairs with the
     /// one on its left.
     /// </summary>
-    private string ChestTypeAt(IBlock block, World world, Vec3<int> pos, Direction facing) {
+    private ChestType ChestTypeAt(IBlock block, World world, Vec3<int> pos, Direction facing) {
         if (facing == CandidatePartnerFacing(block, world, pos, facing.ClockWise())) {
-            return "left";
+            return ChestType.Left;
         }
 
         return facing == CandidatePartnerFacing(block, world, pos, facing.CounterClockWise())
-            ? "right"
-            : "single";
+            ? ChestType.Right
+            : ChestType.Single;
     }
 
     /// <summary>The facing of a single chest that way, or null if there is nothing to pair with.</summary>
     private Direction? CandidatePartnerFacing(IBlock block, World world, Vec3<int> pos, Direction towards) {
         IBlock neighbour = world.GetBlock(pos.GetBlockTowards(towards.ToFace()));
-        if (!CanConnectTo(block, neighbour) || PlacementHelpers.PropertyOf(neighbour, Type) != "single") {
+        if (!CanConnectTo(block, neighbour) || TypeOf(neighbour) != ChestType.Single) {
             return null;
         }
 
@@ -337,7 +357,7 @@ public class ChestPlacementRule : IBlockPlacementRule {
             return BlockFace.PosY;
         }
 
-        return PlacementHelpers.PropertyOf(chest, Type) == "left"
+        return TypeOf(chest) == ChestType.Left
             ? facing.Facing.ClockWise().ToFace()
             : facing.Facing.CounterClockWise().ToFace();
     }
@@ -346,10 +366,18 @@ public class ChestPlacementRule : IBlockPlacementRule {
         return a is IHorizontalFacing fa && b is IHorizontalFacing fb && fa.Facing == fb.Facing;
     }
 
-    private static string Opposite(string type) => type switch {
-        "left" => "right",
-        "right" => "left",
-        _ => "single"
+    private static IBlock WithType(IBlock block, ChestType type) {
+        return block is IChestTyped chest ? chest.WithType(type) : block;
+    }
+
+    private static ChestType TypeOf(IBlock block) {
+        return block is IChestTyped chest ? chest.Type : ChestType.Single;
+    }
+
+    private static ChestType Opposite(ChestType type) => type switch {
+        ChestType.Left => ChestType.Right,
+        ChestType.Right => ChestType.Left,
+        _ => ChestType.Single
     };
 }
 
@@ -384,19 +412,37 @@ public sealed class RepeaterPlacementRule : IBlockPlacementRule {
             return null;
         }
 
-        // isLocked: true when a repeater beside this one, across its facing axis, is powering it.
-        // There is no redstone engine, so it is always false.
-        return PlacementHelpers.WithProperty(state, "locked", false);
+        Direction facing = state is IHorizontalFacing placed ? placed.Facing : Direction.North;
+        return state is ILocked repeater
+            ? repeater.WithLocked(Redstone.IsRepeaterLocked(context.World, context.PlacePos, facing))
+            : state;
     }
 
     public bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
         return Diode.CanSurvive(block, world, pos);
     }
 
+    /// <summary>
+    /// The break below, then the one thing a repeater does that a comparator does not: anything
+    /// changing across its facing axis makes it read its two sides again, because a repeater is
+    /// locked by another one pointing into its side.
+    /// </summary>
     public IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
         Vec3<int> neighbourPos, IBlock neighbourState) {
-        return toNeighbour == BlockFace.NegY && !CanSurvive(block, world, pos) ? Block.Air : block;
+        if (toNeighbour == BlockFace.NegY && !CanSurvive(block, world, pos)) {
+            return Block.Air;
+        }
+
+        if (block is not IHorizontalFacing repeater
+            || Directions.SameAxis(toNeighbour, repeater.Facing.ToFace())) {
+            return block;
+        }
+
+        return block is ILocked locked
+            ? locked.WithLocked(Redstone.IsRepeaterLocked(world, pos, repeater.Facing))
+            : block;
     }
+
 }
 
 /// <summary>
@@ -426,14 +472,27 @@ public sealed class ComparatorPlacementRule : IBlockPlacementRule {
 /// <c>SmallDripleafBlock</c>. A double plant with a facing, and the one whose lower half will grow
 /// out of plain vegetation as long as it is standing in water.
 /// </summary>
-public sealed class SmallDripleafPlacementRule : IBlockPlacementRule {
-    private static readonly DoublePlantPlacementRule DoublePlant = new();
+public sealed class SmallDripleafPlacementRule : DoublePlantPlacementRule {
     private static readonly Identifier SupportsSmallDripleaf = "minecraft:supports_small_dripleaf";
 
-    public BlockClass VanillaClass => BlockClass.SmallDripleafBlock;
+    public override BlockClass VanillaClass => BlockClass.SmallDripleafBlock;
 
-    public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
-        IBlock? state = DoublePlant.GetStateForPlacement(block, context);
+    /// <summary>
+    /// The tag, or standing in a water source over anything a plant grows on at all. The water is
+    /// read at <c>pos.above()</c>, and <c>pos</c> here is the block <b>below</b> the plant, so that
+    /// is the plant's own cell.
+    /// <p/>
+    /// Vanilla also overrides <c>canSurvive</c>, and its override says the same thing the inherited
+    /// one does, so there is none here.
+    /// </summary>
+    protected override bool MayPlaceOn(IBlock plant, IBlock below, World world, Vec3<int> belowPos) {
+        return PlacementHelpers.InTag(world.Server.Registry, SupportsSmallDripleaf, below.Identifier)
+               || (PlacementHelpers.IsWaterSourceAt(world, belowPos.WithY(belowPos.Y + 1))
+                   && base.MayPlaceOn(plant, below, world, belowPos));
+    }
+
+    public override IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
+        IBlock? state = base.GetStateForPlacement(block, context);
         if (state is null) {
             return null;
         }
@@ -446,7 +505,7 @@ public sealed class SmallDripleafPlacementRule : IBlockPlacementRule {
     }
 
     /// <summary>The upper half keeps the facing and takes the water from its own cell.</summary>
-    public void OnPlaced(IBlock placed, IBlockPlaceContext context) {
+    public override void OnPlaced(IBlock placed, IBlockPlaceContext context) {
         if (placed is not IDoubleHalved halved) {
             return;
         }
@@ -454,28 +513,6 @@ public sealed class SmallDripleafPlacementRule : IBlockPlacementRule {
         Vec3<int> above = context.PlacePos.WithY(context.PlacePos.Y + 1);
         context.World.SetBlock(above,
             CopyWaterloggedFrom(halved.WithHalf(BlockHalf.Upper), context.World, above));
-    }
-
-    public bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
-        if (block is IDoubleHalved { Half: BlockHalf.Upper }) {
-            return DoublePlant.CanSurvive(block, world, pos);
-        }
-
-        Vec3<int> belowPos = pos.WithY(pos.Y - 1);
-        IBlock below = world.GetBlock(belowPos);
-
-        if (PlacementHelpers.InTag(world.Server.Registry, SupportsSmallDripleaf, below.Identifier)) {
-            return true;
-        }
-
-        // The water is read at the cell the plant is in, ie. above the block it is standing on.
-        return PlacementHelpers.IsWaterSourceAt(world, pos)
-               && PlacementHelpers.SupportsVegetation(world, pos);
-    }
-
-    public IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
-        Vec3<int> neighbourPos, IBlock neighbourState) {
-        return DoublePlant.UpdateShape(block, world, pos, toNeighbour, neighbourPos, neighbourState);
     }
 
     private static IBlock CopyWaterloggedFrom(IBlock block, World world, Vec3<int> pos) {
@@ -494,39 +531,40 @@ public sealed class SmallDripleafPlacementRule : IBlockPlacementRule {
 /// <c>canBeReplaced</c> is a flat false, so nothing is ever placed into a pitcher crop.
 /// <c>setPlacedBy</c> is overridden to do <b>nothing</b>, which is why placing one does not write a
 /// top half the way every other double plant does.
+/// <p/>
+/// <b>Documented divergence.</b> Vanilla's <c>canSurvive</c> is
+/// <c>isLower(state) &amp;&amp; !sufficientLight(level, pos) ? false : super.canSurvive(...)</c>. The
+/// light half is dropped for the reason <c>CropPlacementRule</c> records, there is no per position
+/// brightness query, so the inherited answer is used unchanged and it errs permissive.
 /// </summary>
-public sealed class PitcherCropPlacementRule : IBlockPlacementRule {
-    private static readonly DoublePlantPlacementRule DoublePlant = new();
+public sealed class PitcherCropPlacementRule : DoublePlantPlacementRule {
     private static readonly Identifier SupportsCrops = "minecraft:supports_crops";
 
-    public BlockClass VanillaClass => BlockClass.PitcherCropBlock;
+    public override BlockClass VanillaClass => BlockClass.PitcherCropBlock;
 
-    public bool CanBeReplaced(IBlock existing, IBlockPlaceContext context) {
+    protected override bool MayPlaceOn(IBlock plant, IBlock below, World world, Vec3<int> belowPos) {
+        return PlacementHelpers.InTag(world.Server.Registry, SupportsCrops, below.Identifier);
+    }
+
+    public override bool CanBeReplaced(IBlock existing, IBlockPlaceContext context) {
         return false;
     }
 
-    /// <summary>
-    /// The light half of vanilla's test is dropped for the reason <c>CropPlacementRule</c> records:
-    /// there is no per position brightness query.
-    /// </summary>
-    public bool CanSurvive(IBlock block, World world, Vec3<int> pos) {
-        if (block is IDoubleHalved { Half: BlockHalf.Upper }) {
-            return DoublePlant.CanSurvive(block, world, pos);
-        }
+    /// <summary>The room above test is skipped, and no top half is written.</summary>
+    public override IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) => block;
 
-        return PlacementHelpers.InTag(world.Server.Registry, SupportsCrops,
-            world.GetBlock(pos.WithY(pos.Y - 1)).Identifier);
-    }
+    /// <inheritdoc cref="GetStateForPlacement"/>
+    public override void OnPlaced(IBlock placed, IBlockPlaceContext context) { }
 
     /// <summary>
     /// Below age three the crop is one cell, so the two cell rule would kill it for having no partner
     /// above. Vanilla guards exactly that, and the ungrown branch is a plain survival test.
     /// </summary>
-    public IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
+    public override IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
         Vec3<int> neighbourPos, IBlock neighbourState) {
-        int age = int.Parse(PlacementHelpers.PropertyOf(block, "age"));
+        int age = block is IAged crop ? crop.Age : 0;
         if (age >= 3) {
-            return DoublePlant.UpdateShape(block, world, pos, toNeighbour, neighbourPos, neighbourState);
+            return base.UpdateShape(block, world, pos, toNeighbour, neighbourPos, neighbourState);
         }
 
         return CanSurvive(block, world, pos) ? block : Block.Air;

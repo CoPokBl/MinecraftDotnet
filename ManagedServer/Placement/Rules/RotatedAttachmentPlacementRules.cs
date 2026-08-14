@@ -175,7 +175,7 @@ public sealed class LanternPlacementRule : IBlockPlacementRule {
                 continue;
             }
 
-            IBlock state = PlacementHelpers.WithProperty(block, "hanging", face == BlockFace.PosY);
+            IBlock state = block is IHanging lantern ? lantern.WithHanging(face == BlockFace.PosY) : block;
             if (CanSurvive(state, context.World, context.PlacePos)) {
                 return PlacementHelpers.Waterlog(state, context);
             }

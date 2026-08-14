@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:end_portal_frame", "block.minecraft.end_portal_frame", 3600000f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:end_portal_frame", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:end_portal_frame", "block.minecraft.end_portal_frame", 3600000f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:end_portal_frame", BlockInfo.VanillaOnly, null);
     private static readonly BlockStateInfo I0 = new(-1f, 1, 0, PushReaction.Normal, 27, "glass", NoteBlockInstrument.Basedrum, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S526, BlockShapes.S526, BlockShapes.S1, BlockShapes.S526, BlockShapes.S526, BlockShapes.S526);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S400, CollisionShape = BlockShapes.S400, OcclusionShape = BlockShapes.S400, VisualShape = BlockShapes.S400, SupportShape = BlockShapes.S400 };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

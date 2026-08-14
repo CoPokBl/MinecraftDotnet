@@ -252,6 +252,51 @@ public static class Mth {
     }
 
     /// <summary>
+    /// <c>Mth.nextInt(RandomSource, int, int)</c>: a value in [min, max], <b>inclusive</b> at both
+    /// ends, unlike <see cref="RandomSource.NextInt(int, int)"/>.
+    /// </summary>
+    public static int NextInt(RandomSource random, int min, int max) {
+        return min >= max ? min : random.NextInt(max - min + 1) + min;
+    }
+
+    /// <summary><c>Mth.nextFloat(RandomSource, float, float)</c>.</summary>
+    public static float NextFloat(RandomSource random, float min, float max) {
+        return min >= max ? min : random.NextFloat() * (max - min) + min;
+    }
+
+    /// <summary><c>Mth.nextDouble(RandomSource, double, double)</c>.</summary>
+    public static double NextDouble(RandomSource random, double min, double max) {
+        return min >= max ? min : random.NextDouble() * (max - min) + min;
+    }
+
+    /// <summary>
+    /// Java's <c>Math.round(float)</c>, which <see cref="Math.Round(double)"/> is not: C# rounds a tie
+    /// to the nearest even, so a half comes back as zero rather than as one. <c>NumberProvider.getInt</c>
+    /// is this method, so a loot table asking for half a roll rolls once upstream and would roll
+    /// nothing here.
+    /// <p/>
+    /// Transcribed rather than written as <c>floor(x + 0.5f)</c>, which is what the Java docs say but
+    /// not what the method does: adding a half to the float just below it rounds up in the addition
+    /// and gives one where Java gives zero.
+    /// </summary>
+    public static int JavaRound(float value) {
+        int bits = BitConverter.SingleToInt32Bits(value);
+        int biasedExponent = (bits & 0x7F800000) >> 23;
+        int shift = 24 - 2 + 127 - biasedExponent;
+
+        if ((shift & -32) != 0) {
+            return (int)value;
+        }
+
+        int significand = (bits & 0x007FFFFF) | 0x00800000;
+        if (bits < 0) {
+            significand = -significand;
+        }
+
+        return ((significand >> shift) + 1) >> 1;
+    }
+
+    /// <summary>
     /// <c>Mth.clamp(float, float, float)</c>. Vanilla's is not symmetric: the lower bound is a plain
     /// comparison and the upper one is <c>Math.min</c>, so a NaN comes back as NaN rather than as the
     /// minimum.

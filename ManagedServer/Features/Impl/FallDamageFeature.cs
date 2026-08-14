@@ -1,3 +1,4 @@
+using Minecraft.Schemas.Blocks.BlockEnums;
 using ManagedServer.Damage;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
@@ -107,8 +108,8 @@ public class FallDamageFeature : ScopedFeature {
         // A stalagmite is the one that makes a fall worse rather than better, and the one that lands as
         // its own damage type rather than as a fall.
         if (block is PointedDripstoneBlock {
-                VerticalDirectionValue: PointedDripstoneBlock.VerticalDirection.Up,
-                ThicknessValue: PointedDripstoneBlock.Thickness.Tip
+                VerticalDirection: VerticalDirection.Up,
+                Thickness: SpeleothemThickness.Tip
             }) {
             return (fallDistance + 2.5, 2.0f, DamageType.Stalagmite);
         }

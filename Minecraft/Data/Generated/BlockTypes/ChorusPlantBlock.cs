@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool West) : IBlock, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:chorus_plant", "block.minecraft.chorus_plant", 0.4f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:chorus_plant", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:chorus_plant", "block.minecraft.chorus_plant", 0.4f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:chorus_plant", BlockInfo.VanillaOnly, "minecraft:blocks/chorus_plant");
     private static readonly BlockStateInfo I0 = new(0.4f, 0, 1, PushReaction.Destroy, 24, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S421, BlockShapes.S421, BlockShapes.S1, BlockShapes.S1, BlockShapes.S421, BlockShapes.S421);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S422, CollisionShape = BlockShapes.S422, VisualShape = BlockShapes.S422, SupportShape = BlockShapes.S422 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S423, CollisionShape = BlockShapes.S423, VisualShape = BlockShapes.S423, SupportShape = BlockShapes.S423 };
@@ -93,6 +93,8 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

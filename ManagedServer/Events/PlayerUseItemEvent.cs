@@ -14,8 +14,7 @@ public class PlayerUseItemEvent : IPlayerEvent, ICancelableEvent {
     public required Player Player { get; init; }
     public required ItemStack Item { get; init; }
     public required Hand Hand { get; init; }
-    public bool StopsBlockPlacement { get; set; } = false;
-    
+
     public Entity Entity {
         get => Player;
         init { }

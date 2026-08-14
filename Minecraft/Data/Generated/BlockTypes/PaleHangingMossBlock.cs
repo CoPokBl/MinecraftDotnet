@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:hanging_moss", "block.minecraft.pale_hanging_moss", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pale_hanging_moss", BlockInfo.VanillaOnly);
+public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock, ITipped {
+    private static readonly BlockInfo Data = new("minecraft:hanging_moss", "block.minecraft.pale_hanging_moss", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pale_hanging_moss", BlockInfo.VanillaOnly, "minecraft:blocks/pale_hanging_moss");
     private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 22, "moss_carpet", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S658, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S401 };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -64,6 +66,8 @@ public record PaleHangingMossBlock(Identifier Identifier, bool Tip) : IBlock {
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithTip(bool tip) => this with { Tip = tip };
 
 
     public uint StateId {

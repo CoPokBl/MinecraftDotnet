@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock, IDirectional {
-    private static readonly BlockInfo Data = new("minecraft:end_rod", "block.minecraft.end_rod", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:end_rod", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:end_rod", "block.minecraft.end_rod", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:end_rod", BlockInfo.VanillaOnly, "minecraft:blocks/end_rod");
     private static readonly BlockStateInfo I0 = new(0f, 14, 0, PushReaction.Normal, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S527, BlockShapes.S527, BlockShapes.S1, BlockShapes.S1, BlockShapes.S527, BlockShapes.S527);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S528, CollisionShape = BlockShapes.S528, VisualShape = BlockShapes.S528, SupportShape = BlockShapes.S528 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S66 };
@@ -32,6 +32,8 @@ public record EndRodBlock(Identifier Identifier, Cardinal Facing) : IBlock, IDir
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock, IDirectional {
-    private static readonly BlockInfo Data = new("minecraft:shulker_box", "block.minecraft.shulker_box", 2f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.None, 0f, 0f, "minecraft:shulker_box", "minecraft:shulker_box", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:shulker_box", "block.minecraft.shulker_box", 2f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.None, 0f, 0f, "minecraft:shulker_box", "minecraft:shulker_box", BlockInfo.VanillaOnly, "minecraft:blocks/shulker_box");
     private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Destroy, 24, "stone", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock, 
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

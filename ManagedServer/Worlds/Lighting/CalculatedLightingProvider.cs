@@ -92,7 +92,19 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
 
     [ThreadStatic] private static Workspace? _workspace;
 
-    private sealed record CacheEntry(LightData Data, bool HasSkyLight);
+    /// <summary>
+    /// An entry outlives the light it holds, because <see cref="Invalidate"/> has to be visible to a
+    /// <see cref="Compute"/> that is already running. <see cref="Stamp"/> is what makes it visible:
+    /// a computation reads it before it starts and only publishes if it has not moved, so a result
+    /// that was already stale by the time it finished is thrown away instead of installed over the
+    /// invalidation. Removing the entry instead loses that, and the loser wins.
+    /// </summary>
+    private sealed class CacheEntry {
+        public readonly Lock Lock = new();
+        public LightData? Data;
+        public bool HasSkyLight;
+        public int Stamp;
+    }
 
     /// <param name="registry">
     /// Unused. What light needs is the dampening and face shapes of a state, and
@@ -107,16 +119,28 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
     public LightData GetLighting(Vec2<int> chunkPos, ChunkData chunk,
         Func<Vec2<int>, ChunkData?>? neighborLookup, MinecraftRegistry registry, bool hasSkyLight) {
 
-        if (_cache.TryGetValue(chunkPos, out CacheEntry? cached) && cached.HasSkyLight == hasSkyLight) {
-            return cached.Data;
+        CacheEntry entry = _cache.GetOrAdd(chunkPos, static _ => new CacheEntry());
+
+        int stamp;
+        lock (entry.Lock) {
+            if (entry.Data != null && entry.HasSkyLight == hasSkyLight) {
+                return entry.Data;
+            }
+            stamp = entry.Stamp;
         }
 
         LightData result = Compute(chunkPos, chunk, neighborLookup, hasSkyLight, out bool complete);
 
         // Light computed while a neighbour was missing is the best answer available now, but not
-        // the one the chunk settles on once that neighbour loads, so it isn't kept.
+        // the one the chunk settles on once that neighbour loads, so it isn't kept. Neither is one
+        // whose stamp moved while it ran: something changed under it and this answer is already old.
         if (complete) {
-            _cache[chunkPos] = new CacheEntry(result, hasSkyLight);
+            lock (entry.Lock) {
+                if (entry.Stamp == stamp) {
+                    entry.Data = result;
+                    entry.HasSkyLight = hasSkyLight;
+                }
+            }
         }
 
         return result;
@@ -126,10 +150,22 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
     /// Drops the chunk and the eight around it. A block change moves light up to fifteen blocks
     /// out, which reaches diagonally as well as along the axes.
     /// </summary>
+    /// <remarks>
+    /// Only positions that already have an entry are touched, and that is enough: an entry is
+    /// created by <see cref="GetLighting"/> before it computes, so anything in flight has one, and a
+    /// position with no entry has neither cached light nor a computation to invalidate.
+    /// </remarks>
     public void Invalidate(Vec2<int> chunkPos) {
         for (int dz = -1; dz <= 1; dz++) {
             for (int dx = -1; dx <= 1; dx++) {
-                _cache.TryRemove(chunkPos + new Vec2<int>(dx, dz), out _);
+                if (!_cache.TryGetValue(chunkPos + new Vec2<int>(dx, dz), out CacheEntry? entry)) {
+                    continue;
+                }
+
+                lock (entry.Lock) {
+                    entry.Data = null;
+                    entry.Stamp++;
+                }
             }
         }
     }

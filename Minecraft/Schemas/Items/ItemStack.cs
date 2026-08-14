@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Minecraft.Data;
 using Minecraft.Data.Components;
+using Minecraft.Data.Enchantments;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Items;
 using Minecraft.Implementations.Tags;
@@ -162,6 +163,34 @@ public class ItemStack(
 
     public T? GetStructOrNull<T>(IDataComponent<T> type) where T : struct {
         return Has(type) ? Get(type) : null;
+    }
+
+    /// <summary>
+    /// <c>EnchantmentHelper.getItemEnchantmentLevel</c>: the level of one enchantment on this stack,
+    /// or zero when it is not on it.
+    /// </summary>
+    public int GetEnchantmentLevel(IEnchantment enchantment) {
+        foreach ((IEnchantment present, int level) in GetOrDefault(DataComponent.Enchantments, [])) {
+            if (present.Identifier == enchantment.Identifier) {
+                return level;
+            }
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// <see cref="GetEnchantmentLevel(IEnchantment)"/> by name, for a caller holding an identifier
+    /// rather than the registry entry. An enchantment that is not on the stack reads as level zero.
+    /// </summary>
+    public int GetEnchantmentLevel(Identifier enchantment) {
+        foreach ((IEnchantment present, int level) in GetOrDefault(DataComponent.Enchantments, [])) {
+            if (present.Identifier == enchantment) {
+                return level;
+            }
+        }
+
+        return 0;
     }
 
     public TradeItem AsTradeItem() {

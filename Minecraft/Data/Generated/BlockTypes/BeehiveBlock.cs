@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BeehiveBlock(Identifier Identifier, Direction Facing, int HoneyLevel) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:beehive", "block.minecraft.beehive", 0.6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:beehive", "minecraft:beehive", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:beehive", "block.minecraft.beehive", 0.6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:beehive", "minecraft:beehive", BlockInfo.VanillaOnly, "minecraft:blocks/beehive");
     private static readonly BlockStateInfo I0 = new(0.6f, 0, 15, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record BeehiveBlock(Identifier Identifier, Direction Facing, int HoneyLev
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:piglinwallskull", "block.minecraft.piglin_head", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:piglin_head", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:piglinwallskull", "block.minecraft.piglin_head", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:piglin_head", BlockInfo.VanillaOnly, "minecraft:blocks/piglin_head");
     private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S790, BlockShapes.S790, BlockShapes.S1, BlockShapes.S790, BlockShapes.S790, BlockShapes.S790);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S791, CollisionShape = BlockShapes.S791, OcclusionShape = BlockShapes.S791, VisualShape = BlockShapes.S791, SupportShape = BlockShapes.S791 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S792, CollisionShape = BlockShapes.S792, OcclusionShape = BlockShapes.S792, VisualShape = BlockShapes.S792, SupportShape = BlockShapes.S792 };
@@ -33,6 +33,8 @@ public record PiglinWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

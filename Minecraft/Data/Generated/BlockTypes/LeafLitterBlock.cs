@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LeafLitterBlock(Identifier Identifier, Direction Facing, int SegmentAmount) : IBlock, IHorizontalFacing, IStackable {
-    private static readonly BlockInfo Data = new("minecraft:leaf_litter", "block.minecraft.leaf_litter", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:leaf_litter", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:leaf_litter", "block.minecraft.leaf_litter", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:leaf_litter", BlockInfo.VanillaOnly, "minecraft:blocks/leaf_litter");
     private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 26, "leaf_litter", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S617, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S618 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S371 };
@@ -38,6 +38,8 @@ public record LeafLitterBlock(Identifier Identifier, Direction Facing, int Segme
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

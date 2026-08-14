@@ -105,6 +105,8 @@ public record {name}(Identifier Identifier, {args}) : IBlock{interfaces} {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -193,6 +195,13 @@ public static class Block {
     private static readonly HashSet<string> SculkSensorPhaseValues = ["inactive", "active", "cooldown"];
     private static readonly HashSet<string> OrientationValues = ["down_east", "down_north", "down_south", "down_west", "up_east", "up_north", "up_south", "up_west", "west_up", "east_up", "north_up", "south_up"];
     private static readonly HashSet<string> RedstoneWireConnectionValues = ["up", "side", "none"];
+    private static readonly HashSet<string> ChestTypeValues = ["single", "left", "right"];
+    private static readonly HashSet<string> SpeleothemThicknessValues = ["tip_merge", "tip", "frustum", "middle", "base"];
+    private static readonly HashSet<string> VerticalDirectionValues = ["up", "down"];
+    private static readonly HashSet<string> BellAttachTypeValues = ["floor", "ceiling", "single_wall", "double_wall"];
+    private static readonly HashSet<string> CreakingHeartStateValues = ["uprooted", "dormant", "awake"];
+    private static readonly HashSet<string> PotentSulfurStateValues = ["dry", "wet", "dormant", "erupting", "continuous"];
+    private static readonly HashSet<string> RailShapeValues = ["north_south", "east_west", "ascending_east", "ascending_west", "ascending_north", "ascending_south", "south_east", "south_west", "north_west", "north_east"];
     private static readonly HashSet<string> NoteBlockInstrumentValues = ["harp", "basedrum", "snare", "hat", "bass", "flute", "bell", "guitar", "chime", "xylophone", "iron_xylophone", "cow_bell", "didgeridoo", "bit", "banjo", "pling", "trumpet", "trumpet_exposed", "trumpet_oxidized", "trumpet_weathered", "zombie", "skeleton", "creeper", "dragon", "wither_skeleton", "piglin", "custom_head"];
 
     /// <summary>
@@ -288,6 +297,36 @@ public static class Block {
                 case "shape" when type == "StairShape": Setter(prop, "IStairShaped", "WithShape", "shape"); break;
                 case "part" when type == "BedPart": Setter(prop, "IBedParted", "WithPart", "part"); break;
                 case "hinge" when type == "LeftRight": Setter(prop, "IHinged", "WithHinge", "hinge"); break;
+
+                // The one property families. See Properties/FlagProperties.cs for why these are
+                // types rather than being left to PlacementHelpers.WithProperty.
+                case "in_wall" when boolean: Setter(prop, "IInWall", "WithInWall", "inWall"); break;
+                case "locked" when boolean: Setter(prop, "ILocked", "WithLocked", "locked"); break;
+                case "berries" when boolean: Setter(prop, "IBerried", "WithBerries", "berries"); break;
+                case "bottom" when boolean: Setter(prop, "IBottomed", "WithBottom", "bottom"); break;
+                case "snowy" when boolean: Setter(prop, "ISnowy", "WithSnowy", "snowy"); break;
+                case "signal_fire" when boolean: Setter(prop, "ISignalFire", "WithSignalFire", "signalFire"); break;
+                case "persistent" when boolean: Setter(prop, "IPersistent", "WithPersistent", "persistent"); break;
+                case "enabled" when boolean: Setter(prop, "IEnabled", "WithEnabled", "enabled"); break;
+                case "hanging" when boolean: Setter(prop, "IHanging", "WithHanging", "hanging"); break;
+                case "attached" when boolean: Setter(prop, "IAttached", "WithAttached", "attached"); break;
+                case "occupied" when boolean: Setter(prop, "IOccupied", "WithOccupied", "occupied"); break;
+                case "tip" when boolean: Setter(prop, "ITipped", "WithTip", "tip"); break;
+
+                // The one property families whose values are an enum. Each needed its value set
+                // adding to the tables above first, so that the enum is shared rather than nested
+                // inside one record and unnameable from an interface.
+                case "type" when type == "ChestType": Setter(prop, "IChestTyped", "WithType", "type"); break;
+                case "thickness" when type == "SpeleothemThickness": Setter(prop, "ISpeleothem", "WithThickness", "thickness"); break;
+                case "vertical_direction" when type == "VerticalDirection": Setter(prop, "IVerticallyDirected", "WithVerticalDirection", "verticalDirection"); break;
+                case "attachment" when type == "BellAttachType": Setter(prop, "IBellAttached", "WithAttachment", "attachment"); break;
+                case "creaking_heart_state" when type == "CreakingHeartState": Setter(prop, "ICreakingHearted", "WithCreakingHeartState", "creakingHeartState"); break;
+                case "potent_sulfur_state" when type == "PotentSulfurState": Setter(prop, "IPotentSulfured", "WithPotentSulfurState", "potentSulfurState"); break;
+                case "shape" when type == "RailShape": Setter(prop, "IRailShaped", "WithShape", "shape"); break;
+                case "shape" when type == "RailDirection": Setter(prop, "IRailDirected", "WithShape", "shape"); break;
+                case "instrument" when type == "NoteBlockInstrument": Setter(prop, "IInstrumented", "WithInstrument", "instrument"); break;
+                case "age" when prop.Type == PropertyType.Integer: Setter(prop, "IAged", "WithAge", "age"); break;
+                case "distance" when prop.Type == PropertyType.Integer: Setter(prop, "IDistanced", "WithDistance", "distance"); break;
             }
 
             // The six counting properties that stack in place. Grouped into one interface because the
@@ -505,6 +544,41 @@ public static class Block {
 
                 if (SameValues(propAllowedValues, NoteBlockInstrumentValues)) {
                     props.Add(new ExistingEnumProperty(propAllowedValues, propName, "NoteBlockInstrument", NoteBlockInstrumentValues));
+                    continue;
+                }
+
+                if (SameValues(propAllowedValues, ChestTypeValues)) {
+                    props.Add(new ExistingEnumProperty(propAllowedValues, propName, "ChestType", ChestTypeValues));
+                    continue;
+                }
+
+                if (SameValues(propAllowedValues, SpeleothemThicknessValues)) {
+                    props.Add(new ExistingEnumProperty(propAllowedValues, propName, "SpeleothemThickness", SpeleothemThicknessValues));
+                    continue;
+                }
+
+                if (SameValues(propAllowedValues, VerticalDirectionValues)) {
+                    props.Add(new ExistingEnumProperty(propAllowedValues, propName, "VerticalDirection", VerticalDirectionValues));
+                    continue;
+                }
+
+                if (SameValues(propAllowedValues, BellAttachTypeValues)) {
+                    props.Add(new ExistingEnumProperty(propAllowedValues, propName, "BellAttachType", BellAttachTypeValues));
+                    continue;
+                }
+
+                if (SameValues(propAllowedValues, CreakingHeartStateValues)) {
+                    props.Add(new ExistingEnumProperty(propAllowedValues, propName, "CreakingHeartState", CreakingHeartStateValues));
+                    continue;
+                }
+
+                if (SameValues(propAllowedValues, PotentSulfurStateValues)) {
+                    props.Add(new ExistingEnumProperty(propAllowedValues, propName, "PotentSulfurState", PotentSulfurStateValues));
+                    continue;
+                }
+
+                if (SameValues(propAllowedValues, RailShapeValues)) {
+                    props.Add(new ExistingEnumProperty(propAllowedValues, propName, "RailShape", RailShapeValues));
                     continue;
                 }
 
@@ -801,7 +875,19 @@ public static class Block {
     /// </summary>
     private static string BlockInfoCode(JObject dataEntry, string category) {
         int shapeOffsets = dataEntry["shapeOffsets"]?.ToObject<int>() ?? 0;
-        string init = shapeOffsets == 0 ? "" : $" {{ ShapeOffsets = {ShapeOffsetsCode(shapeOffsets)} }}";
+
+        List<string> initialisers = [];
+        if (shapeOffsets != 0) {
+            initialisers.Add($"ShapeOffsets = {ShapeOffsetsCode(shapeOffsets)}");
+        }
+
+        // Eighteen blocks of the twelve hundred, so it stays out of every other block's line for the
+        // same reason ShapeOffsets does.
+        if (dataEntry["experienceMin"] != null) {
+            initialisers.Add($"Experience = ({dataEntry["experienceMin"]}, {dataEntry["experienceMax"]})");
+        }
+
+        string init = initialisers.Count == 0 ? "" : $" {{ {string.Join(", ", initialisers)} }}";
         return $"new({BlockInfoArguments(dataEntry, category)}){init}";
     }
 
@@ -832,7 +918,8 @@ public static class Block {
                $"{Bool(dataEntry["dynamicShape"])}, BlockOffsetType.{offsetType}, " +
                $"{Num(dataEntry["maxHorizontalOffset"])}f, {Num(dataEntry["maxVerticalOffset"])}f, " +
                $"{Str(dataEntry["blockEntity"]?["namespace"]?.ToObject<string>())}, " +
-               $"{Str(dataEntry["correspondingItem"]?.ToObject<string>())}, {requiredFeatures}";
+               $"{Str(dataEntry["correspondingItem"]?.ToObject<string>())}, {requiredFeatures}, " +
+               $"{Str(dataEntry["lootTable"]?.ToObject<string>())}";
     }
 
     /// <summary>The names of the <c>BlockStateInfo</c> members, in constructor order.</summary>

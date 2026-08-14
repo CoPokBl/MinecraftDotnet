@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock, IPowered, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:detector_rail", "block.minecraft.detector_rail", 0.7f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:detector_rail", BlockInfo.VanillaOnly);
+public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock, IPowered, IRailDirected, IWaterlogged {
+    private static readonly BlockInfo Data = new("minecraft:detector_rail", "block.minecraft.detector_rail", 0.7f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:detector_rail", BlockInfo.VanillaOnly, "minecraft:blocks/detector_rail");
     private static readonly BlockStateInfo I0 = new(0.7f, 0, 1, PushReaction.Normal, 0, "metal", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S124, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S89 };
@@ -33,6 +33,8 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -68,6 +70,8 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
     public Identifier? Fluid => StateInfo.Fluid;
 
     public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithShape(RailDirection shape) => this with { Shape = shape };
 
     public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 

@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:respawn_anchor", "block.minecraft.respawn_anchor", 1200f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:respawn_anchor", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:respawn_anchor", "block.minecraft.respawn_anchor", 1200f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:respawn_anchor", BlockInfo.VanillaOnly, "minecraft:blocks/respawn_anchor");
     private static readonly BlockStateInfo I0 = new(50f, 0, 15, PushReaction.Normal, 29, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 3 };
     private static readonly BlockStateInfo I2 = I0 with { LightEmission = 7 };
@@ -34,6 +34,8 @@ public record RespawnAnchorBlock(Identifier Identifier, int Charges) : IBlock {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

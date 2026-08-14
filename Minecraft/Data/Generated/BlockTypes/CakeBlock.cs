@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:cake", "block.minecraft.cake", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cake", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:cake", "block.minecraft.cake", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cake", BlockInfo.VanillaOnly, "minecraft:blocks/cake");
     private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 0, "wool", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S404, BlockShapes.S404, BlockShapes.S1, BlockShapes.S404, BlockShapes.S404, BlockShapes.S404);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S405, CollisionShape = BlockShapes.S405, OcclusionShape = BlockShapes.S405, VisualShape = BlockShapes.S405, SupportShape = BlockShapes.S405 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S406, CollisionShape = BlockShapes.S406, OcclusionShape = BlockShapes.S406, VisualShape = BlockShapes.S406, SupportShape = BlockShapes.S406 };
@@ -36,6 +36,8 @@ public record CakeBlock(Identifier Identifier, int Bites) : IBlock {
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

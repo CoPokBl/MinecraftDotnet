@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockHalf Half, bool Waterlogged) : IBlock, IHorizontalFacing, IDoubleHalved, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:small_dripleaf", "block.minecraft.small_dripleaf", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.Xyz, 0.25f, 0.1f, null, "minecraft:small_dripleaf", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:small_dripleaf", "block.minecraft.small_dripleaf", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.Xyz, 0.25f, 0.1f, null, "minecraft:small_dripleaf", BlockInfo.VanillaOnly, "minecraft:blocks/small_dripleaf");
     private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 7, "small_dripleaf", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S521, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockH
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

@@ -1,11 +1,11 @@
 using ManagedServer.Events;
 using ManagedServer.Features;
+using ManagedServer.Interaction;
 using ManagedServer.Inventories;
 using Minecraft;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
-using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Items;
@@ -82,26 +82,31 @@ public class SkyWarsChestsFeature : ScopedFeature {
     private record LootTableEntry(ItemStack Item, float Chance, int MinCount, int MaxCount);
     
     public override void Register() {
-        AddEventHandler<PlayerPacketHandleEvent>(e => {
-            if (e.Packet is not ServerBoundUseItemOnPacket packet) {
+        // ChestBlock overrides useWithoutItem, not useItemOn, so this gates on that stage rather than
+        // matching the packet. Doing it the way the real block does inherits the whole rule for free:
+        // the click is skipped while crouching with a full hand (so sneak-placing a block against a
+        // chest still works), it still runs bare handed while crouching, and the offhand never
+        // reaches it. Vanilla's own chest behaves exactly this way.
+        AddEventHandler<PlayerBlockInteractEvent>(e => {
+            if (e.Result.ConsumesAction || e.Stage != InteractStage.UseWithoutItem) {
                 return;
             }
 
-            Vec3<int> pos = packet.Position;
-            IBlock block = e.World.GetBlock(pos);
-
-            if (!IBlock.SimilarTo(block, Block.Chest)) {
+            if (!IBlock.SimilarTo(e.Block, Block.Chest)) {
                 return;
             }
-            
+
+            Vec3<int> pos = e.Position;
+
             // Chest right click
             Dictionary<Vec3<int>, Inventory> worldData = e.World.GetTagOrSetDefault(ChestsTag, []);
 
             if (worldData.TryGetValue(pos, out Inventory? value)) {
                 e.Player.OpenInventory = value;
+                e.Result = InteractionResult.Success;
                 return;
             }
-            
+
             // Generate loot
             ChestInventory inv = ChestInventory.Create(Scope.Server, 3);
             inv.Title = "SkyWars Chest";
@@ -132,6 +137,11 @@ public class SkyWarsChestsFeature : ScopedFeature {
             worldData.Add(pos, inv);
             e.World.SetTag(ChestsTag, worldData);
             e.Player.OpenInventory = inv;
+
+            // ChestBlock.useWithoutItem returns SUCCESS. This is what stops the held block being
+            // placed, and it does not depend on this feature being registered before or after
+            // BlockPlacingFeature.
+            e.Result = InteractionResult.Success;
         });
     }
 }

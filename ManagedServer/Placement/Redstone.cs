@@ -1,4 +1,5 @@
 using ManagedServer.Worlds;
+using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Placement;
@@ -24,6 +25,15 @@ public static class Redstone {
     /// Always false until there is a redstone engine to ask. See the type comment.
     /// </summary>
     public static bool HasNeighbourSignal(World world, Vec3<int> pos) {
+        return false;
+    }
+
+    /// <summary>
+    /// <c>RepeaterBlock.isLocked</c>, which is <c>getAlternateSignal(level, pos, state) &gt; 0</c>:
+    /// whether a diode pointing into either side of this repeater, across
+    /// <paramref name="facing"/>'s axis, is powering it. Always false for the same reason.
+    /// </summary>
+    public static bool IsRepeaterLocked(World world, Vec3<int> pos, Direction facing) {
         return false;
     }
 }

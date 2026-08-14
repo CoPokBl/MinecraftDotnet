@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CarvedPumpkinBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:jack_o_lantern", "block.minecraft.carved_pumpkin", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:carved_pumpkin", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:jack_o_lantern", "block.minecraft.carved_pumpkin", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:carved_pumpkin", BlockInfo.VanillaOnly, "minecraft:blocks/carved_pumpkin");
     private static readonly BlockStateInfo I0 = new(1f, 0, 15, PushReaction.Destroy, 15, "wood", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record CarvedPumpkinBlock(Identifier Identifier, Direction Facing) : IBlo
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

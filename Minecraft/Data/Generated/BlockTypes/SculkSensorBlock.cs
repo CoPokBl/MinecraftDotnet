@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhase SculkSensorPhase, bool Waterlogged) : IBlock, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:sculk_sensor", "block.minecraft.sculk_sensor", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sculk_sensor", "minecraft:sculk_sensor", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:sculk_sensor", "block.minecraft.sculk_sensor", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sculk_sensor", "minecraft:sculk_sensor", BlockInfo.VanillaOnly, "minecraft:blocks/sculk_sensor");
     private static readonly BlockStateInfo I0 = new(1.5f, 1, 1, PushReaction.Normal, 23, "sculk_sensor", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, true, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S89, BlockShapes.S89, BlockShapes.S1, BlockShapes.S89, BlockShapes.S89, BlockShapes.S89);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhas
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

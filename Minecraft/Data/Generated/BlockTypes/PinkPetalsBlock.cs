@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PinkPetalsBlock(Identifier Identifier, Direction Facing, int FlowerAmount) : IBlock, IHorizontalFacing, IStackable {
-    private static readonly BlockInfo Data = new("minecraft:flower_bed", "block.minecraft.pink_petals", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pink_petals", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:flower_bed", "block.minecraft.pink_petals", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pink_petals", BlockInfo.VanillaOnly, "minecraft:blocks/pink_petals");
     private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "pink_petals", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S794, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S795 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S115 };
@@ -38,6 +38,8 @@ public record PinkPetalsBlock(Identifier Identifier, Direction Facing, int Flowe
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

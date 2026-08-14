@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) : IBlock, IDoubleHalved {
-    private static readonly BlockInfo Data = new("minecraft:pitcher_crop", "block.minecraft.pitcher_crop", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pitcher_pod", BlockInfo.VanillaOnly);
+public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) : IBlock, IAged, IDoubleHalved {
+    private static readonly BlockInfo Data = new("minecraft:pitcher_crop", "block.minecraft.pitcher_crop", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pitcher_pod", BlockInfo.VanillaOnly, "minecraft:blocks/pitcher_crop");
     private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "crop", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S819, CollisionShape = BlockShapes.S819, VisualShape = BlockShapes.S819, SupportShape = BlockShapes.S819 };
     private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S820, CollisionShape = BlockShapes.S821, VisualShape = BlockShapes.S821, SupportShape = BlockShapes.S821 };
@@ -36,6 +36,8 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -69,6 +71,8 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAge(int age) => this with { Age = age };
 
     public IBlock WithHalf(BlockHalf half) => this with { Half = half };
 

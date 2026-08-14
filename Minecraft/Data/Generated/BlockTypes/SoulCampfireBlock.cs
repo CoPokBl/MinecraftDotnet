@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Lit, bool SignalFire, bool Waterlogged) : IBlock, IHorizontalFacing, ILit, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:campfire", "block.minecraft.soul_campfire", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:campfire", "minecraft:soul_campfire", BlockInfo.VanillaOnly);
+public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Lit, bool SignalFire, bool Waterlogged) : IBlock, IHorizontalFacing, ILit, ISignalFire, IWaterlogged {
+    private static readonly BlockInfo Data = new("minecraft:campfire", "block.minecraft.soul_campfire", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:campfire", "minecraft:soul_campfire", BlockInfo.VanillaOnly, "minecraft:blocks/soul_campfire");
     private static readonly BlockStateInfo I0 = new(2f, 10, 1, PushReaction.Normal, 34, "wood", NoteBlockInstrument.Bass, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S411, BlockShapes.S411, BlockShapes.S1, BlockShapes.S1, BlockShapes.S411, BlockShapes.S411);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { LightEmission = 0 };
@@ -33,6 +33,8 @@ public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Li
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -70,6 +72,8 @@ public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Li
     public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
     public IBlock WithLit(bool lit) => this with { Lit = lit };
+
+    public IBlock WithSignalFire(bool signalFire) => this with { SignalFire = signalFire };
 
     public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 

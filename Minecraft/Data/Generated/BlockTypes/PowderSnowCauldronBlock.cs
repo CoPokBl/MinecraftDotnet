@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PowderSnowCauldronBlock(Identifier Identifier, int Level) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:layered_cauldron", "block.minecraft.powder_snow_cauldron", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cauldron", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:layered_cauldron", "block.minecraft.powder_snow_cauldron", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cauldron", BlockInfo.VanillaOnly, "minecraft:blocks/powder_snow_cauldron");
     private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S414, BlockShapes.S414, BlockShapes.S415, BlockShapes.S1, BlockShapes.S414, BlockShapes.S414);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record PowderSnowCauldronBlock(Identifier Identifier, int Level) : IBlock
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

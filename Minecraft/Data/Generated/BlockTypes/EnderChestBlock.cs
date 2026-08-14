@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:ender_chest", "block.minecraft.ender_chest", 600f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:ender_chest", "minecraft:ender_chest", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:ender_chest", "block.minecraft.ender_chest", 600f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:ender_chest", "minecraft:ender_chest", BlockInfo.VanillaOnly, "minecraft:blocks/ender_chest");
     private static readonly BlockStateInfo I0 = new(22.5f, 7, 1, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Basedrum, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo[] States = [
@@ -31,6 +31,8 @@ public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Wate
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

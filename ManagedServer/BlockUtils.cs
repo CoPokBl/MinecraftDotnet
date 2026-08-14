@@ -113,6 +113,14 @@ public static class BlockUtils {
         return ticks;
     }
 
+    /// <summary>
+    /// <c>BlockState.canHarvestBlock</c>, which is both the thirty versus a hundred divisor in the
+    /// break speed above and the gate on whether the block drops anything at all.
+    /// </summary>
+    public static bool CanHarvest(ItemStack tool, IBlock block, MinecraftRegistry registry) {
+        return CanBreakBlock(tool.GetOrNull(DataComponent.Tool), block, registry);
+    }
+
     private static bool CanBreakBlock(Tool? tool, IBlock block, MinecraftRegistry registry) {
         return !block.RequiresTool || (tool != null && tool.IsCorrectForDrops(block, registry));
     }

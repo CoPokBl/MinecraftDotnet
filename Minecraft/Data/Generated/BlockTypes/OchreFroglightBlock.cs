@@ -11,7 +11,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record OchreFroglightBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
-    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.ochre_froglight", 0.3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:ochre_froglight", BlockInfo.VanillaOnly);
+    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.ochre_froglight", 0.3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:ochre_froglight", BlockInfo.VanillaOnly, "minecraft:blocks/ochre_froglight");
     private static readonly BlockStateInfo I0 = new(0.3f, 15, 15, PushReaction.Normal, 2, "froglight", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, [], null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record OchreFroglightBlock(Identifier Identifier, Axis Axis) : IBlock, IA
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;

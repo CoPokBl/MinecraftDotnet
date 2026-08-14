@@ -67,7 +67,7 @@ public sealed class SnowyPlacementRule : IBlockPlacementRule {
     }
 
     private static IBlock WithSnowy(IBlock block, bool snowy) {
-        return PlacementHelpers.WithProperty(block, "snowy", snowy);
+        return block is ISnowy surface ? surface.WithSnowy(snowy) : block;
     }
 }
 
@@ -109,7 +109,7 @@ public sealed class NoteBlockPlacementRule : IBlockPlacementRule {
     }
 
     private static IBlock With(IBlock block, NoteBlockInstrument instrument) {
-        return PlacementHelpers.WithProperty(block, "instrument", instrument.ToName());
+        return block is IInstrumented noteBlock ? noteBlock.WithInstrument(instrument) : block;
     }
 }
 
@@ -220,12 +220,12 @@ public sealed class CreakingHeartPlacementRule : IBlockPlacementRule {
     }
 
     private static IBlock UpdateState(IBlock block, World world, Vec3<int> pos) {
-        bool uprooted = PlacementHelpers.PropertyOf(block, "creaking_heart_state") == "uprooted";
+        bool uprooted = block is ICreakingHearted { CreakingHeartState: CreakingHeartState.Uprooted };
         if (!uprooted || !HasRequiredLogs(block, world, pos)) {
             return block;
         }
 
-        return PlacementHelpers.WithProperty(block, "creaking_heart_state", "dormant");
+        return ((ICreakingHearted)block).WithCreakingHeartState(CreakingHeartState.Dormant);
     }
 
     /// <summary>
@@ -285,27 +285,27 @@ public sealed class PotentSulfurPlacementRule : IBlockPlacementRule {
 
     private static IBlock ValidState(IBlock block, World world, Vec3<int> pos) {
         if (!PlacementHelpers.IsWaterSourceAt(world, pos.WithY(pos.Y + 1))) {
-            return With(block, "dry");
+            return With(block, PotentSulfurState.Dry);
         }
 
         IBlock below = world.GetBlock(pos.WithY(pos.Y - 1));
         bool sourceIfFluid = FluidState.Of(below) is { IsEmpty: true } or { Source: true };
 
         if (sourceIfFluid && PlacementHelpers.InTag(world.Server.Registry, Continuous, below.Identifier)) {
-            return With(block, "continuous");
+            return With(block, PotentSulfurState.Continuous);
         }
 
         if (sourceIfFluid && PlacementHelpers.InTag(world.Server.Registry, Periodic, below.Identifier)) {
-            return PlacementHelpers.PropertyOf(block, "potent_sulfur_state") == "erupting"
+            return block is IPotentSulfured { PotentSulfurState: PotentSulfurState.Erupting }
                 ? block
-                : With(block, "dormant");
+                : With(block, PotentSulfurState.Dormant);
         }
 
-        return With(block, "wet");
+        return With(block, PotentSulfurState.Wet);
     }
 
-    private static IBlock With(IBlock block, string state) {
-        return PlacementHelpers.WithProperty(block, "potent_sulfur_state", state);
+    private static IBlock With(IBlock block, PotentSulfurState state) {
+        return block is IPotentSulfured sulfur ? sulfur.WithPotentSulfurState(state) : block;
     }
 }
 
@@ -323,9 +323,9 @@ public sealed class LeavesPlacementRule : IBlockPlacementRule {
     public BlockClass VanillaClass => BlockClass.LeavesBlock;
 
     public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
-        IBlock state = PlacementHelpers.WithProperty(block, "persistent", true);
-        state = state is IWaterlogged leaves
-            ? leaves.WithWaterlogged(PlacementHelpers.IsWaterAt(context.World, context.PlacePos))
+        IBlock state = block is IPersistent leaves ? leaves.WithPersistent(true) : block;
+        state = state is IWaterlogged wet
+            ? wet.WithWaterlogged(PlacementHelpers.IsWaterAt(context.World, context.PlacePos))
             : state;
         return UpdateDistance(state, context.World, context.PlacePos);
     }
@@ -343,7 +343,7 @@ public sealed class LeavesPlacementRule : IBlockPlacementRule {
             }
         }
 
-        return PlacementHelpers.WithProperty(block, "distance", distance.ToString());
+        return block is IDistanced leaves ? leaves.WithDistance(distance) : block;
     }
 
     /// <summary>
@@ -352,7 +352,7 @@ public sealed class LeavesPlacementRule : IBlockPlacementRule {
     /// </summary>
     private static int DistanceAt(World world, IBlock block) {
         if (BlockClasses.Is(block.Identifier, BlockClass.LeavesBlock)) {
-            return int.Parse(PlacementHelpers.PropertyOf(block, "distance"));
+            return block is IDistanced leaves ? leaves.Distance : 7;
         }
 
         return PlacementHelpers.InTag(world.Server.Registry, Logs, block.Identifier) ? 0 : 7;

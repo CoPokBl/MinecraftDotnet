@@ -1,4 +1,5 @@
 using ManagedServer.Damage;
+using ManagedServer.Interaction;
 using ManagedServer.Placement;
 using Minecraft.Implementations.Server.Events;
 
@@ -66,5 +67,17 @@ public abstract class ScopedFeature {
     /// </summary>
     protected void AddPlacementRule(IBlockPlacementRule rule) {
         EventCancelers.Add(Scope.Server.BlockPlacementRules.Add(rule, Scope));
+    }
+
+    /// <summary>
+    /// Registers a rule for what a block does when it is right clicked, scoped the same way the
+    /// feature's listeners are, so a world scoped feature only changes interaction inside its world.
+    /// It comes back off with the rest of the feature on unregister.
+    /// <p/>
+    /// A rule for a vanilla class that already has one shadows it while it is registered, the same
+    /// bargain <see cref="AddPlacementRule"/> makes.
+    /// </summary>
+    protected void AddInteractionRule(IBlockInteractionRule rule) {
+        EventCancelers.Add(Scope.Server.BlockInteractionRules.Add(rule, Scope));
     }
 }

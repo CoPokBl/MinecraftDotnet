@@ -119,10 +119,23 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         }
     }
     
+    /// <summary>
+    /// A copy that later writes to this section cannot reach. Both halves are carried: a section
+    /// that only ever held biomes still has to survive a clone, and dropping them silently resets
+    /// the section to biome zero rather than failing.
+    /// <p/>
+    /// The unpacked arrays are copied and the palettes are shared, which is safe because a
+    /// <see cref="Minecraft.Schemas.Chunks.Palettes.Palette"/> is never mutated in place once built:
+    /// <see cref="Palettes.Palette.CreateOptimisedPalette"/> fills it in its constructor and
+    /// <see cref="UnpackData"/> allocates a fresh array rather than writing through it. So a packed
+    /// section clones in constant time, which is what makes snapshotting a chunk per send affordable.
+    /// </summary>
     public ChunkSection Clone() {
         ChunkSection clone = new() {
             _blocks = _blocks?.Clone() as uint[,,],
-            _palette = _palette
+            _palette = _palette,
+            _biomes = _biomes?.Clone() as uint[,,],
+            _biomesPalette = _biomesPalette
         };
         return clone;
     }

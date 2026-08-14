@@ -75,7 +75,7 @@ public sealed class PlayerPlaceContext : IBlockPlaceContext {
 
     public float Rotation => Player?.Yaw.DegreesF ?? 0f;
 
-    public bool IsSecondaryUseActive => Player?.Crouching ?? false;
+    public bool IsSecondaryUseActive => Player?.IsSecondaryUseActive ?? false;
 
     public BlockFace NearestLookingDirection => LookOrder()[0];
 

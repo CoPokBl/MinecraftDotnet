@@ -10,8 +10,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, bool Locked, bool Powered) : IBlock, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:repeater", "block.minecraft.repeater", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:repeater", BlockInfo.VanillaOnly);
+public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, bool Locked, bool Powered) : IBlock, IHorizontalFacing, ILocked, IPowered {
+    private static readonly BlockInfo Data = new("minecraft:repeater", "block.minecraft.repeater", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:repeater", BlockInfo.VanillaOnly, "minecraft:blocks/repeater");
     private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S124, BlockShapes.S124, BlockShapes.S1, BlockShapes.S124, BlockShapes.S124, BlockShapes.S124);
 
     public BlockStateInfo StateInfo => I0;
@@ -27,6 +27,8 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
     public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
 
     public float Hardness => StateInfo.Hardness;
     public bool Solid => StateInfo.Solid;
@@ -62,6 +64,8 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
     public Identifier? Fluid => StateInfo.Fluid;
 
     public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithLocked(bool locked) => this with { Locked = locked };
 
     public IBlock WithPowered(bool powered) => this with { Powered = powered };
 
