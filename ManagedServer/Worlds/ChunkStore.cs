@@ -4,6 +4,7 @@ using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Registry;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
 
@@ -69,8 +70,10 @@ internal sealed class ChunkStore {
     private readonly ILightingProvider _lighting;
     private readonly MinecraftRegistry _registry;
     private readonly int _worldHeight;
+    private readonly int _minY;
     private readonly bool _hasSkyLight;
     private readonly Action<Exception?> _onError;
+    private readonly ChunkGenerationQueue _generation;
 
     /// <summary>
     /// Raised once per chunk, off the tick thread, when its terrain has arrived. The world turns
@@ -79,14 +82,17 @@ internal sealed class ChunkStore {
     public event Action<Vec2<int>>? ChunkLoaded;
 
     public ChunkStore(ITerrainProvider provider, ILightingProvider lighting, MinecraftRegistry registry,
-        int worldHeight, bool hasSkyLight, Action<Exception?> onError) {
+        int worldHeight, int minY, bool hasSkyLight, Action<Exception?> onError,
+        ChunkGenerationQueue generation) {
 
         _provider = provider;
         _lighting = lighting;
         _registry = registry;
         _worldHeight = worldHeight;
+        _minY = minY;
         _hasSkyLight = hasSkyLight;
         _onError = onError;
+        _generation = generation;
     }
 
     // ── loading ─────────────────────────────────────────────────────────────
@@ -98,6 +104,22 @@ internal sealed class ChunkStore {
 
     public bool IsLoaded(Vec2<int> pos) {
         return _entries.TryGetValue(pos, out ChunkEntry? entry) && entry.Load.IsCompletedSuccessfully;
+    }
+
+    /// <summary>
+    /// Whether a chunk and all eight around it are loaded, which is exactly the condition under which
+    /// nothing arriving later can change the light over it.
+    /// </summary>
+    public bool NeighbourhoodLoaded(Vec2<int> pos) {
+        for (int dz = -1; dz <= 1; dz++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                if (!IsLoaded(new Vec2<int>(pos.X + dx, pos.Y + dz))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -133,8 +155,13 @@ internal sealed class ChunkStore {
         return created;
     }
 
+    /// <summary>
+    /// Posted to the shared generation queue rather than straight to the pool. A viewport is asked
+    /// for in one tick, so an unbounded post here is what puts every packet the server has to answer
+    /// behind the whole of it.
+    /// </summary>
     private void StartLoad(ChunkEntry entry) {
-        _ = Task.Run(() => {
+        _generation.Post(() => {
             try {
                 entry.Completion.SetResult(LoadCore(entry.Position));
             } catch (Exception e) {
@@ -155,12 +182,18 @@ internal sealed class ChunkStore {
     }
 
     private ChunkData LoadCore(Vec2<int> pos) {
-        ChunkData data = new(_worldHeight) { ChunkX = pos.X, ChunkZ = pos.Y };
+        ChunkData data = new(_worldHeight) { ChunkX = pos.X, ChunkZ = pos.Y, MinY = _minY };
         _provider.GetChunk(ref data);
         if (data == null!) {
             throw new InvalidOperationException($"Terrain provider returned null for chunk {pos}.");
         }
-        data.PackData();
+
+        // Stamped again because the provider takes the chunk by reference and a loader may have
+        // swapped in a different object: PolarLoader and AnvilLoader both answer with a clone of a
+        // chunk they hold. The one that came back is the one the world will use.
+        data.MinY = _minY;
+
+        data.PackData(_registry);
         return data;
     }
 
@@ -174,6 +207,13 @@ internal sealed class ChunkStore {
     /// mutation and a write racing it can null the array the serialiser is halfway through. The
     /// world's contract says block writes happen on the tick thread, but <c>SetBlocksAsync</c>
     /// resumes on a pool thread after awaiting its loads, so that was never quite true.
+    /// <p/>
+    /// <b>Blocks for a full chunk generation when the target is not loaded</b>, and
+    /// <c>World.SetBlock</c> reaches this from the tick thread, so a write into unloaded terrain
+    /// stalls the whole server for as long as generating that chunk takes. It waits because
+    /// <c>SetBlock</c> is synchronous to its caller: a write that returned before the chunk existed
+    /// would not be visible to the <c>GetBlock</c> after it. Use <c>SetBlocksAsync</c>, or load the
+    /// chunk first, for a write that might land outside what is loaded.
     /// </summary>
     public void Write(Vec2<int> pos, Action<ChunkData> mutate) {
         ChunkEntry entry = Entry(pos);
@@ -213,14 +253,23 @@ internal sealed class ChunkStore {
     /// The chunk's packet as of now, shared by every player owed it. Null when the chunk is not
     /// loaded, which the streaming path reads as "not ready yet" rather than as a failure.
     /// </summary>
-    public MinecraftPacket? BuildPacket(Vec2<int> pos) {
+    /// <remarks>
+    /// The packet object rather than its bytes, deliberately. A frame could be cached here and shared
+    /// between recipients, and <see cref="PreSerialisedPacket"/> is the protocol layer's way to send
+    /// one, but doing it changes the type every listener on the send path sees a chunk arrive as. A
+    /// re-serialisation is a fraction of a millisecond against the tens a chunk costs to generate, so
+    /// that is not a trade worth making here.
+    /// </remarks>
+    public MinecraftPacket? BuildPacket(Vec2<int> pos) => Build(pos)?.Packet;
+
+    private Built? Build(Vec2<int> pos) {
         if (!_entries.TryGetValue(pos, out ChunkEntry? entry) || !entry.Load.IsCompletedSuccessfully) {
             return null;
         }
 
         Built? built = entry.Built;
         if (built != null && built.Version == Interlocked.Read(ref entry.Version)) {
-            return built.Packet;
+            return built;
         }
 
         lock (entry.Build) {
@@ -228,7 +277,7 @@ internal sealed class ChunkStore {
 
             built = entry.Built;
             if (built != null && built.Version == version) {
-                return built.Packet;
+                return built;
             }
 
             MinecraftPacket packet = new ClientBoundChunkDataAndUpdateLightPacket {
@@ -238,13 +287,15 @@ internal sealed class ChunkStore {
                 Light = _lighting.GetLighting(pos, snapshot, SnapshotLookup, _registry, _hasSkyLight)
             };
 
+            Built fresh = new(packet, version);
+
             // Published only if nothing moved while we built. Otherwise this answer is already old,
             // and installing it would hide the newer one until the chunk happened to change again.
             if (Interlocked.Read(ref entry.Version) == version) {
-                entry.Built = new Built(packet, version);
+                entry.Built = fresh;
             }
 
-            return packet;
+            return fresh;
         }
     }
 
@@ -260,7 +311,15 @@ internal sealed class ChunkStore {
         return SnapshotOf(entry, out _);
     }
 
-    private static ChunkData SnapshotOf(ChunkEntry entry, out long version) {
+    /// <remarks>
+    /// The snapshot is <b>packed before it is published</b>, and that is a correctness requirement
+    /// rather than a saving. A snapshot is shared by every player owed the chunk and serialised by
+    /// each of them at once, and <c>ChunkSection.Palette</c>'s getter repacks in place: two threads
+    /// reaching an unpacked section together each build their own palette and one of them is left
+    /// reading an array the other has already nulled. Packed here, under the same lock that guards
+    /// the clone, every later reader only ever sees an immutable palette.
+    /// </remarks>
+    private ChunkData SnapshotOf(ChunkEntry entry, out long version) {
         ChunkData live = entry.Load.Result;
 
         lock (entry.Write) {
@@ -271,6 +330,7 @@ internal sealed class ChunkStore {
             }
 
             ChunkData snapshot = live.Snapshot();
+            snapshot.PackData(_registry);
             entry.Snapshot = snapshot;
             entry.SnapshotVersion = current;
             version = current;

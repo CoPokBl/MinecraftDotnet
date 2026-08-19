@@ -10,7 +10,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlock {
+public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlock, IOriented {
     private static readonly BlockInfo Data = new("minecraft:jigsaw", "block.minecraft.jigsaw", 3600000f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:jigsaw", "minecraft:jigsaw", BlockInfo.VanillaOnly, null);
     private static readonly BlockStateInfo I0 = new(-1f, 0, 15, PushReaction.Normal, 22, "stone", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
@@ -62,6 +62,8 @@ public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlo
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithOrientation(Orientation orientation) => this with { Orientation = orientation };
 
 
     public uint StateId {

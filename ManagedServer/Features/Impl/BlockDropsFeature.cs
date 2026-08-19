@@ -14,9 +14,10 @@ namespace ManagedServer.Features.Impl;
 /// <summary>
 /// Drops what a block is worth when it is broken, from the vanilla loot tables.
 /// <p/>
-/// Everything the feature reads comes in through <paramref name="loot"/>, which defaults to
-/// <see cref="VanillaBlockLoot"/>. There is no registry on the server to fill: see
-/// <see cref="IBlockLootSource"/> for why the seam is here instead.
+/// Everything the feature reads comes in through <paramref name="loot"/>, and it is <b>required</b>:
+/// the tables are content rather than measured fact, so nothing here ships them and there is no
+/// default to fall back to. <c>DatapackBlockLoot.Load(source)</c> is the vanilla set. There is no
+/// registry on the server to fill either: see <see cref="IBlockLootSource"/> for why the seam is here.
 /// <p/>
 /// Two paths reach a broken block and both are covered:
 /// <list type="bullet">
@@ -30,8 +31,8 @@ namespace ManagedServer.Features.Impl;
 /// handled is remembered for the rest of that tick and skipped, the same guard
 /// <c>LuckyBlocksFeature</c> gets for free from its own dictionary.
 /// </summary>
-public class BlockDropsFeature(IBlockLootSource? loot = null, bool dropOnDestroy = true) : ScopedFeature {
-    private readonly IBlockLootSource _loot = loot ?? VanillaBlockLoot.Instance;
+public class BlockDropsFeature(IBlockLootSource loot, bool dropOnDestroy = true) : ScopedFeature {
+    private readonly IBlockLootSource _loot = loot;
 
     /// <summary>
     /// Positions the player path has taken responsibility for, and the tick it did so. Read by the

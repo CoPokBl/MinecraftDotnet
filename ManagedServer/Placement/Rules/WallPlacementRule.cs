@@ -49,27 +49,40 @@ public sealed class WallPlacementRule : IBlockPlacementRule {
 
     public IBlock UpdateShape(IBlock block, World world, Vec3<int> pos, BlockFace toNeighbour,
         Vec3<int> neighbourPos, IBlock neighbourState) {
+        // Only the changed side reads a sturdy face, and only a horizontal side can be the changed
+        // one, so a vertical update never asks the world for it.
+        return Settled(world.Server.Registry, block, toNeighbour, neighbourState,
+            Directions.IsHorizontal(toNeighbour)
+                && PlacementHelpers.FaceSturdy(world, neighbourPos, toNeighbour.Opposite()),
+            toNeighbour == BlockFace.PosY ? neighbourState : world.GetBlock(pos.WithY(pos.Y + 1)));
+    }
+
+    /// <summary>
+    /// <c>WallBlock.updateShape</c> over the states it reads rather than over a world, so the
+    /// generator reaches the same transcription the placement rule does.
+    /// </summary>
+    /// <remarks>
+    /// <paramref name="above"/> is the block over the wall, which every path reads: it decides each
+    /// side's height as well as the post. Where the update itself came from above the two are the same
+    /// state, which is why the caller can hand the neighbour twice.
+    /// </remarks>
+    public static IBlock Settled(MinecraftRegistry registry, IBlock block, BlockFace toNeighbour,
+        IBlock neighbourState, bool neighbourSturdy, IBlock above) {
+
         if (toNeighbour == BlockFace.NegY || block is not IWallConnected wall) {
             return block;
         }
-
-        MinecraftRegistry registry = world.Server.Registry;
 
         // Which sides are connected is kept, since only the changed side can have changed, but the
         // heights and the post are all worked out again against whatever is above.
         bool[] connections = new bool[Directions.Horizontal.Length];
         for (int i = 0; i < Directions.Horizontal.Length; i++) {
             BlockFace face = Directions.Horizontal[i];
-            if (face == toNeighbour) {
-                connections[i] = ConnectsTo(registry, neighbourState,
-                    PlacementHelpers.FaceSturdy(world, neighbourPos, face.Opposite()), face);
-            }
-            else {
-                connections[i] = wall.Side(face) != WallSide.None;
-            }
+            connections[i] = face == toNeighbour
+                ? ConnectsTo(registry, neighbourState, neighbourSturdy, face)
+                : wall.Side(face) != WallSide.None;
         }
 
-        IBlock above = toNeighbour == BlockFace.PosY ? neighbourState : world.GetBlock(pos.WithY(pos.Y + 1));
         return Settle(registry, block, above, connections);
     }
 

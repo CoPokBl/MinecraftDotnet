@@ -16,9 +16,13 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.tags.TagLoader;
+import net.minecraft.server.packs.resources.MultiPackResourceManager;
+import net.minecraft.server.packs.repository.ServerPacksSource;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.core.component.DataComponentInitializers;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.ProtocolInfo;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -33,6 +37,7 @@ import net.minecraft.network.protocol.login.LoginProtocols;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.server.RegistryLayer;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.PalettedContainerFactory;
 
@@ -94,7 +99,8 @@ public class Harness {
                 int extra = buf.readableBytes();
 
                 if (entry.has("sections")) {
-                    String mismatch = checkChunkSections(packet, entry.get("sections").getAsInt(), registries);
+                    String mismatch = checkChunkSections(packet, entry.get("sections").getAsInt(),
+                        registries, entry.has("probes") ? entry.get("probes").getAsJsonArray() : null);
                     if (mismatch != null) {
                         failures.add(name + " [" + state + "]: " + mismatch);
                         continue;
@@ -141,13 +147,19 @@ public class Harness {
      * <p>Decoding a chunk packet proves almost nothing on its own: the sections arrive as one
      * opaque byte array, so a blob of the wrong length or with a mis-encoded section sails
      * through and only explodes later in {@code LevelChunk.replaceWithPacketData}. That's this
-     * check — parse exactly as many sections as the world height implies, then insist the blob
+     * check: parse exactly as many sections as the world height implies, then insist the blob
      * is spent.
+     *
+     * <p>Being spent is necessary and not sufficient. A paletted container written at the wrong
+     * bits per entry occupies exactly the right number of bytes and decodes happily into different
+     * blocks, which is how a silently corrupt direct palette passed this harness for as long as it
+     * existed. So the probes are read back with vanilla's own {@code getBlockState} and compared
+     * against the state ids our writer put in.
      *
      * @return a description of the mismatch, or null when it lines up
      */
     private static String checkChunkSections(Packet<?> packet, int expectedSections,
-        RegistryAccess.Frozen registries) {
+        RegistryAccess.Frozen registries, JsonArray probes) {
 
         if (!(packet instanceof ClientboundLevelChunkWithLightPacket chunk)) {
             return "expected a level_chunk_with_light packet, got " + packet.getClass().getSimpleName();
@@ -157,9 +169,11 @@ public class Harness {
         int size = buf.readableBytes();
         PalettedContainerFactory factory = PalettedContainerFactory.create(registries);
 
+        LevelChunkSection[] sections = new LevelChunkSection[expectedSections];
         for (int i = 0; i < expectedSections; i++) {
             try {
-                new LevelChunkSection(factory).read(buf);
+                sections[i] = new LevelChunkSection(factory);
+                sections[i].read(buf);
             }
             catch (Exception ex) {
                 return "section " + i + " of " + expectedSections + " failed to read at byte "
@@ -174,6 +188,30 @@ public class Harness {
                 + " bytes left over";
         }
 
+        if (probes == null) {
+            return null;
+        }
+
+        for (JsonElement element : probes) {
+            JsonObject probe = element.getAsJsonObject();
+            int index = probe.get("section").getAsInt();
+            int x = probe.get("x").getAsInt();
+            int y = probe.get("y").getAsInt();
+            int z = probe.get("z").getAsInt();
+            int expected = probe.get("state").getAsInt();
+
+            if (index < 0 || index >= sections.length) {
+                return "probe names section " + index + ", of " + sections.length;
+            }
+
+            int actual = Block.getId(sections[index].getBlockState(x, y, z));
+            if (actual != expected) {
+                return "section " + index + " at " + x + "," + y + "," + z
+                    + ": we wrote state " + expected + ", vanilla read " + actual
+                    + " (" + sections[index].getBlockState(x, y, z) + ")";
+            }
+        }
+
         return null;
     }
 
@@ -182,7 +220,7 @@ public class Harness {
      * its field in {@link net.minecraft.network.syncher.EntityDataSerializers}.
      *
      * <p>Bytes alone can't tell a mis-numbered type from a correct one when the two serializers
-     * share a wire shape — every variant is a var int — so the packet decodes cleanly while
+     * share a wire shape, every variant being a var int, so the packet decodes cleanly while
      * meaning something else entirely. Only the id is checked here; the value's encoding is
      * already covered by the decode itself.
      *
@@ -222,7 +260,7 @@ public class Harness {
      * server hands out, which is fine: this checks packet shape, not registry contents.
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static RegistryAccess.Frozen buildRegistryAccess() {
+    static RegistryAccess.Frozen buildRegistryAccess() {
         List<Registry<?>> all = new ArrayList<>();
         java.util.Set<ResourceKey<? extends Registry<?>>> seen = new java.util.HashSet<>();
 
@@ -232,27 +270,43 @@ public class Harness {
             seen.add(entry.key());
         });
 
-        // The datapack ones have to be rebuilt from the vanilla defaults, which arrive as a
-        // lookup provider rather than as registries. It overlaps the static set, and a
-        // duplicate key blows up ImmutableRegistryAccess.
-        HolderLookup.Provider vanilla = VanillaRegistries.createLookup();
+        // The datapack driven ones are decoded from the vanilla pack, which is where a server gets
+        // them: RegistryDataLoader over the resource manager is the only route they take, and it is
+        // what lets a datapack replace any of them.
+        //
+        // They are deliberately not VanillaRegistries' bootstrap objects. Those are the input to the
+        // data generator that writes the pack, and the encode is lossy wherever a codec's forGetter
+        // names the wrong field: CherryFoliagePlacer's corner_hole_chance reads
+        // wideBottomLayerHoleChance, so the shipped cherry.json says 0.25 where the bootstrap object
+        // holds 0.5, and every cherry tree a server grows uses the 0.25. A harness built on the
+        // bootstrap objects measures against a configuration no world is generated with.
+        MultiPackResourceManager resources = new MultiPackResourceManager(
+            PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource()));
+
+        // Half the pack's own elements name a tag: a dimension type holds #infiniburn_overworld, and
+        // decoding one with tags unbound fails the whole registry rather than reading as empty.
+        TagLoader.loadTagsForExistingRegistries(resources,
+                RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY))
+            .forEach(Registry.PendingTags::apply);
+
+        List<HolderLookup.RegistryLookup<?>> lookups = new ArrayList<>();
+        all.forEach(registry -> lookups.add((HolderLookup.RegistryLookup<?>) registry));
+
+        RegistryAccess.Frozen worldgen = RegistryDataLoader
+            .load(resources, lookups, RegistryDataLoader.WORLDGEN_REGISTRIES, Runnable::run)
+            .join();
+
+        worldgen.registries().filter(entry -> !seen.contains(entry.key()))
+            .forEach(entry -> all.add(entry.value()));
+
+        RegistryAccess.Frozen combined = new RegistryAccess.ImmutableRegistryAccess(all).freeze();
 
         // An item's default components are data driven now, and ItemStack's own decoding walks them, so
         // any packet carrying a stack throws "Components not bound yet" until these are baked.
-        BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(vanilla)
+        BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(combined)
             .forEach(DataComponentInitializers.PendingComponents::apply);
 
-        vanilla.listRegistryKeys().filter(key -> !seen.contains(key)).forEach(key -> {
-            HolderLookup.RegistryLookup lookup = vanilla.lookupOrThrow((ResourceKey) key);
-            MappedRegistry registry = new MappedRegistry((ResourceKey) key, com.mojang.serialization.Lifecycle.stable());
-            lookup.listElements().forEach(holder -> {
-                Holder.Reference reference = (Holder.Reference) holder;
-                registry.register(reference.key(), reference.value(), RegistrationInfo.BUILT_IN);
-            });
-            all.add(registry.freeze());
-        });
-
-        return new RegistryAccess.ImmutableRegistryAccess(all).freeze();
+        return combined;
     }
 
     private static byte[] hexToBytes(String hex) {

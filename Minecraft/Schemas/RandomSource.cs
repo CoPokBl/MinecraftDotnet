@@ -6,9 +6,11 @@ namespace Minecraft.Schemas;
 /// that reaches for <see cref="Random"/> produces a different sequence from the same seed and nothing
 /// random driven can be diffed against the jar or reproduced in a test.
 /// <p/>
-/// This is the <c>BitRandomSource</c> half: everything is derived from <see cref="Next"/>, exactly as
-/// the interface's default methods derive it. <see cref="LegacyRandomSource"/> is the generator that
-/// supplies the bits.
+/// The methods here are the <c>BitRandomSource</c> half, everything derived from <see cref="Next"/>
+/// exactly as the interface's default methods derive it, which is what
+/// <see cref="LegacyRandomSource"/> supplies the bits for. They are <b>virtual</b> because
+/// <see cref="XoroshiroRandomSource"/> is not a bit source: it draws whole longs and derives every
+/// method its own way, down to a different double multiplier.
 /// </summary>
 public abstract class RandomSource {
     private const float FloatMultiplier = 5.9604645E-8f;
@@ -23,7 +25,13 @@ public abstract class RandomSource {
     /// <summary>A new generator seeded from this one, vanilla's <c>fork</c>.</summary>
     public abstract RandomSource Fork();
 
-    public int NextInt() {
+    /// <summary>
+    /// Vanilla's <c>forkPositional</c>: a factory handing out a generator per position, which is what
+    /// anything reproducible from a coordinate alone is seeded from.
+    /// </summary>
+    public abstract IPositionalRandomFactory ForkPositional();
+
+    public virtual int NextInt() {
         return Next(32);
     }
 
@@ -32,7 +40,7 @@ public abstract class RandomSource {
     /// else is rejection sampled, and the loop is what keeps the distribution flat, so it cannot be
     /// replaced with a plain modulo.
     /// </summary>
-    public int NextInt(int bound) {
+    public virtual int NextInt(int bound) {
         if (bound <= 0) {
             throw new ArgumentException("Bound must be positive", nameof(bound));
         }
@@ -60,7 +68,7 @@ public abstract class RandomSource {
         return NextInt(max - min + 1) + min;
     }
 
-    public long NextLong() {
+    public virtual long NextLong() {
         // Two draws, high half first. The addition rather than an or is vanilla's, and it matters:
         // the low half is signed, so a negative one borrows from the high half.
         int high = Next(32);
@@ -68,15 +76,15 @@ public abstract class RandomSource {
         return ((long)high << 32) + low;
     }
 
-    public bool NextBoolean() {
+    public virtual bool NextBoolean() {
         return Next(1) != 0;
     }
 
-    public float NextFloat() {
+    public virtual float NextFloat() {
         return Next(24) * FloatMultiplier;
     }
 
-    public double NextDouble() {
+    public virtual double NextDouble() {
         long bits = ((long)Next(26) << 27) + Next(27);
         return bits * DoubleMultiplier;
     }
@@ -86,7 +94,7 @@ public abstract class RandomSource {
     /// time and hands the second one out on the next call. Reseeding throws the spare away, which is
     /// why <see cref="SetSeed"/> has to call <see cref="ResetGaussian"/>.
     /// </summary>
-    public double NextGaussian() {
+    public virtual double NextGaussian() {
         if (_haveNextGaussian) {
             _haveNextGaussian = false;
             return _nextGaussian;
@@ -118,7 +126,7 @@ public abstract class RandomSource {
     }
 
     /// <summary><c>RandomSource.consumeCount</c>: burn draws without using them.</summary>
-    public void ConsumeCount(int count) {
+    public virtual void ConsumeCount(int count) {
         for (int i = 0; i < count; i++) {
             NextInt();
         }
@@ -174,5 +182,37 @@ public sealed class LegacyRandomSource : RandomSource {
 
     public override RandomSource Fork() {
         return new LegacyRandomSource(NextLong());
+    }
+
+    public override IPositionalRandomFactory ForkPositional() {
+        return new LegacyPositionalRandomFactory(NextLong());
+    }
+}
+
+/// <summary>
+/// <c>LegacyRandomSource.LegacyPositionalRandomFactory</c>. <see cref="FromHashOf"/> is Java's
+/// <c>String.hashCode</c>, so it has to be that exact polynomial rather than any hash.
+/// </summary>
+public sealed class LegacyPositionalRandomFactory(long seed) : IPositionalRandomFactory {
+    public RandomSource At(int x, int y, int z) {
+        return new LegacyRandomSource(Mth.GetSeed(x, y, z) ^ seed);
+    }
+
+    public RandomSource FromHashOf(string name) {
+        return new LegacyRandomSource(JavaStringHash(name) ^ seed);
+    }
+
+    public RandomSource FromSeed(long seed2) {
+        return new LegacyRandomSource(seed2);
+    }
+
+    /// <summary>Java's <c>String.hashCode</c>: <c>s[0]*31^(n-1) + ...</c>, wrapping at 32 bits.</summary>
+    internal static int JavaStringHash(string value) {
+        int hash = 0;
+        foreach (char c in value) {
+            hash = hash * 31 + c;
+        }
+
+        return hash;
     }
 }

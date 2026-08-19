@@ -90,6 +90,18 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public int WorldPacketsPerTick { get; set; } = 3000;
 
     /// <summary>
+    /// The thread pool budget every world's chunk generation shares. One per server rather than one
+    /// per world, because the pool is one and four worlds each taking most of it is the same problem
+    /// as one world taking all of it.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="ChunkGenerationQueue.MaxConcurrency"/> is the knob. Raise it for a server that does
+    /// nothing but stream terrain, lower it for one that has other work to do; leaving it alone
+    /// leaves two cores for everything that is not terrain.
+    /// </remarks>
+    public ChunkGenerationQueue ChunkGeneration { get; }
+
+    /// <summary>
     /// A floor on the gap between two flushes of the same world, on top of the tick rate. Zero, so
     /// the tick rate is the only pacing.
     /// <p/>
@@ -121,7 +133,8 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public ManagedMinecraftServer(params IServerFeature[] feats) {
         FeatureHandler = new FeatureHandler(this);
         Scheduler = new ServerScheduler(this);
-        
+        ChunkGeneration = new ChunkGenerationQueue(HandleError);
+
         foreach (IServerFeature feat in feats) {
             AddFeature(feat);
         }
@@ -321,6 +334,13 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         connection.Registry = Registry;
         Connections.Add(connection);
         Events.AddChild<IPacketEvent>(connection.Events, pe => pe.Connection == connection);
-        connection.Disconnected += () => Connections.Remove(connection);
+
+        // The node is detached again as well as the connection dropped, for the reason given on
+        // MinecraftServer.AddConnection: every event walks the children, so one left behind per
+        // connection ever made costs every event for the rest of the run.
+        connection.Disconnected += () => {
+            Connections.Remove(connection);
+            Events.RemoveChild(connection.Events);
+        };
     }
 }

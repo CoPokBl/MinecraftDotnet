@@ -73,6 +73,13 @@ public class MinecraftServer {
     public virtual void AddConnection(PlayerConnection connection) {
         Connections.Add(connection);
         Events.AddChild<IPacketEvent>(connection.Events, pe => pe.Connection == connection);
-        connection.Disconnected += () => Connections.Remove(connection);
+
+        // The node is detached again as well as the connection dropped. Every event the server
+        // dispatches walks its children, so a node left behind by each connection that has ever
+        // been made is both a leak and a growing cost on every event for the whole run.
+        connection.Disconnected += () => {
+            Connections.Remove(connection);
+            Events.RemoveChild(connection.Events);
+        };
     }
 }

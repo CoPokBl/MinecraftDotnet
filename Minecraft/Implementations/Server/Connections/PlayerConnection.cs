@@ -179,6 +179,13 @@ public abstract class PlayerConnection : MinecraftConnection {
     }
 
     public override void SendPacket(MinecraftPacket packet) {
+        // Nothing after the disconnect can reach the client, so it is dropped before the event and the
+        // serialisation rather than after. A player who leaves is still owed a whole flight of chunks
+        // and a despawn from every entity around them, and all of it used to be built and dispatched.
+        if (IsDisconnected) {
+            return;
+        }
+
         PacketSendingEvent e = new() {
             Connection = this,
             Packet = packet

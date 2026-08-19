@@ -6,6 +6,13 @@ public class IndirectPalette : Palette {
 
     public override bool HasData => Blocks.Length > 0 && PaletteValues.Length > 0;
 
+    /// <remarks>
+    /// Quadratic: <see cref="List{T}.IndexOf"/> once per position, so a section with twenty distinct
+    /// states costs some forty thousand comparisons. Use <see cref="PaletteBuilder.FromFlat"/>, which
+    /// is one pass over a flat buffer and also picks the right palette shape rather than always
+    /// building this one.
+    /// </remarks>
+    [Obsolete("Use PaletteBuilder.FromFlat, which is linear and picks the right palette shape.")]
     public IndirectPalette(uint[,,] blocks, int d, int maxbpe, int minbpe) : base(d, maxbpe, minbpe) {
         List<uint> palette = [];  // list of unique values
 
@@ -42,7 +49,18 @@ public class IndirectPalette : Palette {
         return PaletteValues[Blocks[x + Dimension*z + Dimension*Dimension*y]];
     }
 
-    public override byte[] Serialise() {
+    protected override byte[] BuildSerialised() {
+        // A clamp here would be silent corruption rather than a narrow write: the entries still
+        // occupy the right number of bytes, so the client parses the section happily and reads
+        // indices that mean a different block. Anything past the indirect range is a DirectPalette,
+        // and reaching this with more is a bug in whatever built the palette.
+        if (PaletteValues.Length > 1 << MaxBitsPerEntry) {
+            throw new InvalidOperationException(
+                $"An indirect palette cannot index {PaletteValues.Length} values at {MaxBitsPerEntry} " +
+                "bits per entry. Build it through PaletteBuilder.FromFlat, which falls back to a " +
+                "DirectPalette.");
+        }
+
         int bpe = Math.Min(Math.Max(PaletteValues.Length.MinBitsToStore(), MinBitsPerEntry), MaxBitsPerEntry);
         return new DataWriter()
             .WriteUnsignedByte((byte)bpe)

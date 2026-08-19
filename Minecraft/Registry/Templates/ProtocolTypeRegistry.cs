@@ -1,6 +1,7 @@
 using Minecraft.Data;
 using Minecraft.Registry.Tags;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Tags;
 
 namespace Minecraft.Registry.Templates;
 
@@ -16,6 +17,8 @@ public abstract class MappedRegistry<TSelf, T> : MappedRegistry<T>, ISubRegistry
         foreach (KeyValuePair<Identifier, T> pair in ById) {
             clone.Add(ProtocolIds[pair.Key], pair.Value);
         }
+
+        CopyTagsTo(clone);
         return clone;
     }
 
@@ -37,6 +40,20 @@ public abstract class MappedRegistry<T> : IProtocolTypeRegistry where T : IProto
     public abstract Identifier RegistryId { get; }
     public RegistryTagContainer<T> Tags { get; } = new();
     RegistryTagContainer ISubRegistry.Tags => Tags;
+
+    /// <summary>
+    /// Carries the tags onto a copy. A clone without them is a registry the client is sent no tags
+    /// for, which is not a copy of anything.
+    /// </summary>
+    /// <remarks>
+    /// The tags themselves are shared rather than rebuilt, since an <see cref="IRegistryTag"/> is
+    /// read only once constructed.
+    /// </remarks>
+    protected void CopyTagsTo(MappedRegistry<T> clone) {
+        foreach (KeyValuePair<Identifier, IRegistryTag> tag in Tags.Tags) {
+            clone.Tags.Tags[tag.Key] = tag.Value;
+        }
+    }
 
     public virtual void Add(int protocolId, T type) {
         ById.Add(type.Identifier, type);
@@ -76,6 +93,8 @@ public abstract class SequentialRegistry<TSelf, T> : SequentialRegistry<T>, ISub
         foreach (T entry in Entries) {
             clone.Add(entry);
         }
+
+        CopyTagsTo(clone);
         return clone;
     }
 
@@ -96,6 +115,20 @@ public abstract class SequentialRegistry<T> : IProtocolTypeRegistry where T : IP
     public abstract Identifier RegistryId { get; }
     public RegistryTagContainer<T> Tags { get; } = new();
     RegistryTagContainer ISubRegistry.Tags => Tags;
+
+    /// <summary>
+    /// Carries the tags onto a copy. A clone without them is a registry the client is sent no tags
+    /// for, which is not a copy of anything.
+    /// </summary>
+    /// <remarks>
+    /// The tags themselves are shared rather than rebuilt, since an <see cref="IRegistryTag"/> is
+    /// read only once constructed.
+    /// </remarks>
+    protected void CopyTagsTo(SequentialRegistry<T> clone) {
+        foreach (KeyValuePair<Identifier, IRegistryTag> tag in Tags.Tags) {
+            clone.Tags.Tags[tag.Key] = tag.Value;
+        }
+    }
 
     public virtual void Add(T type) {
         int protocolId = Entries.Count;

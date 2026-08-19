@@ -246,6 +246,33 @@ public class DataReader(byte[] data) : Stream {
         return entries;
     }
     
+    /// <summary>
+    /// <see cref="ReadPacketDataArray"/> over 32 bit entries, which is what a direct palette needs:
+    /// its entries are raw block state ids rather than indices into a small table.
+    /// </summary>
+    /// <remarks>
+    /// Shifts the entries out of each long rather than going through a <see cref="BitArray"/> per long
+    /// and a sliced, reversed one per entry, which costs about three objects an entry and so some
+    /// twelve thousand over a direct section.
+    /// </remarks>
+    public uint[] ReadPacketDataArray32(int bitsPerEntry, int entryCount) {
+        int entriesPerLong = 64 / bitsPerEntry;  // entries never straddle a long
+        int longCount = (entryCount + entriesPerLong - 1) / entriesPerLong;
+
+        uint[] entries = new uint[entryCount];
+        long mask = bitsPerEntry == 64 ? -1L : (1L << bitsPerEntry) - 1L;
+        int currentEntry = 0;
+
+        for (int i = 0; i < longCount; i++) {
+            long value = ReadLong();
+            for (int j = 0; j < entriesPerLong && currentEntry < entryCount; j++) {
+                entries[currentEntry++] = (uint)((value >> (j * bitsPerEntry)) & mask);
+            }
+        }
+
+        return entries;
+    }
+
     public ushort[] ReadPrefixedPacketDataArray(int bitsPerEntry) {
         int entriesPerLong = 64 / bitsPerEntry;  // How many entries fit into one long
         int longCount = ReadVarInt();  // Read the number of longs

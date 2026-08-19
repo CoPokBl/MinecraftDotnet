@@ -24,4 +24,8 @@
       <ProjectReference Include="..\Minecraft\Minecraft.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="Schemas\vanilla-hashset.txt.gz" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+
 </Project>

@@ -28,7 +28,12 @@ public abstract class CrossCollisionPlacementRule : IBlockPlacementRule {
     /// Whether this block connects to <paramref name="neighbour"/> across <paramref name="towards"/>,
     /// which points from this block at the neighbour.
     /// </summary>
-    protected abstract bool ConnectsTo(MinecraftRegistry registry, IBlock self, IBlock neighbour,
+    /// <remarks>
+    /// Public because the generator's own shape settle asks it too: it takes the neighbour rather than
+    /// a <c>World</c>, so it is the one part of this rule a caller without a world can reuse, and a
+    /// second copy of "what a fence joins" would be a second thing to update.
+    /// </remarks>
+    public abstract bool ConnectsTo(MinecraftRegistry registry, IBlock self, IBlock neighbour,
         bool faceSturdy, BlockFace towards);
 
     public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
@@ -76,7 +81,7 @@ public sealed class FencePlacementRule : CrossCollisionPlacementRule {
 
     public override BlockClass VanillaClass => BlockClass.FenceBlock;
 
-    protected override bool ConnectsTo(MinecraftRegistry registry, IBlock self, IBlock neighbour,
+    public override bool ConnectsTo(MinecraftRegistry registry, IBlock self, IBlock neighbour,
         bool faceSturdy, BlockFace towards) {
         bool sameFence = IsSameFence(registry, self, neighbour);
         bool gate = BlockClasses.Is(neighbour.Identifier, BlockClass.FenceGateBlock)
@@ -106,7 +111,7 @@ public sealed class IronBarsPlacementRule : CrossCollisionPlacementRule {
 
     public override BlockClass VanillaClass => BlockClass.IronBarsBlock;
 
-    protected override bool ConnectsTo(MinecraftRegistry registry, IBlock self, IBlock neighbour,
+    public override bool ConnectsTo(MinecraftRegistry registry, IBlock self, IBlock neighbour,
         bool faceSturdy, BlockFace towards) {
         return (!PlacementHelpers.IsExceptionForConnection(registry, neighbour) && faceSturdy)
                || BlockClasses.Is(neighbour.Identifier, BlockClass.IronBarsBlock)

@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 using ManagedServer.Entities;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
@@ -167,6 +168,37 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     /// </summary>
     private const int ScanSlack = 64;
 
+    /// <summary>
+    /// Chunks whose light is known to be stale for whoever holds them, and the moment each must be
+    /// sent again whatever else has happened by then. Drained by the tick.
+    /// </summary>
+    private readonly Dictionary<Vec2<int>, long> _lightCorrections = [];
+
+    private readonly Lock _lightCorrectionsLock = new();
+
+    /// <summary>
+    /// Held rather than taken off the method group per call, since the tick hands it to every
+    /// player's flush and a method group conversion is an allocation each time.
+    /// </summary>
+    private readonly Func<Vec2<int>, bool> _isChunkLoaded;
+
+    /// <summary>
+    /// How long a light correction waits for the rest of a chunk's neighbourhood to arrive before
+    /// going out regardless.
+    /// </summary>
+    /// <remarks>
+    /// A chunk's light is decided by the three by three around it, so a chunk on the frontier is
+    /// invalidated once per neighbour that loads after it: without a wait, walking into new terrain
+    /// costs up to nine full chunk packets per chunk per player, all but the last of them
+    /// immediately superseded. Waiting for the neighbourhood collapses that to one.
+    /// <p/>
+    /// The deadline exists because a neighbourhood is not guaranteed to complete: a chunk at the edge
+    /// of what anybody wants loaded would otherwise hold its correction forever. It is set by the
+    /// first invalidation and never refreshed, so this is a bound on how late a correction can be and
+    /// not a window that a player who keeps walking can push in front of them.
+    /// </remarks>
+    private const int LightSettleMs = 500;
+
     #endregion
 
     #region construction
@@ -198,9 +230,14 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         _neighbours = new NeighbourUpdater(this);
 
         _viewportOffsets = BuildViewportOffsets(viewDistance);
-        _chunks = new ChunkStore(_provider, _lighting, Server.Registry, Dimension.Height,
-            Dimension.HasSkyLight, Server.HandleError);
+        _chunks = new ChunkStore(_provider, _lighting, Server.Registry, Dimension.Height, _minY,
+            Dimension.HasSkyLight, Server.HandleError, Server.ChunkGeneration);
         _chunks.ChunkLoaded += OnChunkLoaded;
+        _isChunkLoaded = _chunks.IsLoaded;
+
+        // Last, so the provider cannot be asked for a chunk before the store it would deliver into
+        // exists. A provider with nothing to say back ignores this entirely.
+        _provider.Attach(new WorldTerrainHost(this, _chunks));
 
         Events.AddListener<ServerTickEvent>(_ => Tick());
     }
@@ -254,6 +291,10 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             ReconcileViewport(player, view);
         }
 
+        // After the reconcile, so a correction for a chunk the player has just walked out of range of
+        // is dropped by the same diff rather than queued and then dropped next tick.
+        DrainLightCorrections();
+
         // Advanced by whole delays rather than snapped to now, so a flush that lands a millisecond
         // early does not push the next one a whole tick out. Clamped so a stalled server catches up
         // once instead of firing a burst.
@@ -274,7 +315,7 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
             toLoad.Clear();
             PlayerChunkView.Batch batch = view.TakeBatch(_packetsPerTick, _packetsPerTick + ScanSlack,
-                _chunks.IsLoaded, toLoad);
+                _isChunkLoaded, toLoad);
 
             // Anything the player is waiting on that nobody has started yet.
             foreach (Vec2<int> pos in toLoad) _chunks.EnsureLoading(pos);
@@ -400,10 +441,6 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
             Value = 0f
         });
 
-        Action onDisconnect = () => RemovePlayer(player);
-        player.Connection.Disconnected += onDisconnect;
-        view.DisconnectHandler = onDisconnect;
-
         view.CancelMoveListener = player.Events.AddListener<EntityMoveEvent>(e => {
             if (view.Disconnected) return;
             if (e.Entity != player) return;
@@ -411,6 +448,14 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         });
 
         Players.Add(player);
+
+        // Subscribed last, once the view is fully wired. A connection that has already gone runs the
+        // handler immediately, and RemovePlayer can only undo what has been done by the time it runs:
+        // subscribing earlier meant a player who left mid join had their move listener registered
+        // after their own removal, and was added back to Players behind it.
+        Action onDisconnect = () => RemovePlayer(player);
+        view.DisconnectHandler = onDisconnect;
+        player.Connection.Disconnected += onDisconnect;
 
         // Terrain starts arriving now rather than at the next tick, so it overlaps the rest of the
         // login handshake instead of following it.
@@ -577,15 +622,20 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         Vec2<int> chunkPos = GetChunkPos(pos);
         Vec3<int> localPos = ToChunkLocalPos(GameToProtocolPos(pos));
 
+        // Chunk local x and z with the game y, which is what the record carries, what the wire form
+        // wants, and where GetBlockData and SetBlockData look. Keyed by the absolute position instead
+        // it is never found and never cleared, so writing air over it leaves it behind.
+        Vec3<int> blockEntityKey = ToChunkLocalPos(pos);
+
         // Through the store, which holds the chunk's write lock for the duration and then marks it
         // and its neighbours stale. Writing the chunk directly races anything serialising it, since
         // serialising repacks the sections in place.
         _chunks.Write(chunkPos, data => {
             data.SetBlock(localPos, block);
             if (blockEntityType == null) {
-                data.BlockEntities.Remove(pos);
+                data.BlockEntities.Remove(blockEntityKey);
             } else {
-                data.BlockEntities[pos] = new BlockEntity(
+                data.BlockEntities[blockEntityKey] = new BlockEntity(
                     localPos.X, pos.Y, localPos.Z, blockEntityType, blockEntityData.ThrowIfNull()
                 );
             }
@@ -843,25 +893,74 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     /// <p/>
     /// The order matters and is not incidental. Versions are bumped first, inside
     /// <c>InvalidateLightAround</c>, so that a build already running for any of these chunks can no
-    /// longer publish its result. Only then are players scanned. A player holding a neighbour gets it
+    /// longer publish its result. Only then is anything queued. A player holding a neighbour gets it
     /// queued again, at the tail, behind the copy it is correcting; a player who merely has it
     /// pending needs nothing, because the build that eventually happens reads the new light for free.
     /// That is what collapses a join from thousands of lighting passes into one per chunk.
+    /// <p/>
+    /// The correction itself is recorded rather than sent, and released by
+    /// <see cref="DrainLightCorrections"/> once the rest of the chunk's neighbourhood has arrived.
+    /// See <see cref="LightSettleMs"/>.
     /// </summary>
     private void OnChunkLoaded(Vec2<int> pos) {
         _chunks.InvalidateLightAround(pos);
 
-        ReadOnlySpan<Vec2<int>> neighbours = [
-            new(pos.X + 1, pos.Y), new(pos.X - 1, pos.Y),
-            new(pos.X, pos.Y + 1), new(pos.X, pos.Y - 1),
-            new(pos.X + 1, pos.Y + 1), new(pos.X + 1, pos.Y - 1),
-            new(pos.X - 1, pos.Y + 1), new(pos.X - 1, pos.Y - 1)
-        ];
+        long deadline = Environment.TickCount64 + LightSettleMs;
+        lock (_lightCorrectionsLock) {
+            for (int dz = -1; dz <= 1; dz++) {
+                for (int dx = -1; dx <= 1; dx++) {
+                    if (dx == 0 && dz == 0) continue;
 
-        Player[] snap = Players.Snapshot;
-        foreach (Player player in snap) {
+                    // TryAdd, so the deadline is the first invalidation's. Overwriting it would let a
+                    // chunk whose neighbours keep arriving postpone its own correction indefinitely.
+                    _lightCorrections.TryAdd(new Vec2<int>(pos.X + dx, pos.Y + dz), deadline);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Queues the light corrections whose chunks have settled, meaning the whole three by three
+    /// around them is loaded and no later arrival can move their light, or whose deadline has passed.
+    /// </summary>
+    private void DrainLightCorrections() {
+        List<Vec2<int>>? ready = null;
+        long now = Environment.TickCount64;
+
+        lock (_lightCorrectionsLock) {
+            if (_lightCorrections.Count == 0) return;
+
+            foreach ((Vec2<int> pos, long deadline) in _lightCorrections) {
+                if (now < deadline && !_chunks.NeighbourhoodLoaded(pos)) continue;
+                (ready ??= []).Add(pos);
+            }
+
+            if (ready == null) return;
+            foreach (Vec2<int> pos in ready) _lightCorrections.Remove(pos);
+        }
+
+        ReadOnlySpan<Vec2<int>> positions = CollectionsMarshal.AsSpan(ready);
+        foreach (Player player in Players.Snapshot) {
             if (!_views.TryGetValue(player, out PlayerChunkView? view) || view.Disconnected) continue;
-            view.RequeueForLight(neighbours);
+            view.Requeue(positions);
+        }
+    }
+
+    /// <summary>
+    /// Sends a chunk again to everyone already holding it, because its contents changed wholesale.
+    /// Terrain generation forking into an already delivered chunk is what this is for.
+    /// </summary>
+    /// <remarks>
+    /// Through the same per player queue as a light correction, and for the same reason: the queue
+    /// releases <c>WorldPacketsPerTick</c> a tick, so a direct send would arrive ahead of chunks the
+    /// client is still waiting on. See <see cref="PlayerChunkView.Requeue"/>.
+    /// </remarks>
+    public void ResendChunk(Vec2<int> pos) {
+        ReadOnlySpan<Vec2<int>> one = [pos];
+
+        foreach (Player player in Players.Snapshot) {
+            if (!_views.TryGetValue(player, out PlayerChunkView? view) || view.Disconnected) continue;
+            view.Requeue(one);
         }
     }
 

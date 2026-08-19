@@ -21,11 +21,16 @@ public static class Directions {
     ];
 
     /// <summary>
-    /// <c>Direction.Plane.HORIZONTAL</c>, in vanilla's order: north, south, west, east. The order is
-    /// load bearing wherever a search takes the first match.
+    /// <c>Direction.Plane.HORIZONTAL</c>: north, east, south, west.
     /// </summary>
+    /// <remarks>
+    /// <b>Compass order, not the horizontal half of <c>Direction.values()</c></b>, which is north,
+    /// south, west, east and is what <see cref="All"/> holds. The two are different arrays upstream
+    /// and both are iterated, so which one a call site means decides where a draw over them lands and
+    /// which of two matches a search finds first.
+    /// </remarks>
     public static readonly BlockFace[] Horizontal = [
-        BlockFace.NegZ, BlockFace.PosZ, BlockFace.NegX, BlockFace.PosX
+        BlockFace.NegZ, BlockFace.PosX, BlockFace.PosZ, BlockFace.NegX
     ];
 
     /// <summary>

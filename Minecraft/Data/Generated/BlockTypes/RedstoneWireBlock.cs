@@ -10,7 +10,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection East, RedstoneWireConnection North, int Power, RedstoneWireConnection South, RedstoneWireConnection West) : IBlock {
+public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection East, RedstoneWireConnection North, int Power, RedstoneWireConnection South, RedstoneWireConnection West) : IBlock, IRedstoneConnected {
     private static readonly BlockInfo Data = new("minecraft:redstone_wire", "block.minecraft.redstone_wire", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:redstone", BlockInfo.VanillaOnly, "minecraft:blocks/redstone_wire");
     private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S828, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S829 };
@@ -145,6 +145,22 @@ public record RedstoneWireBlock(Identifier Identifier, RedstoneWireConnection Ea
     public bool PathfindableAir => StateInfo.PathfindableAir;
     public NoteBlockInstrument Instrument => StateInfo.Instrument;
     public Identifier? Fluid => StateInfo.Fluid;
+
+    public RedstoneWireConnection Connection(BlockFace face) => face switch {
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => RedstoneWireConnection.None
+    };
+
+    public IBlock WithConnection(BlockFace face, RedstoneWireConnection connection) => face switch {
+        BlockFace.NegZ => this with { North = connection },
+        BlockFace.PosZ => this with { South = connection },
+        BlockFace.NegX => this with { West = connection },
+        BlockFace.PosX => this with { East = connection },
+        _ => this
+    };
 
 
     public uint StateId {

@@ -241,15 +241,17 @@ internal sealed class PlayerChunkView {
     }
 
     /// <summary>
-    /// Queues a chunk the client already has to be sent again, because the light over it changed.
+    /// Queues a chunk the client already has to be sent again, because what it holds changed
+    /// wholesale: the light over it moved, or worldgen wrote into it after it was delivered.
+    /// <p/>
     /// Appended at the tail so it lands behind the packet it is correcting: the client drops light
     /// for a chunk it does not hold, so a correction that overtook its chunk would leave the wrong
     /// light on screen permanently.
     /// <p/>
     /// A chunk that is merely pending needs nothing. It has not been built yet, and the build that
-    /// eventually happens reads the new light for free.
+    /// eventually happens reads the new contents and the new light for free.
     /// </summary>
-    public void RequeueForLight(ReadOnlySpan<Vec2<int>> positions) {
+    public void Requeue(ReadOnlySpan<Vec2<int>> positions) {
         lock (Lock) {
             foreach (Vec2<int> pos in positions) {
                 if (!Sent.Contains(pos)) {
@@ -270,12 +272,18 @@ internal sealed class PlayerChunkView {
     /// </summary>
     public void ReturnUnsent(ReadOnlySpan<Vec2<int>> positions) {
         lock (Lock) {
-            for (int i = positions.Length - 1; i >= 0; i--) {
-                Vec2<int> pos = positions[i];
+            // Gathered first and inserted as one range: an Insert(0, ...) per position shifts the whole
+            // pending list each time, and a batch that fails at its first chunk returns a viewport.
+            List<Vec2<int>>? returning = null;
+            foreach (Vec2<int> pos in positions) {
                 Sent.Remove(pos);
                 if (Queued.Add(pos)) {
-                    Pending.Insert(0, pos);
+                    (returning ??= []).Add(pos);
                 }
+            }
+
+            if (returning != null) {
+                Pending.InsertRange(0, returning);
             }
         }
     }

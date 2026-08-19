@@ -7,6 +7,7 @@ using TestServer.Servers.MobAi;
 using TestServer.Servers.Placement;
 using TestServer.Servers.SkyWarsLuckyBlock;
 using TestServer.Servers.Transferer;
+using TestServer.Servers.Worldgen;
 
 // File.WriteAllBytes("polar.polar", PolarLoader.CreateWorld(new AnvilLoader("anvil", VanillaRegistry.Data)));
 // return 0;
@@ -65,6 +66,10 @@ switch (args[0]) {
 
     case "placement":
         await PlacementTest.Start();
+        break;
+
+    case "worldgen":
+        await WorldgenTest.Start();
         break;
     
     default:

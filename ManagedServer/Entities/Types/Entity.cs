@@ -214,7 +214,19 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     // these should be set by an entity tracker
     // not doing so is unsupported and will cause issues.
     public int NetId { get; internal set; } = -1;
-    public IEntityManager? Manager { get; private set; }
+
+    /// <summary>
+    /// The manager this entity is registered with, or null when it is in no world. Backed by a field
+    /// rather than an auto property because <see cref="Despawn"/> claims it with an interlocked
+    /// exchange, which is what makes despawning idempotent across threads.
+    /// </summary>
+    public IEntityManager? Manager {
+        get => _manager;
+        private set => _manager = value;
+    }
+
+    private IEntityManager? _manager;
+
     public World? World { get; private set; }
 
     private readonly Dictionary<IAttribute, (double Base, List<AttributeModifier> Modifiers)> _attributes = [];
@@ -363,6 +375,10 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
         World = world;
         Manager = world?.Entities;
 
+        if (world == null) {
+            return;
+        }
+
         Debug.Assert(Manager != null, nameof(Manager) + " != null");
         Manager?.BaseEventNode.AddChild(Events, serverEvent => {
             return serverEvent switch {
@@ -371,10 +387,6 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
                 _ => true
             };
         });
-
-        if (world == null) {
-            return;
-        }
 
         AfterEnteringWorld(world);
 
@@ -394,11 +406,25 @@ public class Entity : MappedTaggable, IViewable, IFeatureScope {
     /// </summary>
     protected virtual void AfterEnteringWorld(World world) { }
 
+    /// <summary>
+    /// Takes the entity out of its world and tells whoever could see it. Safe to call twice and safe
+    /// to call on an entity that was never spawned, both of which happen on a disconnect: the tick
+    /// thread and the network thread can notice a dead connection at the same moment, and a
+    /// connection that dies mid login belongs to a player who never reached a world.
+    /// <p/>
+    /// The manager is claimed with an interlocked exchange, so exactly one caller does the work. It is
+    /// still passed to <see cref="IEntityManager.Despawn"/> after being cleared here, because the
+    /// remove packet has to reach the viewers this entity had a moment ago.
+    /// </summary>
     public void Despawn() {
-        Manager!.BaseEventNode.RemoveChild(Events);
-        Manager.Despawn(this);
-        Manager = null;
+        IEntityManager? manager = Interlocked.Exchange(ref _manager, null);
+        if (manager == null) {
+            return;
+        }
+
         World = null;
+        manager.BaseEventNode.RemoveChild(Events);
+        manager.Despawn(this);
     }
 
     /// <summary>

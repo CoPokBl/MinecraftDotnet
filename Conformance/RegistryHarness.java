@@ -18,7 +18,7 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryDataLoader;
@@ -141,21 +141,27 @@ public class RegistryHarness {
             seen.add(entry.key());
         });
 
-        HolderLookup.Provider vanilla = VanillaRegistries.createLookup();
-        vanilla.listRegistryKeys().filter(key -> !seen.contains(key)).forEach(key -> {
-            HolderLookup.RegistryLookup lookup = vanilla.lookupOrThrow((ResourceKey) key);
-            MappedRegistry registry = new MappedRegistry((ResourceKey) key, Lifecycle.stable());
-            lookup.listElements().forEach(holder -> {
-                Holder.Reference reference = (Holder.Reference) holder;
-                registry.register(reference.key(), reference.value(), RegistrationInfo.BUILT_IN);
-            });
-            all.add(registry.freeze());
-        });
+        MultiPackResourceManager resources = new MultiPackResourceManager(PackType.SERVER_DATA,
+            List.of(ServerPacksSource.createVanillaPackSource()));
+
+        // Tags twice, and both are needed. The block and item tags have to be bound before the pack
+        // decodes or a dimension type naming #infiniburn_overworld fails its whole registry; the
+        // datapack registries' own tags can only be bound once those registries exist.
+        TagLoader.loadTagsForExistingRegistries(resources,
+                RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY))
+            .forEach(Registry.PendingTags::apply);
+
+        List<HolderLookup.RegistryLookup<?>> lookups = new ArrayList<>();
+        all.forEach(registry -> lookups.add((HolderLookup.RegistryLookup<?>) registry));
+
+        RegistryDataLoader
+            .load(resources, lookups, RegistryDataLoader.WORLDGEN_REGISTRIES, Runnable::run)
+            .join()
+            .registries().filter(entry -> !seen.contains(entry.key()))
+            .forEach(entry -> all.add(entry.value()));
 
         RegistryAccess.Frozen registries = new RegistryAccess.ImmutableRegistryAccess(all).freeze();
 
-        MultiPackResourceManager resources = new MultiPackResourceManager(PackType.SERVER_DATA,
-            List.of(ServerPacksSource.createVanillaPackSource()));
         TagLoader.loadTagsForExistingRegistries(resources, registries)
             .forEach(Registry.PendingTags::apply);
 

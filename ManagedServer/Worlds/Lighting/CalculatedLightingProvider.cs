@@ -90,7 +90,38 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
 
     private readonly ConcurrentDictionary<Vec2<int>, CacheEntry> _cache = new();
 
-    [ThreadStatic] private static Workspace? _workspace;
+    /// <summary>
+    /// Workspaces not currently in use, shared across every provider and every world.
+    /// </summary>
+    /// <remarks>
+    /// A pool rather than a <c>[ThreadStatic]</c>, because both chunk loads and the send path run on
+    /// the thread pool: held per thread, a workspace is retained for the life of every pool thread
+    /// that has ever lit a chunk, which is eventually all of them, at megabytes each. Pooled, the
+    /// retained set is the number of chunks being lit at once.
+    /// </remarks>
+    private static readonly ConcurrentBag<Workspace> Workspaces = [];
+
+    /// <summary>
+    /// How many workspaces are kept between computations. Lighting runs one per chunk in flight, so
+    /// this is well past what a busy server holds at once and is a ceiling rather than a target.
+    /// </summary>
+    private const int MaxPooledWorkspaces = 16;
+
+    /// <summary>
+    /// The section above the world, which is all sky and never anything else. Vanilla stores one
+    /// there so that the top block of a column is lit from above.
+    /// </summary>
+    /// <remarks>
+    /// Shared by every packet that carries one. A <see cref="LightData"/>'s arrays go out through
+    /// <c>DataWriter</c>, which copies them, and nothing here writes back into one.
+    /// </remarks>
+    private static readonly byte[] FullSkySection = BuildFullSkySection();
+
+    private static byte[] BuildFullSkySection() {
+        byte[] section = new byte[2048];
+        section.AsSpan().Fill(0xFF);
+        return section;
+    }
 
     /// <summary>
     /// An entry outlives the light it holds, because <see cref="Invalidate"/> has to be visible to a
@@ -104,6 +135,18 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
         public LightData? Data;
         public bool HasSkyLight;
         public int Stamp;
+
+        /// <summary>
+        /// Which of the nine slots were loaded when <see cref="Data"/> was computed, one bit each.
+        /// </summary>
+        /// <remarks>
+        /// A result computed with a neighbour missing is the best answer available then and not the
+        /// one the chunk settles on, so it is only reused while the same neighbours are missing. That
+        /// is a second guard rather than the only one: a neighbour arriving invalidates this entry
+        /// through <see cref="Invalidate"/> anyway. It is what keeps the answer right for a caller
+        /// that drives the provider directly and never tells it anything changed.
+        /// </remarks>
+        public int Neighbourhood;
     }
 
     /// <param name="registry">
@@ -122,29 +165,56 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
         CacheEntry entry = _cache.GetOrAdd(chunkPos, static _ => new CacheEntry());
 
         int stamp;
+        LightData? cached;
+        int cachedNeighbourhood;
         lock (entry.Lock) {
-            if (entry.Data != null && entry.HasSkyLight == hasSkyLight) {
-                return entry.Data;
-            }
+            cached = entry.Data;
+            cachedNeighbourhood = entry.Neighbourhood;
             stamp = entry.Stamp;
         }
 
-        LightData result = Compute(chunkPos, chunk, neighborLookup, hasSkyLight, out bool complete);
+        if (cached != null && entry.HasSkyLight == hasSkyLight
+            && (cachedNeighbourhood == FullNeighbourhood
+                || cachedNeighbourhood == Neighbourhood(chunkPos, chunk, neighborLookup))) {
 
-        // Light computed while a neighbour was missing is the best answer available now, but not
-        // the one the chunk settles on once that neighbour loads, so it isn't kept. Neither is one
-        // whose stamp moved while it ran: something changed under it and this answer is already old.
-        if (complete) {
-            lock (entry.Lock) {
-                if (entry.Stamp == stamp) {
-                    entry.Data = result;
-                    entry.HasSkyLight = hasSkyLight;
-                }
+            return cached;
+        }
+
+        LightData result = Compute(chunkPos, chunk, neighborLookup, hasSkyLight, out int neighbourhood);
+
+        // A result whose stamp moved while it ran is already old: something changed under it, and
+        // installing it would hide the newer answer until the chunk happened to change again.
+        lock (entry.Lock) {
+            if (entry.Stamp == stamp) {
+                entry.Data = result;
+                entry.HasSkyLight = hasSkyLight;
+                entry.Neighbourhood = neighbourhood;
             }
         }
 
         return result;
     }
+
+    /// <summary>Which of the nine slots around a chunk are loaded, one bit each.</summary>
+    private static int Neighbourhood(Vec2<int> pos, ChunkData chunk,
+        Func<Vec2<int>, ChunkData?>? neighborLookup) {
+
+        int mask = 0;
+        for (int slot = 0; slot < SlotCount; slot++) {
+            ChunkData? data = slot == CentreSlot
+                ? chunk
+                : neighborLookup?.Invoke(pos + new Vec2<int>(slot % 3 - 1, slot / 3 - 1));
+
+            if (data != null && data.Sections.Length == chunk.Sections.Length) {
+                mask |= 1 << slot;
+            }
+        }
+
+        return mask;
+    }
+
+    /// <summary>Every slot present, which is the neighbourhood no later load can change.</summary>
+    private const int FullNeighbourhood = (1 << SlotCount) - 1;
 
     /// <summary>
     /// Drops the chunk and the eight around it. A block change moves light up to fifteen blocks
@@ -172,8 +242,9 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
 
     // ── The region ──────────────────────────────────────────────────────────
 
+    /// <param name="neighbourhood">Which of the nine slots were loaded, one bit each.</param>
     private static LightData Compute(Vec2<int> pos, ChunkData chunk,
-        Func<Vec2<int>, ChunkData?>? neighborLookup, bool hasSkyLight, out bool complete) {
+        Func<Vec2<int>, ChunkData?>? neighborLookup, bool hasSkyLight, out int neighbourhood) {
 
         int sections = chunk.Sections.Length;
         if (sections > MaxSections) {
@@ -181,47 +252,51 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
                 $"CalculatedLightingProvider handles up to {MaxSections} sections, this world has {sections}.");
         }
 
-        Workspace ws = GetWorkspace(sections);
-        int totalHeight = sections * 16;
-        complete = true;
+        Workspace ws = RentWorkspace(sections);
+        try {
+            int totalHeight = sections * 16;
+            neighbourhood = 0;
 
-        ws.Emitters.Clear();
-        ws.Queue.Reset();
-        ws.Lowest.AsSpan().Fill(SourcesBelowWorld);
+            ws.Emitters.Clear();
+            ws.Queue.Reset();
+            ws.Lowest.AsSpan().Fill(SourcesBelowWorld);
 
-        for (int slot = 0; slot < SlotCount; slot++) {
-            ChunkData? data = slot == CentreSlot
-                ? chunk
-                : neighborLookup?.Invoke(pos + new Vec2<int>(slot % 3 - 1, slot / 3 - 1));
+            for (int slot = 0; slot < SlotCount; slot++) {
+                ChunkData? data = slot == CentreSlot
+                    ? chunk
+                    : neighborLookup?.Invoke(pos + new Vec2<int>(slot % 3 - 1, slot / 3 - 1));
 
-            // A neighbour that isn't loaded, or that disagrees about the world height, becomes
-            // void: light neither enters nor leaves it, which is what vanilla does with a section
-            // it holds no light for.
-            if (data == null || data.Sections.Length != sections) {
-                ws.SlabOfSlot[slot] = VoidSlab;
-                complete = false;
-                continue;
+                // A neighbour that isn't loaded, or that disagrees about the world height, becomes
+                // void: light neither enters nor leaves it, which is what vanilla does with a section
+                // it holds no light for.
+                if (data == null || data.Sections.Length != sections) {
+                    ws.SlabOfSlot[slot] = VoidSlab;
+                    continue;
+                }
+
+                neighbourhood |= 1 << slot;
+                ws.SlabOfSlot[slot] = slot;
+                BuildSlab(data, slot, ws);
+
+                if (hasSkyLight) {
+                    FindSkySources(data, slot, ws, totalHeight);
+                }
             }
 
-            ws.SlabOfSlot[slot] = slot;
-            BuildSlab(data, slot, ws);
+            ws.LinkSlabs();
 
             if (hasSkyLight) {
-                FindSkySources(data, slot, ws, totalHeight);
+                SeedSkySources(ws, totalHeight);
+                Propagate(ws, ws.Sky);
             }
+
+            SeedEmitters(ws);
+            Propagate(ws, ws.Block);
+
+            return BuildLightData(ws, sections, hasSkyLight);
+        } finally {
+            ReturnWorkspace(ws);
         }
-
-        ws.LinkSlabs();
-
-        if (hasSkyLight) {
-            SeedSkySources(ws, totalHeight);
-            Propagate(ws, ws.Sky);
-        }
-
-        SeedEmitters(ws);
-        Propagate(ws, ws.Block);
-
-        return BuildLightData(ws, sections, hasSkyLight);
     }
 
     /// <summary>
@@ -229,6 +304,15 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
     /// light off. A section's palette is resolved once rather than per block, which is what keeps
     /// this to a table read and a store for each of the four thousand blocks.
     /// </summary>
+    /// <remarks>
+    /// Run for all nine chunks of the region, so a viewport builds each chunk's slab nine times, and
+    /// it is about seventy percent of what lighting a chunk costs. Caching a chunk's slab against its
+    /// version and reading its neighbours' out of that would remove most of it, and is deliberately
+    /// not done: a slab is a byte per block, a hundred kilobytes for a chunk as tall as the overworld,
+    /// and neither the chunk store's entries nor this provider's light are evicted. Against a chunk
+    /// costing tens of milliseconds to generate and about one to light, a third per chunk cache of
+    /// that size buys under two percent of a join.
+    /// </remarks>
     private static void BuildSlab(ChunkData chunk, int slab, Workspace ws) {
         ChunkSection[] sections = chunk.Sections;
         byte[] cls = ws.Cls;
@@ -777,10 +861,8 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
         }
 
         if (hasSkyLight) {
-            byte[] above = new byte[2048];
-            above.AsSpan().Fill(0xFF);
             skyMask.Set(sections + 1, true);
-            skyArrays.Add(above);
+            skyArrays.Add(FullSkySection);
         }
         else {
             emptySkyMask.Set(sections + 1, true);
@@ -840,10 +922,27 @@ public sealed class CalculatedLightingProvider : ILightingProvider {
 
     // ── Workspace ───────────────────────────────────────────────────────────
 
-    private static Workspace GetWorkspace(int sections) {
-        Workspace workspace = _workspace ??= new Workspace();
+    /// <summary>
+    /// Takes a workspace out of the pool, or builds one if it is empty. Always paired with
+    /// <see cref="ReturnWorkspace"/> in a <c>finally</c>.
+    /// </summary>
+    private static Workspace RentWorkspace(int sections) {
+        if (!Workspaces.TryTake(out Workspace? workspace)) {
+            workspace = new Workspace();
+        }
+
         workspace.Resize(sections);
         return workspace;
+    }
+
+    private static void ReturnWorkspace(Workspace workspace) {
+        // Bounded rather than unbounded, since a workspace is megabytes and a burst of concurrent
+        // loads would otherwise set the pool's size for the life of the process.
+        if (Workspaces.Count >= MaxPooledWorkspaces) {
+            return;
+        }
+
+        Workspaces.Add(workspace);
     }
 
     /// <summary>

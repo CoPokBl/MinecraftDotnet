@@ -1,7 +1,7 @@
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;
-using Minecraft.Implementations.Server.Terrain.Providers;
+using Minecraft.Implementations.Server.Terrain.Generation;
 using Minecraft.Schemas.Blocks.BlockEnums;
 
 namespace TestServer.Servers.Placement;
@@ -13,14 +13,11 @@ namespace TestServer.Servers.Placement;
 /// attach to, water to log into, a slab to double, and snow and grass to be replaced instead of
 /// placed beside. On an empty floor most of the rules look the same as no rules at all.
 /// </summary>
-public class PlacementMapProvider : ThreadedPerBlockTerrainProvider {
+public class PlacementMapProvider : IGenerator {
     /// <summary>Where the floor is, in game coordinates. A player standing on it is at y 0.</summary>
     public const int FloorY = 0;
 
     public const int Radius = 40;
-
-    /// <summary>The provider works in protocol y, so game y is shifted by this.</summary>
-    private const int MinY = -64;
 
     /// <summary>A stone wall to hang torches, signs, ladders, levers and buttons on. Runs along x.</summary>
     private const int WallZ = -10;
@@ -35,8 +32,8 @@ public class PlacementMapProvider : ThreadedPerBlockTerrainProvider {
     private const int SlabRowZ = 6;
     private const int SnowZ = 10;
 
-    public override uint GetBlock(int x, int y, int z) {
-        return BlockAt(x, y + MinY, z).StateId;
+    public void Generate(IGenerationUnit unit) {
+        unit.Modifier.SetAll(BlockAt);
     }
 
     private static IBlock BlockAt(int x, int y, int z) {

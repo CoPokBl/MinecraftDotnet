@@ -6,7 +6,7 @@ public class SingleValuePalette(int d, int maxbpe, int minbpe, uint val) : Palet
 
     public override bool HasData => true;  // always has data since it represents a single value
 
-    public override byte[] Serialise() {
+    protected override byte[] BuildSerialised() {
         return new DataWriter()
             .WriteUnsignedByte(0x00)
             .WriteVarInt((int)Value)

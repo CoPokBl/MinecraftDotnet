@@ -105,13 +105,13 @@ foreach ((string name, MinecraftPacket packet) in RichSamples.Build()) {
 }
 
 // Chunks likewise: the section format is bit packed, so a fabricated one proves nothing
-foreach ((string name, MinecraftPacket packet) in ChunkSamples.Build()) {
+foreach ((string name, MinecraftPacket packet, ChunkProbe[] probes) in ChunkSamples.Build()) {
     try {
         DataReader reader = new(packet.Serialise(ConnectionState.Play));
         reader.ReadVarInt();
         entries.Add(Entry(ConnectionState.Play, name,
             reader.Read((int)(reader.Length - reader.Position)),
-            sections: ChunkSamples.SectionCount));
+            sections: ChunkSamples.SectionCount, probes: probes));
         built++;
     }
     catch (Exception ex) {
@@ -127,10 +127,21 @@ File.WriteAllText(outputPath, json.ToString());
 
 Console.WriteLine($"Wrote {built} packets to {outputPath}");
 
+// Heightmap scenes, for Conformance/heightmap.sh. Separate from the packet corpus because what is
+// being checked is not a wire format but the three predicates behind the numbers, which only the
+// real Heightmap.primeHeightmaps can settle.
+int heightmapArg = Array.IndexOf(args, "--heightmaps");
+if (heightmapArg >= 0 && heightmapArg + 1 < args.Length) {
+    File.WriteAllText(args[heightmapArg + 1], HeightmapSamples.BuildJson());
+    Console.WriteLine($"Wrote {HeightmapSamples.SceneCount} heightmap scenes to {args[heightmapArg + 1]}");
+}
+
 // The datapack driven registries travel as NBT the client parses with the element codec rather
 // than a stream codec, so decoding the packet they arrive in proves nothing about them.
 // RegistryHarness.java runs those codecs. See Conformance/registries.sh.
-if (args.Length > 1) {
+// Skips a flag, so that a second positional really is a path: otherwise a mode like "--heightmaps"
+// is taken as one and the registry corpus is written to a file of that name.
+if (args.Length > 1 && !args[1].StartsWith("--")) {
     List<string> registries = [];
     int elements = 0;
     foreach (ISubRegistry sub in VanillaRegistry.Data.SubRegistries) {
@@ -160,10 +171,18 @@ if (skipped.Count > 0) {
 return;
 
 static string Entry(ConnectionState state, string name, byte[] body, string? serialiser = null,
-    int? sections = null) {
+    int? sections = null, ChunkProbe[]? probes = null) {
 
     string extra = serialiser == null ? "" : $", \"serialiser\": \"{serialiser}\"";
     extra += sections == null ? "" : $", \"sections\": {sections}";
+
+    // Positions the harness reads back out of the decoded section with vanilla's own getBlockState.
+    // Without these a chunk sample only proves the blob is the right length.
+    if (probes is { Length: > 0 }) {
+        extra += ", \"probes\": [" + string.Join(", ", probes.Select(pr =>
+            $"{{\"section\": {pr.Section}, \"x\": {pr.X}, \"y\": {pr.Y}, \"z\": {pr.Z}, " +
+            $"\"state\": {pr.StateId}}}")) + "]";
+    }
     return $"  {{\"state\": \"{state}\", \"name\": \"{name}\", " +
            $"\"hex\": \"{Convert.ToHexString(body).ToLowerInvariant()}\"{extra}}}";
 }

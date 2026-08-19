@@ -29,6 +29,7 @@ using Minecraft.Schemas.Vec;
 using Minecraft.Schemas.Vec.Relative;
 using Minecraft.Text;
 using NBT.Tags;
+using Minecraft.Implementations.Server.Terrain.Generation;
 
 namespace TestServer.Servers.BlockSumoFFA;
 
@@ -102,7 +103,7 @@ public static class BlockSumoFfa {
             .With(DataComponent.Enchantments, [(Enchantment.Breach, 10)]);
 
         PlayerPosition spawn = new(new Vec3<double>(0, 0, 0), Vec3<double>.Zero, Angle.FromDegrees(-90), Angle.Zero);
-        ITerrainProvider terrain = new BlockSumoMapProvider(12);
+        ITerrainProvider terrain = new GeneratorTerrainProvider(new BlockSumoMapProvider(12));
         World world = server.CreateWorld(terrain);//, "minecraft:potatoland");
         world.AddFeature(new SimpleCombatFeature(500));
 

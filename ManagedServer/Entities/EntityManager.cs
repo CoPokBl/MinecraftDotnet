@@ -4,6 +4,7 @@ using ManagedServer.Physics;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
+using Minecraft.Implementations;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;
@@ -33,6 +34,22 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     private readonly ConcurrentDictionary<Vec2<int>, Entity[]> _entitiesByChunk = new();
     private readonly ConcurrentDictionary<int, Entity> _entitiesById = new();
     private readonly Lock _chunkIndexLock = new();
+
+    /// <summary>
+    /// The players registered here, kept as their own list rather than being filtered back out of
+    /// every entity.
+    /// <p/>
+    /// Viewer lookups are the hottest thing this class does: every movement, rotation, velocity change
+    /// and metadata write of every entity asks who can see it, several times per entity per tick. Each
+    /// of those used to sweep the chunk index over the whole view distance, which at the default eight
+    /// chunks is 361 dictionary probes and a LINQ pipeline, to find what is typically a handful of
+    /// players. Walking the players directly is the same answer for a fraction of the work and none of
+    /// the allocation.
+    /// </summary>
+    private readonly SnapshotList<Player> _players = new();
+
+    /// <summary>Compared against squared distances, so no square root is taken per candidate.</summary>
+    private readonly double _viewDistanceSqr = (double)viewDistanceBlocks * viewDistanceBlocks;
 
     private int _nextNetId;
 
@@ -102,8 +119,16 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     public void Register(Entity entity, int? id = null) {
         entity.NetId = id ?? NewNetId;
 
-        MoveEntityInStorage(entity, new Vec3<double>(int.MaxValue), entity.Position);
+        // Straight into the index rather than through MoveEntityInStorage. That method's second half
+        // announces a chunk crossing to the viewers of entity.World, and on this path entity.World is
+        // still the world the entity is *leaving*: registering a player into their game world told
+        // everyone back in the lobby to spawn them. The spawn broadcast below is this world's, and is
+        // the only one wanted here.
+        AddToChunkIndex(World.GetChunkPos(entity.Position), entity);
         _entitiesById[entity.NetId] = entity;
+        if (entity is Player player) {
+            _players.Add(player);
+        }
 
         MinecraftPacket[] spawnPackets = entity.GenerateSpawnEntityPackets();
         foreach (Player viewer in GetViewersOf(entity)) {
@@ -113,47 +138,69 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     }
 
     public void Despawn(Entity entity) {
-        SendPacketsToViewers(entity, new ClientBoundRemoveEntitiesPacket {
-            Entities = [entity.NetId]
-        });
+        // Removed by identity, not just by id, and only once. Despawning is reached from a disconnect,
+        // which two threads can notice at the same moment, and a plain remove by id would take out
+        // whatever now holds that id if one has been reused.
+        if (!_entitiesById.TryRemove(new KeyValuePair<int, Entity>(entity.NetId, entity))) {
+            return;
+        }
 
-        _entitiesById.TryRemove(entity.NetId, out _);
+        if (entity is Player player) {
+            _players.Remove(player);
+        }
+
         RemoveFromChunkIndex(World.GetChunkPos(entity.Position), entity);
-    }
 
-    public void RefreshViewers(Entity entity) {
-        foreach (Player player in GetViewersOf(entity, true)) {
-            if (entity.ViewableRule(player)) {
-                if (IsViewing(player, entity.NetId)) {
-                    continue;  // already visible
-                }
-                SendSpawnPackets(entity, player);
-            } else {
-                if (!IsViewing(player, entity.NetId)) {
-                    continue;  // already not visible
-                }
-                SendDespawnPackets(entity, player);
+        // Told to exactly the players recorded as holding it, rather than to whoever is in range now.
+        // Those are not the same set: a player who walked away has already been sent a despawn by the
+        // viewport reconcile, and one whose ViewableRule turned false since would be missed. Untracking
+        // is the same pass, so nothing is left recorded as seeing an entity that no longer exists; a
+        // stale id there is what makes a later entity registered with an explicit net id (a player's,
+        // which is random rather than sequential) silently never spawn.
+        ClientBoundRemoveEntitiesPacket packet = new() {
+            Entities = [entity.NetId]
+        };
+
+        foreach (Player viewer in _players.Snapshot) {
+            if (!ReferenceEquals(viewer, entity) && RemoveViewedEntity(viewer, entity.NetId)) {
+                viewer.SendPacket(packet);
             }
         }
     }
-    
+
+    public void RefreshViewers(Entity entity) {
+        Vec3<double> pos = entity.Position;
+
+        foreach (Player player in _players.Snapshot) {
+            if (CanSee(player, entity, pos, true)) {
+                SyncVisibility(entity, player);
+            }
+        }
+    }
+
     public void RefreshPlayerVisibleEntities(Player player) {
         foreach (Entity entity in GetNearbyEntities(player.Position, viewDistanceBlocks)) {
-            if (entity == player) {
-                continue;
+            if (entity != player) {
+                SyncVisibility(entity, player);
             }
-            
-            if (entity.ViewableRule(player)) {
-                if (IsViewing(player, entity.NetId)) {
-                    continue;  // already visible
-                }
+        }
+    }
+
+    /// <summary>
+    /// Brings one client's idea of one entity in line with its <see cref="Entity.ViewableRule"/>, and
+    /// sends nothing when it already agrees. Both refresh paths are this same question asked over a
+    /// different set.
+    /// </summary>
+    private void SyncVisibility(Entity entity, Player player) {
+        bool visible = IsViewing(player, entity.NetId);
+
+        if (entity.ViewableRule(player)) {
+            if (!visible) {
                 SendSpawnPackets(entity, player);
-            } else {
-                if (!IsViewing(player, entity.NetId)) {
-                    continue;  // already not visible
-                }
-                SendDespawnPackets(entity, player);
             }
+        }
+        else if (visible) {
+            SendDespawnPackets(entity, player);
         }
     }
 
@@ -168,21 +215,26 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         RemoveFromChunkIndex(fromChunk, entity);
         AddToChunkIndex(toChunk, entity);
 
-        if (entity.World == null) {
+        // Read once. The entity can be despawned by a disconnect on another thread part way through
+        // this, and reading it again below would then be a null dereference, or a throw out of
+        // Entity.Server, in the middle of somebody else's move.
+        World? world = entity.World;
+        if (world == null) {
             return;
         }
-        
+
         // Inform viewers of the chunk change. We schedule on the next tick because
         // entity.Position is set by Entity.Move *after* this method returns, and the
         // spawn packet needs the new position. On next tick we build the packets
         // (cheap) on the tick thread, then hand the socket write to the pool so the
         // tick itself doesn't block on serialisation/network I/O.
-        foreach (Player player in entity.World.GetViewersOf(toChunk)) {
-            if (player == entity) continue;
-            if (entity.World.DoesPlayerHaveChunkLoaded(player, fromChunk)) continue;
+        foreach (Player player in world.GetViewersOf(toChunk)) {
+            if (ReferenceEquals(player, entity)) continue;
+            if (world.DoesPlayerHaveChunkLoaded(player, fromChunk)) continue;
 
             Player capturedPlayer = player;
-            entity.Server.Scheduler.ScheduleNextTick(() => {
+            world.Server.Scheduler.ScheduleNextTick(() => {
+                if (capturedPlayer.Connection.IsDisconnected) return;
                 if (!entity.ViewableRule(capturedPlayer)) return;
                 MinecraftPacket[] packets = entity.GenerateSpawnEntityPackets();
                 AddViewedEntity(capturedPlayer, entity.NetId);
@@ -201,8 +253,27 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         SendPacketsToViewers(entity, entity.GenerateSpawnEntityPackets());
     }
 
+    /// <summary>
+    /// Writes packets to everyone who can see an entity, without building the viewer list first. This
+    /// is the broadcast every moving entity performs several times a tick, so it walks the player
+    /// snapshot in place: no array, no audience wrapper, no LINQ.
+    /// </summary>
     public void SendPacketsToViewers(Entity entity, params MinecraftPacket[] packets) {
-        entity.SendPacketsToViewers(packets);
+        if (packets.Length == 0) {
+            return;
+        }
+
+        Vec3<double> pos = entity.Position;
+
+        foreach (Player player in _players.Snapshot) {
+            if (!CanSee(player, entity, pos, false)) {
+                continue;
+            }
+
+            foreach (MinecraftPacket packet in packets) {
+                player.SendPacket(packet);
+            }
+        }
     }
 
     public Entity? GetEntity(int id) {
@@ -214,45 +285,73 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     }
 
     public Player? GetPlayerByConnection(PlayerConnection connection) {
-        return _entitiesById.Values
-            .Where(e => e is Player pe && pe.Connection == connection)
-            .Cast<Player>()
-            .FirstOrDefault();
-    }
-
-    // this could use some optimising
-    public Player[] GetViewersOf(Entity entity, bool ignoreViewableRule = false) {
-        return GetNearbyEntities(entity.Position, viewDistanceBlocks)
-            .Where(e => 
-                e is Player pe &&  // Only find players nearby
-                (ignoreViewableRule || entity.ViewableRule(pe)) &&  // They can view the entity
-                pe != entity)  // Don't include the entity itself if it's a player
-            .Select(e => (Player)e)
-            .ToArray();
-    }
-
-    // this is very slow for large numbers of entities
-    public Player[] GetPlayers() {
-        return _entitiesById.Values
-            .Where(e => e is Player)
-            .Cast<Player>()
-            .ToArray();
-    }
-    
-    // TODO: optimise this by removing .ToArray call
-    public Entity[] GetNearbyEntities(Vec3<double> pos, double distance) {
-        int chunkRadius = (int)Math.Ceiling(distance / 16) + 1;
-        
-        Vec2<int> chunkPos = World.GetChunkPos(pos);
-        
-        List<Entity> entities = [];
-        foreach (Vec2<int> chunk in IEntityManager.GetChunksInRadius(chunkPos, chunkRadius)) {
-            Entity[]? chunkEntities = _entitiesByChunk.GetValueOrDefault(chunk);
-            if (chunkEntities == null) continue;
-
-            entities.AddRange(chunkEntities.Where(entity => entity.Position.DistanceTo(pos) < distance));
+        foreach (Player player in _players.Snapshot) {
+            if (player.Connection == connection) {
+                return player;
+            }
         }
-        
+
+        return null;
+    }
+
+    public Player[] GetViewersOf(Entity entity, bool ignoreViewableRule = false) {
+        Player[] players = _players.Snapshot;
+        if (players.Length == 0) {
+            return [];
+        }
+
+        Vec3<double> pos = entity.Position;
+        Player[] buffer = new Player[players.Length];
+        int count = 0;
+
+        foreach (Player player in players) {
+            if (CanSee(player, entity, pos, ignoreViewableRule)) {
+                buffer[count++] = player;
+            }
+        }
+
+        if (count == buffer.Length) {
+            return buffer;
+        }
+
+        Player[] result = new Player[count];
+        Array.Copy(buffer, result, count);
+        return result;
+    }
+
+    /// <summary>
+    /// Whether a player is close enough to an entity to be sent its packets, and allowed to be. The
+    /// entity's own position is passed in rather than read here, so a broadcast reads it once instead
+    /// of once per player, and so every player in one broadcast is judged against the same position.
+    /// <p/>
+    /// An entity is never its own viewer. That is vanilla's <c>ChunkMap.TrackedEntity.updatePlayer</c>
+    /// returning early for the tracked entity, and it is what keeps a player's own metadata from
+    /// reaching them; see the note on <see cref="Entity.Meta"/> for why that matters.
+    /// </summary>
+    private bool CanSee(Player player, Entity entity, Vec3<double> entityPos, bool ignoreViewableRule) {
+        if (ReferenceEquals(player, entity)) {
+            return false;
+        }
+
+        return SquaredDistance(player.Position, entityPos) < _viewDistanceSqr
+               && (ignoreViewableRule || entity.ViewableRule(player));
+    }
+
+    /// <summary>Every player in this world. The array is shared, so it must not be written to.</summary>
+    public Player[] GetPlayers() {
+        return _players.Snapshot;
+    }
+
+    public Entity[] GetNearbyEntities(Vec3<double> pos, double distance) {
+        double distanceSqr = distance * distance;
+        List<Entity> entities = [];
+
+        foreach (Entity entity in CandidatesAround(pos, distance)) {
+            if (SquaredDistance(entity.Position, pos) < distanceSqr) {
+                entities.Add(entity);
+            }
+        }
+
         return entities.ToArray();
     }
 
@@ -334,14 +433,20 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
     /// </summary>
     private IEnumerable<Entity> CandidatesAround(Vec3<double> pos, double radius) {
         int chunkRadius = (int)Math.Ceiling(radius / 16) + 1;
+        Vec2<int> centre = World.GetChunkPos(pos);
 
-        foreach (Vec2<int> chunk in IEntityManager.GetChunksInRadius(World.GetChunkPos(pos), chunkRadius)) {
-            if (!_entitiesByChunk.TryGetValue(chunk, out Entity[]? chunkEntities)) {
-                continue;
-            }
+        // The chunk walk is written out rather than going through GetChunksInRadius, which is a second
+        // iterator wrapped around this one for every call.
+        for (int dx = -chunkRadius; dx <= chunkRadius; dx++) {
+            for (int dz = -chunkRadius; dz <= chunkRadius; dz++) {
+                if (!_entitiesByChunk.TryGetValue(new Vec2<int>(centre.X + dx, centre.Y + dz),
+                        out Entity[]? chunkEntities)) {
+                    continue;
+                }
 
-            foreach (Entity entity in chunkEntities) {
-                yield return entity;
+                foreach (Entity entity in chunkEntities) {
+                    yield return entity;
+                }
             }
         }
     }
@@ -526,12 +631,13 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
         lock (visible) visible.Add(entityId);
     }
     
-    private static void RemoveViewedEntity(Player player, int entityId) {
+    /// <summary>Forgets an entity, answering whether the player was being shown it.</summary>
+    private static bool RemoveViewedEntity(Player player, int entityId) {
         if (!player.HasTag(VisibleEntitiesTag)) {
-            return;
+            return false;
         }
 
         HashSet<int> visible = player.GetTag(VisibleEntitiesTag);
-        lock (visible) visible.Remove(entityId);
+        lock (visible) return visible.Remove(entityId);
     }
 }

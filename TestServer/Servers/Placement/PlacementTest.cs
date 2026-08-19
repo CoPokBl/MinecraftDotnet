@@ -10,6 +10,7 @@ using Minecraft.Data.Items;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
+using Minecraft.Implementations.Server.Terrain.Generation;
 
 namespace TestServer.Servers.Placement;
 
@@ -54,7 +55,7 @@ public static class PlacementTest {
             ManagedMinecraftServer.BasicsBundle,
             ManagedMinecraftServer.BlockRulesBundle);
 
-        World world = server.CreateWorld(new PlacementMapProvider());
+        World world = server.CreateWorld(new GeneratorTerrainProvider(new PlacementMapProvider()));
 
         server.Events.AddListener<PlayerPreLoginEvent>(e => {
             e.World = world;

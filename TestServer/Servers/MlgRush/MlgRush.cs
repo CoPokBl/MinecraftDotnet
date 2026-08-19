@@ -23,6 +23,7 @@ using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
+using Minecraft.Implementations.Server.Terrain.Generation;
 
 namespace TestServer.Servers.MlgRush;
 
@@ -103,7 +104,7 @@ public static class MlgRush {
         Console.WriteLine("Server ready, listening...");
         _ = listener.Listen(Port);
 
-        ITerrainProvider terrain = new MlgRushMapProvider();
+        ITerrainProvider terrain = new GeneratorTerrainProvider(new MlgRushMapProvider());
         while (run) {
             World world = server.CreateWorld(terrain);
             world.AddFeature(new SimpleCombatFeature(500));
@@ -245,11 +246,11 @@ public static class MlgRush {
             
             // Win condition
             world.Events.AddListener<PlayerBreakBlockEvent>(e => {
-                if (!(e.Position.Equals(MlgRushMapProvider.P1BedPosClient) || e.Position.Equals(MlgRushMapProvider.P2BedPosClient))) {
+                if (!(e.Position.Equals(MlgRushMapProvider.P1BedPos) || e.Position.Equals(MlgRushMapProvider.P2BedPos))) {
                     return;  // not a bed
                 }
 
-                bool p1Bed = e.Position.Equals(MlgRushMapProvider.P1BedPosClient);
+                bool p1Bed = e.Position.Equals(MlgRushMapProvider.P1BedPos);
 
                 if ((p1Bed && !p1HasBed) || (!p1Bed && !p2HasBed)) {
                     return;  // someone placed a block where the bed was, we can ignore it

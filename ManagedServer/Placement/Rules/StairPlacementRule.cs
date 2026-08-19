@@ -33,7 +33,7 @@ public sealed class StairPlacementRule : IBlockPlacementRule {
 
         state = PlacementHelpers.Waterlog(state, context);
         return state is IStairShaped shaped
-            ? shaped.WithShape(ShapeAt(state, context.World, context.PlacePos))
+            ? shaped.WithShape(ShapeAt(state, context.World.GetBlock, context.PlacePos))
             : state;
     }
 
@@ -42,7 +42,7 @@ public sealed class StairPlacementRule : IBlockPlacementRule {
         // Only a horizontal neighbour can change a stair's corner. Vanilla also schedules a water
         // tick for a waterlogged stair here, which belongs to the fluid simulation rather than here.
         return Directions.IsHorizontal(toNeighbour) && block is IStairShaped shaped
-            ? shaped.WithShape(ShapeAt(block, world, pos))
+            ? shaped.WithShape(ShapeAt(block, world.GetBlock, pos))
             : block;
     }
 
@@ -51,28 +51,33 @@ public sealed class StairPlacementRule : IBlockPlacementRule {
     /// an inner corner towards one in front, in both cases only when that stair crosses its axis and
     /// the stair on the far side does not already claim it.
     /// </summary>
-    private static StairShape ShapeAt(IBlock block, World world, Vec3<int> pos) {
+    /// <remarks>
+    /// Reads through a lookup rather than a <c>World</c> so that the generator's own shape settle can
+    /// call it: a template places stairs against blocks that only exist in the chunk being decorated,
+    /// and a second transcription of the corner rule would be a second thing to get wrong.
+    /// </remarks>
+    public static StairShape ShapeAt(IBlock block, Func<Vec3<int>, IBlock> blockAt, Vec3<int> pos) {
         if (block is not IHorizontalFacing self || block is not IHalved selfHalf) {
             return StairShape.Straight;
         }
 
         Direction facing = self.Facing;
 
-        IBlock behind = world.GetBlock(pos.GetBlockTowards(facing.ToFace()));
+        IBlock behind = blockAt(pos.GetBlockTowards(facing.ToFace()));
         if (IsStairs(behind) && behind is IHorizontalFacing behindFacing && behind is IHalved behindHalf
             && selfHalf.Half == behindHalf.Half
             && !Directions.SameAxis(behindFacing.Facing, facing)
-            && CanTakeShape(block, world, pos, behindFacing.Facing.Opposite())) {
+            && CanTakeShape(block, blockAt, pos, behindFacing.Facing.Opposite())) {
             return behindFacing.Facing == facing.CounterClockWise()
                 ? StairShape.OuterLeft
                 : StairShape.OuterRight;
         }
 
-        IBlock front = world.GetBlock(pos.GetBlockTowards(facing.Opposite().ToFace()));
+        IBlock front = blockAt(pos.GetBlockTowards(facing.Opposite().ToFace()));
         if (IsStairs(front) && front is IHorizontalFacing frontFacing && front is IHalved frontHalf
             && selfHalf.Half == frontHalf.Half
             && !Directions.SameAxis(frontFacing.Facing, facing)
-            && CanTakeShape(block, world, pos, frontFacing.Facing)) {
+            && CanTakeShape(block, blockAt, pos, frontFacing.Facing)) {
             return frontFacing.Facing == facing.CounterClockWise()
                 ? StairShape.InnerLeft
                 : StairShape.InnerRight;
@@ -85,8 +90,10 @@ public sealed class StairPlacementRule : IBlockPlacementRule {
     /// <c>StairBlock.canTakeShape</c>: whether the stair on the far side is not an identical one
     /// already forming the corner. Two stairs facing the same way and in the same half cancel it.
     /// </summary>
-    private static bool CanTakeShape(IBlock block, World world, Vec3<int> pos, Direction neighbour) {
-        IBlock other = world.GetBlock(pos.GetBlockTowards(neighbour.ToFace()));
+    private static bool CanTakeShape(IBlock block, Func<Vec3<int>, IBlock> blockAt, Vec3<int> pos,
+        Direction neighbour) {
+
+        IBlock other = blockAt(pos.GetBlockTowards(neighbour.ToFace()));
         if (!IsStairs(other)) {
             return true;
         }

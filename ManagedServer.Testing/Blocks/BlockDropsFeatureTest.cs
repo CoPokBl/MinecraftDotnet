@@ -14,6 +14,9 @@ using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Vec;
 
+using ManagedServer.Loot;
+using ManagedServer.Testing.Terrain;
+
 namespace ManagedServer.Testing.Blocks;
 
 /// <summary>
@@ -53,7 +56,7 @@ public class BlockDropsFeatureTest {
         // framework refuses the registration unless something declares it calls that event. Breaking
         // blocks is what makes drops mean anything, so needing the pair is right rather than awkward.
         _server.FeatureHandler.AddFeature(new BlockBreakingFeature());
-        _server.FeatureHandler.AddFeature(new BlockDropsFeature());
+        _server.FeatureHandler.AddFeature(new BlockDropsFeature(DatapackBlockLoot.Load(VanillaPack.Source)));
 
         _world = _server.CreateWorld(new FloorTerrain(), "minecraft:overworld", new FullBrightLightingProvider());
         _world.LoadChunk(new Vec2<int>(0, 0)).Wait(TimeSpan.FromSeconds(30));

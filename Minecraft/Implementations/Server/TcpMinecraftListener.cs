@@ -16,7 +16,13 @@ public class TcpMinecraftListener(Action<PlayerConnection> connectionConsumer, C
                 client.NoDelay = true;
                 PlayerConnection connection = new TcpPlayerConnection(client);
                 ConnectionConsumer(connection);
-                _ = connection.HandlePackets();
+
+                // Observed rather than dropped on the floor. The read loop ends by tearing the
+                // connection down, so a failure in somebody's disconnect handler faults this task, and
+                // with nothing watching it the whole teardown went missing in silence.
+                _ = connection.HandlePackets().ContinueWith(
+                    t => Console.WriteLine($"Connection handler failed: {t.Exception}"),
+                    TaskContinuationOptions.OnlyOnFaulted);
             }
         }
         catch (OperationCanceledException) {

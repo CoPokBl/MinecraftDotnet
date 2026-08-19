@@ -195,6 +195,7 @@ public static class Block {
     private static readonly HashSet<string> SculkSensorPhaseValues = ["inactive", "active", "cooldown"];
     private static readonly HashSet<string> OrientationValues = ["down_east", "down_north", "down_south", "down_west", "up_east", "up_north", "up_south", "up_west", "west_up", "east_up", "north_up", "south_up"];
     private static readonly HashSet<string> RedstoneWireConnectionValues = ["up", "side", "none"];
+    private static readonly HashSet<string> HopperDirectionValues = ["down", "north", "south", "west", "east"];
     private static readonly HashSet<string> ChestTypeValues = ["single", "left", "right"];
     private static readonly HashSet<string> SpeleothemThicknessValues = ["tip_merge", "tip", "frustum", "middle", "base"];
     private static readonly HashSet<string> VerticalDirectionValues = ["up", "down"];
@@ -288,6 +289,8 @@ public static class Block {
                 case "lit" when boolean: Setter(prop, "ILit", "WithLit", "lit"); break;
                 case "facing" when type == "Direction": Setter(prop, "IHorizontalFacing", "WithFacing", "facing"); break;
                 case "facing" when type == "Cardinal": Setter(prop, "IDirectional", "WithFacing", "facing"); break;
+                case "orientation" when type == "Orientation": Setter(prop, "IOriented", "WithOrientation", "orientation"); break;
+                case "facing" when type == "HopperDirection": Setter(prop, "IHopperFacing", "WithFacing", "facing"); break;
                 case "axis" when type == "Axis": Setter(prop, "IAxisAligned", "WithAxis", "axis"); break;
                 case "face" when type == "AttachDirection": Setter(prop, "IAttachFaced", "WithFace", "face"); break;
                 case "rotation" when prop.Type == PropertyType.Integer: Setter(prop, "IRotated", "WithRotation", "rotation"); break;
@@ -354,6 +357,13 @@ public static class Block {
             .Select(f => (f.Face, GetPascalPropName(f.Prop!)))
             .ToArray();
 
+        (string Face, string Prop)[] wires = ConnectionFaces
+            .Select(f => (f.Face, Prop: props.FirstOrDefault(p =>
+                p.Name == f.Name && p is ExistingEnumProperty { ExistingEnum: "RedstoneWireConnection" })))
+            .Where(f => f.Prop is not null)
+            .Select(f => (f.Face, GetPascalPropName(f.Prop!)))
+            .ToArray();
+
         if (flags.Length > 0) {
             interfaces.Add("IFaceConnected");
             string has = string.Join(" or ", flags.Select(f => $"BlockFace.{f.Face}"));
@@ -373,6 +383,16 @@ public static class Block {
                    .Append("        _ => WallSide.None\n    };\n")
                    .Append("\n    public IBlock WithSide(BlockFace face, WallSide side) => face switch {\n")
                    .Append(string.Join("", sides.Select(s => $"        BlockFace.{s.Face} => this with {{ {s.Prop} = side }},\n")))
+                   .Append("        _ => this\n    };\n");
+        }
+
+        if (wires.Length > 0) {
+            interfaces.Add("IRedstoneConnected");
+            methods.Append("\n    public RedstoneWireConnection Connection(BlockFace face) => face switch {\n")
+                   .Append(string.Join("", wires.Select(w => $"        BlockFace.{w.Face} => {w.Prop},\n")))
+                   .Append("        _ => RedstoneWireConnection.None\n    };\n")
+                   .Append("\n    public IBlock WithConnection(BlockFace face, RedstoneWireConnection connection) => face switch {\n")
+                   .Append(string.Join("", wires.Select(w => $"        BlockFace.{w.Face} => this with {{ {w.Prop} = connection }},\n")))
                    .Append("        _ => this\n    };\n");
         }
 
@@ -534,6 +554,11 @@ public static class Block {
 
                 if (SameValues(propAllowedValues, OrientationValues)) {
                     props.Add(new ExistingEnumProperty(propAllowedValues, propName, "Orientation", OrientationValues));
+                    continue;
+                }
+
+                if (SameValues(propAllowedValues, HopperDirectionValues)) {
+                    props.Add(new ExistingEnumProperty(propAllowedValues, propName, "HopperDirection", HopperDirectionValues));
                     continue;
                 }
 

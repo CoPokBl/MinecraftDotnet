@@ -20,9 +20,25 @@ block property gets noticed instead of silently missing.
 - Check code gen for warnings of missing types (data components, etc.)
 - Run `./Conformance/run.sh <version>` and fix everything it reports. Packets whose *fields*
 changed don't fail to compile and still round-trip through our own deserialiser, so this is
-what catches them — it decodes our packets with the vanilla codecs the client uses.
-- Regenerate the other fixtures too: `registries.sh`, `lighting.sh`, `clip.sh`, `fluid-wall.sh`
-and `pathtype.sh`, each with the same version. They are committed answers from the old jar, so
-until they are regenerated they pin last version's behaviour.
+what catches them: it decodes our packets with the vanilla codecs the client uses.
+- Regenerate the other fixtures too: `registries.sh`, `lighting.sh`, `clip.sh`, `fluid-wall.sh`,
+`pathtype.sh`, `placement.sh`, `heightmap.sh`, `terrain.sh`, `terrainstage.sh`, `blocktransform.sh`,
+`featureorder.sh`, `worldparity.sh` and `structurelayout.sh`, each with the same version. They are committed answers from the old jar, so until they are regenerated
+they pin last version's behaviour. `worldparity.sh` and `structurelayout.sh` run the dedicated server,
+so they want `MCDOTNET_ACCEPT_EULA=1`. World parity's baselines belong to the fixture rather than to
+the seed: re-record every number in `WorldParityConformanceTest.Baseline` from the run against the new
+one. `structurelayout.sh`'s cluster list is one chunk per biome and is reprinted by the explicit
+`FindStructureClusters` test if the biome layout moves.
+- `hashset.sh` is deliberately **not** on that list. It pins `java.util.HashMap`'s iteration order,
+which is the JDK's rather than the jar's, so a Minecraft version cannot move it and regenerating it
+on a bump only risks re-recording it from a JDK whose behaviour changed. Regenerate it if the JDK
+changes that order, which would show as `JavaHashSetConformanceTest` failing.
+- Add the new server jar URL to `ManagedServer/Terrain/Data/VanillaDatapack.cs`. That is the only
+place a version is wired to a download, and the tests, the benchmarks and the demos all resolve their
+worldgen data and loot tables through it. There is no vanilla data in this repository to refresh.
+- Re-dump the climate tables with `Conformance/biome-parameters.sh <version>` and re-run
+`OverworldBiomeBuilderTest`. `OverworldBiomeBuilder` is transcribed rather than read, because the table
+lives in code in the jar and in no datapack file, so an upstream change to it is a silently different
+world until that test fails.
 - Run `dotnet test`. The physics fixtures carry numbers taken from vanilla, so a change in
 how it moves entities shows up as a failure there rather than as a client desync.

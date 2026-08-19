@@ -1,6 +1,6 @@
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
-using Minecraft.Implementations.Server.Terrain.Providers;
+using Minecraft.Implementations.Server.Terrain.Generation;
 
 namespace TestServer.Servers.MobAi;
 
@@ -14,7 +14,7 @@ namespace TestServer.Servers.MobAi;
 /// rest. The lava is the malus, which is the only thing keeping a mob out of it, since nothing about
 /// lava is solid.
 /// </summary>
-public class MobAiMapProvider : ThreadedPerBlockTerrainProvider {
+public class MobAiMapProvider : IGenerator {
     /// <summary>Where the floor is, in game coordinates. A mob standing on it is at y 0.</summary>
     public const int FloorY = 0;
 
@@ -41,15 +41,9 @@ public class MobAiMapProvider : ThreadedPerBlockTerrainProvider {
     private static readonly IBlock Wall = Block.StoneBricks;
     private static readonly IBlock Step = Block.OakPlanks;
 
-    /// <summary>
-    /// The provider works in protocol y (zero at the bottom of the world), so everything below is
-    /// written in game y and shifted here. Getting this backwards puts the floor 64 blocks under the
-    /// spawn point, which looks exactly like the terrain having failed to generate.
-    /// </summary>
-    private const int MinY = -64;
-
-    public override uint GetBlock(int x, int y, int z) {
-        return BlockAt(x, y + MinY, z).StateId;
+    public void Generate(IGenerationUnit unit) {
+        // Game y throughout, which is what BlockAt is written in, so no shift.
+        unit.Modifier.SetAll(BlockAt);
     }
 
     private static IBlock BlockAt(int x, int y, int z) {

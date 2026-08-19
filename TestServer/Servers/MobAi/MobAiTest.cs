@@ -14,6 +14,7 @@ using ManagedServer.Viewables;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
 using Attribute = Minecraft.Data.Generated.Attribute;
+using Minecraft.Implementations.Server.Terrain.Generation;
 
 namespace TestServer.Servers.MobAi;
 
@@ -47,7 +48,7 @@ public static class MobAiTest {
         server.AddFeature(new ArmourFeature());
         server.AddFeature(new FallDamageFeature());
 
-        World world = server.CreateWorld(new MobAiMapProvider());
+        World world = server.CreateWorld(new GeneratorTerrainProvider(new MobAiMapProvider()));
 
         server.Events.AddListener<PlayerPreLoginEvent>(e => {
             e.World = world;

@@ -7,6 +7,10 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 
+using ManagedServer.Loot;
+using ManagedServer.Terrain.Data;
+using ManagedServer.Testing.Terrain;
+
 namespace ManagedServer.Testing.Blocks;
 
 /// <summary>
@@ -29,9 +33,15 @@ public class BlockLootTest {
             : stack.With(DataComponent.Enchantments, enchantments.Select(e => (e.Enchantment, e.Level)).ToArray());
     }
 
+    /// <summary>
+    /// The vanilla tables, read out of the pack rather than generated: a loot table is content, so
+    /// nothing here ships one. See the rule at the top of CLAUDE.md.
+    /// </summary>
+    private static DatapackBlockLoot Loot => DatapackBlockLoot.Load(VanillaPack.Source);
+
     /// <summary>One roll of a block's table, with the given tool in hand.</summary>
     private static ItemStack[] Roll(IBlock block, ItemStack tool, RandomSource random) {
-        LootTable table = BlockLootTables.Of(block)
+        LootTable table = Loot.TableFor(block)
                           ?? throw new AssertionException($"{block.Identifier} has no loot table.");
 
         return table.GetRandomItems(new LootContext(block, Vec3<int>.Zero, random, Registry) {
@@ -222,7 +232,7 @@ public class BlockLootTest {
             }
 
             withTable++;
-            if (BlockLootTables.Of(block) == null) {
+            if (Loot.TableFor(block) == null) {
                 missing.Add($"{block.Identifier} -> {block.LootTable}");
             }
         }
@@ -275,7 +285,7 @@ public class BlockLootTest {
         RandomSource random = Seeded();
 
         foreach (IBlock block in Registry.Blocks.StatesByStateId.Values) {
-            if (BlockLootTables.Of(block) is not { } table) {
+            if (Loot.TableFor(block) is not { } table) {
                 continue;
             }
 

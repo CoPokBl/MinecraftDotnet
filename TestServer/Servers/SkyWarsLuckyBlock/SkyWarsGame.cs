@@ -16,6 +16,8 @@ using Minecraft.Schemas.Vec;
 using Minecraft.Text;
 using PolarWorlds;
 
+using ManagedServer.Loot;
+
 namespace TestServer.Servers.SkyWarsLuckyBlock;
 
 public class SkyWarsGame(ManagedMinecraftServer server, Player[] players, Action gameEndCallback) {
@@ -49,7 +51,7 @@ public class SkyWarsGame(ManagedMinecraftServer server, Player[] players, Action
         new SkyWarsChestsFeature(),
         new DropItemsOnGroundFeature(),
         new ItemPickupFeature(),
-        new BlockDropsFeature(),
+        new BlockDropsFeature(DatapackBlockLoot.Load(VanillaPack.Source)),
         new ItemEntityFeature(),
         new BlockExperienceFeature(),
         new ExperiencePickupFeature(),

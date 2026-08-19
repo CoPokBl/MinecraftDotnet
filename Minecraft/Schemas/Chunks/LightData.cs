@@ -61,15 +61,22 @@ public class LightData : IWritable {
     }
 
     public void Write(DataWriter w) {
-        w.WritePrefixedArray(SkyLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
-        w.WritePrefixedArray(BlockLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
-        w.WritePrefixedArray(EmptySkyLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
-        w.WritePrefixedArray(EmptyBlockLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
-        
-        w.WritePrefixedArray(SkyLight, (i, writer) =>
-            writer.WritePrefixedArray(i, (b, dataWriter) => dataWriter.WriteUnsignedByte(b)));
-        w.WritePrefixedArray(BlockLight, (i, writer) =>
-            writer.WritePrefixedArray(i, (b, dataWriter) => dataWriter.WriteUnsignedByte(b)));
+        w.WritePrefixedArray((ReadOnlySpan<long>)SkyLightMask.ToLongArray());
+        w.WritePrefixedArray((ReadOnlySpan<long>)BlockLightMask.ToLongArray());
+        w.WritePrefixedArray((ReadOnlySpan<long>)EmptySkyLightMask.ToLongArray());
+        w.WritePrefixedArray((ReadOnlySpan<long>)EmptyBlockLightMask.ToLongArray());
+
+        // Bulk rather than a nested WritePrefixedArray: a lit chunk carries 48 sections of 2048 bytes,
+        // so a delegate per byte is a hundred thousand calls to append a hundred kilobytes.
+        WriteSections(w, SkyLight);
+        WriteSections(w, BlockLight);
+    }
+
+    private static void WriteSections(DataWriter w, byte[][] sections) {
+        w.WriteVarInt(sections.Length);
+        foreach (byte[] section in sections) {
+            w.WritePrefixedArray((ReadOnlySpan<byte>)section);
+        }
     }
 
     public static LightData Read(DataReader r) {

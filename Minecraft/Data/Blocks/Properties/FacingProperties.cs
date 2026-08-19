@@ -31,6 +31,33 @@ public interface IDirectional : IBlock {
 }
 
 /// <summary>
+/// A block with an <c>orientation</c>, vanilla's <c>FrontAndTop</c> property. Two blocks, the jigsaw
+/// and the crafter.
+/// <p/>
+/// It is a <b>pair</b> of directions rather than one, which is what makes it its own family: a jigsaw
+/// facing up still has a top, and that is what decides whether two pieces may be joined in a given
+/// rotation. Only twelve of the 36 combinations exist, since the two directions must be perpendicular.
+/// </summary>
+public interface IOriented : IBlock {
+    public Orientation Orientation { get; }
+
+    public IBlock WithOrientation(Orientation orientation);
+}
+
+/// <summary>
+/// A block with a <c>facing</c> that may be down or horizontal but never up, which is the hopper and
+/// nothing else.
+/// <p/>
+/// Its own family because the missing value is the point: a hopper pointing up is a state that does
+/// not exist, so the property cannot be a <see cref="IDirectional"/> without inventing one.
+/// </summary>
+public interface IHopperFacing : IBlock {
+    public HopperDirection Facing { get; }
+
+    public IBlock WithFacing(HopperDirection facing);
+}
+
+/// <summary>
 /// A block with an <c>axis</c>, vanilla's <c>RotatedPillarBlock</c>. 68 blocks, and the simplest
 /// placement rule in the game: <c>AXIS = context.getClickedFace().getAxis()</c>.
 /// </summary>

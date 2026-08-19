@@ -53,7 +53,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2026-08-14
+// Last updated: 2026-08-15
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 

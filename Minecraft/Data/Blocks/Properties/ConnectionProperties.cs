@@ -45,3 +45,18 @@ public interface IWallConnected : IBlock {
     /// <summary>The state with that side set. Unchanged for a vertical face.</summary>
     public IBlock WithSide(BlockFace face, WallSide side);
 }
+
+/// <summary>
+/// Redstone wire's four horizontal connections, vanilla's <c>RedStoneWireBlock</c>. One block.
+/// <p/>
+/// Separate from <see cref="IFaceConnected"/> for <see cref="IWallConnected"/>'s reason: a side is
+/// <c>none</c>, <c>side</c> or <c>up</c> rather than on or off, and the <c>up</c> value is what makes
+/// a wire climb a block beside it.
+/// </summary>
+public interface IRedstoneConnected : IBlock {
+    /// <summary>The connection on a face. <c>None</c> for a vertical face, which wire has none for.</summary>
+    public RedstoneWireConnection Connection(BlockFace face);
+
+    /// <summary>The state with that connection set. Unchanged for a vertical face.</summary>
+    public IBlock WithConnection(BlockFace face, RedstoneWireConnection connection);
+}

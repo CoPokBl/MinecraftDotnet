@@ -26,6 +26,21 @@ Examples:
 - [Block Sumo FFA](https://github.com/Serble/BlockSumoFFA)
 - The entire `TestServer` subproject
 
+## Running a server
+Turn on the server garbage collector in your own project file:
+
+```xml
+<PropertyGroup>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+</PropertyGroup>
+```
+
+Chunk loading runs one thread pool task per chunk and each one allocates megabytes. Under the
+default workstation collector that work is collected on the thread that allocated it, which means
+inside a chunk load, so a joining player waits for it. This is an application's choice rather than
+a library's, which is why the packages do not set it for you.
+
 ## Versioning (Protocol & Managed Server)
 `0.0.x` - 1.21.5  
 `0.1.x` - 1.21.10  

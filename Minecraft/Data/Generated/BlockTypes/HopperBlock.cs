@@ -10,7 +10,7 @@ namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facing FacingValue) : IBlock, IEnabled {
+public record HopperBlock(Identifier Identifier, bool Enabled, HopperDirection Facing) : IBlock, IEnabled, IHopperFacing {
     private static readonly BlockInfo Data = new("minecraft:hopper", "block.minecraft.hopper", 4.8f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hopper", "minecraft:hopper", BlockInfo.VanillaOnly, "minecraft:blocks/hopper");
     private static readonly BlockStateInfo I0 = new(3f, 0, 0, PushReaction.Normal, 11, "metal", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S601, BlockShapes.S601, BlockShapes.S602, BlockShapes.S1, BlockShapes.S601, BlockShapes.S601);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S603, CollisionShape = BlockShapes.S603, InteractionShape = BlockShapes.S604, VisualShape = BlockShapes.S603, SupportShape = BlockShapes.S603 };
@@ -72,25 +72,27 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
 
     public IBlock WithEnabled(bool enabled) => this with { Enabled = enabled };
 
+    public IBlock WithFacing(HopperDirection facing) => this with { Facing = facing };
+
 
     public uint StateId {
         get {
             return Enabled switch {
-                true => FacingValue switch {
-                    Facing.Down => 11313,
-                    Facing.North => 11314,
-                    Facing.South => 11315,
-                    Facing.West => 11316,
-                    Facing.East => 11317,
-                    _ => throw new ArgumentOutOfRangeException(nameof(FacingValue), FacingValue, "Unknown value for property facing.")
+                true => Facing switch {
+                    HopperDirection.Down => 11313,
+                    HopperDirection.North => 11314,
+                    HopperDirection.South => 11315,
+                    HopperDirection.West => 11316,
+                    HopperDirection.East => 11317,
+                    _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                false => FacingValue switch {
-                    Facing.Down => 11318,
-                    Facing.North => 11319,
-                    Facing.South => 11320,
-                    Facing.West => 11321,
-                    Facing.East => 11322,
-                    _ => throw new ArgumentOutOfRangeException(nameof(FacingValue), FacingValue, "Unknown value for property facing.")
+                false => Facing switch {
+                    HopperDirection.Down => 11318,
+                    HopperDirection.North => 11319,
+                    HopperDirection.South => 11320,
+                    HopperDirection.West => 11321,
+                    HopperDirection.East => 11322,
+                    _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
             };
         }
@@ -98,16 +100,16 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     
     public IBlock WithState(uint state) {
         return state switch {
-            11313 => new HopperBlock(Identifier, true, Facing.Down),
-            11314 => new HopperBlock(Identifier, true, Facing.North),
-            11315 => new HopperBlock(Identifier, true, Facing.South),
-            11316 => new HopperBlock(Identifier, true, Facing.West),
-            11317 => new HopperBlock(Identifier, true, Facing.East),
-            11318 => new HopperBlock(Identifier, false, Facing.Down),
-            11319 => new HopperBlock(Identifier, false, Facing.North),
-            11320 => new HopperBlock(Identifier, false, Facing.South),
-            11321 => new HopperBlock(Identifier, false, Facing.West),
-            11322 => new HopperBlock(Identifier, false, Facing.East),
+            11313 => new HopperBlock(Identifier, true, HopperDirection.Down),
+            11314 => new HopperBlock(Identifier, true, HopperDirection.North),
+            11315 => new HopperBlock(Identifier, true, HopperDirection.South),
+            11316 => new HopperBlock(Identifier, true, HopperDirection.West),
+            11317 => new HopperBlock(Identifier, true, HopperDirection.East),
+            11318 => new HopperBlock(Identifier, false, HopperDirection.Down),
+            11319 => new HopperBlock(Identifier, false, HopperDirection.North),
+            11320 => new HopperBlock(Identifier, false, HopperDirection.South),
+            11321 => new HopperBlock(Identifier, false, HopperDirection.West),
+            11322 => new HopperBlock(Identifier, false, HopperDirection.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
@@ -115,44 +117,15 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     public IBlock WithState(CompoundTag properties) {
         return this with {
             Enabled = properties.Contains("enabled") ? properties["enabled"].GetString() == "true" : Enabled,
-            FacingValue = properties.Contains("facing") ? FacingFromString(properties["facing"].GetString()) : FacingValue,
+            Facing = properties.Contains("facing") ? HopperDirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(
             ("enabled", new StringTag(Enabled.ToString().ToLower())),
-            ("facing", new StringTag(FacingToName(FacingValue)))
+            ("facing", new StringTag(Facing.ToName()))
         );
     }
     
-    public enum Facing {
-        Down,
-        North,
-        South,
-        West,
-        East,
-    }
-
-    public static Facing FacingFromString(string value) {
-        return value switch {
-            "down" => Facing.Down,
-            "north" => Facing.North,
-            "south" => Facing.South,
-            "west" => Facing.West,
-            "east" => Facing.East,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Facing.")
-        };
-    }
-
-    public static string FacingToName(Facing value) {
-        return value switch {
-            Facing.Down => "down",
-            Facing.North => "north",
-            Facing.South => "south",
-            Facing.West => "west",
-            Facing.East => "east",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Facing value.")
-        };
-    }
 }

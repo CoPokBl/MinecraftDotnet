@@ -71,7 +71,7 @@ public class BlockExperienceFeature : ScopedFeature {
                     return;
                 }
 
-                Award(world, position, Mth.NextInt(world.Random, range.Min, range.Max));
+                Award(world, position, Mth.RandomBetweenInclusive(world.Random, range.Min, range.Max));
             });
         });
     }

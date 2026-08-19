@@ -214,7 +214,6 @@ StringBuilder registryEntries = new();
 RunStep("Particles", ParticleCodeGen.CreateParticleEntries);
 RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
 RunFileStep("Block Light", BlockLightCodeGen.GenerateBlockLightCode);
-RunFileStep("Block Loot Tables", LootTableCodeGen.GenerateLootTableCode);
 RunStep("Packets", PacketCodeGen.CreatePacketEntries);
 RunStep("Data Components", DataComponentCodeGen.CreateComponentEntries);
 RunStep("Items", ItemCodeGen.CreateItemEntries);

@@ -35,6 +35,21 @@
       <None Include="Pathfinding\vanilla-pathtype.bin.gz" CopyToOutputDirectory="PreserveNewest" />
       <!-- canSurvive and updateShape as the vanilla blocks answer them, see Conformance/placement.sh. -->
       <None Include="Placement\vanilla-placement.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Every entry of the vanilla noise router over a grid of positions, see Conformance/terrain.sh. -->
+      <None Include="Terrain\vanilla-terrain.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Terrain\vanilla-terrainstage.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Every block state turned and flipped by the vanilla blocks, see Conformance/blocktransform.sh. -->
+      <None Include="Terrain\vanilla-blocktransform.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Whole scenes as the real server generated them, see Conformance/worldparity.sh. -->
+      <None Include="Terrain\vanilla-world.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- The order the vanilla feature sorter puts every placed feature in, see Conformance/featureorder.sh. -->
+      <None Include="Terrain\vanilla-feature-order.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Every structure start the real server laid out, see Conformance/structurelayout.sh. -->
+      <None Include="Terrain\vanilla-structures.txt.gz" CopyToOutputDirectory="PreserveNewest" />
+
+      <!-- The climate table dumped out of OverworldBiomeBuilder, which is what pins the
+           transcription of it. Conformance/biome-parameters.sh regenerates it on a version bump. -->
+      <None Include="Terrain\vanilla-biome-parameters.json.gz" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>
