@@ -10,8 +10,7 @@ namespace Conformance;
 /// over them and diffs its answer against ours.
 /// </summary>
 /// <remarks>
-/// This is the case CLAUDE.md's harness rule is really about. Every rule in
-/// <see cref="HeightmapStates"/> is a reading of the jar: whether the predicate is
+/// Every rule in <see cref="HeightmapStates"/> is a reading of the jar: whether the predicate is
 /// <c>blocksMotion()</c> alone or that <b>or</b> a fluid, whether leaves are excluded by class or by
 /// tag, whether the stored number is the block's position or one above it, and how wide the entries
 /// are. Our own tests would encode the same reading, so they cannot tell us it is wrong. Only the

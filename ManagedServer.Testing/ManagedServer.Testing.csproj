@@ -35,6 +35,8 @@
       <None Include="Pathfinding\vanilla-pathtype.bin.gz" CopyToOutputDirectory="PreserveNewest" />
       <!-- canSurvive and updateShape as the vanilla blocks answer them, see Conformance/placement.sh. -->
       <None Include="Placement\vanilla-placement.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Grids matched by the vanilla crafting recipes, see Conformance/crafting.sh. -->
+      <None Include="Recipes\vanilla-crafting.bin.gz" CopyToOutputDirectory="PreserveNewest" />
       <!-- Every entry of the vanilla noise router over a grid of positions, see Conformance/terrain.sh. -->
       <None Include="Terrain\vanilla-terrain.bin.gz" CopyToOutputDirectory="PreserveNewest" />
       <None Include="Terrain\vanilla-terrainstage.bin.gz" CopyToOutputDirectory="PreserveNewest" />

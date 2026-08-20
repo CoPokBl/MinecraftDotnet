@@ -58,9 +58,9 @@ import org.jspecify.annotations.Nullable;
  * rule come from one reading of the same method.
  * <p>
  * Deliberately <b>not</b> covered: {@code getStateForPlacement}. It needs a {@code BlockPlaceContext},
- * which needs a real {@code Level}, and that is the thing CLAUDE.md lists as out of reach. These two
- * take only a {@link LevelReader} and a {@link ScheduledTickAccess}, both interfaces, so they are
- * reachable from a stub in a way the placement context is not.
+ * which needs a real {@code Level}, and that is out of reach for a harness. These two take only a
+ * {@link LevelReader} and a {@link ScheduledTickAccess}, both interfaces, so they are reachable from
+ * a stub in a way the placement context is not.
  * <p>
  * Three things travel with the fixture beyond the answers themselves:
  * <ul>

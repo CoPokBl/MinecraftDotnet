@@ -35,7 +35,7 @@ public class BlockLootTest {
 
     /// <summary>
     /// The vanilla tables, read out of the pack rather than generated: a loot table is content, so
-    /// nothing here ships one. See the rule at the top of CLAUDE.md.
+    /// nothing here ships one.
     /// </summary>
     private static DatapackBlockLoot Loot => DatapackBlockLoot.Load(VanillaPack.Source);
 

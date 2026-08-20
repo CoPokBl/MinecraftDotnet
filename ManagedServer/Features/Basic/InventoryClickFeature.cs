@@ -26,14 +26,6 @@ public class InventoryClickFeature : ScopedFeature {
     private static readonly Tag<List<int>> DragSlotsTag = new("managedserver:inventoryclick:drag_slots");
     private const int DefaultMaxStackSize = 64; // Default max stack size for items
     
-    private static readonly int[] PlayerInvEquipmentSlots = [
-        PlayerInventory.HelmetSlot,
-        PlayerInventory.ChestplateSlot,
-        PlayerInventory.LeggingsSlot,
-        PlayerInventory.BootsSlot,
-        PlayerInventory.OffhandSlot
-    ];
-    
     private enum DragType {
         None,
         LeftClick,
@@ -50,106 +42,122 @@ public class InventoryClickFeature : ScopedFeature {
         });
     }
     
-    private static int GetRegularInvDestinationSlot(ItemStack item, Inventory inv) {
-        return SearchRangeForDestinationSlot(item, inv, 0, inv.Size-1);
-    }
-    
-    private static int SearchRangeForDestinationSlot(ItemStack item, Inventory inv, int startIndex, int endIndex, int[]? prefixedSlots = null) {
-        prefixedSlots ??= [];
-        
-        EquippableComponent.Data? equipData = item.GetOrNull(DataComponent.Equippable);
-        
-        int[] slots = new int[endIndex - startIndex + 1 + prefixedSlots.Length];
-        for (int i = 0; i < prefixedSlots.Length; i++) {
-            slots[i] = prefixedSlots[i];
-        }
-        for (int i = startIndex; i < endIndex + 1; i++) {
-            slots[i - startIndex + prefixedSlots.Length] = i;
-        }
-
-        foreach (int i in slots) {
-            int maxStackSize = inv[i].GetMaxStackSize(DefaultMaxStackSize);
-            if (inv[i].CanStackWith(item) && inv[i].Count < maxStackSize) {
-                return i;
-            }
-        }
-
-        foreach (int i in slots) {
-            EquippableComponent.Slot? slot = inv is PlayerInventory ? i switch {
-                PlayerInventory.HelmetSlot => EquippableComponent.Slot.Head,
-                PlayerInventory.ChestplateSlot => EquippableComponent.Slot.Chest,
-                PlayerInventory.LeggingsSlot => EquippableComponent.Slot.Legs,
-                PlayerInventory.BootsSlot => EquippableComponent.Slot.Feet,
-                PlayerInventory.OffhandSlot => EquippableComponent.Slot.OffHand,
-                _ => null
-            } : null;
-            
-            if (inv[i].IsAir() && (slot == null || slot == equipData?.Slot)) {
-                return i;
-            }
-        }
-
-        return -1;  // No available slot found
-    }
-    
-    private static int GetPlayerInvDestinationSlot(ItemStack item, Inventory inv) {
-        for (int i = inv.PlayerInventoryStartIndex; i < inv.Size; i++) {
-            int maxStackSize = inv[i].GetMaxStackSize(DefaultMaxStackSize);
-            if (inv[i].CanStackWith(item) && inv[i].Count < maxStackSize) {
-                return i;
-            }
-        }
-
-        // no similar item found, so move to the first empty slot
-        // start from the end of the player inventory to find an empty slot
-        // hotbar slot 9 is the last actual inventory slot (the one after it is the offhand)
-        // so start from there and go backwards
-        for (int i = PlayerInventory.HotbarSlot9; i > inv.PlayerInventoryStartIndex; i--) {
-            if (inv[i].IsAir()) {
-                return i;
-            }
-        }
-        
-        return -1;  // No available slot found
+    /// <summary>
+    /// The window's own slots, which is where a shift click out of the player's inventory aims.
+    /// Which of them will actually have the stack is <see cref="Inventory.AcceptsQuickMove"/>.
+    /// </summary>
+    private static int[] WindowSlots(Inventory inventory) {
+        return Enumerable.Range(0, inventory.PlayerInventoryStartIndex).ToArray();
     }
 
-    private static void TransferItemToInventorySection(ItemStack itemToMove, int originSlot, Inventory originInventory, 
-        Inventory destinationInventory, Func<ItemStack, Inventory, int> destinationSlotGetter) {
-        while (true) {
-            int destinationSlot = destinationSlotGetter(itemToMove, destinationInventory);
-            if (destinationSlot == -1) {
-                originInventory[originSlot] =
-                    itemToMove; // Put the rest of the item back in the original slot
-                return;
-            }
+    /// <summary>
+    /// The half of the player's inventory a stack in <paramref name="slot"/> crosses into: the hotbar
+    /// for a main inventory slot, and back again.
+    /// </summary>
+    private static int[] PlayerSectionSwap(int slot) {
+        return slot switch {
+            >= PlayerInventory.RegularInventoryStartIndex and < PlayerInventory.HotbarSlot1 =>
+                PlayerInventory.HotbarSlots,
+            >= PlayerInventory.HotbarSlot1 and <= PlayerInventory.HotbarSlot9 =>
+                PlayerInventory.MainInventorySlots,
 
-            ItemStack destinationItem = destinationInventory[destinationSlot];
-            if (destinationItem.IsAir()) {
-                // If the best slot is empty, just move the whole itemstack there
-                originInventory[originSlot] = ItemStack.Air; // Clear the slot we moved from
-                destinationInventory[destinationSlot] = itemToMove;
-                return;
-            }
-
-            // Okay so it's stackable
-            int maxStackSize = destinationItem.GetMaxStackSize(DefaultMaxStackSize);
-            int newCount = Math.Min(itemToMove.Count + destinationItem.Count, maxStackSize);
-
-            int leftOverCount = itemToMove.Count + destinationItem.Count - newCount;
-            if (leftOverCount <= 0) {
-                // We moved all the item, so clear the slot we moved from
-                originInventory[originSlot] = ItemStack.Air;
-                destinationInventory[destinationSlot] = destinationItem.WithCount(newCount);
-                return;
-            }
-                        
-            destinationInventory[destinationSlot] = destinationItem.WithCount(newCount);
-
-            // We didn't move all the item, so update the item to move
-            itemToMove = itemToMove.WithCount(leftOverCount);
-        }
+            // The offhand, which has no other half: it empties into the whole inventory.
+            _ => PlayerInventory.QuickMoveSlots
+        };
     }
-    
+
+    /// <summary>
+    /// The armour or offhand slot an item belongs in, if that slot is empty. Checked <b>before</b>
+    /// the hotbar, so a helmet in the main inventory equips rather than moving down.
+    /// </summary>
+    private static int? EquipmentDestination(PlayerInventory inventory, ItemStack item) {
+        int slot = item.GetOrNull(DataComponent.Equippable)?.Slot switch {
+            EquippableComponent.Slot.Head => PlayerInventory.HelmetSlot,
+            EquippableComponent.Slot.Chest => PlayerInventory.ChestplateSlot,
+            EquippableComponent.Slot.Legs => PlayerInventory.LeggingsSlot,
+            EquippableComponent.Slot.Feet => PlayerInventory.BootsSlot,
+            EquippableComponent.Slot.OffHand => PlayerInventory.OffhandSlot,
+            _ => -1
+        };
+
+        return slot != -1 && inventory[slot].IsAir() ? slot : null;
+    }
+
+    /// <summary>
+    /// Where a shift click inside the player's own window sends the stack in <paramref name="slot"/>.
+    /// </summary>
+    private static int[] OwnInventoryDestination(PlayerInventory inventory, int slot, ItemStack item) {
+        // The two by two and the armour slots empty into the whole inventory, main half first. This
+        // comes before the equipment check, so a helmet taken off does not put itself back on.
+        if (slot is >= PlayerInventory.CraftingInput1Slot and <= PlayerInventory.BootsSlot) {
+            return PlayerInventory.QuickMoveSlots;
+        }
+
+        if (EquipmentDestination(inventory, item) is { } equipment) {
+            return [equipment];
+        }
+
+        return PlayerSectionSwap(slot);
+    }
+
+    /// <summary>
+    /// Top up every stack in <paramref name="order"/> that will take some, then put whatever is left
+    /// in the first empty slot in it. Anything still left over stays where it came from.
+    /// </summary>
+    /// <remarks>
+    /// <paramref name="order"/> carries both the destination and the direction, so a caller that has
+    /// the order right cannot get the direction wrong. It must not contain
+    /// <paramref name="originSlot"/>.
+    /// </remarks>
+    /// <returns>Whether any of it moved.</returns>
+    private static bool TransferItemToInventorySection(ItemStack itemToMove, int originSlot,
+        Inventory originInventory, Inventory destinationInventory, int[] order) {
+        ItemStack remaining = itemToMove;
+
+        foreach (int slot in order) {
+            if (remaining.IsAir()) {
+                break;
+            }
+
+            ItemStack destination = destinationInventory[slot];
+            if (destination.IsAir() || !destination.CanStackWith(remaining)
+                || !destinationInventory.AcceptsQuickMove(slot, remaining)) {
+                continue;
+            }
+
+            int maxStackSize = destination.GetMaxStackSize(DefaultMaxStackSize);
+            if (destination.Count >= maxStackSize) {
+                continue;
+            }
+
+            int moved = Math.Min(maxStackSize - destination.Count, remaining.Count);
+            destinationInventory[slot] = destination.WithCount(destination.Count + moved);
+            remaining = remaining.Count > moved ? remaining.WithCount(remaining.Count - moved) : ItemStack.Air;
+        }
+
+        // One empty slot, not every empty slot.
+        if (!remaining.IsAir()) {
+            foreach (int slot in order) {
+                if (!destinationInventory[slot].IsAir()
+                    || !destinationInventory.AcceptsQuickMove(slot, remaining)) {
+                    continue;
+                }
+
+                int moved = Math.Min(remaining.GetMaxStackSize(DefaultMaxStackSize), remaining.Count);
+                destinationInventory[slot] = remaining.WithCount(moved);
+                remaining = remaining.Count > moved ? remaining.WithCount(remaining.Count - moved) : ItemStack.Air;
+                break;
+            }
+        }
+
+        if (remaining.Count == itemToMove.Count && !remaining.IsAir()) {
+            return false;  // Nothing fit, so the origin slot is untouched.
+        }
+
+        originInventory[originSlot] = remaining;
+        return true;
+    }
+
     private void HandleInventoryClick(Player player, ServerBoundClickContainerPacket packet) {
         // player.SendMessage($"Inventory Clicked: {packet.Slot}, Mode: {packet.Mode}");
         Inventory clickedInventory = packet.WindowId == 0 ? player.Inventory : player.OpenInventory!;
@@ -177,7 +185,8 @@ public class InventoryClickFeature : ScopedFeature {
             ClickedItem = effectiveSlot >= 0 ? targetInventory[effectiveSlot] : null,
             CursorItem = player.CursorItem,
             World = player.World!,
-            Type = type
+            Type = type,
+            Button = packet.Button
         };
         CallEvent(preClickEvent);
 
@@ -290,55 +299,51 @@ public class InventoryClickFeature : ScopedFeature {
                     break;
                 }
 
-                // Shift-click
+                // Shift-click, which moves the stack somewhere else outright. Left and right click
+                // are identical.
                 case 1: {
-                    // Move to other container (identical for both left and right click)
-                    // if the item is coming from the player inventory then it should go to the lowest id available slot in the other.
-                    // if it's coming from the other container then it should go to the highest id available slot in the player inventory
-                    // because mojang is weird like that.
-                    if (effectiveSlot == -1) {
-                        // huh
+                    if (effectiveSlot < 0) {
+                        // A shift click on the space outside the window, which has nothing to move.
                         break;
                     }
+
                     ItemStack itemToMove = targetInventory[effectiveSlot];
-                    bool isFromPlayerInventory = targetInventory == player.Inventory;
                     if (itemToMove.IsAir()) {
                         // Nothing to move
                         return;
                     }
 
-                    Inventory destinationInventory =
-                        isFromPlayerInventory ? clickedInventory : player.Inventory;
-                    Func<ItemStack, Inventory, int> destinationSlotGetter = isFromPlayerInventory
-                        ? GetRegularInvDestinationSlot
-                        : GetPlayerInvDestinationSlot;
-
-                    if (isFromPlayerInventory && destinationInventory == player.Inventory) {
-                        // They only have one inventory open (their own)
-                        
-                        // The way this works is that it treats the hotbar and remaining inventory as
-                        // two separate inventories and the item should be moved to the first available slot
-                        // in the other 'section' to where it came from.
-                        
-                        // For example, if the item is in the hotbar, it should be moved to the first available slot
-                        // in the remaining inventory, and vice versa.
-                        
-                        bool isHotbarItem = effectiveSlot is >= PlayerInventory.HotbarSlot1 and <= PlayerInventory.HotbarSlot9;
-                        bool isEquipmentItem = PlayerInvEquipmentSlots.Contains(effectiveSlot);
-                        Func<ItemStack, Inventory, int> slotGetter = isHotbarItem || isEquipmentItem
-                            ? (stack, inv) => SearchRangeForDestinationSlot(stack, inv,  // Search in upper inventory
-                                clickedInventory.PlayerInventoryStartIndex, PlayerInventory.HotbarSlot1 - 1, isEquipmentItem ? [] : PlayerInvEquipmentSlots)
-                            : (stack, inv) => SearchRangeForDestinationSlot(stack, inv,  // Search in hotbar + equipment
-                                PlayerInventory.HotbarSlot1, PlayerInventory.HotbarSlot9, PlayerInvEquipmentSlots);
-
-                        // Move the item to the first available slot in the other section
-                        TransferItemToInventorySection(itemToMove, effectiveSlot, clickedInventory, clickedInventory, slotGetter);
+                    if (clickedInventory == player.Inventory) {
+                        // Their own window, so the two by two, the armour and both halves are in play.
+                        TransferItemToInventorySection(itemToMove, effectiveSlot, player.Inventory,
+                            player.Inventory,
+                            OwnInventoryDestination(player.Inventory, effectiveSlot, itemToMove));
                         break;
                     }
 
-                    // We'll keep trying to move more of the item until we run out of it or can't find a slot
-                    TransferItemToInventorySection(itemToMove, effectiveSlot, targetInventory, destinationInventory,
-                        destinationSlotGetter);
+                    if (targetInventory == clickedInventory) {
+                        // Out of the open window and into the player's inventory, which is the only
+                        // direction a window's own slot moves in.
+                        TransferItemToInventorySection(itemToMove, effectiveSlot, clickedInventory,
+                            player.Inventory,
+                            clickedInventory.QuickMoveFillsBackwards(effectiveSlot)
+                                ? PlayerInventory.BackwardsQuickMoveSlots
+                                : PlayerInventory.QuickMoveSlots);
+                        break;
+                    }
+
+                    // Out of the player's inventory and into the open window. Its own slots say which
+                    // of them will have it, so a result slot is not among them.
+                    if (TransferItemToInventorySection(itemToMove, effectiveSlot, player.Inventory,
+                            clickedInventory, WindowSlots(clickedInventory))
+                        || !clickedInventory.QuickMoveFallsBackToPlayerSections) {
+                        break;
+                    }
+
+                    // The window would take none of it, so the stack crosses the player's own two
+                    // halves instead. Only some windows do this; a chest leaves the stack where it is.
+                    TransferItemToInventorySection(itemToMove, effectiveSlot, player.Inventory,
+                        player.Inventory, PlayerSectionSwap(effectiveSlot));
                     break;
                 }
 

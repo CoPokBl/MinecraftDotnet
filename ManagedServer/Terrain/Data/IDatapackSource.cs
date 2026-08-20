@@ -16,8 +16,7 @@ public readonly record struct DatapackEntry(Identifier Id, string Path);
 /// <remarks>
 /// <b>This exists because nothing Mojang wrote ships here.</b> The density function tree, the biome
 /// feature lists, the loot tables and the structure templates are all content rather than measured
-/// fact, so they are supplied by the consumer at runtime instead of embedded. See the rule at the top
-/// of CLAUDE.md.
+/// fact, so they are supplied by the consumer at runtime instead of embedded.
 /// <p/>
 /// It buys a second thing that matters more day to day: worldgen becomes configurable. A consumer
 /// overriding one density function or adding a feature to a biome writes one file and layers it over

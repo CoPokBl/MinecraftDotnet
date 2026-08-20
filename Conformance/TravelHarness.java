@@ -5,8 +5,8 @@ import net.minecraft.util.Mth;
  * a living entity walking forward on a flat floor, on stone and on ice.
  *
  * READ THIS BEFORE TRUSTING IT. Unlike the other harnesses beside it, this one does NOT drive
- * vanilla code. A LivingEntity cannot be constructed without a ServerLevel, which CLAUDE.md already
- * lists as out of reach, so the loop below is a transcription of LivingEntity.aiStep,
+ * vanilla code. A LivingEntity cannot be constructed without a ServerLevel, which is out of reach
+ * for a harness, so the loop below is a transcription of LivingEntity.aiStep,
  * travelInAir and Entity.moveRelative, with the collision resolve cut down to the single flat floor
  * plane the test world has.
  *

@@ -20,7 +20,7 @@ namespace ManagedServer.Testing.Terrain;
 /// <p/>
 /// The tolerance is <b>exact zero</b> on purpose. Every operation is a transcription of a double
 /// expression in the same order, so the two sides should agree bit for bit; a tolerance would hide
-/// exactly the reordering and premature widening CLAUDE.md warns about. The one exception is spelled
+/// exactly the reordering and premature widening it is there to catch. The one exception is spelled
 /// out on <see cref="Tolerance"/>.
 /// </remarks>
 [TestFixture]

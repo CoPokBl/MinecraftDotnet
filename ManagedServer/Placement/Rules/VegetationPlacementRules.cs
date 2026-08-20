@@ -16,8 +16,8 @@ namespace ManagedServer.Placement.Rules;
 // Vanilla splits it in an unusual way. VegetationBlock.canSurvive is one line, "mayPlaceOn the block
 // below", and almost nothing overrides canSurvive; what the twenty odd subclasses override is
 // mayPlaceOn, and each one names a different tag. So these rules all have the same shape and differ
-// only in the question, which is exactly the granularity CLAUDE.md asks for: a consumer replacing
-// what wither roses grow on does not touch what azaleas grow on.
+// only in the question. That is the granularity to keep: a consumer replacing what wither roses
+// grow on does not touch what azaleas grow on.
 //
 // VegetationBlock.updateShape is "die the moment you cannot survive", whichever neighbour changed,
 // and every rule here inherits it.

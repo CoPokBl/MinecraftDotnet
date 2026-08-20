@@ -1,5 +1,6 @@
 ﻿using TestServer.Servers.AnvilTesting;
 using TestServer.Servers.BlockSumoFFA;
+using TestServer.Servers.Crafting;
 using TestServer.Servers.Dialogs;
 using TestServer.Servers.Everything;
 using TestServer.Servers.MlgRush;
@@ -70,6 +71,10 @@ switch (args[0]) {
 
     case "worldgen":
         await WorldgenTest.Start();
+        break;
+
+    case "crafting":
+        await CraftingTest.Start();
         break;
     
     default:

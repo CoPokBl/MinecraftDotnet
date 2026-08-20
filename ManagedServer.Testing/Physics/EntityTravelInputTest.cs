@@ -16,8 +16,8 @@ namespace ManagedServer.Testing.Physics;
 /// <p/>
 /// The expected positions came out of a Java harness run against the real server jar, so they carry
 /// vanilla's <c>Mth</c> sine table and the order its float terms are multiplied in before they
-/// widen. A live <c>LivingEntity</c> is out of reach without a <c>ServerLevel</c> (see CLAUDE.md),
-/// so the harness transcribes <c>aiStep</c>, <c>travelInAir</c> and <c>moveRelative</c> with the
+/// widen. A live <c>LivingEntity</c> is out of reach without a <c>ServerLevel</c>, so the harness
+/// transcribes <c>aiStep</c>, <c>travelInAir</c> and <c>moveRelative</c> with the
 /// collision resolve reduced to the flat floor this world has. What it therefore pins is the
 /// arithmetic rather than the method structure, and the structure is what gets diffed by eye.
 /// </summary>

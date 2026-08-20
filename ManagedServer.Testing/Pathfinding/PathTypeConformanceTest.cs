@@ -15,11 +15,10 @@ namespace ManagedServer.Testing.Pathfinding;
 /// <summary>
 /// Holds the block classification against the game's own <c>WalkNodeEvaluator</c>.
 /// <para>
-/// This is the test CLAUDE.md's conformance rule is really about. Nothing here reaches a client, so
-/// there is no desync to catch; the problem is that every rule in <see cref="BlockPathData"/> is one
-/// a hand written test would encode from the same reading of the jar, and would then agree with. A
-/// mob that treats a closed wooden door as a wall, a lily pad as open air, or a square beside lava
-/// as safe passes any test written from the same misreading.
+/// Nothing here reaches a client, so there is no desync to catch; the problem is that every rule in
+/// <see cref="BlockPathData"/> is one a hand written test would encode from the same reading of the
+/// jar, and would then agree with. A mob that treats a closed wooden door as a wall, a lily pad as
+/// open air, or a square beside lava as safe passes any test written from the same misreading.
 /// </para>
 /// <para>
 /// Two halves, because they fail differently. <see cref="EveryBlockStateAgreesWithVanilla"/> covers

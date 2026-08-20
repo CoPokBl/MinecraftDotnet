@@ -39,7 +39,26 @@ public class PlayerInventory : Inventory {
     public const int HotbarSlot7 = 42;
     public const int HotbarSlot8 = 43;
     public const int HotbarSlot9 = 44;
-    
+
+    /// <summary>The twenty seven main inventory slots, top left first.</summary>
+    public static readonly int[] MainInventorySlots =
+        Enumerable.Range(RegularInventoryStartIndex, HotbarSlot1 - RegularInventoryStartIndex).ToArray();
+
+    /// <summary>The nine hotbar slots, left to right.</summary>
+    public static readonly int[] HotbarSlots = Enumerable.Range(HotbarSlot1, 9).ToArray();
+
+    /// <summary>
+    /// Both of those, main inventory first: the thirty six slots a shift click can reach, in the
+    /// order it fills them. Armour, the offhand and the two by two are not in it.
+    /// </summary>
+    public static readonly int[] QuickMoveSlots = [..MainInventorySlots, ..HotbarSlots];
+
+    /// <summary>
+    /// The same thirty six from the last hotbar slot backwards. <b>Everything a window hands the
+    /// player arrives in this order</b>: a crafted result, a trade, a chest's stack.
+    /// </summary>
+    public static readonly int[] BackwardsQuickMoveSlots = QuickMoveSlots.Reverse().ToArray();
+
     public PlayerInventory(ManagedMinecraftServer server, Player owner) : 
         base(server, InventorySize, RegularInventoryStartIndex) {
         Viewers.Add(owner);

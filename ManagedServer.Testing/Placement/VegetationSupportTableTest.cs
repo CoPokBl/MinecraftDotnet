@@ -11,10 +11,10 @@ namespace ManagedServer.Testing.Placement;
 /// Both exist because the value they hold is a <b>constructor argument</b> in vanilla's
 /// <c>Blocks.java</c> rather than anything on the block state or on
 /// <c>BlockBehaviour.Properties</c>, so the dumper cannot see it and the generator cannot write it.
-/// That makes them the one place in the placement rules where a name is matched by hand, which
-/// CLAUDE.md says to avoid and here cannot be, so this is the backstop it also asks for: a block
-/// added to one of these classes upstream fails a test instead of quietly becoming a plant that can
-/// never be placed or a vine that never converts between its head and its body.
+/// That makes them the one place in the placement rules where a name is matched by hand rather than
+/// generated, so they need a backstop: a block added to one of these classes upstream fails a test
+/// instead of quietly becoming a plant that can never be placed or a vine that never converts between
+/// its head and its body.
 /// <p/>
 /// If one of these fails after a version bump, read the new block's registration in
 /// <c>Blocks.java</c> and add the row it names.

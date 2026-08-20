@@ -12,10 +12,10 @@ namespace ManagedServer.Placement.Rules;
 //
 // The classes that override canSurvive and nothing about the state they are placed in.
 //
-// They are rules for the reason CLAUDE.md gives: a missing canSurvive reads as permissive
-// rather than as unimplemented, so the block goes down, the client draws it, and it stays. Every one
-// of these asks a materially different question, which is why they are separate transcriptions and
-// not one "needs something below it" helper.
+// They are rules rather than nothing because a missing canSurvive reads as permissive rather than
+// as unimplemented: the block goes down, the client draws it, and it stays. Every one of these asks
+// a materially different question, which is why they are separate transcriptions and not one
+// "needs something below it" helper.
 //
 // Several of them also override updateShape to do nothing but schedule a tick. There is no
 // block tick scheduler here, so those have no UpdateShape: the shape hook itself returns the

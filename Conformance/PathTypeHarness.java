@@ -38,10 +38,10 @@ import org.jspecify.annotations.Nullable;
  * Commits what the real {@code WalkNodeEvaluator} makes of a block, so the C# classification can be
  * diffed against vanilla rather than against itself.
  * <p>
- * This is the harness CLAUDE.md's rule is really about. Nothing the client computes is involved, so
- * there is no desync to catch; the problem is that a wrong classification rule is one our own tests
- * would encode too, and would then agree with. A mob that treats a closed wooden door as a wall, or
- * a lily pad as open air, passes every test written from the same misreading.
+ * Nothing the client computes is involved here, so there is no desync to catch; the problem is that
+ * a wrong classification rule is one our own tests would encode too, and would then agree with. A
+ * mob that treats a closed wooden door as a wall, or a lily pad as open air, passes every test
+ * written from the same misreading.
  * <p>
  * Two things are pinned, because they fail differently:
  * <ul>

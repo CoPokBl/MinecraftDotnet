@@ -10,7 +10,7 @@
 # version first.
 #
 # getStateForPlacement is deliberately not covered here: it needs a BlockPlaceContext, which needs a
-# real Level, which is the thing CLAUDE.md lists as out of reach. These two hooks take interfaces.
+# real Level, and that is out of reach for a harness. These two hooks take interfaces.
 set -euo pipefail
 
 version="${1:-26.2}"

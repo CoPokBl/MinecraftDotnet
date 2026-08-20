@@ -15,8 +15,8 @@ namespace ManagedServer.Interaction;
 /// hooks (18 override <c>useItemOn</c>, 55 override <c>useWithoutItem</c>, 9 override both). Every
 /// one of them is either in this list or in the list below.
 /// <p/>
-/// The seven transcribed here are the whole of what is reachable without a subsystem that does not
-/// exist yet, and between them they cover 76 blocks. The rest are grouped by what they are waiting
+/// The seven transcribed here are the whole of what is reachable in this list without a subsystem
+/// that does not exist yet, and between them they cover 76 blocks. The rest are grouped by what they are waiting
 /// for, so the list shortens as those land rather than needing to be re-derived.
 /// <p/>
 /// <b>Deliberately not transcribed</b>, with the reason each time:
@@ -34,11 +34,17 @@ namespace ManagedServer.Interaction;
 /// to open. This is why a minigame wanting a working chest supplies its own, as
 /// <c>SkyWarsChestsFeature</c> does, and why the spectator branch of
 /// <see cref="BlockInteraction.UseItemOn"/> is a comment.</item>
-/// <item><b>Needs a container menu with server side logic</b> (9 classes):
-/// <c>CraftingTableBlock</c>, <c>AnvilBlock</c>, <c>GrindstoneBlock</c>, <c>LoomBlock</c>,
-/// <c>SmithingTableBlock</c>, <c>StonecutterBlock</c>, <c>CartographyTableBlock</c>,
-/// <c>EnchantingTableBlock</c>, <c>BeaconBlock</c>. These need no block entity, but opening the
-/// screen without the recipe handling behind it would be a window that does nothing.</item>
+/// <item><b>Needs a container menu with server side logic</b> (7 classes):
+/// <c>AnvilBlock</c>, <c>GrindstoneBlock</c>, <c>LoomBlock</c>, <c>StonecutterBlock</c>,
+/// <c>CartographyTableBlock</c>, <c>EnchantingTableBlock</c>, <c>BeaconBlock</c>. These need no
+/// block entity, but opening the screen without the logic behind it would be a window that does
+/// nothing.</item>
+/// <item><b>Belongs to the feature that answers it</b>: <c>CraftingTableBlock</c> and
+/// <c>SmithingTableBlock</c> are <c>CraftingTableInteractionRule</c> and
+/// <c>SmithingTableInteractionRule</c>, registered by <c>CraftingFeature</c>. They are not in this
+/// list for the reason the seven above are not transcribed at all: a grid that opens without recipes
+/// behind it is a window that does nothing, so the rule ships with the recipes rather than with the
+/// block behaviour.</item>
 /// <item><b>Needs redstone or a block tick scheduler</b>: <c>RepeaterBlock</c> and
 /// <c>ComparatorBlock</c> (both cycle a state and then schedule the tick that is the actual
 /// behaviour; their <c>delay</c> and <c>mode</c> properties also have no generated interface yet),

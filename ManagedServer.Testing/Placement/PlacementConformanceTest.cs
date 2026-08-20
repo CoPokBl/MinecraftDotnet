@@ -28,9 +28,9 @@ namespace ManagedServer.Testing.Placement;
 /// </para>
 /// <para>
 /// <c>getStateForPlacement</c> is <b>not</b> covered, and that is a real gap rather than an
-/// oversight: it needs a <c>BlockPlaceContext</c>, which needs a live <c>Level</c>, which is what
-/// CLAUDE.md lists as out of reach for a harness. These two take only a <c>LevelReader</c> and a
-/// <c>ScheduledTickAccess</c>, both interfaces, so a stub reaches them.
+/// oversight: it needs a <c>BlockPlaceContext</c>, which needs a live <c>Level</c>, and that is out of
+/// reach for a harness. These two take only a <c>LevelReader</c> and a <c>ScheduledTickAccess</c>,
+/// both interfaces, so a stub reaches them.
 /// </para>
 /// <para>
 /// The fixture is the real methods run out of the server jar. Regenerate it on a version bump, see

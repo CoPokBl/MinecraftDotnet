@@ -13,7 +13,7 @@ namespace ManagedServer.Loot;
 /// <remarks>
 /// <b>Read rather than generated, because a loot table is content and not a measured fact.</b> Which
 /// item a block drops, at what weight, under what conditions, is somebody's design; restating it as
-/// C# would be the same material in another syntax. See the rule at the top of CLAUDE.md.
+/// C# would be the same material in another syntax, and nothing Mojang wrote ships here.
 /// <p/>
 /// Keyed by table rather than by block, because the two are not one to one: every wall sign shares its
 /// standing form's table, and a block with no table at all is absent rather than present and empty.
