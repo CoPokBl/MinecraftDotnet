@@ -163,10 +163,16 @@ public class TextComponent : CompoundTagSerialisable {
     }
 
     public override CompoundTag SerialiseToTag() {
-        List<(string, INbtTag)> tags = [
-            ("type", new StringTag(Content.Type))
-        ];
+        List<(string, INbtTag)> tags = [];
         tags.AddRange(Content.Fields);  // add all the content fields
+
+        // Vanilla leaves the type out wherever the content fields already imply it, which is every
+        // component it writes, so spelling it out makes the same text differ from what a datapack or
+        // a resource pack holds. Written only where the fields would be read as something else,
+        // which is why it is asked rather than assumed.
+        if (InferType(tags) != Content.Type) {
+            tags.Insert(0, ("type", new StringTag(Content.Type)));
+        }
 
         if (Color != null) {
             tags.Add(("color", new StringTag(Color.Value.ToHex())));
@@ -229,6 +235,26 @@ public class TextComponent : CompoundTagSerialisable {
         return new CompoundTag(tags.ToArray());
     }
 
+    /// <summary>
+    /// The content type a compound's fields say it is, or null for fields that say nothing.
+    /// </summary>
+    /// <remarks>
+    /// The order is the one that decides, not the set: a component carrying both <c>text</c> and
+    /// <c>translate</c> is text. Shared between reading and writing because the writer leaves the
+    /// type out exactly when the reader would put it back.
+    /// </remarks>
+    private static string? InferType(IEnumerable<(string Key, INbtTag Tag)> fields) {
+        HashSet<string> keys = fields.Select(field => field.Key).ToHashSet();
+
+        if (keys.Contains("text")) return "text";
+        if (keys.Contains("translate")) return "translatable";
+        if (keys.Contains("score")) return "score";
+        if (keys.Contains("selector")) return "selector";
+        if (keys.Contains("keybind")) return "keybind";
+        if (keys.Contains("nbt")) return "nbt";
+        return null;
+    }
+
     public static TextComponent FromTag(INbtTag tag) {
         if (tag is StringTag str) {  // direct string
             return Text(str.Value);
@@ -251,15 +277,12 @@ public class TextComponent : CompoundTagSerialisable {
         }
 
         fields.TryGetValue("type", out INbtTag? contentTypeTag);
-        string? contentType = ((StringTag?)contentTypeTag)?.Value;
-        if (contentType == null) {
-                 if (fields.ContainsKey("text")) contentType = "text";
-            else if (fields.ContainsKey("translate")) contentType = "translatable";
-            else if (fields.ContainsKey("score")) contentType = "score";
-            else if (fields.ContainsKey("selector"))  contentType = "selector";
-            else if (fields.ContainsKey("keybind"))  contentType = "keybind";
-            else if (fields.ContainsKey("nbt")) throw new NotImplementedException("NBT content type not implemented");
-            else throw new Exception("Unknown content type, no type field found and no known content fields present");
+        string? contentType = ((StringTag?)contentTypeTag)?.Value
+            ?? InferType(fields.Select(field => (field.Key, field.Value)))
+            ?? throw new Exception("Unknown content type, no type field found and no known content fields present");
+
+        if (contentType == "nbt") {
+            throw new NotImplementedException("NBT content type not implemented");
         }
         
         if (contentType == "text") {
@@ -293,9 +316,6 @@ public class TextComponent : CompoundTagSerialisable {
         }
         else if (contentType == "keybind") {
             textComponent.Content = TextContent.Text(((StringTag)fields["keybind"]).Value);
-        }
-        else if (contentType == "nbt") {
-            throw new NotImplementedException("NBT content type not implemented");
         }
         else {
             throw new Exception("Unknown content type, data: " + compound.ToJsonString());

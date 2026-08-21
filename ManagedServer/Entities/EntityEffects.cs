@@ -73,7 +73,7 @@ public class EntityEffects(LivingEntity entity) {
 
     /// <summary>Convenience for the common case, an effect that shows its icon and particles.</summary>
     public bool Add(IPotionEffectType type, int amplifier, int duration) {
-        return Add(new PotionEffect(type, amplifier, duration, false, true, true, false));
+        return Add(new PotionEffect(type, amplifier, duration, false, true, true));
     }
 
     public bool Remove(IPotionEffectType type) {

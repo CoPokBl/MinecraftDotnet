@@ -18,10 +18,10 @@ namespace ManagedServer.Recipes;
 /// between two recipes that accept one grid.
 /// <p/>
 /// <b>Recipes this build cannot make are declined by name, not dropped.</b> The pack's 1585 recipes
-/// include smelting, stonecutting, smithing and the special crafting types; 17 more are the
-/// suspicious stew recipes, whose results carry <c>minecraft:suspicious_stew_effects</c>, which has no
-/// port. All land in <see cref="Declined"/>, so what a consumer loses is a number rather than a
-/// silence. A handled type still throws on a field it does not know, see <see cref="RecipeParser"/>.
+/// include smelting, stonecutting, smithing and the special crafting types, all of which land in
+/// <see cref="Declined"/>, so what a consumer loses is a number rather than a silence. A result
+/// naming a data component with no persistent form is declined the same way. A handled type still
+/// throws on a field it does not know, see <see cref="RecipeParser"/>.
 /// <p/>
 /// Ingredients resolve their tags against <paramref name="registry"/> as they are built, so a second
 /// registry needs its own load.

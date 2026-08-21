@@ -1,8 +1,11 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Data.Sounds;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Tags;
+using NBT;
+using NBT.Tags;
 
 namespace Minecraft.Data.Components.Types;
 
@@ -16,6 +19,75 @@ namespace Minecraft.Data.Components.Types;
 /// </summary>
 public record BlocksAttacksComponent() : IDataComponent<BlocksAttacksComponent.Data> {
     public override Identifier Identifier => "minecraft:blocks_attacks";
+
+    /// <summary>
+    /// <c>disabled_sound</c> carries the d that <c>block_sound</c> beside it does not, which is
+    /// vanilla's spelling.
+    /// </summary>
+    /// <remarks>
+    /// Nothing measures <c>damage_reductions</c>: the shield is the only item carrying this component
+    /// and it leaves the field at its default, so those four keys come off
+    /// <c>BlocksAttacks.DamageReduction</c> in the jar rather than off any vanilla value.
+    /// </remarks>
+    public override NbtCodec<Data>? Codec => Persistent;
+    private static readonly NbtCodec<Data> Persistent = new(
+        (val, registry) => new CompoundBuilder()
+            .Float("block_delay_seconds", val.BlockDelaySeconds, 0f)
+            .Float("disable_cooldown_scale", val.DisableCooldownScale, 1f)
+            .TagWhen("damage_reductions", new ListTag(val.DamageReductions
+                    .Select(reduction => (INbtTag)new CompoundBuilder()
+                        .Float("horizontal_blocking_angle", reduction.HorizontalBlockingAngle, 90f)
+                        .IdSet("type", reduction.Type, registry.DamageTypes)
+                        .Float("base", reduction.Base)
+                        .Float("factor", reduction.Factor)
+                        .Build())
+                    .ToArray()),
+                !IsDefaultReductions(val.DamageReductions))
+            .TagWhen("item_damage", new CompoundBuilder()
+                    .Float("threshold", val.ItemDamage.Threshold)
+                    .Float("base", val.ItemDamage.Base)
+                    .Float("factor", val.ItemDamage.Factor)
+                    .Build(),
+                !val.ItemDamage.Equals(ItemDamage.Default))
+            .IdSet("bypassed_by", val.BypassedBy, registry.DamageTypes)
+            .Sound("block_sound", val.BlockSound)
+            .Sound("disabled_sound", val.DisableSound)
+            .Build(),
+
+        (tag, registry) => {
+            NbtNode node = NbtNode.Of(tag, "minecraft:blocks_attacks");
+
+            Data data = new(
+                node.Float("block_delay_seconds", 0f),
+                node.Float("disable_cooldown_scale", 1f),
+                node.Has("damage_reductions")
+                    ? node.Objects("damage_reductions", reduction => {
+                        DamageReduction read = new(
+                            reduction.Float("horizontal_blocking_angle", 90f),
+                            reduction.IdSetOrNull("type", registry.DamageTypes),
+                            reduction.Float("base"),
+                            reduction.Float("factor"));
+                        reduction.AssertRead();
+                        return read;
+                    })
+                    : [DamageReduction.Everything],
+                node.Object("item_damage", damage => {
+                    ItemDamage read = new(
+                        damage.Float("threshold"), damage.Float("base"), damage.Float("factor"));
+                    damage.AssertRead();
+                    return read;
+                }, ItemDamage.Default),
+                node.IdSetOrNull("bypassed_by", registry.DamageTypes),
+                node.Sound("block_sound", registry),
+                node.Sound("disabled_sound", registry));
+
+            node.AssertRead();
+            return data;
+        });
+
+    private static bool IsDefaultReductions(DamageReduction[] reductions) {
+        return reductions.Length == 1 && reductions[0].Equals(DamageReduction.Everything);
+    }
 
     public override DataWriter WriteData(Data val, DataWriter writer, MinecraftRegistry registry) {
         return writer

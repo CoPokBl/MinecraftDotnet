@@ -4,7 +4,6 @@ using Minecraft.Registry;
 
 namespace Minecraft.Schemas;
 
-// todo: work out what hidden effects are, if has hidden effect is true then one must be present
 public record PotionEffect(
     IPotionEffectType Type,
     int Amplifier,
@@ -12,8 +11,42 @@ public record PotionEffect(
     bool Ambient,
     bool ShowParticles,
     bool ShowIcon,
-    bool HasHiddenEffect) : INetworkType<PotionEffect> {
-    
+    PotionEffect.HiddenEffect? Hidden = null) : INetworkType<PotionEffect> {
+
+    /// <summary>
+    /// The effect an entity goes back to when this one runs out, vanilla's
+    /// <c>MobEffectInstance.hiddenEffect</c>. It is the same effect type, so only the settings the
+    /// stronger instance overrode travel.
+    /// </summary>
+    public record HiddenEffect(
+        int Amplifier,
+        int Duration,
+        bool Ambient,
+        bool ShowParticles,
+        bool ShowIcon,
+        HiddenEffect? Hidden = null) {
+
+        public static HiddenEffect ReadData(DataReader reader) {
+            return new HiddenEffect(
+                reader.ReadVarInt(),
+                reader.ReadVarInt(),
+                reader.ReadBoolean(),
+                reader.ReadBoolean(),
+                reader.ReadBoolean(),
+                reader.ReadPrefixedOptional(ReadData));
+        }
+
+        public DataWriter WriteData(DataWriter writer) {
+            return writer
+                .WriteVarInt(Amplifier)
+                .WriteVarInt(Duration)
+                .WriteBoolean(Ambient)
+                .WriteBoolean(ShowParticles)
+                .WriteBoolean(ShowIcon)
+                .WritePrefixedOptional(Hidden, (h, w) => h.WriteData(w));
+        }
+    }
+
     public static PotionEffect ReadData(DataReader reader, MinecraftRegistry registry) {
         IPotionEffectType type = registry.PotionEffectTypes[reader.ReadVarInt()];
         int amplifier = reader.ReadVarInt();
@@ -21,9 +54,9 @@ public record PotionEffect(
         bool ambient = reader.ReadBoolean();
         bool showParticles = reader.ReadBoolean();
         bool showIcon = reader.ReadBoolean();
-        bool hasHiddenEffect = reader.ReadBoolean();
+        HiddenEffect? hidden = reader.ReadPrefixedOptional(HiddenEffect.ReadData);
 
-        return new PotionEffect(type, amplifier, duration, ambient, showParticles, showIcon, hasHiddenEffect);
+        return new PotionEffect(type, amplifier, duration, ambient, showParticles, showIcon, hidden);
     }
 
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry) {
@@ -34,6 +67,6 @@ public record PotionEffect(
             .WriteBoolean(Ambient)
             .WriteBoolean(ShowParticles)
             .WriteBoolean(ShowIcon)
-            .WriteBoolean(HasHiddenEffect);
+            .WritePrefixedOptional(Hidden, (h, w) => h.WriteData(w));
     }
 }

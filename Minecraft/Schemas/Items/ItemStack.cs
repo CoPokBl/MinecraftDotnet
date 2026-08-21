@@ -35,6 +35,15 @@ public class ItemStack(
     public static readonly ItemStack Air = new(Item.Air, 0);
 
     public ItemStack With<T>(IDataComponent<T> component, T value) where T : notnull {
+        return With((IDataComponent)component, value);
+    }
+
+    /// <summary>
+    /// The same, for a component whose value type is not known at the call site. Reading a stack out
+    /// of data is that: the component comes back from the registry as an <see cref="IDataComponent"/>
+    /// and its codec answers an <see cref="object"/>.
+    /// </summary>
+    public ItemStack With(IDataComponent component, object value) {
         Dictionary<IDataComponent, object> newComponents = new(_components) {
             [component] = value
         };
@@ -205,6 +214,74 @@ public class ItemStack(
         writer.WriteVarInt(Count);
         writer.WriteVarInt(registry.Items.GetProtocolId(Type));
         return WriteComponentPatch(writer, registry);
+    }
+
+    /// <summary>
+    /// The stack as a datapack or a saved world spells it, which is vanilla's <c>ItemStack.CODEC</c>.
+    /// </summary>
+    /// <remarks>
+    /// <b>Not the wire form.</b> That is <see cref="WriteData"/>, where a component is a protocol id
+    /// and a payload with no key names in it.
+    /// <p/>
+    /// A count of one is left off, as vanilla leaves it off. A component the patch removes is written
+    /// under its name with a <c>!</c> in front, which is how one patch says both what a component is
+    /// and that another is gone.
+    /// </remarks>
+    public CompoundTag ToNbt(MinecraftRegistry registry) {
+        List<(string, INbtTag)> fields = [("id", new StringTag(Type.Identifier.ToString()))];
+
+        if (Count != 1) {
+            fields.Add(("count", new IntegerTag(Count)));
+        }
+
+        List<(string, INbtTag)> patch = [];
+
+        foreach ((IDataComponent component, object value) in _components) {
+            patch.Add((component.Identifier.ToString(), component.ToNbt(value, registry)));
+        }
+
+        foreach (IDataComponent component in _removeComponents) {
+            patch.Add(("!" + component.Identifier, new CompoundTag()));
+        }
+
+        if (patch.Count != 0) {
+            fields.Add(("components", new CompoundTag(patch.ToArray())));
+        }
+
+        return new CompoundTag(fields.ToArray());
+    }
+
+    /// <inheritdoc cref="ToNbt"/>
+    public static ItemStack FromNbt(INbtTag tag, MinecraftRegistry registry) {
+        CompoundTag compound = tag.GetCompound();
+        Dictionary<IDataComponent, object> components = [];
+        List<IDataComponent> removed = [];
+
+        if (compound["components"] is { } patch) {
+            foreach ((string key, INbtTag value) in patch.GetCompound().Children) {
+                bool remove = key.StartsWith('!');
+                Identifier name = remove ? key[1..] : key;
+
+                if (!registry.DataComponents.Contains(name)) {
+                    throw new InvalidOperationException($"No data component called \"{name}\".");
+                }
+
+                IDataComponent component = registry.DataComponents[name];
+
+                if (remove) {
+                    removed.Add(component);
+                    continue;
+                }
+
+                components[component] = component.FromNbt(value, registry);
+            }
+        }
+
+        return new ItemStack(
+            registry.Items[(Identifier)compound["id"].GetString()],
+            compound.Contains("count") ? compound["count"].GetInteger() : 1,
+            components,
+            removed.ToArray());
     }
 
     public static ItemStack ReadData(DataReader reader, MinecraftRegistry registry) {

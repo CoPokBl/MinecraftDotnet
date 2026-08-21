@@ -1,3 +1,4 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Data.ConsumeEffects;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Sounds;
@@ -9,7 +10,37 @@ namespace Minecraft.Data.Components.Types;
 
 public record ConsumableComponent() : IDataComponent<ConsumableComponent.Data> {
     public override Identifier Identifier => "minecraft:consumable";
-    
+
+    /// <summary>
+    /// The sound defaults to the generic eat rather than to nothing, so an item that says nothing
+    /// still makes one.
+    /// </summary>
+    public override NbtCodec<Data>? Codec => Persistent;
+    private static readonly NbtCodec<Data> Persistent = new(
+        (val, registry) => new CompoundBuilder()
+            .Float("consume_seconds", val.ConsumeSeconds, DefaultConsumeSeconds)
+            .Enum("animation", val.Animation, ConsumeAnimation.Eat)
+            .Sound("sound", DefaultSound.Equals(val.Sound) ? null : val.Sound)
+            .Bool("has_consume_particles", val.HasParticles, true)
+            .ListOrOmit("on_consume_effects", val.Effects,
+                effect => EffectCodecs.WriteConsumeEffect(effect, registry))
+            .Build(),
+        (tag, registry) => {
+            NbtNode node = NbtNode.Of(tag, "minecraft:consumable");
+            Data data = new(
+                node.Float("consume_seconds", DefaultConsumeSeconds),
+                node.Enum("animation", ConsumeAnimation.Eat),
+                node.Sound("sound", registry) ?? DefaultSound,
+                node.Bool("has_consume_particles", true),
+                node.List("on_consume_effects",
+                    effect => EffectCodecs.ReadConsumeEffect(effect, registry, "minecraft:consumable")));
+            node.AssertRead();
+            return data;
+        });
+
+    private static readonly Or<ISoundType, SoundEvent> DefaultSound =
+        Or<ISoundType, SoundEvent>.FromValue1(SoundType.GenericEat);
+
     public override DataWriter WriteData(Data val, DataWriter writer, MinecraftRegistry registry) {
         return writer.Write(w => {
             w.WriteFloat(val.ConsumeSeconds);

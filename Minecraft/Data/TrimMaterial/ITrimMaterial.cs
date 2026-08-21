@@ -6,7 +6,7 @@ using NBT.Tags;
 
 namespace Minecraft.Data.TrimMaterial;
 
-public interface ITrimMaterial : IProtocolType {
+public interface ITrimMaterial : IProtocolType, INetworkType<ITrimMaterial> {
     /// <summary>
     /// The suffix the client sticks on a trim pattern's texture name to find this material's
     /// version of it.
@@ -51,5 +51,29 @@ public interface ITrimMaterial : IProtocolType {
             tag["asset_name"]!.GetString(),
             TextComponent.FromTag(tag["description"]!),
             overrides);
+    }
+
+    DataWriter INetworkType<ITrimMaterial>.WriteData(DataWriter writer, MinecraftRegistry registry) {
+        return writer
+            .WriteString(AssetName)
+            .WriteVarInt(OverrideArmorAssets.Count)
+            .WriteArray(OverrideArmorAssets, (o, w) => w.Write(o.Key).WriteString(o.Value))
+            .WriteNbt(Description);
+    }
+
+    static ITrimMaterial INetworkType<ITrimMaterial>.ReadData(DataReader reader, MinecraftRegistry registry) {
+        return ReadData(reader, registry);
+    }
+
+    /// <remarks>
+    /// An inline material has no registry name, so the asset suffix it names stands in as its
+    /// identifier.
+    /// </remarks>
+    public new static ITrimMaterial ReadData(DataReader reader, MinecraftRegistry registry) {
+        string assetName = reader.ReadString();
+        Dictionary<Identifier, string> overrides = reader
+            .ReadPrefixedArray(r => new KeyValuePair<Identifier, string>(r.ReadString(), r.ReadString()))
+            .ToDictionary();
+        return new SimpleTrimMaterial(assetName, assetName, reader.ReadText(), overrides);
     }
 }

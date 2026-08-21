@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Minecraft.Data;
 using Minecraft.Registry;
+using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities.Meta;
 using Minecraft.Schemas.Vec;
@@ -659,6 +660,21 @@ public class DataWriter : Stream, IWritable {
     
     public DataWriter WriteIdOr<TP, T>(Or<TP, T> idOr, Func<TP, int> idResolver, MinecraftRegistry reg) where TP : IProtocolType where T : INetworkType<T> {
         return WriteIdOr(idOr, idResolver, (type, writer) => type.WriteData(writer, reg));
+    }
+
+    /// <summary>
+    /// Writes a vanilla <c>Holder</c>: an entry the registry holds as its id plus one, and anything
+    /// else inline behind a zero.
+    /// </summary>
+    public DataWriter WriteHolder<T>(T value, IProtocolTypeRegistry registry, Action<T, DataWriter> inlineWriter)
+        where T : IProtocolType {
+        if (registry.Contains(value.Identifier)) {
+            return WriteVarInt(registry.GetProtocolId(value) + 1);
+        }
+
+        WriteVarInt(0);
+        inlineWriter.Invoke(value, this);
+        return this;
     }
 
     public DataWriter WritePrefixedArray<T>(T[] values, Action<T, DataWriter> writerAction) {

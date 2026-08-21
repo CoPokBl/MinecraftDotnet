@@ -7,7 +7,7 @@ using NBT.Tags;
 
 namespace Minecraft.Data.Instrument;
 
-public interface IInstrument : IProtocolType {
+public interface IInstrument : IProtocolType, INetworkType<IInstrument> {
     public SoundEvent SoundEvent { get; }
     public float UseDuration { get; }
     public float Range { get; }
@@ -28,5 +28,24 @@ public interface IInstrument : IProtocolType {
             tag["use_duration"]!.GetFloat(),
             tag["range"]!.GetFloat(),
             TextComponent.FromTag(tag["description"]!));
+    }
+
+    DataWriter INetworkType<IInstrument>.WriteData(DataWriter writer, MinecraftRegistry registry) {
+        return SoundEvent.WriteHolder(writer, registry)
+            .WriteFloat(UseDuration)
+            .WriteFloat(Range)
+            .WriteNbt(Description);
+    }
+
+    static IInstrument INetworkType<IInstrument>.ReadData(DataReader reader, MinecraftRegistry registry) {
+        return ReadData(reader, registry);
+    }
+
+    /// <remarks>
+    /// An inline instrument has no registry name, so the sound it plays stands in as its identifier.
+    /// </remarks>
+    public new static IInstrument ReadData(DataReader reader, MinecraftRegistry registry) {
+        SoundEvent sound = SoundEvent.ReadHolder(reader, registry);
+        return new SimpleInstrument(sound.Type.Identifier, sound, reader.ReadFloat(), reader.ReadFloat(), reader.ReadText());
     }
 }

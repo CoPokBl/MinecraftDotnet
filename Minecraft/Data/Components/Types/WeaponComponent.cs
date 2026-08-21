@@ -1,3 +1,4 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 
@@ -10,6 +11,21 @@ namespace Minecraft.Data.Components.Types;
 /// </summary>
 public record WeaponComponent() : IDataComponent<WeaponComponent.Data> {
     public override Identifier Identifier => "minecraft:weapon";
+
+    public override NbtCodec<Data>? Codec => Persistent;
+    private static readonly NbtCodec<Data> Persistent = new(
+        (val, _) => new CompoundBuilder()
+            .Int("item_damage_per_attack", val.ItemDamagePerAttack, 1)
+            .Float("disable_blocking_for_seconds", val.DisableBlockingForSeconds, 0f)
+            .Build(),
+        (tag, _) => {
+            NbtNode node = NbtNode.Of(tag, "minecraft:weapon");
+            Data data = new(
+                node.Int("item_damage_per_attack", 1),
+                node.Float("disable_blocking_for_seconds", 0f));
+            node.AssertRead();
+            return data;
+        });
 
     public override DataWriter WriteData(Data val, DataWriter writer, MinecraftRegistry registry) {
         return writer

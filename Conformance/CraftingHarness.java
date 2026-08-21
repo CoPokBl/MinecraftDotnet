@@ -1,6 +1,5 @@
 import java.io.DataOutputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -54,6 +53,10 @@ import net.minecraft.world.item.crafting.TransmuteRecipe;
  * <b>Scope: the three recipe types the port implements.</b> Both sides filter to shaped, shapeless
  * and transmute. The special types are a gap already recorded in
  * {@code DatapackCraftingRecipes.Declined}; including them would need a {@code Level}.
+ * <p>
+ * A result carrying data components is in scope, so the suspicious stews are among the recipes a
+ * grid can match here. That is the whole of what their component changes: two stews are one recipe
+ * to the matcher and differ only in what the result carries.
  * <p>
  * The corpus is derived from the recipes themselves, so it hits every real shape, and every grid is
  * written into the fixture as the items it holds rather than as a description of it.
@@ -120,8 +123,8 @@ public final class CraftingHarness {
 
         List<Loaded> result = new ArrayList<>();
         parsed.forEach((id, recipe) -> {
-            if ((recipe instanceof ShapedRecipe || recipe instanceof ShapelessRecipe
-                    || recipe instanceof TransmuteRecipe) && resultIsPortable(recipe)) {
+            if (recipe instanceof ShapedRecipe || recipe instanceof ShapelessRecipe
+                    || recipe instanceof TransmuteRecipe) {
 
                 result.add(new Loaded(id, (Recipe<CraftingInput>) recipe));
             }
@@ -132,31 +135,6 @@ public final class CraftingHarness {
         }
 
         return result;
-    }
-
-    /**
-     * The same criterion {@code RecipeParser} declines on: a result carrying data components needs a
-     * port of each, and {@code minecraft:suspicious_stew_effects} has none.
-     * <p>
-     * Read off the private {@code result} field rather than an assembled stack, since a transmute
-     * recipe's assembled stack carries the <i>input's</i> components and would look the same.
-     * Reflection rather than a subclass: the jar is signed, so a class in {@code net.minecraft.*}
-     * fails to load.
-     */
-    private static boolean resultIsPortable(Recipe<?> recipe) {
-        for (Class<?> type = recipe.getClass(); type != null; type = type.getSuperclass()) {
-            try {
-                Field field = type.getDeclaredField("result");
-                field.setAccessible(true);
-                return ((ItemStackTemplate) field.get(recipe)).components().isEmpty();
-            } catch (NoSuchFieldException e) {
-                // Keep walking up; the field is declared on the concrete class for all three types.
-            } catch (ReflectiveOperationException e) {
-                throw new IllegalStateException("Could not read the result of " + recipe, e);
-            }
-        }
-
-        throw new IllegalStateException(recipe.getClass() + " has no result field");
     }
 
     // ---------------------------------------------------------------- corpus

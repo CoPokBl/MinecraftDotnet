@@ -1,4 +1,3 @@
-using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Terrain.Generation;
 using Minecraft.Schemas.Chunks;

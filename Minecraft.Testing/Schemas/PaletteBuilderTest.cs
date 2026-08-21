@@ -1,5 +1,4 @@
 using Minecraft.Data.Generated;
-using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Chunks.Palettes;
 

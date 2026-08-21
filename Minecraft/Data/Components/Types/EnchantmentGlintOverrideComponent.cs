@@ -1,3 +1,4 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 
@@ -5,6 +6,9 @@ namespace Minecraft.Data.Components.Types;
 
 public record EnchantmentGlintOverrideComponent() : IDataComponent<bool> {
     public override Identifier Identifier => "minecraft:enchantment_glint_override";
+
+    public override NbtCodec<bool>? Codec => Persistent;
+    private static readonly NbtCodec<bool> Persistent = NbtCodecs.Bool();
     
     public override DataWriter WriteData(bool val, DataWriter writer, MinecraftRegistry registry) {
         return writer.WriteBoolean(val);

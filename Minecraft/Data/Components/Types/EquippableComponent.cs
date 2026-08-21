@@ -1,3 +1,4 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Data.Sounds;
 using Minecraft.Registry;
 using Minecraft.Schemas;
@@ -9,6 +10,66 @@ namespace Minecraft.Data.Components.Types;
 // TODO: Make this actually work without kicking the client
 public record EquippableComponent() : IDataComponent<EquippableComponent.Data> {
     public override Identifier Identifier => "minecraft:equippable";
+
+    /// <summary>
+    /// <b>The slot names are not the member names in snake case.</b> Vanilla writes <c>mainhand</c>
+    /// and <c>offhand</c> with no separator while the rest are plain words, so the pair is spelled
+    /// out rather than derived.
+    /// </summary>
+    public override NbtCodec<Data>? Codec => Persistent;
+    private static readonly NbtCodec<Data> Persistent = new(
+        (val, registry) => new CompoundBuilder()
+            .String("slot", SlotNames[val.Slot])
+            .Sound("equip_sound", val.EquipSound)
+            .Id("asset_id", val.Model)
+            .Id("camera_overlay", val.CameraOverlay)
+            .IdSet("allowed_entities", val.AllowedEntities, registry.EntityTypes)
+            .Bool("dispensable", val.Dispensable, true)
+            .Bool("swappable", val.Swappable, true)
+            .Bool("damage_on_hurt", val.DamageOnHurt, true)
+            .Bool("equip_on_interact", val.EquipOnInteract, false)
+            .Bool("can_be_sheared", val.CanBeSheared, false)
+            .Sound("shearing_sound", val.ShearSound)
+            .Build(),
+        (tag, registry) => {
+            NbtNode node = NbtNode.Of(tag, "minecraft:equippable");
+            string slot = node.String("slot");
+
+            if (!SlotsByName.TryGetValue(slot, out Slot named)) {
+                throw new UnportedComponentException("minecraft:equippable",
+                    $"\"{slot}\" is not an equipment slot.");
+            }
+
+            Data data = new(
+                named,
+                node.Sound("equip_sound", registry)!,
+                node.IdOrNull("asset_id"),
+                node.IdOrNull("camera_overlay"),
+                node.IdSetOrNull("allowed_entities", registry.EntityTypes),
+                node.Bool("dispensable", true),
+                node.Bool("swappable", true),
+                node.Bool("damage_on_hurt", true),
+                node.Bool("equip_on_interact", false),
+                node.Bool("can_be_sheared", false),
+                node.Sound("shearing_sound", registry)!);
+
+            node.AssertRead();
+            return data;
+        });
+
+    private static readonly Dictionary<Slot, string> SlotNames = new() {
+        [Slot.MainHand] = "mainhand",
+        [Slot.OffHand] = "offhand",
+        [Slot.Feet] = "feet",
+        [Slot.Legs] = "legs",
+        [Slot.Chest] = "chest",
+        [Slot.Head] = "head",
+        [Slot.Body] = "body",
+        [Slot.Saddle] = "saddle"
+    };
+
+    private static readonly Dictionary<string, Slot> SlotsByName =
+        SlotNames.ToDictionary(pair => pair.Value, pair => pair.Key);
     
     public override DataWriter WriteData(Data val, DataWriter writer, MinecraftRegistry registry) {
         return writer

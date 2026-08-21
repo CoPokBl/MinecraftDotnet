@@ -1,3 +1,4 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using NBT.Tags;
@@ -6,6 +7,9 @@ namespace Minecraft.Data.Components.Types;
 
 public record IntangibleProjectileComponent() : IDataComponent<None> {
     public override Identifier Identifier => "minecraft:intangible_projectile";
+
+    public override NbtCodec<None>? Codec => Persistent;
+    private static readonly NbtCodec<None> Persistent = NbtCodecs.Unit();
     public static None Value => None.Value;
     
     public override DataWriter WriteData(None _, DataWriter writer, MinecraftRegistry registry) {

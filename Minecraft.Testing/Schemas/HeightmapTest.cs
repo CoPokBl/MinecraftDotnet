@@ -1,4 +1,3 @@
-using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;

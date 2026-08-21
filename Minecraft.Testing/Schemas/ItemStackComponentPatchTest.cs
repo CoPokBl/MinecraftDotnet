@@ -1,9 +1,6 @@
-using Minecraft;
-using Minecraft.Data.Components;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
 using Minecraft.Registry;
-using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 
 namespace Minecraft.Testing.Schemas;

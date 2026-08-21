@@ -21,6 +21,23 @@ public record SoundEvent(ISoundType Type, float? FixedRange) : INetworkType<Soun
     }
 
     /// <summary>
+    /// Writes the sound as a <c>Holder&lt;SoundEvent&gt;</c>: the registry id plus one for a plain
+    /// entry, and a zero followed by the inline form for a sound carrying a fixed range or one the
+    /// registry does not hold.
+    /// </summary>
+    public DataWriter WriteHolder(DataWriter writer, MinecraftRegistry registry) {
+        if (FixedRange == null && registry.SoundTypes.Contains(Type.Identifier)) {
+            return writer.WriteVarInt(registry.SoundTypes.GetProtocolId(Type) + 1);
+        }
+
+        return WriteData(writer.WriteVarInt(0), registry);
+    }
+
+    public static SoundEvent ReadHolder(DataReader reader, MinecraftRegistry registry) {
+        return reader.ReadHolder(id => new SoundEvent(registry.SoundTypes[id], null), r => ReadData(r, registry));
+    }
+
+    /// <summary>
     /// Writes the sound the way the registries that hold one do: a bare string when it's an
     /// entry of the sound registry, and the inline form otherwise. This is a
     /// <c>Holder&lt;SoundEvent&gt;</c> on the vanilla side, so both shapes are accepted

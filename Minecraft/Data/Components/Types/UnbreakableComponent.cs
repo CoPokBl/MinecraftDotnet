@@ -1,3 +1,4 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 
@@ -6,6 +7,9 @@ namespace Minecraft.Data.Components.Types;
 public record UnbreakableComponent() : IDataComponent<None> {
     public static None Value => None.Value;
     public override Identifier Identifier => "minecraft:unbreakable";
+
+    public override NbtCodec<None>? Codec => Persistent;
+    private static readonly NbtCodec<None> Persistent = NbtCodecs.Unit();
     
     public override DataWriter WriteData(None _, DataWriter writer, MinecraftRegistry registry) {
         return writer;

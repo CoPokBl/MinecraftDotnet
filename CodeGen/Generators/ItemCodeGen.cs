@@ -17,6 +17,9 @@ using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Tags;
 using Minecraft.Schemas;
 using Minecraft.Text;
+using Minecraft.Data.ConsumeEffects;
+using Minecraft.Data.Sounds;
+using NBT.Tags;
 
 namespace Minecraft.Data.Generated;
 
@@ -78,7 +81,11 @@ public static class Item {
                 // eg. IDataComponent<THIS_THING>
                 string componentType = DataComponentCodeGen.ComponentTypes[componentId];
 
-                if (!Deserialisers.TryGetValue(componentType, out Func<JToken, string?>? deserialiser)) {
+                // Several components share a value type but not a reported shape, eg. repairable and
+                // damage_resistant are both an IdSet under a key of their own, so the id wins where
+                // there is an entry for it.
+                if (!DeserialisersById.TryGetValue(componentId, out Func<JToken, string?>? deserialiser) &&
+                    !Deserialisers.TryGetValue(componentType, out deserialiser)) {
                     Console.WriteLine("WARNING: No deserializer found for component type " + componentType + ", to create item default component.");
                     continue;
                 }
@@ -307,64 +314,9 @@ public static class Item {
             sound = SoundCodeGen.GetVariableName(sound);
             
             bool hasParticles = obj["has_consume_particles"]?.Value<bool>() ?? true;
-            JArray consumeEffects = obj["on_consume_effects"]?.ToObject<JArray>() ?? [];
-            List<string> consumeEffectDefs = [];
-            foreach (JToken consumeEffect in consumeEffects) {
-                string type = consumeEffect["type"]?.Value<string>() ?? throw new Exception("Consume effect type not found");
-                string consumeEffectDef;
-                switch (type) {
-                    case "minecraft:apply_effects": {
-                        float probability = consumeEffect["probability"]?.Value<float>() ?? 1.0f;
-                        JArray effects = consumeEffect["effects"]?.ToObject<JArray>() ?? throw new Exception("Consume effect effects not found");
-                        List<string> inlineEffectDefs = [];
-                        foreach (JToken effect in effects) {
-                            string effectId = effect["id"]?.ToObject<string>()!;
-                            string potionTypeEffectGuess = CodeGenUtils.NamespacedIdToPascalName(effectId);
-                            sbyte amplifier = effect["amplifier"]?.Value<sbyte>() ?? 0;
-                            int duration = effect["duration"]?.Value<int>() ?? 0;
-                            bool ambient = effect["ambient"]?.Value<bool>() ?? false;
-                            bool showParticles = effect["show_particles"]?.Value<bool>() ?? true;
-                            bool showIcon = effect["show_icon"]?.Value<bool>() ?? true;
-                            // TODO: Handle hidden effects
-                            Func<bool, string> boolStr = b => b ? "true" : "false";
-                            inlineEffectDefs.Add($"new PotionEffect(PotionEffectType.{potionTypeEffectGuess}, {amplifier}, {duration}, " +
-                                                 $"{boolStr(ambient)}, {boolStr(showParticles)}, {boolStr(showIcon)}, false)");
-                        }
-                        //[{string.Join(", ", inlineEffectDefs)}], {probability}
-                        consumeEffectDef = $"ConsumeEffect.ApplyEffects with {{ Effects = [{string.Join(", ", inlineEffectDefs)}], Probability = {probability}f }}";
-                        break;
-                    }
+            IEnumerable<string> consumeEffectDefs = (obj["on_consume_effects"]?.ToObject<JArray>() ?? [])
+                .Select(ConsumeEffect);
 
-                    case "minecraft:play_sound": {
-                        string soundId = consumeEffect["sound"]?.ToObject<string>() ?? throw new Exception("Consume effect sound not found");
-                        string soundTypeGuess = SoundCodeGen.GetVariableName(soundId);
-                        consumeEffectDef = $"ConsumeEffect.PlaySound with {{ Sound = new SoundEvent(SoundType.{soundTypeGuess}, null) }}";
-                        break;
-                    }
-
-                    case "minecraft:clear_all_effects": {
-                        consumeEffectDef = "ConsumeEffect.ClearAllEffects";
-                        break;
-                    }
-
-                    case "minecraft:teleport_randomly": {
-                        consumeEffectDef = "ConsumeEffect.TeleportRandomly";
-                        break;
-                    }
-
-                    case "minecraft:remove_effects": {
-                        string effect = consumeEffect["effects"]?.ToObject<string>() ?? throw new Exception("Consume effect effects not found");
-                        consumeEffectDef = $"ConsumeEffect.RemoveEffects with {{ Effects = new IdSet.Tag(\"{effect}\") }}";
-                        break;
-                    }
-                    
-                    default:
-                        throw new Exception("Unsupported consume effect type: " + type);
-                }
-
-                consumeEffectDefs.Add(consumeEffectDef);
-            }
-            
             return $"new ConsumableComponent.Data({consumeSeconds}f, ConsumableComponent.ConsumeAnimation.{animationStr}, " +
                    $"new SoundEvent(SoundType.{sound}, null), {hasParticles.ToString().ToLowerInvariant()}, " +
                    $"[{string.Join(", ", consumeEffectDefs)}])";
@@ -487,6 +439,109 @@ public static class Item {
             // array of 3 floats
             JArray arr = token.ToObject<JArray>()!;
             return $"TextColor.Rgb({arr[0].ToObject<float>()}f, {arr[1].ToObject<float>()}f, {arr[2].ToObject<float>()}f)";
+        } },
+        { "float", token => Float(token.ToObject<float>()) },
+        { "Or<ISoundType, SoundEvent>", token =>
+            $"Or<ISoundType, SoundEvent>.FromValue1(SoundType.{SoundCodeGen.GetVariableName(token.ToObject<string>()!)})" },
+        { "DyeColor", token => "DyeColor." + CodeGenUtils.NamespacedIdToPascalName(token.ToObject<string>()!) },
+        { "IdSet", token => GetIdSet(token, id => id) },
+        // Left off, because the only handle on one of these is a generated class that reads it back
+        // out of the vanilla registry, and these initialisers run partway through building that
+        // registry. A datapack drives all five, so a consumer's registry need not hold the entry at
+        // all: whatever wants one sets it on the stack itself.
+        { "IDamageType", _ => null },
+        { "IInstrument", _ => null },
+        { "IJukeboxSong", _ => null },
+        { "ITrimMaterial", _ => null },
+        { "IChickenVariant", _ => null },
+        { "UseEffectsComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            return $"new UseEffectsComponent.Data({Bool(obj["can_sprint"], false)}, " +
+                   $"{Bool(obj["interact_vibrations"], true)}, {Float(obj["speed_multiplier"]?.Value<float>() ?? 0.2f)})";
+        } },
+        { "SwingAnimationComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            string type = CodeGenUtils.NamespacedIdToPascalName(obj["type"]?.Value<string>() ?? "whack");
+            return $"new SwingAnimationComponent.Data(SwingAnimationType.{type}, {obj["duration"]?.Value<int>() ?? 6})";
+        } },
+        { "AttackRangeComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            return $"new AttackRangeComponent.Data({Float(obj["min_reach"]?.Value<float>() ?? 0f)}, " +
+                   $"{Float(obj["max_reach"]?.Value<float>() ?? 3f)}, " +
+                   $"{Float(obj["min_creative_reach"]?.Value<float>() ?? 0f)}, " +
+                   $"{Float(obj["max_creative_reach"]?.Value<float>() ?? 5f)}, " +
+                   $"{Float(obj["hitbox_margin"]?.Value<float>() ?? 0.3f)}, " +
+                   $"{Float(obj["mob_factor"]?.Value<float>() ?? 1f)})";
+        } },
+        { "PiercingWeaponComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            return $"new PiercingWeaponComponent.Data({Bool(obj["deals_knockback"], true)}, " +
+                   $"{Bool(obj["dismounts"], false)}, {SoundHolder(obj["sound"])}, {SoundHolder(obj["hit_sound"])})";
+        } },
+        { "KineticWeaponComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            return $"new KineticWeaponComponent.Data({obj["contact_cooldown_ticks"]?.Value<int>() ?? 10}, " +
+                   $"{obj["delay_ticks"]?.Value<int>() ?? 0}, " +
+                   $"{KineticCondition(obj["dismount_conditions"])}, " +
+                   $"{KineticCondition(obj["knockback_conditions"])}, " +
+                   $"{KineticCondition(obj["damage_conditions"])}, " +
+                   $"{Float(obj["forward_movement"]?.Value<float>() ?? 0f)}, " +
+                   $"{Float(obj["damage_multiplier"]?.Value<float>() ?? 1f)}, " +
+                   $"{SoundHolder(obj["sound"])}, {SoundHolder(obj["hit_sound"])})";
+        } },
+        { "FireworksComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            IEnumerable<string> explosions = (obj["explosions"]?.ToObject<JArray>() ?? [])
+                .Select(explosion => FireworkExplosion(explosion.ToObject<JObject>()!));
+            return $"new FireworksComponent.Data({obj["flight_duration"]?.Value<int>() ?? 0}, " +
+                   $"[{string.Join(", ", explosions)}])";
+        } },
+        { "FireworkExplosionComponent.Data", token => FireworkExplosion(token.ToObject<JObject>()!) },
+        { "EntityData", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            string type = CodeGenUtils.NamespacedIdToPascalName(obj["id"]!.Value<string>()!);
+            // The type is the only key vanilla reports, and it travels beside the tag rather than in it.
+            return $"new EntityData(EntityType.{type}, new CompoundTag())";
+        } },
+        { "IItem[]", token => {
+            IEnumerable<string> items = token.ToObject<JArray>()!
+                .Select(item => CodeGenUtils.NamespacedIdToPascalName(item.ToObject<string>()!));
+            return $"new IItem[] {{ {string.Join(", ", items)} }}";
+        } },
+        { "Dictionary<string, string>", token => {
+            IEnumerable<string> properties = token.ToObject<JObject>()!
+                .Properties()
+                .Select(property => $"{{ \"{property.Name}\", \"{property.Value.Value<string>()}\" }}");
+            return $"new Dictionary<string, string> {{ {string.Join(", ", properties)} }}";
+        } },
+        // Reported empty on every item that has them, so they are left off rather than written out.
+        { "TextComponent[]", _ => null },
+        { "(IEnchantment, int)[]", _ => null },
+        { "ItemStack[]", _ => null },
+        { "Identifier[]", _ => null },
+        { "INbtTag", _ => null },
+        { "BannerPatternsComponent.Layer[]", _ => null },
+        { "BeesComponent.Occupant[]", _ => null },
+        { "SuspiciousStewEffectsComponent.Entry[]", _ => null },
+        { "WritableBookContentComponent.Data", _ => null },
+        { "PotionContentsComponent.Data", _ => null },
+        { "Dictionary<Identifier, string>", _ => null },
+        { "Dictionary<string, MapDecorationsComponent.Entry>", _ => null }
+    };
+
+    /// <summary>
+    /// Overrides for components whose reported shape does not follow from their value type, keyed by
+    /// component id rather than by that type.
+    /// </summary>
+    private static readonly Dictionary<string, Func<JToken, string?>> DeserialisersById = new() {
+        { "minecraft:enchantable", token => token["value"]!.Value<int>().ToString() },
+        { "minecraft:repairable", token => GetIdSet(token["items"]!, id => id) },
+        { "minecraft:damage_resistant", token => DamageTypeSet(token["types"]!) },
+        { "minecraft:glider", _ => "GliderComponent.Value" },
+        { "minecraft:death_protection", token => {
+            IEnumerable<string> effects = (token["death_effects"]?.ToObject<JArray>() ?? [])
+                .Select(ConsumeEffect);
+            return $"new IConsumeEffect[] {{ {string.Join(", ", effects)} }}";
         } }
     };
 
@@ -540,6 +595,90 @@ public static class Item {
     /// <summary>A <c>Holder&lt;SoundEvent&gt;</c> field that may be absent, as a sound registry entry.</summary>
     private static string Sound(JToken? token) {
         return token == null ? "null" : "SoundType." + SoundCodeGen.GetVariableName(token.ToObject<string>()!);
+    }
+
+    /// <summary>
+    /// The same field where the component holds the whole <c>Or</c> rather than the registry entry.
+    /// </summary>
+    private static string SoundHolder(JToken? token) {
+        return token == null
+            ? "null"
+            : $"Or<ISoundType, SoundEvent>.FromValue1(SoundType.{SoundCodeGen.GetVariableName(token.ToObject<string>()!)})";
+    }
+
+    private static string Bool(JToken? token, bool fallback) {
+        return (token?.Value<bool>() ?? fallback) ? "true" : "false";
+    }
+
+    private static string KineticCondition(JToken? token) {
+        if (token == null) {
+            return "null";
+        }
+
+        JObject obj = token.ToObject<JObject>()!;
+        return $"new KineticWeaponComponent.Condition({obj["max_duration_ticks"]!.Value<int>()}, " +
+               $"{Float(obj["min_speed"]?.Value<float>() ?? 0f)}, " +
+               $"{Float(obj["min_relative_speed"]?.Value<float>() ?? 0f)})";
+    }
+
+    private static string FireworkExplosion(JObject obj) {
+        string shape = CodeGenUtils.NamespacedIdToPascalName(obj["shape"]!.Value<string>()!);
+        string Colors(string key) {
+            IEnumerable<string> colors = (obj[key]?.ToObject<JArray>() ?? [])
+                .Select(colour => colour.Value<int>().ToString());
+            return $"[{string.Join(", ", colors)}]";
+        }
+
+        return $"new FireworkExplosionComponent.Data(FireworkShape.{shape}, {Colors("colors")}, " +
+               $"{Colors("fade_colors")}, {Bool(obj["has_trail"], false)}, {Bool(obj["has_twinkle"], false)})";
+    }
+
+    /// <summary>
+    /// One entry of a consume effect list, which both <c>consumable</c> and <c>death_protection</c>
+    /// hold. An unknown type throws rather than being dropped, since a silently missing effect is an
+    /// item that quietly stops working.
+    /// </summary>
+    private static string ConsumeEffect(JToken token) {
+        string type = token["type"]?.Value<string>() ?? throw new Exception("Consume effect type not found");
+        switch (type) {
+            case "minecraft:apply_effects": {
+                float probability = token["probability"]?.Value<float>() ?? 1.0f;
+                JArray effects = token["effects"]?.ToObject<JArray>() ?? throw new Exception("Consume effect effects not found");
+                List<string> inlineEffectDefs = [];
+                foreach (JToken effect in effects) {
+                    string potionTypeEffectGuess = CodeGenUtils.NamespacedIdToPascalName(effect["id"]!.ToObject<string>()!);
+                    sbyte amplifier = effect["amplifier"]?.Value<sbyte>() ?? 0;
+                    int duration = effect["duration"]?.Value<int>() ?? 0;
+                    // A hidden effect is what an entity falls back to when a stronger instance of the
+                    // same effect runs out, so an item's defaults never carry one.
+                    inlineEffectDefs.Add($"new PotionEffect(PotionEffectType.{potionTypeEffectGuess}, {amplifier}, {duration}, " +
+                                         $"{Bool(effect["ambient"], false)}, {Bool(effect["show_particles"], true)}, " +
+                                         $"{Bool(effect["show_icon"], true)})");
+                }
+
+                return $"ConsumeEffect.ApplyEffects with {{ Effects = [{string.Join(", ", inlineEffectDefs)}], " +
+                       $"Probability = {Float(probability)} }}";
+            }
+
+            case "minecraft:play_sound": {
+                string soundId = token["sound"]?.ToObject<string>() ?? throw new Exception("Consume effect sound not found");
+                return $"ConsumeEffect.PlaySound with {{ Sound = new SoundEvent(SoundType.{SoundCodeGen.GetVariableName(soundId)}, null) }}";
+            }
+
+            case "minecraft:clear_all_effects":
+                return "ConsumeEffect.ClearAllEffects";
+
+            case "minecraft:teleport_randomly":
+                return "ConsumeEffect.TeleportRandomly";
+
+            case "minecraft:remove_effects": {
+                string effect = token["effects"]?.ToObject<string>() ?? throw new Exception("Consume effect effects not found");
+                return $"ConsumeEffect.RemoveEffects with {{ Effects = new IdSet.Tag(\"{effect}\") }}";
+            }
+
+            default:
+                throw new Exception("Unsupported consume effect type: " + type);
+        }
     }
 
     private static string ParseOptionalFloat(JToken? obj) {

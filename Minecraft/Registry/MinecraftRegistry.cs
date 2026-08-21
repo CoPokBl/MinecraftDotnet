@@ -15,6 +15,8 @@ public class MinecraftRegistry {
     public SoundTypeRegistry SoundTypes { get; set; } = new();
     public InventoryTypeRegistry InventoryTypes { get; set; } = new();
     public PotionEffectTypeRegistry PotionEffectTypes { get; set; } = new();
+    public PotionRegistry Potions { get; set; } = new();
+    public VillagerTypeRegistry VillagerTypes { get; set; } = new();
     public ConsumeEffectRegistry ConsumeEffects { get; set; } = new();
     public BlockEntityTypeRegistry BlockEntityTypes { get; set; } = new();
     public AttributeRegistry Attributes { get; set; } = new();
@@ -79,6 +81,8 @@ public class MinecraftRegistry {
         SoundTypes,
         InventoryTypes,
         PotionEffectTypes,
+        Potions,
+        VillagerTypes,
         ConsumeEffects,
         BlockEntityTypes,
         Attributes,
@@ -133,6 +137,8 @@ public class MinecraftRegistry {
             SoundTypes = SoundTypes.Clone(),
             InventoryTypes = InventoryTypes.Clone(),
             PotionEffectTypes = PotionEffectTypes.Clone(),
+            Potions = Potions.Clone(),
+            VillagerTypes = VillagerTypes.Clone(),
             ConsumeEffects = ConsumeEffects.Clone(),
             BlockEntityTypes = BlockEntityTypes.Clone(),
             Attributes = Attributes.Clone(),

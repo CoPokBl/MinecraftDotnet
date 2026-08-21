@@ -345,6 +345,15 @@ public class DataReader(byte[] data) : Stream {
             : Or<TP, T>.FromValue1(readerAdapter1.Invoke(id - 1));
     }
     
+    /// <summary>
+    /// Reads a vanilla <c>Holder</c>: a zero means the value follows inline, anything else is a
+    /// registry protocol id offset by one.
+    /// </summary>
+    public T ReadHolder<T>(Func<int, T> byId, Func<DataReader, T> inlineReader) {
+        int id = ReadVarInt();
+        return id == 0 ? inlineReader.Invoke(this) : byId.Invoke(id - 1);
+    }
+
     public T[] ReadPrefixedArray<T>(Func<DataReader, T> readerAdapter) {
         return ReadArray(ReadVarInt(), readerAdapter);
     }

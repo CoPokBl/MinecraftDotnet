@@ -1,5 +1,6 @@
 using ManagedServer.Features.Impl;
 using ManagedServer.Recipes;
+using Minecraft.Data.Components.Types;
 using ManagedServer.Testing.Terrain;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Recipes;
@@ -30,7 +31,7 @@ public class VanillaRecipeLoadTest {
 
         Assert.Multiple(() => {
             Assert.That(recipes.Recipes.OfType<ShapedRecipe>().Count(), Is.EqualTo(733));
-            Assert.That(recipes.Recipes.OfType<ShapelessRecipe>().Count(), Is.EqualTo(306));
+            Assert.That(recipes.Recipes.OfType<ShapelessRecipe>().Count(), Is.EqualTo(323));
             Assert.That(recipes.Recipes.OfType<TransmuteRecipe>().Count(), Is.EqualTo(33));
         });
     }
@@ -47,7 +48,6 @@ public class VanillaRecipeLoadTest {
             .ToArray();
 
         Assert.That(reasons, Is.EqualTo(new[] {
-            "data component minecraft:suspicious_stew_effects",
             "recipe type minecraft:blasting",
             "recipe type minecraft:campfire_cooking",
             "recipe type minecraft:crafting_decorated_pot",
@@ -82,6 +82,27 @@ public class VanillaRecipeLoadTest {
                 Is.LessThan(0),
                 $"{recipes[i - 1].Id} should sort before {recipes[i].Id}");
         }
+    }
+
+    /// <summary>
+    /// A result's data components are read, not merely tolerated. Wither rose stew is the case: the
+    /// recipe declines whole if the component has no persistent form, so a recipe that loads proves
+    /// nothing on its own, and a result that carries the wrong effect is what this catches.
+    /// </summary>
+    [Test]
+    public void ReadsDataComponentsOnAResult() {
+        ShapelessRecipe recipe = Load().Recipes
+            .OfType<ShapelessRecipe>()
+            .First(candidate => candidate.Id == (Identifier)"minecraft:suspicious_stew_from_wither_rose");
+
+        SuspiciousStewEffectsComponent.Entry[] effects =
+            recipe.Result.Get(DataComponent.SuspiciousStewEffects);
+
+        Assert.That(effects, Has.Length.EqualTo(1));
+        Assert.Multiple(() => {
+            Assert.That(effects[0].Effect.Identifier, Is.EqualTo((Identifier)"minecraft:wither"));
+            Assert.That(effects[0].Duration, Is.EqualTo(140));
+        });
     }
 
     /// <summary>Every ingredient resolved to something, so no recipe is unmatchable.</summary>

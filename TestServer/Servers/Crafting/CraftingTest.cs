@@ -2,6 +2,7 @@ using ManagedServer;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features.Impl;
+using ManagedServer.Inventories;
 using ManagedServer.Recipes;
 using ManagedServer.Terrain.Data;
 using ManagedServer.Features;
@@ -32,7 +33,7 @@ public static class CraftingTest {
     private static readonly Vec3<double> SpawnPos = new(0.5, CraftingMapProvider.FloorY + 1, 0.5);
 
     /// <summary>Enough of the common ingredients to reach most of the recipe tree.</summary>
-    private static readonly ItemStack[] Kit = [
+    private static readonly ItemStack[] Hotbar = [
         new(Item.OakLog, 64),
         new(Item.OakPlanks, 64),
         new(Item.Stick, 64),
@@ -40,8 +41,19 @@ public static class CraftingTest {
         new(Item.IronIngot, 64),
         new(Item.Diamond, 64),
         new(Item.Redstone, 64),
-        new(Item.WaterBucket),
-        new(Item.Wheat, 64)
+        new(Item.Wheat, 64),
+        new(Item.Sugar, 64)
+    ];
+
+    /// <summary>
+    /// The rest of a cake, which is the demo's crafting remainder: its three buckets come back. Three
+    /// separate stacks of milk, because a bucket does not stack and the recipe wants three at once.
+    /// </summary>
+    private static readonly ItemStack[] Pantry = [
+        new(Item.MilkBucket),
+        new(Item.MilkBucket),
+        new(Item.MilkBucket),
+        new(Item.Egg, 16)
     ];
 
     public static async Task Start() {
@@ -93,8 +105,12 @@ public static class CraftingTest {
     }
 
     private static void GiveKit(Player player) {
-        for (int slot = 0; slot < Kit.Length; slot++) {
-            player.Inventory.SetHotbarItem(slot, Kit[slot]);
+        for (int slot = 0; slot < Hotbar.Length; slot++) {
+            player.Inventory.SetHotbarItem(slot, Hotbar[slot]);
+        }
+
+        for (int slot = 0; slot < Pantry.Length; slot++) {
+            player.Inventory[PlayerInventory.MainInventorySlots[slot]] = Pantry[slot];
         }
     }
 
@@ -104,7 +120,8 @@ public static class CraftingTest {
         Tell(player, "&7Your own &f2x2&7 is in your inventory screen; the &f3x3&7 is the table in front of you.");
         Tell(player, "&7Left click the result to take one, shift click to take the lot, a number key");
         Tell(player, "&7to send one to that hotbar slot, Q to throw it.");
-        Tell(player, "&7Try a &fwater bucket&7 and &fwheat&7 in the table: the bucket comes back empty.");
+        Tell(player, "&7Try a &fcake&7 in the table: &fmilk&7 across the top, &fsugar egg sugar&7, then");
+        Tell(player, "&f  wheat&7 across the bottom. The three buckets come back to you empty.");
         Tell(player, "&7Say &fkit&7 for more ingredients.");
         Tell(player, "");
     }

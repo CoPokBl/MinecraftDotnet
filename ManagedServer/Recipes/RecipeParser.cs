@@ -1,4 +1,6 @@
 using System.Text.Json;
+using Minecraft.Data.Components;
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Data.Recipes;
 using Minecraft.Registry;
 using Minecraft.Schemas;
@@ -98,17 +100,12 @@ public static class RecipeParser {
                     throw new UnportedRecipeException(id, $"recipe type {type}");
             }
         } catch (UnportedComponentException e) {
-            declined = new UnportedRecipe(id, type, e.Message);
+            // The reason is the grouping key a consumer counts by, so it names the component and
+            // nothing else; the exception's own message carries the detail.
+            declined = new UnportedRecipe(id, type, $"data component {e.Component}");
             return null;
         }
     }
-
-    /// <summary>
-    /// A result naming a data component with no port. Its own type so it can be caught where the
-    /// recipe is, rather than confused with a field the parser failed to read.
-    /// </summary>
-    private sealed class UnportedComponentException(string component)
-        : InvalidOperationException($"data component {component}");
 
     // ------------------------------------------------------------------ shaped
 
@@ -223,8 +220,8 @@ public static class RecipeParser {
     }
 
     /// <summary>
-    /// The result stack. A component with no port declines the whole recipe rather than producing a
-    /// stack missing it.
+    /// The result stack. A component with no persistent form declines the whole recipe rather than
+    /// producing a stack missing it.
     /// </summary>
     private static ItemStack Result(JsonElement recipe, Identifier id, MinecraftRegistry registry) {
         if (!recipe.TryGetProperty("result", out JsonElement result)) {
@@ -237,14 +234,27 @@ public static class RecipeParser {
 
         Consumed(result, id, "id", "count", "components");
 
-        if (result.TryGetProperty("components", out JsonElement components)) {
-            foreach (JsonProperty component in components.EnumerateObject()) {
-                throw new UnportedComponentException(component.Name);
-            }
+        ItemStack stack = new(registry.Items[ItemId(String(result, "id")!, id, registry)],
+            Int(result, "count", 1));
+
+        if (!result.TryGetProperty("components", out JsonElement components)) {
+            return stack;
         }
 
-        return new ItemStack(registry.Items[ItemId(String(result, "id")!, id, registry)],
-            Int(result, "count", 1));
+        foreach (JsonProperty component in components.EnumerateObject()) {
+            Identifier name = component.Name;
+
+            // Checked rather than indexed, or a component this build has never heard of arrives as a
+            // missing key rather than as the countable decline it is.
+            if (!registry.DataComponents.Contains(name)) {
+                throw new UnportedComponentException(name, "no component by that name.");
+            }
+
+            IDataComponent type = registry.DataComponents[name];
+            stack = stack.With(type, type.FromNbt(JsonNbt.FromJson(component.Value, name), registry));
+        }
+
+        return stack;
     }
 
     private static Identifier ItemId(string name, Identifier id, MinecraftRegistry registry) {
