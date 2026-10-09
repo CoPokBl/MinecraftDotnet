@@ -49,4 +49,8 @@ internal sealed class WorldTerrainHost(World world, ChunkStore chunks) : ITerrai
     public void NotifyChunkChanged(Vec2<int> chunk) {
         world.ResendChunk(chunk);
     }
+
+    public void ReportError(Exception error) {
+        world.Server.HandleError(error);
+    }
 }

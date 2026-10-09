@@ -46,6 +46,13 @@ public interface ITerrainHost {
     void NotifyChunkChanged(Vec2<int> chunk) { }
 
     /// <summary>
+    /// Something went wrong that the provider recovered from and carried on past, which whoever runs
+    /// the world should still hear about. Defaulted, so a host with nowhere to report implements
+    /// nothing.
+    /// </summary>
+    void ReportError(Exception error) { }
+
+    /// <summary>
     /// Raised once per chunk, off the tick thread, <b>strictly after</b> it becomes visible to
     /// <see cref="TryApplyToLoadedChunk"/>.
     /// </summary>

@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using ManagedServer.Entities;
 using ManagedServer.Entities.Types;
@@ -10,6 +11,7 @@ using ManagedServer.Fluids;
 using ManagedServer.Pathfinding;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds.Lighting;
+using ManagedServer.Worlds.Saving;
 using Minecraft;
 using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Data.Blocks;
@@ -63,6 +65,21 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
     public Identifier DimensionId { get; }
     public IDimensionType Dimension => Server.Registry.DimensionTypes[DimensionId];
     public bool Immutable { get; set; }
+
+    /// <summary>
+    /// Where <see cref="SaveAsync(SaveOptions?)"/> writes, and the store the dirty flags answer for.
+    /// Null until a consumer sets it, however the world was made.
+    /// </summary>
+    /// <remarks>
+    /// Never taken from the terrain provider, even one that could be written to. A provider is chosen
+    /// for where terrain comes from: a map loader shared between a game's rounds, or a read only copy of
+    /// someone's world, would otherwise be written into by the first save policy registered on the
+    /// server.
+    /// <p/>
+    /// Holding one does not make the world save. A save happens when a consumer asks, or when a feature
+    /// registered to ask on their behalf does.
+    /// </remarks>
+    public IChunkSink? Sink { get; set; }
 
     /// <summary>
     /// <c>Level.getRandom</c>, the world's own source. What anything not acting on behalf of an
@@ -153,6 +170,8 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
     // Chunks, their loading, and the packet each one currently serialises to.
     private readonly ChunkStore _chunks;
+
+    private readonly Lock _saveLock = new();
 
     /// <summary>
     /// The viewport offsets ordered by distance from the centre, computed once because the view
@@ -966,6 +985,137 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
 
     private ChunkData? TryGetLoadedChunk(Vec2<int> pos) {
         return _chunks.TryGet(pos);
+    }
+
+    #endregion
+
+    #region saving
+
+    /// <summary>
+    /// Raised off the tick when a chunk's own contents change. What an incremental saver watches, as
+    /// opposed to sweeping the loaded set on a timer.
+    /// </summary>
+    /// <remarks>
+    /// A block write only, never a light change in a neighbour, and never a chunk arriving. It fires
+    /// once per <see cref="SetBlock(Vec3{int},IBlock,IBlockEntityType?,INbtTag?,int,int)"/> and so on
+    /// the thread that made the write; a handler doing anything slow has to hand it off.
+    /// </remarks>
+    public event Action<Vec2<int>>? ChunkChanged {
+        add => _chunks.ChunkChanged += value;
+        remove => _chunks.ChunkChanged -= value;
+    }
+
+    /// <summary>
+    /// Whether this chunk has been written to, or generated, since <see cref="Sink"/> last stored it.
+    /// </summary>
+    public bool IsChunkDirty(Vec2<int> pos) => _chunks.IsDirty(pos);
+
+    /// <summary>Every chunk currently in memory.</summary>
+    public IEnumerable<Vec2<int>> LoadedChunks() => _chunks.LoadedChunks();
+
+    /// <summary>
+    /// Writes this world's chunks to <see cref="Sink"/>.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The world has no sink to write to.</exception>
+    public Task<SaveReport> SaveAsync(SaveOptions? options = null) {
+        IChunkSink sink = Sink ?? throw new InvalidOperationException(
+            "This world has no Sink, so there is nowhere to save it. Set World.Sink, register a " +
+            "WorldPersistenceFeature, or pass a sink to the other overload.");
+
+        return SaveAsync(sink, options);
+    }
+
+    /// <summary>
+    /// Writes this world's chunks to <paramref name="sink"/>.
+    /// </summary>
+    /// <remarks>
+    /// Every chunk goes over as a snapshot, which is the same immutable copy the send path builds, so
+    /// capture costs nothing for a chunk anybody has been sent recently and encoding never holds a
+    /// lock against the tick.
+    /// <p/>
+    /// The tick is not stopped, so this is consistent per chunk and not across the world: a chunk is
+    /// whatever it was when its snapshot was taken. A write landing while its own chunk is being
+    /// encoded leaves that chunk dirty and it goes out again on the next save rather than being lost.
+    /// <p/>
+    /// Only a save to <see cref="Sink"/> marks chunks clean. A copy made to anywhere else leaves them
+    /// owed to the sink, which would otherwise never be sent what the copy took.
+    /// <p/>
+    /// One save of a world runs at a time and a second waits for the first. Two overlapping would each
+    /// mark a chunk against its own snapshot in whichever order they finished, and could leave the
+    /// older one on disk with the chunk marked clean.
+    /// </remarks>
+    public Task<SaveReport> SaveAsync(IChunkSink sink, SaveOptions? options = null) {
+        return Task.Run(() => Save(sink, options));
+    }
+
+    /// <summary>
+    /// <see cref="SaveAsync(IChunkSink,SaveOptions?)"/> without handing the work off, for a shutdown
+    /// path that has to finish before the process goes away.
+    /// </summary>
+    public SaveReport Save(IChunkSink sink, SaveOptions? options = null) {
+        options ??= SaveOptions.Default;
+
+        lock (_saveLock) {
+            return SaveCore(sink, ReferenceEquals(sink, Sink), options);
+        }
+    }
+
+    private SaveReport SaveCore(IChunkSink sink, bool marksSaved, SaveOptions options) {
+        long started = Stopwatch.GetTimestamp();
+        List<Vec2<int>> candidates = [];
+        int skipped = 0;
+
+        foreach (Vec2<int> pos in _chunks.LoadedChunks()) {
+            if (options.Chunks?.Invoke(pos) == false || (options.Scope == SaveScope.Changed && !_chunks.IsDirty(pos))) {
+                skipped++;
+                continue;
+            }
+
+            candidates.Add(pos);
+        }
+
+        ConcurrentBag<ChunkSaveFailure> failures = [];
+        int written = 0;
+
+        // A failure is recorded and the sweep goes on, so one unwritable chunk costs that chunk rather
+        // than everything after it. StopOnError instead lets it out of here, and out of the task.
+        ParallelOptions parallel = new() { MaxDegreeOfParallelism = Math.Max(1, options.MaxConcurrency) };
+        Parallel.ForEach(candidates, parallel, pos => {
+            try {
+                // Marked with the version the snapshot holds rather than the one now, so a block placed
+                // while this chunk was being encoded leaves it dirty for the next pass.
+                ChunkData? snapshot = _chunks.SnapshotFor(pos, out long version);
+                if (snapshot == null) {
+                    return;
+                }
+
+                sink.PutChunk(snapshot);
+                if (marksSaved) {
+                    _chunks.MarkSaved(pos, version);
+                }
+                Interlocked.Increment(ref written);
+            } catch (Exception e) {
+                failures.Add(new ChunkSaveFailure(pos, e));
+                if (options.StopOnError) {
+                    throw;
+                }
+            }
+        });
+
+        if (options.Flush) {
+            try {
+                sink.Flush();
+            } catch (Exception e) {
+                failures.Add(new ChunkSaveFailure(null, e));
+            }
+        }
+
+        return new SaveReport {
+            Written = written,
+            Skipped = skipped,
+            Duration = Stopwatch.GetElapsedTime(started),
+            Failures = failures.ToArray()
+        };
     }
 
     #endregion

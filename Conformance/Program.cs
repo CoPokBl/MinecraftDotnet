@@ -136,6 +136,14 @@ if (heightmapArg >= 0 && heightmapArg + 1 < args.Length) {
     Console.WriteLine($"Wrote {HeightmapSamples.SceneCount} heightmap scenes to {args[heightmapArg + 1]}");
 }
 
+// A world directory written through AnvilLoader, for Conformance/anvil.sh, which opens it with
+// vanilla's own RegionFile and chunk parser.
+int anvilArg = Array.IndexOf(args, "--anvil");
+if (anvilArg >= 0 && anvilArg + 2 < args.Length) {
+    File.WriteAllText(args[anvilArg + 2], AnvilSamples.Write(args[anvilArg + 1]));
+    Console.WriteLine($"Wrote {AnvilSamples.ChunkCount} chunks to {args[anvilArg + 1]}");
+}
+
 // The datapack driven registries travel as NBT the client parses with the element codec rather
 // than a stream codec, so decoding the packet they arrive in proves nothing about them.
 // RegistryHarness.java runs those codecs. See Conformance/registries.sh.

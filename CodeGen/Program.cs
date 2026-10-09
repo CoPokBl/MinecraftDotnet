@@ -213,6 +213,7 @@ Directory.SetCurrentDirectory(codeDir);
 
 StringBuilder registryEntries = new();
 
+RunFileStep("Game Version", GameVersionCodeGen.GenerateGameVersionCode);
 RunStep("Particles", ParticleCodeGen.CreateParticleEntries);
 RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
 RunFileStep("Block Light", BlockLightCodeGen.GenerateBlockLightCode);

@@ -59,8 +59,32 @@ internal sealed class ChunkStore {
         /// </summary>
         public long Version;
 
+        /// <summary>
+        /// Bumped only by writes to this chunk's own contents, which is what persistence keys off.
+        /// <p/>
+        /// <see cref="Version"/> cannot be used for it: a neighbour loading moves the light over this
+        /// chunk and so moves that counter, which would mark most of a freshly generated world as
+        /// changed and save terrain identical to what the generator would produce.
+        /// </summary>
+        public long ContentVersion;
+
+        /// <summary>
+        /// The <see cref="ContentVersion"/> a sink last took. Negative until something has stored this
+        /// chunk, so a generated chunk starts out owed a save and a chunk read back from storage does
+        /// not.
+        /// </summary>
+        public long SavedVersion = -1;
+
         public ChunkData? Snapshot;
         public long SnapshotVersion = -1;
+
+        /// <summary>
+        /// The <see cref="ContentVersion"/> <see cref="Snapshot"/> was taken at. Matching
+        /// <see cref="SnapshotVersion"/> alone is not enough: a write bumps the content version under the
+        /// lock and <see cref="Version"/> only after releasing it, so in between, a snapshot that matches
+        /// the version is from before the write.
+        /// </summary>
+        public long SnapshotContentVersion = -1;
 
         public Built? Built;
     }
@@ -80,6 +104,12 @@ internal sealed class ChunkStore {
     /// this into light corrections for the chunks around it.
     /// </summary>
     public event Action<Vec2<int>>? ChunkLoaded;
+
+    /// <summary>
+    /// Raised when a chunk's own contents change, which is the signal persistence runs on. Inert
+    /// with nothing subscribed, and never raised for a light change in a neighbour.
+    /// </summary>
+    public event Action<Vec2<int>>? ChunkChanged;
 
     public ChunkStore(ITerrainProvider provider, ILightingProvider lighting, MinecraftRegistry registry,
         int worldHeight, int minY, bool hasSkyLight, Action<Exception?> onError,
@@ -163,7 +193,7 @@ internal sealed class ChunkStore {
     private void StartLoad(ChunkEntry entry) {
         _generation.Post(() => {
             try {
-                entry.Completion.SetResult(LoadCore(entry.Position));
+                entry.Completion.SetResult(LoadCore(entry.Position, entry));
             } catch (Exception e) {
                 // Dropped from the store so a later request retries rather than inheriting the
                 // failure for the lifetime of the world.
@@ -181,9 +211,15 @@ internal sealed class ChunkStore {
         });
     }
 
-    private ChunkData LoadCore(Vec2<int> pos) {
+    private ChunkData LoadCore(Vec2<int> pos, ChunkEntry entry) {
         ChunkData data = new(_worldHeight) { ChunkX = pos.X, ChunkZ = pos.Y, MinY = _minY };
-        _provider.GetChunk(ref data);
+
+        // A store says whether it actually had the chunk, and a chunk it did not have is terrain
+        // nothing has written down. That is the same state a block write leaves a chunk in, so a
+        // generated chunk is picked up by the next pass over changed chunks without asking.
+        bool stored = _provider is ITerrainStore store ? store.TryGetChunk(ref data) : Generate(ref data);
+        entry.SavedVersion = stored ? 0 : -1;
+
         if (data == null!) {
             throw new InvalidOperationException($"Terrain provider returned null for chunk {pos}.");
         }
@@ -195,6 +231,12 @@ internal sealed class ChunkStore {
 
         data.PackData(_registry);
         return data;
+    }
+
+    /// <summary>A plain provider has no way to say it had nothing, so nothing it makes counts as stored.</summary>
+    private bool Generate(ref ChunkData data) {
+        _provider.GetChunk(ref data);
+        return false;
     }
 
     // ── mutation ────────────────────────────────────────────────────────────
@@ -221,9 +263,66 @@ internal sealed class ChunkStore {
 
         lock (entry.Write) {
             mutate(data);
+            Interlocked.Increment(ref entry.ContentVersion);
         }
 
         InvalidateLightAround(pos);
+
+        try {
+            ChunkChanged?.Invoke(pos);
+        } catch (Exception e) {
+            _onError(e);
+        }
+    }
+
+    // -- persistence ---------------------------------------------------------
+
+    /// <summary>Chunks that have been written to, or generated, since anything last stored them.</summary>
+    public bool IsDirty(Vec2<int> pos) {
+        return _entries.TryGetValue(pos, out ChunkEntry? entry)
+               && entry.Load.IsCompletedSuccessfully
+               && Interlocked.Read(ref entry.ContentVersion) != Interlocked.Read(ref entry.SavedVersion);
+    }
+
+    public IEnumerable<Vec2<int>> LoadedChunks() {
+        foreach (KeyValuePair<Vec2<int>, ChunkEntry> pair in _entries) {
+            if (pair.Value.Load.IsCompletedSuccessfully) {
+                yield return pair.Key;
+            }
+        }
+    }
+
+    /// <summary>
+    /// A chunk as it stands, safe to serialise from another thread, together with the content version
+    /// it represents.
+    /// </summary>
+    /// <remarks>
+    /// The same snapshot the send path builds, so a chunk anybody has been sent recently costs nothing
+    /// to capture. Never save the live chunk: <c>ChunkSection.Palette</c>'s getter repacks in place, so
+    /// a writer racing an encode can null the array halfway through it.
+    /// </remarks>
+    public ChunkData? SnapshotFor(Vec2<int> pos, out long contentVersion) {
+        contentVersion = 0;
+        if (!_entries.TryGetValue(pos, out ChunkEntry? entry) || !entry.Load.IsCompletedSuccessfully) {
+            return null;
+        }
+
+        return SnapshotOf(entry, out _, out contentVersion);
+    }
+
+    /// <summary>
+    /// Records that a sink has taken this chunk as of <paramref name="contentVersion"/>.
+    /// </summary>
+    /// <remarks>
+    /// The version is the one the snapshot was taken at rather than the one now, so a write that
+    /// landed while the chunk was being encoded leaves it dirty and is saved by the next pass. Marking
+    /// it clean against the current version would drop that write until something touched the chunk
+    /// again.
+    /// </remarks>
+    public void MarkSaved(Vec2<int> pos, long contentVersion) {
+        if (_entries.TryGetValue(pos, out ChunkEntry? entry)) {
+            Interlocked.Exchange(ref entry.SavedVersion, contentVersion);
+        }
     }
 
     /// <summary>
@@ -273,7 +372,7 @@ internal sealed class ChunkStore {
         }
 
         lock (entry.Build) {
-            ChunkData snapshot = SnapshotOf(entry, out long version);
+            ChunkData snapshot = SnapshotOf(entry, out long version, out _);
 
             built = entry.Built;
             if (built != null && built.Version == version) {
@@ -308,7 +407,7 @@ internal sealed class ChunkStore {
         if (!_entries.TryGetValue(pos, out ChunkEntry? entry) || !entry.Load.IsCompletedSuccessfully) {
             return null;
         }
-        return SnapshotOf(entry, out _);
+        return SnapshotOf(entry, out _, out _);
     }
 
     /// <remarks>
@@ -319,13 +418,17 @@ internal sealed class ChunkStore {
     /// reading an array the other has already nulled. Packed here, under the same lock that guards
     /// the clone, every later reader only ever sees an immutable palette.
     /// </remarks>
-    private ChunkData SnapshotOf(ChunkEntry entry, out long version) {
+    private ChunkData SnapshotOf(ChunkEntry entry, out long version, out long contentVersion) {
         ChunkData live = entry.Load.Result;
 
         lock (entry.Write) {
             long current = Interlocked.Read(ref entry.Version);
-            if (entry.Snapshot != null && entry.SnapshotVersion == current) {
-                version = current;
+            long content = Interlocked.Read(ref entry.ContentVersion);
+            version = current;
+            contentVersion = content;
+
+            if (entry.Snapshot != null && entry.SnapshotVersion == current
+                && entry.SnapshotContentVersion == content) {
                 return entry.Snapshot;
             }
 
@@ -333,7 +436,7 @@ internal sealed class ChunkStore {
             snapshot.PackData(_registry);
             entry.Snapshot = snapshot;
             entry.SnapshotVersion = current;
-            version = current;
+            entry.SnapshotContentVersion = content;
             return snapshot;
         }
     }
