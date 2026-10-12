@@ -13,7 +13,8 @@ public record DyedColorComponent() : IDataComponent<TextColor> {
     public override NbtCodec<TextColor>? Codec => Persistent;
     private static readonly NbtCodec<TextColor> Persistent = new(
         (val, _) => new IntegerTag(val.ToDecimal()),
-        (tag, _) => TextColor.FromDecimal(tag.GetInteger()));
+        // TextColor has no alpha, which the vector form sets.
+        (tag, _) => TextColor.FromDecimal(PackedColor.RgbFromNbt(tag) & 0xFFFFFF));
     public override DataWriter WriteData(TextColor val, DataWriter writer, MinecraftRegistry registry) {
         return writer.WriteInteger(val.ToDecimal());
     }

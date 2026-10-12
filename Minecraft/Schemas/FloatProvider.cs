@@ -28,24 +28,24 @@ public abstract record FloatProvider {
 
     public static FloatProvider FromNbt(INbtTag tag) {
         if (tag is not CompoundTag compound) {
-            return new Constant(tag.GetFloat());
+            return new Constant(tag.AsFloat());
         }
 
         Identifier type = compound["type"]!.GetString();
         return type.ToString() switch {
-            "minecraft:constant" => new Constant(compound["value"]!.GetFloat()),
+            "minecraft:constant" => new Constant(compound["value"]!.AsFloat()),
             "minecraft:uniform" => new Uniform(
-                compound["min_inclusive"]!.GetFloat(),
-                compound["max_exclusive"]!.GetFloat()),
+                compound["min_inclusive"]!.AsFloat(),
+                compound["max_exclusive"]!.AsFloat()),
             "minecraft:clamped_normal" => new ClampedNormal(
-                compound["mean"]!.GetFloat(),
-                compound["deviation"]!.GetFloat(),
-                compound["min"]!.GetFloat(),
-                compound["max"]!.GetFloat()),
+                compound["mean"]!.AsFloat(),
+                compound["deviation"]!.AsFloat(),
+                compound["min"]!.AsFloat(),
+                compound["max"]!.AsFloat()),
             "minecraft:trapezoid" => new Trapezoid(
-                compound["min"]!.GetFloat(),
-                compound["max"]!.GetFloat(),
-                compound["plateau"]!.GetFloat()),
+                compound["min"]!.AsFloat(),
+                compound["max"]!.AsFloat(),
+                compound["plateau"]!.AsFloat()),
             _ => throw new ArgumentException($"Unknown float provider type {type}", nameof(tag))
         };
     }

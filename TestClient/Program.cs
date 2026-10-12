@@ -18,6 +18,18 @@ using TestClient;
 // ClientBoundStatusResponsePacket status = await ServerPinger.QueryServer("mc.emortal.dev");
 // Console.WriteLine($"Description: {status.Description!.ToJsonString()}");
 
+if (args.Length > 0 && args[0] == "movement") {
+    return await MovementScenario.Run(args.Skip(1).ToArray());
+}
+
+if (args.Length > 0 && args[0] == "interaction") {
+    return await InteractionScenario.Run(args.Skip(1).ToArray());
+}
+
+if (args.Length > 0 && args[0] == "inventory") {
+    return await InventoryScenario.Run(args.Skip(1).ToArray());
+}
+
 TestBot.Start().Wait();
 return 0;
 

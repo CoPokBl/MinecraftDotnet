@@ -36,31 +36,31 @@ public static class NbtCodecs {
     public static NbtCodec<int> Int() {
         return new NbtCodec<int>(
             (val, _) => new IntegerTag(val),
-            (tag, _) => tag.GetInteger());
+            (tag, _) => tag.AsInt());
     }
 
     public static NbtCodec<long> Long() {
         return new NbtCodec<long>(
             (val, _) => new LongTag(val),
-            (tag, _) => tag.GetLong());
+            (tag, _) => tag.AsLong());
     }
 
     public static NbtCodec<float> Float() {
         return new NbtCodec<float>(
             (val, _) => new FloatTag(val),
-            (tag, _) => tag.GetFloat());
+            (tag, _) => tag.AsFloat());
     }
 
     public static NbtCodec<double> Double() {
         return new NbtCodec<double>(
             (val, _) => new DoubleTag(val),
-            (tag, _) => tag.GetDouble());
+            (tag, _) => tag.AsDouble());
     }
 
     public static NbtCodec<bool> Bool() {
         return new NbtCodec<bool>(
             (val, _) => new BooleanTag(val),
-            (tag, _) => tag.GetBoolean());
+            (tag, _) => tag.AsBool());
     }
 
     public static NbtCodec<string> String() {
@@ -78,7 +78,7 @@ public static class NbtCodecs {
     public static NbtCodec<Identifier[]> Ids() {
         return new NbtCodec<Identifier[]>(
             (val, _) => new ListTag(val.Select(id => (INbtTag)new StringTag(id.ToString())).ToArray()),
-            (tag, _) => tag.GetList().Tags.ToArray().Select(id => (Identifier)id.GetString()).ToArray());
+            (tag, _) => tag.AsList().Select(id => (Identifier)id.GetString()).ToArray());
     }
 
     /// <summary>An enum by the name vanilla writes for it, with no key around it.</summary>
@@ -108,14 +108,14 @@ public static class NbtCodecs {
 
     public static NbtCodec<TextComponent> Text() {
         return new NbtCodec<TextComponent>(
-            (val, _) => val.SerialiseToTag(),
+            (val, _) => val.TryCollapseToString() is { } plain ? new StringTag(plain) : val.SerialiseToTag(),
             (tag, _) => TextComponent.FromTag(tag));
     }
 
     public static NbtCodec<TextComponent[]> TextList() {
         return new NbtCodec<TextComponent[]>(
             (val, _) => new ListTag(val.Select(text => (INbtTag)text.SerialiseToTag()).ToArray()),
-            (tag, _) => tag.GetList().Tags.ToArray().Select(TextComponent.FromTag).ToArray());
+            (tag, _) => tag.AsList().Select(TextComponent.FromTag).ToArray());
     }
 
     // ------------------------------------------------------------------ registry references

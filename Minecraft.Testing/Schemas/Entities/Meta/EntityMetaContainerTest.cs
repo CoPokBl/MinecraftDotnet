@@ -93,6 +93,21 @@ public class EntityMetaContainerTest {
     }
 
     [Test]
+    public void AbsentStructOptionalsStayAbsent() {
+        EntityMetaContainer container = new();
+        container.Fields.Add(0, new MetaField(MetaFieldType.OptionalPosition, Optional<Vec3<int>>.Empty));
+        container.Fields.Add(1, new MetaField(MetaFieldType.OptionalLivingEntityReference, Optional<Guid>.Empty));
+
+        DataWriter writer = new();
+        container.Write(VanillaRegistry.Data, writer);
+        EntityMetaContainer deserialised = new();
+        deserialised.ReadData(VanillaRegistry.Data, new DataReader(writer.ToArray()));
+
+        Assert.That(deserialised.Fields[0].GetValue<Optional<Vec3<int>>>().Present, Is.False);
+        Assert.That(deserialised.Fields[1].GetValue<Optional<Guid>>().Present, Is.False);
+    }
+
+    [Test]
     public void LoadingIntoObjects() {
         EntityMetaContainer container = new();
         container.WithField(0, MetaFieldType.Byte, (sbyte)EntityStatus.Invisible);

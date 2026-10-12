@@ -4,6 +4,7 @@ using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
 using Minecraft.Implementations.Events;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Events;
 

@@ -18,7 +18,8 @@ public class ServerBoundPlayerActionPacket : ServerBoundPacket {
         DropItemStack,
         DropItem,
         UpdateHeldItem,  // used for after eating or pulling back a bow or using a bucket (anything that should change item state)
-        SwapItem
+        SwapItem,
+        Stab
     }
 
     protected override DataWriter WriteData(DataWriter w) {

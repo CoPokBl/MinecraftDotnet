@@ -59,7 +59,7 @@ public class ClientBoundExplosionPacket : ClientBoundPacket {
         Vec3<double> center = r.ReadVec3();
         float radius = r.ReadFloat();
         int blockCount = r.ReadInteger();
-        Vec3<double>? knockback = r.ReadPrefixedOptional<Vec3<double>>(reader => reader.ReadVec3());
+        Vec3<double>? knockback = r.ReadPrefixedOptionalValue<Vec3<double>>(reader => reader.ReadVec3());
         IParticle particle = reg.Particles[r.ReadVarInt()].ReadData(r, reg);
 
         int soundId = r.ReadVarInt();

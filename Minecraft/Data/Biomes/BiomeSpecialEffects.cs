@@ -6,7 +6,8 @@ namespace Minecraft.Data.Biomes;
 
 /// <summary>
 /// The colours a biome tints things with. Anything left null is worked out by the client from the
-/// biome's climate instead of being sent.
+/// biome's climate instead of being sent. Each is RGB with no alpha byte, whichever of vanilla's
+/// forms it arrived in.
 /// </summary>
 public record BiomeSpecialEffects(
     int WaterColor,
@@ -42,15 +43,17 @@ public record BiomeSpecialEffects(
     public static BiomeSpecialEffects FromNbt(INbtTag tag) {
         CompoundTag compound = (CompoundTag)tag;
         return new BiomeSpecialEffects(
-            PackedColor.Parse(compound["water_color"]!.GetString()),
-            compound.Contains("foliage_color") ? PackedColor.Parse(compound["foliage_color"]!.GetString()) : null,
-            compound.Contains("dry_foliage_color")
-                ? PackedColor.Parse(compound["dry_foliage_color"]!.GetString())
-                : null,
-            compound.Contains("grass_color") ? PackedColor.Parse(compound["grass_color"]!.GetString()) : null,
+            PackedColor.StringRgbFromNbt(compound["water_color"]!) & 0xFFFFFF,
+            OptionalColor(compound, "foliage_color"),
+            OptionalColor(compound, "dry_foliage_color"),
+            OptionalColor(compound, "grass_color"),
             compound.Contains("grass_color_modifier")
                 ? GrassColorModifierExtensions.ParseGrassColorModifier(compound["grass_color_modifier"]!.GetString())
                 : GrassColorModifier.None);
+    }
+
+    private static int? OptionalColor(CompoundTag compound, string key) {
+        return compound[key] is { } color ? PackedColor.StringRgbFromNbt(color) & 0xFFFFFF : null;
     }
 }
 

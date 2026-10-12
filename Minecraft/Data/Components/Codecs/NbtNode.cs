@@ -19,8 +19,8 @@ namespace Minecraft.Data.Components.Codecs;
 /// a throw is not. The alternative, listing the expected keys beside the reads, duplicates them and
 /// drifts; a node that records what it was asked for cannot.
 /// <p/>
-/// Coercion between tag types is left to the tag accessors, which widen across everything reading
-/// JSON produces. What is added here is a key with a default, which they have no notion of, and an
+/// Coercion between tag types is left to <see cref="NbtValues"/>, which reads numbers and lists the
+/// way vanilla's <c>NbtOps</c> does. What is added here is a key with a default, which they have no notion of, and an
 /// error naming the component and the field, which they cannot see.
 /// </remarks>
 public sealed class NbtNode {
@@ -61,20 +61,20 @@ public sealed class NbtNode {
 
     // ------------------------------------------------------------------ primitives
 
-    public int Int(string key) => Read(key, static tag => tag.GetInteger());
-    public int Int(string key, int fallback) => Read(key, static tag => tag.GetInteger(), fallback);
+    public int Int(string key) => Read(key, static tag => tag.AsInt());
+    public int Int(string key, int fallback) => Read(key, static tag => tag.AsInt(), fallback);
 
-    public long Long(string key) => Read(key, static tag => tag.GetLong());
-    public long Long(string key, long fallback) => Read(key, static tag => tag.GetLong(), fallback);
+    public long Long(string key) => Read(key, static tag => tag.AsLong());
+    public long Long(string key, long fallback) => Read(key, static tag => tag.AsLong(), fallback);
 
-    public float Float(string key) => Read(key, static tag => tag.GetFloat());
-    public float Float(string key, float fallback) => Read(key, static tag => tag.GetFloat(), fallback);
+    public float Float(string key) => Read(key, static tag => tag.AsFloat());
+    public float Float(string key, float fallback) => Read(key, static tag => tag.AsFloat(), fallback);
 
-    public double Double(string key) => Read(key, static tag => tag.GetDouble());
-    public double Double(string key, double fallback) => Read(key, static tag => tag.GetDouble(), fallback);
+    public double Double(string key) => Read(key, static tag => tag.AsDouble());
+    public double Double(string key, double fallback) => Read(key, static tag => tag.AsDouble(), fallback);
 
-    public bool Bool(string key) => Read(key, static tag => tag.GetBoolean());
-    public bool Bool(string key, bool fallback) => Read(key, static tag => tag.GetBoolean(), fallback);
+    public bool Bool(string key) => Read(key, static tag => tag.AsBool());
+    public bool Bool(string key, bool fallback) => Read(key, static tag => tag.AsBool(), fallback);
 
     public string String(string key) => Read(key, static tag => tag.GetString());
     public string String(string key, string fallback) => Read(key, static tag => tag.GetString(), fallback);
@@ -117,14 +117,10 @@ public sealed class NbtNode {
             return [];
         }
 
-        if (tag is not ListTag list) {
-            throw new UnportedComponentException(_component,
-                $"\"{key}\" is a {tag.GetType().Name}, not a list.");
-        }
-
-        T[] values = new T[list.Tags.Length];
+        INbtTag[] list = Convert(key, static tag => tag.AsList(), tag);
+        T[] values = new T[list.Length];
         for (int i = 0; i < values.Length; i++) {
-            values[i] = read(list.Tags[i]);
+            values[i] = read(list[i]);
         }
 
         return values;

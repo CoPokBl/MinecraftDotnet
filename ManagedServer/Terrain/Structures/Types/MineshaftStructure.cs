@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
-using ManagedServer.Placement;
-using ManagedServer.Placement.Helpers;
+using Minecraft.Placement.Helpers;
 using ManagedServer.Terrain.Features;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
@@ -10,6 +9,7 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Terrain.Structures.Types;
 

@@ -31,7 +31,7 @@ public class ServerBoundSeenAdvancementsPacket : ServerBoundPacket {
         AdvancementAction action = (AdvancementAction)r.ReadVarInt();
         return new ServerBoundSeenAdvancementsPacket {
             Action = action,
-            Tab = action == AdvancementAction.OpenedTab ? (Identifier)r.ReadString() : null
+            Tab = action == AdvancementAction.OpenedTab ? (Identifier?)(Identifier)r.ReadString() : null
         };
     };
 

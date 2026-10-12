@@ -28,8 +28,8 @@ public record FireworkExplosionComponent() : IDataComponent<FireworkExplosionCom
             NbtNode node = NbtNode.Of(tag, "minecraft:firework_explosion");
             Data data = new(
                 node.Enum<FireworkShape>("shape"),
-                node.Has("colors") ? node.Require("colors").GetIntegers().ToArray() : [],
-                node.Has("fade_colors") ? node.Require("fade_colors").GetIntegers().ToArray() : [],
+                node.List("colors", value => value.AsInt()),
+                node.List("fade_colors", value => value.AsInt()),
                 node.Bool("has_trail", false),
                 node.Bool("has_twinkle", false));
             node.AssertRead();

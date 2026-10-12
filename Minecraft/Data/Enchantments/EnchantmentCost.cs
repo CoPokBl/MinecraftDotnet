@@ -12,8 +12,8 @@ public record EnchantmentCost(int Base, int PerLevelAboveFirst) {
     }
     
     public static EnchantmentCost FromNbt(CompoundTag tag) {
-        int baseCost = tag["base"].GetInteger();
-        int perLevel = tag["per_level_above_first"].GetInteger();
+        int baseCost = tag["base"].AsInt();
+        int perLevel = tag["per_level_above_first"].AsInt();
         return new EnchantmentCost(baseCost, perLevel);
     }
 }

@@ -8,6 +8,9 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 using Attribute = Minecraft.Data.Generated.Attribute;
 
+using Minecraft.Physics;
+using Minecraft.Fluids;
+
 namespace ManagedServer.Physics;
 
 /// <summary>

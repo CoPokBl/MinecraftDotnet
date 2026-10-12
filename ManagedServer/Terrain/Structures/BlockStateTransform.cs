@@ -1,9 +1,9 @@
-using ManagedServer.Placement;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
+using Minecraft.Placement;
 
 namespace ManagedServer.Terrain.Structures;
 

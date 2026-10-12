@@ -8,6 +8,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Testing.Placement;
 

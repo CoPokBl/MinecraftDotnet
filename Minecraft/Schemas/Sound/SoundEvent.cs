@@ -17,7 +17,7 @@ public record SoundEvent(ISoundType Type, float? FixedRange) : INetworkType<Soun
     public static SoundEvent ReadData(DataReader reader, MinecraftRegistry registry) {
         return new SoundEvent(
             registry.SoundTypes[reader.ReadString()],
-            reader.ReadPrefixedOptional(re => re.ReadFloat()));
+            reader.ReadPrefixedOptionalValue(re => re.ReadFloat()));
     }
 
     /// <summary>
@@ -57,7 +57,8 @@ public record SoundEvent(ISoundType Type, float? FixedRange) : INetworkType<Soun
         if (tag is CompoundTag compound) {
             return new SoundEvent(
                 GetSoundType(compound["sound_id"].GetString(), registry),
-                compound.Contains("range") ? compound["range"].GetFloat() : null);
+                // lenientOptionalFieldOf: a range that does not read as a number is no range.
+                compound["range"] is { } range && range.IsNumber() ? range.AsFloat() : null);
         }
 
         return new SoundEvent(GetSoundType(tag.GetString(), registry), null);

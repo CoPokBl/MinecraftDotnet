@@ -1,6 +1,7 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Physics;
+using Minecraft.Physics;
 using ManagedServer.Worlds;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;

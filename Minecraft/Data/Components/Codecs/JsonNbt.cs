@@ -12,7 +12,7 @@ namespace Minecraft.Data.Components.Codecs;
 /// This is what lets one codec serve both formats. The mapping is the same one <c>INbtTag.FromJson</c>
 /// makes from the other JSON library, so a component read through either arrives at the same tags:
 /// every whole number becomes an integer tag and every fractional one a double tag, whatever width
-/// the field wants, and the tag accessors widen from there.
+/// the field wants, and <see cref="NbtValues"/> widens from there.
 /// <p/>
 /// Reading text rather than a document is deliberate. Handing the raw text back to
 /// <c>INbtTag.FromJson</c> would reparse every component of every recipe and put a second JSON

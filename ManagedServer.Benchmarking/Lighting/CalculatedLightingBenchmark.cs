@@ -1,5 +1,5 @@
 using BenchmarkDotNet.Attributes;
-using ManagedServer.Worlds.Lighting;
+using Minecraft.Lighting;
 using Minecraft.Data.Generated;
 using Minecraft.Registry;
 using Minecraft.Schemas.Chunks;

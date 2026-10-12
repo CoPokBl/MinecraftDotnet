@@ -13,6 +13,6 @@ public class ClientBoundSelectAdvancementsTabPacket : ClientBoundPacket {
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundSelectAdvancementsTabPacket {
-        Tab = r.ReadPrefixedOptional<Identifier>(reader => reader.ReadString())
+        Tab = r.ReadPrefixedOptionalValue<Identifier>(reader => reader.ReadString())
     };
 }

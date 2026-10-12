@@ -19,7 +19,7 @@ public record AttributeModifier(Identifier Id, double Value, AttributeOperation 
         CompoundTag compound = (CompoundTag)tag;
         return new AttributeModifier(
             compound["id"]!.GetString(),
-            compound["amount"]!.GetDouble(),
+            compound["amount"]!.AsDouble(),
             AttributeOperationExtensions.ParseAttributeOperation(compound["operation"]!.GetString()));
     }
 

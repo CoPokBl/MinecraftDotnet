@@ -5,6 +5,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Testing.Placement;
 

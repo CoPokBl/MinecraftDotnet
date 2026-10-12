@@ -45,7 +45,7 @@ public class ServerBoundTestInstanceBlockActionPacket : ServerBoundPacket {
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundTestInstanceBlockActionPacket {
         Location = r.ReadPosition(),
         Action = (TestInstanceAction)r.ReadVarInt(),
-        Test = r.ReadPrefixedOptional<Identifier>(reader => reader.ReadString()),
+        Test = r.ReadPrefixedOptionalValue<Identifier>(reader => reader.ReadString()),
         Size = new Vec3<int>(r.ReadVarInt(), r.ReadVarInt(), r.ReadVarInt()),
         Rotation = (BlockRotation)r.ReadVarInt(),
         IgnoreEntities = r.ReadBoolean(),

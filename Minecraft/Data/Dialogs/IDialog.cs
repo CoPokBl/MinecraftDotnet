@@ -1,3 +1,4 @@
+using Minecraft.Packets.Config.ClientBound;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Tags;
@@ -35,8 +36,8 @@ public interface IDialog : IProtocolType {
             ? DialogActionButton.FromNbt(tag["exit_action"]!)
             : null;
 
-        int Columns() => tag.Contains("columns") ? tag["columns"]!.GetInteger() : 2;
-        int ButtonWidth() => tag.Contains("button_width") ? tag["button_width"]!.GetInteger() : 150;
+        int Columns() => tag.Contains("columns") ? tag["columns"]!.AsInt() : 2;
+        int ButtonWidth() => tag.Contains("button_width") ? tag["button_width"]!.AsInt() : 150;
 
         return type.ToString() switch {
             "minecraft:notice" => new NoticeDialog(ident, common,
@@ -49,12 +50,12 @@ public interface IDialog : IProtocolType {
                 DialogActionButton.FromNbt(tag["no"]!)),
 
             "minecraft:multi_action" => new MultiActionDialog(ident, common,
-                ((ListTag)tag["actions"]!).Tags.ToArray().Select(DialogActionButton.FromNbt).ToArray(),
+                tag["actions"]!.AsList().Select(DialogActionButton.FromNbt).ToArray(),
                 ExitAction(),
                 Columns()),
 
             "minecraft:dialog_list" => new DialogListDialog(ident, common,
-                HolderSet.FromNbt(tag["dialogs"]!),
+                DialogsFromNbt(tag["dialogs"]!, reg),
                 ExitAction(),
                 Columns(),
                 ButtonWidth()),
@@ -66,5 +67,20 @@ public interface IDialog : IProtocolType {
 
             _ => throw new ArgumentException($"Unknown dialog type {type}", nameof(tag))
         };
+    }
+
+    /// <summary>
+    /// <c>Dialog.LIST_CODEC</c>, whose elements are a <c>RegistryFileCodec</c>: names, a tag, or
+    /// dialogs defined in place, each alone or in a list.
+    /// </summary>
+    private static Or<HolderSet, IDialog[]> DialogsFromNbt(INbtTag tag, MinecraftRegistry reg) {
+        INbtTag[] elements = tag.AsCompactList();
+        if (elements.Length == 0 || elements[0] is not CompoundTag) {
+            return HolderSet.FromNbt(tag);
+        }
+
+        return elements
+            .Select(e => FromNbt(ClientBoundShowDialogPacket.InlineIdentifier, (CompoundTag)e, reg))
+            .ToArray();
     }
 }

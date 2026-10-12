@@ -25,20 +25,22 @@ public abstract record DialogBody {
             "minecraft:plain_message" => PlainMessage.FromFields(compound),
             "minecraft:item" => new ItemBody(
                 DialogItem.FromNbt(compound["item"]!),
-                compound.Contains("description")
-                    ? PlainMessage.FromFields((CompoundTag)compound["description"]!)
-                    : null,
-                !compound.Contains("show_decorations") || compound["show_decorations"]!.GetBoolean(),
-                !compound.Contains("show_tooltip") || compound["show_tooltip"]!.GetBoolean(),
-                compound.Contains("width") ? compound["width"]!.GetInteger() : 16,
-                compound.Contains("height") ? compound["height"]!.GetInteger() : 16),
+                compound["description"] switch {
+                    null => null,
+                    CompoundTag fields => PlainMessage.FromFields(fields),
+                    { } text => new PlainMessage(TextComponent.FromTag(text))
+                },
+                !compound.Contains("show_decorations") || compound["show_decorations"]!.AsBool(),
+                !compound.Contains("show_tooltip") || compound["show_tooltip"]!.AsBool(),
+                compound.Contains("width") ? compound["width"]!.AsInt() : 16,
+                compound.Contains("height") ? compound["height"]!.AsInt() : 16),
             _ => throw new ArgumentException($"Unknown dialog body type {type}", nameof(tag))
         };
     }
 
     /// <summary>Reads a body list, which is written unwrapped when there's only one of them.</summary>
     public static DialogBody[] ListFromNbt(INbtTag tag) {
-        return tag is ListTag list ? list.Tags.ToArray().Select(FromNbt).ToArray() : [FromNbt(tag)];
+        return tag.AsCompactList().Select(FromNbt).ToArray();
     }
 
     public static INbtTag ListToNbt(DialogBody[] bodies) {
@@ -69,7 +71,7 @@ public abstract record DialogBody {
 
             return new PlainMessage(
                 TextComponent.FromTag(compound["contents"]!),
-                compound.Contains("width") ? compound["width"]!.GetInteger() : 200);
+                compound.Contains("width") ? compound["width"]!.AsInt() : 200);
         }
     }
 
@@ -138,10 +140,14 @@ public record DialogItem(Identifier Id, int Count = 1, CompoundTag? Components =
     }
 
     public static DialogItem FromNbt(INbtTag tag) {
+        if (tag is StringTag id) {
+            return new DialogItem(id.Value);
+        }
+
         CompoundTag compound = (CompoundTag)tag;
         return new DialogItem(
             compound["id"]!.GetString(),
-            compound.Contains("count") ? compound["count"]!.GetInteger() : 1,
+            compound.Contains("count") ? compound["count"]!.AsInt() : 1,
             compound.Contains("components") ? (CompoundTag)compound["components"]! : null);
     }
 }

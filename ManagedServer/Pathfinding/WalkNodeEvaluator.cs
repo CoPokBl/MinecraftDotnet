@@ -1,11 +1,13 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Fluids;
 using ManagedServer.Physics;
+using Minecraft.Physics;
 using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
+using Minecraft.Fluids;
 
 namespace ManagedServer.Pathfinding;
 

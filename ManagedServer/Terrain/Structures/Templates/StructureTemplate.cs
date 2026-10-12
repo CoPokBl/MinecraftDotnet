@@ -7,6 +7,7 @@ using Minecraft.Schemas;
 using Minecraft.Registry;
 using Minecraft.Schemas.Vec;
 using NBT.Tags;
+using Minecraft.Fluids;
 
 namespace ManagedServer.Terrain.Structures.Templates;
 

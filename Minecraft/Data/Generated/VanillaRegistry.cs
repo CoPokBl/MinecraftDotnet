@@ -55,7 +55,7 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 //
-// Last updated: 2026-08-20
+// Last updated: 2026-10-10
 public static class VanillaRegistry {
     public static readonly MinecraftRegistry Data = new();
 
@@ -5651,13 +5651,55 @@ public static class VanillaRegistry {
         Data.CommandArgumentTypes.Add(3, CommandArgumentType.Integer);
         Data.CommandArgumentTypes.Add(4, CommandArgumentType.Long);
         Data.CommandArgumentTypes.Add(5, CommandArgumentType.String);
+        Data.CommandArgumentTypes.Add(28, CommandArgumentType.Angle);
         Data.CommandArgumentTypes.Add(8, CommandArgumentType.BlockPos);
+        Data.CommandArgumentTypes.Add(13, CommandArgumentType.BlockPredicate);
         Data.CommandArgumentTypes.Add(12, CommandArgumentType.BlockState);
         Data.CommandArgumentTypes.Add(9, CommandArgumentType.ColumnPos);
+        Data.CommandArgumentTypes.Add(18, CommandArgumentType.Component);
+        Data.CommandArgumentTypes.Add(55, CommandArgumentType.Dialog);
+        Data.CommandArgumentTypes.Add(41, CommandArgumentType.Dimension);
+        Data.CommandArgumentTypes.Add(6, CommandArgumentType.Entity);
+        Data.CommandArgumentTypes.Add(38, CommandArgumentType.EntityAnchor);
+        Data.CommandArgumentTypes.Add(40, CommandArgumentType.FloatRange);
+        Data.CommandArgumentTypes.Add(37, CommandArgumentType.Function);
+        Data.CommandArgumentTypes.Add(7, CommandArgumentType.GameProfile);
         Data.CommandArgumentTypes.Add(42, CommandArgumentType.Gamemode);
+        Data.CommandArgumentTypes.Add(51, CommandArgumentType.Heightmap);
         Data.CommandArgumentTypes.Add(17, CommandArgumentType.HexColor);
+        Data.CommandArgumentTypes.Add(39, CommandArgumentType.IntRange);
+        Data.CommandArgumentTypes.Add(15, CommandArgumentType.ItemPredicate);
+        Data.CommandArgumentTypes.Add(34, CommandArgumentType.ItemSlot);
+        Data.CommandArgumentTypes.Add(35, CommandArgumentType.ItemSlots);
+        Data.CommandArgumentTypes.Add(14, CommandArgumentType.ItemStack);
+        Data.CommandArgumentTypes.Add(54, CommandArgumentType.LootModifier);
+        Data.CommandArgumentTypes.Add(53, CommandArgumentType.LootPredicate);
+        Data.CommandArgumentTypes.Add(52, CommandArgumentType.LootTable);
+        Data.CommandArgumentTypes.Add(20, CommandArgumentType.Message);
+        Data.CommandArgumentTypes.Add(21, CommandArgumentType.NbtCompoundTag);
+        Data.CommandArgumentTypes.Add(23, CommandArgumentType.NbtPath);
+        Data.CommandArgumentTypes.Add(22, CommandArgumentType.NbtTag);
+        Data.CommandArgumentTypes.Add(24, CommandArgumentType.Objective);
+        Data.CommandArgumentTypes.Add(25, CommandArgumentType.ObjectiveCriteria);
+        Data.CommandArgumentTypes.Add(26, CommandArgumentType.Operation);
+        Data.CommandArgumentTypes.Add(27, CommandArgumentType.Particle);
+        Data.CommandArgumentTypes.Add(46, CommandArgumentType.Resource);
+        Data.CommandArgumentTypes.Add(47, CommandArgumentType.ResourceKey);
+        Data.CommandArgumentTypes.Add(36, CommandArgumentType.ResourceLocation);
+        Data.CommandArgumentTypes.Add(44, CommandArgumentType.ResourceOrTag);
+        Data.CommandArgumentTypes.Add(45, CommandArgumentType.ResourceOrTagKey);
+        Data.CommandArgumentTypes.Add(48, CommandArgumentType.ResourceSelector);
+        Data.CommandArgumentTypes.Add(29, CommandArgumentType.Rotation);
+        Data.CommandArgumentTypes.Add(31, CommandArgumentType.ScoreHolder);
+        Data.CommandArgumentTypes.Add(30, CommandArgumentType.ScoreboardSlot);
+        Data.CommandArgumentTypes.Add(19, CommandArgumentType.Style);
         Data.CommandArgumentTypes.Add(32, CommandArgumentType.Swizzle);
+        Data.CommandArgumentTypes.Add(33, CommandArgumentType.Team);
         Data.CommandArgumentTypes.Add(16, CommandArgumentType.TeamColor);
+        Data.CommandArgumentTypes.Add(49, CommandArgumentType.TemplateMirror);
+        Data.CommandArgumentTypes.Add(50, CommandArgumentType.TemplateRotation);
+        Data.CommandArgumentTypes.Add(43, CommandArgumentType.Time);
+        Data.CommandArgumentTypes.Add(56, CommandArgumentType.Uuid);
         Data.CommandArgumentTypes.Add(11, CommandArgumentType.Vec2);
         Data.CommandArgumentTypes.Add(10, CommandArgumentType.Vec3);
 

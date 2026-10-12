@@ -8,7 +8,7 @@ public class ClientBoundSetBorderLerpSizePacket : ClientBoundPacket {
     public required double OldDiameter { get; init; }
     public required double NewDiameter { get; init; }
 
-    /// <summary>Milliseconds the border takes to grow or shrink to the new diameter.</summary>
+    /// <summary>Ticks the border takes to grow or shrink to the new diameter.</summary>
     public required long Speed { get; init; }
 
     protected override DataWriter WriteData(DataWriter w) {

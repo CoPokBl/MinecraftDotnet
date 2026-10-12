@@ -51,12 +51,12 @@ public interface IBiome : IProtocolType {
     public static IBiome FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
         return new SimpleBiome(
             ident,
-            tag["has_precipitation"]!.GetBoolean(),
-            tag["temperature"]!.GetFloat(),
+            tag["has_precipitation"]!.AsBool(),
+            tag["temperature"]!.AsFloat(),
             tag.Contains("temperature_modifier")
                 ? TemperatureModifierExtensions.ParseTemperatureModifier(tag["temperature_modifier"]!.GetString())
                 : TemperatureModifier.None,
-            tag["downfall"]!.GetFloat(),
+            tag["downfall"]!.AsFloat(),
             BiomeSpecialEffects.FromNbt(tag["effects"]!),
             tag.Contains("attributes")
                 ? EnvironmentAttributeMap.FromNbt(tag["attributes"]!, reg)

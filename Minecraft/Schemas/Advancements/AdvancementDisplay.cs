@@ -64,7 +64,7 @@ public class AdvancementDisplay {
             Description = description,
             Icon = icon,
             Frame = frame,
-            Background = (flags & 0x1) != 0 ? (Identifier)r.ReadString() : null,
+            Background = (flags & 0x1) != 0 ? (Identifier?)(Identifier)r.ReadString() : null,
             ShowToast = (flags & 0x2) != 0,
             Hidden = (flags & 0x4) != 0,
             X = r.ReadFloat(),

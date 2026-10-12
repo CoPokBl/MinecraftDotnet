@@ -1,8 +1,6 @@
 using ManagedServer;
-using ManagedServer.Placement;
-using ManagedServer.Placement.Rules;
+using Minecraft.Placement.Rules;
 using ManagedServer.Worlds;
-using ManagedServer.Worlds.Lighting;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Items;
@@ -14,6 +12,7 @@ using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Testing.Placement;
 

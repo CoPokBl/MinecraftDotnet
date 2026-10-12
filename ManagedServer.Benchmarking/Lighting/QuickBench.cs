@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using ManagedServer.Worlds.Lighting;
+using Minecraft.Lighting;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;

@@ -279,7 +279,7 @@ public class ItemStack(
 
         return new ItemStack(
             registry.Items[(Identifier)compound["id"].GetString()],
-            compound.Contains("count") ? compound["count"].GetInteger() : 1,
+            compound.Contains("count") ? compound["count"].AsInt() : 1,
             components,
             removed.ToArray());
     }

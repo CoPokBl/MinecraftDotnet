@@ -1,5 +1,4 @@
-using ManagedServer.Placement;
-using ManagedServer.Placement.Helpers;
+using Minecraft.Placement.Helpers;
 using ManagedServer.Terrain.Data;
 using ManagedServer.Terrain.Features;
 using ManagedServer.Terrain.Features.Values;
@@ -12,6 +11,7 @@ using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
 using NBT;
 using NBT.Tags;
+using Minecraft.Placement;
 
 namespace ManagedServer.Terrain.Structures.Templates;
 

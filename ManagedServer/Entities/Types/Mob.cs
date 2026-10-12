@@ -4,7 +4,7 @@ using ManagedServer.Ai.Navigation;
 using ManagedServer.Ai.Sensing;
 using ManagedServer.Damage;
 using ManagedServer.Fluids;
-using ManagedServer.Physics;
+using Minecraft.Physics;
 using ManagedServer.Worlds;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Generated;
@@ -15,6 +15,7 @@ using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Attribute = Minecraft.Data.Generated.Attribute;
+using Minecraft.Fluids;
 
 namespace ManagedServer.Entities.Types;
 

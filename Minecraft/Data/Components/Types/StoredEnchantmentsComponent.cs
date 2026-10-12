@@ -23,7 +23,7 @@ public record StoredEnchantmentsComponent() : IDataComponent<(IEnchantment, int)
             .Select(pair => (pair.Item1.Identifier.ToString(), (INbtTag)new IntegerTag(pair.Item2)))
             .ToArray()),
         (tag, registry) => tag.GetCompound().Children
-            .Select(pair => (registry.Enchantments[(Identifier)pair.key], pair.child.GetInteger()))
+            .Select(pair => (registry.Enchantments[(Identifier)pair.key], pair.child.AsInt()))
             .ToArray());
 
     public override DataWriter WriteData((IEnchantment, int)[] val, DataWriter writer, MinecraftRegistry registry) {

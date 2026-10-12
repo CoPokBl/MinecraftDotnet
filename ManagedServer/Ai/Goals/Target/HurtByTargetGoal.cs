@@ -1,6 +1,6 @@
 using ManagedServer.Ai.Targeting;
 using ManagedServer.Entities.Types;
-using ManagedServer.Physics;
+using Minecraft.Physics;
 
 namespace ManagedServer.Ai.Goals.Target;
 

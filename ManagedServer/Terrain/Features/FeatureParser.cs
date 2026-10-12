@@ -11,6 +11,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Data.Generated.BlockTypes;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
+using Minecraft.Fluids;
 
 namespace ManagedServer.Terrain.Features;
 

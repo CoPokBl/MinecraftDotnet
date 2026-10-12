@@ -24,7 +24,7 @@ public class ClientBoundTestInstanceBlockStatusPacket : ClientBoundPacket {
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundTestInstanceBlockStatusPacket {
         Status = r.ReadText(),
-        Size = r.ReadPrefixedOptional(reader =>
+        Size = r.ReadPrefixedOptionalValue(reader =>
             new Vec3<int>(reader.ReadVarInt(), reader.ReadVarInt(), reader.ReadVarInt()))
     };
 }

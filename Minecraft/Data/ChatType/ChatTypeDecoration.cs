@@ -53,7 +53,7 @@ public record ChatTypeDecoration(
         CompoundTag compound = (CompoundTag)tag;
         return new ChatTypeDecoration(
             compound["translation_key"]!.GetString(),
-            ((ListTag)compound["parameters"]!).Tags.ToArray()
+            compound["parameters"]!.AsList()
                 .Select(t => ChatDecorationParameterExtensions.ParseChatDecorationParameter(t.GetString()))
                 .ToArray(),
             compound.Contains("style") ? TextStyle.FromNbt(compound["style"]!) : TextStyle.Empty);

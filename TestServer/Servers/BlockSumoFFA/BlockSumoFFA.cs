@@ -320,7 +320,7 @@ public static class BlockSumoFfa {
 
             .Button("Wait for me", _ => {
                 // The dialog locks itself until something else closes it
-                player.ShowDialog(new DialogBuilder("Working...")
+                player.ShowDialog(new DialogBuilder("Hang on...")
                     .AfterAction(DialogAfterAction.WaitForResponse)
                     .CanCloseWithEscape(false)
                     .Body("This one can't be closed, even with escape. Back in two seconds.")

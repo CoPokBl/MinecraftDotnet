@@ -1,12 +1,12 @@
-using ManagedServer.Placement;
-using ManagedServer.Placement.Helpers;
-using ManagedServer.Placement.Rules;
+using Minecraft.Placement.Helpers;
+using Minecraft.Placement.Rules;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Terrain.Features.Blocks;
 

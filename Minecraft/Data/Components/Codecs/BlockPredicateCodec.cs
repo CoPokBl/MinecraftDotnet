@@ -24,7 +24,7 @@ public static class BlockPredicateCodec {
             (val, registry) => new ListTag(val
                 .Select(predicate => Write(predicate, registry, component))
                 .ToArray()),
-            (tag, registry) => tag.GetList().Tags.ToArray()
+            (tag, registry) => tag.AsList()
                 .Select(predicate => Read(predicate, registry, component))
                 .ToArray());
     }

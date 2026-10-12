@@ -61,7 +61,7 @@ public class ClientBoundUpdateAdvancementsPacket : ClientBoundPacket {
             Dictionary<string, DateTimeOffset?> criteria = new(criteriaCount);
             for (int j = 0; j < criteriaCount; j++) {
                 string name = r.ReadString();
-                criteria.Add(name, r.ReadPrefixedOptional<DateTimeOffset>(
+                criteria.Add(name, r.ReadPrefixedOptionalValue<DateTimeOffset>(
                     reader => DateTimeOffset.FromUnixTimeMilliseconds(reader.ReadLong())));
             }
             progress.Add(id, criteria);

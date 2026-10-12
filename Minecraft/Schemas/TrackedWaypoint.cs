@@ -122,7 +122,7 @@ public record WaypointIcon : IWritable {
     public static WaypointIcon Read(DataReader r) {
         return new WaypointIcon {
             Style = r.ReadString(),
-            Color = r.ReadPrefixedOptional<int>(reader =>
+            Color = r.ReadPrefixedOptionalValue<int>(reader =>
                 (reader.Read() << 16) | (reader.Read() << 8) | reader.Read())
         };
     }

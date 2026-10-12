@@ -17,7 +17,7 @@ public record AmbientParticle(ParticleValue Particle, float Probability) {
         CompoundTag compound = (CompoundTag)tag;
         return new AmbientParticle(
             ParticleValue.FromNbt(compound["particle"]!),
-            compound["probability"]!.GetFloat());
+            compound["probability"]!.AsFloat());
     }
 }
 

@@ -1,41 +1,36 @@
 using ClientLib;
-using ClientLib.Features;
-using Minecraft;
 using Minecraft.Data.Blocks;
-using Minecraft.Data.Generated;
-using Minecraft.Implementations.Client;
-using Minecraft.Schemas.Vec;
 
 namespace TestClient;
 
 public class TestBot {
 
     public static async Task Start() {
-        ServerConnection con = await MinecraftClientUtils.ConnectToServer("localhost", 25565);
-        MinecraftClient client = new(con);
-        client.AddFeatures(MinecraftClient.BasicFeatures);
-        client.Login("potato", 25565, ProtocolConstants.ProtocolVersion);
-        Console.WriteLine("Finished login");
-        
-        await Task.Delay(TimeSpan.FromSeconds(5));
-        
-        // find highest block at current pos
-        Console.WriteLine("Starting search");
-        int cY = (int)client.Position.Y + 100;
-        while (true) {
-            cY--;
-            if (!client.World.IsInBounds(new Vec3<int>(0, cY, 0))) {
-                Console.WriteLine("Failed to find a block, out of bounds");
-                break;
-            }
-            IBlock block = client.World.GetBlock(new Vec3<int>(0, cY, 0));
-        
-            if (block.Identifier != Block.Air.Identifier) {
-                Console.WriteLine(block.Identifier);
-                break;
-            }
-        }
+        MinecraftClient client = new(new ClientOptions { Username = "potato" });
+        client.Log += Console.WriteLine;
+        await client.Connect("localhost", 25565);
 
-        await Task.Delay(-1);
+        // Packets are handled and ticks run on this thread, as a game loop would.
+        bool reported = false;
+        while (client.Phase != ClientPhase.Disconnected) {
+            client.ProcessPackets();
+            client.Tick();
+
+            if (!reported && client.ClientLoaded && client.Player != null && client.Level != null) {
+                reported = true;
+                int x = (int)Math.Floor(client.Player.Position.X);
+                int z = (int)Math.Floor(client.Player.Position.Z);
+                for (int y = client.Level.MaxY; y >= client.Level.MinY; y--) {
+                    IBlock block = client.Level.GetBlock(x, y, z);
+                    if (!block.Air) {
+                        Console.WriteLine($"Highest block under the player: {block} at y {y}");
+                        break;
+                    }
+                }
+            }
+
+            await Task.Delay(50);
+        }
+        Console.WriteLine($"Disconnected: {client.DisconnectReason}");
     }
 }

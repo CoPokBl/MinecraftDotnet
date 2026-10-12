@@ -1,6 +1,7 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Pathfinding;
 using ManagedServer.Physics;
+using Minecraft.Physics;
 using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;

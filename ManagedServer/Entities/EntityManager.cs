@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using ManagedServer.Entities.Types;
-using ManagedServer.Physics;
+using Minecraft.Physics;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;

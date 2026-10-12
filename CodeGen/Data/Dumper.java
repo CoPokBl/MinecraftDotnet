@@ -22,6 +22,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.util.valueproviders.ConstantInt;
@@ -82,12 +85,14 @@ public final class Dumper {
 
         write(out.resolve("block.json"), blocks());
         write(out.resolve("entity_type.json"), entityTypes());
+        write(out.resolve("entity_data.json"), entityData());
+        write(out.resolve("sound_type.json"), soundTypes());
         write(out.resolve("attribute.json"), attributes());
         write(out.resolve("light.json"), light());
         write(out.resolve("path_type.json"), pathTypes());
 
         reportUnknownMembers();
-        System.out.println("Dumped block.json, entity_type.json, attribute.json, light.json and " +
+        System.out.println("Dumped block.json, entity_type.json, entity_data.json, sound_type.json, attribute.json, light.json and " +
                 "path_type.json to " + out);
     }
 
@@ -596,6 +601,33 @@ public final class Dumper {
         }
     }
 
+    /**
+     * What each block sound group plays and how loud: the volume and pitch every one of its sounds is
+     * scaled by, and the events for breaking, stepping, placing, hitting while digging and falling.
+     */
+    private static Obj soundTypes() {
+        Obj json = new Obj();
+        for (Map.Entry<String, SoundType> entry : new TreeMap<>(invert(soundTypeNames())).entrySet()) {
+            SoundType type = entry.getValue();
+            Obj sound = new Obj();
+            sound.put("volume", type.getVolume());
+            sound.put("pitch", type.getPitch());
+            sound.put("break", type.getBreakSound().location().toString());
+            sound.put("step", type.getStepSound().location().toString());
+            sound.put("place", type.getPlaceSound().location().toString());
+            sound.put("hit", type.getHitSound().location().toString());
+            sound.put("fall", type.getFallSound().location().toString());
+            json.put(entry.getKey(), sound);
+        }
+        return json;
+    }
+
+    private static Map<String, SoundType> invert(Map<SoundType, String> names) {
+        Map<String, SoundType> inverted = new HashMap<>();
+        names.forEach((type, name) -> inverted.put(name, type));
+        return inverted;
+    }
+
     /** SoundType instances are static fields with no name of their own. */
     private static Map<SoundType, String> soundTypeNames() {
         Map<SoundType, String> names = new HashMap<>();
@@ -643,6 +675,63 @@ public final class Dumper {
         }
 
         return entities;
+    }
+
+    /**
+     * Every entity data accessor each entity class declares: its field name, the index the protocol
+     * sends it at, and the serializer that encodes it. The index comes from the order the accessors
+     * are defined in down the class hierarchy, which nothing but running the static initialisers
+     * knows, and which shifts whenever a field is added upstream.
+     */
+    private static Obj entityData() {
+        Map<EntityDataSerializer<?>, String> serializerNames = new IdentityHashMap<>();
+        for (Field field : EntityDataSerializers.class.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers()) && EntityDataSerializer.class.isAssignableFrom(field.getType())) {
+                try {
+                    field.setAccessible(true);
+                    serializerNames.put((EntityDataSerializer<?>) field.get(null), field.getName());
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        Map<String, Class<?>> classes = new TreeMap<>();
+        for (String name : entityClassNames().values()) {
+            try {
+                for (Class<?> current = Class.forName(name); current != null && current != Object.class;
+                        current = current.getSuperclass()) {
+                    classes.putIfAbsent(current.getSimpleName(), current);
+                }
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException("Class " + name + " is not loadable", e);
+            }
+        }
+
+        Obj json = new Obj();
+        for (Map.Entry<String, Class<?>> entry : classes.entrySet()) {
+            Map<Integer, Obj> fields = new TreeMap<>();
+            for (Field field : entry.getValue().getDeclaredFields()) {
+                if (!Modifier.isStatic(field.getModifiers()) || !EntityDataAccessor.class.isAssignableFrom(field.getType())) {
+                    continue;
+                }
+                try {
+                    field.setAccessible(true);
+                    EntityDataAccessor<?> accessor = (EntityDataAccessor<?>) field.get(null);
+                    Obj fieldJson = new Obj();
+                    fieldJson.put("field", field.getName());
+                    fieldJson.put("id", accessor.id());
+                    fieldJson.put("serializer", serializerNames.getOrDefault(accessor.serializer(), "UNKNOWN"));
+                    fields.put(accessor.id(), fieldJson);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (!fields.isEmpty()) {
+                json.put(entry.getKey(), new ArrayList<>(fields.values()));
+            }
+        }
+        return json;
     }
 
     /**

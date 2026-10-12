@@ -63,8 +63,8 @@ public record Music(SoundEvent Sound, int MinDelay, int MaxDelay, bool ReplaceCu
         CompoundTag compound = (CompoundTag)tag;
         return new Music(
             SoundEvent.FromNbt(compound["sound"]!, reg),
-            compound["min_delay"]!.GetInteger(),
-            compound["max_delay"]!.GetInteger(),
-            compound.Contains("replace_current_music") && compound["replace_current_music"]!.GetBoolean());
+            compound["min_delay"]!.AsInt(),
+            compound["max_delay"]!.AsInt(),
+            compound.Contains("replace_current_music") && compound["replace_current_music"]!.AsBool());
     }
 }

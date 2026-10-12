@@ -16,6 +16,7 @@ public interface IEnchantmentEffect {
         return id switch {
             "minecraft:attributes" => AttributeEnchantmentEffect.ParseData(tag, reg),
             "minecraft:damage_protection" => DamageProtectionEnchantmentEffect.ParseData(tag, reg),
+            "minecraft:trident_spin_attack_strength" => TridentSpinAttackStrengthEnchantmentEffect.ParseData(tag, reg),
 
             // TODO: The rest of them, see Minestom's implementation for reference
             _ => throw new ArgumentOutOfRangeException()

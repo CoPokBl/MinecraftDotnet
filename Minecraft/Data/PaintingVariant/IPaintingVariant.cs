@@ -42,8 +42,8 @@ public interface IPaintingVariant : IProtocolType, INetworkType<IPaintingVariant
 
     public static IPaintingVariant FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
         Identifier assetId = tag["asset_id"]!.GetString();
-        int width = tag["width"]!.GetInteger();
-        int height = tag["height"]!.GetInteger();
+        int width = tag["width"]!.AsInt();
+        int height = tag["height"]!.AsInt();
 
         TextComponent? title = tag.Contains("title") ? TextComponent.FromTag(tag["title"]!) : null;
         TextComponent? author = tag.Contains("author") ? TextComponent.FromTag(tag["author"]!) : null;

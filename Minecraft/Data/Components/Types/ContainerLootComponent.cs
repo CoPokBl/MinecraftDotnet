@@ -40,7 +40,7 @@ public record ContainerLootComponent() : IDataComponent<ContainerLootComponent.D
         CompoundTag tag = (CompoundTag)reader.ReadNbt();
         return new Data(
             tag["loot_table"]!.GetString(),
-            tag.Contains("seed") ? tag["seed"]!.GetLong() : 0L);
+            tag.Contains("seed") ? tag["seed"]!.AsLong() : 0L);
     }
 
     public override bool ValuesEqual(Data val1, Data val2) {

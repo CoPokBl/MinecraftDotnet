@@ -2,6 +2,7 @@ using ManagedServer.Features;
 using ManagedServer.Features.Impl;
 using ManagedServer.Worlds;
 using ManagedServer.Worlds.Lighting;
+using Minecraft.Lighting;
 using ManagedServer.Worlds.Saving;
 using Minecraft;
 using Minecraft.Data.Generated;

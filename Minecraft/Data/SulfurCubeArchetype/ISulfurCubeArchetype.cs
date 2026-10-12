@@ -53,10 +53,10 @@ public interface ISulfurCubeArchetype : IProtocolType {
         return new SimpleSulfurCubeArchetype(
             ident,
             HolderSet.FromNbt(tag["items"]!),
-            ((ListTag)tag["attribute_modifiers"]!).Tags.ToArray()
+            tag["attribute_modifiers"]!.AsList()
                 .Select(t => SulfurCubeAttributeEntry.FromNbt(t, reg))
                 .ToArray(),
-            tag.Contains("buoyant") && tag["buoyant"]!.GetBoolean(),
+            tag.Contains("buoyant") && tag["buoyant"]!.AsBool(),
             tag.Contains("explosion") ? SulfurCubeExplosion.FromNbt(tag["explosion"]!) : null,
             tag.Contains("contact_damage")
                 ? SulfurCubeContactDamage.FromNbt(tag["contact_damage"]!, reg)

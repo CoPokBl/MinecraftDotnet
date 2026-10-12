@@ -1,4 +1,4 @@
-using ManagedServer.Placement.Rules;
+using Minecraft.Placement.Rules;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;

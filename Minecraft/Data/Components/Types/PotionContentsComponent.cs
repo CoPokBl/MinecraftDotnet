@@ -45,7 +45,7 @@ public record PotionContentsComponent() : IDataComponent<PotionContentsComponent
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
         return new Data(
             reader.ReadPrefixedOptional(r => registry.Potions[r.ReadVarInt()]),
-            reader.ReadPrefixedOptional(r => r.ReadInteger()),
+            reader.ReadPrefixedOptionalValue(r => r.ReadInteger()),
             reader.ReadPrefixedArray<PotionEffect>(registry),
             reader.ReadPrefixedOptional(r => r.ReadString()));
     }

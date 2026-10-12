@@ -53,7 +53,7 @@ public record FunctionTestInstance(
     ];
 }
 
-/// <param name="Environment">The test environment entry this runs under.</param>
+/// <param name="Environment">The test environment this runs under, by name or inline.</param>
 /// <param name="Structure">The structure template placed before the test starts.</param>
 /// <param name="MaxTicks">How long the test may run before it's failed.</param>
 /// <param name="SetupTicks">Ticks of grace before the test starts being judged.</param>
@@ -62,7 +62,7 @@ public record FunctionTestInstance(
 /// <param name="SkyAccess">Whether the test area is left open to the sky.</param>
 /// <param name="Padding">Empty blocks left around the structure.</param>
 public record TestData(
-    Identifier Environment,
+    TestEnvironmentReference Environment,
     Identifier Structure,
     int MaxTicks,
     int SetupTicks = 0,
@@ -76,7 +76,7 @@ public record TestData(
 
     public (string, INbtTag)[] ToFields() {
         List<(string, INbtTag)> fields = [
-            ("environment", new StringTag(Environment.ToString())),
+            ("environment", Environment.ToNbt()),
             ("structure", new StringTag(Structure.ToString())),
             ("max_ticks", new IntegerTag(MaxTicks))
         ];
@@ -118,19 +118,19 @@ public record TestData(
 
     public static TestData FromNbt(CompoundTag tag) {
         return new TestData(
-            tag["environment"]!.GetString(),
+            TestEnvironmentReference.FromNbt(tag["environment"]!),
             tag["structure"]!.GetString(),
-            tag["max_ticks"]!.GetInteger(),
-            tag.Contains("setup_ticks") ? tag["setup_ticks"]!.GetInteger() : 0,
-            !tag.Contains("required") || tag["required"]!.GetBoolean(),
+            tag["max_ticks"]!.AsInt(),
+            tag.Contains("setup_ticks") ? tag["setup_ticks"]!.AsInt() : 0,
+            !tag.Contains("required") || tag["required"]!.AsBool(),
             tag.Contains("rotation")
                 ? StructureRotationExtensions.ParseStructureRotation(tag["rotation"]!.GetString())
                 : StructureRotation.None,
-            tag.Contains("manual_only") && tag["manual_only"]!.GetBoolean(),
-            tag.Contains("max_attempts") ? tag["max_attempts"]!.GetInteger() : 1,
-            tag.Contains("required_successes") ? tag["required_successes"]!.GetInteger() : 1,
-            tag.Contains("sky_access") && tag["sky_access"]!.GetBoolean(),
-            tag.Contains("padding") ? tag["padding"]!.GetInteger() : 0);
+            tag.Contains("manual_only") && tag["manual_only"]!.AsBool(),
+            tag.Contains("max_attempts") ? tag["max_attempts"]!.AsInt() : 1,
+            tag.Contains("required_successes") ? tag["required_successes"]!.AsInt() : 1,
+            tag.Contains("sky_access") && tag["sky_access"]!.AsBool(),
+            tag.Contains("padding") ? tag["padding"]!.AsInt() : 0);
     }
 }
 

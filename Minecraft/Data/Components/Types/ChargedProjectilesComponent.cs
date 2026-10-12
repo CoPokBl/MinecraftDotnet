@@ -13,16 +13,17 @@ public record ChargedProjectilesComponent() : IDataComponent<ItemStack[]> {
     public override NbtCodec<ItemStack[]>? Codec => Persistent;
     private static readonly NbtCodec<ItemStack[]> Persistent = new(
         (val, registry) => new ListTag(val.Select(stack => (INbtTag)stack.ToNbt(registry)).ToArray()),
-        (tag, registry) => tag.GetList().Tags.ToArray()
+        (tag, registry) => tag.AsList()
             .Select(stack => ItemStack.FromNbt(stack, registry))
             .ToArray());
     
+    /// <summary><c>ItemStackTemplate.STREAM_CODEC</c> per projectile, the item before the count.</summary>
     public override DataWriter WriteData(ItemStack[] val, DataWriter writer, MinecraftRegistry registry) {
-        return writer.WritePrefixedArray(val, registry);
+        return writer.WritePrefixedArray(val, (stack, w) => stack.WriteTemplateData(w, registry));
     }
 
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
-        return reader.ReadPrefixedArray<ItemStack>(registry);
+        return reader.ReadPrefixedArray(r => ItemStack.ReadTemplateData(r, registry));
     }
 
     public override bool ValuesEqual(ItemStack[] val1, ItemStack[] val2) {

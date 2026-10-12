@@ -17,7 +17,7 @@ public record ContainerComponent() : IDataComponent<ItemStack[]> {
     public override NbtCodec<ItemStack[]>? Codec => Persistent;
     private static readonly NbtCodec<ItemStack[]> Persistent = new(
         (val, registry) => new ListTag(val.Select(stack => (INbtTag)stack.ToNbt(registry)).ToArray()),
-        (tag, registry) => tag.GetList().Tags.ToArray()
+        (tag, registry) => tag.AsList()
             .Select(stack => ItemStack.FromNbt(stack, registry))
             .ToArray());
 

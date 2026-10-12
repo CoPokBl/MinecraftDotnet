@@ -1,9 +1,9 @@
-using ManagedServer.Placement;
 using ManagedServer.Terrain.Structures;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Terrain.Features.Types;
 

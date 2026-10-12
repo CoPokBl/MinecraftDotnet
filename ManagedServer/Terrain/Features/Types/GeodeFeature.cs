@@ -1,4 +1,3 @@
-using ManagedServer.Placement;
 using ManagedServer.Terrain.Features.Blocks;
 using ManagedServer.Terrain.Features.Values;
 using ManagedServer.Terrain.Noise;
@@ -7,6 +6,8 @@ using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
+using Minecraft.Fluids;
 
 namespace ManagedServer.Terrain.Features.Types;
 
@@ -237,10 +238,10 @@ public sealed record GeodeFeature(BlockStateProvider FillingProvider, BlockState
     }
 
     private static bool IsWaterSource(IFeatureLevel level, Vec3<int> pos) {
-        Fluids.FluidState fluid = Fluids.FluidState.Of(
+        FluidState fluid = FluidState.Of(
             level.Registry.Blocks.GetByStateId(level.GetState(pos.X, pos.Y, pos.Z)));
 
-        return fluid.Kind == Fluids.FluidKind.Water && fluid.Amount == 8;
+        return fluid.Kind == FluidKind.Water && fluid.Amount == 8;
     }
 
     /// <summary>Writes unless the block there is on the list a geode may not cut through.</summary>

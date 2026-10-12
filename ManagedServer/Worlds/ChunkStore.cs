@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using ManagedServer.Worlds.Lighting;
+using Minecraft.Lighting;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Packets;
 using Minecraft.Packets.Play.ClientBound;

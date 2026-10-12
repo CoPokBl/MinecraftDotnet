@@ -40,9 +40,9 @@ public record SulfurCubeExplosion(int Power, bool CausesFire, int Fuse) {
     public static SulfurCubeExplosion FromNbt(INbtTag tag) {
         CompoundTag compound = (CompoundTag)tag;
         return new SulfurCubeExplosion(
-            compound["power"]!.GetInteger(),
-            compound["causes_fire"]!.GetBoolean(),
-            compound["fuse"]!.GetInteger());
+            compound["power"]!.AsInt(),
+            compound["causes_fire"]!.AsBool(),
+            compound["fuse"]!.AsInt());
     }
 }
 
@@ -64,7 +64,7 @@ public record SulfurCubeContactDamage(IDamageType DamageType, FloatProvider Amou
         return new SulfurCubeContactDamage(
             reg.DamageTypes[compound["damage_type"]!.GetString()],
             FloatProvider.FromNbt(compound["amount"]!),
-            compound["attribute_to_source"]!.GetBoolean());
+            compound["attribute_to_source"]!.AsBool());
     }
 }
 
@@ -80,8 +80,8 @@ public record SulfurCubeKnockbackModifiers(float HorizontalPower, float Vertical
     public static SulfurCubeKnockbackModifiers FromNbt(INbtTag tag) {
         CompoundTag compound = (CompoundTag)tag;
         return new SulfurCubeKnockbackModifiers(
-            compound["horizontal_power"]!.GetFloat(),
-            compound["vertical_power"]!.GetFloat());
+            compound["horizontal_power"]!.AsFloat(),
+            compound["vertical_power"]!.AsFloat());
     }
 }
 
@@ -106,7 +106,7 @@ public record SulfurCubeSoundSettings(
         return new SulfurCubeSoundSettings(
             SoundEvent.FromNbt(compound["hit_sound"]!, reg),
             SoundEvent.FromNbt(compound["push_sound"]!, reg),
-            compound["push_sound_impulse_threshold"]!.GetFloat(),
-            compound["push_sound_cooldown"]!.GetFloat());
+            compound["push_sound_impulse_threshold"]!.AsFloat(),
+            compound["push_sound_cooldown"]!.AsFloat());
     }
 }

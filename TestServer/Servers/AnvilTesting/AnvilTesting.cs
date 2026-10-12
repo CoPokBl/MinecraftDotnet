@@ -31,7 +31,7 @@ public static class AnvilTesting {
         }));
         server.ViewDistance = 16;
 
-        Console.WriteLine("Creating world...");
+        Console.WriteLine("Building the world...");
         World world = server.CreateWorld(new AnvilLoader("testanvil", VanillaRegistry.Data));
         // World world = server.CreateWorld(new PolarLoader("testpolar.polar", VanillaRegistry.Data));
         Console.WriteLine("World created.");

@@ -38,28 +38,28 @@ public abstract record InputControl {
         return type.ToString() switch {
             "minecraft:boolean" => new Boolean(
                 TextComponent.FromTag(compound["label"]!),
-                compound.Contains("initial") && compound["initial"]!.GetBoolean(),
+                compound.Contains("initial") && compound["initial"]!.AsBool(),
                 compound.Contains("on_true") ? compound["on_true"]!.GetString() : "true",
                 compound.Contains("on_false") ? compound["on_false"]!.GetString() : "false"),
 
             "minecraft:number_range" => new NumberRange(
                 TextComponent.FromTag(compound["label"]!),
                 RangeInfo.FromNbt(compound),
-                compound.Contains("width") ? compound["width"]!.GetInteger() : 200,
+                compound.Contains("width") ? compound["width"]!.AsInt() : 200,
                 compound.Contains("label_format") ? compound["label_format"]!.GetString() : "options.generic_value"),
 
             "minecraft:single_option" => new SingleOption(
                 TextComponent.FromTag(compound["label"]!),
-                ((ListTag)compound["options"]!).Tags.ToArray().Select(SingleOptionEntry.FromNbt).ToArray(),
-                compound.Contains("width") ? compound["width"]!.GetInteger() : 200,
-                !compound.Contains("label_visible") || compound["label_visible"]!.GetBoolean()),
+                compound["options"]!.AsList().Select(SingleOptionEntry.FromNbt).ToArray(),
+                compound.Contains("width") ? compound["width"]!.AsInt() : 200,
+                !compound.Contains("label_visible") || compound["label_visible"]!.AsBool()),
 
             "minecraft:text" => new Text(
                 TextComponent.FromTag(compound["label"]!),
-                compound.Contains("width") ? compound["width"]!.GetInteger() : 200,
-                !compound.Contains("label_visible") || compound["label_visible"]!.GetBoolean(),
+                compound.Contains("width") ? compound["width"]!.AsInt() : 200,
+                !compound.Contains("label_visible") || compound["label_visible"]!.AsBool(),
                 compound.Contains("initial") ? compound["initial"]!.GetString() : "",
-                compound.Contains("max_length") ? compound["max_length"]!.GetInteger() : 32,
+                compound.Contains("max_length") ? compound["max_length"]!.AsInt() : 32,
                 compound.Contains("multiline") ? MultilineOptions.FromNbt(compound["multiline"]!) : null),
 
             _ => throw new ArgumentException($"Unknown dialog input control type {type}", nameof(compound))
@@ -222,10 +222,10 @@ public record RangeInfo(float Start, float End, float? Initial = null, float? St
 
     public static RangeInfo FromNbt(CompoundTag compound) {
         return new RangeInfo(
-            compound["start"]!.GetFloat(),
-            compound["end"]!.GetFloat(),
-            compound.Contains("initial") ? compound["initial"]!.GetFloat() : null,
-            compound.Contains("step") ? compound["step"]!.GetFloat() : null);
+            compound["start"]!.AsFloat(),
+            compound["end"]!.AsFloat(),
+            compound.Contains("initial") ? compound["initial"]!.AsFloat() : null,
+            compound.Contains("step") ? compound["step"]!.AsFloat() : null);
     }
 }
 
@@ -248,11 +248,15 @@ public record SingleOptionEntry(string Id, TextComponent? Display = null, bool I
     }
 
     public static SingleOptionEntry FromNbt(INbtTag tag) {
+        if (tag is StringTag id) {
+            return new SingleOptionEntry(id.Value);
+        }
+
         CompoundTag compound = (CompoundTag)tag;
         return new SingleOptionEntry(
             compound["id"]!.GetString(),
             compound.Contains("display") ? TextComponent.FromTag(compound["display"]!) : null,
-            compound.Contains("initial") && compound["initial"]!.GetBoolean());
+            compound.Contains("initial") && compound["initial"]!.AsBool());
     }
 }
 
@@ -275,7 +279,7 @@ public record MultilineOptions(int? MaxLines = null, int? Height = null) {
     public static MultilineOptions FromNbt(INbtTag tag) {
         CompoundTag compound = (CompoundTag)tag;
         return new MultilineOptions(
-            compound.Contains("max_lines") ? compound["max_lines"]!.GetInteger() : null,
-            compound.Contains("height") ? compound["height"]!.GetInteger() : null);
+            compound.Contains("max_lines") ? compound["max_lines"]!.AsInt() : null,
+            compound.Contains("height") ? compound["height"]!.AsInt() : null);
     }
 }

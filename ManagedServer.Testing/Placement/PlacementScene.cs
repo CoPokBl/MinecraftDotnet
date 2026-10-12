@@ -10,6 +10,7 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Testing.Placement;
 
@@ -78,17 +79,17 @@ internal sealed class PlacementScene {
     }
 
     /// <summary>The context a click on that face would build, for a caller driving a rule directly.</summary>
-    public PlayerPlaceContext ContextFor(Vec3<int> hit, BlockFace face, double cursorY = 0.5,
+    public BlockPlaceContext ContextFor(Vec3<int> hit, BlockFace face, double cursorY = 0.5,
         IItem? item = null) {
         ItemStack stack = new(item ?? Item.Stone, 1);
         Vec3<double> click = new(hit.X + 0.5, hit.Y + cursorY, hit.Z + 0.5);
-        return new PlayerPlaceContext(World, null, Hand.MainHand, stack, hit, face, click, false, Rules);
+        return new BlockPlaceContext(World, null, Hand.MainHand, stack, hit, face, click, false);
     }
 
     /// <summary>Where a click on that face would put the block, after the replace decision.</summary>
     public Vec3<int> PlacePosFor(Vec3<int> hit, BlockFace face, IItem item, double cursorY = 0.5) {
         Vec3<double> click = new(hit.X + 0.5, hit.Y + cursorY, hit.Z + 0.5);
-        return new PlayerPlaceContext(World, null, Hand.MainHand, new ItemStack(item, 1), hit, face,
-            click, false, Rules).PlacePos;
+        return new BlockPlaceContext(World, null, Hand.MainHand, new ItemStack(item, 1), hit, face,
+            click, false).PlacePos;
     }
 }

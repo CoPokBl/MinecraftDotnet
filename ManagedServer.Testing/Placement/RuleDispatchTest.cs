@@ -1,5 +1,5 @@
 using System.Reflection;
-using ManagedServer.Placement;
+using Minecraft.Placement;
 
 namespace ManagedServer.Testing.Placement;
 

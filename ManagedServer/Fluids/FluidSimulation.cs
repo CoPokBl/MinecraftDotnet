@@ -9,6 +9,7 @@ using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using NBT.Tags;
 using Entry = ManagedServer.Fluids.FluidBlockData.Entry;
+using Minecraft.Fluids;
 
 namespace ManagedServer.Fluids;
 

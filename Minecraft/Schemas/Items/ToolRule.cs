@@ -15,8 +15,8 @@ public record ToolRule(IdSet Blocks, float? Speed, bool? CorrectDropForBlocks) :
 
     public static ToolRule ReadData(DataReader reader, MinecraftRegistry reg) {
         IdSet blocks = reader.Read<IdSet>(reg);
-        float? speed = reader.ReadPrefixedOptional(r => r.ReadFloat());
-        bool? correctDropForBlocks = reader.ReadPrefixedOptional(r => r.ReadBoolean());
+        float? speed = reader.ReadPrefixedOptionalValue(r => r.ReadFloat());
+        bool? correctDropForBlocks = reader.ReadPrefixedOptionalValue(r => r.ReadBoolean());
         return new ToolRule(blocks, speed, correctDropForBlocks);
     }
 

@@ -17,6 +17,7 @@ using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 using NBT.Tags;
 using Entry = ManagedServer.Fluids.FluidBlockData.Entry;
+using Minecraft.Fluids;
 
 namespace ManagedServer.Features.Basic;
 

@@ -1,4 +1,5 @@
 using Minecraft.Schemas;
+using Minecraft.Schemas.Tags;
 using NBT;
 using NBT.Tags;
 
@@ -13,7 +14,7 @@ public record SimpleDimensionType(
     int MinY,
     int Height,
     int LogicalHeight,
-    string InfiniBurn,
+    HolderSet InfiniBurn,
     Skybox Skybox,
     CardinalLight CardinalLight,
     float AmbientLight,

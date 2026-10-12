@@ -6,6 +6,7 @@ using Minecraft.Registry;
 using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Shapes;
 using Minecraft.Schemas.Vec;
+using Minecraft.Fluids;
 
 namespace ManagedServer.Fluids;
 

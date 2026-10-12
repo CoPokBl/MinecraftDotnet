@@ -1,5 +1,5 @@
 using ManagedServer.Features;
-using ManagedServer.Placement;
+using Minecraft.Placement;
 
 namespace ManagedServer.Features.Basic;
 

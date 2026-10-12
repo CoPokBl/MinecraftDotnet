@@ -1,4 +1,5 @@
 using Minecraft.Schemas.Vec;
+using Minecraft.Fluids;
 
 namespace ManagedServer.Fluids;
 

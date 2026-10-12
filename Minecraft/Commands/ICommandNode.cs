@@ -10,21 +10,17 @@ public interface ICommandNode {
     
     public DataWriter WriteData(DataWriter writer, MinecraftRegistry registry);
 
+    /// <summary>
+    /// Only an argument node carries a suggestions id on the wire. Vanilla reads the type from the low
+    /// two bits and treats the unused value 3 as a root, reading nothing after the redirect.
+    /// </summary>
     public static ICommandNode ReadData(DataReader reader, MinecraftRegistry registry) {
         CommandNodeFlag flags = (CommandNodeFlag)reader.ReadByte();
 
-        if (flags.HasFlag(CommandNodeFlag.ArgumentType)) {
-            return ArgumentNode.ReadAfterFlags(flags, reader, registry);
-        }
-        
-        if (flags.HasFlag(CommandNodeFlag.LiteralType)) {
-            return LiteralNode.ReadAfterFlags(flags, reader, registry);
-        }
-        
-        if (flags.HasFlag(CommandNodeFlag.RootType)) {
-            return RootNode.ReadAfterFlags(flags, reader, registry);
-        }
-        
-        throw new NotSupportedException($"Unsupported command node type with flags: {flags}");
+        return ((int)flags & 0x03) switch {
+            (int)CommandNodeFlag.ArgumentType => ArgumentNode.ReadAfterFlags(flags, reader, registry),
+            (int)CommandNodeFlag.LiteralType => LiteralNode.ReadAfterFlags(flags, reader, registry),
+            _ => RootNode.ReadAfterFlags(flags, reader, registry)
+        };
     }
 }

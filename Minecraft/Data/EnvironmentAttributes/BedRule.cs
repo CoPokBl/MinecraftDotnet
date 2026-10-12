@@ -35,7 +35,7 @@ public record BedRule(
         return new BedRule(
             BedRuleConditionExtensions.ParseBedRuleCondition(compound["can_sleep"]!.GetString()),
             BedRuleConditionExtensions.ParseBedRuleCondition(compound["can_set_spawn"]!.GetString()),
-            compound.Contains("explodes") && compound["explodes"]!.GetBoolean(),
+            compound.Contains("explodes") && compound["explodes"]!.AsBool(),
             compound.Contains("error_message") ? TextComponent.FromTag(compound["error_message"]!) : null);
     }
 }

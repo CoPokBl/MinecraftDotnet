@@ -7,6 +7,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 using Path = ManagedServer.Pathfinding.Path;
+using Minecraft.Fluids;
 
 namespace ManagedServer.Ai.Navigation;
 

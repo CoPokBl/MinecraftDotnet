@@ -22,7 +22,7 @@ public record BannerPatternsComponent() : IDataComponent<BannerPatternsComponent
                 .Enum("color", layer.Color)
                 .Build())
             .ToArray()),
-        (tag, registry) => tag.GetList().Tags.ToArray()
+        (tag, registry) => tag.AsList()
             .Select(entry => {
                 NbtNode node = NbtNode.Of(entry, "minecraft:banner_patterns");
                 Layer layer = new(

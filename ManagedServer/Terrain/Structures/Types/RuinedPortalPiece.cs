@@ -1,12 +1,13 @@
-using ManagedServer.Placement;
 using ManagedServer.Terrain.Features;
 using ManagedServer.Terrain.Structures.Templates;
+using Minecraft.Placement.Helpers;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Terrain.Structures.Types;
 
@@ -191,7 +192,7 @@ public sealed class RuinedPortalPiece : TemplateStructurePiece {
 
         IBlock block = level.Registry.Blocks.GetByStateId(stateId);
 
-        if (!Placement.Helpers.ShapeSupport.IsFaceFull(block.CollisionShape, face)) {
+        if (!ShapeSupport.IsFaceFull(block.CollisionShape, face)) {
             return;
         }
 

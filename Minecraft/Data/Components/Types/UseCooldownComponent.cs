@@ -26,7 +26,7 @@ public record UseCooldownComponent() : IDataComponent<UseCooldownComponent.Data>
     }
     
     public override object ReadData(DataReader reader, MinecraftRegistry registry) {
-        return new Data(reader.ReadFloat(), reader.ReadPrefixedOptional<Identifier>(registry));
+        return new Data(reader.ReadFloat(), reader.ReadPrefixedOptionalValue<Identifier>(registry));
     }
 
     public override bool ValuesEqual(Data val1, Data val2) {

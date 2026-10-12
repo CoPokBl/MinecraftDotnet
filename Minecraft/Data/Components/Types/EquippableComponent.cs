@@ -92,8 +92,8 @@ public record EquippableComponent() : IDataComponent<EquippableComponent.Data> {
             id => registry.SoundTypes[id],
             r => r.Read<SoundEvent>(registry)
         );
-        Identifier? model = reader.ReadPrefixedOptional(r => r.Read<Identifier>(registry));
-        Identifier? cameraOverlay = reader.ReadPrefixedOptional(r => r.Read<Identifier>(registry));
+        Identifier? model = reader.ReadPrefixedOptionalValue(r => r.Read<Identifier>(registry));
+        Identifier? cameraOverlay = reader.ReadPrefixedOptionalValue(r => r.Read<Identifier>(registry));
         IdSet? allowedEntities = reader.ReadPrefixedOptional(r => r.Read<IdSet>(registry));
         bool dispensable = reader.ReadBoolean();
         bool swappable = reader.ReadBoolean();

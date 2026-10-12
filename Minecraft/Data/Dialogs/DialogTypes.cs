@@ -79,10 +79,11 @@ public record MultiActionDialog(
 }
 
 /// <summary>A menu of other dialogs.</summary>
+/// <param name="Dialogs">Registry entries by name or tag, or dialogs written out in place.</param>
 public record DialogListDialog(
     Identifier Identifier,
     CommonDialogData Common,
-    HolderSet Dialogs,
+    Or<HolderSet, IDialog[]> Dialogs,
     DialogActionButton? ExitAction = null,
     int Columns = 2,
     int ButtonWidth = 150) : IDialog {
@@ -91,7 +92,12 @@ public record DialogListDialog(
 
     (string, INbtTag)[] IDialog.ExtraFields {
         get {
-            List<(string, INbtTag)> fields = [("dialogs", Dialogs.ToNbt())];
+            INbtTag dialogs = Dialogs.IsValue1
+                ? Dialogs.Value1!.ToNbt()
+                : Dialogs.Value2!.Length == 1
+                    ? Dialogs.Value2[0].ToNbt()
+                    : new ListTag(Dialogs.Value2.Select(d => d.ToNbt()).ToArray());
+            List<(string, INbtTag)> fields = [("dialogs", dialogs)];
 
             if (ExitAction != null) {
                 fields.Add(("exit_action", ExitAction.ToNbt()));

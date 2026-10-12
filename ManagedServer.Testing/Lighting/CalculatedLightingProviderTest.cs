@@ -1,4 +1,4 @@
-using ManagedServer.Worlds.Lighting;
+using Minecraft.Lighting;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Chunks;

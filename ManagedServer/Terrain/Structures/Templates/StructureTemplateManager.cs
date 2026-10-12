@@ -1,5 +1,6 @@
 using System.IO.Compression;
 using ManagedServer.Terrain.Data;
+using Minecraft.Placement.Helpers;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Registry;
@@ -291,7 +292,7 @@ public sealed class StructureTemplateManager {
         IBlock block = _registry.Blocks.GetByStateId(stateId);
 
         return !HasDynamicShape.Contains(block.Identifier)
-            && Placement.Helpers.ShapeSupport.IsShapeFullBlock(block.CollisionShape);
+            && ShapeSupport.IsShapeFullBlock(block.CollisionShape);
     }
 
     /// <summary>

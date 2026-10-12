@@ -8,6 +8,7 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Interaction.Rules;
 

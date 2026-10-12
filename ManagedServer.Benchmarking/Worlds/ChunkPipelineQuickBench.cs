@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using ManagedServer.Terrain;
-using ManagedServer.Worlds.Lighting;
+using Minecraft.Lighting;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Terrain;
 using Minecraft.Implementations.Server.Terrain.Generation;

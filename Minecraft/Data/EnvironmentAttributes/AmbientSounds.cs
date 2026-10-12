@@ -42,9 +42,9 @@ public record AmbientSounds(
 
         AmbientAdditionsSettings[] additions = [];
         if (compound.Contains("additions")) {
-            additions = compound["additions"]! is ListTag list
-                ? list.Tags.ToArray().Select(t => AmbientAdditionsSettings.FromNbt(t, reg)).ToArray()
-                : [AmbientAdditionsSettings.FromNbt(compound["additions"]!, reg)];
+            additions = compound["additions"]!.AsCompactList()
+                .Select(t => AmbientAdditionsSettings.FromNbt(t, reg))
+                .ToArray();
         }
 
         return new AmbientSounds(
@@ -80,9 +80,9 @@ public record AmbientMoodSettings(SoundEvent Sound, int TickDelay, int BlockSear
         CompoundTag compound = (CompoundTag)tag;
         return new AmbientMoodSettings(
             SoundEvent.FromNbt(compound["sound"]!, reg),
-            compound["tick_delay"]!.GetInteger(),
-            compound["block_search_extent"]!.GetInteger(),
-            compound["offset"]!.GetDouble());
+            compound["tick_delay"]!.AsInt(),
+            compound["block_search_extent"]!.AsInt(),
+            compound["offset"]!.AsDouble());
     }
 }
 
@@ -99,6 +99,6 @@ public record AmbientAdditionsSettings(SoundEvent Sound, double TickChance) {
         CompoundTag compound = (CompoundTag)tag;
         return new AmbientAdditionsSettings(
             SoundEvent.FromNbt(compound["sound"]!, reg),
-            compound["tick_chance"]!.GetDouble());
+            compound["tick_chance"]!.AsDouble());
     }
 }

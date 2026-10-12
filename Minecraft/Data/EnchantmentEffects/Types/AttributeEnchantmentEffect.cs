@@ -10,9 +10,7 @@ public record AttributeEnchantmentEffect(AttributeEnchantmentEffect.Effect[] Eff
     public string Id => "minecraft:attributes";
     
     public static IEnchantmentEffect ParseData(INbtTag tag, MinecraftRegistry reg) {
-        ListTag tags = tag.GetList();
-        return new AttributeEnchantmentEffect(tags.Tags
-            .ToArray()
+        return new AttributeEnchantmentEffect(tag.AsList()
             .Select(t => Parse(t.GetCompound(), reg))
             .ToArray());
     }

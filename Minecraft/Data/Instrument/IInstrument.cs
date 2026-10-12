@@ -25,8 +25,8 @@ public interface IInstrument : IProtocolType, INetworkType<IInstrument> {
         return new SimpleInstrument(
             ident,
             SoundEvent.FromNbt(tag["sound_event"]!, reg),
-            tag["use_duration"]!.GetFloat(),
-            tag["range"]!.GetFloat(),
+            tag["use_duration"]!.AsFloat(),
+            tag["range"]!.AsFloat(),
             TextComponent.FromTag(tag["description"]!));
     }
 

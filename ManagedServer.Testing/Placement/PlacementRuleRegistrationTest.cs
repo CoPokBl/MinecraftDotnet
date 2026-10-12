@@ -1,7 +1,7 @@
 using ManagedServer;
-using ManagedServer.Placement;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
+using Minecraft.Placement;
 
 namespace ManagedServer.Testing.Placement;
 

@@ -33,7 +33,7 @@ public class Advancement : INetworkType<Advancement> {
 
     public static Advancement ReadData(DataReader r, MinecraftRegistry reg) {
         return new Advancement {
-            Parent = r.ReadPrefixedOptional<Identifier>(reader => reader.ReadString()),
+            Parent = r.ReadPrefixedOptionalValue<Identifier>(reader => reader.ReadString()),
             Display = r.ReadPrefixedOptional(reader => AdvancementDisplay.Read(reader, reg)),
             Requirements = r.ReadPrefixedArray(reader =>
                 reader.ReadPrefixedArray(gr => gr.ReadString())),

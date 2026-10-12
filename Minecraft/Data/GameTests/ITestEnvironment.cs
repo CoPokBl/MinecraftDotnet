@@ -41,13 +41,13 @@ public abstract record TestEnvironmentDefinition {
         Identifier type = compound["type"]!.GetString();
 
         return type.ToString() switch {
-            "minecraft:all_of" => new AllOf(((ListTag)compound["definitions"]!).Tags.ToArray()
+            "minecraft:all_of" => new AllOf(compound["definitions"]!.AsList()
                 .Select(TestEnvironmentReference.FromNbt)
                 .ToArray()),
 
             "minecraft:clock_time" => new ClockTime(
                 compound["clock"]!.GetString(),
-                compound["time"]!.GetInteger()),
+                compound["time"]!.AsInt()),
 
             "minecraft:difficulty" => new SetDifficulty(
                 DifficultyExtensions.ParseDifficulty(compound["difficulty"]!.GetString())),
@@ -59,7 +59,7 @@ public abstract record TestEnvironmentDefinition {
             "minecraft:game_rules" => new SetGameRules(((CompoundTag)compound["rules"]!).Children
                 .ToDictionary(c => c.Item1, c => c.Item2)),
 
-            "minecraft:timeline_attributes" => new Timelines(((ListTag)compound["timelines"]!).Tags.ToArray()
+            "minecraft:timeline_attributes" => new Timelines(compound["timelines"]!.AsList()
                 .Select(t => (Identifier)t.GetString())
                 .ToArray()),
 

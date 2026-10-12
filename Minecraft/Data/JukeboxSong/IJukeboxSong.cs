@@ -26,8 +26,8 @@ public interface IJukeboxSong : IProtocolType, INetworkType<IJukeboxSong> {
             ident,
             SoundEvent.FromNbt(tag["sound_event"]!, reg),
             TextComponent.FromTag(tag["description"]!),
-            tag["length_in_seconds"]!.GetFloat(),
-            tag["comparator_output"]!.GetInteger());
+            tag["length_in_seconds"]!.AsFloat(),
+            tag["comparator_output"]!.AsInt());
     }
 
     DataWriter INetworkType<IJukeboxSong>.WriteData(DataWriter writer, MinecraftRegistry registry) {

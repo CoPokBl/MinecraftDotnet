@@ -77,11 +77,20 @@ public readonly struct TextColor : IEquatable<TextColor> {
         }
         
         // maybe it's hex
-        if (val[0] != '#') {
+        if (val.Length == 0 || val[0] != '#') {
             throw new ArgumentException("Invalid color format.", nameof(val));
         }
-        
-        return Hex(val);
+
+        // TextColor.parseColor takes any number of digits, so long as the value fits in RGB.
+        return FromDecimal(int.Parse(val.AsSpan(1), System.Globalization.NumberStyles.AllowHexSpecifier));
+    }
+
+    /// <summary>
+    /// <c>ExtraCodecs.ARGB_COLOR_CODEC</c>, as a text shadow is written. The alpha is dropped, since
+    /// this type has nowhere to keep it.
+    /// </summary>
+    public static TextColor FromArgbNbt(NBT.INbtTag tag) {
+        return FromDecimal(Minecraft.Schemas.PackedColor.ArgbFromNbt(tag) & 0xFFFFFF);
     }
 
     public static TextColor FromNamedTextColor(NamedTextColor color) => color switch {
@@ -116,6 +125,20 @@ public readonly struct TextColor : IEquatable<TextColor> {
         return new TextColor(r, g, b);
     }
     
+    /// <summary>
+    /// <c>TextColor.serialize</c>: one of the sixteen formatting colours by its name, anything else as
+    /// hex. Vanilla keeps the name for a colour it was given by name, so writing those as hex makes the
+    /// same text differ from what a datapack spells and what the client hashes.
+    /// </summary>
+    public string Serialise() {
+        foreach (NamedTextColor named in Enum.GetValues<NamedTextColor>()) {
+            if (Equals(FromNamedTextColor(named))) {
+                return named.GetName();
+            }
+        }
+        return ToHex();
+    }
+
     public string ToHex() {
         return $"#{R:X2}{G:X2}{B:X2}";
     }

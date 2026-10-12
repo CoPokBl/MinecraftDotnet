@@ -9,6 +9,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Registry;
 using Minecraft.Implementations.Server.Terrain.Providers;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Testing.Pathfinding;
 

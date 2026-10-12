@@ -3,6 +3,7 @@ using ManagedServer.Features;
 using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
+using Minecraft.Placement;
 using Minecraft.Schemas;
 
 namespace ManagedServer.Placement;

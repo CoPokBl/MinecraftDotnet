@@ -19,7 +19,7 @@ public record PotDecorationsComponent() : IDataComponent<IItem[]> {
         (val, _) => new ListTag(val
             .Select(item => (INbtTag)new StringTag(item.Identifier.ToString()))
             .ToArray()),
-        (tag, registry) => tag.GetList().Tags.ToArray()
+        (tag, registry) => tag.AsList()
             .Select(item => registry.Items[(Identifier)item.GetString()])
             .ToArray());
 

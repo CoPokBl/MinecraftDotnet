@@ -1,4 +1,5 @@
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Components.Types;
 using Minecraft.Data.Particles;
 using Minecraft.Data.PaintingVariant;
 using Minecraft.Registry;
@@ -25,22 +26,25 @@ public class EntityMetaContainer {
         { MetaFieldType.Boolean, (_, reader) => new MetaField<bool>(MetaFieldType.Boolean, reader.ReadBoolean()) },
         { MetaFieldType.Rotations, (_, reader) => new MetaField<Vec3<float>>(MetaFieldType.Rotations, reader.ReadFVec3()) },
         { MetaFieldType.Position, (_, reader) => new MetaField<Vec3<int>>(MetaFieldType.Position, reader.ReadPosition()) },
+        // Not ReadPrefixedOptional: its default for an absent struct is a present zero once made an Optional.
         { MetaFieldType.OptionalPosition, (_, reader) => new MetaField<Optional<Vec3<int>>>(MetaFieldType.OptionalPosition, 
-            reader.ReadPrefixedOptional(r => r.ReadPosition())) },
+            reader.ReadBoolean() ? new Optional<Vec3<int>>(true, reader.ReadPosition()) : Optional<Vec3<int>>.Empty) },
         { MetaFieldType.Direction, (_, reader) => new MetaField<Cardinal>(MetaFieldType.Direction, (Cardinal)reader.ReadVarInt()) },
         { MetaFieldType.OptionalLivingEntityReference, (_, reader) => new MetaField<Optional<Guid>>(MetaFieldType.OptionalLivingEntityReference, 
-            reader.ReadPrefixedOptional(r => r.ReadUuid())) },
+            reader.ReadBoolean() ? new Optional<Guid>(true, reader.ReadUuid()) : Optional<Guid>.Empty) },
         { MetaFieldType.BlockState, (reg, reader) => new MetaField<IBlock>(MetaFieldType.BlockState, reg.Blocks.GetByStateId((uint)reader.ReadVarInt())) },
+        // EntityDataSerializers.OPTIONAL_BLOCK_STATE: one VarInt, 0 being empty, which air's id also is.
         { MetaFieldType.OptionalBlockState, (reg, reader) => new MetaField<Optional<IBlock>>(MetaFieldType.OptionalBlockState, 
-            Optional<IBlock>.FromNullable(reader.ReadPrefixedOptional(r => reg.Blocks.GetByStateId((uint)r.ReadVarInt())))) },
+            reader.ReadVarInt() is var state and not 0 ? new Optional<IBlock>(true, reg.Blocks.GetByStateId((uint)state)) : Optional<IBlock>.Empty) },
         { MetaFieldType.Particle, (reg, reader) => new MetaField<IParticle>(MetaFieldType.Particle, 
             reg.Particles[reader.ReadVarInt()].ReadData(reader, reg)) },
         { MetaFieldType.Particles, (reg, reader) => new MetaField<IParticle[]>(MetaFieldType.Particles, 
             reader.ReadPrefixedArray(r => reg.Particles[r.ReadVarInt()].ReadData(r, reg))) },
         { MetaFieldType.VillagerData, (_, reader) => new MetaField<(int, int, int)>(MetaFieldType.VillagerData, 
             (reader.ReadVarInt(), reader.ReadVarInt(), reader.ReadVarInt())) },
+        // EntityDataSerializers.OPTIONAL_UNSIGNED_INT: one VarInt holding the value plus one, 0 being empty.
         { MetaFieldType.OptionalVarInt, (_, reader) => new MetaField<Optional<int>>(MetaFieldType.OptionalVarInt, 
-            reader.ReadPrefixedOptional(r => r.ReadVarInt())) },
+            reader.ReadVarInt() is var value and not 0 ? new Optional<int>(true, value - 1) : Optional<int>.Empty) },
         { MetaFieldType.Pose, (_, reader) => new MetaField<EntityPose>(MetaFieldType.Pose, (EntityPose)reader.ReadVarInt()) },
         { MetaFieldType.CatVariant, (_, reader) => new MetaField<int>(MetaFieldType.CatVariant, reader.ReadVarInt()) },
         { MetaFieldType.CatSoundVariant, (_, reader) => new MetaField<int>(MetaFieldType.CatSoundVariant, reader.ReadVarInt()) },
@@ -55,7 +59,8 @@ public class EntityMetaContainer {
         { MetaFieldType.ChickenSoundVariant, (_, reader) => new MetaField<int>(MetaFieldType.ChickenSoundVariant, reader.ReadVarInt()) },
         { MetaFieldType.ZombieNautilusVariant, (_, reader) => new MetaField<int>(MetaFieldType.ZombieNautilusVariant, reader.ReadVarInt()) },
         { MetaFieldType.OptionalGlobalPosition, (_, reader) => new MetaField<Optional<(Identifier, Vec3<int>)>>(MetaFieldType.OptionalGlobalPosition, 
-            reader.ReadPrefixedOptional(r => (r.ReadString(), r.ReadPosition()))) },
+            reader.ReadPrefixedOptionalValue(r => ((Identifier)r.ReadString(), r.ReadPosition())) is { } global
+                ? new Optional<(Identifier, Vec3<int>)>(true, global) : Optional<(Identifier, Vec3<int>)>.Empty) },
         { MetaFieldType.PaintingVariant, (reg, reader) => new MetaField<Or<int, IPaintingVariant>>(MetaFieldType.PaintingVariant, 
             reader.ReadIdOr(r => IPaintingVariant.ReadData(r, reg))) },
         { MetaFieldType.SnifferState, (_, reader) => new MetaField<SnifferState>(MetaFieldType.SnifferState, 
@@ -68,7 +73,8 @@ public class EntityMetaContainer {
             (WeatheringCopperState)reader.ReadVarInt()) },
         { MetaFieldType.Vector3, (_, reader) => new MetaField<Vec3<float>>(MetaFieldType.Vector3, reader.ReadFVec3()) },
         { MetaFieldType.Quaternion, (_, reader) => new MetaField<Quaternion>(MetaFieldType.Quaternion, reader.ReadQuaternion()) },
-        // TODO: { MetaFieldType.ResolvableProfile, (_, reader) => new MetaField<ResolvableProfile>(MetaFieldType.ResolvableProfile, reader.ReadResolvableProfile()) }
+        // Held as an object, the type the generated field for it has.
+        { MetaFieldType.ResolvableProfile, (reg, reader) => new MetaField<object>(MetaFieldType.ResolvableProfile, ProfileComponent.Read(reader, reg)) },
         { MetaFieldType.HumanoidArm, (_, reader) => new MetaField<HumanoidArm>(MetaFieldType.HumanoidArm,
             (HumanoidArm)reader.ReadVarInt()) },
     };
@@ -93,7 +99,7 @@ public class EntityMetaContainer {
             writer.WritePrefixedOptional(field.GetValue<Optional<Guid>>(), (uuid, w) => w.WriteUuid(uuid)) },
         { MetaFieldType.BlockState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<IBlock>().StateId) },
         { MetaFieldType.OptionalBlockState, (_, writer, field) => 
-            writer.WritePrefixedOptional(field.GetValue<Optional<IBlock>>(), (block, w) => w.WriteVarInt((int)block.StateId)) },
+            writer.WriteVarInt(field.GetValue<Optional<IBlock>>() is { Present: true } block ? (int)block.Value.StateId : 0) },
         { MetaFieldType.Particle, (reg, writer, field) => 
             writer.WriteVarInt(reg.Particles.GetProtocolId(field.GetValue<IParticle>())).Write(wr => field.GetValue<IParticle>().WriteData(wr, reg)) },
         { MetaFieldType.Particles, (reg, writer, field) => 
@@ -104,7 +110,7 @@ public class EntityMetaContainer {
             writer.WriteVarInt(type).WriteVarInt(profession).WriteVarInt(level);
         }},
         { MetaFieldType.OptionalVarInt, (_, writer, field) => 
-            writer.WritePrefixedOptional(field.GetValue<Optional<int>>(), (i, w) => w.WriteVarInt(i)) },
+            writer.WriteVarInt(field.GetValue<Optional<int>>() is { Present: true } value ? value.Value + 1 : 0) },
         { MetaFieldType.Pose, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<EntityPose>()) },
         { MetaFieldType.CatVariant, (_, writer, field) => writer.WriteVarInt(field.GetValue<int>()) },
         { MetaFieldType.CatSoundVariant, (_, writer, field) => writer.WriteVarInt(field.GetValue<int>()) },
@@ -129,7 +135,7 @@ public class EntityMetaContainer {
         { MetaFieldType.WeatheringCopperState, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<WeatheringCopperState>()) },
         { MetaFieldType.Vector3, (_, writer, field) => writer.WriteVec3(field.GetValue<Vec3<float>>()) },
         { MetaFieldType.Quaternion, (_, writer, field) => writer.WriteQuaternion(field.GetValue<Quaternion>()) },
-        // TODO: { MetaFieldType.ResolvableProfile, (_, writer, field) =>  },
+        { MetaFieldType.ResolvableProfile, (reg, writer, field) => new ProfileComponent().WriteData((ProfileComponent.Data)field.Value, writer, reg) },
         { MetaFieldType.HumanoidArm, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<HumanoidArm>()) },
     };
 

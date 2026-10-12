@@ -1,5 +1,5 @@
-using ManagedServer.Placement.Helpers;
-using ManagedServer.Placement.Rules;
+using Minecraft.Placement.Helpers;
+using Minecraft.Placement.Rules;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;

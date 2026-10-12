@@ -26,7 +26,7 @@ public record LodestoneTrackerComponent() : IDataComponent<LodestoneTrackerCompo
             Data data = new(
                 node.ObjectOrNull("target", target => {
                     Identifier dimension = target.Id("dimension");
-                    ReadOnlySpan<int> pos = target.Require("pos").GetIntegers();
+                    int[] pos = target.List("pos", value => value.AsInt());
                     target.AssertRead();
                     return new GlobalPosition(dimension, new Vec3<int>(pos[0], pos[1], pos[2]));
                 }),

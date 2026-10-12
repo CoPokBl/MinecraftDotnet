@@ -67,13 +67,27 @@ public class DataReader(byte[] data) : Stream {
         return newData;
     }
 
-    public T? ReadPrefixedOptional<T>(Func<DataReader, T> reader) {
+    public T? ReadPrefixedOptional<T>(Func<DataReader, T> reader) where T : class {
         bool exists = ReadBoolean();
-        return exists ? reader(this) : default;
+        return exists ? reader(this) : null;
     }
     
-    public T? ReadPrefixedOptional<T>(MinecraftRegistry reg) where T : INetworkType<T> {
+    public T? ReadPrefixedOptional<T>(MinecraftRegistry reg) where T : class, INetworkType<T> {
         return ReadPrefixedOptional(r => T.ReadData(r, reg));
+    }
+
+    /// <summary>
+    /// <see cref="ReadPrefixedOptional{T}(Func{DataReader,T})"/> for a value type, which has to be a
+    /// separate method: an unconstrained <c>T?</c> is plain <c>T</c> for a struct, so an absent value
+    /// would come back as a present zero.
+    /// </summary>
+    public T? ReadPrefixedOptionalValue<T>(Func<DataReader, T> reader) where T : struct {
+        bool exists = ReadBoolean();
+        return exists ? reader(this) : null;
+    }
+
+    public T? ReadPrefixedOptionalValue<T>(MinecraftRegistry reg) where T : struct, INetworkType<T> {
+        return ReadPrefixedOptionalValue(r => T.ReadData(r, reg));
     }
 
     public T Read<T>(MinecraftRegistry reg) where T : INetworkType<T> {
@@ -366,7 +380,9 @@ public class DataReader(byte[] data) : Stream {
     }
     
     public byte[] ReadRemaining() {
-        return _data[Pos..];
+        byte[] remaining = _data[Pos..];
+        Pos = _data.Length;
+        return remaining;
     }
     
     public override void Flush() {

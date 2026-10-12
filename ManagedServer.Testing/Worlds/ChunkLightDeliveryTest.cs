@@ -1,6 +1,6 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Worlds;
-using ManagedServer.Worlds.Lighting;
+using Minecraft.Lighting;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Terrain;

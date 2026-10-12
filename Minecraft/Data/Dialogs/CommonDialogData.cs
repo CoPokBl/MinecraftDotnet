@@ -55,14 +55,14 @@ public record CommonDialogData(
         return new CommonDialogData(
             TextComponent.FromTag(tag["title"]!),
             tag.Contains("external_title") ? TextComponent.FromTag(tag["external_title"]!) : null,
-            !tag.Contains("can_close_with_escape") || tag["can_close_with_escape"]!.GetBoolean(),
-            !tag.Contains("pause") || tag["pause"]!.GetBoolean(),
+            !tag.Contains("can_close_with_escape") || tag["can_close_with_escape"]!.AsBool(),
+            !tag.Contains("pause") || tag["pause"]!.AsBool(),
             tag.Contains("after_action")
                 ? DialogAfterActionExtensions.ParseDialogAfterAction(tag["after_action"]!.GetString())
                 : DialogAfterAction.Close,
             tag.Contains("body") ? DialogBody.ListFromNbt(tag["body"]!) : [],
             tag.Contains("inputs")
-                ? ((ListTag)tag["inputs"]!).Tags.ToArray().Select(DialogInput.FromNbt).ToArray()
+                ? tag["inputs"]!.AsList().Select(DialogInput.FromNbt).ToArray()
                 : []);
     }
 
@@ -112,7 +112,7 @@ public record DialogActionButton(
         return new DialogActionButton(
             TextComponent.FromTag(compound["label"]!),
             compound.Contains("tooltip") ? TextComponent.FromTag(compound["tooltip"]!) : null,
-            compound.Contains("width") ? compound["width"]!.GetInteger() : 150,
+            compound.Contains("width") ? compound["width"]!.AsInt() : 150,
             compound.Contains("action") ? DialogAction.FromNbt(compound["action"]!) : null);
     }
 }

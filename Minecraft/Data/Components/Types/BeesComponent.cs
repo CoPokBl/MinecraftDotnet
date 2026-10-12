@@ -21,7 +21,7 @@ public record BeesComponent() : IDataComponent<BeesComponent.Occupant[]> {
                 .Int("min_ticks_in_hive", bee.MinTicksInHive)
                 .Build())
             .ToArray()),
-        (tag, registry) => tag.GetList().Tags.ToArray()
+        (tag, registry) => tag.AsList()
             .Select(entry => {
                 NbtNode node = NbtNode.Of(entry, "minecraft:bees");
                 Occupant bee = new(

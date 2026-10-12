@@ -1,3 +1,4 @@
+using Minecraft.Lighting;
 using Minecraft.Registry;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;

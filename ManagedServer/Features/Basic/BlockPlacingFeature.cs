@@ -3,13 +3,14 @@ using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using ManagedServer.Interaction;
 using ManagedServer.Inventories;
-using ManagedServer.Physics;
+using Minecraft.Physics;
 using ManagedServer.Placement;
 using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
+using Minecraft.Placement;
 
 namespace ManagedServer.Features.Basic;
 
@@ -60,8 +61,8 @@ public class BlockPlacingFeature : ScopedFeature {
         IBlock block = player.Server.Registry.Blocks[blockId];
         BlockPlacementRules rules = player.Server.BlockPlacementRules;
 
-        PlayerPlaceContext context = new(world, player, e.Hand, usedItem, e.Position, e.Face,
-            e.ClickLocation, e.InsideBlock, rules);
+        BlockPlaceContext context = new(world, new Placer(player.Yaw.DegreesF, player.Pitch.DegreesF, player.IsSecondaryUseActive),
+            e.Hand, usedItem, e.Position, e.Face, e.ClickLocation, e.InsideBlock);
 
         // Whether anything at all can go there, before asking the block what it would look like.
         // Every refusal below is BlockItem.place returning FAIL. Nothing needs to be sent to put the

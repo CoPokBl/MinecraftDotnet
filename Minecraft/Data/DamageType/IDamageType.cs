@@ -31,7 +31,7 @@ public interface IDamageType : IProtocolType {
     }
 
     public static IDamageType FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
-        float exhaustion = tag["exhaustion"].GetFloat();
+        float exhaustion = tag["exhaustion"].AsFloat();
         string messageId = tag["message_id"].GetString();
         DamageScaling scaling = DamageScalingExtensions.ParseDamageScaling(tag["scaling"].GetString());
 

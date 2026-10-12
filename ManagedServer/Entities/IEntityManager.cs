@@ -1,5 +1,5 @@
 using ManagedServer.Entities.Types;
-using ManagedServer.Physics;
+using Minecraft.Physics;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Connections;
 using Minecraft.Implementations.Server.Events;

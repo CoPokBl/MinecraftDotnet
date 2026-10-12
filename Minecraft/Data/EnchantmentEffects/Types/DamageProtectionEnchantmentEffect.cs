@@ -33,8 +33,7 @@ public record DamageProtectionEnchantmentEffect(DamageProtectionEnchantmentEffec
     public record Requirement(Identifier Tag, bool Expected);
 
     public static IEnchantmentEffect ParseData(INbtTag tag, MinecraftRegistry reg) {
-        return new DamageProtectionEnchantmentEffect(tag.GetList().Tags
-            .ToArray()
+        return new DamageProtectionEnchantmentEffect(tag.AsList()
             .Select(t => ParseEntry(t.GetCompound()))
             .ToArray());
     }
@@ -60,16 +59,16 @@ public record DamageProtectionEnchantmentEffect(DamageProtectionEnchantmentEffec
         Identifier type = condition["condition"].GetString();
         switch (type.Key) {
             case "all_of":
-                foreach (INbtTag term in condition["terms"].GetList().Tags.ToArray()) {
+                foreach (INbtTag term in condition["terms"].AsList()) {
                     ParseCondition(term.GetCompound(), into);
                 }
 
                 return;
 
             case "damage_source_properties":
-                foreach (INbtTag entry in condition["predicate"].GetCompound()["tags"].GetList().Tags.ToArray()) {
+                foreach (INbtTag entry in condition["predicate"].GetCompound()["tags"].AsList()) {
                     CompoundTag tag = entry.GetCompound();
-                    into.Add(new Requirement(tag["id"].GetString(), tag["expected"].GetBoolean()));
+                    into.Add(new Requirement(tag["id"].GetString(), tag["expected"].AsBool()));
                 }
 
                 return;

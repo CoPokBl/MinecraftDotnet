@@ -1,5 +1,6 @@
 using System.Globalization;
 using ManagedServer.Physics;
+using Minecraft.Physics;
 using Minecraft.Schemas.Shapes;
 using Minecraft.Schemas.Vec;
 

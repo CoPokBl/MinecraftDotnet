@@ -29,7 +29,7 @@ public record AttributeModifiersComponent() : IDataComponent<ItemAttributeModifi
                 .Build())
             .ToArray()),
 
-        (tag, registry) => tag.GetList().Tags.ToArray()
+        (tag, registry) => tag.AsList()
             .Select(entry => {
                 NbtNode node = NbtNode.Of(entry, "minecraft:attribute_modifiers");
                 ItemAttributeModifier modifier = new(

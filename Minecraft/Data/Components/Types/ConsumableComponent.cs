@@ -107,10 +107,12 @@ public record ConsumableComponent() : IDataComponent<ConsumableComponent.Data> {
         Drink = 2,
         Block = 3,
         Bow = 4,
-        Spear = 5,
+        Trident = 5,
         Crossbow = 6,
         Spyglass = 7,
         TootHorn = 8,
-        Brush = 9
+        Brush = 9,
+        Bundle = 10,
+        Spear = 11
     }
 }

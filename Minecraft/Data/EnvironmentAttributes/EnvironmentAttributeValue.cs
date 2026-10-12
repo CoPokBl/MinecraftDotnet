@@ -18,17 +18,19 @@ public abstract record EnvironmentAttributeValue {
     public static EnvironmentAttributeValue FromNbt(EnvironmentAttributeValueKind kind, INbtTag tag,
         MinecraftRegistry reg) {
         return kind switch {
-            EnvironmentAttributeValueKind.Boolean => new Boolean(tag.GetBoolean()),
-            EnvironmentAttributeValueKind.Float => new Float(tag.GetFloat()),
-            EnvironmentAttributeValueKind.RgbColor => new RgbColor(PackedColor.Parse(tag.GetString())),
-            EnvironmentAttributeValueKind.ArgbColor => new ArgbColor(PackedColor.Parse(tag.GetString())),
+            EnvironmentAttributeValueKind.Boolean => new Boolean(tag.AsBool()),
+            EnvironmentAttributeValueKind.Float => new Float(tag.AsFloat()),
+            EnvironmentAttributeValueKind.RgbColor => new RgbColor(PackedColor.StringRgbFromNbt(tag) & 0xFFFFFF),
+            EnvironmentAttributeValueKind.ArgbColor => new ArgbColor(PackedColor.StringArgbFromNbt(tag)),
             EnvironmentAttributeValueKind.Activity => new Activity(tag.GetString()),
-            EnvironmentAttributeValueKind.TriState =>
-                new TriStateValue(TriStateExtensions.ParseTriState(tag.GetString())),
+            // TriState.CODEC tries a boolean before the name.
+            EnvironmentAttributeValueKind.TriState => new TriStateValue(tag is StringTag name
+                ? TriStateExtensions.ParseTriState(name.Value)
+                : tag.AsBool() ? TriState.True : TriState.False),
             EnvironmentAttributeValueKind.MoonPhase =>
                 new MoonPhaseValue(MoonPhaseExtensions.ParseMoonPhase(tag.GetString())),
             EnvironmentAttributeValueKind.Particle => new Particle(ParticleValue.FromNbt(tag)),
-            EnvironmentAttributeValueKind.AmbientParticles => new AmbientParticles(((ListTag)tag).Tags.ToArray()
+            EnvironmentAttributeValueKind.AmbientParticles => new AmbientParticles(tag.AsList()
                 .Select(AmbientParticle.FromNbt)
                 .ToArray()),
             EnvironmentAttributeValueKind.AmbientSounds =>
@@ -51,6 +53,7 @@ public abstract record EnvironmentAttributeValue {
         public override INbtTag ToNbt() => new FloatTag(Value);
     }
 
+    /// <param name="Value">RGB with no alpha byte, whichever of vanilla's forms it arrived in.</param>
     public record RgbColor(int Value) : EnvironmentAttributeValue {
         public override EnvironmentAttributeValueKind Kind => EnvironmentAttributeValueKind.RgbColor;
         public override INbtTag ToNbt() => new StringTag(PackedColor.ToRgbString(Value));

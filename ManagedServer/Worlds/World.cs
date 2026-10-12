@@ -10,7 +10,7 @@ using ManagedServer.Features;
 using ManagedServer.Fluids;
 using ManagedServer.Pathfinding;
 using ManagedServer.Viewables;
-using ManagedServer.Worlds.Lighting;
+using Minecraft.Lighting;
 using ManagedServer.Worlds.Saving;
 using Minecraft;
 using Minecraft.Data.BlockEntityTypes;
@@ -33,6 +33,10 @@ using Minecraft.Schemas.Entities.Meta.Types;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using NBT;
+using Minecraft.Placement;
+using Minecraft.Placement.Helpers;
+using Minecraft.Fluids;
+using Minecraft.Registry;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -54,7 +58,7 @@ namespace ManagedServer.Worlds;
 /// tried again, so nothing is lost by arriving at an awkward moment. Building and writing happen off
 /// the tick, one flight per player.
 /// </summary>
-public class World : MappedTaggable, IAudience, IFeatureScope {
+public class World : MappedTaggable, IAudience, IFeatureScope, IPlacementLevel {
     #region public_properties
 
     public SnapshotList<Player> Players { get; } = new();
@@ -705,6 +709,17 @@ public class World : MappedTaggable, IAudience, IFeatureScope {
         INbtTag? blockEntityData = null, int flags = BlockUpdateFlags.Default,
         int updateLimit = BlockUpdateFlags.UpdateLimit) =>
         SetBlock(pos.ToBlockPos(), block, blockEntityType, blockEntityData, flags, updateLimit);
+
+    MinecraftRegistry IPlacementLevel.Registry => Server.Registry;
+    int IPlacementLevel.MinY => Dimension.MinY;
+    int IPlacementLevel.Height => Dimension.Height;
+    bool IPlacementLevel.IsInBounds(Vec3<int> pos) => IsInBounds(pos);
+    bool IPlacementLevel.IsClientSide => false;
+    bool IPlacementLevel.IsInBlockTag(Identifier tag, Identifier block) => PlacementHelpers.InTag(Server.Registry, tag, block);
+    IBlockPlacementRule? IPlacementLevel.PlacementRuleFor(IBlock block) => Server.BlockPlacementRules.For(block, this);
+
+    void IPlacementLevel.SetBlock(Vec3<int> pos, IBlock block, int flags, int updateLimit) =>
+        SetBlock(pos, block, null, null, flags, updateLimit);
 
     public void SetBlockData(Vec3<int> pos, BlockEntity? data) {
         if (Immutable) throw new InvalidOperationException("World is immutable, cannot set block data.");

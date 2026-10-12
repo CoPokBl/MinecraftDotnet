@@ -80,14 +80,12 @@ public record TextStyle {
 
         return new TextStyle {
             Color = compound.Contains("color") ? TextColor.Parse(compound["color"]!.GetString()) : null,
-            Bold = compound.Contains("bold") ? compound["bold"]!.GetBoolean() : null,
-            Italic = compound.Contains("italic") ? compound["italic"]!.GetBoolean() : null,
-            Underlined = compound.Contains("underlined") ? compound["underlined"]!.GetBoolean() : null,
-            Strikethrough = compound.Contains("strikethrough") ? compound["strikethrough"]!.GetBoolean() : null,
-            Obfuscated = compound.Contains("obfuscated") ? compound["obfuscated"]!.GetBoolean() : null,
-            ShadowColor = compound.Contains("shadow_color")
-                ? TextColor.FromDecimal(compound["shadow_color"]!.GetInteger())
-                : null,
+            Bold = compound.Contains("bold") ? compound["bold"]!.AsBool() : null,
+            Italic = compound.Contains("italic") ? compound["italic"]!.AsBool() : null,
+            Underlined = compound.Contains("underlined") ? compound["underlined"]!.AsBool() : null,
+            Strikethrough = compound.Contains("strikethrough") ? compound["strikethrough"]!.AsBool() : null,
+            Obfuscated = compound.Contains("obfuscated") ? compound["obfuscated"]!.AsBool() : null,
+            ShadowColor = compound["shadow_color"] is { } shadow ? TextColor.FromArgbNbt(shadow) : null,
             Font = compound.Contains("font") ? compound["font"]!.GetString() : null,
             Insertion = compound.Contains("insertion") ? compound["insertion"]!.GetString() : null
         };

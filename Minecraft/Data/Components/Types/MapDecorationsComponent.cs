@@ -54,9 +54,9 @@ public record MapDecorationsComponent() : IDataComponent<Dictionary<string, MapD
             CompoundTag entry = (CompoundTag)d.child;
             return new Entry(
                 registry.MapDecorationTypes[(Identifier)entry["type"]!.GetString()],
-                entry["x"]!.GetDouble(),
-                entry["z"]!.GetDouble(),
-                entry["rotation"]!.GetFloat());
+                entry["x"]!.AsDouble(),
+                entry["z"]!.AsDouble(),
+                entry["rotation"]!.AsFloat());
         });
     }
 

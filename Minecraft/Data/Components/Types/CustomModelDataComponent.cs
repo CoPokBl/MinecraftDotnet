@@ -24,10 +24,10 @@ public record CustomModelDataComponent() : IDataComponent<CustomModelData> {
         (tag, _) => {
             NbtNode node = NbtNode.Of(tag, "minecraft:custom_model_data");
             CustomModelData data = new(
-                node.List("floats", value => value.GetFloat()),
-                node.List("flags", value => value.GetBoolean()),
+                node.List("floats", value => value.AsFloat()),
+                node.List("flags", value => value.AsBool()),
                 node.List("strings", value => value.GetString()),
-                node.List("colors", value => value.GetInteger()));
+                node.List("colors", PackedColor.RgbFromNbt));
             node.AssertRead();
             return data;
         });

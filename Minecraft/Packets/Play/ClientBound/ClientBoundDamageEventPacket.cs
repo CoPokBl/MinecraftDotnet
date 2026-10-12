@@ -44,7 +44,7 @@ public class ClientBoundDamageEventPacket : ClientBoundPacket {
             SourceType = sourceType,
             SourceCauseId = causeId == -1 ? null : causeId,
             SourceDirectId = directId == -1 ? null : directId,
-            SourcePosition = r.ReadPrefixedOptional<Vec3<double>>(reader => reader.ReadVec3())
+            SourcePosition = r.ReadPrefixedOptionalValue<Vec3<double>>(reader => reader.ReadVec3())
         };
     };
 }

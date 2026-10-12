@@ -1,0 +1,137 @@
+using GraphicalClient.Assets.ResourcePacks;
+using Silk.NET.OpenGL;
+
+namespace GraphicalClient.Rendering;
+
+/// <summary>
+/// Plays animated block textures in the texture array, once per game tick as
+/// <c>SpriteContents.AnimationState</c> does: each frame holds for its ticks, and an interpolated
+/// animation blends toward the next frame across them. Ticking works out the new pixels; uploading
+/// them is a separate step, so it can wait for the GL half of the frame.
+/// </summary>
+public sealed unsafe class TextureAnimator {
+    private sealed class Playing(int layer, TextureAnimation animation) {
+        public readonly int Layer = layer;
+        public readonly TextureAnimation Animation = animation;
+        public int Frame;
+        public int SubFrame;
+        public bool Dirty = true;
+
+        /// <summary>Each frame's mip chain, built the first time it is shown.</summary>
+        public readonly byte[][]?[] Chains = new byte[][]?[animation.Frames.Length];
+
+        /// <summary>Where an interpolated frame is blended, reused tick to tick.</summary>
+        public byte[][]? Blended;
+
+        /// <summary>The top level last sent, and how many times it has changed.</summary>
+        public byte[]? Shown;
+        public int Version;
+    }
+
+    private readonly GL _gl;
+    private readonly TextureArray _array;
+    private readonly List<Playing> _playing = [];
+    private readonly Dictionary<int, Playing> _byLayer = new();
+    private readonly List<(int Layer, byte[][] Levels)> _pending = [];
+
+    public int Count => _playing.Count;
+
+    public TextureAnimator(GL gl, TextureArray array, IEnumerable<(int Layer, TextureAnimation Animation)> animations) {
+        _gl = gl;
+        _array = array;
+        foreach ((int layer, TextureAnimation animation) in animations) {
+            Playing playing = new(layer, animation);
+            _playing.Add(playing);
+            _byLayer[layer] = playing;
+        }
+    }
+
+    /// <summary>One game tick. No GL calls.</summary>
+    public void Tick() {
+        foreach (Playing playing in _playing) {
+            (int Index, int Time)[] sequence = playing.Animation.Sequence;
+            int old = sequence[playing.Frame].Index;
+            playing.SubFrame++;
+            if (playing.SubFrame >= sequence[playing.Frame].Time) {
+                playing.Frame = (playing.Frame + 1) % sequence.Length;
+                playing.SubFrame = 0;
+                playing.Dirty |= sequence[playing.Frame].Index != old;
+            }
+            if (!playing.Dirty && !playing.Animation.Interpolate) {
+                continue;
+            }
+            playing.Dirty = false;
+            byte[][] current = ChainOf(playing, sequence[playing.Frame].Index);
+            if (playing.Animation.Interpolate) {
+                // Blended level by level rather than blending the top level and filtering it down again;
+                // the box filter is linear, so the two differ only in rounding.
+                byte[][] next = ChainOf(playing, sequence[(playing.Frame + 1) % sequence.Length].Index);
+                float progress = (float)playing.SubFrame / sequence[playing.Frame].Time;
+                playing.Blended ??= current.Select(level => new byte[level.Length]).ToArray();
+                for (int level = 0; level < current.Length; level++) {
+                    byte[] from = current[level], to = next[level], into = playing.Blended[level];
+                    for (int i = 0; i < into.Length; i++) {
+                        into[i] = (byte)(from[i] + (to[i] - from[i]) * progress);
+                    }
+                }
+                current = playing.Blended;
+            }
+            _pending.Add((playing.Layer, current));
+            playing.Shown = current[0];
+            playing.Version++;
+        }
+    }
+
+    /// <summary>
+    /// What a layer shows at the array's size, for a copy kept elsewhere; null for a layer that does not
+    /// animate or has not ticked. An interpolated layer's pixels are rewritten in place on the next tick,
+    /// so a copy is taken whenever the version moves.
+    /// </summary>
+    public (byte[]? Pixels, int Version) Showing(int layer) =>
+        _byLayer.TryGetValue(layer, out Playing? playing) ? (playing.Shown, playing.Version) : (null, 0);
+
+    private byte[][] ChainOf(Playing playing, int frame) =>
+        playing.Chains[frame] ??= MipChain(playing.Animation.Frames[frame].Resized(_array.Size), _array.Levels);
+
+    /// <summary>Box filtered levels, as the array's own mipmaps were generated.</summary>
+    private static byte[][] MipChain(TextureImage image, int levels) {
+        byte[][] chain = new byte[levels][];
+        chain[0] = image.Rgba;
+        int size = image.Width;
+        for (int level = 1; level < levels; level++) {
+            int half = Math.Max(1, size / 2);
+            byte[] smaller = new byte[half * half * 4];
+            byte[] larger = chain[level - 1];
+            for (int y = 0; y < half; y++) {
+                for (int x = 0; x < half; x++) {
+                    for (int c = 0; c < 4; c++) {
+                        int sum = larger[((y * 2) * size + x * 2) * 4 + c] + larger[((y * 2) * size + x * 2 + 1) * 4 + c]
+                                  + larger[((y * 2 + 1) * size + x * 2) * 4 + c] + larger[((y * 2 + 1) * size + x * 2 + 1) * 4 + c];
+                        smaller[(y * half + x) * 4 + c] = (byte)(sum / 4);
+                    }
+                }
+            }
+            chain[level] = smaller;
+            size = half;
+        }
+        return chain;
+    }
+
+    /// <summary>Sends what the last ticks changed to the texture array.</summary>
+    public void Upload() {
+        if (_pending.Count == 0) {
+            return;
+        }
+        _gl.BindTexture(TextureTarget.Texture2DArray, _array.Handle);
+        foreach ((int layer, byte[][] levels) in _pending) {
+            int size = _array.Size;
+            for (int level = 0; level < levels.Length; level++) {
+                fixed (byte* p = levels[level]) {
+                    _gl.TexSubImage3D(TextureTarget.Texture2DArray, level, 0, 0, layer, (uint)size, (uint)size, 1, PixelFormat.Rgba, PixelType.UnsignedByte, p);
+                }
+                size = Math.Max(1, size / 2);
+            }
+        }
+        _pending.Clear();
+    }
+}

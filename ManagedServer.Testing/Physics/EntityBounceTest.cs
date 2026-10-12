@@ -1,5 +1,6 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Physics;
+using Minecraft.Physics;
 using ManagedServer.Worlds;
 using ManagedServer.Worlds.Lighting;
 using Minecraft.Data.Entities;
