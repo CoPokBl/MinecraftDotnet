@@ -22,8 +22,11 @@ public sealed class ResourcePackSource(PackFiles files, IResourceSource fallback
     private readonly Lock _gate = new();
     private readonly Dictionary<string, TextureImage> _textures = new();
     private ItemIcons? _items;
+    private PalettedPermutations? _permutations;
 
     private ItemIcons Items => _items ??= new ItemIcons(files, _baker, id => Texture(BlockModels.TextureKey(id)), ColourMaps());
+
+    private PalettedPermutations Permutations => _permutations ??= new PalettedPermutations(files, LoadFirstFrame);
 
     public IReadOnlyList<string> Warnings => _baker.Warnings;
 
@@ -62,7 +65,7 @@ public sealed class ResourcePackSource(PackFiles files, IResourceSource fallback
             return fallback.Texture(key);
         }
         if (!_textures.TryGetValue(key, out TextureImage? texture)) {
-            texture = LoadFirstFrame(FileOf(key));
+            texture = LoadFirstFrame(FileOf(key)) ?? ModelPermutation(Minecraft.Schemas.Identifier.Parse(key[PackPrefix.Length..]));
             if (texture == null) {
                 _baker.Warnings.Add($"Missing texture {Minecraft.Schemas.Identifier.Parse(key[PackPrefix.Length..])}");
                 texture = DevArt.MissingTexture();
@@ -70,6 +73,15 @@ public sealed class ResourcePackSource(PackFiles files, IResourceSource fallback
             _textures[key] = texture;
         }
         return texture;
+    }
+
+    private TextureImage? ModelPermutation(Minecraft.Schemas.Identifier sprite) => Permutations.Sprite("items", sprite) ?? Permutations.Sprite("blocks", sprite);
+
+    /// <summary>A sprite one of the named atlas's <c>paletted_permutations</c> sources makes, <c>armor_trims</c> say; null when none does.</summary>
+    public TextureImage? AtlasPermutation(string atlas, Minecraft.Schemas.Identifier sprite) {
+        lock (_gate) {
+            return Permutations.Sprite(atlas, sprite);
+        }
     }
 
     /// <summary>The pack file a <c>pack:</c> texture key names.</summary>
@@ -146,6 +158,12 @@ public sealed class ResourcePackSource(PackFiles files, IResourceSource fallback
     public ItemModelNode? ItemDefinition(Minecraft.Schemas.Identifier modelId) {
         lock (_gate) {
             return Items.Definition(modelId);
+        }
+    }
+
+    public ClientItemProperties ItemProperties(Minecraft.Schemas.Identifier modelId) {
+        lock (_gate) {
+            return Items.Properties(modelId);
         }
     }
 

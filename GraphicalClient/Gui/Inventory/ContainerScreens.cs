@@ -24,7 +24,7 @@ public static class ContainerScreens {
         DispenserMenu menu => new BasicScreen(client, menu, new("gui/container/dispenser")),
         ShulkerBoxMenu menu => new BasicScreen(client, menu, new("gui/container/shulker_box")),
         HopperMenu menu => new BasicScreen(client, menu, new("gui/container/hopper", Height: 133)),
-        CraftingMenu menu => new BasicScreen(client, menu, new("gui/container/crafting_table", Arrow: (90, 35), Title: (29, 6))),
+        CraftingMenu menu => new CraftingScreen(client, menu),
         SmithingMenu menu => new BasicScreen(client, menu, new(Arrow: (68, 49))),
         GrindstoneMenu menu => new BasicScreen(client, menu, new(Arrow: (98, 34))),
         CartographyTableMenu menu => new BasicScreen(client, menu, new(Arrow: (113, 39))),
@@ -66,13 +66,29 @@ public sealed class BasicScreen(MinecraftClient client, ContainerMenu menu, Cont
 }
 
 /// <summary><c>InventoryScreen</c>: the player's own menu.</summary>
-public sealed class InventoryScreen(MinecraftClient client) : ContainerScreen(client, client.Inventory.Menu) {
+public sealed class InventoryScreen(MinecraftClient client) : RecipeBookScreen(client, client.Inventory.Menu) {
     protected override (int X, int Y)? InventoryLabel => null;
     protected override (int X, int Y) TitleLabel => (97, 8);
     protected override string PackBackground => "gui/container/inventory";
 
     private float _xMouse, _yMouse;
     private readonly EffectsInInventory _effects = new();
+    private bool _buttonClicked;
+
+    protected override (float X, float Y) RecipeBookButtonPosition(int height) => (Left + 104, height / 2 - 22);
+
+    protected override bool IsBiggerResultSlot => false;
+
+    protected override void OnRecipeBookButtonClick() => _buttonClicked = true;
+
+    /// <summary>The release of the press that toggled the book is swallowed, so it cannot drop a carried stack.</summary>
+    public override void MouseUp(GuiContext context, float x, float y, MouseButton button) {
+        if (_buttonClicked) {
+            _buttonClicked = false;
+            return;
+        }
+        base.MouseUp(context, x, y, button);
+    }
 
     /// <summary>
     /// Vanilla records the cursor after drawing, so the player turns to where it was a frame ago,
@@ -183,8 +199,25 @@ public sealed class CrafterScreen(MinecraftClient client, CrafterMenu menu) : Co
     }
 }
 
-public sealed class FurnaceScreen(MinecraftClient client, FurnaceMenu menu) : ContainerScreen(client, menu) {
-    protected override string PackBackground => "gui/container/furnace";
+/// <summary><c>CraftingScreen</c>: the crafting table's 3x3, with the recipe book.</summary>
+public sealed class CraftingScreen(MinecraftClient client, CraftingMenu menu) : RecipeBookScreen(client, menu) {
+    protected override string PackBackground => "gui/container/crafting_table";
+    protected override (int X, int Y) TitleLabel => (29, 6);
+
+    protected override (float X, float Y) RecipeBookButtonPosition(int height) => (Left + 5, height / 2 - 49);
+
+    protected override void DrawBackground(GuiContext context) => Panel.Arrow(context, Left + 90, Top + 35, ResultShown ? 1 : 0);
+}
+
+/// <summary><c>AbstractFurnaceScreen</c> for the furnace, the smoker and the blast furnace, which differ in their art.</summary>
+public sealed class FurnaceScreen(MinecraftClient client, FurnaceMenu menu) : RecipeBookScreen(client, menu) {
+    private readonly string _kind = menu.Type?.Identifier == InventoryType.Smoker.Identifier ? "smoker"
+        : menu.Type?.Identifier == InventoryType.BlastFurnace.Identifier ? "blast_furnace"
+        : "furnace";
+
+    protected override string PackBackground => "gui/container/" + _kind;
+
+    protected override (float X, float Y) RecipeBookButtonPosition(int height) => (Left + 20, height / 2 - 49);
 
     protected override void DrawBackground(GuiContext context) {
         Panel.Flame(context, Left + 56, Top + 36, menu.IsLit ? menu.LitProgress : 0);
@@ -198,10 +231,10 @@ public sealed class FurnaceScreen(MinecraftClient client, FurnaceMenu menu) : Co
     protected override void DrawPackOverlay(GuiContext context) {
         if (menu.IsLit) {
             int rows = (int)MathF.Ceiling(menu.LitProgress * 13.0F) + 1;
-            context.Sprites.SpriteFromBottom(context.Gui, "container/furnace/lit_progress", Left + 56, Top + 36, 14, 14, rows / 14.0F);
+            context.Sprites.SpriteFromBottom(context.Gui, $"container/{_kind}/lit_progress", Left + 56, Top + 36, 14, 14, rows / 14.0F);
         }
         int columns = (int)MathF.Ceiling(menu.BurnProgress * 24.0F);
-        context.Sprites.Sprite(context.Gui, "container/furnace/burn_progress", Left + 79, Top + 34, 24, 16, fraction: columns / 24.0F);
+        context.Sprites.Sprite(context.Gui, $"container/{_kind}/burn_progress", Left + 79, Top + 34, 24, 16, fraction: columns / 24.0F);
     }
 }
 
@@ -247,24 +280,27 @@ public sealed class AnvilScreen(MinecraftClient client, AnvilMenu menu) : Contai
         context.Text.Draw(text, Left + ImageWidth - 8 - width, Top + 69, affordable && menu.Cost < 40 ? 0xFF80FF20 : 0xFFFF6060);
     }
 
+    /// <summary>The name field is editable, and so has the keyboard, while there is an item to rename.</summary>
+    public override bool HasFocusedEditBox => !menu.Slots[0].Item.IsEmpty;
+
     public override void Char(GuiContext context, char c) {
-        if (_lastInput.IsEmpty || c < ' ' || _name.Length >= 50) {
+        if (!HasFocusedEditBox || !EditBox.IsAllowedChatCharacter(c) || _name.Length >= 50) {
             return;
         }
         _name += c;
         Client.RenameItem(_name);
     }
 
+    /// <summary><c>keyPressed</c>: an editable name field takes every key but Escape, so typing never reaches the key mappings.</summary>
     public override void KeyDown(GuiContext context, Key key, bool control) {
-        if (key == Key.Backspace && _name.Length > 0 && !_lastInput.IsEmpty) {
+        if (key == Key.Escape || !HasFocusedEditBox) {
+            base.KeyDown(context, key, control);
+            return;
+        }
+        if (key == Key.Backspace && _name.Length > 0) {
             _name = _name[..^1];
             Client.RenameItem(_name);
-            return;
         }
-        if (key == Key.E && !_lastInput.IsEmpty) {
-            return;
-        }
-        base.KeyDown(context, key, control);
     }
 }
 
@@ -326,7 +362,11 @@ public abstract class ListScreen(MinecraftClient client, ContainerMenu menu, Scr
         return true;
     }
 
-    public override void Scroll(GuiContext context, float delta) => Grid.ScrollBy(delta, Count);
+    public override void Scroll(GuiContext context, float delta) {
+        if (!ScrollSlot(delta)) {
+            Grid.ScrollBy(delta, Count);
+        }
+    }
 }
 
 /// <summary><c>StonecutterScreen</c>: the recipes the input can be cut into, four to a row; picking one is a button.</summary>

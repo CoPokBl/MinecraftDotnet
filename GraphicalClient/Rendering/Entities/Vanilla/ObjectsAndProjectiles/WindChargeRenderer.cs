@@ -2,11 +2,7 @@ using ClientLib.Entities;
 
 namespace GraphicalClient.Rendering.Entities.Vanilla;
 
-/// <summary>
-/// <c>WindChargeRenderer</c>. <c>breezeWind</c> scrolls the texture sideways by <c>xOffset</c> each frame;
-/// an atlas cannot wrap a texture, so this draws it translucent at the scroll's starting offset, the
-/// swirl turning with the model but not sliding across it.
-/// </summary>
+/// <summary><c>WindChargeRenderer</c>.</summary>
 /// <param name="hiddenWhileClose">A player's wind charge, whose <c>WindCharge.shouldRenderAtSqrDistance</c> hides it at first; a breeze's does not.</param>
 public sealed class WindChargeRenderer(bool hiddenWhileClose) : EntityRenderer<EntityRenderState> {
     private const string TextureLocation = "minecraft:textures/entity/projectiles/wind_charge.png";
@@ -19,7 +15,9 @@ public sealed class WindChargeRenderer(bool hiddenWhileClose) : EntityRenderer<E
 
     public override void Submit(EntityRenderState state, PoseStack pose, EntityRenderContext context) {
         _model.SetupAnim(state);
-        _model.RenderToBuffer(pose, context.TranslucentBatch, new ModelDrawState(context.Texture(TextureLocation), state) { NoOutline = true });
+        System.Numerics.Vector2 offset = new(state.AgeInTicks * 0.03F % 1.0F, 0.0F);
+        EntityTexture? tiled = TiledTextures.Get(context.Textures, TextureLocation, ScrollingSink.Tiles, ScrollingSink.Tiles);
+        _model.RenderToBuffer(pose, new ScrollingSink(context.TranslucentBatch, offset, tiled), new ModelDrawState(context.Texture(TextureLocation), state) { NoOutline = true });
     }
 }
 

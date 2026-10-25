@@ -1,5 +1,10 @@
 using ClientLib;
+using ClientLib.Physics;
 using ClientLib.World;
+using Minecraft.Data.Blocks;
+using Minecraft.Data.Generated;
+using Minecraft.Data.Generated.BlockTypes;
+using Minecraft.Physics;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Sound;
@@ -8,13 +13,13 @@ using SoundType = Minecraft.Data.Generated.SoundType;
 namespace GraphicalClient.Audio;
 
 /// <summary>
-/// The rain sound out of <c>ClientLevel.tickWeatherEffects</c>: it plays at the last column the rain particles
-/// landed on, so the particle loop's draws are all taken even though this client spawns no rain particles.
+/// <c>ClientLevel.tickWeatherEffects</c>: the rain's splashes, or smoke where it falls on something hot, on the
+/// columns round the camera, and the rain sound at the last of them. The sound's draws follow the splashes', so
+/// the Particles option changes them as it does in vanilla: Decreased halves the splashes and Minimal stops at the
+/// first column.
 /// </summary>
-public sealed class WeatherEffectSounds(ClientSounds sounds, MinecraftClient client, Func<(double X, double Y, double Z)> camera) {
-    // Options.weatherRadius and Options.particles at their defaults: ten, and ParticleStatus.ALL.
-    private const int WeatherRadius = 10;
-
+/// <param name="weatherRadius"><c>Options.weatherRadius</c>.</param>
+public sealed class WeatherEffectSounds(ClientSounds sounds, MinecraftClient client, Func<(double X, double Y, double Z)> camera, Func<int> weatherRadius) {
     private ClientLevel? _level;
     private int _rainSoundTime;
 
@@ -37,13 +42,15 @@ public sealed class WeatherEffectSounds(ClientSounds sounds, MinecraftClient cli
         int cameraX = Mth.Floor(camX), cameraY = Mth.Floor(camY), cameraZ = Mth.Floor(camZ);
         bool found = false;
         int rainX = 0, rainY = 0, rainZ = 0;
-        int weatherDiameter = 2 * WeatherRadius + 1;
+        int radius = weatherRadius();
+        int weatherDiameter = 2 * radius + 1;
         int weatherArea = weatherDiameter * weatherDiameter;
-        int rainParticles = (int)(0.225F * weatherArea * rainLevel * rainLevel);
+        ParticleStatus status = client.Options.Particles;
+        int rainParticles = (int)(0.225F * weatherArea * rainLevel * rainLevel) / (status == ParticleStatus.Decreased ? 2 : 1);
 
         for (int ii = 0; ii < rainParticles; ii++) {
-            int x = random.NextInt(weatherDiameter) - WeatherRadius;
-            int z = random.NextInt(weatherDiameter) - WeatherRadius;
+            int x = random.NextInt(weatherDiameter) - radius;
+            int z = random.NextInt(weatherDiameter) - radius;
             int heightmapX = cameraX + x, heightmapZ = cameraZ + z;
             int heightmapY = level.GetHeight(HeightmapType.MotionBlocking, heightmapX, heightmapZ);
             if (heightmapY > level.MinY && heightmapY <= cameraY + 10 && heightmapY >= cameraY - 10
@@ -52,9 +59,12 @@ public sealed class WeatherEffectSounds(ClientSounds sounds, MinecraftClient cli
                 rainX = heightmapX;
                 rainY = heightmapY - 1;
                 rainZ = heightmapZ;
-                // The particle's offset in the block.
-                random.NextDouble();
-                random.NextDouble();
+                if (status == ParticleStatus.Minimal) {
+                    break;
+                }
+                double blockX = random.NextDouble();
+                double blockZ = random.NextDouble();
+                Splash(level, rainX, rainY, rainZ, blockX, blockZ);
             }
         }
 
@@ -67,5 +77,25 @@ public sealed class WeatherEffectSounds(ClientSounds sounds, MinecraftClient cli
                 sounds.Play(SoundType.Rain, SoundCategory.Weather, 0.2F, 1.0F, rainX + 0.5, rainY + 0.5, rainZ + 0.5);
             }
         }
+    }
+
+    /// <summary>A rain splash on top of what is in the block, or smoke off lava, magma or a lit campfire.</summary>
+    private void Splash(ClientLevel level, int x, int y, int z, double blockX, double blockZ) {
+        ushort state = level.GetState(x, y, z);
+        IBlock block = level.Registry.Blocks.GetByStateId(state);
+        double blockTop = 0.0;
+        foreach (Box box in BlockPhysicsData.Get(level.Registry, state).Collision) {
+            if (blockX >= box.MinX && blockX <= box.MaxX && blockZ >= box.MinZ && blockZ <= box.MaxZ) {
+                blockTop = Math.Max(blockTop, box.MaxY);
+            }
+        }
+        MovementBlocks.Entry fluid = MovementBlocks.Get(level.Registry, state);
+        // FluidState.getHeight: a full block under the same fluid, else the fluid's own height.
+        double fluidTop = fluid.Fluid == FluidKind.Empty ? 0.0
+            : MovementBlocks.Get(level.Registry, level.GetState(x, y + 1, z)).Fluid == fluid.Fluid ? 1.0
+            : fluid.FluidAmount / 9.0;
+        bool hot = fluid.Fluid == FluidKind.Lava || block.Identifier == Block.MagmaBlock.Identifier
+            || block is CampfireBlock { Lit: true } or SoulCampfireBlock { Lit: true };
+        client.Particles.AddParticle(hot ? Particle.Smoke : Particle.Rain, x + blockX, y + Math.Max(blockTop, fluidTop), z + blockZ, 0.0, 0.0, 0.0);
     }
 }

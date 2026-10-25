@@ -4,10 +4,7 @@ using Minecraft.Schemas.Items;
 
 namespace GraphicalClient.Rendering.Entities.Vanilla;
 
-/// <summary>
-/// <c>ItemInHandLayer</c>. A spear's stab and use animations (<c>SpearAnimations</c>) are not ported;
-/// the spear is held still in their place.
-/// </summary>
+/// <summary><c>ItemInHandLayer</c>.</summary>
 public class ItemInHandLayer<S, M> : RenderLayer<S, M>
     where S : ArmedEntityRenderState, new()
     where M : EntityModel<S>, IArmedModel<S> {
@@ -36,6 +33,14 @@ public class ItemInHandLayer<S, M> : RenderLayer<S, M>
         float offsetY = babyOffset ? 1.0F : 2.0F;
         float offsetZ = babyOffset ? -4.5F : -10.0F;
         pose.Translate((isLeftHand ? -1 : 1) * offsetX / 16.0F, offsetY / 16.0F, offsetZ / 16.0F);
+        if (state.AttackTime > 0.0F && state.AttackArm == arm && state.SwingAnimationType == SwingAnimationType.Stab) {
+            SpearAnimations.ThirdPersonAttackItem(state, pose);
+        }
+        float ticksUsingItem = state.TicksUsingItem(arm);
+        // ArmPose.animateUseItem, which only the spear's pose overrides.
+        if (ticksUsingItem != 0.0F && (arm == HumanoidArm.Right ? state.RightArmPose : state.LeftArmPose) == ArmPose.Spear) {
+            SpearAnimations.ThirdPersonUseItem(state, pose, ticksUsingItem, arm, stack);
+        }
         _items.Submit(item, isLeftHand ? ItemDisplayContext.ThirdPersonLeftHand : ItemDisplayContext.ThirdPersonRightHand, pose, context.Batch,
             state.SkyLight, state.BlockLight);
         pose.Pop();

@@ -82,6 +82,9 @@ public interface IResourceSource {
     /// <summary>The item definition a model id names, <c>ClientItem.model</c> read into its tree; null for an item drawn as its icon.</summary>
     ItemModelNode? ItemDefinition(Minecraft.Schemas.Identifier modelId) => null;
 
+    /// <summary><c>ClientItem.properties</c> of the definition a model id names.</summary>
+    ClientItemProperties ItemProperties(Minecraft.Schemas.Identifier modelId) => ClientItemProperties.Default;
+
     /// <summary>The layers a definition chose for a stack, drawn into an icon; null when nothing in them draws.</summary>
     TextureImage? ItemIcon(IReadOnlyList<ItemModelLayer> layers, Minecraft.Schemas.Items.ItemStack stack) => null;
 

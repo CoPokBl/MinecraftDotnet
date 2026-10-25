@@ -61,7 +61,17 @@ public sealed partial class MinecraftClient {
         if (Player != null && entity.HasIndirectPassenger(Player)) {
             _removedPlayerVehicleId = id;
         }
-        Entities.Remove(id);
+        Discard(entity);
+    }
+
+    /// <summary>
+    /// <c>Entity.setRemoved</c> through the level's callback, which drops it from the level whether the
+    /// server removed it or its own tick discarded it.
+    /// </summary>
+    internal void Discard(ClientEntity entity) {
+        if (Entities.GetValueOrDefault(entity.Id) == entity) {
+            Entities.Remove(entity.Id);
+        }
         entity.SetRemoved();
     }
 
@@ -269,6 +279,7 @@ public sealed partial class MinecraftClient {
     /// players and what carries one tick.
     /// </summary>
     private void TickEntities() {
+        // An entity's tick may discard it; removing from a Dictionary leaves its enumerator valid.
         foreach (ClientEntity entity in Entities.Values) {
             if (entity == Player || entity.IsPassenger || Level?.TickRateManager.IsEntityFrozen(entity) == true) {
                 continue;

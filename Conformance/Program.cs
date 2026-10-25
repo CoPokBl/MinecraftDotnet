@@ -144,6 +144,14 @@ if (anvilArg >= 0 && anvilArg + 2 < args.Length) {
     Console.WriteLine($"Wrote {AnvilSamples.ChunkCount} chunks to {args[anvilArg + 1]}");
 }
 
+// What the chat signing and last seen tracking send, for Conformance/chatsigning.sh, which checks it
+// as the server would with vanilla's validator and decoder.
+int chatSigningArg = Array.IndexOf(args, "--chat-signing");
+if (chatSigningArg >= 0 && chatSigningArg + 1 < args.Length) {
+    File.WriteAllText(args[chatSigningArg + 1], ChatSigningSamples.BuildJson());
+    Console.WriteLine($"Wrote the chat signing sessions to {args[chatSigningArg + 1]}");
+}
+
 // The datapack driven registries travel as NBT the client parses with the element codec rather
 // than a stream codec, so decoding the packet they arrive in proves nothing about them.
 // RegistryHarness.java runs those codecs. See Conformance/registries.sh.

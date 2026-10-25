@@ -6,20 +6,20 @@ using Minecraft.Schemas.Items;
 
 namespace GraphicalClient.Rendering.Entities.Vanilla;
 
-/// <summary><c>ItemFrameRenderState</c>, without the map, which this client has no data for.</summary>
+/// <summary><c>ItemFrameRenderState</c>.</summary>
 public class ItemFrameRenderState : EntityRenderState {
     public Cardinal Direction = Cardinal.North;
     public bool HasFrameModel;
     public ItemStack? Item;
     public int Rotation;
     public bool IsGlowFrame;
+    public int? MapId;
+    public ClientLib.World.ClientMapData? MapData;
 }
 
 /// <summary>
-/// <c>ItemFrameRenderer</c>. A framed map's contents are not drawn: the client keeps no map data, which
-/// vanilla treats as no map at all, so the frame takes its <c>map=false</c> model and holds the map as an
-/// item. <c>getRenderOffset</c> is left out with the translation that undoes it, as nothing else here is
-/// drawn at the offset.
+/// <c>ItemFrameRenderer</c>. <c>getRenderOffset</c> is left out with the translation that undoes it, as
+/// nothing else here is drawn at the offset.
 /// </summary>
 public sealed class ItemFrameRenderer : EntityRenderer<ItemFrameRenderState> {
     public const int GlowFrameBrightness = 5;
@@ -27,13 +27,19 @@ public sealed class ItemFrameRenderer : EntityRenderer<ItemFrameRenderState> {
     private static readonly Identifier ItemFrameLocation = "minecraft:item_frame";
     private static readonly Identifier GlowItemFrameLocation = "minecraft:glow_item_frame";
     private static readonly IReadOnlyDictionary<string, string> NoMap = new Dictionary<string, string> { ["map"] = "false" };
+    private static readonly IReadOnlyDictionary<string, string> WithMap = new Dictionary<string, string> { ["map"] = "true" };
+
+    /// <summary><c>BRIGHT_MAP_LIGHT_ADJUSTMENT</c> below full block light, in light levels: a glow frame's map.</summary>
+    private const float GlowMapBlockLight = (240 - 30) / 16.0F;
 
     private readonly BlockModelRenderer _blocks;
     private readonly ItemRenderer _items;
+    private readonly MapRenderer _maps;
 
     public ItemFrameRenderer(EntityRendererContext context) {
         _blocks = context.Blocks;
         _items = context.Items;
+        _maps = context.Maps;
     }
 
     /// <summary><c>ItemFrame.shouldRenderAtSqrDistance</c>.</summary>
@@ -63,7 +69,8 @@ public sealed class ItemFrameRenderer : EntityRenderer<ItemFrameRenderState> {
         if (state.HasFrameModel) {
             pose.Push();
             pose.Translate(-0.5F, -0.5F, -0.5F);
-            _blocks.Render(state.IsGlowFrame ? GlowItemFrameLocation : ItemFrameLocation, NoMap, pose, context.Batch, state.SkyLight, state.BlockLight);
+            _blocks.Render(state.IsGlowFrame ? GlowItemFrameLocation : ItemFrameLocation, state.MapId != null ? WithMap : NoMap, pose, context.Batch,
+                state.SkyLight, state.BlockLight);
             pose.Pop();
         }
         if (state.IsInvisible) {
@@ -72,7 +79,17 @@ public sealed class ItemFrameRenderer : EntityRenderer<ItemFrameRenderState> {
         else {
             pose.Translate(0.0F, 0.0F, 0.4375F);
         }
-        if (state.Item is { } item && !item.IsAir()) {
+        if (state.MapId is { } mapId && state.MapData is { } mapData) {
+            int rotation = state.Rotation % 4 * 2;
+            pose.RotateZDegrees(rotation * 360.0F / 8.0F);
+            pose.RotateZDegrees(180.0F);
+            pose.Scale(0.0078125F, 0.0078125F, 0.0078125F);
+            pose.Translate(-64.0F, -64.0F, 0.0F);
+            pose.Translate(0.0F, 0.0F, -1.0F);
+            float sky = state.IsGlowFrame ? 15 : state.SkyLight, block = state.IsGlowFrame ? GlowMapBlockLight : state.BlockLight;
+            _maps.Render(mapId, mapData, pose, context.Batch, context.TranslucentBatch, true, sky, block);
+        }
+        else if (state.Item is { } item && !item.IsAir()) {
             pose.RotateZDegrees(state.Rotation * 360.0F / 8.0F);
             // getLightCoords: a glow frame's item is drawn at full brightness.
             float sky = state.IsGlowFrame ? 15 : state.SkyLight, block = state.IsGlowFrame ? 15 : state.BlockLight;
@@ -113,6 +130,13 @@ public sealed class ItemFrameRenderer : EntityRenderer<ItemFrameRenderState> {
         state.Direction = entity.Get(EntityDataFields.HangingEntity.Direction, Cardinal.South);
         state.Item = entity.Get(EntityDataFields.ItemFrame.Item);
         state.Rotation = entity.Get(EntityDataFields.ItemFrame.Rotation);
+        // getFramedMapId, and a map the server has sent nothing of is no map at all.
+        state.MapId = null;
+        state.MapData = null;
+        if (state.Item is { } framed && framed.Has(DataComponent.MapId) && context.Client.MapData(framed.Get(DataComponent.MapId)) is { } mapData) {
+            state.MapId = framed.Get(DataComponent.MapId);
+            state.MapData = mapData;
+        }
         state.HasFrameModel = !state.IsInvisible;
     }
 }

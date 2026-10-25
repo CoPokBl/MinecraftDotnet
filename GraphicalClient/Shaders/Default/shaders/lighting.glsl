@@ -2,6 +2,31 @@
 
 uniform sampler2DShadow shadowMap;
 
+#ifdef ENTITY_SHADOWS
+uniform sampler2DShadow entityShadowMap;
+
+// Entities, drawn into a map of their own every frame with the same matrices. Four gathers take the 4x4
+// texels the 3x3 filter below can reach; most pixels have no entity shadow near and stop there.
+float entityShadow(vec3 coords) {
+    vec2 texel = 1.0 / vec2(textureSize(entityShadowMap, 0));
+    float depth = coords.z - 0.0004;
+    vec4 near = textureGather(entityShadowMap, coords.xy + vec2(-1.0, -1.0) * texel, depth)
+        + textureGather(entityShadowMap, coords.xy + vec2(1.0, -1.0) * texel, depth)
+        + textureGather(entityShadowMap, coords.xy + vec2(-1.0, 1.0) * texel, depth)
+        + textureGather(entityShadowMap, coords.xy + vec2(1.0, 1.0) * texel, depth);
+    if (dot(near, vec4(1.0)) > 15.99) {
+        return 1.0;
+    }
+    float lit = 0.0;
+    for (int x = -1; x <= 1; x++) {
+        for (int y = -1; y <= 1; y++) {
+            lit += texture(entityShadowMap, vec3(coords.xy + vec2(x, y) * texel, depth));
+        }
+    }
+    return lit / 9.0;
+}
+#endif
+
 // Percentage closer filtering over a 5x5 grid of comparisons, with the hardware's bilinear
 // comparison inside each, which hides the texel edges of the map.
 float shadowFactor(vec3 relative, vec3 normal) {
@@ -20,9 +45,13 @@ float shadowFactor(vec3 relative, vec3 normal) {
             lit += texture(shadowMap, vec3(coords.xy + vec2(x, y) * texel, coords.z - 0.0004));
         }
     }
+    lit /= 25.0;
+#ifdef ENTITY_SHADOWS
+    lit = min(lit, entityShadow(coords));
+#endif
     // Fade out toward the edge of the shadowed area instead of stopping at a line.
     float edge = max(abs(coords.x - 0.5), abs(coords.y - 0.5)) * 2.0;
-    return mix(lit / 25.0, 1.0, smoothstep(0.85, 1.0, edge));
+    return mix(lit, 1.0, smoothstep(0.85, 1.0, edge));
 }
 
 // What light falls on a surface. Sky and block levels are 0 to 1, from the server's light engine;

@@ -41,6 +41,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -48,6 +50,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -90,10 +93,11 @@ public final class Dumper {
         write(out.resolve("attribute.json"), attributes());
         write(out.resolve("light.json"), light());
         write(out.resolve("path_type.json"), pathTypes());
+        write(out.resolve("block_conversion.json"), blockConversions());
 
         reportUnknownMembers();
-        System.out.println("Dumped block.json, entity_type.json, entity_data.json, sound_type.json, attribute.json, light.json and " +
-                "path_type.json to " + out);
+        System.out.println("Dumped block.json, entity_type.json, entity_data.json, sound_type.json, attribute.json, light.json, " +
+                "path_type.json and block_conversion.json to " + out);
     }
 
     // ------------------------------------------------------- completeness
@@ -620,6 +624,36 @@ public final class Dumper {
             json.put(entry.getKey(), sound);
         }
         return json;
+    }
+
+    /**
+     * The block to block maps the tools turn a clicked block through: what an axe strips, what copper
+     * weathers to next, and what a honeycomb waxes. Each is in its map's own order; the inverses an axe
+     * scrapes and unwaxes by are the same pairs read backwards.
+     */
+    private static Obj blockConversions() {
+        Obj json = new Obj();
+        json.put("strippables", blockPairs(Strippables.get()));
+        json.put("weathering", blockPairs(WeatheringCopper.NEXT_BY_BLOCK.get()));
+        json.put("waxables", blockPairs(HoneycombItem.WAXABLES.get()));
+        return json;
+    }
+
+    private static Obj blockPairs(Map<Block, Block> pairs) {
+        Obj json = new Obj();
+        pairs.forEach((from, to) -> json.put(BuiltInRegistries.BLOCK.getKey(from).toString(), BuiltInRegistries.BLOCK.getKey(to).toString()));
+        return json;
+    }
+
+    /** {@code AxeItem.STRIPPABLES} is protected, so a subclass names it; it is never constructed. */
+    private static final class Strippables extends AxeItem {
+        private Strippables() {
+            super(null, 0.0F, 0.0F, null);
+        }
+
+        static Map<Block, Block> get() {
+            return STRIPPABLES;
+        }
     }
 
     private static Map<String, SoundType> invert(Map<SoundType, String> names) {

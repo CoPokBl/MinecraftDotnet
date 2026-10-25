@@ -46,13 +46,21 @@ public static class Tooltips {
         _ => value.ToString()
     };
 
-    /// <summary>Draws the box next to the cursor, kept on screen.</summary>
-    public static void Draw(GuiContext context, List<List<TextRun>> lines, float mouseX, float mouseY) {
-        if (lines.Count == 0) {
+    /// <summary>
+    /// <c>GuiGraphicsExtractor.tooltip</c>: draws the box next to the cursor, kept on screen. An item's
+    /// tooltip image goes after its name, as <c>setTooltipForNextFrame</c> puts it.
+    /// </summary>
+    public static void Draw(GuiContext context, List<List<TextRun>> lines, float mouseX, float mouseY, ITooltipImage? image = null) {
+        int components = lines.Count + (image == null ? 0 : 1);
+        if (components == 0) {
             return;
         }
-        int width = lines.Max(l => context.Text.Width(l));
-        int height = lines.Count == 1 ? 8 : 10 + (lines.Count - 1) * 10;
+        int width = 0, height = components == 1 ? -2 : 0;
+        for (int i = 0; i < components; i++) {
+            (int w, int h) = Size(context, lines, image, i);
+            width = Math.Max(width, w);
+            height += h;
+        }
         float x = mouseX + 12, y = mouseY - 12;
         if (x + width + 4 > context.Width) {
             x = mouseX - 16 - width;
@@ -67,9 +75,38 @@ public static class Tooltips {
         context.Gui.Rect(x + width + 2, y - 2, 1, height + 4, 0x80280070);
 
         float lineY = y;
-        for (int i = 0; i < lines.Count; i++) {
-            context.Text.Draw(lines[i], x, lineY);
-            lineY += i == 0 ? 12 : 10;
+        for (int i = 0; i < components; i++) {
+            if (Component(lines, image, i) is { } line) {
+                context.Text.Draw(line, x, lineY);
+            }
+            lineY += Size(context, lines, image, i).Height + (i == 0 ? 2 : 0);
+        }
+        lineY = y;
+        for (int i = 0; i < components; i++) {
+            if (image != null && i == 1) {
+                image.Draw(context, x, lineY, width);
+            }
+            lineY += Size(context, lines, image, i).Height + (i == 0 ? 2 : 0);
         }
     }
+
+    /// <summary>The text line at a component's place, null where the image is.</summary>
+    private static List<TextRun>? Component(List<List<TextRun>> lines, ITooltipImage? image, int index) =>
+        image == null || index == 0 ? lines[index] : index == 1 ? null : lines[index - 1];
+
+    private static (int Width, int Height) Size(GuiContext context, List<List<TextRun>> lines, ITooltipImage? image, int index) =>
+        Component(lines, image, index) is { } line ? (context.Text.Width(line), 10) : (image!.Width, image.Height(context));
+}
+
+/// <summary><c>ClientTooltipComponent</c> for an item's <c>getTooltipImage</c>: something drawn into a tooltip besides text.</summary>
+public interface ITooltipImage {
+    int Width { get; }
+
+    int Height(GuiContext context);
+
+    /// <summary><c>extractImage</c>: <paramref name="tooltipWidth"/> is the whole tooltip's.</summary>
+    void Draw(GuiContext context, float x, float y, int tooltipWidth);
+
+    /// <summary><c>showTooltipWithItemInHand</c>: shown over the slot while the cursor holds something.</summary>
+    bool ShowTooltipWithItemInHand { get; }
 }

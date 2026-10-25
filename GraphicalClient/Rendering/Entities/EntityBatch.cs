@@ -21,7 +21,8 @@ public sealed unsafe class EntityBatch : IModelSink, IDisposable {
     }
 
     private readonly GL _gl;
-    private readonly uint _vao, _vbo;
+    private readonly uint _vbo;
+    private uint _vao;
     private Vertex[] _vertices = new Vertex[8192];
     private int _count, _uploaded, _capacity;
 
@@ -45,41 +46,78 @@ public sealed unsafe class EntityBatch : IModelSink, IDisposable {
     public EntityBatch(GL gl, EntityTextures textures) {
         _gl = gl;
         Textures = textures;
-        _vao = gl.CreateVertexArray();
         _vbo = gl.CreateBuffer();
-        uint stride = (uint)sizeof(Vertex);
-        gl.VertexArrayVertexBuffer(_vao, 0, _vbo, 0, stride);
-        void Attribute(uint index, int size, VertexAttribType type, bool normalised, uint offset) {
-            gl.EnableVertexArrayAttrib(_vao, index);
-            gl.VertexArrayAttribFormat(_vao, index, size, type, normalised, offset);
-            gl.VertexArrayAttribBinding(_vao, index, 0);
+    }
+
+    /// <summary>Made at the first draw: a vertex array belongs to the context that made it, and a batch may be built on another.</summary>
+    private uint VertexArray() {
+        if (_vao != 0) {
+            return _vao;
         }
+        _vao = _gl.CreateVertexArray();
+        _gl.VertexArrayVertexBuffer(_vao, 0, _vbo, 0, (uint)sizeof(Vertex));
         Attribute(0, 3, VertexAttribType.Float, false, 0);
         Attribute(1, 2, VertexAttribType.Float, false, 12);
         Attribute(2, 4, VertexAttribType.UnsignedByte, true, 20);
         Attribute(3, 2, VertexAttribType.UnsignedByte, false, 24);
         Attribute(4, 3, VertexAttribType.Byte, true, 26);
         Attribute(5, 2, VertexAttribType.UnsignedByte, true, 29);
+        return _vao;
+
+        void Attribute(uint index, int size, VertexAttribType type, bool normalised, uint offset) {
+            _gl.EnableVertexArrayAttrib(_vao, index);
+            _gl.VertexArrayAttribFormat(_vao, index, size, type, normalised, offset);
+            _gl.VertexArrayAttribBinding(_vao, index, 0);
+        }
     }
 
     private static uint Abgr(uint argb) => (argb & 0xFF00FF00) | (argb >> 16 & 0xFF) | (argb & 0xFF) << 16;
 
-    private void Add(Vector3 position, Vector2 uv, uint abgr, Vector3 normal, ModelDrawState draw) {
-        if (_count == _vertices.Length) {
-            Array.Resize(ref _vertices, _vertices.Length * 2);
+    /// <summary>Everything but the position and texture coordinates, which a quad's six vertices share.</summary>
+    private static Vertex Template(uint abgr, Vector3 normal, in ModelDrawState draw) => new() {
+        Colour = abgr,
+        Sky = (byte)Math.Clamp((int)(draw.SkyLight * 16), 0, 240),
+        Block = (byte)Math.Clamp((int)(draw.BlockLight * 16), 0, 240),
+        NormalX = (sbyte)(normal.X * 127),
+        NormalY = (sbyte)(normal.Y * 127),
+        NormalZ = (sbyte)(normal.Z * 127),
+        RedOverlay = (byte)(Math.Clamp(draw.RedOverlay, 0, 1) * 255),
+        WhiteOverlay = (byte)(Math.Clamp(draw.WhiteOverlay, 0, 1) * 255)
+    };
+
+    private Span<Vertex> Reserve(int count) {
+        if (_count + count > _vertices.Length) {
+            Array.Resize(ref _vertices, Math.Max(_vertices.Length * 2, _count + count));
         }
-        _vertices[_count++] = new Vertex {
-            Position = position,
-            Uv = uv,
-            Colour = abgr,
-            Sky = (byte)Math.Clamp((int)(draw.SkyLight * 16), 0, 240),
-            Block = (byte)Math.Clamp((int)(draw.BlockLight * 16), 0, 240),
-            NormalX = (sbyte)(normal.X * 127),
-            NormalY = (sbyte)(normal.Y * 127),
-            NormalZ = (sbyte)(normal.Z * 127),
-            RedOverlay = (byte)(Math.Clamp(draw.RedOverlay, 0, 1) * 255),
-            WhiteOverlay = (byte)(Math.Clamp(draw.WhiteOverlay, 0, 1) * 255)
-        };
+        Span<Vertex> span = _vertices.AsSpan(_count, count);
+        _count += count;
+        return span;
+    }
+
+    private void Add(Vector3 position, Vector2 uv, uint abgr, Vector3 normal, in ModelDrawState draw) {
+        ref Vertex vertex = ref Reserve(1)[0];
+        vertex = Template(abgr, normal, draw);
+        vertex.Position = position;
+        vertex.Uv = uv;
+    }
+
+    /// <summary>Two triangles, 0 1 2 and 2 3 0, of corners that share everything in <paramref name="template"/>.</summary>
+    private void AddQuad(in Vertex template, ReadOnlySpan<Vector3> corners, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3) {
+        Span<Vertex> quad = Reserve(6);
+        quad[0] = template;
+        quad[0].Position = corners[0];
+        quad[0].Uv = uv0;
+        quad[1] = template;
+        quad[1].Position = corners[1];
+        quad[1].Uv = uv1;
+        quad[2] = template;
+        quad[2].Position = corners[2];
+        quad[2].Uv = uv2;
+        quad[3] = quad[2];
+        quad[4] = template;
+        quad[4].Position = corners[3];
+        quad[4].Uv = uv3;
+        quad[5] = quad[0];
     }
 
     /// <summary>A textured quad as two triangles; texture coordinates are 0 to 1 within <see cref="ModelDrawState.Texture"/>.</summary>
@@ -87,20 +125,127 @@ public sealed unsafe class EntityBatch : IModelSink, IDisposable {
         if (IsOutline && OutlineColour == 0) {
             return;
         }
-        uint colour = Abgr(IsOutline ? OutlineColour : draw.Argb);
         EntityTexture texture = draw.Texture;
-        Span<Vector2> mapped = stackalloc Vector2[4];
-        for (int i = 0; i < 4; i++) {
-            mapped[i] = new Vector2(texture.U(uvs[i].X), texture.V(uvs[i].Y));
-        }
-        Add(corners[0], mapped[0], colour, normal, draw);
-        Add(corners[1], mapped[1], colour, normal, draw);
-        Add(corners[2], mapped[2], colour, normal, draw);
-        Add(corners[2], mapped[2], colour, normal, draw);
-        Add(corners[3], mapped[3], colour, normal, draw);
-        Add(corners[0], mapped[0], colour, normal, draw);
+        Vertex template = Template(Abgr(IsOutline ? OutlineColour : draw.Argb), normal, draw);
+        AddQuad(template, corners, new Vector2(texture.U(uvs[0].X), texture.V(uvs[0].Y)), new Vector2(texture.U(uvs[1].X), texture.V(uvs[1].Y)),
+            new Vector2(texture.U(uvs[2].X), texture.V(uvs[2].Y)), new Vector2(texture.U(uvs[3].X), texture.V(uvs[3].Y)));
         if (Outlines is { OutlineColour: not 0 } outlines && !draw.NoOutline) {
             outlines.Quad(corners, uvs, normal, draw);
+        }
+    }
+
+    /// <summary>A quad whose corners each have their own colour, as vanilla's custom geometry can.</summary>
+    public void Quad(ReadOnlySpan<Vector3> corners, ReadOnlySpan<Vector2> uvs, ReadOnlySpan<uint> argb, Vector3 normal, ModelDrawState draw) {
+        if (IsOutline) {
+            return;
+        }
+        EntityTexture texture = draw.Texture;
+        Span<Vector2> mapped = stackalloc Vector2[4];
+        Span<uint> colours = stackalloc uint[4];
+        for (int i = 0; i < 4; i++) {
+            mapped[i] = new Vector2(texture.U(uvs[i].X), texture.V(uvs[i].Y));
+            colours[i] = Abgr(argb[i]);
+        }
+        Add(corners[0], mapped[0], colours[0], normal, draw);
+        Add(corners[1], mapped[1], colours[1], normal, draw);
+        Add(corners[2], mapped[2], colours[2], normal, draw);
+        Add(corners[2], mapped[2], colours[2], normal, draw);
+        Add(corners[3], mapped[3], colours[3], normal, draw);
+        Add(corners[0], mapped[0], colours[0], normal, draw);
+    }
+
+    /// <summary>An untextured triangle with a colour at each corner, drawn with the white texel.</summary>
+    public void Triangle(Vector3 a, Vector3 b, Vector3 c, uint argbA, uint argbB, uint argbC, ModelDrawState draw) {
+        if (IsOutline) {
+            return;
+        }
+        Vector2 white = new(Textures.White.U(0.5F), Textures.White.V(0.5F));
+        Add(a, white, Abgr(argbA), Vector3.Zero, draw);
+        Add(b, white, Abgr(argbB), Vector3.Zero, draw);
+        Add(c, white, Abgr(argbC), Vector3.Zero, draw);
+    }
+
+    /// <summary>
+    /// A quad whose texture repeats, as vanilla's samplers repeat it: <paramref name="uvs"/> may run past 0
+    /// to 1. The atlas holds one copy of each texture, so the quad is cut wherever a coordinate crosses a
+    /// whole number and each piece is drawn inside its own repeat. The texture coordinates must be a
+    /// rectangle the corners map affinely, as every model face and every beam's are.
+    /// </summary>
+    public void RepeatingQuad(ReadOnlySpan<Vector3> corners, ReadOnlySpan<Vector2> uvs, ReadOnlySpan<uint> argb, Vector3 normal, ModelDrawState draw) {
+        Span<RepeatCorner> quad = stackalloc RepeatCorner[4];
+        for (int i = 0; i < 4; i++) {
+            uint c = argb[i];
+            quad[i] = new RepeatCorner(corners[i], uvs[i], new Vector4(c >> 16 & 0xFF, c >> 8 & 0xFF, c & 0xFF, c >> 24));
+        }
+        CutRepeats(quad, 0, normal, draw);
+    }
+
+    /// <inheritdoc cref="RepeatingQuad(ReadOnlySpan{Vector3}, ReadOnlySpan{Vector2}, ReadOnlySpan{uint}, Vector3, ModelDrawState)"/>
+    public void RepeatingQuad(ReadOnlySpan<Vector3> corners, ReadOnlySpan<Vector2> uvs, Vector3 normal, ModelDrawState draw) =>
+        RepeatingQuad(corners, uvs, [draw.Argb, draw.Argb, draw.Argb, draw.Argb], normal, draw);
+
+    private readonly record struct RepeatCorner(Vector3 Position, Vector2 Uv, Vector4 Colour);
+
+    /// <summary>More repeats than this along one axis of one quad are drawn as the last one stretched.</summary>
+    private const int MaxRepeats = 4096;
+
+    private void CutRepeats(ReadOnlySpan<RepeatCorner> quad, int axis, Vector3 normal, ModelDrawState draw) {
+        float min = float.MaxValue, max = float.MinValue;
+        foreach (RepeatCorner corner in quad) {
+            float value = corner.Uv[axis];
+            min = Math.Min(min, value);
+            max = Math.Max(max, value);
+        }
+        float first = MathF.Floor(min);
+        if (max - first <= 1.0F || max - min <= 0.0F) {
+            if (axis == 0) {
+                CutRepeats(quad, 1, normal, draw);
+            }
+            else {
+                EmitRepeat(quad, normal, draw);
+            }
+            return;
+        }
+        Span<RepeatCorner> piece = stackalloc RepeatCorner[4];
+        float last = Math.Min(MathF.Ceiling(max), first + MaxRepeats);
+        for (float cell = first; cell < last; cell++) {
+            float from = Math.Max(min, cell), to = cell + 1 >= last ? max : Math.Min(max, cell + 1);
+            if (to <= from) {
+                continue;
+            }
+            for (int i = 0; i < 4; i++) {
+                RepeatCorner corner = quad[i];
+                // Along the edge to the neighbour on the far side of the rectangle, only this axis changes.
+                RepeatCorner other = quad[(i + 1) % 4].Uv[axis] != corner.Uv[axis] ? quad[(i + 1) % 4] : quad[(i + 3) % 4];
+                float target = corner.Uv[axis] < other.Uv[axis] ? from : to;
+                float t = (target - corner.Uv[axis]) / (other.Uv[axis] - corner.Uv[axis]);
+                piece[i] = new RepeatCorner(Vector3.Lerp(corner.Position, other.Position, t), Vector2.Lerp(corner.Uv, other.Uv, t),
+                    Vector4.Lerp(corner.Colour, other.Colour, t));
+            }
+            if (axis == 0) {
+                CutRepeats(piece, 1, normal, draw);
+            }
+            else {
+                EmitRepeat(piece, normal, draw);
+            }
+        }
+    }
+
+    private void EmitRepeat(ReadOnlySpan<RepeatCorner> quad, Vector3 normal, ModelDrawState draw) {
+        Vector2 cell = new(MathF.Floor(Math.Min(Math.Min(quad[0].Uv.X, quad[1].Uv.X), Math.Min(quad[2].Uv.X, quad[3].Uv.X))),
+            MathF.Floor(Math.Min(Math.Min(quad[0].Uv.Y, quad[1].Uv.Y), Math.Min(quad[2].Uv.Y, quad[3].Uv.Y))));
+        ReadOnlySpan<Vector3> corners = [quad[0].Position, quad[1].Position, quad[2].Position, quad[3].Position];
+        ReadOnlySpan<Vector2> uvs = [quad[0].Uv - cell, quad[1].Uv - cell, quad[2].Uv - cell, quad[3].Uv - cell];
+        Span<uint> argb = stackalloc uint[4];
+        for (int i = 0; i < 4; i++) {
+            Vector4 c = Vector4.Clamp(quad[i].Colour + new Vector4(0.5F), Vector4.Zero, new Vector4(255));
+            argb[i] = (uint)c.W << 24 | (uint)c.X << 16 | (uint)c.Y << 8 | (uint)c.Z;
+        }
+        if (argb[0] == argb[1] && argb[0] == argb[2] && argb[0] == argb[3]) {
+            Quad(corners, uvs, normal, draw with { Argb = argb[0] });
+        }
+        else {
+            Quad(corners, uvs, argb, normal, draw);
         }
     }
 
@@ -119,12 +264,7 @@ public sealed unsafe class EntityBatch : IModelSink, IDisposable {
         for (int i = 0; i < 4; i++) {
             mapped[i] = Vector2.Transform(uvs[i], matrix);
         }
-        glints.Add(corners[0], mapped[0], grey, Vector3.Zero, draw);
-        glints.Add(corners[1], mapped[1], grey, Vector3.Zero, draw);
-        glints.Add(corners[2], mapped[2], grey, Vector3.Zero, draw);
-        glints.Add(corners[2], mapped[2], grey, Vector3.Zero, draw);
-        glints.Add(corners[3], mapped[3], grey, Vector3.Zero, draw);
-        glints.Add(corners[0], mapped[0], grey, Vector3.Zero, draw);
+        glints.AddQuad(Template(grey, Vector3.Zero, draw), corners, mapped[0], mapped[1], mapped[2], mapped[3]);
     }
 
     /// <summary>A plain coloured box in a model space <paramref name="transform"/> takes to camera relative space.</summary>
@@ -168,7 +308,7 @@ public sealed unsafe class EntityBatch : IModelSink, IDisposable {
         if (_uploaded == 0) {
             return;
         }
-        _gl.BindVertexArray(_vao);
+        _gl.BindVertexArray(VertexArray());
         _gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)_uploaded);
         _gl.BindVertexArray(0);
     }

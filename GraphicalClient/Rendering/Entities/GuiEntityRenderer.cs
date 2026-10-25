@@ -21,7 +21,7 @@ public sealed unsafe class GuiEntityRenderer : IDisposable {
     private static readonly Vector3 InventoryDiffuseLight1 = Vector3.Normalize(new Vector3(-0.2F, -1.0F, 0.0F));
 
     private readonly GL _gl;
-    private readonly MinecraftClient _client;
+    private MinecraftClient _client;
     private readonly EntityRenderDispatcher _dispatcher;
     private readonly FlameFeatureRenderer _flames;
     private readonly uint _lightmap;
@@ -42,6 +42,9 @@ public sealed unsafe class GuiEntityRenderer : IDisposable {
         _translucentBatch = new EntityBatch(gl, textures);
         _shader = new ShaderProgram(gl, Shaders.EntityInUiVertex, Shaders.EntityInUiFragment);
     }
+
+    /// <summary>Takes up the connection a join makes.</summary>
+    public void Attach(MinecraftClient client) => _client = client;
 
     private EntityRenderContext Context(ClientLevel level) => new() {
         Client = _client, Level = level, Camera = _camera, Batch = _batch, TranslucentBatch = _translucentBatch, PartialTick = 1.0F, Flames = _flames

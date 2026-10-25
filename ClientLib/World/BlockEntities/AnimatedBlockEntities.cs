@@ -1,4 +1,5 @@
 using ClientLib.Maths;
+using ClientLib.Particles;
 using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
@@ -60,12 +61,18 @@ public sealed class SpawnerBlockEntity(IBlockEntityType type, int x, int y, int 
 
     public override bool HasClientTicker => true;
 
-    /// <summary><c>BaseSpawner.clientTick</c>, without its smoke and flame.</summary>
+    /// <summary><c>BaseSpawner.clientTick</c>.</summary>
     public override void Tick(BlockEntityTickContext context) {
         if (!context.HasNearbyAlivePlayer(X + 0.5, Y + 0.5, Z + 0.5, _requiredPlayerRange)) {
             OSpin = Spin;
         }
         else if (DisplayEntity != null) {
+            if (context.Particles is { } particles) {
+                ParticleRandom random = particles.Random;
+                double x = X + random.NextDouble(), y = Y + random.NextDouble(), z = Z + random.NextDouble();
+                particles.AddParticle(Particle.Smoke, x, y, z, 0.0, 0.0, 0.0);
+                particles.AddParticle(Particle.Flame, x, y, z, 0.0, 0.0, 0.0);
+            }
             if (_spawnDelay > 0) {
                 _spawnDelay--;
             }
@@ -94,6 +101,43 @@ public sealed class TrialSpawnerBlockEntity(IBlockEntityType type, int x, int y,
         _entity = tag["spawn_data"] is CompoundTag spawnData ? SpawnerBlockEntity.EntityToSpawn(spawnData) : null;
     }
 
+    /// <summary><c>TrialSpawnerState.ParticleEmission</c>, by state: small flames, flames and smoke, or smoke inside and a puff on top.</summary>
+    private void EmitParticles(ParticleEngine particles, TrialSpawnerBlock.TrialSpawnerState state, bool ominous, long gameTime) {
+        ParticleRandom random = particles.Random;
+        switch (state) {
+            case TrialSpawnerBlock.TrialSpawnerState.WaitingForPlayers or TrialSpawnerBlock.TrialSpawnerState.WaitingForRewardEjection
+                or TrialSpawnerBlock.TrialSpawnerState.EjectingReward:
+                if (random.NextInt(2) == 0) {
+                    (double x, double y, double z) = OffsetRandom(random, 0.9F);
+                    particles.AddParticle(ominous ? Particle.SoulFireFlame : Particle.SmallFlame, x, y, z, 0.0, 0.0, 0.0);
+                }
+                break;
+            case TrialSpawnerBlock.TrialSpawnerState.Active: {
+                (double x, double y, double z) = OffsetRandom(random, 1.0F);
+                particles.AddParticle(Particle.Smoke, x, y, z, 0.0, 0.0, 0.0);
+                particles.AddParticle(ominous ? Particle.SoulFireFlame : Particle.Flame, x, y, z, 0.0, 0.0, 0.0);
+                break;
+            }
+            case TrialSpawnerBlock.TrialSpawnerState.Cooldown: {
+                (double x, double y, double z) = OffsetRandom(random, 0.9F);
+                if (random.NextInt(3) == 0) {
+                    particles.AddParticle(Particle.Smoke, x, y, z, 0.0, 0.0, 0.0);
+                }
+                if (gameTime % 20L == 0L) {
+                    int count = random.NextInt(4) + 20;
+                    for (int i = 0; i < count; i++) {
+                        particles.AddParticle(Particle.Smoke, X + 0.5, Y + 1.0, Z + 0.5, 0.0, 0.0, 0.0);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    /// <summary><c>Vec3.atCenterOf(pos).offsetRandom(random, offset)</c>.</summary>
+    private (double X, double Y, double Z) OffsetRandom(ParticleRandom random, float offset) =>
+        (X + 0.5 + (random.NextFloat() - 0.5F) * offset, Y + 0.5 + (random.NextFloat() - 0.5F) * offset, Z + 0.5 + (random.NextFloat() - 0.5F) * offset);
+
     /// <summary><c>TrialSpawnerState.hasSpinningMob</c>.</summary>
     public static bool HasSpinningMob(TrialSpawnerBlock.TrialSpawnerState state) =>
         state is TrialSpawnerBlock.TrialSpawnerState.WaitingForPlayers or TrialSpawnerBlock.TrialSpawnerState.Active;
@@ -107,9 +151,12 @@ public sealed class TrialSpawnerBlockEntity(IBlockEntityType type, int x, int y,
 
     public override bool HasClientTicker => true;
 
-    /// <summary><c>TrialSpawner.tickClient</c>, without its particles and sounds.</summary>
+    /// <summary><c>TrialSpawner.tickClient</c>, without its sounds.</summary>
     public override void Tick(BlockEntityTickContext context) {
         TrialSpawnerBlock.TrialSpawnerState current = SpawnerState;
+        if (context.Particles is { } particles) {
+            EmitParticles(particles, current, State is TrialSpawnerBlock { Ominous: true }, context.Level.GameTime);
+        }
         if (HasSpinningMob(current)) {
             double spawnDelay = Math.Max(0L, _nextMobSpawnsAt - context.Level.GameTime);
             OSpin = Spin;
@@ -124,36 +171,54 @@ public sealed class VaultBlockEntity(IBlockEntityType type, int x, int y, int z,
     public float CurrentSpin { get; private set; }
     public float PreviousSpin { get; private set; }
 
+    /// <summary>The shared data's players the vault draws its connection particles to.</summary>
+    public HashSet<Guid> ConnectedPlayers { get; } = [];
+
+    /// <summary>How far from the vault a connected player still draws them; <c>VaultConfig.DEFAULT</c>'s deactivation range without one.</summary>
+    public double ConnectedParticlesRange { get; private set; } = 4.5;
+
     protected override void LoadAdditional(CompoundTag tag, MinecraftRegistry registry) {
         if (tag["shared_data"] is CompoundTag shared) {
             DisplayItem = shared["display_item"] is { } item ? ItemDisplayBlockEntity.ReadStack(item, registry) ?? ItemStack.Air : ItemStack.Air;
+            ConnectedPlayers.Clear();
+            if (shared["connected_players"] is ListTag players) {
+                Span<byte> bytes = stackalloc byte[16];
+                foreach (INbtTag player in players.Tags) {
+                    // UUIDUtil.CODEC: four ints, most significant first.
+                    if (player is ArrayTag<int> { Values.Length: 4 } ints) {
+                        for (int i = 0; i < 4; i++) {
+                            System.Buffers.Binary.BinaryPrimitives.WriteInt32BigEndian(bytes[(i * 4)..], ints.Values[i]);
+                        }
+                        ConnectedPlayers.Add(new Guid(bytes, bigEndian: true));
+                    }
+                }
+            }
+            ConnectedParticlesRange = shared["connected_particles_range"] is DoubleTag range ? range.GetDouble() : 4.5;
         }
     }
 
     public override bool HasClientTicker => true;
 
-    /// <summary><c>VaultBlockEntity.Client.tick</c>: <c>updateDisplayItemSpin</c>; the particles and sounds are left out.</summary>
+    /// <summary><c>VaultBlockEntity.Client.tick</c>, without its sounds.</summary>
     public override void Tick(BlockEntityTickContext context) {
         PreviousSpin = CurrentSpin;
         CurrentSpin = Minecraft.Schemas.Mth.WrapDegrees(CurrentSpin + 10.0F);
+        if (context.Particles is not { } particles) {
+            return;
+        }
+        if (context.Level.GameTime % 20L == 0L) {
+            particles.EmitVaultConnections(this);
+        }
+        // emitIdleParticles, from randomPosInsideCage; the flame only while it shows an item.
+        ParticleRandom random = particles.Random;
+        if (random.NextFloat() <= 0.5F) {
+            double px = X + 0.1 + random.NextDouble() * 0.8, py = Y + 0.25 + random.NextDouble() * 0.5, pz = Z + 0.1 + random.NextDouble() * 0.8;
+            particles.AddParticle(Particle.Smoke, px, py, pz, 0.0, 0.0, 0.0);
+            if (!DisplayItem.IsAir()) {
+                particles.AddParticle(State is VaultBlock { Ominous: true } ? Particle.SoulFireFlame : Particle.SmallFlame, px, py, pz, 0.0, 0.0, 0.0);
+            }
+        }
     }
-}
-
-/// <summary>An entity a moving piston on this client moves: one whose movement the client runs itself.</summary>
-public interface IPistonPushable {
-    Box BoundingBox { get; }
-    Vec3d Position { get; }
-    Vec3d DeltaMovement { get; set; }
-    bool OnGround { get; }
-
-    /// <summary><c>Entity.isSupportedBy</c>.</summary>
-    bool IsSupportedBy(int x, int y, int z);
-
-    /// <summary>
-    /// What <c>PistonMovingBlockEntity.moveEntityByPiston</c> calls on the entity: <c>move(MoverType.PISTON)</c>,
-    /// then <c>applyEffectsFromBlocks</c> from where it was, then <c>removeLatestMovementRecording</c>.
-    /// </summary>
-    void MoveByPiston(Vec3d delta);
 }
 
 /// <summary>
@@ -294,9 +359,9 @@ public sealed class PistonMovingBlockEntity : ClientBlockEntity {
         }
         Box aabb = MoveByPositionAndProgress(Bounds(shapeAabbs));
         Box area = MinMax(MovementArea(aabb, movement, deltaProgress), aabb);
-        List<IPistonPushable> entities = context.PistonPushable.Where(entity => entity.BoundingBox.Intersects(area)).ToList();
+        List<IBlockEntityMovable> entities = context.Movable.Where(entity => entity.BoundingBox.Intersects(area)).ToList();
         bool causeBounce = MovedState.Identifier.Equals(Block.SlimeBlock.Identifier);
-        foreach (IPistonPushable entity in entities) {
+        foreach (IBlockEntityMovable entity in entities) {
             if (causeBounce) {
                 Vec3d deltaMovement = entity.DeltaMovement;
                 (int sx, int sy, int sz) = DirectionUtil.Step(movement);
@@ -329,7 +394,7 @@ public sealed class PistonMovingBlockEntity : ClientBlockEntity {
         }
     }
 
-    private static void MoveEntityByPiston(Cardinal pistonDirection, IPistonPushable entity, double delta, Cardinal movement) {
+    private static void MoveEntityByPiston(Cardinal pistonDirection, IBlockEntityMovable entity, double delta, Cardinal movement) {
         _noClip = pistonDirection;
         (int sx, int sy, int sz) = DirectionUtil.Step(movement);
         try {
@@ -352,19 +417,19 @@ public sealed class PistonMovingBlockEntity : ClientBlockEntity {
         double stickyTop = Bounds(CollisionOf(context.Level.Registry, MovedState)).MaxY;
         Box aabb = MoveByPositionAndProgress(new Box(0.0, stickyTop, 0.0, 1.0, 1.5000010000000001, 1.0));
         double deltaProgress = newProgress - _progress;
-        List<IPistonPushable> entities = context.PistonPushable.Where(entity => entity.BoundingBox.Intersects(aabb) && MatchesStickyCriteria(aabb, entity)).ToList();
-        foreach (IPistonPushable entity in entities) {
+        List<IBlockEntityMovable> entities = context.Movable.Where(entity => entity.BoundingBox.Intersects(aabb) && MatchesStickyCriteria(aabb, entity)).ToList();
+        foreach (IBlockEntityMovable entity in entities) {
             MoveEntityByPiston(movement, entity, deltaProgress, movement);
         }
     }
 
-    private bool MatchesStickyCriteria(Box aabb, IPistonPushable entity) {
+    private bool MatchesStickyCriteria(Box aabb, IBlockEntityMovable entity) {
         return entity.OnGround && (entity.IsSupportedBy(X, Y, Z) ||
                                    entity.Position.X >= aabb.MinX && entity.Position.X <= aabb.MaxX && entity.Position.Z >= aabb.MinZ && entity.Position.Z <= aabb.MaxZ);
     }
 
     /// <summary><c>fixEntityWithinPistonBase</c>: a retracting head drags back out what it would leave inside the base.</summary>
-    private void FixEntityWithinPistonBase(IPistonPushable entity, Cardinal direction, double deltaProgress) {
+    private void FixEntityWithinPistonBase(IBlockEntityMovable entity, Cardinal direction, double deltaProgress) {
         Box entityAabb = entity.BoundingBox;
         Box box = new(X, Y, Z, X + 1.0, Y + 1.0, Z + 1.0);
         if (!entityAabb.Intersects(box)) {
@@ -568,4 +633,42 @@ public sealed class BeaconBlockEntity(IBlockEntityType type, int x, int y, int z
         uint Channel(int shift) => (((a >> shift) & 0xFF) + ((b >> shift) & 0xFF)) / 2;
         return Channel(24) << 24 | Channel(16) << 16 | Channel(8) << 8 | Channel(0);
     }
+}
+
+/// <summary><c>TheEndGatewayBlockEntity</c>: its age and teleport cooldown, which the beam's height follows.</summary>
+public sealed class EndGatewayBlockEntity(IBlockEntityType type, int x, int y, int z, IBlock state) : ClientBlockEntity(type, x, y, z, state) {
+    private const int SpawnTime = 200, CooldownTime = 40, EventCooldown = 1;
+
+    public long Age { get; private set; }
+    public int TeleportCooldown { get; private set; }
+
+    protected override void LoadAdditional(CompoundTag tag, MinecraftRegistry registry) {
+        Age = tag["Age"] is { } age ? age.GetLong() : 0L;
+    }
+
+    public override bool TriggerEvent(int b0, int b1) {
+        if (b0 == EventCooldown) {
+            TeleportCooldown = CooldownTime;
+            return true;
+        }
+        return false;
+    }
+
+    public override bool HasClientTicker => true;
+
+    /// <summary><c>beamAnimationTick</c>.</summary>
+    public override void Tick(BlockEntityTickContext context) {
+        Age++;
+        if (IsCoolingDown) {
+            TeleportCooldown--;
+        }
+    }
+
+    public bool IsSpawning => Age < SpawnTime;
+
+    public bool IsCoolingDown => TeleportCooldown > 0;
+
+    public float SpawnPercent(float a) => Math.Clamp((Age + a) / SpawnTime, 0.0F, 1.0F);
+
+    public float CooldownPercent(float a) => 1.0F - Math.Clamp((TeleportCooldown - a) / CooldownTime, 0.0F, 1.0F);
 }

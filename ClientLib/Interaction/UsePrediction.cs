@@ -56,7 +56,7 @@ public static class UsePrediction {
     private static readonly HashSet<Identifier> UseOnItems = Ids(
         Item.FlintAndSteel, Item.FireCharge, Item.BoneMeal, Item.ItemFrame, Item.GlowItemFrame, Item.Painting, Item.ArmorStand,
         Item.EndCrystal, Item.Lead, Item.Minecart, Item.ChestMinecart, Item.FurnaceMinecart, Item.HopperMinecart, Item.TntMinecart,
-        Item.CommandBlockMinecart, Item.EnderEye, Item.Honeycomb, Item.Brush, Item.DebugStick, Item.GlassBottle);
+        Item.CommandBlockMinecart, Item.EnderEye, Item.Brush, Item.DebugStick, Item.GlassBottle);
 
     /// <summary><c>ItemTags.LECTERN_BOOKS</c>.</summary>
     private static readonly HashSet<Identifier> LecternBooks = Ids(Item.WritableBook, Item.WrittenBook);
@@ -65,7 +65,7 @@ public static class UsePrediction {
         Item.WoodenHoe, Item.StoneHoe, Item.CopperHoe, Item.IronHoe, Item.GoldenHoe, Item.DiamondHoe, Item.NetheriteHoe);
     private static readonly HashSet<Identifier> Shovels = Ids(
         Item.WoodenShovel, Item.StoneShovel, Item.CopperShovel, Item.IronShovel, Item.GoldenShovel, Item.DiamondShovel, Item.NetheriteShovel);
-    private static readonly HashSet<Identifier> Axes = Ids(
+    internal static readonly HashSet<Identifier> Axes = Ids(
         Item.WoodenAxe, Item.StoneAxe, Item.CopperAxe, Item.IronAxe, Item.GoldenAxe, Item.DiamondAxe, Item.NetheriteAxe);
 
     /// <summary><c>HoeItem.TILLABLES</c>.</summary>
@@ -92,10 +92,11 @@ public static class UsePrediction {
             return Flattenables.Contains(block) || BlockClasses.Of(block) is [var nearest, ..] && nearest == BlockClass.CampfireBlock;
         }
         if (Axes.Contains(item)) {
-            // The strippable and waxable blocks have no generated table, so they are matched by name.
-            string path = block.Key;
-            return path.EndsWith("_log") || path.EndsWith("_wood") || path.EndsWith("_stem") || path.EndsWith("_hyphae")
-                   || path.Contains("copper") || block == Block.BambooBlock.Identifier;
+            return BlockConversions.Strippables.ContainsKey(block) || BlockConversions.WeatheringPrevious.ContainsKey(block)
+                   || BlockConversions.WaxOff.ContainsKey(block);
+        }
+        if (item == Item.Honeycomb.Identifier) {
+            return BlockConversions.Waxables.ContainsKey(block);
         }
         return false;
     }

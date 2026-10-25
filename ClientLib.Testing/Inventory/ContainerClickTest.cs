@@ -19,6 +19,9 @@ public class ContainerClickTest {
         public PlayerInventory Inventory { get; } = inventory;
         public List<Stack> Dropped { get; } = [];
         public void Drop(Stack stack) => Dropped.Add(stack.Copy());
+        public void PlaySound(Minecraft.Data.Sounds.ISoundType sound, float volume, float pitch) {
+        }
+        public Minecraft.Schemas.RandomSource Random { get; } = new Minecraft.Schemas.LegacyRandomSource(0);
     }
 
     private PlayerInventory _inventory = null!;

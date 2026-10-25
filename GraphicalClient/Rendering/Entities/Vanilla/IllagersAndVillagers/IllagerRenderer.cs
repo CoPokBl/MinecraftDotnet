@@ -26,7 +26,7 @@ public class IllagerRenderState : UndeadRenderState {
     public float AttackAnim;
 }
 
-/// <summary><c>IllagerRenderer</c>. Its <c>CustomHeadLayer</c>, which draws a worn skull or block, is not ported.</summary>
+/// <summary><c>IllagerRenderer</c>.</summary>
 public abstract class IllagerRenderer<S> : MobRenderer<S, IllagerModel<S>> where S : IllagerRenderState, new() {
     protected readonly ItemRenderer Items;
 
@@ -34,6 +34,7 @@ public abstract class IllagerRenderer<S> : MobRenderer<S, IllagerModel<S>> where
     protected IllagerRenderer(EntityRendererContext context)
         : base(new IllagerModel<S>(IllagerModel<S>.CreateBodyLayer().Apply(MeshTransformers.Scaling(0.9375F)).BakeRoot()), 0.5F) {
         Items = context.Items;
+        AddLayer(new CustomHeadLayer<S, IllagerModel<S>>(this, context.Items));
     }
 
     /// <summary><c>getArmPose</c> of the vanilla class; <c>AbstractIllager</c>'s is crossed arms.</summary>

@@ -1,5 +1,6 @@
 using ClientLib;
 using ClientLib.Entities;
+using ClientLib.Particles;
 using ClientLib.World;
 using Minecraft.Data.Generated;
 using Minecraft.Packets;
@@ -11,7 +12,8 @@ namespace GraphicalClient.Audio;
 
 /// <summary>
 /// The sounds the client makes for itself when told something happened in the world: level events,
-/// explosions, game events, entity and damage events, items picked up, and lightning striking.
+/// explosions, game events, entity and damage events, items picked up, lightning striking, and the
+/// blocks and fluids the animate tick samples.
 /// </summary>
 public sealed class WorldSounds {
     private readonly ClientSounds _sounds;
@@ -34,6 +36,7 @@ public sealed class WorldSounds {
         _entityEvents = new EntityEventSounds(sounds, client, camera);
         client.LevelChanged += SetLevel;
         client.EntityTaken += TakeEntity;
+        client.AnimateTicks.SoundPlayed += PlayAnimateTick;
         if (client.Level != null) {
             SetLevel(client.Level);
         }
@@ -50,6 +53,16 @@ public sealed class WorldSounds {
     }
 
     private void LocalLevelEvent(int type, int x, int y, int z, int data) => _levelEvents?.LevelEvent(type, x, y, z, data);
+
+    /// <summary><c>ClientLevel.playLocalSound</c> at a position, or <c>playPlayerSound</c> following the player.</summary>
+    private void PlayAnimateTick(AnimateTickSound sound) {
+        if (!sound.AtPlayer) {
+            _sounds.Play(sound.Sound, sound.Category, sound.Volume, sound.Pitch, sound.X, sound.Y, sound.Z);
+        }
+        else if (_client.Player is { } player) {
+            _sounds.PlayAt(player, sound.Sound, sound.Category, sound.Volume, sound.Pitch);
+        }
+    }
 
     public void Handle(MinecraftPacket packet) {
         switch (packet) {

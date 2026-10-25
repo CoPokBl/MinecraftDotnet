@@ -6,9 +6,9 @@ using BlockEntityType = Minecraft.Data.Generated.BlockEntityType;
 namespace GraphicalClient.Rendering.BlockEntities;
 
 /// <summary>
-/// <c>BlockEntityRenderers</c>: the renderer each block entity type is drawn with. The end portal and
-/// gateway are drawn by <see cref="EndPortalRenderer"/> from the meshed sections instead, and the structure
-/// block and test instance block have none here.
+/// <c>BlockEntityRenderers</c>: the renderer each block entity type is drawn with. The end portal's and
+/// gateway's faces are drawn by <see cref="EndPortalRenderer"/> from the meshed sections instead, and the
+/// structure block and test instance block have none here.
 /// </summary>
 public static class BlockEntityRenderers {
     private static readonly Dictionary<Identifier, Func<BlockEntityRendererContext, BlockEntityRenderer>> Providers = new();
@@ -36,6 +36,7 @@ public static class BlockEntityRenderers {
         Register(BlockEntityType.CopperGolemStatue, context => new CopperGolemStatueRenderer(context));
         Register(BlockEntityType.Shelf, context => new ShelfRenderer(context));
         Register(BlockEntityType.Beacon, context => new BeaconRenderer(context));
+        Register(BlockEntityType.EndGateway, context => new EndGatewayBeamRenderer(context));
     }
 
     /// <summary>

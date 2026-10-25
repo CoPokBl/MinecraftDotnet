@@ -61,7 +61,7 @@ public sealed class HumanoidArmorLayer<S, M, A> : RenderLayer<S, M>
         }
         Identifier assetId = itemStack.Get(DataComponent.Equippable).Model!.Value;
         A model = GetArmorModel(state, slot);
-        EquipmentClientInfo.LayerType layerType = state.IsBaby && state.EntityType != EntityType.ArmorStand
+        EquipmentClientInfo.LayerType layerType = state.IsBaby && state.EntityType.Identifier != EntityType.ArmorStand.Identifier
             ? EquipmentClientInfo.LayerType.HumanoidBaby
             : UsesInnerModel(slot) ? EquipmentClientInfo.LayerType.HumanoidLeggings : EquipmentClientInfo.LayerType.Humanoid;
         _equipmentRenderer.RenderLayers(layerType, assetId, model, state, itemStack, pose, context);

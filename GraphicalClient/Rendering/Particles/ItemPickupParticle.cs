@@ -1,8 +1,9 @@
 using ClientLib.Entities;
 using ClientLib.Player;
 using GraphicalClient.Audio;
+using GraphicalClient.Rendering.Entities;
 
-namespace GraphicalClient.Rendering.Entities;
+namespace GraphicalClient.Rendering.Particles;
 
 /// <summary><c>ItemPickupParticle</c>: a taken entity, as it was when taken, flying into whoever took it.</summary>
 public sealed class ItemPickupParticle {
@@ -101,8 +102,7 @@ public sealed class ItemPickupParticleGroup {
     }
 
     /// <summary><c>ParticleInstance.fromParticle</c> and <c>State.submit</c>.</summary>
-    public void Render(EntityRenderContext context) {
-        float partialTick = context.PartialTick;
+    public void Render(EntityRenderContext context, float partialTick) {
         ClientLib.Maths.Vec3d camera = context.Camera.Position;
         foreach (ItemPickupParticle particle in _particles) {
             float time = (particle.Life + partialTick) / ItemPickupParticle.LifeTime;

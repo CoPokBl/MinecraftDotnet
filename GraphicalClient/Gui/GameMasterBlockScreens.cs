@@ -41,6 +41,9 @@ public abstract class FocusScreen : Screen {
     /// <summary><c>init</c>, which a resize runs again with <paramref name="first"/> false.</summary>
     protected abstract void InitChildren(GuiContext context, int width, int height, bool first);
 
+    /// <summary><c>EditBox.canConsumeInput</c> on the focused child.</summary>
+    public override bool HasFocusedEditBox => _focused is EditBox { Focused: true, Visible: true, Editable: true };
+
     protected T AddChild<T>(T child) where T : class {
         _children.Add(child);
         return child;
@@ -178,7 +181,9 @@ public abstract class AbstractCommandBlockEditScreen : FocusScreen {
         AddExtraControls(width);
         DoneButton = AddChild(new Button(Tr("gui.done"), width / 2 - 4 - 150, height / 4 + 120 + 12, 150, () => OnDone(context)));
         AddChild(new Button(Tr("gui.cancel"), width / 2 + 4, height / 4 + 120 + 12, 150, () => Close(context)));
-        _commandSuggestions = new CommandSuggestions(context.Client, () => context.Height, CommandEdit, context.Text, true, true, 0, 7, false, 0x80000000);
+        _commandSuggestions = new CommandSuggestions(context.Client, () => context.Height, CommandEdit, context.Text, true, true, 0, 7, false, 0x80000000) {
+            AutoSuggestions = () => context.Settings?.AutoSuggestions ?? true
+        };
         _commandSuggestions.SetAllowSuggestions(true);
         _commandSuggestions.UpdateCommandInfo();
         UpdatePreviousOutput(trackOutput);

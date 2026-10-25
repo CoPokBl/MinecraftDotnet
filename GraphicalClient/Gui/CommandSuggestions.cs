@@ -50,6 +50,9 @@ public sealed partial class CommandSuggestions {
     private bool _currentParseIsCommand;
     private bool _currentParseIsMessage;
     private bool _allowSuggestions;
+
+    /// <summary>The <c>autoSuggestions</c> option.</summary>
+    public Func<bool> AutoSuggestions { get; init; } = () => true;
     private bool _keepSuggestions;
     private bool _allowHiding = true;
     private bool _messagesAllowed = true;
@@ -274,8 +277,7 @@ public sealed partial class CommandSuggestions {
         }
 
         _suggestions = null;
-        // options.autoSuggestions, which defaults to on and has no setting in this client.
-        if (_allowSuggestions) {
+        if (_allowSuggestions && AutoSuggestions()) {
             ShowSuggestions(false);
         }
     }

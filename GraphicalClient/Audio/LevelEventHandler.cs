@@ -9,9 +9,9 @@ using Minecraft.Schemas.Sound;
 namespace GraphicalClient.Audio;
 
 /// <summary>
-/// The sound half of <c>LevelEventHandler</c>, one per level as vanilla keeps it. The particle half of
-/// every case is left out, there being no particle system; the random draws that only feed particles
-/// go with it, which nothing can observe since the level's random is unseeded.
+/// The sound half of <c>LevelEventHandler</c>, one per level as vanilla keeps it. The particle half is
+/// <c>ParticleEngine.LevelEvent</c>; the random draws that only feed particles are left out here,
+/// which nothing can observe since the level's random is unseeded.
 /// </summary>
 public sealed class LevelEventHandler(ClientSounds sounds, ClientLevel level, Func<(double X, double Y, double Z)> camera) {
     private static readonly Func<LegacyRandom, float> Even = _ => 1.0F;

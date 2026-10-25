@@ -15,11 +15,12 @@ public readonly record struct TextRun(
     bool Strikethrough = false,
     bool Obfuscated = false,
     ClickEvent? Click = null,
-    HoverEvent? Hover = null) {
-    public RunStyle Style => new(Rgb, Bold, Italic, Underlined, Strikethrough, Obfuscated, Click, Hover);
+    HoverEvent? Hover = null,
+    string? Insertion = null) {
+    public RunStyle Style => new(Rgb, Bold, Italic, Underlined, Strikethrough, Obfuscated, Click, Hover, Insertion);
 
     public static TextRun Of(string text, RunStyle style) =>
-        new(text, style.Rgb, style.Bold, style.Italic, style.Underlined, style.Strikethrough, style.Obfuscated, style.Click, style.Hover);
+        new(text, style.Rgb, style.Bold, style.Italic, style.Underlined, style.Strikethrough, style.Obfuscated, style.Click, style.Hover, style.Insertion);
 }
 
 /// <summary>A run's style without its text: vanilla's <c>Style</c> with the colour resolved and the font left out.</summary>
@@ -31,7 +32,8 @@ public readonly record struct RunStyle(
     bool Strikethrough = false,
     bool Obfuscated = false,
     ClickEvent? Click = null,
-    HoverEvent? Hover = null);
+    HoverEvent? Hover = null,
+    string? Insertion = null);
 
 /// <summary>
 /// Turns a text component into styled runs. An untranslated key falls back to the component's fallback,
@@ -87,7 +89,8 @@ public static class TextFlattener {
             component.Strikethrough ?? parent.Strikethrough,
             component.Obfuscated ?? parent.Obfuscated,
             component.ClickEvent ?? parent.Click,
-            component.HoverEvent ?? parent.Hover);
+            component.HoverEvent ?? parent.Hover,
+            component.Insertion ?? parent.Insertion);
 
         TextContent content = component.Content;
         if (content.Type == "translatable") {

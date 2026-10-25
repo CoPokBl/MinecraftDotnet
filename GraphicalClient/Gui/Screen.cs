@@ -9,11 +9,11 @@ public sealed class GuiContext(GuiRenderer gui, TextRenderer text, HudIcons icon
     public GuiRenderer Gui { get; } = gui;
 
     /// <summary>A resource pack's GUI art, where there is one; every draw falls back to the built in art.</summary>
-    public GuiSprites Sprites { get; } = sprites;
-    public TextRenderer Text { get; } = text;
-    public HudIcons Icons { get; } = icons;
-    public ItemAtlas Items { get; } = items;
-    public MinecraftClient Client { get; } = client;
+    public GuiSprites Sprites { get; set; } = sprites;
+    public TextRenderer Text { get; set; } = text;
+    public HudIcons Icons { get; set; } = icons;
+    public ItemAtlas Items { get; set; } = items;
+    public MinecraftClient Client { get; set; } = client;
     public int Width => Gui.ScaledWidth;
     public int Height => Gui.ScaledHeight;
     public Func<string>? ReadClipboard { get; set; }
@@ -27,8 +27,28 @@ public sealed class GuiContext(GuiRenderer gui, TextRenderer text, HudIcons icon
     /// <summary>Replaces the open screen, null for none.</summary>
     public Action<Screen?>? Open { get; set; }
 
+    /// <summary><c>Gui.screen</c>: the screen open now.</summary>
+    public Func<Screen?> CurrentScreen { get; set; } = () => null;
+
+    /// <summary><c>Gui.openChatAndAddText</c>: the chat screen as the key opens it, with the text added.</summary>
+    public Action<ChatComponent.ChatMethod, string>? OpenChat { get; set; }
+
+    /// <summary>What the title screen and the server list ask of the window: joining, leaving, quitting, the panorama.</summary>
+    public IMenuHost? Host { get; set; }
+
     /// <summary>Draws an entity into a box of the screen, as <c>GuiGraphicsExtractor.entity</c> does.</summary>
     public Rendering.Entities.GuiEntityRenderer? EntityRenderer { get; set; }
+
+    /// <summary>Told the <c>rawMouseInput</c> option changed, which the window applies at once as vanilla's change action does.</summary>
+    public Action? RawMouseInputChanged { get; set; }
+
+    public Narration.GameNarrator? Narrator { get; set; }
+
+    /// <summary>The toasts in the top right corner, which outlive any one connection.</summary>
+    public ToastManager Toasts { get; } = new();
+
+    /// <summary>The resource packs and languages, which the options screens choose from and reload.</summary>
+    public ClientResources? Resources { get; set; }
 
     /// <summary>The cursor in HUD pixels as of this frame, as vanilla passes it to <c>extractRenderState</c>.</summary>
     public float MouseX { get; set; }
@@ -75,6 +95,9 @@ public abstract class Screen {
 
     protected void Add(Widget widget) => _widgets.Add(widget);
 
+    /// <summary>Has <see cref="Init"/> lay the widgets out again before they are next used, as a scrolled list must.</summary>
+    public void InvalidateLayout() => _laidOutFor = null;
+
     protected void LayOut(GuiContext context) {
         if (_laidOutFor == (context.Width, context.Height)) {
             return;
@@ -83,6 +106,99 @@ public abstract class Screen {
         _widgets.Clear();
         _dragging = null;
         Init(context, context.Width, context.Height);
+        // Screen.init: what is there is said at once, then nothing more for two seconds.
+        TriggerImmediateNarration(context, false);
+        _narrationSuppressTime = Environment.TickCount64 + NarrateSuppressAfterInitTime;
+    }
+
+    /// <summary><c>Screen.removed</c>: the screen is being replaced, by another or by none.</summary>
+    public virtual void Removed(GuiContext context) {
+    }
+
+    /// <summary><c>Screen.insertText</c>, which a <c>suggest_command</c> click calls with <paramref name="replace"/> set.</summary>
+    public virtual void InsertText(string text, bool replace) {
+    }
+
+    /// <summary>Whether a text field has the keyboard, which keeps Ctrl+B from the narrator.</summary>
+    public virtual bool HasFocusedEditBox => false;
+
+    private const long NarrateSuppressAfterInitTime = 2000;
+    private readonly Narration.ScreenNarrationCollector _narrationState = new();
+    private long _narrationSuppressTime = long.MinValue, _nextNarrationTime = long.MaxValue;
+
+    /// <summary><c>getNarrationMessage</c>: the title, said first.</summary>
+    protected virtual string NarrationTitle => "";
+
+    /// <summary><c>narratorButton</c>, which follows the narrator option when the hot key changes it.</summary>
+    protected CycleButton<Narration.NarratorStatus>? NarratorButton { get; set; }
+
+    private void ScheduleNarration(long delay, bool ignoreSuppression) {
+        _nextNarrationTime = Environment.TickCount64 + delay;
+        if (ignoreSuppression) {
+            _narrationSuppressTime = long.MinValue;
+        }
+    }
+
+    public void AfterMouseMove() => ScheduleNarration(750, false);
+
+    public void AfterMouseAction() => ScheduleNarration(200, true);
+
+    public void AfterKeyboardAction() => ScheduleNarration(200, true);
+
+    public void UpdateNarratorStatus(bool wasDisabled, Narration.NarratorStatus status) {
+        if (wasDisabled) {
+            ScheduleNarration(NarrateSuppressAfterInitTime, false);
+        }
+        NarratorButton?.SetValue(status);
+    }
+
+    /// <summary><c>handleDelayedNarration</c>, once a frame: what changed since the last narration, once its delay is up.</summary>
+    public void HandleDelayedNarration(GuiContext context) {
+        if (context.Narrator is not { IsActive: true }) {
+            return;
+        }
+        long now = Environment.TickCount64;
+        if (now > _nextNarrationTime && now > _narrationSuppressTime) {
+            RunNarration(context, true);
+            _nextNarrationTime = long.MaxValue;
+        }
+    }
+
+    public void TriggerImmediateNarration(GuiContext context, bool onlyChanged) {
+        if (context.Narrator is { IsActive: true }) {
+            RunNarration(context, onlyChanged);
+        }
+    }
+
+    private void RunNarration(GuiContext context, bool onlyChanged) {
+        _narrationState.Update(UpdateNarrationState);
+        string narration = _narrationState.CollectNarrationText(!onlyChanged);
+        if (narration.Length > 0) {
+            context.Narrator!.SaySystemNow(narration);
+        }
+    }
+
+    protected virtual void UpdateNarrationState(Narration.INarrationOutput output) {
+        output.Add(Narration.NarratedElementType.Title, Minecraft.Text.TextComponent.Text(NarrationTitle));
+        UpdateNarratedWidget(output);
+    }
+
+    /// <summary>
+    /// <c>updateNarratedWidget</c> with the widget under the cursor, there being no keyboard focus here: its
+    /// place among the active widgets and its own narration, or how to pick one when none is hovered.
+    /// </summary>
+    protected void UpdateNarratedWidget(Narration.INarrationOutput output) {
+        List<Widget> active = _widgets.Where(w => w.Visible && w.Active).ToList();
+        int index = active.FindIndex(w => w.Contains(MouseX, MouseY));
+        if (index < 0) {
+            output.Add(Narration.NarratedElementType.Usage, Minecraft.Text.TextComponent.Translatable("narrator.screen.usage"));
+            return;
+        }
+        if (active.Count > 1) {
+            output.Add(Narration.NarratedElementType.Position, Minecraft.Text.TextComponent.Translatable("narrator.position.screen", null,
+                [Minecraft.Text.TextComponent.Text((index + 1).ToString()), Minecraft.Text.TextComponent.Text(active.Count.ToString())]));
+        }
+        active[index].UpdateNarration(output.Nest());
     }
 
     /// <summary><c>Screen.tick</c>, once a game tick while open.</summary>
@@ -104,6 +220,10 @@ public abstract class Screen {
         if (key == Key.Escape && CloseOnEscape) {
             Close(context);
         }
+    }
+
+    /// <summary><c>keyReleased</c>.</summary>
+    public virtual void KeyUp(GuiContext context, Key key) {
     }
 
     public virtual void Char(GuiContext context, char c) {

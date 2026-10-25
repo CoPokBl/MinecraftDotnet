@@ -91,7 +91,10 @@ public sealed class WardenRenderer : MobRenderer<WardenRenderState, WardenModel>
         }
     }
 
-    /// <summary><c>Warden.tick</c>'s client half. The heartbeat sound and digging particles are not this renderer's.</summary>
+    /// <summary>
+    /// <c>Warden.tick</c>'s client half. The heartbeat sound is not this renderer's, nor the digging particles,
+    /// which are <see cref="ClientLib.Particles.EntityParticles"/>'.
+    /// </summary>
     public override void Tick(ClientEntity entity) {
         WardenData data = DataOf(entity);
         NoticePose(entity, data, entity.TickCount - 1);

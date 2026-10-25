@@ -22,6 +22,16 @@ public sealed record SignText(TextComponent[] Messages, TextComponent[] Filtered
 
     public TextComponent[] GetMessages(bool shouldFilter) => shouldFilter ? FilteredMessages : Messages;
 
+    public TextComponent GetMessage(int line, bool shouldFilter) => GetMessages(shouldFilter)[line];
+
+    /// <summary><c>setMessage(int, Component)</c>: one line, filtered and not, in a new text.</summary>
+    public SignText SetMessage(int line, TextComponent message) {
+        TextComponent[] messages = (TextComponent[])Messages.Clone(), filtered = (TextComponent[])FilteredMessages.Clone();
+        messages[line] = message;
+        filtered[line] = message;
+        return this with { Messages = messages, FilteredMessages = filtered };
+    }
+
     /// <summary><c>DIRECT_CODEC</c>; the empty text when the tag is not one, as <c>orElseGet(SignText::new)</c>.</summary>
     public static SignText Read(INbtTag? tag) {
         if (tag is not CompoundTag compound || Lines(compound["messages"]) is not { } messages) {
@@ -57,6 +67,34 @@ public sealed class SignBlockEntity(IBlockEntityType type, int x, int y, int z, 
 
     public int TextLineHeight => IsHanging ? 9 : 10;
     public int MaxTextLineWidth => IsHanging ? 60 : 90;
+
+    public SignText GetText(bool isFrontText) => isFrontText ? FrontText : BackText;
+
+    /// <summary><c>setText</c>, as the editor does to show what is typed before the server has it.</summary>
+    public void SetText(SignText text, bool isFrontText) {
+        if (isFrontText) {
+            FrontText = text;
+        }
+        else {
+            BackText = text;
+        }
+    }
+
+    /// <summary>
+    /// <c>playerIsTooFarAwayToEdit</c> for the local player, the one the editor asks about:
+    /// <c>Player.isWithinBlockInteractionRange(pos, 4.0)</c>, the block's box against the eyes.
+    /// </summary>
+    public bool PlayerIsTooFarAwayToEdit(Player.LocalPlayer? player) {
+        if (player == null) {
+            return true;
+        }
+        double maxRange = player.Attributes.Value(Minecraft.Data.Generated.Attribute.BlockInteractionRange) + 4.0;
+        Maths.Vec3d eye = Interaction.Picking.EyePosition(player, 1.0F);
+        double dx = Math.Max(Math.Max(X - eye.X, eye.X - (X + 1)), 0.0);
+        double dy = Math.Max(Math.Max(Y - eye.Y, eye.Y - (Y + 1)), 0.0);
+        double dz = Math.Max(Math.Max(Z - eye.Z, eye.Z - (Z + 1)), 0.0);
+        return !(dx * dx + dy * dy + dz * dz < maxRange * maxRange);
+    }
 
     protected override void LoadAdditional(CompoundTag tag, MinecraftRegistry registry) {
         FrontText = SignText.Read(tag["front_text"]);
@@ -133,6 +171,48 @@ public sealed class ItemDisplayBlockEntity(IBlockEntityType type, int x, int y, 
     private static ItemStack[] Empty(IBlockEntityType type) =>
         Enumerable.Repeat(ItemStack.Air, type.Identifier.Equals(BlockEntityType.Shelf.Identifier) ? 3 : 4).ToArray();
 
+    /// <summary><c>CampfireBlock.getTicker</c>: a lit campfire's client ticker is its <c>particleTick</c>.</summary>
+    public override bool HasClientTicker => Type.Identifier.Equals(BlockEntityType.Campfire.Identifier) && State is Minecraft.Data.Blocks.Properties.ILit { Lit: true };
+
+    /// <summary><c>CampfireBlockEntity.particleTick</c>: smoke columns now and then, and smoke off each cooking item.</summary>
+    public override void Tick(BlockEntityTickContext context) {
+        if (context.Particles is not { } particles) {
+            return;
+        }
+        Particles.ParticleRandom random = particles.Random;
+        bool signalFire = State is Minecraft.Data.Blocks.Properties.ISignalFire { SignalFire: true };
+        if (random.NextFloat() < 0.11F) {
+            int columns = random.NextInt(2) + 2;
+            for (int i = 0; i < columns; i++) {
+                particles.CampfireSmoke(X, Y, Z, signalFire, false);
+            }
+        }
+        // Direction.get2DDataValue of the facing: south, west, north, east.
+        int rotation = State is Minecraft.Data.Blocks.Properties.IHorizontalFacing facing ? facing.Facing switch {
+            Direction.South => 0,
+            Direction.West => 1,
+            Direction.North => 2,
+            _ => 3
+        } : 2;
+        for (int slot = 0; slot < Items.Length; slot++) {
+            if (Items[slot].IsAir() || random.NextFloat() >= 0.2F) {
+                continue;
+            }
+            // Direction.from2DDataValue, and its clockwise neighbour.
+            (int sx, int sz, int cx, int cz) = ((slot + rotation) & 3) switch {
+                0 => (0, 1, -1, 0),
+                1 => (-1, 0, 0, -1),
+                2 => (0, -1, 1, 0),
+                _ => (1, 0, 0, 1)
+            };
+            double x = X + 0.5 - sx * 0.3125F + cx * 0.3125F;
+            double z = Z + 0.5 - sz * 0.3125F + cz * 0.3125F;
+            for (int i = 0; i < 4; i++) {
+                particles.AddParticle(Particle.Smoke, x, Y + 0.5, z, 0.0, 5.0E-4, 0.0);
+            }
+        }
+    }
+
     /// <summary><c>ContainerHelper.loadAllItems</c>.</summary>
     protected override void LoadAdditional(CompoundTag tag, MinecraftRegistry registry) {
         Items = Empty(Type);
@@ -194,17 +274,58 @@ public sealed class ConduitBlockEntity(IBlockEntityType type, int x, int y, int 
     public bool IsActive { get; private set; }
     public bool IsHunting { get; private set; }
 
+    /// <summary><c>destroyTarget</c>: the entity the conduit is attacking, by its UUID.</summary>
+    private Guid? _destroyTarget;
+
+    protected override void LoadAdditional(CompoundTag tag, MinecraftRegistry registry) {
+        _destroyTarget = BlockEntityTags.ReadUuid(tag["Target"]);
+    }
+
     public override bool HasClientTicker => true;
 
-    /// <summary><c>clientTick</c>, without its particles.</summary>
+    /// <summary><c>clientTick</c>.</summary>
     public override void Tick(BlockEntityTickContext context) {
         TickCount++;
         if (context.Level.GameTime % 40L == 0L) {
             IsActive = UpdateShape(context.Level, X, Y, Z, _effectBlocks);
             IsHunting = _effectBlocks.Count >= 42;
         }
+        if (context.Particles is { } particles) {
+            AnimationTick(context.Client!, particles);
+        }
         if (IsActive) {
             _activeRotation++;
+        }
+    }
+
+    /// <summary><c>animationTick</c>: nautilus particles drawn from the frame blocks into the eye, and from around its target.</summary>
+    private void AnimationTick(MinecraftClient client, Particles.ParticleEngine particles) {
+        Particles.ParticleRandom random = particles.Random;
+        float bob = MathF.Sin((TickCount + 35) * 0.1F) / 2.0F + 0.5F;
+        bob = (bob * bob + bob) * 0.3F;
+        double endX = X + 0.5, endY = Y + 1.5 + bob, endZ = Z + 0.5;
+        foreach ((int bx, int by, int bz) in _effectBlocks) {
+            if (random.NextInt(50) == 0) {
+                float dx = -0.5F + random.NextFloat() + (bx - X);
+                float dy = -2.0F + random.NextFloat() + (by - Y);
+                float dz = -0.5F + random.NextFloat() + (bz - Z);
+                particles.AddParticle(Particle.Nautilus, endX, endY, endZ, dx, dy, dz);
+            }
+        }
+        if (_destroyTarget is not { } uuid) {
+            return;
+        }
+        foreach (Entities.ClientEntity target in client.Entities.Values) {
+            if (target.Uuid != uuid || !target.IsLiving) {
+                continue;
+            }
+            Minecraft.Physics.Box box = target.BoundingBox;
+            double width = box.MaxX - box.MinX, height = box.MaxY - box.MinY;
+            float randX = (-0.5F + random.NextFloat()) * (3.0F + (float)width);
+            float randY = -1.0F + random.NextFloat() * (float)height;
+            float randZ = (-0.5F + random.NextFloat()) * (3.0F + (float)width);
+            particles.AddParticle(Particle.Nautilus, target.Position.X, target.Position.Y + target.CurrentEyeHeight, target.Position.Z, randX, randY, randZ);
+            break;
         }
     }
 

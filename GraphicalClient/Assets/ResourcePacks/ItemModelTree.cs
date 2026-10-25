@@ -50,6 +50,9 @@ public sealed class ItemModelQuery {
 
     /// <summary><c>Minecraft.hasShiftDown</c>.</summary>
     public static Func<bool> ShiftDown { get; set; } = () => false;
+
+    /// <summary>The resolver's definition for another stack, which <c>appendItemLayers</c> walks into the same output; null resolves nothing.</summary>
+    public Func<ItemStack, ItemModelNode?>? Definition;
 }
 
 /// <summary>One layer a stack's model draws: the leaf that drew it, the colours its tint indices take, and its glint.</summary>
@@ -70,6 +73,14 @@ public sealed class ItemModelOutput {
         Animated = false;
         Missing = false;
     }
+}
+
+/// <summary><c>ClientItem.Properties</c>, those read here.</summary>
+public sealed record ClientItemProperties(bool HandAnimationOnSwap, float SwapAnimationScale) {
+    public static readonly ClientItemProperties Default = new(true, 1.0F);
+
+    public static ClientItemProperties Read(JObject definition) =>
+        new(definition.Value<bool?>("hand_animation_on_swap") ?? true, definition.Value<float?>("swap_animation_scale") ?? 1.0F);
 }
 
 /// <summary><c>ItemModel</c>: a node of an item definition's tree, baked.</summary>
@@ -126,6 +137,22 @@ public sealed class EmptyItemModelNode : ItemModelNode {
     public static readonly EmptyItemModelNode Instance = new();
 
     public override void Update(ItemModelOutput output, ItemModelQuery query) { }
+}
+
+/// <summary><c>BundleSelectedItemSpecialRenderer</c>: the selected item's own model, appended to the bundle's.</summary>
+public sealed class BundleSelectedItemModelNode : ItemModelNode {
+    public static readonly BundleSelectedItemModelNode Instance = new();
+
+    public override void Update(ItemModelOutput output, ItemModelQuery query) {
+        if (ClientLib.Inventory.BundleItem.GetSelectedItem(query.Stack) is not { } selected || query.Definition?.Invoke(selected) is not { } definition) {
+            return;
+        }
+        (ItemStack stack, Hand? heldIn, bool carried) = (query.Stack, query.HeldIn, query.Carried);
+        // A stack made from the template is none of the owner's, so it is neither held nor carried.
+        (query.Stack, query.HeldIn, query.Carried) = (selected, null, false);
+        definition.Update(output, query);
+        (query.Stack, query.HeldIn, query.Carried) = (stack, heldIn, carried);
+    }
 }
 
 /// <summary><c>CompositeModel</c>.</summary>
@@ -305,9 +332,7 @@ public sealed class ItemModelTree(BlockModelBaker baker, Rendering.BiomeColours.
             case "empty":
                 return EmptyItemModelNode.Instance;
             case "bundle/selected_item":
-                // This client keeps no selected bundle slot, which is what vanilla's bundle tooltip scrolls,
-                // so BundleItem.getSelectedItem is always nothing and this draws nothing.
-                return EmptyItemModelNode.Instance;
+                return BundleSelectedItemModelNode.Instance;
             default:
                 baker.Warnings.Add($"item model type {type} is not known");
                 return MissingItemModelNode.Instance;
@@ -370,7 +395,7 @@ public sealed class ItemModelTree(BlockModelBaker baker, Rendering.BiomeColours.
             case "fishing_rod/cast":
                 return FishingRodCast;
             case "bundle/has_selected_item":
-                return _ => false;
+                return q => ClientLib.Inventory.BundleItem.GetSelectedItemIndex(q.Stack) != ClientLib.Inventory.BundleContents.NoSelectedItemIndex;
             case "selected":
                 return q => q.Living is LocalPlayer && q.HeldIn == Hand.MainHand;
             case "carried":

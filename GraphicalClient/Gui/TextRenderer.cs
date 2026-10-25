@@ -15,11 +15,15 @@ public sealed class TextRenderer : IDisposable {
     private readonly GuiRenderer _gui;
     private readonly Font _font;
     private readonly Random _obfuscation = new();
+    private Glyph[] _glyphs = new Glyph[64];
 
     public TextRenderer(GuiRenderer gui, Font font) {
         _gui = gui;
         _font = font;
-        Splitter = new StringSplitter((codepoint, style) => _font[codepoint].Advance + (style.Bold ? 1 : 0));
+        Splitter = new StringSplitter((codepoint, style) => {
+            Glyph glyph = _font[codepoint];
+            return glyph.Advance + (style.Bold ? glyph.ShadowOffset : 0);
+        });
     }
 
     /// <summary><c>Font.getSplitter</c>: measuring and line breaking with this font's advances.</summary>
@@ -32,28 +36,47 @@ public sealed class TextRenderer : IDisposable {
     public int Width(IEnumerable<TextRun> runs) => (int)MathF.Ceiling(Splitter.StringWidth(runs));
 
     /// <returns>The x just past the text.</returns>
+    /// <summary>A plain string, in visual order as <c>GuiGraphicsExtractor.text</c> draws one.</summary>
     public float Draw(string text, float x, float y, uint argb = 0xFFFFFFFF, bool shadow = true) {
-        if (text.Contains(StringDecomposer.SectionSign)) {
+        if (text.Contains(StringDecomposer.SectionSign) || NeedsReordering(text)) {
             return Draw(TextFlattener.Formatted(text, (int)(argb & 0xFFFFFF)), x, y, (byte)(argb >> 24), shadow);
         }
-        Glyph[] glyphs = Glyphs(text, false);
+        ReadOnlySpan<Glyph> glyphs = Glyphs(text, false);
         if (shadow) {
-            DrawGlyphs(glyphs, x + 1, y + 1, ShadowOf(argb), false, false);
+            DrawGlyphs(glyphs, x, y, ShadowOf(argb), false, false, true);
         }
-        return DrawGlyphs(glyphs, x, y, argb, false, false);
+        return DrawGlyphs(glyphs, x, y, argb, false, false, false);
     }
 
-    public float Draw(IReadOnlyList<TextRun> runs, float x, float y, byte alpha = 255, bool shadow = true) {
+    /// <summary>
+    /// Styled runs, put in visual order by <c>Language.getVisualOrder</c> unless <paramref name="bidi"/> is off, as
+    /// for an edit box's text, which vanilla draws as typed.
+    /// </summary>
+    public float Draw(IReadOnlyList<TextRun> runs, float x, float y, byte alpha = 255, bool shadow = true, bool bidi = true) {
         float cursor = x;
-        foreach (TextRun run in TextFlattener.Decode(runs)) {
+        IReadOnlyList<TextRun> decoded = TextFlattener.Decode(runs);
+        foreach (TextRun run in bidi ? BidiReorder.Reorder(decoded, Translations.DefaultRightToLeft) : decoded) {
             uint argb = (uint)alpha << 24 | (uint)run.Rgb & 0xFFFFFF;
-            Glyph[] glyphs = Glyphs(run.Text, run.Obfuscated);
+            ReadOnlySpan<Glyph> glyphs = Glyphs(run.Text, run.Obfuscated);
             if (shadow) {
-                DrawStyled(glyphs, cursor + 1, y + 1, ShadowOf(argb), run);
+                DrawStyled(glyphs, cursor, y, ShadowOf(argb), run, true);
             }
-            cursor = DrawStyled(glyphs, cursor, y, argb, run);
+            cursor = DrawStyled(glyphs, cursor, y, argb, run, false);
         }
         return cursor;
+    }
+
+    /// <summary>Whether a plain string could come out of the bidi pass changed: it holds right to left text, or the language reads that way.</summary>
+    private static bool NeedsReordering(string text) {
+        if (Translations.DefaultRightToLeft) {
+            return true;
+        }
+        foreach (char c in text) {
+            if (c is >= '\u0590' and <= '\u08FF' or >= '\uFB1D' and <= '\uFDFF' or >= '\uFE70' and <= '\uFEFF' or '\u200F') {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void DrawCentred(string text, float centreX, float y, uint argb = 0xFFFFFFFF, bool shadow = true) {
@@ -68,21 +91,29 @@ public sealed class TextRenderer : IDisposable {
     /// <c>Font.getGlyph</c> for each code point. An obfuscated one is <see cref="Font.RandomGlyph"/> of its
     /// width, picked once so the shadow and the text match; a space stays a space.
     /// </summary>
-    private Glyph[] Glyphs(string text, bool obfuscated) {
-        List<Glyph> glyphs = new(text.Length);
+    /// <remarks>The span is a buffer the next call overwrites.</remarks>
+    private ReadOnlySpan<Glyph> Glyphs(string text, bool obfuscated) {
+        if (_glyphs.Length < text.Length) {
+            _glyphs = new Glyph[Math.Max(text.Length, _glyphs.Length * 2)];
+        }
+        int count = 0;
         foreach (Rune rune in text.EnumerateRunes()) {
             Glyph glyph = _font[rune.Value];
             if (obfuscated && rune.Value != ' ') {
                 glyph = _font.RandomGlyph(_obfuscation, (int)MathF.Ceiling(glyph.Advance));
             }
-            glyphs.Add(glyph);
+            _glyphs[count++] = glyph;
         }
-        return glyphs.ToArray();
+        return _glyphs.AsSpan(0, count);
     }
 
-    private float DrawStyled(Glyph[] glyphs, float x, float y, uint argb, TextRun run) {
+    /// <summary>A run, or its shadow, which each glyph offsets by its own shadow offset and the lines by a pixel.</summary>
+    private float DrawStyled(ReadOnlySpan<Glyph> glyphs, float x, float y, uint argb, TextRun run, bool shadow) {
+        float end = DrawGlyphs(glyphs, x, y, argb, run.Bold, run.Italic, shadow);
+        if (shadow) {
+            (x, y, end) = (x + 1, y + 1, end + 1);
+        }
         float start = x;
-        float end = DrawGlyphs(glyphs, x, y, argb, run.Bold, run.Italic);
         if (run.Underlined) {
             _gui.Rect(start - 1, y + LineHeight - 1, end - start + 1, 1, argb);
         }
@@ -92,15 +123,17 @@ public sealed class TextRenderer : IDisposable {
         return end;
     }
 
-    private float DrawGlyphs(Glyph[] glyphs, float x, float y, uint argb, bool bold, bool italic) {
+    /// <summary>The glyphs from the pen at <paramref name="x"/>; a shadow is each glyph moved by its shadow offset, and bold a second copy moved by it.</summary>
+    private float DrawGlyphs(ReadOnlySpan<Glyph> glyphs, float x, float y, uint argb, bool bold, bool italic, bool shadow) {
         foreach (Glyph glyph in glyphs) {
             if (glyph.Width > 0) {
-                DrawGlyph(glyph, x, y, argb, italic);
+                float offset = shadow ? glyph.ShadowOffset : 0;
+                DrawGlyph(glyph, x + offset, y + offset, argb, italic);
                 if (bold) {
-                    DrawGlyph(glyph, x + 1, y, argb, italic);
+                    DrawGlyph(glyph, x + offset + glyph.ShadowOffset, y + offset, argb, italic);
                 }
             }
-            x += glyph.Advance + (bold ? 1 : 0);
+            x += glyph.Advance + (bold ? glyph.ShadowOffset : 0);
         }
         return x;
     }
@@ -138,7 +171,7 @@ public sealed class TextRenderer : IDisposable {
         foreach (TextRun run in TextFlattener.Decode(runs)) {
             foreach (Rune rune in run.Text.EnumerateRunes()) {
                 Glyph glyph = _font[rune.Value];
-                float advance = glyph.Advance + (run.Bold ? 1 : 0);
+                float advance = glyph.Advance + (run.Bold ? glyph.ShadowOffset : 0);
                 // EmptyArea for a glyph with nothing to draw: the full line height from the top of the line.
                 float top = glyph.Width > 0 ? y + glyph.Top : y;
                 float bottom = glyph.Width > 0 ? top + glyph.Height : y + LineHeight;

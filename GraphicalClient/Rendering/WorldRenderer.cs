@@ -24,7 +24,7 @@ public sealed unsafe class WorldRenderer : IDisposable {
     private readonly GeometryArena _arena;
     private readonly UploadRing _uploads;
     private readonly SectionCuller _culler;
-    private readonly uint _vao;
+    private uint _vao;
 
     private readonly Dictionary<long, SectionRender> _sections = new();
     private readonly DirtySections _dirty = new();
@@ -131,9 +131,16 @@ public sealed unsafe class WorldRenderer : IDisposable {
         _uploads = new UploadRing(gl, 32 * 1024 * 1024);
         _arena = new GeometryArena(gl, _uploads, BlockVertex.Size, 4 * 1024 * 1024);
         _culler = new SectionCuller(gl, _uploads, MaxQuadsPerDraw);
-        _vao = CreateVertexArray();
-        _arena.Grown += () => _gl.VertexArrayVertexBuffer(_vao, 0, _arena.Buffer, 0, BlockVertex.Size);
-        _culler.Grown += () => _gl.VertexArrayVertexBuffer(_vao, 1, _culler.OriginBuffer, 0, (uint)sizeof(Vector4));
+        _arena.Grown += () => {
+            if (_vao != 0) {
+                _gl.VertexArrayVertexBuffer(_vao, 0, _arena.Buffer, 0, BlockVertex.Size);
+            }
+        };
+        _culler.Grown += () => {
+            if (_vao != 0) {
+                _gl.VertexArrayVertexBuffer(_vao, 1, _culler.OriginBuffer, 0, (uint)sizeof(Vector4));
+            }
+        };
 
         _workers = new Thread[Math.Max(1, Environment.ProcessorCount / 2 - 1)];
         for (int i = 0; i < _workers.Length; i++) {
@@ -482,12 +489,18 @@ public sealed unsafe class WorldRenderer : IDisposable {
         if (set >= SectionCuller.Sets) {
             return;
         }
+        if (_vao == 0) {
+            _vao = CreateVertexArray();
+        }
         _gl.BindVertexArray(_vao);
         _culler.Draw(set);
         _gl.BindVertexArray(0);
     }
 
-    /// <summary>Binding 0 is the arena's <see cref="BlockVertex"/>es; binding 1 is each section's camera relative origin, per draw.</summary>
+    /// <summary>
+    /// Binding 0 is the arena's <see cref="BlockVertex"/>es; binding 1 is each section's camera relative origin, per draw.
+    /// Made at the first draw: a vertex array belongs to the context that made it, and the renderer may be built on another.
+    /// </summary>
     private uint CreateVertexArray() {
         uint vao = _gl.CreateVertexArray();
         _gl.VertexArrayElementBuffer(vao, _quadIndices);

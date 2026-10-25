@@ -27,6 +27,21 @@ public sealed class EntityRenderContext {
     /// <summary>For vanilla's <c>waterMask</c> render type, a boat's water patch: depth only, drawn before the translucent terrain.</summary>
     public EntityBatch? WaterMaskBatch { get; init; }
 
+    /// <summary>For the render types that add their colour to what is behind them: energy swirls, lightning, the dragon's death rays.</summary>
+    public EntityBatch? AdditiveBatch { get; init; }
+
+    /// <summary>For <c>RenderTypes.lines</c>: a fishing line.</summary>
+    public OverlayRenderer? Lines { get; init; }
+
+    /// <summary><c>CameraType.isFirstPerson</c> for the camera option.</summary>
+    public bool FirstPerson { get; init; }
+
+    /// <summary>Where the round shadows on the ground under entities go; null leaves them out.</summary>
+    public EntityShadows? Shadows { get; init; }
+
+    /// <summary>Where text displays go; null leaves them out.</summary>
+    public TextDisplayBatch? TextDisplays { get; init; }
+
     public EntityTextures Textures => Batch.Textures;
 
     /// <summary>Where a glowing entity's silhouette goes, in its outline colour; null where nothing outlines.</summary>
@@ -58,6 +73,8 @@ public class EntityRenderState {
     /// <summary>The opaque team colour while the entity appears glowing, otherwise 0.</summary>
     public uint OutlineColour;
 
+    public List<LeashState>? LeashStates;
+
     public bool AppearsGlowing => OutlineColour != 0;
 }
 
@@ -68,6 +85,7 @@ public class LivingEntityRenderState : EntityRenderState {
     public float WalkAnimationPos, WalkAnimationSpeed;
     public float Scale = 1, AgeScale = 1;
     public bool IsUpsideDown, IsFullyFrozen, IsBaby, IsInWater, IsAutoSpinAttack, HasRedOverlay, IsInvisibleToPlayer;
+    public float TicksSinceKineticHitFeedback;
     public EntityPose Pose = EntityPose.Standing;
     public Direction? BedOrientation;
 
@@ -146,17 +164,30 @@ public abstract class EntityRenderer {
     /// </summary>
     public virtual (Vector3 Min, Vector3 Max)? BoundingBoxForCulling(ClientEntity entity) => null;
 
+    /// <summary>The rest of <c>shouldRender</c> for an entity whose box is out of view: whether what it draws past its box is not.</summary>
+    public virtual bool ShouldRenderOutOfView(ClientEntity entity, Frustum frustum, EntityRenderContext context) => false;
+
     /// <summary>Extracts and submits at once, where the entity stands this frame.</summary>
     public void Render(ClientEntity entity, EntityRenderContext context) {
         EntityRenderState state = Extract(entity, context.PartialTick, context);
         Vec3d camera = context.Camera.Position;
         Submit(state, state.X - camera.X, state.Y - camera.Y, state.Z - camera.Z, context);
+        if (context.Shadows != null) {
+            SubmitShadow(state, context.Shadows, camera);
+        }
     }
+
+    /// <summary><c>extractShadow</c> and the dispatcher's <c>submitShadow</c>: where the shadow falls is left to the shader pack.</summary>
+    protected internal abstract void SubmitShadow(EntityRenderState state, EntityShadows shadows, Vec3d camera);
 
     /// <summary><c>EntityRenderDispatcher.extractEntity</c>: a state taken now, to be drawn by <see cref="Submit(EntityRenderState, double, double, double, PoseStack, EntityRenderContext)"/> later.</summary>
     public abstract EntityRenderState Extract(ClientEntity entity, float partialTick, EntityRenderContext context);
 
-    public void Submit(EntityRenderState state, double x, double y, double z, EntityRenderContext context) => Submit(state, x, y, z, new PoseStack(), context);
+    public void Submit(EntityRenderState state, double x, double y, double z, EntityRenderContext context) {
+        PoseStack pose = PoseStack.Rent();
+        Submit(state, x, y, z, pose, context);
+        PoseStack.Return(pose);
+    }
 
     /// <summary><c>EntityRenderDispatcher.submit</c>: draws an extracted state at an offset from the camera, into a pose the caller may have set up.</summary>
     public abstract void Submit(EntityRenderState state, double x, double y, double z, PoseStack pose, EntityRenderContext context);
@@ -174,8 +205,8 @@ public abstract class EntityRenderer {
     /// in vanilla, so it only shows players while a binding holds it.
     /// </summary>
     public static bool AppearsGlowing(ClientEntity entity, MinecraftClient client) =>
-        entity.IsCurrentlyGlowing || client.Player is { IsSpectator: true } && Assets.ResourcePacks.ItemModelQuery.KeyMappingDown("key.spectatorOutlines") == true
-        && entity.Is(EntityClass.Player);
+        entity.IsCurrentlyGlowing || client.Player is { IsSpectator: true } && entity.Is(EntityClass.Player)
+        && Assets.ResourcePacks.ItemModelQuery.KeyMappingDown("key.spectatorOutlines") == true;
 
     /// <summary>The outline colour <c>EntityRenderer.extractRenderState</c> takes: <c>ARGB.opaque(getTeamColor())</c> while glowing.</summary>
     public static uint OutlineColourOf(ClientEntity entity, MinecraftClient client) =>
@@ -195,12 +226,39 @@ public abstract class EntityRenderer {
 /// <summary><c>EntityRenderer</c>.</summary>
 public abstract class EntityRenderer<S> : EntityRenderer where S : EntityRenderState, new() {
     public float ShadowRadius;
+    public float ShadowStrength = 1.0F;
+
+    protected virtual float GetShadowRadius(S state) => ShadowRadius;
+
+    protected virtual float GetShadowStrength(S state) => ShadowStrength;
+
+    protected internal override void SubmitShadow(EntityRenderState state, EntityShadows shadows, Vec3d camera) {
+        if (state.IsInvisible) {
+            return;
+        }
+        S typed = (S)state;
+        float radius = Math.Min(GetShadowRadius(typed), 32.0F);
+        if (radius <= 0.0F) {
+            return;
+        }
+        double x = state.X - camera.X, y = state.Y - camera.Y, z = state.Z - camera.Z;
+        float power = (float)((1.0 - (x * x + y * y + z * z) / 256.0) * GetShadowStrength(typed));
+        if (power <= 0.0F) {
+            return;
+        }
+        // The dispatcher submits a player's shadow after taking its render offset back off, anything else's before.
+        Vector3 offset = state is Vanilla.AvatarRenderState ? Vector3.Zero : GetRenderOffset(typed);
+        shadows.Add(state.X + offset.X, state.Y + offset.Y, state.Z + offset.Z, camera, radius, power);
+    }
 
     public override EntityRenderState Extract(ClientEntity entity, float partialTick, EntityRenderContext context) {
-        S state = CreateRenderState();
+        S state = RenderStateFor(entity);
         ExtractRenderState(entity, state, partialTick, context);
         return state;
     }
+
+    /// <summary>The state <see cref="Extract"/> fills: a new one, unless a renderer keeps one per entity to fill again each frame.</summary>
+    protected virtual S RenderStateFor(ClientEntity entity) => CreateRenderState();
 
     public override void Submit(EntityRenderState state, double x, double y, double z, PoseStack pose, EntityRenderContext context) {
         Vector3 offset = GetRenderOffset((S)state);
@@ -211,6 +269,11 @@ public abstract class EntityRenderer<S> : EntityRenderer where S : EntityRenderS
         Submit((S)state, pose, context);
         context.SetOutlineColour(0);
         pose.Pop();
+        if (state.LeashStates != null) {
+            foreach (LeashState leash in state.LeashStates) {
+                LeashFeatureRenderer.Submit(pose, leash, context.Batch);
+            }
+        }
         if (state.DisplayFireAnimation) {
             context.Flames?.Submit(pose, state.BoundingBoxWidth, state.BoundingBoxHeight, state.SkyLight, context.Camera, context.Batch);
         }
@@ -236,6 +299,7 @@ public abstract class EntityRenderer<S> : EntityRenderer where S : EntityRenderS
         state.IsDiscrete = entity.IsCrouching;
         state.DisplayFireAnimation = DisplayFireAnimation(entity, context.Client);
         state.OutlineColour = OutlineColourOf(entity, context.Client);
+        state.LeashStates = LeashFeatureRenderer.Extract(entity, partialTick, context.Client, context.Level, state.LeashStates);
         // getPackedLightCoords: the light where the entity's eyes are, full block light while burning.
         int bx = (int)Math.Floor(state.X), by = (int)Math.Floor(state.Y + state.EyeHeight), bz = (int)Math.Floor(state.Z);
         state.SkyLight = context.Level.GetSkyLight(bx, by, bz);
@@ -280,6 +344,8 @@ public abstract class LivingEntityRenderer<S, M> : EntityRenderer<S> where S : L
 
     public M CurrentModel => Model;
 
+    protected override float GetShadowRadius(S state) => base.GetShadowRadius(state) * state.Scale;
+
     protected void AddLayer(RenderLayer<S, M> layer) => Layers.Add(layer);
 
     /// <summary>The texture identifier, as vanilla names it: <c>minecraft:textures/entity/creeper/creeper.png</c>.</summary>
@@ -319,6 +385,7 @@ public abstract class LivingEntityRenderer<S, M> : EntityRenderer<S> where S : L
         state.HasRedOverlay = entity.HurtTime > 0 || entity.DeathTime > 0;
         state.DeathTime = entity.DeathTime > 0 ? entity.DeathTime + partialTick : 0;
         state.IsInvisibleToPlayer = state.IsInvisible;
+        state.TicksSinceKineticHitFeedback = entity.TicksSinceLastKineticHitFeedback(context.Level.GameTime, partialTick);
     }
 
     /// <summary><c>isEntityUpsideDown</c>: named Dinnerbone or Grumm.</summary>
@@ -433,6 +500,8 @@ public abstract class LivingEntityRenderer<S, M> : EntityRenderer<S> where S : L
 /// <summary><c>MobRenderer</c>.</summary>
 public abstract class MobRenderer<S, M> : LivingEntityRenderer<S, M> where S : LivingEntityRenderState, new() where M : EntityModel<S> {
     protected MobRenderer(M model, float shadowRadius) : base(model, shadowRadius) { }
+
+    protected override float GetShadowRadius(S state) => base.GetShadowRadius(state) * state.AgeScale;
 }
 
 /// <summary><c>AgeableMobRenderer</c>: an adult and a baby model, chosen per frame.</summary>

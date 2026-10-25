@@ -53,7 +53,7 @@ public partial class ClientEntity {
 
     public MobEffectInstance? RemoveEffectNoUpdate(IPotionEffectType type) => _activeEffects.Remove(type, out MobEffectInstance? removed) ? removed : null;
 
-    /// <summary><c>LivingEntity.tickEffects</c> on the client, less the effect particles, which this client has no particle engine for.</summary>
+    /// <summary><c>LivingEntity.tickEffects</c> on the client, less the effect particles.</summary>
     private void TickEffects() {
         foreach (MobEffectInstance effect in _activeEffects.Values) {
             effect.TickClient();
@@ -62,6 +62,9 @@ public partial class ClientEntity {
 
     /// <summary>Ticks left on the hurt flash, set by <c>hurt_animation</c> and damage events.</summary>
     public int HurtTime { get; set; }
+
+    /// <summary><c>Entity.invulnerableTime</c> as the client keeps it: 20 after a hit, 10 after the local player heals.</summary>
+    public int InvulnerableTime { get; set; }
 
     /// <summary><c>LivingEntity.swinging</c>, <c>swingTime</c> and <c>swingingArm</c>.</summary>
     public bool Swinging { get; private set; }
@@ -74,6 +77,22 @@ public partial class ClientEntity {
 
     /// <summary><c>LivingEntity.deathTime</c>: ticks since its health reached zero, which tips the body over.</summary>
     public int DeathTime { get; private set; }
+
+    /// <summary><c>LivingEntity.lastKineticHitFeedbackTime</c>, in game time.</summary>
+    public long LastKineticHitFeedbackTime { get; private set; } = int.MinValue;
+
+    /// <summary>The gate of <c>LivingEntity.onKineticHit</c>: a hit more than ten ticks after the last starts its feedback.</summary>
+    public bool OnKineticHit(long gameTime) {
+        if (gameTime - LastKineticHitFeedbackTime <= 10L) {
+            return false;
+        }
+        LastKineticHitFeedbackTime = gameTime;
+        return true;
+    }
+
+    /// <summary><c>LivingEntity.getTicksSinceLastKineticHitFeedback</c>.</summary>
+    public float TicksSinceLastKineticHitFeedback(long gameTime, float partial) =>
+        LastKineticHitFeedbackTime < 0L ? 0.0F : gameTime - LastKineticHitFeedbackTime + partial;
 
     /// <summary>Whether the type has health at all, vanilla's <c>LivingEntity</c>.</summary>
     public bool IsLiving => _isLiving ??= Is(EntityClass.LivingEntity);
@@ -170,6 +189,9 @@ public partial class ClientEntity {
         if (HurtTime > 0) {
             HurtTime--;
         }
+        if (InvulnerableTime > 0) {
+            InvulnerableTime--;
+        }
         if (IsLiving && CurrentHealth <= 0) {
             if (DeathTime < 20) {
                 DeathTime++;
@@ -244,6 +266,10 @@ public partial class ClientEntity {
 
     /// <summary><c>Entity.onSyncedDataUpdated</c>, after the field at the index was set.</summary>
     public virtual void OnSyncedDataUpdated(int index) {
+        // Display.onSyncedDataUpdated: the teleport duration is the number of steps a move is interpolated over.
+        if (index == EntityDataFields.Display.PosRotInterpolationDuration.Index && Is(EntityClass.Display)) {
+            InterpolationSteps = Get(EntityDataFields.Display.PosRotInterpolationDuration);
+        }
         // LivingEntity.setPosToBed.
         if (IsLiving && index == EntityDataFields.LivingEntity.SleepingPos.Index && SleepingPos is { } bed) {
             Position = new Vec3d(bed.X + 0.5, bed.Y + 0.6875, bed.Z + 0.5);

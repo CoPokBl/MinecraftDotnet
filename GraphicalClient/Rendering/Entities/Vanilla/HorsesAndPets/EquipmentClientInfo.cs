@@ -84,4 +84,7 @@ public sealed class EquipmentClientInfo {
     private static readonly Dictionary<string, LayerType> LayerTypes = SerializedNames.ToDictionary(pair => pair.Value, pair => pair.Key);
 
     private static string SerializedName(LayerType type) => SerializedNames[type];
+
+    /// <summary><c>LayerType.trimAssetPrefix</c>.</summary>
+    public static string TrimAssetPrefix(LayerType type) => "trims/entity/" + SerializedName(type);
 }

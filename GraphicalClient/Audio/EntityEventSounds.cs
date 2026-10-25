@@ -26,7 +26,6 @@ namespace GraphicalClient.Audio;
 public sealed class EntityEventSounds(ClientSounds sounds, MinecraftClient client, Func<(double X, double Y, double Z)> camera) {
     // Entity.random is unseeded, so one random stands in for every entity's own.
     private readonly LegacyRandom _random = new();
-    private readonly Dictionary<ClientEntity, long> _lastKineticHitFeedbackTime = new();
     private readonly List<FireworkStarter> _fireworks = [];
 
     /// <summary><c>ClientPacketListener.handleEntityEvent</c>.</summary>
@@ -130,10 +129,7 @@ public sealed class EntityEventSounds(ClientSounds sounds, MinecraftClient clien
     /// use, which is what <c>onSyncedDataUpdated</c> takes it to be; the local player's is its own.
     /// </summary>
     private void OnKineticHit(ClientEntity entity) {
-        long gameTime = client.Level?.GameTime ?? 0L;
-        long last = _lastKineticHitFeedbackTime.GetValueOrDefault(entity, int.MinValue);
-        if (gameTime - last > 10L) {
-            _lastKineticHitFeedbackTime[entity] = gameTime;
+        if (entity.OnKineticHit(client.Level?.GameTime ?? 0L)) {
             KineticWeaponComponent.Data? kineticWeapon = ItemComponents.Get(UseItem(entity), DataComponent.KineticWeapon);
             if (kineticWeapon?.HitSound is { } hitSound) {
                 sounds.PlayAt(entity, ClientSounds.TypeOf(hitSound), SoundSourceOf(entity), 1.0F, 1.0F);
@@ -215,11 +211,6 @@ public sealed class EntityEventSounds(ClientSounds sounds, MinecraftClient clien
             firework.Tick();
         }
         _fireworks.RemoveAll(firework => firework.Removed);
-        foreach (ClientEntity entity in _lastKineticHitFeedbackTime.Keys) {
-            if (sounds.IsRemoved(entity)) {
-                _lastKineticHitFeedbackTime.Remove(entity);
-            }
-        }
     }
 
     private static bool IsSilent(ClientEntity entity) => entity.Get(EntityDataFields.Entity.Silent);

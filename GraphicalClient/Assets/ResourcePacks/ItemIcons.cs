@@ -16,6 +16,7 @@ public sealed class ItemIcons(PackFiles files, BlockModelBaker baker, Func<strin
 
     private readonly ItemModelTree _tree = new(baker, maps);
     private readonly Dictionary<Identifier, ItemModelNode?> _definitions = new();
+    private readonly Dictionary<Identifier, ClientItemProperties> _properties = new();
     private SpecialItemIcons? _special;
 
     private SpecialItemIcons Special => _special ??= new SpecialItemIcons(sprite => texture(sprite.Texture));
@@ -28,8 +29,10 @@ public sealed class ItemIcons(PackFiles files, BlockModelBaker baker, Func<strin
         byte[]? data = files.Read($"assets/{modelId.Namespace}/items/{modelId.Key}.json");
         if (data != null) {
             try {
-                if (JObject.Parse(System.Text.Encoding.UTF8.GetString(data))["model"] is JObject root) {
+                JObject json = JObject.Parse(System.Text.Encoding.UTF8.GetString(data));
+                if (json["model"] is JObject root) {
                     definition = _tree.Read(root);
+                    _properties[modelId] = ClientItemProperties.Read(json);
                 }
             }
             catch (Newtonsoft.Json.JsonException e) {
@@ -38,6 +41,12 @@ public sealed class ItemIcons(PackFiles files, BlockModelBaker baker, Func<strin
         }
         _definitions[modelId] = definition;
         return definition;
+    }
+
+    /// <summary><c>ClientItem.properties</c> of the definition a model id names, the defaults when no pack has one.</summary>
+    public ClientItemProperties Properties(Identifier modelId) {
+        Definition(modelId);
+        return _properties.GetValueOrDefault(modelId, ClientItemProperties.Default);
     }
 
     /// <summary>The icon of a stack with nothing to read, as <see cref="ItemModelNode.UpdateDefault"/> resolves it.</summary>

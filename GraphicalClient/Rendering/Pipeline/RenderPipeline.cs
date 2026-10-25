@@ -422,7 +422,7 @@ public sealed unsafe class RenderPipeline : IDisposable {
         bool readable = _frameIndex >= TimerFrames;
         _frameIndex++;
         foreach (CompiledPass pass in _passes) {
-            if (!drawShadows && pass.Shadow || pass.Definition.When is { } when && geometry.IsEmpty(when)) {
+            if (!drawShadows && pass.Shadow && pass.Definition.Update != "always" || pass.Definition.When is { } when && geometry.IsEmpty(when) || DrawsNothing(pass, geometry)) {
                 continue;
             }
             uint timer = pass.Timers[slot];
@@ -451,6 +451,13 @@ public sealed unsafe class RenderPipeline : IDisposable {
         _gl.DepthRange(0.0, 1.0);
     }
 
+    /// <summary>A pass that only draws, with nothing to draw, which can be left out whole, its timer query with it.</summary>
+    private static bool DrawsNothing(CompiledPass pass, IGeometryDrawer geometry) {
+        PassDefinition definition = pass.Definition;
+        return pass.Kind == PassKind.Geometry && definition.Geometry != null && definition.Clear == null && !definition.ClearDepth
+            && pass.HistoryOutputs.Length == 0 && pass.MipmappedOutputs.Length == 0 && geometry.IsEmpty(definition.Geometry);
+    }
+
     private void Run(CompiledPass pass, IGeometryDrawer geometry) {
         PassDefinition definition = pass.Definition;
         if (pass.Kind == PassKind.Copy) {
@@ -459,11 +466,6 @@ public sealed unsafe class RenderPipeline : IDisposable {
                 to.Written, CopyImageSubDataTarget.Texture2D, 0, 0, 0, 0, (uint)from.Width, (uint)from.Height, 1);
             to.Wrote();
             FinishOutputs(pass);
-            return;
-        }
-        // A pass that only draws, with nothing to draw, can be left out whole.
-        if (pass.Kind == PassKind.Geometry && definition.Geometry != null && definition.Clear == null && !definition.ClearDepth
-            && pass.HistoryOutputs.Length == 0 && pass.MipmappedOutputs.Length == 0 && geometry.IsEmpty(definition.Geometry)) {
             return;
         }
         foreach ((Target target, FramebufferAttachment attachment) in pass.HistoryOutputs) {

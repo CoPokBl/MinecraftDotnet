@@ -11,10 +11,10 @@ public static class EntityKinds {
     /// </summary>
     public static ClientEntity Create(MinecraftClient client, IEntityType type, Guid uuid, int spawnData) {
         bool Is(EntityClass vanillaClass) => EntityClasses.Is(type.Identifier, vanillaClass);
-        ClientEntity entity = type == EntityType.Item ? new ClientItemEntity(client)
-            : type == EntityType.ExperienceOrb ? new ClientExperienceOrb(client)
-            : type == EntityType.Tnt ? new ClientPrimedTnt(client)
-            : type == EntityType.FallingBlock ? new ClientFallingBlock(client)
+        ClientEntity entity = type.Identifier == EntityType.Item.Identifier ? new ClientItemEntity(client)
+            : type.Identifier == EntityType.ExperienceOrb.Identifier ? new ClientExperienceOrb(client)
+            : type.Identifier == EntityType.Tnt.Identifier ? new ClientPrimedTnt(client)
+            : type.Identifier == EntityType.FallingBlock.Identifier ? new ClientFallingBlock(client)
             : Is(EntityClass.AbstractBoat) ? new ClientBoat(client)
             : Is(EntityClass.Camel) ? new ClientCamel(client)
             : Is(EntityClass.AbstractHorse) ? new ClientHorse(client)
@@ -23,17 +23,21 @@ public static class EntityKinds {
             : Is(EntityClass.HappyGhast) ? new ClientHappyGhast(client)
             : Is(EntityClass.AbstractNautilus) ? new ClientNautilus(client)
             : Is(EntityClass.Shulker) ? new ClientShulker(client)
-            : type == EntityType.CommandBlockMinecart ? new ClientMinecartCommandBlock()
+            : type.Identifier == EntityType.CommandBlockMinecart.Identifier ? new ClientMinecartCommandBlock()
             : new ClientEntity { MovesFreely = MovesFreely(type) };
         entity.Uuid = uuid;
         entity.Type = type;
         entity.SpawnData = spawnData;
+        // Display's InterpolationHandler takes no steps until its teleport duration says otherwise.
+        if (Is(EntityClass.Display)) {
+            entity.InterpolationSteps = 0;
+        }
         return entity;
     }
 
     /// <summary>Projectiles, whose client copy moves by its velocity between server updates rather than only interpolating.</summary>
     private static bool MovesFreely(IEntityType type) =>
-        type == EntityType.Arrow || type == EntityType.SpectralArrow || type == EntityType.Trident || type == EntityType.Snowball
-        || type == EntityType.Egg || type == EntityType.EnderPearl || type == EntityType.ExperienceBottle
-        || type == EntityType.SplashPotion || type == EntityType.LingeringPotion || type == EntityType.FishingBobber;
+        type.Identifier == EntityType.Arrow.Identifier || type.Identifier == EntityType.SpectralArrow.Identifier || type.Identifier == EntityType.Trident.Identifier || type.Identifier == EntityType.Snowball.Identifier
+        || type.Identifier == EntityType.Egg.Identifier || type.Identifier == EntityType.EnderPearl.Identifier || type.Identifier == EntityType.ExperienceBottle.Identifier
+        || type.Identifier == EntityType.SplashPotion.Identifier || type.Identifier == EntityType.LingeringPotion.Identifier || type.Identifier == EntityType.FishingBobber.Identifier;
 }

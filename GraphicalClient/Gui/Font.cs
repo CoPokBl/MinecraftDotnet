@@ -9,27 +9,41 @@ namespace GraphicalClient.Gui;
 /// One character's look: where it is in the font texture, the size it is drawn at in GUI pixels with
 /// its top <see cref="Top"/> below the line's, and how far the pen moves after it.
 /// </summary>
-public readonly record struct Glyph(float U0, float V0, float U1, float V1, float Width, float Height, float Top, float Advance);
+/// <param name="ShadowOffset"><c>GlyphInfo.getShadowOffset</c>, which is also its bold offset: half a pixel for a unifont glyph.</param>
+public readonly record struct Glyph(float U0, float V0, float U1, float V1, float Width, float Height, float Top, float Advance, float ShadowOffset = 1.0F);
 
 /// <summary>
 /// A bitmap font in one texture, looked up by code point: this client's own <see cref="PixelFont"/>,
-/// or a resource pack's <c>font/default.json</c>.
+/// or a resource pack's <c>font/default.json</c>. A pack's unifont glyphs are drawn into a spare part of
+/// the texture the first time each is asked for, as the full set would not fit.
 /// </summary>
 public sealed unsafe class Font : IDisposable {
     private readonly GL _gl;
     private readonly Dictionary<int, Glyph> _glyphs;
-    private readonly Glyph _missing;
+    private Glyph _missing;
     private readonly Dictionary<int, int[]> _byWidth;
+    private readonly List<Dictionary<int, UnihexGlyph>> _unihex;
+    private readonly Dictionary<int, Glyph> _lazy = new();
+    private readonly int _glThread = Environment.CurrentManagedThreadId;
+    private readonly int _lazyTop;
+    private int _shelfX, _shelfY;
 
     public uint Texture { get; }
 
     /// <summary>The texture's pixels, for text drawn in the world from another atlas.</summary>
     public TextureImage Atlas { get; }
 
-    private Font(GL gl, int width, int height, byte[] rgba, Dictionary<int, Glyph> glyphs, Glyph missing) {
+    /// <summary>Counts the unifont glyphs drawn into <see cref="Atlas"/> so far, so a copy of it can tell it is stale.</summary>
+    public int AtlasVersion { get; private set; }
+
+    private Font(GL gl, int width, int height, byte[] rgba, Dictionary<int, Glyph> glyphs, Glyph missing,
+        List<Dictionary<int, UnihexGlyph>>? unihex = null, int lazyTop = 0) {
         _gl = gl;
         _glyphs = glyphs;
         _missing = missing;
+        _unihex = unihex ?? [];
+        _lazyTop = lazyTop;
+        _shelfY = lazyTop;
         Atlas = new TextureImage(width, height, rgba);
         // The built in font has cells for the control characters, which no pack font maps.
         _byWidth = glyphs.Where(g => g.Key is >= 32 and not 127).GroupBy(g => (int)MathF.Ceiling(g.Value.Advance))
@@ -43,12 +57,58 @@ public sealed unsafe class Font : IDisposable {
         gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
     }
 
-    public Glyph this[int codePoint] => _glyphs.TryGetValue(codePoint, out Glyph glyph) ? glyph : _missing;
+    public Glyph this[int codePoint] => _glyphs.TryGetValue(codePoint, out Glyph glyph) ? glyph : _unihex.Count > 0 ? Unihex(codePoint) ?? _missing : _missing;
+
+    /// <summary>
+    /// A unifont glyph, drawn into the texture's spare rows on the game thread; text drawn in the world copies
+    /// the texture again when <see cref="AtlasVersion"/> moves.
+    /// </summary>
+    private Glyph? Unihex(int codePoint) {
+        lock (_lazy) {
+            if (_lazy.TryGetValue(codePoint, out Glyph known)) {
+                return known;
+            }
+            UnihexGlyph? found = null;
+            foreach (Dictionary<int, UnihexGlyph> provider in _unihex) {
+                if (provider.TryGetValue(codePoint, out UnihexGlyph g)) {
+                    found = g;
+                    break;
+                }
+            }
+            if (found is not { } source || Environment.CurrentManagedThreadId != _glThread) {
+                return null;
+            }
+            int width = source.Right - source.Left + 1;
+            if (_shelfX + width > Atlas.Width) {
+                _shelfX = 0;
+                _shelfY += UnihexGlyph.Height;
+            }
+            if (width <= 0 || width > Atlas.Width || _shelfY + UnihexGlyph.Height > Atlas.Height) {
+                return null;
+            }
+            int x = _shelfX, y = _shelfY;
+            _shelfX += width + 1;
+            byte[] pixels = source.Unpack();
+            for (int row = 0; row < UnihexGlyph.Height; row++) {
+                Array.Copy(pixels, row * width * 4, Atlas.Rgba, ((y + row) * Atlas.Width + x) * 4, width * 4);
+            }
+            _gl.BindTexture(TextureTarget.Texture2D, Texture);
+            fixed (byte* p = pixels) {
+                _gl.TexSubImage2D(TextureTarget.Texture2D, 0, x, y, (uint)width, UnihexGlyph.Height, PixelFormat.Rgba, PixelType.UnsignedByte, p);
+            }
+            // UnihexProvider.Glyph: oversampled twice, so half its pixels wide, eight tall from the line's top.
+            Glyph glyph = new(x / (float)Atlas.Width, y / (float)Atlas.Height, (x + width) / (float)Atlas.Width, (y + UnihexGlyph.Height) / (float)Atlas.Height,
+                width / 2.0F, 8, 0, width / 2.0F + 1.0F, 0.5F);
+            _lazy[codePoint] = glyph;
+            AtlasVersion++;
+            return glyph;
+        }
+    }
 
     /// <summary>
     /// <c>FontSet.getRandomGlyph</c>, what obfuscated text draws: any glyph whose advance rounds up to the
-    /// width, else the missing glyph. Vanilla draws from its unifont fallback too, which this font does
-    /// not load, so the pick is from fewer glyphs.
+    /// width, else the missing glyph. Vanilla draws from its unifont fallback too, which this does not
+    /// search, so the pick is from fewer glyphs.
     /// </summary>
     public Glyph RandomGlyph(Random random, int width) =>
         _byWidth.TryGetValue(width, out int[]? codes) ? this[codes[random.Next(codes.Length)]] : _missing;
@@ -75,13 +135,14 @@ public sealed unsafe class Font : IDisposable {
     }
 
     /// <summary>
-    /// A pack's default font, following <c>reference</c> providers. For each code point the first
-    /// provider that has it wins, as <c>FontSet</c> searches. Bitmap and space providers are read;
-    /// the unifont fallback is not, so characters only it covers draw as the missing glyph.
+    /// A pack's default font, following <c>reference</c> providers and keeping those whose <c>filter</c>
+    /// matches <paramref name="options"/> (<c>uniform</c>, <c>jp</c>), as <c>FontManager</c> does. For each code
+    /// point the first provider that has it wins, as <c>FontSet</c> searches, except that the bitmap and space
+    /// providers are all searched before any unihex one, which only matters to a pack ordering them otherwise.
     /// </summary>
-    public static Font? FromPack(GL gl, PackFiles files, ResourcePackSource source) {
+    public static Font? FromPack(GL gl, PackFiles files, ResourcePackSource source, IReadOnlySet<string>? options = null) {
         List<JObject> providers = [];
-        Collect(files, "minecraft:default", providers, 0);
+        Collect(files, "minecraft:default", providers, 0, options ?? new HashSet<string>());
         if (providers.Count == 0) {
             return null;
         }
@@ -107,7 +168,15 @@ public sealed unsafe class Font : IDisposable {
             shelfX += image.Width;
             shelfHeight = Math.Max(shelfHeight, image.Height);
         }
-        int atlasHeight = Math.Max(1, shelfY + shelfHeight);
+        List<Dictionary<int, UnihexGlyph>> unihex = [];
+        foreach (JObject provider in providers) {
+            if (provider.Value<string>("type") == "unihex" && UnihexGlyph.Load(files, provider) is { } loaded) {
+                unihex.Add(loaded);
+            }
+        }
+        int lazyTop = shelfY + shelfHeight;
+        // Room for a few thousand unifont glyphs, drawn in as they are first needed.
+        int atlasHeight = Math.Max(1, lazyTop + (unihex.Count > 0 ? 1024 : 0));
         byte[] rgba = new byte[atlasWidth * atlasHeight * 4];
         foreach ((_, TextureImage image, int x, int y) in placed) {
             for (int row = 0; row < image.Height; row++) {
@@ -132,14 +201,18 @@ public sealed unsafe class Font : IDisposable {
                     break;
             }
         }
-        if (glyphs.Count == 0) {
+        if (glyphs.Count == 0 && unihex.Count == 0) {
             return null;
         }
-        Glyph missing = glyphs.TryGetValue('?', out Glyph question) ? question : glyphs.Values.First();
-        return new Font(gl, atlasWidth, atlasHeight, rgba, glyphs, missing);
+        Glyph missing = glyphs.TryGetValue('?', out Glyph question) ? question : glyphs.Values.FirstOrDefault();
+        Font font = new(gl, atlasWidth, atlasHeight, rgba, glyphs, missing, unihex, lazyTop);
+        if (!glyphs.ContainsKey('?') && font.Unihex('?') is { } unifontQuestion) {
+            font._missing = unifontQuestion;
+        }
+        return font;
     }
 
-    private static void Collect(PackFiles files, string id, List<JObject> into, int depth) {
+    private static void Collect(PackFiles files, string id, List<JObject> into, int depth, IReadOnlySet<string> options) {
         Minecraft.Schemas.Identifier identifier = Minecraft.Schemas.Identifier.Parse(id);
         if (depth > 8 || files.Read($"assets/{identifier.Namespace}/font/{identifier.Key}.json") is not { } data) {
             return;
@@ -152,12 +225,12 @@ public sealed unsafe class Font : IDisposable {
             return;
         }
         foreach (JObject provider in (json["providers"] as JArray)?.OfType<JObject>() ?? []) {
-            // A reference filtered to uniform fonts only stands in for the default when the player
-            // forces unifont; it applies by default otherwise.
+            // FontOption.Filter: every option named must be on or off as it says.
+            if (provider["filter"] is JObject filter && filter.Properties().Any(f => f.Value.Type != JTokenType.Boolean || options.Contains(f.Name) != f.Value.Value<bool>())) {
+                continue;
+            }
             if (provider.Value<string>("type") == "reference" && provider.Value<string>("id") is { } reference) {
-                if (provider["filter"]?["uniform"]?.Value<bool>() != true) {
-                    Collect(files, reference, into, depth + 1);
-                }
+                Collect(files, reference, into, depth + 1, options);
             }
             else {
                 into.Add(provider);
@@ -206,4 +279,101 @@ public sealed unsafe class Font : IDisposable {
     }
 
     public void Dispose() => _gl.DeleteTexture(Texture);
+}
+
+/// <summary>
+/// <c>UnihexProvider.Glyph</c>: one glyph of a <c>.hex</c> file, sixteen rows of up to 32 bits with the most
+/// significant bit leftmost, and the columns it is cut to.
+/// </summary>
+internal readonly record struct UnihexGlyph(int[] Lines, int Left, int Right) {
+    public const int Height = 16;
+
+    /// <summary><c>unpackBitsToBytes</c>: white where a bit is set, clear elsewhere.</summary>
+    public byte[] Unpack() {
+        int width = Right - Left + 1;
+        byte[] rgba = new byte[width * Height * 4];
+        for (int row = 0; row < Height; row++) {
+            for (int column = 0; column < width; column++) {
+                int bit = 31 - Left - column;
+                if (bit is >= 0 and < 32 && (Lines[row] >> bit & 1) != 0) {
+                    rgba.AsSpan((row * width + column) * 4, 4).Fill(0xFF);
+                }
+            }
+        }
+        return rgba;
+    }
+
+    /// <summary>
+    /// <c>UnihexProvider.Definition.loadData</c>: every <c>.hex</c> in the zip, the <c>size_overrides</c> ranges cut
+    /// to their given columns and the rest to their set bits. Null when the file is missing or does not parse.
+    /// </summary>
+    public static Dictionary<int, UnihexGlyph>? Load(PackFiles files, JObject provider) {
+        if (provider.Value<string>("hex_file") is not { } hexFile) {
+            return null;
+        }
+        Minecraft.Schemas.Identifier id = Minecraft.Schemas.Identifier.Parse(hexFile);
+        if (files.Read($"assets/{id.Namespace}/{id.Key}") is not { } zip) {
+            return null;
+        }
+        Dictionary<int, (int[] Lines, int BitWidth)> bits = new();
+        try {
+            using System.IO.Compression.ZipArchive archive = new(new MemoryStream(zip));
+            foreach (System.IO.Compression.ZipArchiveEntry entry in archive.Entries) {
+                if (!entry.FullName.EndsWith(".hex", StringComparison.Ordinal)) {
+                    continue;
+                }
+                using StreamReader reader = new(entry.Open(), Encoding.ASCII);
+                while (reader.ReadLine() is { } line) {
+                    if (line.Length > 0) {
+                        (int codePoint, int[] lines, int bitWidth) = ParseLine(line);
+                        bits[codePoint] = (lines, bitWidth);
+                    }
+                }
+            }
+        }
+        catch (Exception e) when (e is InvalidDataException or FormatException or ArgumentException) {
+            Console.WriteLine($"Unifont {hexFile} did not load: {e.Message}");
+            return null;
+        }
+        Dictionary<int, UnihexGlyph> glyphs = new(bits.Count);
+        foreach (JObject range in (provider["size_overrides"] as JArray)?.OfType<JObject>() ?? []) {
+            int from = char.ConvertToUtf32(range.Value<string>("from")!, 0), to = char.ConvertToUtf32(range.Value<string>("to")!, 0);
+            int left = range.Value<int>("left"), right = range.Value<int>("right");
+            for (int c = from; c <= to; c++) {
+                if (bits.Remove(c, out (int[] Lines, int) found)) {
+                    glyphs[c] = new UnihexGlyph(found.Lines, left, right);
+                }
+            }
+        }
+        foreach ((int codePoint, (int[] lines, int bitWidth)) in bits) {
+            // LineData.calculateWidth: the set columns, or the whole cell and one more for a blank glyph.
+            int mask = lines.Aggregate(0, (a, b) => a | b);
+            glyphs[codePoint] = mask == 0 ? new UnihexGlyph(lines, 0, bitWidth)
+                : new UnihexGlyph(lines, System.Numerics.BitOperations.LeadingZeroCount((uint)mask), 32 - System.Numerics.BitOperations.TrailingZeroCount(mask) - 1);
+        }
+        return glyphs;
+    }
+
+    /// <summary><c>readFromStream</c>'s line: four to six hex digits, a colon, then 32, 64, 96 or 128 hex digits.</summary>
+    private static (int CodePoint, int[] Lines, int BitWidth) ParseLine(string line) {
+        int colon = line.IndexOf(':');
+        if (colon is < 4 or > 6) {
+            throw new FormatException($"Invalid entry {line}: expected 4, 5 or 6 hex digits followed by a colon");
+        }
+        int codePoint = Convert.ToInt32(line[..colon], 16);
+        string data = line[(colon + 1)..];
+        int bitWidth = data.Length switch {
+            32 => 8,
+            64 => 16,
+            96 => 24,
+            128 => 32,
+            _ => throw new FormatException($"Invalid entry {line}: expected an (8,16,24,32) x 16 bitmap")
+        };
+        int digits = bitWidth / 4;
+        int[] lines = new int[Height];
+        for (int row = 0; row < Height; row++) {
+            lines[row] = (int)(Convert.ToUInt32(data.Substring(row * digits, digits), 16) << (32 - bitWidth));
+        }
+        return (codePoint, lines, bitWidth);
+    }
 }

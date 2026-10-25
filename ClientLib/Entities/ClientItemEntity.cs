@@ -16,6 +16,7 @@ public sealed class ClientItemEntity(MinecraftClient client) : SimulatedEntity(c
     /// <summary><c>ItemEntity.tick</c>, client side.</summary>
     protected override void EntityTick() {
         if (Item.IsAir()) {
+            Client.Discard(this);
             return;
         }
 

@@ -33,6 +33,9 @@ public sealed partial class MinecraftClient {
     /// <summary>The server closed the open menu.</summary>
     public event Action? ContainerClosed;
 
+    /// <summary>A menu click played a sound at the player, as <c>LocalPlayer.playSound</c>: the sound, its volume and its pitch.</summary>
+    public event Action<Minecraft.Data.Sounds.ISoundType, float, float>? MenuSoundPlayed;
+
     /// <summary><c>handleOpenBook</c>: the server asked for the book held in this hand to be shown.</summary>
     public event Action<Hand>? BookOpened;
 
@@ -206,6 +209,11 @@ public sealed partial class MinecraftClient {
         return new HashedSlot(stack.Count, stack.Item, components.ToArray(), item.RemoveComponents.ToArray());
     }
 
+    /// <summary><c>BundleMouseActions.toggleSelectedBundleItem</c>'s packet: the bundle in a slot of the open menu now has this item selected, -1 for none.</summary>
+    public void SelectBundleItem(int slotId, int selectedItemIndex) {
+        Send(new ServerBoundSelectBundleItemPacket { SlotId = slotId, SelectedItemIndex = selectedItemIndex });
+    }
+
     /// <summary><c>LocalPlayer.closeContainer</c>: tells the server, then drops back to the inventory menu.</summary>
     public void CloseContainer() {
         Send(new ServerBoundCloseContainerPacket { WindowId = ActiveMenu.WindowId });
@@ -262,5 +270,10 @@ public sealed partial class MinecraftClient {
 
         public void Drop(Stack stack) {
         }
+
+        public void PlaySound(Minecraft.Data.Sounds.ISoundType sound, float volume, float pitch) => client.MenuSoundPlayed?.Invoke(sound, volume, pitch);
+
+        /// <summary>This client keeps no level random, so the draws come from one of the user's own.</summary>
+        public Minecraft.Schemas.RandomSource Random { get; } = new Minecraft.Schemas.LegacyRandomSource(System.Random.Shared.NextInt64());
     }
 }

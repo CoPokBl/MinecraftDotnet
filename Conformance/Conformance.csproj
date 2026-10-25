@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Minecraft\Minecraft.csproj"/>
+        <ProjectReference Include="..\ClientLib\ClientLib.csproj"/>
     </ItemGroup>
 
 </Project>

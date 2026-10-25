@@ -54,7 +54,7 @@ public sealed class PiglinRenderer : HumanoidMobRenderer<PiglinRenderState, Pigl
 
     public override void ExtractRenderState(ClientEntity entity, PiglinRenderState state, float partialTick, EntityRenderContext context) {
         base.ExtractRenderState(entity, state, partialTick, context);
-        state.IsBrute = entity.Type == EntityType.PiglinBrute;
+        state.IsBrute = entity.Type.Identifier == EntityType.PiglinBrute.Identifier;
         state.ArmPose = GetPiglinArmPose(entity, context);
         state.MaxCrossbowChageDuration = HumanoidEntityData.CrossbowChargeDuration(HumanoidEntityData.UseItem(entity));
         state.IsConverting = IsConverting(entity, context.Level);
@@ -65,7 +65,7 @@ public sealed class PiglinRenderer : HumanoidMobRenderer<PiglinRenderState, Pigl
     /// <summary><c>Piglin.getArmPose</c> and <c>PiglinBrute.getArmPose</c>.</summary>
     private static PiglinArmPose GetPiglinArmPose(ClientEntity entity, EntityRenderContext context) {
         bool attacking = HumanoidEntityData.IsAggressive(entity) && IsHoldingMeleeWeapon(entity);
-        if (entity.Type == EntityType.PiglinBrute) {
+        if (entity.Type.Identifier == EntityType.PiglinBrute.Identifier) {
             return attacking ? PiglinArmPose.AttackingWithMeleeWeapon : PiglinArmPose.Default;
         }
         if (entity.Get(EntityDataFields.Piglin.IsDancing)) {

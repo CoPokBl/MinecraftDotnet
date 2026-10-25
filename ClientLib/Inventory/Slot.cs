@@ -14,6 +14,12 @@ public interface IMenuUser {
 
     /// <summary>Where a stack thrown out of a menu goes; the client only forgets it, the server spawns the item.</summary>
     void Drop(Stack stack);
+
+    /// <summary><c>LocalPlayer.playSound</c>: a sound only this player hears, where it stands.</summary>
+    void PlaySound(Minecraft.Data.Sounds.ISoundType sound, float volume, float pitch);
+
+    /// <summary><c>level().getRandom()</c>, which a bundle's sounds draw their pitch from.</summary>
+    Minecraft.Schemas.RandomSource Random { get; }
 }
 
 /// <summary>Vanilla's <c>Slot</c>: one position of a container as a menu shows it.</summary>

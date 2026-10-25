@@ -24,4 +24,8 @@
       <ProjectReference Include="..\ClientLib\ClientLib.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="Interaction\vanilla-picking.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
 </Project>

@@ -1,3 +1,4 @@
+using System.Numerics;
 using GraphicalClient.Assets.ResourcePacks;
 using Silk.NET.OpenGL;
 
@@ -69,10 +70,7 @@ public sealed unsafe class TextureAnimator {
                 float progress = (float)playing.SubFrame / sequence[playing.Frame].Time;
                 playing.Blended ??= current.Select(level => new byte[level.Length]).ToArray();
                 for (int level = 0; level < current.Length; level++) {
-                    byte[] from = current[level], to = next[level], into = playing.Blended[level];
-                    for (int i = 0; i < into.Length; i++) {
-                        into[i] = (byte)(from[i] + (to[i] - from[i]) * progress);
-                    }
+                    Blend(current[level], next[level], playing.Blended[level], progress);
                 }
                 current = playing.Blended;
             }
@@ -80,6 +78,33 @@ public sealed unsafe class TextureAnimator {
             playing.Shown = current[0];
             playing.Version++;
         }
+    }
+
+    /// <summary>Each byte <c>from + (to - from) * progress</c>, truncated; the vectors do the same float arithmetic as the scalar tail.</summary>
+    private static void Blend(byte[] from, byte[] to, byte[] into, float progress) {
+        int i = 0;
+        if (Vector.IsHardwareAccelerated) {
+            Vector<float> scale = new(progress);
+            for (; i <= into.Length - Vector<byte>.Count; i += Vector<byte>.Count) {
+                Vector.Widen(new Vector<byte>(from, i), out Vector<ushort> from0, out Vector<ushort> from1);
+                Vector.Widen(new Vector<byte>(to, i), out Vector<ushort> to0, out Vector<ushort> to1);
+                Vector.Narrow(Blend(from0, to0, scale), Blend(from1, to1, scale)).CopyTo(into, i);
+            }
+        }
+        for (; i < into.Length; i++) {
+            into[i] = (byte)(from[i] + (to[i] - from[i]) * progress);
+        }
+    }
+
+    private static Vector<ushort> Blend(Vector<ushort> from, Vector<ushort> to, Vector<float> scale) {
+        Vector.Widen(from, out Vector<uint> from0, out Vector<uint> from1);
+        Vector.Widen(to, out Vector<uint> to0, out Vector<uint> to1);
+        return Vector.Narrow(Blend(from0, to0, scale), Blend(from1, to1, scale));
+    }
+
+    private static Vector<uint> Blend(Vector<uint> from, Vector<uint> to, Vector<float> scale) {
+        Vector<float> a = Vector.ConvertToSingle(Vector.AsVectorInt32(from)), b = Vector.ConvertToSingle(Vector.AsVectorInt32(to));
+        return Vector.AsVectorUInt32(Vector.ConvertToInt32(a + (b - a) * scale));
     }
 
     /// <summary>

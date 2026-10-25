@@ -2,8 +2,8 @@ using ClientLib.Brigadier;
 
 namespace ClientLib.Commands.Arguments;
 
-/// <summary>Vanilla's <c>MessageArgument</c>. Vanilla signs it for a server enforcing secure chat; this client does not.</summary>
-public sealed class MessageArgument : ArgumentType<MessageArgument.Message> {
+/// <summary>Vanilla's <c>MessageArgument</c>, the one argument a player signs.</summary>
+public sealed class MessageArgument : ArgumentType<MessageArgument.Message>, Chat.ISignedArgument {
     private static readonly string[] ExampleValues = ["Hello world!", "foo", "@e", "Hello @p :)"];
 
     private static readonly Dynamic2CommandExceptionType TooLong =

@@ -30,11 +30,12 @@ public sealed partial class LocalPlayer : ICollisionEntity {
     public bool CanWalkOnPowderSnow =>
         LevelCollisions.CanWalkOnPowderSnow(_client, this, _client.Inventory.Get(36) is { IsEmpty: false } feet && feet.Is(Item.LeatherBoots));
 
-    /// <summary><c>LocalPlayer.move</c>: the walked distance view bobbing swings with.</summary>
+    /// <summary><c>LocalPlayer.move</c>: auto-jump, and the walked distance view bobbing swings with.</summary>
     private void Move(Vec3d delta, MoverType moverType = MoverType.Self) {
         double prevX = Position.X, prevZ = Position.Z;
         EntityMove(delta, moverType);
         float deltaX = (float)(Position.X - prevX), deltaZ = (float)(Position.Z - prevZ);
+        UpdateAutoJump(deltaX, deltaZ);
         WalkDist += MathF.Sqrt(deltaX * deltaX + deltaZ * deltaZ) * 0.6F;
     }
 
@@ -382,7 +383,7 @@ public sealed partial class LocalPlayer : ICollisionEntity {
     /// The effects in <c>InsideBlockEffectType</c> order, so water wins over fire. The client's own fire
     /// ticks are cleared every <c>baseTick</c> and kept lit only by these, so the player burns here ahead
     /// of the server's flag; its frozen ticks only ever climb here, and the server's updates bring them
-    /// back down. <c>isInRain</c> clearing the fire is left out: the client keeps no rain heightmap.
+    /// back down.
     /// </summary>
     private void ApplyInsideEffects(InsideEffect effects) {
         if (IsDead) {

@@ -19,7 +19,7 @@ public class CopperGolemRenderState : ArmedEntityRenderState {
     public IBlock? BlockOnAntenna;
 }
 
-/// <summary><c>CopperGolemRenderer</c>. Its <c>CustomHeadLayer</c>, which draws a worn skull or block, is not ported.</summary>
+/// <summary><c>CopperGolemRenderer</c>.</summary>
 public sealed class CopperGolemRenderer : MobRenderer<CopperGolemRenderState, CopperGolemModel> {
     private readonly ItemRenderer _items;
 
@@ -30,6 +30,7 @@ public sealed class CopperGolemRenderer : MobRenderer<CopperGolemRenderState, Co
         AddLayer(new ItemInHandLayer<CopperGolemRenderState, CopperGolemModel>(this, context.Items));
         AddLayer(new BlockDecorationLayer<CopperGolemRenderState, CopperGolemModel>(this, state => state.BlockOnAntenna, Model.ApplyBlockOnAntennaTransform,
             context.Blocks));
+        AddLayer(new CustomHeadLayer<CopperGolemRenderState, CopperGolemModel>(this, context.Items));
     }
 
     /// <summary>The textures of <c>CopperGolemOxidationLevels</c>.</summary>

@@ -9,16 +9,14 @@ public class CreeperRenderState : LivingEntityRenderState {
     public bool IsPowered;
 }
 
-/// <summary>
-/// <c>CreeperRenderer</c>. The charged creeper's <c>CreeperPowerLayer</c> is not drawn: its energy swirl
-/// is an additive, scrolling, repeating texture, which a deferred entity pass sampling an atlas has no
-/// way to express.
-/// </summary>
+/// <summary><c>CreeperRenderer</c>.</summary>
 public sealed class CreeperRenderer : MobRenderer<CreeperRenderState, CreeperModel> {
     private const string CreeperLocation = "minecraft:textures/entity/creeper/creeper.png";
 
     public CreeperRenderer(EntityRendererContext context)
-        : base(new CreeperModel(CreeperModel.CreateBodyLayer(CubeDeformation.None).BakeRoot()), 0.5F) { }
+        : base(new CreeperModel(CreeperModel.CreateBodyLayer(CubeDeformation.None).BakeRoot()), 0.5F) {
+        AddLayer(new CreeperPowerLayer(this));
+    }
 
     /// <summary><c>Creeper.swell</c> and <c>oldSwell</c>, which the client counts itself from the synced direction.</summary>
     private sealed class Swell {
@@ -68,4 +66,15 @@ public sealed class CreeperRenderer : MobRenderer<CreeperRenderState, CreeperMod
         state.Swelling = entity.RendererData is Swell swell ? Mth.Lerp(partialTick, swell.Old, swell.Current) / (Swell.MaxSwell - 2) : 0;
         state.IsPowered = entity.Get(EntityDataFields.Creeper.IsPowered);
     }
+}
+
+/// <summary><c>CreeperPowerLayer</c>.</summary>
+public sealed class CreeperPowerLayer(LivingEntityRenderer<CreeperRenderState, CreeperModel> parent) : EnergySwirlLayer<CreeperRenderState, CreeperModel>(parent) {
+    protected override CreeperModel Model { get; } = new(CreeperModel.CreateBodyLayer(new CubeDeformation(2.0F)).BakeRoot());
+
+    protected override bool IsPowered(CreeperRenderState state) => state.IsPowered;
+
+    protected override float XOffset(float t) => t * 0.01F;
+
+    protected override string TextureLocation => "minecraft:textures/entity/creeper/creeper_armor.png";
 }

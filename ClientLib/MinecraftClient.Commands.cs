@@ -11,7 +11,7 @@ public sealed partial class MinecraftClient {
     private ClientSuggestionProvider? _suggestionsProvider;
 
     /// <summary><c>ClientPacketListener.commands</c>: empty until the server sends a tree.</summary>
-    public CommandDispatcher<ClientSuggestionProvider> Commands { get; private set; } = new();
+    public CommandDispatcher<ClientSuggestionProvider> Commands { get; internal set; } = new();
 
     /// <summary><c>LocalPlayer.permissions</c> as entity events 24 to 28 set it; null is vanilla's <c>NO_PERMISSIONS</c>.</summary>
     public OpLevel? PermissionLevel { get; private set; }

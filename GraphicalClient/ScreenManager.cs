@@ -14,6 +14,9 @@ public sealed class ScreenManager(MinecraftClient client, Hud hud) {
     /// <summary>Told whether to capture the mouse, which it is while no screen is open.</summary>
     public Action<bool> CaptureMouse { get; set; } = _ => { };
 
+    /// <summary>What leaving the server does, for the screens that offer it.</summary>
+    public Action Quit { get; set; } = () => { };
+
     public void HookClient() {
         // Vanilla's openScreen replaces whatever is open, chat included.
         client.ContainerOpened += _ => {
@@ -57,6 +60,11 @@ public sealed class ScreenManager(MinecraftClient client, Hud hud) {
             }
         };
         client.Interactions.MinecartCommandBlockOpened += minecart => Set(new MinecartCommandBlockEditScreen(minecart));
+        // LocalPlayer.openTextEdit.
+        client.SignEditorOpened += (sign, isFrontText) => Set(new SignEditScreen(sign, isFrontText, client.Options.TextFiltering));
+        client.ChatListener.ChatNarrated += message => Context.Narrator?.SayChatQueued(message);
+        client.ChatListener.SystemChatNarrated += message => Context.Narrator?.SaySystemChatQueued(message);
+        client.ChatListener.SystemNarrated += message => Context.Narrator?.SaySystemQueued(message);
         client.BlockEntityDataLoaded += blockEntity => {
             if (blockEntity is CommandBlockEntity && Current is CommandBlockEditScreen screen) {
                 screen.UpdateGui(Context);
@@ -72,19 +80,23 @@ public sealed class ScreenManager(MinecraftClient client, Hud hud) {
                 Set(null);
             }
         };
-        client.Disconnected += reason => {
-            Console.WriteLine($"Disconnected: {reason}");
-            Set(new DisconnectedScreen(reason));
-        };
+    }
+
+    /// <summary>Takes up the connection a join makes, opening the screens its events ask for.</summary>
+    public void Attach(MinecraftClient joined) {
+        client = joined;
+        HookClient();
     }
 
     public void Set(Screen? screen) {
+        Current?.Removed(Context);
         Current = screen;
-        if (screen != null) {
-            client.Interactions.Keys.ReleaseAll();
-        }
+        ScreenSet(screen);
         CaptureMouse(screen == null);
     }
+
+    /// <summary>Told of every screen set, null for none, as the key mappings must be.</summary>
+    public Action<Screen?> ScreenSet { get; set; } = _ => { };
 
     public void CloseIfClosed() {
         if (Current is { Closed: true }) {
@@ -101,13 +113,25 @@ public sealed class ScreenManager(MinecraftClient client, Hud hud) {
         }
     }
 
-    public void OpenChat(string initial = "") => Set(new ChatScreen(hud, initial));
+    /// <summary><c>Gui.openChatScreen</c>: the draft back if the key takes it, else empty or a slash.</summary>
+    public void OpenChat(ChatComponent.ChatMethod method) {
+        if (client.Player != null) {
+            Set(hud.Chat.CreateScreen(method, (text, isDraft) => new ChatScreen(hud, text, isDraft)));
+        }
+    }
 
-    /// <summary>The death screen, which follows whether the player is dead.</summary>
+    /// <summary><c>Gui.openChatAndAddText</c>, which opens as the command key does.</summary>
+    public void OpenChatAndAddText(ChatComponent.ChatMethod method, string text) {
+        OpenChat(ChatComponent.ChatMethod.Command);
+        (Current as ChatScreen)?.InsertText(text, false);
+    }
+
+    /// <summary>The open screen's delayed narration, then the death screen, which follows whether the player is dead.</summary>
     public void Update() {
+        Current?.HandleDelayedNarration(Context);
         LocalPlayer? player = client.Player;
         if (player is { IsDead: true, ShowDeathScreen: true } && Current is not (DeathScreen or DisconnectedScreen)) {
-            Set(new DeathScreen());
+            Set(new DeathScreen(Quit));
         }
         else if (Current is DeathScreen && player is { IsDead: false }) {
             Set(null);
@@ -126,11 +150,11 @@ public sealed class ScreenManager(MinecraftClient client, Hud hud) {
         LocalPlayer? player = client.Player;
         if (Current != null || player == null) {
             if (Current is InBedChatScreen inBed && player is { IsSleeping: false }) {
-                Set(inBed.OnPlayerWokeUp(Context));
+                Set(inBed.OnPlayerWokeUp());
             }
         }
         else if (player.IsSleeping && client.Level != null) {
-            Set(new InBedChatScreen(hud));
+            Set(hud.Chat.CreateScreen(ChatComponent.ChatMethod.Message, (text, isDraft) => new InBedChatScreen(hud, text, isDraft)));
         }
     }
 }

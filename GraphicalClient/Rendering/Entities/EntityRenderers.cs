@@ -9,6 +9,8 @@ public sealed class EntityRendererContext {
 
     /// <summary>The resource packs, for anything a renderer reads beyond textures, such as equipment assets.</summary>
     public required GraphicalClient.Assets.ResourcePacks.ResourcePackSource Pack { get; init; }
+
+    public required MapRenderer Maps { get; init; }
 }
 
 /// <summary>

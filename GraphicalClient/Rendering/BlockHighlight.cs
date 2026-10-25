@@ -1,25 +1,22 @@
 using System.Numerics;
+using ClientLib.Interaction;
 using ClientLib.World;
 using GraphicalClient.Assets;
-using Minecraft.Data.Blocks;
+using Minecraft.Data.Items;
 using Minecraft.Physics;
-using Minecraft.Schemas.Vec;
 
 namespace GraphicalClient.Rendering;
 
 /// <summary>The outline round the targeted block, and the cracks on blocks being dug.</summary>
 public static class BlockHighlight {
     /// <summary>
-    /// <c>LevelRenderer.renderHitOutline</c>: the block's outline shape, each box's edges in black at
-    /// 40% opacity, pushed out a hair so they win the depth test against the faces.
+    /// <c>LevelRenderer.renderHitOutline</c>: the block's outline shape under the camera entity's context, each
+    /// box's edges in black at 40% opacity, pushed out a hair so they win the depth test against the faces.
     /// </summary>
-    public static void Outline(OverlayRenderer overlay, ClientLevel level, Camera camera, int x, int y, int z) {
-        IBlock block = level.GetBlock(x, y, z);
-        Box[] boxes = BlockPhysicsData.ShapeBoxesOf(block.BlockShape);
-        Vec3<double> offset = block.Info.Offsets(BlockShapeOffsets.Block) ? block.Info.ShapeOffset(new Vec3<int>(x, y, z)) : Vec3<double>.Zero;
-        foreach (Box box in boxes) {
-            Vector3 min = Relative(camera, x + box.MinX + offset.X, y + box.MinY + offset.Y, z + box.MinZ + offset.Z) - new Vector3(0.002F);
-            Vector3 max = Relative(camera, x + box.MaxX + offset.X, y + box.MaxY + offset.Y, z + box.MaxZ + offset.Z) + new Vector3(0.002F);
+    public static void Outline(OverlayRenderer overlay, ClientLevel level, Camera camera, int x, int y, int z, IItem? heldItem) {
+        foreach (Box box in Picking.OutlineShape(level, x, y, z, heldItem)) {
+            Vector3 min = Relative(camera, x + box.MinX, y + box.MinY, z + box.MinZ) - new Vector3(0.002F);
+            Vector3 max = Relative(camera, x + box.MaxX, y + box.MaxY, z + box.MaxZ) + new Vector3(0.002F);
             overlay.BoxEdges(min, max, 0x66000000);
         }
     }

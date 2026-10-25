@@ -18,8 +18,11 @@ public sealed class ItemModelResolver(IResourceSource source, MinecraftClient? c
     private readonly ItemModelOutput _output = new();
     private readonly Dictionary<Identifier, ItemModelNode?> _definitions = new();
 
+    /// <summary>The connection whose level and player items are resolved against, replaced on every join.</summary>
+    public MinecraftClient? Client { get; set; } = client;
+
     /// <summary>The local player, whom the GUI's items are resolved for.</summary>
-    public ClientEntity? Player => client?.Player;
+    public ClientEntity? Player => Client?.Player;
 
     /// <summary>The definition a stack's model id names; null when the source has none, which vanilla draws as the missing model.</summary>
     public ItemModelNode? Definition(ItemStack stack) {
@@ -59,15 +62,22 @@ public sealed class ItemModelResolver(IResourceSource source, MinecraftClient? c
         }
         _query.Stack = stack;
         _query.DisplayContext = context;
-        _query.Client = client;
-        _query.Level = client?.Level;
+        _query.Client = Client;
+        _query.Level = Client?.Level;
         _query.Owner = owner;
         _query.Seed = seed;
         _query.HeldIn = heldIn;
         _query.Carried = carried;
+        _query.Definition ??= Definition;
         definition.Update(_output, _query);
         return _output;
     }
+
+    /// <summary><c>shouldPlaySwapAnimation</c>.</summary>
+    public bool ShouldPlaySwapAnimation(ItemStack stack) => source.ItemProperties(ModelIdOf(stack)).HandAnimationOnSwap;
+
+    /// <summary><c>swapAnimationScale</c>.</summary>
+    public float SwapAnimationScale(ItemStack stack) => source.ItemProperties(ModelIdOf(stack)).SwapAnimationScale;
 
     /// <summary>The seed <c>updateForLiving</c> and <c>updateForNonLiving</c> give an owner.</summary>
     public static int SeedFor(ClientEntity? owner, ItemDisplayContext context) => owner == null ? 0 : owner.IsLiving ? owner.Id + (int)context : owner.Id;

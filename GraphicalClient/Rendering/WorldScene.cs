@@ -8,7 +8,10 @@ using GraphicalClient.Assets.ResourcePacks;
 using GraphicalClient.Rendering.BlockEntities;
 using GraphicalClient.Rendering.Entities;
 using GraphicalClient.Rendering.Entities.Special;
+using GraphicalClient.Rendering.Entities.Vanilla;
+using GraphicalClient.Rendering.Particles;
 using GraphicalClient.Rendering.Pipeline;
+using GraphicalClient.Rendering.Weather;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Generated;
 using Minecraft.Packets.Play.ClientBound;
@@ -21,15 +24,19 @@ namespace GraphicalClient.Rendering;
 /// shader pack's passes draw by geometry name.
 /// </summary>
 public sealed class WorldScene : IGeometryDrawer, IDisposable {
-    private readonly MinecraftClient _client;
+    private MinecraftClient _client;
     private readonly Camera _camera;
     private readonly WorldRenderer _world;
     private readonly OverlayRenderer _overlay;
-    private readonly EntityBatch _entityBatch, _crumblingBatch, _translucentBatch, _waterMaskBatch, _handBatch, _glintBatch, _handGlintBatch, _outlineBatch;
+    private readonly EntityBatch _entityBatch, _crumblingBatch, _translucentBatch, _additiveBatch, _waterMaskBatch, _handBatch, _glintBatch, _handGlintBatch, _outlineBatch;
     private readonly CrumblingRenderer _crumbling;
     private readonly EndPortalRenderer _endPortals;
     private readonly ItemInHandRenderer _itemInHand;
-    private readonly ItemPickupParticleGroup _pickups = new();
+
+    /// <summary>What casts into a shadow map from out of view: entities beside the screen, and the player in first person.</summary>
+    private readonly EntityBatch _casterBatch;
+    private readonly TextDisplayBatch _textDisplays;
+    private readonly EntityShadows _entityShadows;
 
     public EntityTextures Textures { get; }
     public EntityRenderDispatcher Entities { get; }
@@ -37,8 +44,34 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
     public FlameFeatureRenderer Flames { get; }
     public ScreenEffectRenderer ScreenEffects { get; }
     public CameraOverlays CameraOverlays { get; }
+    public WorldParticles Particles { get; }
+    public WeatherRenderer Weather { get; }
+    public CloudRenderer Clouds { get; }
     public uint EndSkyTexture => _endPortals.SkyTexture;
     public uint EndPortalTexture => _endPortals.PortalTexture;
+
+    /// <summary>
+    /// The <c>entityShadows</c> option: the round shadows under entities, and entities drawn from the shadow
+    /// camera at all. Off, both the <c>entity_shadows</c> geometry and <c>entities</c> seen from the shadow camera are empty.
+    /// </summary>
+    public bool ShowEntityShadows { get; set; } = true;
+
+    /// <summary>
+    /// The unit vector toward the light while a pass draws <c>entities</c> from the shadow camera, so entities out of
+    /// view whose shadow may be in it are drawn for it too; null otherwise.
+    /// </summary>
+    public System.Numerics.Vector3? ShadowCasterLight { get; set; }
+
+    /// <summary>The background of a text display that asks for the default one.</summary>
+    public uint DefaultTextBackground {
+        set => _textDisplays.DefaultBackground = value;
+    }
+
+    /// <summary><c>Window.getAppropriateLineWidth</c>, which the frame's lines are drawn at.</summary>
+    public float LineWidth {
+        get => _overlay.LineWidth;
+        set => _overlay.LineWidth = value;
+    }
 
     public WorldScene(GL gl, MinecraftClient client, Camera camera, WorldRenderer world, BlockModels models, TextureAnimator animator,
         ResourcePackSource? pack, DevArtSource art, EnchantmentGlint glint, ItemModelResolver resolver, Gui.Font font) {
@@ -54,10 +87,16 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
         _entityBatch = new EntityBatch(gl, Textures) { Glints = _glintBatch, Outlines = _outlineBatch };
         _crumblingBatch = new EntityBatch(gl, Textures);
         _translucentBatch = new EntityBatch(gl, Textures) { Glints = _glintBatch, Outlines = _outlineBatch };
+        _additiveBatch = new EntityBatch(gl, Textures);
         _waterMaskBatch = new EntityBatch(gl, Textures);
         _handBatch = new EntityBatch(gl, Textures) { Glints = _handGlintBatch };
+        _casterBatch = new EntityBatch(gl, Textures);
+        _textDisplays = new TextDisplayBatch(gl, font, Textures);
+        _entityShadows = new EntityShadows(gl, Textures);
         _crumbling = new CrumblingRenderer(pack, Textures);
         _endPortals = new EndPortalRenderer(gl, pack);
+        Weather = new WeatherRenderer(gl, pack);
+        Clouds = new CloudRenderer(gl, pack);
         EntityAtlasSprite fire0 = new(Textures, animator, models, BlockModels.Fire0);
         EntityAtlasSprite fire1 = new(Textures, animator, models, BlockModels.Fire1);
         Flames = new FlameFeatureRenderer(fire0, fire1);
@@ -66,31 +105,54 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
         ItemRenderer items = new(pack, art, Textures, resolver);
         // Models need the pack's textures; without them every mob is the built in art. Dropped items
         // still draw, as their icons.
+        WorldText worldText = new(font, Textures);
+        MapRenderer maps = new(Textures, worldText);
         Dictionary<IEntityType, EntityRenderer> renderers = pack != null
-            ? EntityRenderers.CreateAll(new EntityRendererContext { Items = items, Blocks = new BlockModelRenderer(pack, Textures), Pack = pack }, Console.WriteLine)
-            : new() { [EntityType.Item] = new ItemEntityRenderer(items) };
+            ? EntityRenderers.CreateAll(new EntityRendererContext { Items = items, Blocks = new BlockModelRenderer(pack, Textures), Pack = pack, Maps = maps },
+                Console.WriteLine)
+            : new() { [EntityType.Item] = new ItemEntityRenderer(items), [EntityType.TextDisplay] = new DisplayRenderer.TextDisplayRenderer() };
         Entities = new EntityRenderDispatcher(renderers, new DevArtEntities(art));
         BlockEntities = new BlockEntityRenderDispatcher(BlockEntityRenderers.CreateAll(new BlockEntityRendererContext {
             Sprites = new EntityTextureSprites(Textures, sprite => pack?.LoadFirstFrame(sprite.PackPath) ?? DevArtSprites.Image(sprite)),
-            Items = items, Blocks = new BlockModelRenderer(pack, Textures), Entities = Entities, Font = new WorldText(font, Textures),
+            Items = items, Blocks = new BlockModelRenderer(pack, Textures), Entities = Entities, Font = worldText,
             RenderDistance = () => _world.RenderDistance
         }));
-        _itemInHand = new ItemInHandRenderer(items, () => _client.Player is { } local ? Entities.RendererFor(local) as IFirstPersonArmRenderer : null);
+        Particles = new WorldParticles(gl, client, Textures, models, items, pack, world.ColourMaps);
+        _itemInHand = new ItemInHandRenderer(items, maps, () => _client.Player is { } local ? Entities.RendererFor(local) as IFirstPersonArmRenderer : null);
+    }
+
+    /// <summary>Takes up the connection a join makes; the old one's pickups go with it.</summary>
+    public void Attach(MinecraftClient client) {
+        _client = client;
+        Assets.Skins.SkinManager.Client = client;
+        Particles.Attach(client);
+        HookClient();
     }
 
     public void HookClient() {
-        _client.LevelChanged += _ => _pickups.Clear();
+        _client.LevelChanged += ClearPickups;
         _client.EntityTaken += TakeEntity;
-        _client.PacketReceived += packet => {
-            if (packet is ClientBoundEntityEventPacket entityEvent) {
-                Entities.HandleEntityEvent(_client, entityEvent.EntityId, (byte)entityEvent.Status);
-            }
-        };
+        _client.PacketReceived += HandleEntityEvent;
+    }
+
+    /// <summary>Lets go of the client, for a resource reload that replaces this scene.</summary>
+    public void UnhookClient() {
+        _client.LevelChanged -= ClearPickups;
+        _client.EntityTaken -= TakeEntity;
+        _client.PacketReceived -= HandleEntityEvent;
+    }
+
+    private void ClearPickups(ClientLevel _) => Particles.ClearPickups();
+
+    private void HandleEntityEvent(Minecraft.Packets.MinecraftPacket packet) {
+        if (packet is ClientBoundEntityEventPacket entityEvent) {
+            Entities.HandleEntityEvent(_client, entityEvent.EntityId, (byte)entityEvent.Status);
+        }
     }
 
     public void Tick() {
         Entities.Tick(_client);
-        _pickups.Tick();
+        Particles.Tick();
         if (_client.Player is { } player) {
             _itemInHand.Tick(player);
         }
@@ -98,19 +160,28 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
 
     /// <summary>Entities, the hand, the block outline and dig cracks for this frame.</summary>
     public void Collect(ClientLevel level, float partialTick, ClientEntity cameraEntity, bool firstPerson, bool hideGui) {
+        _textDisplays.Begin(Frustum.FromMatrix(_camera.View * _camera.CullProjection));
+        _entityShadows.Begin();
         EntityRenderContext context = new() {
             Client = _client, Level = level, Camera = _camera, Batch = _entityBatch, TranslucentBatch = _translucentBatch, PartialTick = partialTick,
-            Flames = Flames, WaterMaskBatch = _waterMaskBatch
+            Flames = Flames, WaterMaskBatch = _waterMaskBatch, AdditiveBatch = _additiveBatch, Lines = _overlay,
+            FirstPerson = firstPerson, Shadows = ShowEntityShadows ? _entityShadows : null, TextDisplays = _textDisplays
         };
-        Entities.Render(context, cameraEntity, !firstPerson);
+        ShadowCasters? casters = ShowEntityShadows && ShadowCasterLight is { } light
+            ? new ShadowCasters(new EntityRenderContext {
+                Client = _client, Level = level, Camera = _camera, Batch = _casterBatch, TranslucentBatch = _casterBatch, PartialTick = partialTick,
+                FirstPerson = firstPerson
+            }, light)
+            : null;
+        Entities.Render(context, cameraEntity, !firstPerson, casters);
         BlockEntities.Render(context);
-        _pickups.Render(context);
+        Particles.Collect(context, _translucentBatch);
         _endPortals.Collect(_world.EndPortals, _camera);
         if (firstPerson && !hideGui && _client.Player is { IsSpectator: false } handPlayer && !handPlayer.IsSleeping) {
             RenderHand(level, handPlayer, partialTick);
         }
         if (!hideGui && _client.Interactions.Target is BlockHitResult hit && _client.Player is { IsSpectator: false }) {
-            BlockHighlight.Outline(_overlay, level, _camera, hit.X, hit.Y, hit.Z);
+            BlockHighlight.Outline(_overlay, level, _camera, hit.X, hit.Y, hit.Z, Picking.HeldItem(cameraEntity));
         }
         if (_client.Interactions.DestroyingBlock is { } digging) {
             Crack(digging.X, digging.Y, digging.Z, _client.Interactions.DestroyStage);
@@ -151,7 +222,7 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
             Client = _client, Level = level, Camera = _camera, Batch = _entityBatch, TranslucentBatch = _translucentBatch, PartialTick = 1.0F,
             Flames = Flames
         };
-        _pickups.Add(new ItemPickupParticle(renderer, renderer.Extract(from, 1.0F, context), to));
+        Particles.AddPickup(new ItemPickupParticle(renderer, renderer.Extract(from, 1.0F, context), to));
     }
 
     public void Upload() {
@@ -159,12 +230,19 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
         _entityBatch.Upload();
         _crumblingBatch.Upload();
         _translucentBatch.Upload();
+        _additiveBatch.Upload();
         _waterMaskBatch.Upload();
         _handBatch.Upload();
         _glintBatch.Upload();
         _handGlintBatch.Upload();
         _outlineBatch.Upload();
+        _casterBatch.Upload();
+        _textDisplays.Upload();
+        _entityShadows.Upload();
         _endPortals.Upload();
+        Weather.Upload();
+        Clouds.Upload();
+        Particles.Upload(_camera);
     }
 
     public void Draw(string geometry, string camera) {
@@ -172,9 +250,19 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
             case "terrain_solid": _world.DrawLayer(RenderLayer.Solid, camera == "shadow"); break;
             case "terrain_cutout": _world.DrawLayer(RenderLayer.Cutout, camera == "shadow"); break;
             case "terrain_translucent": _world.DrawLayer(RenderLayer.Translucent); break;
+            case "entities" when camera == "shadow":
+                if (ShowEntityShadows) {
+                    _entityBatch.Draw();
+                    _casterBatch.Draw();
+                }
+                break;
             case "entities": _entityBatch.Draw(); break;
+            case "text": _textDisplays.DrawText(false); break;
+            case "text_see_through": _textDisplays.DrawText(true); break;
+            case "entity_shadows": _entityShadows.Draw(); break;
             case "crumbling": _crumblingBatch.Draw(); break;
             case "entities_translucent": _translucentBatch.Draw(); break;
+            case "entities_additive": _additiveBatch.Draw(); break;
             case "water_mask": _waterMaskBatch.Draw(); break;
             case "hand": _handBatch.Draw(); break;
             case "glint": _glintBatch.Draw(); break;
@@ -182,29 +270,54 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
             case "entity_outline": _outlineBatch.Draw(); break;
             case "end_portal": _endPortals.Draw(); break;
             case "lines": _overlay.DrawLines(); break;
+            case "particles": Particles.Quads.Draw(false); break;
+            case "particles_translucent": Particles.Quads.Draw(true); break;
+            case "weather": Weather.Draw(); break;
+            case "clouds": Clouds.Draw(); break;
         }
     }
 
     public bool IsEmpty(string geometry) => geometry switch {
+        "entities" => _entityBatch.IsEmpty && _casterBatch.IsEmpty,
+        "text" => _textDisplays.IsEmpty(false),
+        "text_see_through" => _textDisplays.IsEmpty(true),
+        "entity_shadows" => _entityShadows.IsEmpty,
+        "crumbling" => _crumblingBatch.IsEmpty,
+        "entities_translucent" => _translucentBatch.IsEmpty,
+        "hand" => _handBatch.IsEmpty,
+        "end_portal" => _endPortals.IsEmpty,
+        "lines" => _overlay.IsEmpty,
         "water_mask" => _waterMaskBatch.IsEmpty,
+        "entities_additive" => _additiveBatch.IsEmpty,
         "glint" => _glintBatch.IsEmpty,
         "hand_glint" => _handGlintBatch.IsEmpty,
         "entity_outline" => _outlineBatch.IsEmpty,
+        "particles" => Particles.Quads.IsEmpty(false),
+        "particles_translucent" => Particles.Quads.IsEmpty(true),
+        "weather" => Weather.IsEmpty,
+        "clouds" => Clouds.IsEmpty,
         _ => false
     };
 
     public void Dispose() {
         _overlay.Dispose();
+        Particles.Dispose();
         _crumblingBatch.Dispose();
         _endPortals.Dispose();
+        Weather.Dispose();
+        Clouds.Dispose();
         CameraOverlays.Dispose();
         ScreenEffects.Dispose();
         _translucentBatch.Dispose();
+        _additiveBatch.Dispose();
         _waterMaskBatch.Dispose();
         _handBatch.Dispose();
         _glintBatch.Dispose();
         _handGlintBatch.Dispose();
         _outlineBatch.Dispose();
+        _casterBatch.Dispose();
+        _textDisplays.Dispose();
+        _entityShadows.Dispose();
         _entityBatch.Dispose();
         Textures.Dispose();
     }

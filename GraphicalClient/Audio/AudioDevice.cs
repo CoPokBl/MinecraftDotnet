@@ -149,6 +149,11 @@ public sealed unsafe class Channel {
     private bool _initialised = true;
     private IAudioStream? _stream;
     private int _streamingSamples;
+    private int _queued;
+    private bool _streamEnded;
+
+    /// <summary>The stream's next second, decoded on a worker: a second of music is several milliseconds of a frame otherwise.</summary>
+    private Task<short[]?>? _decoding;
 
     public bool Streaming { get; }
 
@@ -176,8 +181,14 @@ public sealed unsafe class Channel {
         }
         _initialised = false;
         Al.SourceStop(_source);
-        if (_stream != null) {
-            _stream.Dispose();
+        if (_stream is { } stream) {
+            if (_decoding is { } decoding) {
+                decoding.ContinueWith(_ => stream.Dispose(), TaskScheduler.Default);
+                _decoding = null;
+            }
+            else {
+                stream.Dispose();
+            }
             RemoveProcessedBuffers();
             _stream = null;
         }
@@ -224,34 +235,50 @@ public sealed unsafe class Channel {
 
     public void AttachStaticBuffer(uint buffer) => Al.SetSourceProperty(_source, SourceInteger.Buffer, buffer);
 
-    /// <summary>A second's worth of samples per buffer, four queued, as vanilla streams.</summary>
+    /// <summary>
+    /// A second's worth of samples per buffer, four queued, as vanilla streams. The first second is decoded
+    /// at once so the source has something to play; the rest arrive from the worker over the next ticks.
+    /// </summary>
     public void AttachBufferStream(IAudioStream stream) {
         _stream = stream;
         _streamingSamples = stream.SampleRate * stream.Channels;
-        PumpBuffers(QueuedBufferCount);
+        Queue(stream.Read(_streamingSamples));
+        DecodeAhead();
     }
 
-    private void PumpBuffers(int count) {
+    private void Queue(short[]? samples) {
+        if (_stream == null || samples == null || samples.Length == 0) {
+            _streamEnded = true;
+            return;
+        }
+        uint buffer = Al.GenBuffers(1)[0];
+        fixed (short* data = samples) {
+            Al.BufferData(buffer, _stream.Channels == 1 ? (BufferFormat)0x1101 : (BufferFormat)0x1103, data, samples.Length * 2, _stream.SampleRate);
+        }
+        Al.SourceQueueBuffers(_source, 1, &buffer);
+        _queued++;
+    }
+
+    private void DecodeAhead() {
+        if (_stream is { } stream && !_streamEnded && _decoding == null) {
+            int samples = _streamingSamples;
+            _decoding = Task.Run(() => stream.Read(samples));
+        }
+    }
+
+    /// <summary>
+    /// Once a tick: drops the buffers that finished and queues what the worker decoded, waiting for it only
+    /// when the source would otherwise run dry.
+    /// </summary>
+    public void UpdateStream() {
         if (_stream == null) {
             return;
         }
-        for (int i = 0; i < count; i++) {
-            short[]? samples = _stream.Read(_streamingSamples);
-            if (samples == null || samples.Length == 0) {
-                return;
-            }
-            uint buffer = Al.GenBuffers(1)[0];
-            fixed (short* data = samples) {
-                Al.BufferData(buffer, _stream.Channels == 1 ? (BufferFormat)0x1101 : (BufferFormat)0x1103, data, samples.Length * 2, _stream.SampleRate);
-            }
-            Al.SourceQueueBuffers(_source, 1, &buffer);
-        }
-    }
-
-    /// <summary>Refills the queue with as many buffers as finished, once a tick.</summary>
-    public void UpdateStream() {
-        if (_stream != null) {
-            PumpBuffers(RemoveProcessedBuffers());
+        _queued -= RemoveProcessedBuffers();
+        while (_queued < QueuedBufferCount && _decoding is { } decoding && (decoding.IsCompleted || _queued == 0)) {
+            _decoding = null;
+            Queue(decoding.GetAwaiter().GetResult());
+            DecodeAhead();
         }
     }
 

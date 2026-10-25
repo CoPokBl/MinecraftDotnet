@@ -1,6 +1,7 @@
 using ClientLib;
 using ClientLib.Inventory;
 using ClientLib.Player;
+using Minecraft.Schemas.Items;
 using Silk.NET.Input;
 using Slot = ClientLib.Inventory.Slot;
 
@@ -18,10 +19,13 @@ public abstract class ContainerScreen : Screen {
     /// <summary>Set once by the window: whether either shift key is down.</summary>
     public static Func<bool> ShiftHeld { get; set; } = () => false;
 
+    /// <summary>Set once by the window: whether either control key is down.</summary>
+    public static Func<bool> ControlHeld { get; set; } = () => false;
+
     protected MinecraftClient Client { get; }
     protected ContainerMenu Menu { get; }
 
-    protected float Left { get; private set; }
+    protected float Left { get; set; }
     protected float Top { get; private set; }
 
     public virtual int ImageWidth => 176;
@@ -43,10 +47,13 @@ public abstract class ContainerScreen : Screen {
     private long _lastClickTime;
     private int _lastClickButton = -1;
     private Stack _lastQuickMoved = Stack.Empty;
+    private Slot? _hoveredSlot;
+    private readonly BundleMouseActions _bundleMouseActions;
 
     protected ContainerScreen(MinecraftClient client, ContainerMenu menu) {
         Client = client;
         Menu = menu;
+        _bundleMouseActions = new BundleMouseActions(client);
     }
 
     public override bool ShowsHud => false;
@@ -75,18 +82,21 @@ public abstract class ContainerScreen : Screen {
             }
         }
 
-        if (Menu.Title != null && ShowsTitle) {
+        if (Menu.Title != null && ShowsTitle && DrawsContents) {
             context.Text.Draw(TextFlattener.Flatten(Menu.Title, (int)(Panel.Label & 0xFFFFFF)), Left + TitleLabel.X, Top + TitleLabel.Y, shadow: false);
         }
-        if (InventoryLabel is { } label) {
+        if (InventoryLabel is { } label && DrawsContents) {
             context.Text.Draw("Inventory", Left + label.X, Top + label.Y, Panel.Label, false);
         }
-        DrawForeground(context);
+        if (DrawsContents) {
+            DrawForeground(context);
+        }
 
-        Slot? hovered = HoveredSlot(MouseX, MouseY);
+        Slot? previouslyHoveredSlot = _hoveredSlot;
+        Slot? hovered = _hoveredSlot = HoveredSlot(MouseX, MouseY);
         Stack carried = Menu.Carried;
         foreach (Slot slot in Menu.Slots) {
-            if (!DrawsSlot(slot)) {
+            if (!DrawsSlot(slot) || !DrawsContents) {
                 continue;
             }
             Stack item = slot.Item;
@@ -102,6 +112,9 @@ public abstract class ContainerScreen : Screen {
         if (hovered != null && DrawsSlot(hovered)) {
             context.Gui.Rect(Left + hovered.X, Top + hovered.Y, 16, 16, 0x80FFFFFF);
         }
+        if (previouslyHoveredSlot != null && previouslyHoveredSlot != hovered) {
+            OnStopHovering(previouslyHoveredSlot);
+        }
 
         DrawOverlay(context);
 
@@ -111,11 +124,27 @@ public abstract class ContainerScreen : Screen {
                 GuiItems.Draw(context, carried.CopyWithCount(count).ToItemStack(), MouseX - 8, MouseY - 8, carried: true);
             }
         }
-        else if (hovered != null && hovered.HasItem) {
-            Tooltips.Draw(context, Tooltips.Lines(hovered.Item.ToItemStack()), MouseX, MouseY);
+        if (hovered != null && hovered.HasItem) {
+            ItemStack item = hovered.Item.ToItemStack();
+            BundleTooltip? image = BundleTooltip.For(item);
+            if (carried.IsEmpty || image is { ShowTooltipWithItemInHand: true }) {
+                Tooltips.Draw(context, Tooltips.Lines(item), MouseX, MouseY, image);
+            }
         }
-        else {
+        else if (carried.IsEmpty) {
             DrawHoverTooltip(context);
+        }
+    }
+
+    public override void Scroll(GuiContext context, float delta) => ScrollSlot(delta);
+
+    /// <summary><c>AbstractContainerScreen.mouseScrolled</c>: whether a bundle under the cursor took the wheel, ahead of the screen's own list.</summary>
+    protected bool ScrollSlot(float delta) =>
+        _hoveredSlot is { HasItem: true } slot && _bundleMouseActions.Matches(slot) && _bundleMouseActions.OnMouseScrolled(0.0, delta, slot.Index, slot.Item);
+
+    private void OnStopHovering(Slot slot) {
+        if (slot.HasItem && _bundleMouseActions.Matches(slot)) {
+            _bundleMouseActions.OnStopHovering(slot);
         }
     }
 
@@ -157,6 +186,19 @@ public abstract class ContainerScreen : Screen {
     protected virtual void DrawHoverTooltip(GuiContext context) {
     }
 
+    /// <summary>The slot under the cursor as of this frame, empty or not.</summary>
+    protected Slot? HoveredSlotNow => _hoveredSlot;
+
+    /// <summary>False while something covers the container, which then shows only its background.</summary>
+    protected virtual bool DrawsContents => true;
+
+    /// <summary><c>isHovering</c>: false while the slots cannot be pointed at, so no click lands on one.</summary>
+    protected virtual bool SlotsHoverable => true;
+
+    /// <summary><c>slotClicked</c>'s tail, after the click went to the server.</summary>
+    protected virtual void OnSlotClicked(Slot? slot) {
+    }
+
     protected virtual bool DrawsSlot(Slot slot) => !slot.IsFake || slot.HasItem;
 
     /// <summary>Whether the menu's result slot holds something, which lights the arrow into it.</summary>
@@ -172,6 +214,9 @@ public abstract class ContainerScreen : Screen {
     }
 
     private Slot? HoveredSlot(float x, float y) {
+        if (!SlotsHoverable) {
+            return null;
+        }
         foreach (Slot slot in Menu.Slots) {
             if (!DrawsSlot(slot)) {
                 continue;
@@ -200,7 +245,12 @@ public abstract class ContainerScreen : Screen {
         if (slot != null) {
             slotId = slot.Index;
         }
+        // onMouseClickAction.
+        if (slot is { HasItem: true } && _bundleMouseActions.Matches(slot)) {
+            _bundleMouseActions.OnSlotClicked(slot, input);
+        }
         Client.ClickContainer(slotId, button, input);
+        OnSlotClicked(slot);
     }
 
     public override void MouseDown(GuiContext context, float x, float y, MouseButton mouseButton) {
@@ -367,24 +417,43 @@ public abstract class ContainerScreen : Screen {
         _quickCraftSlots.Clear();
     }
 
+    /// <summary><c>keyPressed</c>, on the keys the mappings are bound to.</summary>
     public override void KeyDown(GuiContext context, Key key, bool control) {
-        if (key is Key.Escape or Key.E) {
+        KeyBinds binds = context.Settings!.Keys;
+        if (key == Key.Escape || binds.Inventory.Matches(key)) {
+            // onClose, which only these keys reach: a portal or a button closes the container without it.
             Close(context);
+            if (_hoveredSlot != null) {
+                OnStopHovering(_hoveredSlot);
+            }
             return;
         }
         Slot? hovered = HoveredSlot(MouseX, MouseY);
-        if (Menu.Carried.IsEmpty && hovered != null) {
-            if (key == Key.F) {
-                SlotClicked(hovered, hovered.Index, 40, ContainerInput.Swap);
-                return;
+        CheckHotbarKeyPressed(binds, key, hovered);
+        if (hovered is { HasItem: true }) {
+            if (binds.PickItem.Matches(key)) {
+                SlotClicked(hovered, hovered.Index, 0, ContainerInput.Clone);
             }
-            if (key is >= Key.Number1 and <= Key.Number9) {
-                SlotClicked(hovered, hovered.Index, key - Key.Number1, ContainerInput.Swap);
-                return;
+            else if (binds.Drop.Matches(key)) {
+                SlotClicked(hovered, hovered.Index, control ? 1 : 0, ContainerInput.Throw);
             }
         }
-        if (hovered is { HasItem: true } && key == Key.Q) {
-            SlotClicked(hovered, hovered.Index, control ? 1 : 0, ContainerInput.Throw);
+    }
+
+    /// <summary><c>checkHotbarKeyPressed</c>: the off hand and hotbar keys swap the hovered slot while nothing is carried.</summary>
+    private void CheckHotbarKeyPressed(KeyBinds binds, Key key, Slot? hovered) {
+        if (!Menu.Carried.IsEmpty || hovered == null) {
+            return;
+        }
+        if (binds.SwapOffhand.Matches(key)) {
+            SlotClicked(hovered, hovered.Index, 40, ContainerInput.Swap);
+            return;
+        }
+        for (int i = 0; i < 9; i++) {
+            if (binds.Hotbar[i].Matches(key)) {
+                SlotClicked(hovered, hovered.Index, i, ContainerInput.Swap);
+                return;
+            }
         }
     }
 

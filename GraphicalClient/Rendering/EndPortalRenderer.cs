@@ -17,8 +17,7 @@ public sealed record SectionEndPortals(int BaseX, int BaseY, int BaseZ, EndPorta
 /// <c>TheEndPortalRenderer</c> and <c>TheEndGatewayRenderer</c>: the faces of every end portal and gateway
 /// near the camera, drawn as the <c>end_portal</c> geometry, and the two textures vanilla's
 /// <c>rendertype_end_portal</c> layers over them. What a face looks like is the shader pack's to decide.
-/// The gateway's beam is left out: no geometry kind expresses a scrolling texture, and the client does not
-/// track a gateway's age or cooldown.
+/// The gateway's beam is <see cref="BlockEntities.EndGatewayBeamRenderer"/>'s.
 /// </summary>
 public sealed unsafe class EndPortalRenderer : IDisposable {
     /// <summary><c>PORTAL_LAYERS</c> of the <c>end_portal</c> and <c>end_gateway</c> pipelines.</summary>
@@ -39,7 +38,8 @@ public sealed unsafe class EndPortalRenderer : IDisposable {
     }
 
     private readonly GL _gl;
-    private readonly uint _vao, _vbo;
+    private readonly uint _vbo;
+    private uint _vao;
     private Vertex[] _vertices = new Vertex[256];
     private int _count, _uploaded, _capacity;
 
@@ -54,15 +54,23 @@ public sealed unsafe class EndPortalRenderer : IDisposable {
         SkyTexture = CreateTexture(pack?.LoadFirstFrame("assets/minecraft/textures/environment/end_sky.png") ?? DevArt.EndSky());
         PortalTexture = CreateTexture(pack?.LoadFirstFrame("assets/minecraft/textures/entity/end_portal/end_portal.png") ?? DevArt.EndPortalStars());
 
-        _vao = gl.CreateVertexArray();
         _vbo = gl.CreateBuffer();
+    }
+
+    /// <summary>Made at the first draw: a vertex array belongs to the context that made it, and this may be built on another.</summary>
+    private uint VertexArray() {
+        if (_vao != 0) {
+            return _vao;
+        }
+        _vao = _gl.CreateVertexArray();
         _gl.VertexArrayVertexBuffer(_vao, 0, _vbo, 0, (uint)sizeof(Vertex));
-        gl.EnableVertexArrayAttrib(_vao, 0);
-        gl.VertexArrayAttribFormat(_vao, 0, 3, VertexAttribType.Float, false, 0);
-        gl.VertexArrayAttribBinding(_vao, 0, 0);
-        gl.EnableVertexArrayAttrib(_vao, 1);
-        gl.VertexArrayAttribIFormat(_vao, 1, 1, VertexAttribIType.UnsignedInt, 12);
-        gl.VertexArrayAttribBinding(_vao, 1, 0);
+        _gl.EnableVertexArrayAttrib(_vao, 0);
+        _gl.VertexArrayAttribFormat(_vao, 0, 3, VertexAttribType.Float, false, 0);
+        _gl.VertexArrayAttribBinding(_vao, 0, 0);
+        _gl.EnableVertexArrayAttrib(_vao, 1);
+        _gl.VertexArrayAttribIFormat(_vao, 1, 1, VertexAttribIType.UnsignedInt, 12);
+        _gl.VertexArrayAttribBinding(_vao, 1, 0);
+        return _vao;
     }
 
     /// <summary>
@@ -174,11 +182,13 @@ public sealed unsafe class EndPortalRenderer : IDisposable {
         }
     }
 
+    public bool IsEmpty => _uploaded == 0;
+
     public void Draw() {
         if (_uploaded == 0) {
             return;
         }
-        _gl.BindVertexArray(_vao);
+        _gl.BindVertexArray(VertexArray());
         _gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)_uploaded);
         _gl.BindVertexArray(0);
     }

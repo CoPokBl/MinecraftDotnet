@@ -11,6 +11,11 @@ public class TurtleRenderState : LivingEntityRenderState {
 
 public sealed class TurtleRenderer() : AgeableMobRenderer<TurtleRenderState, TurtleModel>(
     new AdultTurtleModel(AdultTurtleModel.CreateBodyLayer().BakeRoot()), new BabyTurtleModel(BabyTurtleModel.CreateBodyLayer().BakeRoot()), 0.7F) {
+    protected override float GetShadowRadius(TurtleRenderState state) {
+        float radius = base.GetShadowRadius(state);
+        return state.IsBaby ? radius * 0.83F : radius;
+    }
+
     public override string GetTextureLocation(TurtleRenderState state) =>
         state.IsBaby ? "minecraft:textures/entity/turtle/turtle_baby.png" : "minecraft:textures/entity/turtle/turtle.png";
 

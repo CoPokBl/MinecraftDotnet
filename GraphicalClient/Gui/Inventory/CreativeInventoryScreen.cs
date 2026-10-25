@@ -24,6 +24,15 @@ public sealed class CreativeInventoryScreen : Screen {
     private string _search = "";
     private readonly ScrollGrid _palette = new(8, 17, Columns, Rows, 18, 18);
     private bool _inventoryTab;
+
+    /// <summary>
+    /// Whether the palette is vanilla's search tab, whose box has the keyboard, rather than an ordinary item tab.
+    /// The chat key or a click on the box picks it, as vanilla's chat key and search tab do.
+    /// </summary>
+    private bool _searchTab;
+
+    /// <summary><c>ignoreTextInput</c>: the key just pressed did something else, so its character is not typed.</summary>
+    private bool _ignoreTextInput;
     private float _left, _top;
     private readonly EffectsInInventory _effects = new();
 
@@ -38,6 +47,8 @@ public sealed class CreativeInventoryScreen : Screen {
     public override bool ShowsHud => false;
 
     public override bool IsAllowedInPortal => false;
+
+    public override bool HasFocusedEditBox => _searchTab && !_inventoryTab;
 
     private Stack Carried {
         get => _client.Inventory.Menu.Carried;
@@ -79,7 +90,11 @@ public sealed class CreativeInventoryScreen : Screen {
 
         context.Gui.Rect(_left + 80, _top + 4, 89, 12, 0xFF000000);
         context.Gui.Rect(_left + 81, _top + 5, 87, 10, 0xFF1A1A1A);
-        context.Text.Draw(_search.Length > 0 ? _search : Translations.Get("itemGroup.search.hint")!, _left + 83, _top + 6, _search.Length > 0 ? 0xFFFFFFFFu : 0xFF707070u, false);
+        string shown = _search.Length > 0 ? _search : Translations.Get("itemGroup.search.hint")!;
+        float end = context.Text.Draw(shown, _left + 83, _top + 6, _search.Length > 0 ? 0xFFFFFFFFu : 0xFF707070u, false);
+        if (HasFocusedEditBox && Environment.TickCount64 / 300 % 2 == 0) {
+            context.Text.Draw("_", _search.Length > 0 ? end : _left + 83, _top + 6, 0xFFFFFFFF, false);
+        }
         context.Text.Draw(_inventoryTab ? "Inventory" : "All items", _left + 8, _top + 6, Panel.Label, false);
 
         ItemStack? hoveredStack = null;
@@ -148,11 +163,15 @@ public sealed class CreativeInventoryScreen : Screen {
         bool shift = ContainerScreen.ShiftHeld();
 
         if (Inside(x, y, _left, _top - 18, 40, 16)) {
-            _inventoryTab = false;
+            SelectTab(false, false);
             return;
         }
         if (Inside(x, y, _left + 42, _top - 18, 56, 16)) {
-            _inventoryTab = true;
+            SelectTab(true, false);
+            return;
+        }
+        if (!_inventoryTab && Inside(x, y, _left + 80, _top + 4, 89, 12)) {
+            SelectTab(false, true);
             return;
         }
 
@@ -216,10 +235,12 @@ public sealed class CreativeInventoryScreen : Screen {
     /// A click on one of the player's slots runs the inventory menu's own click, then sends each slot
     /// it changed, which is what the creative listener on vanilla's inventory menu does.
     /// </summary>
-    private void PlayerSlotClicked(int menuSlot, int button, bool shift) {
+    private void PlayerSlotClicked(int menuSlot, int button, bool shift) =>
+        PlayerSlotClicked(menuSlot, button, button == 2 ? ContainerInput.Clone : shift ? ContainerInput.QuickMove : ContainerInput.Pickup);
+
+    private void PlayerSlotClicked(int menuSlot, int button, ContainerInput input) {
         InventoryMenu menu = _client.Inventory.Menu;
         Stack[] before = menu.Slots.Select(s => s.Item.Copy()).ToArray();
-        ContainerInput input = button == 2 ? ContainerInput.Clone : shift ? ContainerInput.QuickMove : ContainerInput.Pickup;
         menu.Clicked(menuSlot, button, input, _client.MenuUser);
         for (int i = 0; i < menu.Slots.Count; i++) {
             if (!Stack.Matches(before[i], menu.Slots[i].Item)) {
@@ -230,29 +251,133 @@ public sealed class CreativeInventoryScreen : Screen {
 
     public override void Scroll(GuiContext context, float delta) => _palette.ScrollBy(delta, _filtered.Count);
 
+    /// <summary><c>charTyped</c>: only the search tab's box takes characters, and not one whose key did something else.</summary>
     public override void Char(GuiContext context, char c) {
-        if (c < ' ' || _search.Length >= 50) {
+        if (_ignoreTextInput || !HasFocusedEditBox || !EditBox.IsAllowedChatCharacter(c) || _search.Length >= 50) {
             return;
         }
         _search += c;
         Refilter();
     }
 
+    /// <summary>
+    /// <c>keyPressed</c>. On the search tab the box has the keyboard and takes every key but Escape, a number
+    /// over an item or the hotbar excepted, which swaps instead. On another tab the chat key opens the search
+    /// tab and the keys are a container screen's.
+    /// </summary>
     public override void KeyDown(GuiContext context, Key key, bool control) {
-        switch (key) {
-            case Key.Backspace when _search.Length > 0:
-                _search = _search[..^1];
-                Refilter();
+        LayOut(context);
+        _ignoreTextInput = false;
+        KeyBinds binds = context.Settings!.Keys;
+        int cell = HoveredCell();
+        int? playerSlot = HoveredPlayerSlot();
+        if (!HasFocusedEditBox) {
+            if (!_inventoryTab && binds.Chat.Matches(key)) {
+                _ignoreTextInput = true;
+                SelectTab(false, true);
                 return;
-            case Key.E when _search.Length == 0:
-            case Key.Escape:
-                Close(context);
-                return;
+            }
+            ContainerKeyPressed(context, binds, key, control, cell, playerSlot);
+            return;
+        }
+        bool doQuickSwap = cell < 0 || PaletteItem(cell) != null;
+        bool pressingNumber = key is >= Key.Number0 and <= Key.Number9 or >= Key.Keypad0 and <= Key.Keypad9;
+        if (doQuickSwap && pressingNumber && CheckHotbarKeyPressed(binds, key, cell, playerSlot)) {
+            _ignoreTextInput = true;
+            return;
+        }
+        if (key == Key.Backspace && _search.Length > 0) {
+            _search = _search[..^1];
+            Refilter();
+        }
+        if (key == Key.Escape) {
+            Close(context);
         }
     }
 
+    public override void KeyUp(GuiContext context, Key key) => _ignoreTextInput = false;
+
+    /// <summary><c>AbstractContainerScreen.keyPressed</c> on an ordinary tab.</summary>
+    private void ContainerKeyPressed(GuiContext context, KeyBinds binds, Key key, bool control, int cell, int? playerSlot) {
+        if (key == Key.Escape || binds.Inventory.Matches(key)) {
+            Close(context);
+            return;
+        }
+        CheckHotbarKeyPressed(binds, key, cell, playerSlot);
+        if (playerSlot is not { } menuSlot || _client.Inventory.Menu.Slots[menuSlot].Item.IsEmpty) {
+            if (PaletteItem(cell) is { } item && binds.Drop.Matches(key)) {
+                // The palette's THROW: a copy goes, nothing leaves the palette.
+                Stack copy = Stack.Of(new ItemStack(item));
+                _client.SetCreativeSlot(-1, copy.CopyWithCount(control ? copy.MaxStackSize : 1).ToItemStack());
+            }
+            else if (PaletteItem(cell) is { } picked && binds.PickItem.Matches(key) && Carried.IsEmpty) {
+                Stack copy = Stack.Of(new ItemStack(picked));
+                Carried = copy.CopyWithCount(copy.MaxStackSize);
+            }
+            return;
+        }
+        if (binds.PickItem.Matches(key)) {
+            PlayerSlotClicked(menuSlot, 0, ContainerInput.Clone);
+        }
+        else if (binds.Drop.Matches(key)) {
+            // The inventory tab's THROW: the dropped part as a drop, then what is left in its slot. Vanilla's other
+            // tabs throw a hotbar item through the picker menu instead; this client has only the one path.
+            Slot slot = _client.Inventory.Menu.Slots[menuSlot];
+            Stack toDrop = slot.Item.Split(control ? slot.Item.MaxStackSize : 1);
+            _client.SetCreativeSlot(-1, toDrop.ToItemStack());
+            _client.SetCreativeSlot(menuSlot, slot.Item.ToItemStack());
+        }
+    }
+
+    /// <summary>
+    /// <c>checkHotbarKeyPressed</c> over the hovered slot while nothing is carried: a palette item copied whole into
+    /// the slot of the key, or a player slot swapped with it through the inventory menu.
+    /// </summary>
+    private bool CheckHotbarKeyPressed(KeyBinds binds, Key key, int cell, int? playerSlot) {
+        if (!Carried.IsEmpty || cell < 0 && playerSlot == null) {
+            return false;
+        }
+        int button = binds.SwapOffhand.Matches(key) ? 40 : Array.FindIndex(binds.Hotbar, b => b.Matches(key));
+        if (button < 0) {
+            return false;
+        }
+        if (playerSlot is { } menuSlot) {
+            PlayerSlotClicked(menuSlot, button, ContainerInput.Swap);
+        }
+        else if (PaletteItem(cell) is { } item) {
+            Stack copy = Stack.Of(new ItemStack(item));
+            int target = button == 40 ? PlayerInventory.OffhandSlot : PlayerInventory.HotbarStart + button;
+            _client.Inventory.Menu.Slots[target].Set(copy.CopyWithCount(copy.MaxStackSize));
+            _client.SetCreativeSlot(target, _client.Inventory.Menu.Slots[target].Item.ToItemStack());
+        }
+        return true;
+    }
+
+    private int HoveredCell() => _inventoryTab ? -1 : _palette.CellAt(MouseX - _left, MouseY - _top);
+
+    private IItem? PaletteItem(int cell) => cell >= 0 && _palette.IndexOf(cell) < _filtered.Count ? _filtered[_palette.IndexOf(cell)] : null;
+
+    private int? HoveredPlayerSlot() {
+        foreach ((int menuSlot, float sx, float sy) in PlayerSlots()) {
+            if (Inside(MouseX, MouseY, _left + sx - 1, _top + sy - 1, 18, 18)) {
+                return menuSlot;
+            }
+        }
+        return null;
+    }
+
+    /// <summary><c>selectTab</c>: changing tab empties the search, and only the search tab has the box focused.</summary>
+    private void SelectTab(bool inventory, bool search) {
+        if (inventory != _inventoryTab || search != _searchTab) {
+            _search = "";
+            _filtered = _allItems;
+            _palette.Reset();
+        }
+        _inventoryTab = inventory;
+        _searchTab = search;
+    }
+
     private void Refilter() {
-        _inventoryTab = false;
         _palette.Reset();
         string query = _search.Trim().ToLowerInvariant();
         _filtered = query.Length == 0

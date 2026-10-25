@@ -14,6 +14,12 @@ public sealed class DebugOverlay {
     private long _workingSet;
     private long _workingSetRead;
 
+    /// <summary><c>ParticleEngine.countParticles</c>: each group's shorthand and size, then the total.</summary>
+    private static string ParticleCounts(MinecraftClient client) {
+        (int quads, int noRender, int elderGuardians) = client.Particles.Counts;
+        return $"P: SQ {quads} NR {noRender} EG {elderGuardians} T {quads + noRender + elderGuardians}";
+    }
+
     public void Render(GuiContext context, DebugStats stats) {
         if (!Visible) {
             return;
@@ -22,13 +28,15 @@ public sealed class DebugOverlay {
         LocalPlayer? player = client.Player;
         ClientLevel? level = client.Level;
         List<string> left = [
-            $"Minecraft Client ({Minecraft.ProtocolConstants.CurrentVersionString}, protocol {Minecraft.ProtocolConstants.ProtocolVersion})",
+            $"mcdotnet ({Minecraft.ProtocolConstants.CurrentVersionString}, protocol {Minecraft.ProtocolConstants.ProtocolVersion})",
             $"{stats.Fps} fps, frame {stats.FrameMs:F1} ms",
             $"Server: {client.ServerBrand ?? "?"}, {client.Connection?.PacketsReceived ?? 0} packets in, {(client.Connection?.BytesReceived ?? 0) / 1024} KiB",
             $"C: {stats.VisibleSections}/{stats.LoadedSections} sections, {stats.PendingSections} pending, {client.Entities.Count} entities",
+            ParticleCounts(client),
             ""
         ];
-        if (player != null && level != null && !player.ReducedDebugInfo) {
+        // Minecraft.showOnlyReducedInfo: the server's say or the player's own option.
+        if (player != null && level != null && !player.ReducedDebugInfo && context.Settings?.ReducedDebugInfo != true) {
             // Where the view is, which while spectating is the camera entity rather than the player.
             ClientLib.Maths.Vec3d at = (client.CameraEntity ?? player).Position;
             int bx = (int)Math.Floor(at.X), by = (int)Math.Floor(at.Y), bz = (int)Math.Floor(at.Z);

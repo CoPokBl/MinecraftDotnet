@@ -16,7 +16,8 @@ namespace GraphicalClient.Audio;
 /// <summary>
 /// The sounds of an item held in use that the player's own client makes: <c>ItemStack.onUseTick</c>'s
 /// eating and drinking, the last mouthful when the server says the use finished, the spyglass and the
-/// brush.
+/// brush. The crumbs <c>emitParticlesAndSounds</c> spawns with a mouthful go out from here too, so the two
+/// stay on the same tick.
 /// </summary>
 public sealed class ItemUseSounds {
     private readonly ClientSounds _sounds;
@@ -46,7 +47,7 @@ public sealed class ItemUseSounds {
         }
         int ticksRemaining = GameMode.UseItemRemainingTicks;
         if (ItemComponents.Get(useItem, DataComponent.Consumable) is { } consumable && ShouldEmitParticlesAndSounds(consumable, ticksRemaining)) {
-            EmitParticlesAndSounds(player, consumable);
+            EmitParticlesAndSounds(player, useItem, consumable, 5);
         }
         if (useItem.Type.Identifier.Equals(Item.Brush.Identifier)) {
             BrushOnUseTick(ticksRemaining);
@@ -74,7 +75,7 @@ public sealed class ItemUseSounds {
         }
         // Item.finishUsingItem: Consumable.onConsume, whose emission is the sixteen particle one.
         if (ItemComponents.Get(useItem, DataComponent.Consumable) is { } consumable) {
-            EmitParticlesAndSounds(player, consumable);
+            EmitParticlesAndSounds(player, useItem, consumable, 16);
         }
         // SpyglassItem.finishUsingItem, when the 1200 ticks run out.
         SpyglassSound(useItem, SoundType.SpyglassStopUsing);
@@ -93,7 +94,10 @@ public sealed class ItemUseSounds {
     /// <c>Consumable.emitParticlesAndSounds</c>. A player overrides no consume sound. Every draw is
     /// made whichever animation it is, as vanilla makes them.
     /// </summary>
-    private void EmitParticlesAndSounds(LocalPlayer player, ConsumableComponent.Data consumable) {
+    private void EmitParticlesAndSounds(LocalPlayer player, ItemStack useItem, ConsumableComponent.Data consumable, int particleCount) {
+        if (consumable.HasParticles) {
+            _client.Particles.Entities.SpawnItemParticles(player, useItem, particleCount);
+        }
         float eatVolume = _random.NextBoolean() ? 0.5F : 1.0F;
         float eatPitch = _random.Triangle(1.0F, 0.2F);
         float drinkPitch = _random.RandomBetween(0.9F, 1.0F);

@@ -74,16 +74,19 @@ public sealed partial class MinecraftClient {
     public event Action<string>? Disconnected;
     public event Action<string>? Log;
 
+    private readonly Lock _connectLock = new();
     private string _host = "";
     private int _port;
     private readonly Dictionary<Identifier, Dictionary<string, NBT.INbtTag?>> _pendingRegistries = new();
     private readonly Dictionary<Identifier, Dictionary<Identifier, int[]>> _pendingTags = new();
     private readonly ChunkBatchSizeCalculator _batchSize = new();
+    private ServerBoundClientInformationPacket? _remoteClientInformation;
 
     public MinecraftClient(ClientOptions options) {
         Options = options;
         Profile = new GameProfile(options.Account?.Username ?? options.Username,
             options.Account != null ? Guid.Parse(options.Account.Uuid) : OfflineUuid(options.Username));
+        ServerPacks = new Packs.DownloadedPackSource(options.DownloadsDirectory);
         Interactions = new Interaction.MultiPlayerGameMode(this);
         SpectatorGui = new Interaction.SpectatorGui(this);
     }
@@ -107,40 +110,62 @@ public sealed partial class MinecraftClient {
 
     private static readonly Identifier EntityTypeRegistry = "minecraft:entity_type";
 
-    public async Task Connect(string host, int port, CancellationToken ct = default) {
+    public Task Connect(string host, int port, CancellationToken ct = default) => Connect(new Multiplayer.ServerAddress(host, port), ct);
+
+    /// <summary>
+    /// <c>ConnectScreen.connect</c>: the address resolved as vanilla resolves it, then the login. The handshake
+    /// carries the host name and port the address resolved to, which for an SRV record are its target's.
+    /// </summary>
+    public async Task Connect(Multiplayer.ServerAddress address, CancellationToken ct = default) {
         if (Phase is not (ClientPhase.Idle or ClientPhase.Disconnected)) {
             throw new InvalidOperationException($"Already {Phase}");
         }
 
-        _host = host;
-        _port = port;
+        PrepareForMultiplayer();
+        _host = address.Host;
+        _port = address.Port;
         DisconnectReason = null;
         DisconnectReasonText = null;
         PendingTransfer = null;
         Phase = ClientPhase.Connecting;
 
+        Multiplayer.ResolvedServerAddress? resolved = null;
         ClientConnection connection;
         try {
-            connection = await ClientConnection.Connect(host, port, ct);
+            resolved = await Task.Run(() => Multiplayer.ServerNameResolver.Resolve(address), ct);
+            if (resolved == null) {
+                DisconnectReasonText = Minecraft.Text.TextComponent.Translatable("disconnect.genericReason", with: [Minecraft.Text.TextComponent.Translatable("disconnect.unknownHost")]);
+                throw new System.Net.Sockets.SocketException((int)System.Net.Sockets.SocketError.HostNotFound);
+            }
+            connection = await ClientConnection.Connect(resolved.EndPoint, ct);
+            // ConnectScreen's aborted check: a Disconnect while connecting wins, so no login goes out after it.
+            lock (_connectLock) {
+                if (Phase == ClientPhase.Disconnected || ct.IsCancellationRequested) {
+                    connection.Dispose();
+                    throw new OperationCanceledException("Connection aborted", ct);
+                }
+                Connection = connection;
+            }
         }
         catch (Exception e) {
             Phase = ClientPhase.Disconnected;
+            DisconnectReasonText ??= Minecraft.Text.TextComponent.Translatable("disconnect.genericReason", with: [Minecraft.Text.TextComponent.Text(e.Message)]);
             DisconnectReason = $"Could not connect: {e.Message}";
             Disconnected?.Invoke(DisconnectReason);
             throw;
         }
 
+        ServerPacks.ConfigureForServerControl(this, Options.ServerPackStatus);
         connection.Registry = VanillaRegistry.Data;
         connection.Warn = message => Info($"[network] {message}");
         connection.ReaderHook = HandleOnReader;
         connection.Disconnected += reason => DisconnectReason ??= reason;
-        Connection = connection;
 
         // The handshake and login start go out before the reader exists, so nothing can race them.
         connection.OutboundState = ConnectionState.None;
         connection.Send(new ServerBoundHandshakePacket {
-            Hostname = host,
-            Port = (ushort)port,
+            Hostname = resolved.HostName,
+            Port = (ushort)resolved.EndPoint.Port,
             ProtocolVersion = ProtocolConstants.ProtocolVersion,
             Intent = PendingTransferIntent ? ServerBoundHandshakePacket.Intention.Transfer : ServerBoundHandshakePacket.Intention.Login
         });
@@ -155,7 +180,9 @@ public sealed partial class MinecraftClient {
     }
 
     public void Disconnect(string reason = "Disconnected") {
-        Connection?.Close(reason);
+        lock (_connectLock) {
+            Connection?.Close(reason);
+        }
         FinishDisconnect(reason);
     }
 
@@ -163,7 +190,9 @@ public sealed partial class MinecraftClient {
         if (Phase == ClientPhase.Disconnected) {
             return;
         }
+        ClientPhase phase = Phase;
         Phase = ClientPhase.Disconnected;
+        ClearDownloadedResourcePacks(phase);
         DisconnectReason = reason;
         Info($"Disconnected: {reason}");
         Disconnected?.Invoke(reason);
@@ -175,10 +204,31 @@ public sealed partial class MinecraftClient {
     }
 
     /// <summary>
-    /// Handles everything the network threads have queued. Vanilla's
-    /// <c>packetProcessor.processQueuedPackets</c>, run once per frame before the frame's ticks.
+    /// <c>Options.broadcastOptions</c> through <c>ClientPacketListener.broadcastClientInformation</c>, which every
+    /// options save calls: sent in play only when it differs from the last one sent there. That last one starts
+    /// empty on each entry to play, so the first save sends even when nothing changed since configuration.
     /// </summary>
+    public void BroadcastClientInformation() {
+        if (Phase != ClientPhase.Play || Player == null) {
+            return;
+        }
+        ServerBoundClientInformationPacket information = Options.BuildInformation();
+        if (_remoteClientInformation is { } last && ClientOptions.SameInformation(last, information)) {
+            return;
+        }
+        Send(information);
+        _remoteClientInformation = information;
+    }
+
+    /// <summary><c>Minecraft.runTick</c>'s <c>processQueuedPackets</c> then <c>runAllTasks</c>, once per frame before the frame's ticks.</summary>
     public void ProcessPackets() {
+        using ClientLib.Particles.ParticleEngine.LevelHold hold = Particles.HoldLevel();
+        ProcessQueuedPackets();
+        ServerPacks.RunAllTasks();
+    }
+
+    /// <summary>Handles everything the network threads have queued, vanilla's <c>packetProcessor.processQueuedPackets</c>.</summary>
+    private void ProcessQueuedPackets() {
         ClientConnection? connection = Connection;
         if (connection == null) {
             return;
@@ -221,6 +271,7 @@ public sealed partial class MinecraftClient {
 
     /// <summary>One client tick, <c>Minecraft.tick</c>.</summary>
     public void Tick() {
+        using ClientLib.Particles.ParticleEngine.LevelHold hold = Particles.HoldLevel();
         ClientTicks++;
         if (Phase == ClientPhase.Play) {
             TickPlay();
@@ -402,11 +453,11 @@ public sealed partial class MinecraftClient {
                 return true;
 
             case ClientBoundAddResourcePackPacket pack:
-                Info($"Server offered resource pack {pack.Url} (required: {pack.Forced}), declining");
-                Send(new ServerBoundResourcePackResponsePacket {
-                    PackId = pack.Uuid,
-                    Result = ServerBoundResourcePackResponsePacket.PackResponse.Declined
-                });
+                HandleResourcePackPush(pack);
+                return true;
+
+            case ClientBoundRemoveResourcePackPacket pop:
+                HandleResourcePackPop(pop);
                 return true;
 
             case ClientBoundCookieRequestPacket cookie:
@@ -425,7 +476,7 @@ public sealed partial class MinecraftClient {
                 Disconnect($"Transferred to {transfer.Host}:{transfer.Port}");
                 return true;
 
-            case ClientBoundRemoveResourcePackPacket or ClientBoundCustomReportDetailsPacket or ClientBoundServerLinksPacket:
+            case ClientBoundCustomReportDetailsPacket or ClientBoundServerLinksPacket:
                 return true;
 
             case ClientBoundShowDialogPacket dialog:
@@ -457,6 +508,7 @@ public sealed partial class MinecraftClient {
         connection.Registry = Registry;
 
         Send(new ServerBoundAcknowledgeFinishConfigurationPacket());
+        _remoteClientInformation = null;
         connection.OutboundState = ConnectionState.Play;
         Phase = ClientPhase.Play;
         connection.SetInboundState(ConnectionState.Play);

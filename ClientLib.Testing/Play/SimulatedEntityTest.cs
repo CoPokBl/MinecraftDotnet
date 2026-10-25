@@ -40,7 +40,7 @@ public class SimulatedEntityTest {
         return client;
     }
 
-    private static SimulatedEntity Spawn(MinecraftClient client, IEntityType type, Vec3d position, Vec3d velocity, int id = ItemId) {
+    private static SimulatedEntity Spawn(MinecraftClient client, IEntityType type, Vec3d position, Vec3d velocity, int id = ItemId, int data = 0) {
         client.HandleSpawn(new ClientBoundSpawnEntityPacket {
             Id = id,
             Uuid = Guid.NewGuid(),
@@ -49,11 +49,11 @@ public class SimulatedEntityTest {
             Pitch = Angle.FromDegrees(0),
             Yaw = Angle.FromDegrees(0),
             HeadYaw = Angle.FromDegrees(0),
-            Data = 0,
+            Data = data,
             Velocity = new Vec3<double>(velocity.X, velocity.Y, velocity.Z)
         });
         SimulatedEntity entity = (SimulatedEntity)client.Entities[id];
-        if (type == EntityType.Item) {
+        if (type.Identifier == EntityType.Item.Identifier) {
             entity.Metadata[EntityDataFields.ItemEntity.Item.Index] = new MetaField<ItemStack>(MetaFieldType.Slot, new ItemStack(Item.Stone, 1));
         }
         return entity;
@@ -201,5 +201,89 @@ public class SimulatedEntityTest {
         Tick(client, 2);
         Assert.That(orb.Position.X, Is.EqualTo(target).Within(1e-12));
         Assert.That(orb.Position.Y, Is.EqualTo(Floor));
+    }
+
+    /// <summary>
+    /// <c>checkBelowWorld</c> runs in <c>baseTick</c>, ahead of the move, against <c>minY - 64</c> = -128.
+    /// From -127.99 the first tick checks, then falls 0.04 to -128.03; the second check discards it.
+    /// </summary>
+    [Test]
+    public void ItemBelowTheWorldIsDiscarded() {
+        MinecraftClient client = FlatWorld();
+        SimulatedEntity item = Spawn(client, EntityType.Item, new Vec3d(0.5, -127.99, 0.5), Vec3d.Zero);
+        Tick(client, 1);
+        Assert.That(item.Position.Y, Is.EqualTo(-127.99 - 0.04).Within(1e-12));
+        Assert.That(client.Entities.ContainsKey(ItemId), Is.True);
+        Tick(client, 1);
+        Assert.That(client.Entities.ContainsKey(ItemId), Is.False);
+        Assert.That(item.IsRemoved, Is.True);
+    }
+
+    [Test]
+    public void EmptiedItemIsDiscarded() {
+        MinecraftClient client = FlatWorld();
+        SimulatedEntity item = Spawn(client, EntityType.Item, new Vec3d(0.5, Floor, 0.5), Vec3d.Zero);
+        item.Metadata[EntityDataFields.ItemEntity.Item.Index] = new MetaField<ItemStack>(MetaFieldType.Slot, ItemStack.Air);
+        Tick(client, 1);
+        Assert.That(client.Entities.ContainsKey(ItemId), Is.False);
+    }
+
+    /// <summary>
+    /// The first tick only sets <c>firstTick</c> on a client, so <c>age</c> reaches 6000 on tick 6001.
+    /// </summary>
+    [Test]
+    public void OrbAgesOutAfterSixThousandTicks() {
+        MinecraftClient client = FlatWorld();
+        ClientExperienceOrb orb = (ClientExperienceOrb)Spawn(client, EntityType.ExperienceOrb, new Vec3d(0.5, Floor, 0.5), Vec3d.Zero);
+        Tick(client, 6000);
+        Assert.That(orb.Age, Is.EqualTo(5999));
+        Assert.That(client.Entities.ContainsKey(ItemId), Is.True);
+        Tick(client, 1);
+        Assert.That(client.Entities.ContainsKey(ItemId), Is.False);
+    }
+
+    /// <summary><c>PrimedTnt.tick</c> counts down the client's copy of the synced fuse and discards at zero.</summary>
+    [Test]
+    public void TntDiscardsWhenItsFuseRunsOut() {
+        MinecraftClient client = FlatWorld();
+        ClientPrimedTnt tnt = (ClientPrimedTnt)Spawn(client, EntityType.Tnt, new Vec3d(0.5, Floor, 0.5), Vec3d.Zero);
+        tnt.Metadata[EntityDataFields.PrimedTnt.Fuse.Index] = new MetaField<int>(MetaFieldType.VarInt, 3);
+        Tick(client, 2);
+        Assert.That(tnt.Fuse, Is.EqualTo(1));
+        Assert.That(client.Entities.ContainsKey(ItemId), Is.True);
+        Tick(client, 1);
+        Assert.That(tnt.Fuse, Is.Zero);
+        Assert.That(client.Entities.ContainsKey(ItemId), Is.False);
+    }
+
+    /// <summary>Unsynced, the fuse starts at <c>DEFAULT_FUSE_TIME</c>, 80.</summary>
+    [Test]
+    public void TntFuseDefaultsToEighty() {
+        MinecraftClient client = FlatWorld();
+        ClientPrimedTnt tnt = (ClientPrimedTnt)Spawn(client, EntityType.Tnt, new Vec3d(0.5, Floor, 0.5), Vec3d.Zero);
+        Tick(client, 79);
+        Assert.That(tnt.Fuse, Is.EqualTo(1));
+        Tick(client, 1);
+        Assert.That(client.Entities.ContainsKey(ItemId), Is.False);
+    }
+
+    /// <summary><c>FallingBlockEntity</c> reads its state from the spawn data; 0 is air, which it discards.</summary>
+    [TestCase(0, false)]
+    [TestCase(1, true)]
+    public void FallingAirIsDiscarded(int data, bool kept) {
+        MinecraftClient client = FlatWorld();
+        Spawn(client, EntityType.FallingBlock, new Vec3d(0.5, Floor + 2, 0.5), Vec3d.Zero, data: data);
+        Tick(client, 1);
+        Assert.That(client.Entities.ContainsKey(ItemId), Is.EqualTo(kept));
+    }
+
+    /// <summary>The server's removal of an entity the client already discarded finds nothing.</summary>
+    [Test]
+    public void RemovalAfterADiscardIsIgnored() {
+        MinecraftClient client = FlatWorld();
+        Spawn(client, EntityType.FallingBlock, new Vec3d(0.5, Floor + 2, 0.5), Vec3d.Zero);
+        Tick(client, 1);
+        client.RemoveEntity(ItemId);
+        Assert.That(client.Entities.ContainsKey(ItemId), Is.False);
     }
 }

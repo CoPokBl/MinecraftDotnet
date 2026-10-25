@@ -4,10 +4,7 @@ using Minecraft.Schemas.Items;
 
 namespace GraphicalClient.Rendering.Entities.Vanilla;
 
-/// <summary>
-/// <c>HumanoidModel</c>. The spear's arm poses and stab swing (<c>SpearAnimations</c>) are not ported:
-/// an arm in the <see cref="ArmPose.Spear"/> pose, or swinging a stab, is left where the walk put it.
-/// </summary>
+/// <summary><c>HumanoidModel</c>.</summary>
 public class HumanoidModel<S> : EntityModel<S>, IArmedModel<S>, IHeadedModel where S : HumanoidRenderState {
     public static readonly MeshTransformer BabyTransformer = new BabyModelTransform(true, 16.0F, 0.0F, 2.0F, 2.0F, 24.0F, new HashSet<string> { "head" });
 
@@ -289,7 +286,7 @@ public class HumanoidModel<S> : EntityModel<S>, IArmedModel<S>, IHeadedModel whe
                 RightArm.YRot = 0.0F;
                 break;
             case ArmPose.Spear:
-                // SpearAnimations.thirdPersonHandUse: not ported.
+                SpearAnimations.ThirdPersonHandUse(RightArm, HeadPart, true, state.GetUseItemStackForArm(HumanoidArm.Right), state);
                 break;
         }
     }
@@ -335,7 +332,7 @@ public class HumanoidModel<S> : EntityModel<S>, IArmedModel<S>, IHeadedModel whe
                 LeftArm.YRot = 0.0F;
                 break;
             case ArmPose.Spear:
-                // SpearAnimations.thirdPersonHandUse: not ported.
+                SpearAnimations.ThirdPersonHandUse(LeftArm, HeadPart, false, state.GetUseItemStackForArm(HumanoidArm.Left), state);
                 break;
         }
     }
@@ -372,7 +369,7 @@ public class HumanoidModel<S> : EntityModel<S>, IArmedModel<S>, IHeadedModel whe
                     attackArm.ZRot += Mth.Sin(attackTime * (float)Math.PI) * -0.4F;
                     break;
                 case SwingAnimationType.Stab:
-                    // SpearAnimations.thirdPersonAttackHand: not ported.
+                    SpearAnimations.ThirdPersonAttackHand(this, state);
                     break;
             }
         }

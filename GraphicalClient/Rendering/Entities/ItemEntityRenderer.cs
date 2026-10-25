@@ -25,6 +25,7 @@ public sealed class ItemEntityRenderer : EntityRenderer<ItemEntityRenderState> {
     public ItemEntityRenderer(ItemRenderer items) {
         _items = items;
         ShadowRadius = 0.15F;
+        ShadowStrength = 0.75F;
     }
 
     /// <summary><c>ItemEntity.bobOffs</c>, drawn from the entity's own random when the client creates it.</summary>

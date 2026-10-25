@@ -160,7 +160,12 @@ public static class LevelCollisions {
         /// <c>MovingPistonBlock</c>, whose shape is its block entity's whatever the context, and which as a
         /// <c>dynamicShape</c> block is large and alone collides from the shell's edges.
         /// </summary>
-        MovingPiston
+        MovingPiston,
+        /// <summary>
+        /// <c>ShulkerBoxBlock</c>, whose shape is its block entity's lid however far it is open, which as a
+        /// <c>dynamicShape</c> block is large, and which suffocates only while closed.
+        /// </summary>
+        ShulkerBox
     }
 
     // EntityTypeTags.POWDER_SNOW_WALKABLE_MOBS. Entity type tags have no generated type; the server sends this one.
@@ -189,6 +194,7 @@ public static class LevelCollisions {
             ScaffoldingBlock => ContextShape.Scaffolding,
             _ when BlockClasses.Is(block.Identifier, BlockClass.PowderSnowBlock) => ContextShape.PowderSnow,
             MovingPistonBlock => ContextShape.MovingPiston,
+            _ when BlockClasses.Is(block.Identifier, BlockClass.ShulkerBoxBlock) => ContextShape.ShulkerBox,
             _ => ContextShape.None
         };
         shapes[state] = shape;
@@ -365,7 +371,10 @@ public static class LevelCollisions {
         BlockWalk walk = new(query);
         while (walk.MoveNext()) {
             uint state = level.GetState(walk.X, walk.Y, walk.Z);
-            if (!MovementBlocks.Get(registry, state).Suffocating) {
+            bool suffocating = ContextShapeOf(registry, state) == ContextShape.ShulkerBox
+                ? level.GetBlockEntity(walk.X, walk.Y, walk.Z) is not World.BlockEntities.ShulkerBoxBlockEntity box || box.IsClosed
+                : MovementBlocks.Get(registry, state).Suffocating;
+            if (!suffocating) {
                 continue;
             }
             Box[]? boxes = CollidingBoxesAt(level, registry, walk.X, walk.Y, walk.Z, query, walk, default, out Vec3d offset);
@@ -402,6 +411,63 @@ public static class LevelCollisions {
                 into.Add(local.Translate(walk.X + offset.X, walk.Y + offset.Y, walk.Z + offset.Z));
             }
         }
+    }
+
+    /// <summary>
+    /// <c>CollisionGetter.getBlockCollisions</c> flattened through <c>toAabbs</c>, in place and in <c>BlockCollisions</c>'
+    /// own order: <c>Cursor3D</c> runs x fastest, then y, then z. <see cref="BlockWalk"/> visits the same positions in
+    /// another order, which only a caller taking the first box it meets, as <c>updateAutoJump</c> does, can tell.
+    /// </summary>
+    public static void BlockCollisionsInOrder(ClientLevel level, Box query, List<Box> into, in EntityCollisionContext context) {
+        MinecraftRegistry registry = level.Registry;
+        BlockWalk walk = new(query);
+        int x0 = (int)Math.Floor(query.MinX - Epsilon), x1 = (int)Math.Floor(query.MaxX + Epsilon);
+        int y0 = (int)Math.Floor(query.MinY - Epsilon), y1 = (int)Math.Floor(query.MaxY + Epsilon);
+        int z0 = (int)Math.Floor(query.MinZ - Epsilon), z1 = (int)Math.Floor(query.MaxZ + Epsilon);
+        for (int z = z0 - 1; z <= z1 + 1; z++) {
+            for (int y = y0 - 1; y <= y1 + 1; y++) {
+                for (int x = x0 - 1; x <= x1 + 1; x++) {
+                    int outside = (x < x0 || x > x1 ? 1 : 0) + (y < y0 || y > y1 ? 1 : 0) + (z < z0 || z > z1 ? 1 : 0);
+                    if (outside > 2) {
+                        continue;
+                    }
+                    walk.X = x;
+                    walk.Y = y;
+                    walk.Z = z;
+                    walk.Shell = outside >= 1;
+                    walk.Edge = outside == 2;
+                    Box[]? boxes = CollidingBoxesAt(level, registry, x, y, z, query, walk, context, out Vec3d offset);
+                    if (boxes == null) {
+                        continue;
+                    }
+                    foreach (Box local in boxes) {
+                        into.Add(local.Translate(x + offset.X, y + offset.Y, z + offset.Z));
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary><c>BlockState.getCollisionShape</c> under a context, in the block's own coordinates with its offset applied.</summary>
+    public static Box[] CollisionShapeAt(ClientLevel level, int x, int y, int z, in EntityCollisionContext context) {
+        uint state = level.GetState(x, y, z);
+        if (state == 0) {
+            return [];
+        }
+        MinecraftRegistry registry = level.Registry;
+        switch (ContextShapeOf(registry, state)) {
+            case ContextShape.MovingPiston:
+                return level.GetBlockEntity(x, y, z) is World.BlockEntities.PistonMovingBlockEntity piston ? piston.CollisionShape(registry) : [];
+            case ContextShape.ShulkerBox:
+                return ShulkerBoxShape(level, x, y, z);
+        }
+        BlockPhysicsData.Entry data = BlockPhysicsData.Get(registry, state);
+        Box[] shape = context.ShapeOf(level, registry, state, x, y, z) ?? data.Collision;
+        if (data.Offsets == null || shape.Length == 0) {
+            return shape;
+        }
+        Vec3<double> o = data.Offsets.ShapeOffset(new Vec3<int>(x, y, z));
+        return shape.Select(b => b.Translate(o.X, o.Y, o.Z)).ToArray();
     }
 
     /// <summary>
@@ -473,6 +539,9 @@ public static class LevelCollisions {
         if (walk.Edge) {
             return null;
         }
+        if (ContextShapeOf(registry, state) == ContextShape.ShulkerBox) {
+            return Reaching(ShulkerBoxShape(level, x, y, z), x, y, z, query);
+        }
         bool shell = walk.Shell;
 
         BlockPhysicsData.Entry data = BlockPhysicsData.Get(registry, state);
@@ -497,6 +566,10 @@ public static class LevelCollisions {
         }
         return null;
     }
+
+    /// <summary><c>ShulkerBoxBlock.getShape</c>: a full block without a block entity.</summary>
+    internal static Box[] ShulkerBoxShape(ClientLevel level, int x, int y, int z) =>
+        level.GetBlockEntity(x, y, z) is World.BlockEntities.ShulkerBoxBlockEntity box ? [box.BoundingBox] : Block;
 
     private static Box[]? Reaching(Box[] shape, int x, int y, int z, Box query) {
         foreach (Box local in shape) {

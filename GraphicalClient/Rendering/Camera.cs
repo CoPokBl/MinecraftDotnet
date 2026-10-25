@@ -39,6 +39,9 @@ public sealed class Camera {
     public const float NearPlane = 0.05F;
     public float FarPlane { get; private set; }
 
+    /// <summary>Width over height of the projection.</summary>
+    public float Aspect { get; private set; } = 1.0F;
+
     public Vector3 Forward => Look(Yaw, Pitch);
 
     /// <summary>The view's up, square to <see cref="Forward"/>.</summary>
@@ -62,6 +65,7 @@ public sealed class Camera {
         Up = Vector3.Cross(right, Forward);
         View = Matrix4x4.CreateLookAt(Vector3.Zero, Forward, Up);
         FarPlane = farPlane;
+        Aspect = aspect;
         Projection = Frustum.Perspective(FovDegrees * MathF.PI / 180.0F, aspect, NearPlane, farPlane);
         CullProjection = Frustum.Perspective(Math.Max(FovDegrees, CullFovDegrees) * MathF.PI / 180.0F, aspect, NearPlane, farPlane);
     }

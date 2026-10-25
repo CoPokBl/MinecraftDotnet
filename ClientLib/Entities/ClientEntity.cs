@@ -42,6 +42,9 @@ public partial class ClientEntity {
     /// </summary>
     public object? RendererData { get; set; }
 
+    /// <summary><c>Leashable.LeashData.delayedLeashHolderId</c>: the entity holding this one's lead, 0 for none.</summary>
+    public int LeashHolderId { get; set; }
+
     /// <summary>
     /// Entities the client moves by their velocity between server updates instead of only
     /// interpolating, which vanilla does by running their physics; projectiles mostly.
@@ -64,12 +67,15 @@ public partial class ClientEntity {
     }
 
     /// <summary>
-    /// <c>Entity.getDimensions</c> for the current pose: <c>LivingEntity.getDimensions</c> over <c>Avatar</c>'s
-    /// poses and a cube mob's size. The other living classes that override <c>getDefaultDimensions</c>,
+    /// <c>Entity.getDimensions</c> for the current pose: an interaction's own synced size, <c>LivingEntity.getDimensions</c>
+    /// over <c>Avatar</c>'s poses and a cube mob's size. The other living classes that override <c>getDefaultDimensions</c>,
     /// <c>getAgeScale</c> or <c>sanitizeScale</c> (an armor stand, a phantom, a baby turtle) are sized as any other mob.
     /// </summary>
-    public (float Width, float Height) Dimensions {
+    public virtual (float Width, float Height) Dimensions {
         get {
+            if (Is(EntityClass.Interaction)) {
+                return (Get(EntityDataFields.Interaction.Width, 1.0F), Get(EntityDataFields.Interaction.Height, 1.0F));
+            }
             (float width, float height) = ((float)Width, (float)Height);
             if (!IsLiving) {
                 return (width, height);
@@ -99,7 +105,22 @@ public partial class ClientEntity {
     }
 
     /// <summary>Whether the type's vanilla class is, or extends, <paramref name="vanillaClass"/>.</summary>
-    public bool Is(EntityClass vanillaClass) => EntityClasses.Is(Type.Identifier, vanillaClass);
+    public bool Is(EntityClass vanillaClass) {
+        // Renderers ask this several times an entity a frame; the chain is looked up once per type.
+        if (!ReferenceEquals(_classesOf, Type)) {
+            _classes = EntityClasses.Of(Type.Identifier);
+            _classesOf = Type;
+        }
+        foreach (EntityClass name in _classes) {
+            if (name == vanillaClass) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private IEntityType? _classesOf;
+    private EntityClass[] _classes = [];
 
     /// <summary><c>VecDeltaCodec</c>: the last position the server sent, in its quantised form.</summary>
     private long _baseX, _baseY, _baseZ;

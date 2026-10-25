@@ -18,6 +18,9 @@ public sealed class ClientSounds(SoundEngine engine, MinecraftClient client, Fun
 
     public SoundEngine Engine => engine;
 
+    /// <summary>The music of the same connection, which the options screen tells of a volume change.</summary>
+    public MusicManager? Music { get; set; }
+
     public void Handle(MinecraftPacket packet) {
         switch (packet) {
             case ClientBoundSoundEffectPacket sound:

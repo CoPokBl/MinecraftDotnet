@@ -18,9 +18,17 @@ internal static class SyncedVariants {
             int id = entity.Get(field);
             return id >= 0 && id < registry.Count ? registry[id] : null;
         }
-        return registry.All.FirstOrDefault(v => v.Identifier == defaultId) ?? registry.All.FirstOrDefault();
+        for (int i = 0; i < registry.Count; i++) {
+            if (registry[i].Identifier == defaultId) {
+                return registry[i];
+            }
+        }
+        return registry.Count > 0 ? registry[0] : null;
     }
 
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<Identifier, string> TexturePaths = new();
+
     /// <summary><c>ClientAsset.ResourceTexture</c>'s texture path.</summary>
-    public static string TexturePath(Identifier assetId) => $"{assetId.Namespace}:textures/{assetId.Key}.png";
+    public static string TexturePath(Identifier assetId) =>
+        TexturePaths.GetOrAdd(assetId, static id => $"{id.Namespace}:textures/{id.Key}.png");
 }

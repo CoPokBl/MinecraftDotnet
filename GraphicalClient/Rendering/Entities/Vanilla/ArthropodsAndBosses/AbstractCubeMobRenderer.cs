@@ -11,6 +11,8 @@ public class SlimeRenderState : LivingEntityRenderState {
 public abstract class AbstractCubeMobRenderer<S, M> : MobRenderer<S, M> where S : SlimeRenderState, new() where M : EntityModel<S> {
     protected AbstractCubeMobRenderer(M model) : base(model, 0.25F) { }
 
+    protected override float GetShadowRadius(S state) => state.Size * 0.25F;
+
     /// <summary><c>AbstractCubeMob.targetSquish</c>, <c>squish</c>, <c>oSquish</c> and <c>wasOnGround</c>, which the client counts itself.</summary>
     protected class CubeMobData {
         public float TargetSquish, Squish, OSquish;

@@ -3,6 +3,8 @@ using ClientLib.Entities.Vehicles;
 using ClientLib.Player;
 using Minecraft.Data.Generated;
 using Attribute = Minecraft.Data.Generated.Attribute;
+using Minecraft.Schemas;
+using HeartType = GraphicalClient.Gui.HudIcons.HeartType;
 using Icon = GraphicalClient.Gui.HudIcons.Icon;
 
 namespace GraphicalClient.Gui;
@@ -11,7 +13,7 @@ namespace GraphicalClient.Gui;
 public static class StatusBars {
     private const int MaxAir = 300;
 
-    public static void Draw(GuiContext context, MinecraftClient client, LocalPlayer player, int w, int h) {
+    public static void Draw(GuiContext context, MinecraftClient client, LocalPlayer player, HealthDisplay health, int w, int h) {
         float left = w / 2.0F - 91, right = w / 2.0F + 91;
         float heartsY = h - 39;
         if (player.JumpableVehicle == null) {
@@ -19,30 +21,7 @@ public static class StatusBars {
         }
         DrawLevel(context, player, w / 2.0F, h - 35);
 
-        // Gui.renderHearts: rows of ten, half a heart per point.
-        int hearts = (int)Math.Ceiling(player.Attributes.Value(Attribute.MaxHealth) / 2.0);
-        int health = (int)Math.Ceiling(player.Health);
-        int rows = Math.Max(1, (hearts + 9) / 10);
-        int rowStep = Math.Max(10 - (rows - 2), 3);
-        for (int i = hearts - 1; i >= 0; i--) {
-            float hx = left + i % 10 * 8, hy = heartsY - i / 10 * rowStep;
-            if (health <= 4 && client.ClientTicks % 4 < 2 && i * 2 < health + 2) {
-                hy += (client.ClientTicks + i) % 2;
-            }
-            DrawIcon(context, Icon.HeartEmpty, hx, hy);
-            if (Filled(i, health, client.Hardcore ? Icon.HeartHardcoreFull : Icon.HeartFull, client.Hardcore ? Icon.HeartHardcoreHalf : Icon.HeartHalf) is { } heart) {
-                DrawIcon(context, heart, hx, hy);
-            }
-        }
-
-        // Armour sits a row above the hearts, only when there is some.
-        int armour = (int)player.Attributes.Value(Attribute.Armor);
-        if (armour > 0) {
-            float ay = heartsY - (rows - 1) * rowStep - 10;
-            for (int i = 0; i < 10; i++) {
-                DrawIcon(context, Filled(i, armour, Icon.ArmourFull, Icon.ArmourHalf) ?? Icon.ArmourEmpty, left + i * 8, ay);
-            }
-        }
+        DrawPlayerHealth(context, client, player, health, left, heartsY);
 
         // Food, right to left, unless a mount's hearts stand in its place.
         int vehicleHearts = VehicleMaxHearts(player);
@@ -64,6 +43,115 @@ public static class StatusBars {
             for (int i = 0; i < full + popping && i < 10; i++) {
                 DrawIcon(context, i < full ? Icon.Bubble : Icon.BubblePopped, right - i * 8 - 9, airY);
             }
+        }
+    }
+
+    /// <summary>
+    /// <c>Hud.extractPlayerHealth</c>'s armour and hearts. A drop in health blinks the hearts, and the
+    /// health before it stays drawn under the new for a second.
+    /// </summary>
+    private static void DrawPlayerHealth(GuiContext context, MinecraftClient client, LocalPlayer player, HealthDisplay display, float xLeft, float yLineBase) {
+        int tickCount = (int)client.ClientTicks;
+        int currentHealth = (int)MathF.Ceiling(player.Health);
+        bool blink = display.HealthBlinkTime > tickCount && (display.HealthBlinkTime - tickCount) / 3L % 2L == 1L;
+        long timeMillis = Environment.TickCount64;
+        if (currentHealth < display.LastHealth && player.InvulnerableTime > 0) {
+            display.LastHealthTime = timeMillis;
+            display.HealthBlinkTime = tickCount + 20;
+        }
+        else if (currentHealth > display.LastHealth && player.InvulnerableTime > 0) {
+            display.LastHealthTime = timeMillis;
+            display.HealthBlinkTime = tickCount + 10;
+        }
+        if (timeMillis - display.LastHealthTime > 1000L) {
+            display.DisplayHealth = currentHealth;
+            display.LastHealthTime = timeMillis;
+        }
+        display.LastHealth = currentHealth;
+        int oldHealth = display.DisplayHealth;
+        display.Random.SetSeed(unchecked(tickCount * 312871));
+        float maxHealth = Math.Max((float)player.Attributes.Value(Attribute.MaxHealth), Math.Max(oldHealth, currentHealth));
+        int totalAbsorption = (int)MathF.Ceiling(player.Get(EntityDataFields.Player.PlayerAbsorption, 0.0F));
+        int numHealthRows = (int)MathF.Ceiling((maxHealth + totalAbsorption) / 2.0F / 10.0F);
+        int healthRowHeight = Math.Max(10 - (numHealthRows - 2), 3);
+        int heartOffsetIndex = -1;
+        if (player.HasEffect(PotionEffectType.Regeneration)) {
+            heartOffsetIndex = tickCount % (int)MathF.Ceiling(maxHealth + 5.0F);
+        }
+
+        int armour = (int)player.Attributes.Value(Attribute.Armor);
+        if (armour > 0) {
+            float yLineArmour = yLineBase - (numHealthRows - 1) * healthRowHeight - 10;
+            for (int i = 0; i < 10; i++) {
+                DrawIcon(context, Filled(i, armour, Icon.ArmourFull, Icon.ArmourHalf) ?? Icon.ArmourEmpty, xLeft + i * 8, yLineArmour);
+            }
+        }
+
+        DrawHearts(context, client, player, display.Random, xLeft, yLineBase, healthRowHeight, heartOffsetIndex, maxHealth, currentHealth,
+            oldHealth, totalAbsorption, blink);
+    }
+
+    /// <summary><c>Hud.extractHearts</c>: containers right to left and top down, absorption past the health.</summary>
+    private static void DrawHearts(GuiContext context, MinecraftClient client, LocalPlayer player, RandomSource random, float xLeft,
+        float yLineBase, int healthRowHeight, int heartOffsetIndex, float maxHealth, int currentHealth, int oldHealth, int absorption, bool blink) {
+        HeartType type = HeartTypeFor(player);
+        bool isHardcore = client.Hardcore;
+        int healthContainerCount = (int)Math.Ceiling(maxHealth / 2.0);
+        int absorptionContainerCount = (int)Math.Ceiling(absorption / 2.0);
+        int maxHealthHalvesCount = healthContainerCount * 2;
+        for (int containerIndex = healthContainerCount + absorptionContainerCount - 1; containerIndex >= 0; containerIndex--) {
+            int row = containerIndex / 10;
+            int column = containerIndex % 10;
+            float xo = xLeft + column * 8;
+            float yo = yLineBase - row * healthRowHeight;
+            if (currentHealth + absorption <= 4) {
+                yo += random.NextInt(2);
+            }
+            if (containerIndex < healthContainerCount && containerIndex == heartOffsetIndex) {
+                yo -= 2;
+            }
+            DrawContainer(context, isHardcore, blink, xo, yo);
+            int halves = containerIndex * 2;
+            if (containerIndex >= healthContainerCount) {
+                int absorptionHalves = halves - maxHealthHalvesCount;
+                if (absorptionHalves < absorption) {
+                    DrawHeart(context, type == HeartType.Withered ? type : HeartType.Absorbing, isHardcore, absorptionHalves + 1 == absorption, false, xo, yo);
+                }
+            }
+            if (blink && halves < oldHealth) {
+                DrawHeart(context, type, isHardcore, halves + 1 == oldHealth, true, xo, yo);
+            }
+            if (halves < currentHealth) {
+                DrawHeart(context, type, isHardcore, halves + 1 == currentHealth, false, xo, yo);
+            }
+        }
+    }
+
+    /// <summary><c>HeartType.forPlayer</c>.</summary>
+    private static HeartType HeartTypeFor(LocalPlayer player) {
+        if (player.HasEffect(PotionEffectType.Poison)) {
+            return HeartType.Poisoned;
+        }
+        if (player.HasEffect(PotionEffectType.Wither)) {
+            return HeartType.Withered;
+        }
+        return player.IsFullyFrozen ? HeartType.Frozen : HeartType.Normal;
+    }
+
+    private static readonly string[] HeartSpritePrefixes = ["", "poisoned_", "withered_", "absorbing_", "frozen_"];
+
+    private static void DrawContainer(GuiContext context, bool hardcore, bool blink, float x, float y) {
+        string sprite = "hud/heart/container" + (hardcore ? "_hardcore" : "") + (blink ? "_blinking" : "");
+        if (!context.Sprites.Sprite(context.Gui, sprite, x, y, 9, 9)) {
+            DrawUv(context, context.Icons.ContainerUv(hardcore, blink), x, y);
+        }
+    }
+
+    /// <summary><c>HeartType.getSprite</c>, or this client's art where the pack has no such sprite.</summary>
+    private static void DrawHeart(GuiContext context, HeartType type, bool hardcore, bool half, bool blink, float x, float y) {
+        string sprite = "hud/heart/" + HeartSpritePrefixes[(int)type] + (hardcore ? "hardcore_" : "") + (half ? "half" : "full") + (blink ? "_blinking" : "");
+        if (!context.Sprites.Sprite(context.Gui, sprite, x, y, 9, 9)) {
+            DrawUv(context, context.Icons.HeartUv(type, hardcore, half, blink), x, y);
         }
     }
 
@@ -158,8 +246,17 @@ public static class StatusBars {
         }
     }
 
-    private static void DrawIcon(GuiContext context, Icon icon, float x, float y) {
-        (float u0, float v0, float u1, float v1) = context.Icons.Uv(icon);
-        context.Gui.Textured(context.Icons.Texture, x, y, HudIcons.Size, HudIcons.Size, u0, v0, u1, v1);
-    }
+    private static void DrawIcon(GuiContext context, Icon icon, float x, float y) => DrawUv(context, context.Icons.Uv(icon), x, y);
+
+    private static void DrawUv(GuiContext context, (float U0, float V0, float U1, float V1) uv, float x, float y) =>
+        context.Gui.Textured(context.Icons.Texture, x, y, HudIcons.Size, HudIcons.Size, uv.U0, uv.V0, uv.U1, uv.V1);
+}
+
+/// <summary><c>Hud</c>'s memory of the hearts between frames: when they blink, and the health they last showed.</summary>
+public sealed class HealthDisplay {
+    public int LastHealth { get; set; }
+    public int DisplayHealth { get; set; }
+    public long LastHealthTime { get; set; }
+    public long HealthBlinkTime { get; set; }
+    public RandomSource Random { get; } = new LegacyRandomSource(0);
 }

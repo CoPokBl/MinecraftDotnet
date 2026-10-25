@@ -23,6 +23,19 @@ public sealed partial class MinecraftClient {
     /// <summary>A block entity data packet loaded into its block entity, which an open editor refreshes from.</summary>
     public event Action<ClientBlockEntity>? BlockEntityDataLoaded;
 
+    /// <summary><c>handleOpenSignEditor</c>: the sign to edit and whether its front, for <c>LocalPlayer.openTextEdit</c>.</summary>
+    public event Action<SignBlockEntity, bool>? SignEditorOpened;
+
+    private Particles.ParticleEngine? _particles;
+
+    /// <summary>The level's particles, which do nothing until a renderer enables them.</summary>
+    public Particles.ParticleEngine Particles => _particles ??= new Particles.ParticleEngine(this);
+
+    private Particles.AnimateTicks? _animateTicks;
+
+    /// <summary><c>ClientLevel.animateTick</c>, which spawns its particles through <see cref="Particles"/>.</summary>
+    public Particles.AnimateTicks AnimateTicks => _animateTicks ??= new Particles.AnimateTicks(this);
+
     /// <summary>Chunks built on the network thread, waiting for the game thread to install them.</summary>
     private readonly ConditionalWeakTable<ClientBoundChunkDataAndUpdateLightPacket, ClientChunk> _prepared = new();
 
@@ -48,6 +61,9 @@ public sealed partial class MinecraftClient {
                     }
                 }
                 return true;
+            case ClientBoundMapDataPacket map when Level != null:
+                HandleMapData(map);
+                return true;
             case ClientBoundBlockEntityDataPacket blockEntityData:
                 // handleBlockEntityData: getBlockEntity(pos, type), loaded only when the type matches.
                 if (Level?.GetBlockEntity(blockEntityData.Position.X, blockEntityData.Position.Y, blockEntityData.Position.Z) is { } target
@@ -56,8 +72,22 @@ public sealed partial class MinecraftClient {
                     BlockEntityDataLoaded?.Invoke(target);
                 }
                 return true;
+            case ClientBoundOpenSignEditorPacket openSign:
+                if (Level?.GetBlockEntity(openSign.Location.X, openSign.Location.Y, openSign.Location.Z) is SignBlockEntity sign) {
+                    SignEditorOpened?.Invoke(sign, openSign.IsFrontText);
+                }
+                else {
+                    Info($"Ignoring openTextEdit on an invalid entity at {openSign.Location.X} {openSign.Location.Y} {openSign.Location.Z}");
+                }
+                return true;
             case ClientBoundBlockActionPacket blockEvent:
                 Level?.BlockEvent(blockEvent.Location.X, blockEvent.Location.Y, blockEvent.Location.Z, blockEvent.ActionId, blockEvent.ActionParameter);
+                // NoteBlock.triggerEvent's note, coloured by its pitch, over a block whose instrument can be tuned.
+                if (Level?.GetBlock(blockEvent.Location.X, blockEvent.Location.Y, blockEvent.Location.Z) is
+                    Minecraft.Data.Generated.BlockTypes.NoteBlockBlock { InstrumentValue: < Minecraft.Schemas.Blocks.BlockEnums.NoteBlockInstrument.Zombie } note) {
+                    Particles.AddParticle(Minecraft.Data.Generated.Particle.Note, blockEvent.Location.X + 0.5, blockEvent.Location.Y + 1.2,
+                        blockEvent.Location.Z + 0.5, note.Note / 24.0, 0.0, 0.0);
+                }
                 return true;
             case ClientBoundAcknowledgeBlockChangePacket acknowledge:
                 Interactions.Acknowledge(acknowledge.SequenceId);
@@ -112,6 +142,15 @@ public sealed partial class MinecraftClient {
                 return true;
             case ClientBoundSetBorderWarningDelayPacket delay when Level != null:
                 Level.WorldBorder.WarningTime = delay.WarningTime;
+                return true;
+            case ClientBoundParticlePacket particles:
+                Particles.HandlePacket(particles);
+                return true;
+            case ClientBoundWorldEventPacket levelEvent:
+                // ClientPacketListener.handleLevelEvent: a global event goes to globalLevelEvent, which only sounds.
+                if (!levelEvent.DisableRelativeVolume) {
+                    Particles.LevelEvent(levelEvent.Event, levelEvent.Location.X, levelEvent.Location.Y, levelEvent.Location.Z, levelEvent.Data);
+                }
                 return true;
             default:
                 return false;
@@ -259,17 +298,16 @@ public sealed partial class MinecraftClient {
             return;
         }
         List<TickingPlayer> players = [];
-        List<IPistonPushable> pushable = [];
+        List<IBlockEntityMovable> movable = [];
         foreach (Entities.ClientEntity entity in Entities.Values) {
-            if (entity.Type == Minecraft.Data.Generated.EntityType.Player && !IsSpectator(entity)) {
+            if (entity.Type.Identifier == Minecraft.Data.Generated.EntityType.Player.Identifier && !IsSpectator(entity)) {
                 players.Add(new TickingPlayer(entity.Position, entity.CurrentHealth > 0.0F));
             }
-            // Vanilla moves every entity; one the server positions would only be put back by its interpolation.
-            if (entity is IPistonPushable piston and (ClientLib.Player.LocalPlayer or ClientLib.Entities.SimulatedEntity or ClientLib.Entities.Vehicles.ClientVehicle { IsLocalInstanceAuthoritative: true })) {
-                pushable.Add(piston);
+            if (entity is IBlockEntityMovable moved and (ClientLib.Player.LocalPlayer or ClientLib.Entities.SimulatedEntity or ClientLib.Entities.Vehicles.ClientVehicle { IsLocalInstanceAuthoritative: true })) {
+                movable.Add(moved);
             }
         }
-        level.TickBlockEntities(new BlockEntityTickContext(level, players, pushable), level.TickRateManager.RunsNormally);
+        level.TickBlockEntities(new BlockEntityTickContext(level, players, movable, this), level.TickRateManager.RunsNormally);
     }
 
     private bool IsSpectator(Entities.ClientEntity player) => player is Player.LocalPlayer local

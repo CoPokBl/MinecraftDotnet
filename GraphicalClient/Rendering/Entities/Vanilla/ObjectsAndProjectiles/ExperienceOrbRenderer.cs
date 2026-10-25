@@ -14,6 +14,7 @@ public sealed class ExperienceOrbRenderer : EntityRenderer<ExperienceOrbRenderSt
 
     public ExperienceOrbRenderer() {
         ShadowRadius = 0.15F;
+        ShadowStrength = 0.75F;
     }
 
     public override void Submit(ExperienceOrbRenderState state, PoseStack pose, EntityRenderContext context) {

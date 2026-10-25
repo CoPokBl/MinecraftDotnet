@@ -3,13 +3,14 @@ using Minecraft.Data.Generated;
 
 namespace GraphicalClient.Rendering.Entities.Vanilla;
 
-/// <summary><c>WanderingTraderRenderer</c>. Its <c>CustomHeadLayer</c> is not ported.</summary>
+/// <summary><c>WanderingTraderRenderer</c>.</summary>
 public sealed class WanderingTraderRenderer : MobRenderer<VillagerRenderState, VillagerModel> {
     private readonly ItemRenderer _items;
 
     public WanderingTraderRenderer(EntityRendererContext context)
         : base(new VillagerModel(LayerDefinition.Create(VillagerModel.CreateBodyModel(), 64, 64).Apply(MeshTransformers.Scaling(0.9375F)).BakeRoot()), 0.5F) {
         _items = context.Items;
+        AddLayer(new CustomHeadLayer<VillagerRenderState, VillagerModel>(this, context.Items));
         AddLayer(new CrossedArmsItemLayer<VillagerRenderState, VillagerModel>(this, context.Items));
     }
 

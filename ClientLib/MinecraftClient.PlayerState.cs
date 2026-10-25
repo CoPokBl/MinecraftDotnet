@@ -32,8 +32,15 @@ public sealed partial class MinecraftClient {
                 if (Player != null) {
                     // LocalPlayer.hurtTo: a drop is a hit, and the only sign of one landing inside the
                     // invulnerable window, which gets no damage event. The first value after joining is not.
-                    if (_healthReceived && Player.Health - health.Health > 0) {
-                        Player.HurtTime = 10;
+                    if (_healthReceived) {
+                        float damage = Player.Health - health.Health;
+                        if (damage > 0) {
+                            Player.InvulnerableTime = 20;
+                            Player.HurtTime = 10;
+                        }
+                        else if (damage < 0) {
+                            Player.InvulnerableTime = 10;
+                        }
                     }
                     _healthReceived = true;
                     Player.Health = health.Health;
@@ -66,6 +73,7 @@ public sealed partial class MinecraftClient {
                 }
                 return true;
             case ClientBoundExplosionPacket explosion:
+                Particles.HandleExplosion(explosion);
                 // ClientPacketListener.handleExplosion: the knockback is the server's, added as sent.
                 if (Player != null && explosion.PlayerKnockback is { } knockback) {
                     Player.DeltaMovement = Player.DeltaMovement.Add(knockback.X, knockback.Y, knockback.Z);
@@ -79,6 +87,7 @@ public sealed partial class MinecraftClient {
     /// <summary><c>LocalPlayer.respawn</c>: asks the server to bring a dead player back.</summary>
     public void Respawn() {
         Send(new ServerBoundClientStatusPacket { Action = ServerBoundClientStatusPacket.StatusAction.Respawn });
+        Interactions.Keys.ResetToggleKeys();
         _respawnRequestedTick = ClientTicks;
     }
 }

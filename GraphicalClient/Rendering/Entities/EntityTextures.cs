@@ -67,9 +67,17 @@ public sealed unsafe class EntityTextures : IDisposable {
     /// A texture by its identifier as vanilla's renderers name them, <c>minecraft:textures/entity/zombie/zombie.png</c>,
     /// or a downloaded skin's; <see cref="Pending"/> while it loads, then null without a pack or when the pack lacks it.
     /// </summary>
-    public EntityTexture? Get(string identifier) => Get(identifier, () => LoadIdentifier(identifier));
+    public EntityTexture? Get(string identifier) {
+        lock (_lock) {
+            if (_known.TryGetValue(identifier, out EntityTexture? known)) {
+                return known;
+            }
+        }
+        return Get(identifier, () => LoadIdentifier(identifier));
+    }
 
-    private TextureImage? LoadIdentifier(string identifier) {
+    /// <summary>The pixels <see cref="Get(string)"/> packs for an identifier, for a texture composed from others.</summary>
+    public TextureImage? LoadIdentifier(string identifier) {
         if (Assets.Skins.SkinManager.Texture(identifier) is { } downloaded) {
             return downloaded;
         }

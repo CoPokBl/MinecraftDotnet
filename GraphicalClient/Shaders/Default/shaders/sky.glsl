@@ -15,7 +15,7 @@ vec3 skyRadiance(vec3 direction) {
         float sun = dot(direction, sunDirection.xyz);
         colour += vec3(3.0, 2.6, 1.9) * smoothstep(0.9983, 0.9990, sun) * (1.0 - weather.x);
         colour += vec3(1.0, 0.8, 0.5) * pow(max(sun, 0.0), 32.0) * 0.35 * (1.0 - weather.x);
-        colour += vec3(0.6, 0.65, 0.8) * smoothstep(0.9990, 0.9994, -sun);
+        colour += vec3(0.6, 0.65, 0.8) * smoothstep(0.9990, 0.9994, -sun) * (1.0 - weather.x);
         float stars = clamp(1.0 - (sunDirection.y * 2.0 + 0.25), 0.0, 1.0) * 0.5 * (1.0 - weather.x);
         if (stars > 0.0 && direction.y > 0.0 && hash(floor(direction * 180.0)) > 0.997) {
             colour += vec3(stars);

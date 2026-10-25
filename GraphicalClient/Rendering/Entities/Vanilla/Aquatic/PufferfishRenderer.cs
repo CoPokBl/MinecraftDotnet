@@ -30,7 +30,7 @@ public sealed class PufferfishRenderer : MobRenderer<PufferfishRenderState, Enti
 
     public override string GetTextureLocation(PufferfishRenderState state) => "minecraft:textures/entity/fish/pufferfish.png";
 
-    // getShadowRadius (0.1 + 0.1 * puffState) is not ported: entity shadows are not drawn.
+    protected override float GetShadowRadius(PufferfishRenderState state) => 0.1F + 0.1F * state.PuffState;
 
     public override void Submit(PufferfishRenderState state, PoseStack pose, EntityRenderContext context) {
         Model = state.PuffState switch {

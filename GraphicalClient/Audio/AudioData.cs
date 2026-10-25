@@ -36,13 +36,16 @@ public static class OggDecoder {
     /// <summary>vanilla's <c>JOrbisAudioStream</c>, wrapped in <c>LoopingAudioStream</c> when it loops.</summary>
     private sealed class OggStream(byte[] file, bool looping) : IAudioStream {
         private VorbisReader _reader = new(new MemoryStream(file), true);
-        private readonly float[] _buffer = [];
+        private float[] _buffer = [];
 
         public int Channels => _reader.Channels;
         public int SampleRate => _reader.SampleRate;
 
         public short[]? Read(int samples) {
-            float[] buffer = _buffer.Length >= samples ? _buffer : new float[samples];
+            if (_buffer.Length < samples) {
+                _buffer = new float[samples];
+            }
+            float[] buffer = _buffer;
             int read = _reader.ReadSamples(buffer, 0, samples - samples % Channels);
             if (read == 0 && looping) {
                 _reader.Dispose();

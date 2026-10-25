@@ -20,7 +20,8 @@ public sealed partial class MinecraftClient {
     public ContainerMenu? OpenContainer { get; private set; }
 
     public bool Hardcore { get; private set; }
-    public bool EnforcesSecureChat { get; private set; }
+    /// <summary>The login packet's <c>enforcesSecureChat</c>, which <see cref="EnforcesSecureChat"/> also needs the services' keys for.</summary>
+    public bool ServerEnforcesSecureChat { get; private set; }
     public Identifier[] Dimensions { get; private set; } = [];
 
     /// <summary>The player's hands: digging, using, attacking and what the crosshair is on.</summary>
@@ -88,7 +89,8 @@ public sealed partial class MinecraftClient {
     }
 
     private void HandlePlay(MinecraftPacket packet) {
-        if (HandleCommon(packet) || HandleWorldPacket(packet) || HandleEntityPacket(packet) || HandlePlayerPacket(packet) || HandleHudPacket(packet)) {
+        if (HandleCommon(packet) || HandleWorldPacket(packet) || HandleEntityPacket(packet) || HandlePlayerPacket(packet) || HandleHudPacket(packet)
+            || HandleAdvancementPacket(packet) || HandleStatsPacket(packet) || HandleRecipePacket(packet)) {
             return;
         }
         switch (packet) {
@@ -135,16 +137,20 @@ public sealed partial class MinecraftClient {
 
     private void HandleLogin(ClientBoundLoginPacket login) {
         ResetCommands();
+        ResetRecipeBookForLogin();
+        ResetAdvancements();
         Dimensions = login.Dimensions;
         ServerViewDistance = login.ViewDistance;
         SimulationDistance = login.SimulationDistance;
         Hardcore = login.IsHardcore;
-        EnforcesSecureChat = login.EnforcesSecureChat;
+        ResetChatForLogin(login);
+        ResetStatsForLogin();
         // Vanilla's clocks belong to the packet listener, which each entry to the play phase makes anew.
         _clocks = new ClientClockManager();
 
         // Vanilla makes a new MultiPlayerGameMode here and nowhere else, so a respawn keeps what it holds.
         Interactions.Reset();
+        _maps.Clear();
         SetLevel(login.DimensionName, login.DimensionType, login.SeaLevel, login.IsFlat, login.HashedSeed);
 
         Player = new LocalPlayer(this) {
@@ -160,6 +166,7 @@ public sealed partial class MinecraftClient {
             PortalCooldown = login.PortalCooldown
         };
         Player.UpdateAbilities(login.GameMode);
+        OnPlayerCreated();
         Entities.Clear();
         Entities[Player.Id] = Player;
         SetCameraEntity(Player);
@@ -227,6 +234,7 @@ public sealed partial class MinecraftClient {
         Entities.Clear();
         Entities[player.Id] = player;
         Player = player;
+        OnPlayerCreated();
         SetCameraEntity(player);
         DeathMessage = null;
         // The inventory is the player's, so the new one starts on the first slot until the server says otherwise.
@@ -237,6 +245,7 @@ public sealed partial class MinecraftClient {
 
     /// <summary><c>ClientPacketListener.handleConfigurationStart</c>: the level goes, the connection carries on.</summary>
     private void HandleStartConfiguration() {
+        FlushChatForConfiguration();
         Level?.Clear();
         Level = null;
         Player = null;
@@ -339,6 +348,9 @@ public sealed partial class MinecraftClient {
     private void TickPlay() {
         Level?.TickRateManager.Tick();
         TickLevelLoad();
+        // Gui.tick's chat listener, then Hud.tick's chat window.
+        ChatListener.Tick();
+        ChatMessages.Tick();
 
         if (Options.AutoRespawn && Player is { IsDead: true } && ClientTicks - _respawnRequestedTick > 40) {
             Respawn();
@@ -359,6 +371,14 @@ public sealed partial class MinecraftClient {
             level.WorldBorder.Tick();
             level.TickTime();
         }
+        if (level != null) {
+            Particles.TickExplosions();
+        }
+        // Minecraft.tick runs the particle engine after the level's entities, and the animate tick before it.
+        if (level is { TickRateManager.RunsNormally: true }) {
+            AnimateTicks.Tick();
+        }
+        Particles.Tick();
         Send(new ServerBoundClientTickEndPacket());
     }
 }

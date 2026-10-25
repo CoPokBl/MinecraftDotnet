@@ -10,9 +10,10 @@ namespace GraphicalClient.Gui;
 /// </summary>
 public sealed class Hud {
     private readonly HeldItemName _heldItemName = new();
+    private readonly HealthDisplay _health = new();
 
-    public bool ChatOpen { get; set; }
-    public int ChatScroll { get; set; }
+    /// <summary><c>Hud.getChat</c>.</summary>
+    public ChatComponent Chat { get; } = new();
     public bool ShowTabList { get; set; }
 
     /// <summary>Whether the open screen lists the effects itself, which hides the corner icons.</summary>
@@ -34,7 +35,7 @@ public sealed class Hud {
             Hotbar.Draw(context, client, w, h);
         }
         if (player.GameMode is GameMode.Survival or GameMode.Adventure) {
-            StatusBars.Draw(context, client, player, w, h);
+            StatusBars.Draw(context, client, player, _health, w, h);
         }
         if (!spectator) {
             StatusBars.DrawVehicleHealth(context, player, w, h);
@@ -54,7 +55,12 @@ public sealed class Hud {
         }
         Titles.DrawActionBar(context, client, w, h);
         Titles.DrawTitle(context, client, w, h);
-        ChatOverlay.Draw(context, client, h, ChatOpen, ChatScroll);
+        // extractChat: the open chat screen draws it in front instead.
+        Chat.Bind(context);
+        Chat.Focused = context.CurrentScreen() is ChatScreen;
+        if (!Chat.Focused) {
+            Chat.Render(context, (int)client.ClientTicks, context.MouseX, context.MouseY, ChatComponent.DisplayMode.Background);
+        }
         if (ShowTabList) {
             TabList.Draw(context, client, w);
         }

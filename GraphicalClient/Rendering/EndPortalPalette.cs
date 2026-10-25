@@ -18,11 +18,11 @@ public static class EndPortalPalette {
 
     private static readonly Regex Vec3 = new(@"vec3\(\s*([-0-9.eE]+)\s*,\s*([-0-9.eE]+)\s*,\s*([-0-9.eE]+)\s*\)");
 
-    public static Vector3[] Colours { get; private set; } = Generated();
+    /// <summary>Set from <see cref="Read"/> on the render thread, where shader packs read it.</summary>
+    public static Vector3[] Colours { get; set; } = Generated();
 
-    public static void Load(PackFiles? packs) {
-        Colours = packs?.Read(VanillaShader) is { } source && Parse(Encoding.UTF8.GetString(source)) is { } read ? read : Generated();
-    }
+    public static Vector3[] Read(PackFiles? packs) =>
+        packs?.Read(VanillaShader) is { } source && Parse(Encoding.UTF8.GetString(source)) is { } read ? read : Generated();
 
     private static Vector3[]? Parse(string source) {
         int table = source.IndexOf("COLORS", StringComparison.Ordinal);

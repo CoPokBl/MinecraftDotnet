@@ -17,5 +17,8 @@
   "minecraft:trail": "TrailParticle",
   "minecraft:vibration": "VibrationParticle",
   "minecraft:tinted_leaves": "TintedLeavesParticle",
-  "minecraft:dragon_breath": "DragonBreathParticle"
+  "minecraft:dragon_breath": "DragonBreathParticle",
+  "minecraft:effect": "SpellParticle",
+  "minecraft:instant_effect": "SpellParticle",
+  "minecraft:flash": "ColorParticle"
 }

@@ -23,6 +23,62 @@ public static class DevArtGuiSprites {
         ["white"] = 0xECECEC
     };
 
+    private static readonly string[] LanguageIcon = [
+        ".....#####.....",
+        "...##..#..##...",
+        "..#...#.#...#..",
+        ".#...#...#...#.",
+        ".#..#.....#..#.",
+        "#...#.....#...#",
+        "#...#.....#...#",
+        "###############",
+        "#...#.....#...#",
+        "#...#.....#...#",
+        ".#..#.....#..#.",
+        ".#...#...#...#.",
+        "..#...#.#...#..",
+        "...##..#..##...",
+        ".....#####....."
+    ];
+
+    private static readonly string[] AccessibilityIcon = [
+        ".....#####.....",
+        "...##.....##...",
+        "..#....#....#..",
+        ".#....###....#.",
+        ".#.....#.....#.",
+        "#..#########..#",
+        "#.....###.....#",
+        "#.....###.....#",
+        "#.....#.#.....#",
+        "#....#...#....#",
+        ".#..#.....#..#.",
+        ".#...........#.",
+        "..#.........#..",
+        "...##.....##...",
+        ".....#####....."
+    ];
+
+    /// <summary>A pair of beamed quavers, white so the toast's tint is the colour they show.</summary>
+    private static readonly string[] MusicNotesIcon = [
+        "................",
+        "................",
+        "......#########.",
+        "......#########.",
+        "......#.......#.",
+        "......#.......#.",
+        "......#.......#.",
+        "......#.......#.",
+        "......#.......#.",
+        "......#.......#.",
+        "...####....####.",
+        "..#####...#####.",
+        "..#####...#####.",
+        "...###.....###..",
+        "................",
+        "................"
+    ];
+
     public static TextureImage? Image(string sprite) {
         switch (sprite) {
             case "hud/effect_background":
@@ -33,6 +89,17 @@ public static class DevArtGuiSprites {
                 return EffectBackground(32, false);
             case "container/inventory/effect_background_ambient":
                 return EffectBackground(32, true);
+            case "icon/language":
+                return Glyph(LanguageIcon);
+            case "icon/accessibility":
+                return Glyph(AccessibilityIcon);
+            case "icon/music_notes":
+                return Stencil(MusicNotesIcon);
+            case "toast/now_playing":
+                return NowPlayingPanel();
+        }
+        if (sprite.StartsWith(DevArtStatsSprites.Prefix, StringComparison.Ordinal)) {
+            return DevArtStatsSprites.Image(sprite);
         }
         if (sprite.StartsWith(MobEffect, StringComparison.Ordinal)) {
             return EffectIcon(MobEffects.Get(Identifier.Parse("minecraft:" + sprite[MobEffect.Length..])));
@@ -56,6 +123,59 @@ public static class DevArtGuiSprites {
             return Notches(segments);
         }
         return null;
+    }
+
+    /// <summary>A white line icon from a grid, <c>#</c> for ink, with a drop shadow so it reads on a light button.</summary>
+    private static TextureImage Glyph(string[] rows) {
+        int size = rows.Length;
+        byte[] rgba = new byte[size * size * 4];
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                if (rows[y][x] == '#') {
+                    DevArt.Put(rgba, y * size + x, 0xFFFFFFFF);
+                } else if (x > 0 && y > 0 && rows[y - 1][x - 1] == '#') {
+                    DevArt.Put(rgba, y * size + x, 0xFF3F3F3F);
+                }
+            }
+        }
+        return new TextureImage(size, size, rgba);
+    }
+
+    /// <summary>A grid as plain white ink, for a sprite drawn tinted.</summary>
+    private static TextureImage Stencil(string[] rows) {
+        int size = rows.Length;
+        byte[] rgba = new byte[size * size * 4];
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                if (rows[y][x] == '#') {
+                    DevArt.Put(rgba, y * size + x, 0xFFFFFFFF);
+                }
+            }
+        }
+        return new TextureImage(size, size, rgba);
+    }
+
+    /// <summary>
+    /// A slate panel darkening downwards, with a lit top edge and clipped corners. Everything but the
+    /// gradient sits within the four pixel border, so it slices at any width and the 30 pixel height it is drawn at.
+    /// </summary>
+    private static TextureImage NowPlayingPanel() {
+        const int width = 160, height = 32;
+        byte[] rgba = new byte[width * height * 4];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                bool edgeX = x == 0 || x == width - 1, edgeY = y == 0 || y == height - 1;
+                if (edgeX && edgeY) {
+                    continue;
+                }
+                uint rgb = edgeX || edgeY ? 0x0E1116u
+                    : y == 1 ? 0x56657Au
+                    : x == 1 || x == width - 2 || y == height - 2 ? 0x1A2028u
+                    : DevArt.Mix(0x2C3542u, 0x1E242Du, (y - 2) / (float)(height - 4));
+                DevArt.Put(rgba, y * width + x, 0xFF000000 | rgb);
+            }
+        }
+        return new TextureImage(width, height, rgba);
     }
 
     /// <summary>A bar with clipped corners and a dark rim; the filled bar is lit from the top, the empty one sunk.</summary>

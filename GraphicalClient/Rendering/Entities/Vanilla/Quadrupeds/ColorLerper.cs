@@ -2,7 +2,7 @@ using Minecraft.Schemas;
 
 namespace GraphicalClient.Rendering.Entities.Vanilla;
 
-/// <summary><c>ColorLerper</c>, the sheep half: a jeb_ sheep's wool cycles through every dye.</summary>
+/// <summary><c>ColorLerper</c>: a jeb_ sheep's wool cycles through every dye, and the now playing toast's notes through a dozen.</summary>
 public static class ColorLerper {
     /// <summary><c>DyeColor.getTextureDiffuseColor</c>, opaque, by dye id.</summary>
     private static readonly uint[] TextureDiffuseColors = [
@@ -15,18 +15,32 @@ public static class ColorLerper {
 
     private static readonly uint[] SheepColors = Enumerable.Range(0, 16).Select(id => GetModifiedColor((DyeColor)id, SheepBrightness)).ToArray();
 
+    private const int MusicNoteColorDuration = 30;
+    private const float MusicNoteBrightness = 1.25F;
+
+    /// <summary><c>MUSIC_NOTE_COLORS</c>, in its order.</summary>
+    private static readonly uint[] MusicNoteColors = new[] {
+        DyeColor.White, DyeColor.LightGray, DyeColor.LightBlue, DyeColor.Blue, DyeColor.Cyan, DyeColor.Green,
+        DyeColor.Lime, DyeColor.Yellow, DyeColor.Orange, DyeColor.Pink, DyeColor.Red, DyeColor.Magenta
+    }.Select(color => GetModifiedColor(color, MusicNoteBrightness)).ToArray();
+
     /// <summary><c>ColorLerper.Type.SHEEP.getColor</c>.</summary>
     public static uint GetSheepColor(DyeColor color) => SheepColors[(int)color];
 
     /// <summary><c>ColorLerper.getLerpedColor</c> for <c>Type.SHEEP</c>.</summary>
-    public static uint GetLerpedSheepColor(float tick) {
+    public static uint GetLerpedSheepColor(float tick) => GetLerpedColor(SheepColors, SheepColorDuration, tick);
+
+    /// <summary><c>ColorLerper.getLerpedColor</c> for <c>Type.MUSIC_NOTE</c>.</summary>
+    public static uint GetLerpedMusicNoteColor(float tick) => GetLerpedColor(MusicNoteColors, MusicNoteColorDuration, tick);
+
+    private static uint GetLerpedColor(uint[] colors, int colorDuration, float tick) {
         int tickCount = Mth.Floor(tick);
-        int value = tickCount / SheepColorDuration;
-        int colorCount = SheepColors.Length;
+        int value = tickCount / colorDuration;
+        int colorCount = colors.Length;
         int c1 = value % colorCount;
         int c2 = (value + 1) % colorCount;
-        float subStep = (tickCount % SheepColorDuration + Mth.Frac(tick)) / SheepColorDuration;
-        return SrgbLerp(subStep, SheepColors[c1], SheepColors[c2]);
+        float subStep = (tickCount % colorDuration + Mth.Frac(tick)) / colorDuration;
+        return SrgbLerp(subStep, colors[c1], colors[c2]);
     }
 
     private static uint GetModifiedColor(DyeColor color, float brightness) {

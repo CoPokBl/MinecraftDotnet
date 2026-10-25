@@ -9,11 +9,7 @@ public class LightningBoltRenderState : EntityRenderState {
     public long Seed;
 }
 
-/// <summary>
-/// <c>LightningBoltRenderer</c>. The <c>lightning</c> render type blends additively and ignores the
-/// lightmap; this draws into the translucent batch at full light with ordinary alpha blending, which
-/// leaves the bolt a little dimmer where its layers overlap.
-/// </summary>
+/// <summary><c>LightningBoltRenderer</c>.</summary>
 public sealed class LightningBoltRenderer : EntityRenderer<LightningBoltRenderState> {
     /// <summary><c>LightningBolt.seed</c>, drawn from the client entity's own random as it is created.</summary>
     private sealed class Seed {
@@ -47,6 +43,9 @@ public sealed class LightningBoltRenderer : EntityRenderer<LightningBoltRenderSt
         }
         float finalXOff = xOff;
         float finalZOff = zOff;
+        if (context.AdditiveBatch is not { } sink) {
+            return;
+        }
         Matrix4x4 poseMatrix = pose.Matrix;
         ModelDrawState draw = new(context.Textures.White, 0x4C72727F, 15, 15, 0) { NoOutline = true };
         for (int r = 0; r < 4; r++) {
@@ -81,10 +80,10 @@ public sealed class LightningBoltRenderer : EntityRenderer<LightningBoltRenderSt
                     if (p == 0) {
                         rr2 *= (h - 1.0F) * 0.1F + 1.0F;
                     }
-                    Quad(poseMatrix, context.TranslucentBatch, draw, xo0, zo0, h, xo1, zo1, rr1, rr2, false, false, true, false);
-                    Quad(poseMatrix, context.TranslucentBatch, draw, xo0, zo0, h, xo1, zo1, rr1, rr2, true, false, true, true);
-                    Quad(poseMatrix, context.TranslucentBatch, draw, xo0, zo0, h, xo1, zo1, rr1, rr2, true, true, false, true);
-                    Quad(poseMatrix, context.TranslucentBatch, draw, xo0, zo0, h, xo1, zo1, rr1, rr2, false, true, false, false);
+                    Quad(poseMatrix, sink, draw, xo0, zo0, h, xo1, zo1, rr1, rr2, false, false, true, false);
+                    Quad(poseMatrix, sink, draw, xo0, zo0, h, xo1, zo1, rr1, rr2, true, false, true, true);
+                    Quad(poseMatrix, sink, draw, xo0, zo0, h, xo1, zo1, rr1, rr2, true, true, false, true);
+                    Quad(poseMatrix, sink, draw, xo0, zo0, h, xo1, zo1, rr1, rr2, false, true, false, false);
                 }
             }
         }

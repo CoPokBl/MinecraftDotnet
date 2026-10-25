@@ -11,11 +11,7 @@ public sealed class WitherRenderState : LivingEntityRenderState {
     public bool IsPowered;
 }
 
-/// <summary>
-/// <c>WitherBossRenderer</c>. Its <c>WitherArmorLayer</c> is not drawn: the powered wither's energy
-/// swirl is an additive, scrolling, repeating texture, which a deferred entity pass sampling an atlas
-/// has no way to express.
-/// </summary>
+/// <summary><c>WitherBossRenderer</c>.</summary>
 public sealed class WitherBossRenderer : MobRenderer<WitherRenderState, WitherBossModel> {
     private const string WitherInvulnerableLocation = "minecraft:textures/entity/wither/wither_invulnerable.png";
     private const string WitherLocation = "minecraft:textures/entity/wither/wither.png";
@@ -23,7 +19,9 @@ public sealed class WitherBossRenderer : MobRenderer<WitherRenderState, WitherBo
     // The heads aim at other entities, which a tick has no way to look up, so the client is taken from the last frame.
     private MinecraftClient? _client;
 
-    public WitherBossRenderer(EntityRendererContext context) : base(new WitherBossModel(WitherBossModel.CreateBodyLayer(CubeDeformation.None).BakeRoot()), 1.0F) { }
+    public WitherBossRenderer(EntityRendererContext context) : base(new WitherBossModel(WitherBossModel.CreateBodyLayer(CubeDeformation.None).BakeRoot()), 1.0F) {
+        AddLayer(new WitherArmorLayer(this));
+    }
 
     /// <summary><c>WitherBoss.xRotHeads</c> and <c>yRotHeads</c>, which the client turns itself.</summary>
     private sealed class Heads {
@@ -126,4 +124,16 @@ public sealed class WitherBossRenderer : MobRenderer<WitherRenderState, WitherBo
         float maxHealth = (float)entity.Attributes.Value(Minecraft.Data.Generated.Attribute.MaxHealth);
         state.IsPowered = entity.CurrentHealth <= maxHealth / 2.0F;
     }
+}
+
+/// <summary><c>WitherArmorLayer</c>.</summary>
+public sealed class WitherArmorLayer(LivingEntityRenderer<WitherRenderState, WitherBossModel> parent) : EnergySwirlLayer<WitherRenderState, WitherBossModel>(parent) {
+    // LayerDefinitions.INNER_ARMOR_DEFORMATION.
+    protected override WitherBossModel Model { get; } = new(WitherBossModel.CreateBodyLayer(new CubeDeformation(0.5F)).BakeRoot());
+
+    protected override bool IsPowered(WitherRenderState state) => state.IsPowered;
+
+    protected override float XOffset(float t) => Mth.Cos(t * 0.02F) * 3.0F;
+
+    protected override string TextureLocation => "minecraft:textures/entity/wither/wither_armor.png";
 }

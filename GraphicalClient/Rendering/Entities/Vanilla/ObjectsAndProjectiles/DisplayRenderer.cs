@@ -5,6 +5,7 @@ using Minecraft.Data.Generated;
 using Minecraft.Schemas.Entities.Meta;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
+using Minecraft.Text;
 using SchemaQuaternion = Minecraft.Schemas.Quaternion;
 
 namespace GraphicalClient.Rendering.Entities.Vanilla;
@@ -36,11 +37,18 @@ public class ItemDisplayEntityRenderState : DisplayEntityRenderState {
     public override bool HasSubState() => Item != null && !Item.IsAir();
 }
 
+/// <summary><c>TextDisplayEntityRenderState</c>.</summary>
+public class TextDisplayEntityRenderState : DisplayEntityRenderState {
+    public DisplayRenderer.TextRenderState? TextRenderState;
+
+    public override bool HasSubState() => TextRenderState != null;
+}
+
 /// <summary>
 /// <c>DisplayRenderer</c> and the client half of <c>Display</c>: the render state rebuilt on the tick after
 /// its data changes, its transformation interpolated from where the last one had got to. The block or
 /// item it shows is read each frame rather than when the render state is rebuilt, which shows a change
-/// up to a tick early. Text displays are not drawn: nothing draws text in the world yet.
+/// up to a tick early.
 /// </summary>
 public static class DisplayRenderer {
     /// <summary><c>com.mojang.math.Transformation</c> in its decomposed form.</summary>
@@ -89,10 +97,39 @@ public static class DisplayRenderer {
         Center
     }
 
-    /// <summary><c>Display.RenderState</c>, without the shadow, which nothing draws.</summary>
-    public sealed record RenderState(Transformation Previous, Transformation Current, bool Interpolates, BillboardConstraints BillboardConstraints, int BrightnessOverride) {
+    /// <summary><c>Display.RenderState</c>: each interpolated field is its last value and the one it moves to, or only the second when it does not move.</summary>
+    public sealed record RenderState(Transformation Previous, Transformation Current, bool Interpolates, BillboardConstraints BillboardConstraints, int BrightnessOverride,
+        float ShadowRadiusFrom, float ShadowRadiusTo, float ShadowStrengthFrom, float ShadowStrengthTo) {
         /// <summary><c>TransformationInterpolator.get</c>, or the constant one's.</summary>
         public Transformation GetTransformation(float progress) => !Interpolates || progress >= 1.0 ? Current : Previous.Slerp(Current, progress);
+
+        /// <summary><c>LinearFloatInterpolator.get</c>, or the constant one's.</summary>
+        public float ShadowRadius(float progress) => Interpolates ? Mth.Lerp(progress, ShadowRadiusFrom, ShadowRadiusTo) : ShadowRadiusTo;
+
+        /// <inheritdoc cref="ShadowRadius"/>
+        public float ShadowStrength(float progress) => Interpolates ? Mth.Lerp(progress, ShadowStrengthFrom, ShadowStrengthTo) : ShadowStrengthTo;
+    }
+
+    /// <summary>
+    /// <c>Display.TextDisplay.TextRenderState</c>. The opacity moves through its signed byte values, as
+    /// <c>LinearIntInterpolator</c> runs, so a fade from opaque (-1) passes through clear.
+    /// </summary>
+    public sealed record TextRenderState(TextComponent Text, int LineWidth, int OpacityFrom, int OpacityTo, int BackgroundFrom, int BackgroundTo, bool Interpolates,
+        byte Flags) {
+        /// <summary><c>Mth.lerpInt</c>, as <c>LinearIntInterpolator.get</c> uses it.</summary>
+        public int TextOpacity(float progress) => Interpolates ? OpacityFrom + Mth.Floor(progress * (OpacityTo - OpacityFrom)) : OpacityTo;
+
+        /// <summary><c>ColorInterpolator.get</c>: <c>ARGB.srgbLerp</c>, each channel by <c>lerpInt</c>.</summary>
+        public int BackgroundColor(float progress) {
+            if (!Interpolates) {
+                return BackgroundTo;
+            }
+            int Channel(int shift) {
+                int from = BackgroundFrom >> shift & 0xFF, to = BackgroundTo >> shift & 0xFF;
+                return (from + Mth.Floor(progress * (to - from))) << shift;
+            }
+            return Channel(24) | Channel(16) | Channel(8) | Channel(0);
+        }
     }
 
     private static readonly int[] RenderStateIds = [
@@ -108,6 +145,10 @@ public static class DisplayRenderer {
         public int InterpolationDuration;
         public float LastProgress;
         public RenderState? State;
+        public TextRenderState? Text;
+
+        /// <summary>The render state filled again each frame, which a display drawn by the hundred would otherwise allocate each time.</summary>
+        public DisplayEntityRenderState? Extracted;
 
         /// <summary>Whether a packet has set the field since the last tick, as <c>onSyncedDataUpdated</c> hears.</summary>
         public bool Updated(ClientEntity entity, int index) {
@@ -121,8 +162,11 @@ public static class DisplayRenderer {
 
     public static ClientDisplay Display(ClientEntity entity) => (ClientDisplay)(entity.RendererData ??= new ClientDisplay());
 
-    /// <summary><c>Display.tick</c>'s client side, with <c>onSyncedDataUpdated</c>'s flags folded in.</summary>
-    public static void Tick(ClientEntity entity, ReadOnlySpan<int> subStateIds) {
+    /// <summary>
+    /// <c>Display.tick</c>'s client side, with <c>onSyncedDataUpdated</c>'s flags folded in. <paramref name="updateSubState"/>
+    /// is <c>updateRenderSubState</c>, given whether to interpolate and the progress the last frame reached.
+    /// </summary>
+    public static void Tick(ClientEntity entity, ReadOnlySpan<int> subStateIds, Action<ClientEntity, ClientDisplay, bool, float>? updateSubState = null) {
         ClientDisplay display = Display(entity);
         bool updateStartTick = display.Updated(entity, EntityDataFields.Display.TransformationInterpolationStartDeltaTicks.Index);
         bool updateInterpolationDuration = display.Updated(entity, EntityDataFields.Display.TransformationInterpolationDuration.Index);
@@ -143,12 +187,21 @@ public static class DisplayRenderer {
         if (updateRenderState) {
             bool shouldInterpolate = display.InterpolationDuration != 0;
             Transformation current = CreateTransformation(entity);
+            RenderState? previous = shouldInterpolate ? display.State : null;
+            float shadowRadius = entity.Get(EntityDataFields.Display.ShadowRadius, 0.0F);
+            float shadowStrength = entity.Get(EntityDataFields.Display.ShadowStrength, 1.0F);
+            float progress = display.LastProgress;
+            // BillboardConstraints.BY_ID reads an id out of range as FIXED.
+            int billboard = entity.Get(EntityDataFields.Display.BillboardRenderConstraints);
             display.State = new RenderState(
-                shouldInterpolate && display.State != null ? display.State.GetTransformation(display.LastProgress) : current,
+                previous?.GetTransformation(progress) ?? current,
                 current,
-                shouldInterpolate && display.State != null,
-                (BillboardConstraints)Math.Clamp((int)entity.Get(EntityDataFields.Display.BillboardRenderConstraints), 0, 3),
-                entity.Get(EntityDataFields.Display.BrightnessOverride, -1));
+                previous != null,
+                billboard is >= 0 and <= 3 ? (BillboardConstraints)billboard : BillboardConstraints.Fixed,
+                entity.Get(EntityDataFields.Display.BrightnessOverride, -1),
+                previous?.ShadowRadius(progress) ?? shadowRadius, shadowRadius,
+                previous?.ShadowStrength(progress) ?? shadowStrength, shadowStrength);
+            updateSubState?.Invoke(entity, display, shouldInterpolate, progress);
         }
     }
 
@@ -180,7 +233,23 @@ public static class DisplayRenderer {
     public abstract class Base<ST> : EntityRenderer<ST> where ST : DisplayEntityRenderState, new() {
         protected abstract ReadOnlySpan<int> SubStateIds { get; }
 
-        public override void Tick(ClientEntity entity) => DisplayRenderer.Tick(entity, SubStateIds);
+        public override void Tick(ClientEntity entity) => DisplayRenderer.Tick(entity, SubStateIds, UpdateRenderSubState);
+
+        protected override ST RenderStateFor(ClientEntity entity) {
+            ClientDisplay display = Display(entity);
+            if (display.Extracted is not ST state) {
+                state = CreateRenderState();
+                display.Extracted = state;
+            }
+            return state;
+        }
+
+        /// <summary><c>updateRenderSubState</c>, for a display whose sub state interpolates.</summary>
+        protected virtual void UpdateRenderSubState(ClientEntity entity, ClientDisplay display, bool shouldInterpolate, float progress) { }
+
+        protected override float GetShadowRadius(ST state) => state.RenderState?.ShadowRadius(state.InterpolationProgress) ?? 0.0F;
+
+        protected override float GetShadowStrength(ST state) => state.RenderState?.ShadowStrength(state.InterpolationProgress) ?? 0.0F;
 
         /// <summary><c>Display.shouldRenderAtSqrDistance</c>.</summary>
         public override bool? ShouldRenderAtSqrDistance(ClientEntity entity, double distanceSqr) {
@@ -237,9 +306,10 @@ public static class DisplayRenderer {
             state.CameraXRot = context.Camera.Pitch;
             state.CameraYRot = context.Camera.Yaw;
             // getSkyLightLevel and getBlockLightLevel: LightCoordsUtil's packing, block in bits 4 to 7 and sky in 20 to 23.
+            // The override replaces the burning entity's full block light as well.
             if (display.State is { BrightnessOverride: not -1 } overridden) {
                 state.SkyLight = overridden.BrightnessOverride >> 20 & 15;
-                state.BlockLight = entity.IsOnFire ? 15 : overridden.BrightnessOverride >> 4 & 15;
+                state.BlockLight = overridden.BrightnessOverride >> 4 & 15;
             }
         }
     }
@@ -290,5 +360,36 @@ public static class DisplayRenderer {
             pose.RotateY(MathF.PI);
             _items.Render(state.Item, state.ItemTransform, pose, context.Batch, state.SkyLight, state.BlockLight, state.Entity);
         }
+    }
+
+    /// <summary><c>DisplayRenderer.TextDisplayRenderer</c>: the text goes to the frame's <see cref="TextDisplayBatch"/>, which lays it out once.</summary>
+    public sealed class TextDisplayRenderer : Base<TextDisplayEntityRenderState> {
+        private static readonly int[] SubState = [
+            EntityDataFields.TextDisplay.Text.Index, EntityDataFields.TextDisplay.LineWidth.Index, EntityDataFields.TextDisplay.BackgroundColor.Index,
+            EntityDataFields.TextDisplay.TextOpacity.Index, EntityDataFields.TextDisplay.StyleFlags.Index
+        ];
+
+        protected override ReadOnlySpan<int> SubStateIds => SubState;
+
+        /// <summary><c>TextDisplay.updateRenderSubState</c>: <c>createInterpolatedTextRenderState</c> or <c>createFreshTextRenderState</c>.</summary>
+        protected override void UpdateRenderSubState(ClientEntity entity, ClientDisplay display, bool shouldInterpolate, float progress) {
+            TextComponent text = entity.Get(EntityDataFields.TextDisplay.Text) ?? TextComponent.Text("");
+            int lineWidth = entity.Get(EntityDataFields.TextDisplay.LineWidth, 200);
+            int opacity = entity.Get(EntityDataFields.TextDisplay.TextOpacity, (sbyte)-1);
+            int background = entity.Get(EntityDataFields.TextDisplay.BackgroundColor, 0x40000000);
+            byte flags = (byte)entity.Get(EntityDataFields.TextDisplay.StyleFlags);
+            TextRenderState? previous = shouldInterpolate ? display.Text : null;
+            display.Text = previous != null
+                ? new TextRenderState(text, lineWidth, previous.TextOpacity(progress), opacity, previous.BackgroundColor(progress), background, true, flags)
+                : new TextRenderState(text, lineWidth, opacity, opacity, background, background, false, flags);
+        }
+
+        public override void ExtractRenderState(ClientEntity entity, TextDisplayEntityRenderState state, float partialTick, EntityRenderContext context) {
+            base.ExtractRenderState(entity, state, partialTick, context);
+            state.TextRenderState = Display(entity).Text;
+        }
+
+        protected override void SubmitInner(TextDisplayEntityRenderState state, PoseStack pose, EntityRenderContext context, float interpolationProgress) =>
+            context.TextDisplays?.Submit(state.Entity.Id, state.TextRenderState!, interpolationProgress, pose.Matrix, state.SkyLight, state.BlockLight);
     }
 }

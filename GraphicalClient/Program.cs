@@ -27,8 +27,22 @@ ClientOptions clientOptions = new() {
 if (options.Brand != null) {
     clientOptions.Brand = options.Brand;
 }
+if (options.ServerPacks is { } serverPacks) {
+    clientOptions.ServerPackStatus = serverPacks;
+}
+foreach ((string key, string value) in options.SettingOverrides) {
+    if (key == "lang") {
+        clientOptions.Locale = value;
+    }
+    if (key == "chatSigning") {
+        clientOptions.ChatSigning = value == "true";
+    }
+}
 if (options.Microsoft) {
     clientOptions.Account = await SignIn();
+    // Minecraft's userPropertiesFuture: the account's chat permission, and the profanity filter the client information reports.
+    clientOptions.UserFlags = await new ClientLib.Profiles.UserApiService(clientOptions.Account.AccessToken).FetchProperties();
+    clientOptions.TextFiltering = (clientOptions.UserFlags & ClientLib.Profiles.UserFlags.ProfanityFilterEnabled) != 0;
 }
 
 if (options.Headless) {
@@ -37,7 +51,7 @@ if (options.Headless) {
 
 if (options.VanillaPack) {
     if (await Fetch(() => VanillaClientJar.Get(), "Could not get the vanilla pack, carrying on without it") is { } jar) {
-        options.ResourcePacks.Insert(0, jar);
+        options.VanillaJar = jar;
     }
     options.VanillaAssets = await Fetch(() => VanillaAssets.Get(), "Could not get the vanilla sounds, carrying on with the built in ones");
 }
@@ -78,6 +92,7 @@ static async Task<int> RunHeadless(LaunchOptions options, ClientOptions clientOp
     clientOptions.AutoRespawn = true;
     MinecraftClient client = new(clientOptions);
     client.Log += message => Console.WriteLine(message);
+    client.ChatMessages.Logged += message => Console.WriteLine(message);
     await client.Connect(options.Host, options.Port);
 
     Stopwatch clock = Stopwatch.StartNew();

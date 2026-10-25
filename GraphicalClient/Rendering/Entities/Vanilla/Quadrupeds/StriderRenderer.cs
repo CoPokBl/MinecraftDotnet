@@ -18,6 +18,11 @@ public sealed class StriderRenderer : AgeableMobRenderer<StriderRenderState, Str
             EquipmentClientInfo.LayerType.StriderSaddle, state => state.Saddle, new AdultStriderModel(AdultStriderModel.CreateBodyLayer().BakeRoot()), null));
     }
 
+    protected override float GetShadowRadius(StriderRenderState state) {
+        float radius = base.GetShadowRadius(state);
+        return state.IsBaby ? radius * 0.5F : radius;
+    }
+
     public override string GetTextureLocation(StriderRenderState state) =>
         state.IsSuffocating
             ? state.IsBaby ? "minecraft:textures/entity/strider/strider_cold_baby.png" : "minecraft:textures/entity/strider/strider_cold.png"

@@ -189,7 +189,7 @@ public sealed class EditBox {
     private int GetCursorPos(int dir) => OffsetByCodepoints(_value, _cursorPos, dir);
 
     /// <summary><c>Util.offsetByCodepoints</c>.</summary>
-    private static int OffsetByCodepoints(string input, int pos, int offset) {
+    internal static int OffsetByCodepoints(string input, int pos, int offset) {
         int length = input.Length;
         if (offset >= 0) {
             for (int i = 0; pos < length && i < offset; i++) {
@@ -326,8 +326,12 @@ public sealed class EditBox {
         if (displayed.Length > 0) {
             string half = cursorOnScreen ? displayed[..relCursorPos] : displayed;
             List<TextRun> charSequence = ApplyFormat(half, _displayPos, color);
-            _font.Draw(charSequence, drawX, _textY, (byte)(color >> 24), TextShadow);
+            _font.Draw(charSequence, drawX, _textY, (byte)(color >> 24), TextShadow, false);
             drawX += _font.Width(charSequence) + 1;
+        }
+
+        if (Hint != null && displayed.Length == 0 && !_focused) {
+            _font.Draw(Hint, drawX, _textY, (byte)(color >> 24), TextShadow);
         }
 
         bool insert = _cursorPos < _value.Length || _value.Length >= _maxLength;
@@ -341,7 +345,7 @@ public sealed class EditBox {
         }
 
         if (displayed.Length > 0 && cursorOnScreen && relCursorPos < displayed.Length) {
-            _font.Draw(ApplyFormat(displayed[relCursorPos..], _cursorPos, color), drawX, _textY, (byte)(color >> 24), TextShadow);
+            _font.Draw(ApplyFormat(displayed[relCursorPos..], _cursorPos, color), drawX, _textY, (byte)(color >> 24), TextShadow, false);
         }
 
         if (!insert && _suggestion != null) {
@@ -429,6 +433,9 @@ public sealed class EditBox {
     }
 
     public uint TextColor { get; set; } = DefaultTextColor;
+
+    /// <summary><c>setHint</c>: drawn while the box is empty and unfocused.</summary>
+    public List<TextRun>? Hint { get; set; }
 
     /// <summary>A hidden box is neither drawn nor takes keys.</summary>
     public bool Visible { get; set; } = true;

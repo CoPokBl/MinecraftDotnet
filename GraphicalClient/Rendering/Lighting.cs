@@ -64,24 +64,22 @@ public sealed unsafe class Lighting : IDisposable {
     /// <param name="skyRgb">The biome's sky colour at full daylight.</param>
     /// <param name="fogRgb">The fog colour at full daylight, from the biome or else the dimension.</param>
     /// <param name="waterFogRgb">The fog colour under water.</param>
+    /// <param name="weather">The weather drawn, which the sky light, the sky and the fog darken with.</param>
+    /// <param name="skyFlash">Lightning is lighting the sky: <c>ClientLevel</c>'s sky colour and sky light factor layers.</param>
     /// <param name="bossFog">A boss bar asks for world fog, <c>BossHealthOverlay.shouldCreateWorldFog</c>.</param>
-    public void Update(ClientLevel? level, float partialTick, int renderDistance, bool underwater, uint skyRgb, uint fogRgb, uint waterFogRgb, bool bossFog = false) {
+    public void Update(ClientLevel? level, float partialTick, int renderDistance, bool underwater, uint skyRgb, uint fogRgb, uint waterFogRgb,
+        Weather.WeatherView weather, bool skyFlash, bool bossFog = false) {
         float ambient = level?.DimensionType.AmbientLight ?? 0.0F;
         bool hasSky = level?.DimensionType.HasSkyLight ?? true;
-        float rain = level?.RainLevel ?? 0.0F;
-        float thunder = level?.ThunderLevel ?? 0.0F;
         float angle = TimeOfDay(level?.DefaultClockTimeAt(partialTick) ?? 6000);
 
-        // Level.getSkyDarken, as a brightness rather than a darkness.
-        float darken = 1.0F - (MathF.Cos(angle * MathF.PI * 2.0F) * 2.0F + 0.2F);
-        darken = Math.Clamp(darken, 0.0F, 1.0F);
-        darken = 1.0F - darken;
-        darken *= 1.0F - rain * 5.0F / 16.0F;
-        darken *= 1.0F - thunder * 5.0F / 16.0F;
-        SkyDarken = hasSky ? darken * 0.8F + 0.2F : 1.0F;
+        float darken = Darken(angle, weather.Rain, weather.Thunder);
+        SkyDarken = !hasSky || skyFlash ? 1.0F : darken * 0.8F + 0.2F;
         // The dimension's sky_light_level comes from the day timeline, which this client does not run; this
         // curve agrees with it at full day and full night, in rain and thunder, and differs only through dusk and dawn.
-        SkyDarkening = hasSky ? (int)((1.0F - darken) * 11.0F) : 0;
+        // It is game state, so it follows the level's weather whatever is drawn.
+        float rain = level?.RainLevel ?? 0.0F;
+        SkyDarkening = hasSky ? (int)((1.0F - Darken(angle, rain, (level?.ThunderLevel ?? 0.0F) * rain)) * 11.0F) : 0;
 
         float skyBrightness = Math.Clamp(MathF.Cos(angle * MathF.PI * 2.0F) * 2.0F + 0.5F, 0.0F, 1.0F);
         Vector3 baseSky = Rgb(skyRgb);
@@ -90,11 +88,14 @@ public sealed unsafe class Lighting : IDisposable {
             baseSky = baseFog;
             skyBrightness = 1.0F;
         }
-        Vector3 grey = new(0.6F);
         Vector3 sky = baseSky * skyBrightness;
         Vector3 fog = baseFog * (skyBrightness * 0.94F + 0.06F);
-        sky = Vector3.Lerp(sky, grey * skyBrightness, rain * 0.6F);
-        fog = Vector3.Lerp(fog, grey * skyBrightness, rain * 0.6F);
+        // WeatherAttributes' sky and fog colour layers, then ClientLevel's flash toward a pale blue.
+        sky = weather.BlendToGray(sky, 0.6F, 0.75F, 0.24F, 0.94F);
+        fog = weather.Multiply(fog, new Vector3(0.5F, 0.5F, 0.6F), new Vector3(0.25F, 0.25F, 0.3F));
+        if (skyFlash && hasSky) {
+            sky = Vector3.Lerp(sky, new Vector3(204.0F / 255.0F, 204.0F / 255.0F, 1.0F), 0.22F);
+        }
         if (underwater) {
             fog = Rgb(waterFogRgb) * (SkyDarken * 0.8F + 0.2F);
             sky = fog;
@@ -115,6 +116,14 @@ public sealed unsafe class Lighting : IDisposable {
         }
 
         BuildLightmap(ambient, hasSky, _bossOverlayWorldDarkeningO + partialTick * (_bossOverlayWorldDarkening - _bossOverlayWorldDarkeningO));
+    }
+
+    /// <summary><c>Level.getSkyDarken</c>, as a brightness rather than a darkness.</summary>
+    private static float Darken(float angle, float rain, float thunder) {
+        float darken = 1.0F - (MathF.Cos(angle * MathF.PI * 2.0F) * 2.0F + 0.2F);
+        darken = 1.0F - Math.Clamp(darken, 0.0F, 1.0F);
+        darken *= 1.0F - rain * 5.0F / 16.0F;
+        return darken * (1.0F - thunder * 5.0F / 16.0F);
     }
 
     private static Vector3 Rgb(uint rgb) => new(((rgb >> 16) & 0xFF) / 255.0F, ((rgb >> 8) & 0xFF) / 255.0F, (rgb & 0xFF) / 255.0F);

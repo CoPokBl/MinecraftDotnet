@@ -15,22 +15,38 @@ public sealed class PackFiles : IDisposable {
         IEnumerable<string> Paths(string prefix);
     }
 
-    private sealed class FolderPack(string root) : IPack {
-        public byte[]? Read(string path) {
-            string full = Path.Combine(root, path);
-            return File.Exists(full) ? File.ReadAllBytes(full) : null;
-        }
+    /// <summary>
+    /// <c>CompositePackResources</c>' search order for a pack with overlays: the overlay folders that apply, the last
+    /// listed first, then the pack's own root. Root files such as <c>pack.mcmeta</c> only ever come from the root.
+    /// </summary>
+    private static string[] Prefixes(IReadOnlyList<string> overlays) => [.. overlays.Reverse().Select(o => o + "/"), ""];
 
-        public bool Exists(string path) => File.Exists(Path.Combine(root, path));
+    private static bool IsRootFile(string path) => !path.Contains('/');
 
-        public IEnumerable<string> Paths(string prefix) {
-            string directory = Path.Combine(root, prefix);
-            if (!Directory.Exists(directory)) {
-                return [];
+    private sealed class FolderPack(string root, IReadOnlyList<string> overlays) : IPack {
+        private readonly string[] _prefixes = Prefixes(overlays);
+
+        private string? Find(string path) {
+            foreach (string prefix in IsRootFile(path) ? [""] : _prefixes) {
+                string full = Path.Combine(root, prefix + path);
+                if (File.Exists(full)) {
+                    return full;
+                }
             }
-            return Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories)
-                .Select(file => Path.GetRelativePath(root, file).Replace('\\', '/'));
+            return null;
         }
+
+        public byte[]? Read(string path) => Find(path) is { } full ? File.ReadAllBytes(full) : null;
+
+        public bool Exists(string path) => Find(path) != null;
+
+        public IEnumerable<string> Paths(string prefix) => _prefixes.SelectMany(overlay => {
+            string overlayRoot = Path.Combine(root, overlay);
+            string directory = Path.Combine(overlayRoot, prefix);
+            return Directory.Exists(directory)
+                ? Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories).Select(file => Path.GetRelativePath(overlayRoot, file).Replace('\\', '/'))
+                : [];
+        }).Distinct();
 
         public void Dispose() { }
     }
@@ -38,18 +54,31 @@ public sealed class PackFiles : IDisposable {
     private sealed class ZipPack : IPack {
         private readonly ZipArchive _zip;
         private readonly Dictionary<string, ZipArchiveEntry> _entries = new(StringComparer.Ordinal);
+        private readonly string[] _prefixes;
 
-        public ZipPack(string file) {
+        public ZipPack(string file, IReadOnlyList<string> overlays) {
+            _prefixes = Prefixes(overlays);
             _zip = ZipFile.OpenRead(file);
             foreach (ZipArchiveEntry entry in _zip.Entries) {
-                if (entry.FullName.StartsWith("assets/", StringComparison.Ordinal) || entry.FullName == "pack.mcmeta") {
-                    _entries[entry.FullName] = entry;
+                string name = entry.FullName;
+                if (name is "pack.mcmeta" or "pack.png" || _prefixes.Any(prefix => name.Length > prefix.Length + 7 && name.StartsWith(prefix, StringComparison.Ordinal)
+                        && string.CompareOrdinal(name, prefix.Length, "assets/", 0, 7) == 0)) {
+                    _entries[name] = entry;
                 }
             }
         }
 
+        private ZipArchiveEntry? Find(string path) {
+            foreach (string prefix in IsRootFile(path) ? [""] : _prefixes) {
+                if (_entries.TryGetValue(prefix.Length == 0 ? path : prefix + path, out ZipArchiveEntry? entry)) {
+                    return entry;
+                }
+            }
+            return null;
+        }
+
         public byte[]? Read(string path) {
-            if (!_entries.TryGetValue(path, out ZipArchiveEntry? entry)) {
+            if (Find(path) is not { } entry) {
                 return null;
             }
             // ZipArchive is not safe to read from two threads at once.
@@ -61,34 +90,41 @@ public sealed class PackFiles : IDisposable {
             }
         }
 
-        public bool Exists(string path) => _entries.ContainsKey(path);
+        public bool Exists(string path) => Find(path) != null;
 
-        public IEnumerable<string> Paths(string prefix) => _entries.Keys.Where(k => k.StartsWith(prefix, StringComparison.Ordinal) && !k.EndsWith('/'));
+        public IEnumerable<string> Paths(string prefix) => _prefixes.SelectMany(overlay => _entries.Keys
+            .Where(k => k.StartsWith(overlay, StringComparison.Ordinal) && string.CompareOrdinal(k, overlay.Length, prefix, 0, prefix.Length) == 0 && !k.EndsWith('/'))
+            .Select(k => k[overlay.Length..])).Distinct();
 
         public void Dispose() => _zip.Dispose();
     }
 
-    private readonly List<IPack> _packs = [];
+    private readonly List<IPack> _packs;
 
     public IReadOnlyList<string> Names { get; }
 
-    public PackFiles(IReadOnlyList<string> paths) {
-        Names = paths.Select(Path.GetFileName).Select(n => n ?? "").ToList();
-        foreach (string path in paths) {
-            if (Directory.Exists(path)) {
-                _packs.Add(new FolderPack(path));
-            }
-            else if (File.Exists(path)) {
-                _packs.Add(new ZipPack(path));
-            }
-            else {
-                throw new FileNotFoundException($"Resource pack not found: {path}");
-            }
-        }
+    /// <summary>Lowest priority first.</summary>
+    public IReadOnlyList<IPack> Packs => _packs;
+
+    /// <param name="packs">Lowest priority first, each with the name it is listed under.</param>
+    public PackFiles(IReadOnlyList<(string Name, IPack Pack)> packs) {
+        Names = packs.Select(p => p.Name).ToList();
+        _packs = packs.Select(p => p.Pack).ToList();
     }
 
-    /// <summary>A pack beneath every other, as the game's own assets sit beneath the packs a player adds.</summary>
-    public void AddLowest(IPack pack) => _packs.Insert(0, pack);
+    /// <summary>
+    /// A pack folder, or a zip, which a game jar also is: <c>openFull</c>, with the overlay folders its metadata
+    /// chose for this version stacked over its root.
+    /// </summary>
+    public static IPack Open(string path, IReadOnlyList<string>? overlays = null) {
+        if (Directory.Exists(path)) {
+            return new FolderPack(path, overlays ?? []);
+        }
+        if (File.Exists(path)) {
+            return new ZipPack(path, overlays ?? []);
+        }
+        throw new FileNotFoundException($"Resource pack not found: {path}");
+    }
 
     /// <summary>The file from every pack that has it, lowest first, for files that packs add to rather than replace.</summary>
     public IEnumerable<byte[]> ReadEach(string path) {

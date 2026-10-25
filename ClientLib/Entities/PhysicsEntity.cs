@@ -13,7 +13,7 @@ namespace ClientLib.Entities;
 /// gravity, <c>move</c>, the blocks under and inside it, and pistons. Not simulated: portals, and sounds,
 /// which <c>ClientLevel.playSeededSound</c> drops for anything but the player.
 /// </summary>
-public abstract class PhysicsEntity(MinecraftClient client) : ClientEntity, ICollisionEntity, IPistonPushable {
+public abstract class PhysicsEntity(MinecraftClient client) : ClientEntity, ICollisionEntity, IBlockEntityMovable {
     protected readonly MinecraftClient Client = client;
 
     private (int X, int Y, int Z)? _mainSupportingBlock;
@@ -42,7 +42,7 @@ public abstract class PhysicsEntity(MinecraftClient client) : ClientEntity, ICol
     protected int BlockZ => (int)Math.Floor(Position.Z);
 
     /// <summary><c>Entity.getDimensions(getPose())</c>.</summary>
-    protected virtual (float Width, float Height) Dimensions => ((float)Width, (float)Height);
+    public override (float Width, float Height) Dimensions => ((float)Width, (float)Height);
 
     /// <summary><c>EntityDimensions.makeBoundingBox</c>: the half width is a float before it is widened.</summary>
     public Box MakeBoundingBox(Vec3d position) {
@@ -90,10 +90,24 @@ public abstract class PhysicsEntity(MinecraftClient client) : ClientEntity, ICol
         if (IsInLava) {
             FallDistance *= 0.5;
         }
+        CheckBelowWorld();
         FirstTick = false;
     }
 
-    /// <summary><c>Entity.updateFluidInteraction</c>; the splash it runs is only particles and a sound the client drops.</summary>
+    /// <summary><c>Entity.checkBelowWorld</c>.</summary>
+    private void CheckBelowWorld() {
+        if (Position.Y < Level.MinY - 64) {
+            OnBelowWorld();
+        }
+    }
+
+    /// <summary><c>Entity.onBelowWorld</c>, which discards on a client as on the server.</summary>
+    protected virtual void OnBelowWorld() => Client.Discard(this);
+
+    /// <summary>
+    /// <c>Entity.updateFluidInteraction</c>. The splash it runs is a sound the client drops and particles, which
+    /// <see cref="Particles.EntityParticles"/> makes when it sees <see cref="IsInWater"/> turn on.
+    /// </summary>
     protected bool UpdateFluidInteraction() {
         Fluids.Update(Level, BoundingBox, BlockX, EyeY, BlockZ, !IsPushedByFluid);
         bool inWater = Fluids.InWater;
@@ -388,5 +402,16 @@ public abstract class PhysicsEntity(MinecraftClient client) : ClientEntity, ICol
         Move(delta, MoverType.Piston);
         ApplyEffectsFromBlocks([new EntityMovement(previousPos, Position)]);
         _movements.RemoveLatest();
+    }
+
+    public void MoveByShulkerBox(Vec3d delta) => Move(delta, MoverType.ShulkerBox);
+
+    /// <summary>Only a player is ever a spectator.</summary>
+    public bool IsAliveAndNotSpectator => !IsRemoved && (!IsLiving || CurrentHealth > 0.0F);
+
+    public void CheckFallDistanceAccumulation() {
+        if (DeltaMovement.Y > -0.5 && FallDistance > 1.0) {
+            FallDistance = 1.0;
+        }
     }
 }

@@ -15,15 +15,12 @@ public sealed class ZombieVillagerRenderer : HumanoidMobRenderer<ZombieVillagerR
     private const string ZombieVillagerLocation = "minecraft:textures/entity/zombie_villager/zombie_villager.png";
     private const string BabyZombieVillagerLocation = "minecraft:textures/entity/zombie_villager/zombie_villager_baby.png";
 
-    /// <summary><c>VillagerRenderer.CUSTOM_HEAD_TRANSFORMS</c>.</summary>
-    public static readonly CustomHeadLayer.Transforms VillagerCustomHeadTransforms = new(-0.1171875F, -0.07421875F, 1.0F);
-
     public ZombieVillagerRenderer(EntityRendererContext context)
         : base(context,
             new ZombieVillagerModel<ZombieVillagerRenderState>(ZombieVillagerModel<ZombieVillagerRenderState>.CreateBodyLayer().BakeRoot()),
             new BabyZombieVillagerModel<ZombieVillagerRenderState>(BabyZombieVillagerModel<ZombieVillagerRenderState>.CreateBodyLayer().BakeRoot()),
             0.5F,
-            VillagerCustomHeadTransforms) {
+            VillagerRenderer.CustomHeadTransforms) {
         AddLayer(new HumanoidArmorLayer<ZombieVillagerRenderState, ZombieVillagerModel<ZombieVillagerRenderState>, ZombieVillagerModel<ZombieVillagerRenderState>>(
             this,
             ArmorModelSet.Bake(ZombieVillagerModel<ZombieVillagerRenderState>.CreateArmorLayerSet(HumanoidLayers.InnerArmorDeformation, HumanoidLayers.OuterArmorDeformation),

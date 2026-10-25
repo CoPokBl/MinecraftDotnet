@@ -1,3 +1,5 @@
+using ClientLib.Inventory;
+using ClientLib.Maths;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Items;
 using Minecraft.Schemas.Items;
@@ -17,16 +19,16 @@ public static class ItemBars {
 
     public static bool IsBarVisible(ItemStack stack) {
         if (IsBundle(stack)) {
-            return BundleWeight(ItemComponents.Get(stack, DataComponent.BundleContents) ?? []).CompareTo(Fraction.Zero) > 0;
+            return BundleWeight(stack).CompareTo(Fraction.Zero) > 0;
         }
         return IsDamaged(stack);
     }
 
     public static int GetBarWidth(ItemStack stack) {
         if (IsBundle(stack)) {
-            Fraction weight = BundleWeight(ItemComponents.Get(stack, DataComponent.BundleContents) ?? []);
+            Fraction weight = BundleWeight(stack);
             // Mth.mulAndTruncate.
-            return (int)Math.Min(1 + weight.Numerator * 12 / weight.Denominator, 13);
+            return Math.Min(1 + unchecked(weight.Numerator * 12) / weight.Denominator, 13);
         }
         // Math.round(float) is floor(x + 0.5F).
         return Math.Clamp((int)MathF.Floor(13.0F - DamageValue(stack) * 13.0F / MaxDamage(stack) + 0.5F), 0, 13);
@@ -35,7 +37,7 @@ public static class ItemBars {
     /// <returns>The colour as 0xRRGGBB, alpha not included.</returns>
     public static uint GetBarColor(ItemStack stack) {
         if (IsBundle(stack)) {
-            Fraction weight = BundleWeight(ItemComponents.Get(stack, DataComponent.BundleContents) ?? []);
+            Fraction weight = BundleWeight(stack);
             return (weight.CompareTo(Fraction.One) >= 0 ? BundleFullBarColor : BundleBarColor) & 0xFFFFFF;
         }
         int maxDamage = MaxDamage(stack);
@@ -43,14 +45,8 @@ public static class ItemBars {
         return HsvToRgb(healthPercentage / 3.0F, 1.0F, 1.0F);
     }
 
-    /// <summary>The items that are <c>BundleItem</c>s, the only class overriding the bar; another stack given bundle contents keeps the durability bar.</summary>
-    private static readonly HashSet<IItem> Bundles = [
-        Item.Bundle, Item.WhiteBundle, Item.OrangeBundle, Item.MagentaBundle, Item.LightBlueBundle, Item.YellowBundle, Item.LimeBundle,
-        Item.PinkBundle, Item.GrayBundle, Item.LightGrayBundle, Item.CyanBundle, Item.PurpleBundle, Item.BlueBundle, Item.BrownBundle,
-        Item.GreenBundle, Item.RedBundle, Item.BlackBundle
-    ];
-
-    public static bool IsBundle(ItemStack stack) => Bundles.Contains(stack.Type);
+    /// <summary>Only a <c>BundleItem</c> overrides the bar; another stack given bundle contents keeps the durability bar.</summary>
+    public static bool IsBundle(ItemStack stack) => BundleItem.Is(stack.Type);
 
     /// <summary><c>ItemStack.isDamageableItem</c>.</summary>
     internal static bool IsDamageableItem(ItemStack stack) =>
@@ -66,27 +62,11 @@ public static class ItemBars {
         ItemComponents.Has(stack, DataComponent.MaxStackSize) ? ItemComponents.Get(stack, DataComponent.MaxStackSize) : 1;
 
     /// <summary><c>BundleItem.getFullnessDisplay</c>.</summary>
-    internal static float BundleFullness(ItemStack stack) {
-        Fraction weight = BundleWeight(ItemComponents.Get(stack, DataComponent.BundleContents) ?? []);
-        return (float)weight.Numerator / weight.Denominator;
-    }
+    internal static float BundleFullness(ItemStack stack) => BundleWeight(stack).FloatValue;
 
-    /// <summary><c>BundleContents.computeContentWeight</c>.</summary>
-    private static Fraction BundleWeight(ItemStack[] items) {
-        Fraction weight = Fraction.Zero;
-        foreach (ItemStack stack in items) {
-            weight = weight.Add(Weight(stack).Multiply(stack.Count));
-        }
-        return weight;
-    }
-
-    /// <summary><c>BundleContents.getWeight</c>: a bundle weighs its contents and a sixteenth, a hive with bees a whole bundle.</summary>
-    private static Fraction Weight(ItemStack stack) {
-        if (ItemComponents.Get(stack, DataComponent.BundleContents) is { } nested) {
-            return BundleWeight(nested).Add(new Fraction(1, 16));
-        }
-        return ItemComponents.Get(stack, DataComponent.Bees) is { Length: > 0 } ? Fraction.One : new Fraction(1, MaxStackSize(stack));
-    }
+    /// <summary><c>BundleItem.getWeightSafe</c>: an unusable weight counts as full.</summary>
+    private static Fraction BundleWeight(ItemStack stack) =>
+        BundleContents.Weight(BundleContents.Of(stack) ?? []) ?? Fraction.One;
 
     /// <summary><c>Mth.hsvToRgb</c>.</summary>
     private static uint HsvToRgb(float hue, float saturation, float value) {
@@ -106,26 +86,5 @@ public static class ItemBars {
         };
         return (uint)Math.Clamp((int)(red * 255.0F), 0, 255) << 16 | (uint)Math.Clamp((int)(green * 255.0F), 0, 255) << 8
             | (uint)Math.Clamp((int)(blue * 255.0F), 0, 255);
-    }
-
-    /// <summary>The part of Apache's <c>Fraction</c> bundle weights use: always reduced, as its arithmetic leaves it.</summary>
-    private readonly record struct Fraction : IComparable<Fraction> {
-        public static readonly Fraction Zero = new(0, 1);
-        public static readonly Fraction One = new(1, 1);
-
-        public long Numerator { get; }
-        public long Denominator { get; }
-
-        public Fraction(long numerator, long denominator) {
-            long gcd = (long)System.Numerics.BigInteger.GreatestCommonDivisor(numerator, denominator);
-            Numerator = gcd == 0 ? 0 : numerator / gcd;
-            Denominator = gcd == 0 ? 1 : denominator / gcd;
-        }
-
-        public Fraction Add(Fraction other) => new(Numerator * other.Denominator + other.Numerator * Denominator, Denominator * other.Denominator);
-
-        public Fraction Multiply(int factor) => new(Numerator * factor, Denominator);
-
-        public int CompareTo(Fraction other) => (Numerator * other.Denominator).CompareTo(other.Numerator * Denominator);
     }
 }

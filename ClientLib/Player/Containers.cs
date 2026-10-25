@@ -235,37 +235,38 @@ public abstract class ContainerMenu(int windowId, IInventoryType? type, TextComp
                 Slot slot = _slots[slotIndex];
                 Stack clicked = slot.Item;
                 Stack carried = Carried;
-                // tryItemClickBehaviourOverride is bundles stacking onto and out of slots, which is not ported.
-                if (clicked.IsEmpty) {
-                    if (!carried.IsEmpty) {
-                        int amount = primary ? carried.Count : 1;
-                        Carried = slot.SafeInsert(carried, amount);
-                    }
-                }
-                else if (slot.MayPickup(user)) {
-                    if (carried.IsEmpty) {
-                        int amount = primary ? clicked.Count : (clicked.Count + 1) / 2;
-                        Stack? taken = slot.TryRemove(amount, int.MaxValue, user);
-                        if (taken != null) {
-                            Carried = taken;
-                            slot.OnTake(user, taken);
-                        }
-                    }
-                    else if (slot.MayPlace(carried)) {
-                        if (Stack.IsSameItemSameComponents(clicked, carried)) {
+                if (!TryItemClickBehaviourOverride(user, primary, slot, clicked, carried)) {
+                    if (clicked.IsEmpty) {
+                        if (!carried.IsEmpty) {
                             int amount = primary ? carried.Count : 1;
                             Carried = slot.SafeInsert(carried, amount);
                         }
-                        else if (carried.Count <= slot.MaxStackSizeFor(carried)) {
-                            Carried = clicked;
-                            slot.SetByPlayer(carried);
-                        }
                     }
-                    else if (Stack.IsSameItemSameComponents(clicked, carried)) {
-                        Stack? taken = slot.TryRemove(clicked.Count, carried.MaxStackSize - carried.Count, user);
-                        if (taken != null) {
-                            carried.Grow(taken.Count);
-                            slot.OnTake(user, taken);
+                    else if (slot.MayPickup(user)) {
+                        if (carried.IsEmpty) {
+                            int amount = primary ? clicked.Count : (clicked.Count + 1) / 2;
+                            Stack? taken = slot.TryRemove(amount, int.MaxValue, user);
+                            if (taken != null) {
+                                Carried = taken;
+                                slot.OnTake(user, taken);
+                            }
+                        }
+                        else if (slot.MayPlace(carried)) {
+                            if (Stack.IsSameItemSameComponents(clicked, carried)) {
+                                int amount = primary ? carried.Count : 1;
+                                Carried = slot.SafeInsert(carried, amount);
+                            }
+                            else if (carried.Count <= slot.MaxStackSizeFor(carried)) {
+                                Carried = clicked;
+                                slot.SetByPlayer(carried);
+                            }
+                        }
+                        else if (Stack.IsSameItemSameComponents(clicked, carried)) {
+                            Stack? taken = slot.TryRemove(clicked.Count, carried.MaxStackSize - carried.Count, user);
+                            if (taken != null) {
+                                carried.Grow(taken.Count);
+                                slot.OnTake(user, taken);
+                            }
                         }
                     }
                 }
@@ -351,6 +352,15 @@ public abstract class ContainerMenu(int windowId, IInventoryType? type, TextComp
             }
         }
     }
+
+    /// <summary>
+    /// <c>tryItemClickBehaviourOverride</c>: a bundle on the cursor or in the slot taking the click. Bundles are
+    /// never feature flagged off, so the enabled checks are left out. <c>BundleItem</c> also tells the menu its
+    /// slots changed, which on a client only matters to a merchant's sell item, and this client predicts none.
+    /// </summary>
+    private bool TryItemClickBehaviourOverride(IMenuUser user, bool primary, Slot slot, Stack clicked, Stack carried) =>
+        BundleItem.Is(carried.Item) && BundleItem.OverrideStackedOnOther(carried, slot, primary, user)
+        || BundleItem.Is(clicked.Item) && BundleItem.OverrideOtherStackedOnMe(clicked, carried, slot, primary, user, this);
 
     /// <summary><c>moveItemStackTo</c>: fills matching stacks first, then the first empty slot.</summary>
     protected bool MoveItemStackTo(Stack stack, int startSlot, int endSlot, bool backwards) {

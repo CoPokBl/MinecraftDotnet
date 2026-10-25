@@ -19,12 +19,6 @@ public sealed class TntRenderer : EntityRenderer<TntRenderState> {
         _blocks = context.Blocks;
     }
 
-    /// <summary><c>PrimedTnt.tick</c> counts its fuse down on the client's own copy of the synced value.</summary>
-    public override void Tick(ClientEntity entity) {
-        LocalEntityData<int> fuse = (LocalEntityData<int>)(entity.RendererData ??= new LocalEntityData<int>(EntityDataFields.PrimedTnt.Fuse, 80));
-        fuse.Value = fuse.Sync(entity) - 1;
-    }
-
     public override void Submit(TntRenderState state, PoseStack pose, EntityRenderContext context) {
         pose.Push();
         pose.Translate(0.0F, 0.5F, 0.0F);
@@ -54,7 +48,7 @@ public sealed class TntRenderer : EntityRenderer<TntRenderState> {
 
     public override void ExtractRenderState(ClientEntity entity, TntRenderState state, float partialTick, EntityRenderContext context) {
         base.ExtractRenderState(entity, state, partialTick, context);
-        int fuse = entity.RendererData is LocalEntityData<int> local ? local.Value : entity.Get(EntityDataFields.PrimedTnt.Fuse, 80);
+        int fuse = entity.Get(EntityDataFields.PrimedTnt.Fuse, 80);
         state.FuseRemainingInTicks = fuse - partialTick + 1.0F;
         state.BlockState = entity.Get(EntityDataFields.PrimedTnt.BlockState) ?? Block.Tnt;
     }

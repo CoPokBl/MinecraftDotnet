@@ -12,7 +12,7 @@ namespace ClientLib.Player;
 /// The moves of a tick as <c>Entity</c> records them, what the blocks they pass through do to the player,
 /// and the pistons that move it.
 /// </summary>
-public sealed partial class LocalPlayer : IPistonPushable {
+public sealed partial class LocalPlayer : IBlockEntityMovable {
     private readonly TickMovements _movements = new();
     private readonly PistonMovementLimit _pistonLimit = new();
 
@@ -40,6 +40,9 @@ public sealed partial class LocalPlayer : IPistonPushable {
             ApplyInsideEffects(effects);
         }
         _effectSteps.Clear();
+        if (IsInRain) {
+            ClearFire();
+        }
     }
 
     /// <summary><c>Block.stepOn</c>: a slime block slows what walks on it.</summary>
@@ -148,5 +151,15 @@ public sealed partial class LocalPlayer : IPistonPushable {
         Move(delta, MoverType.Piston);
         ApplyEffectsFromBlocks([new EntityMovement(previousPos, Position)]);
         _movements.RemoveLatest();
+    }
+
+    public void MoveByShulkerBox(Vec3d delta) => Move(delta, MoverType.ShulkerBox);
+
+    public bool IsAliveAndNotSpectator => !IsRemoved && !IsDead && !IsSpectator;
+
+    public void CheckFallDistanceAccumulation() {
+        if (DeltaMovement.Y > -0.5 && FallDistance > 1.0) {
+            FallDistance = 1.0;
+        }
     }
 }

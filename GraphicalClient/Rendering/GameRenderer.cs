@@ -10,6 +10,7 @@ using GraphicalClient.Assets.ResourcePacks;
 using GraphicalClient.Gui;
 using GraphicalClient.Rendering.Entities;
 using GraphicalClient.Rendering.Pipeline;
+using GraphicalClient.Rendering.Weather;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Silk.NET.Maths;
@@ -26,13 +27,12 @@ public readonly record struct FramePlan(bool InWorld, float PartialTick, bool Un
 /// <summary>The render resources built from the resource packs, and the world's half of each frame.</summary>
 public sealed class GameRenderer : IDisposable {
     private readonly GL _gl;
-    private readonly MinecraftClient _client;
+    private MinecraftClient _client;
     private readonly LaunchOptions _options;
     private readonly GameSettings _settings;
     private readonly FrameProfiler _profiler;
     private readonly Stopwatch _clock;
-    private readonly BlockModels _models;
-    private readonly TextureAnimator _animator;
+    private PackResources _pack = null!;
     private readonly ShadowCamera _shadows = new();
     private RenderPipeline _pipeline = null!;
 
@@ -41,76 +41,134 @@ public sealed class GameRenderer : IDisposable {
     private double _previousFrameSeconds;
     private long _frameNumber;
     private Vector2 _easedEyeLight = new(-1);
+    private readonly LightningFlash _lightning = new();
+    private WeatherView _weather;
 
     public Camera Camera { get; } = new();
     public PlayerCamera View { get; } = new();
     public bool HideGui { get; set; }
-    public PackFiles? PackFiles { get; }
-    public WorldRenderer World { get; }
+    public PackFiles? PackFiles => _pack.Packs;
+    public WorldRenderer World => _pack.World;
     public Lighting Lighting { get; }
     public GpuTimers GpuTimers { get; }
-    public WorldScene Scene { get; }
+    public WorldScene Scene => _pack.Scene;
     public GuiRenderer Gui { get; }
-    public TextRenderer Text { get; }
-    public GuiSprites Sprites { get; }
-    public HudIcons Icons { get; }
-    public ItemAtlas Items { get; }
-    public ItemModelResolver ItemModels { get; }
-    public EnchantmentGlint Glint { get; }
-    public GuiEntityRenderer GuiEntities { get; }
-    public int BlockTextureCount => _models.Textures.Count;
+    public TextRenderer Text => _pack.Text;
+    public GuiSprites Sprites => _pack.Sprites;
+    public HudIcons Icons => _pack.Icons;
+    public ItemAtlas Items => _pack.Items;
+    public ItemModelResolver ItemModels => _pack.ItemModels;
+    public EnchantmentGlint Glint => _pack.Glint;
+    public GuiEntityRenderer GuiEntities => _pack.GuiEntities;
+    public int BlockTextureCount => _pack.Models.Textures.Count;
     public string? PipelineReport => _pipeline?.GpuReport();
 
-    public GameRenderer(GL gl, MinecraftClient client, LaunchOptions options, GameSettings settings, FrameProfiler profiler, Stopwatch clock) {
+    public GameRenderer(GL gl, MinecraftClient client, LaunchOptions options, GameSettings settings, FrameProfiler profiler, Stopwatch clock, PackFiles? packs) {
         _gl = gl;
         _client = client;
         _options = options;
         _settings = settings;
         _profiler = profiler;
         _clock = clock;
+        Lighting = new Lighting(gl);
+        GpuTimers = new GpuTimers(gl);
+        Gui = new GuiRenderer(gl);
+        Swap(Build(packs, FontOptions()));
+        LoadPipeline();
+    }
 
+    /// <summary>The <c>Options</c> font settings a <see cref="Build"/> reads, taken on the render thread.</summary>
+    public HashSet<string> FontOptions() {
+        HashSet<string> fontOptions = [];
+        if (_settings.ForceUnicodeFont) {
+            fontOptions.Add("uniform");
+        }
+        if (_settings.JapaneseGlyphVariants) {
+            fontOptions.Add("jp");
+        }
+        return fontOptions;
+    }
+
+    /// <summary>
+    /// Builds everything drawn from the resource packs, the packs' half of vanilla's resource reload. Nothing the
+    /// frame draws from is touched, so it may run on another thread with a context sharing this one's objects.
+    /// </summary>
+    public PackResources Build(PackFiles? packs, IReadOnlySet<string> fontOptions) {
+        MinecraftClient client = _client;
         DevArtSource art = new(VanillaRegistry.Data);
         ResourcePackSource? pack = null;
         BiomeColours.ColourMaps? colourMaps = null;
-        if (options.ResourcePacks.Count > 0) {
-            PackFiles = new PackFiles(options.ResourcePacks);
-            if (options.VanillaAssets is { } vanillaAssets) {
-                PackFiles.AddLowest(vanillaAssets);
-            }
-            pack = new ResourcePackSource(PackFiles, art);
+        if (packs != null) {
+            pack = new ResourcePackSource(packs, art);
             colourMaps = pack.ColourMaps();
-            Console.WriteLine($"Resource packs: {string.Join(", ", PackFiles.Names)}");
-            Translations.Load(PackFiles.ReadEach("assets/minecraft/lang/en_us.json")
-                .Select(json => Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(System.Text.Encoding.UTF8.GetString(json))!));
+            Console.WriteLine($"Resource packs: {string.Join(", ", packs.Names)}");
         }
-        EndPortalPalette.Load(PackFiles);
         IResourceSource source = (IResourceSource?)pack ?? art;
-        _models = new BlockModels(VanillaRegistry.Data, source, (keys, pixels) => new TextureArray(gl, keys, pixels));
+        BlockModels models = new(VanillaRegistry.Data, source, (keys, pixels) => new TextureArray(_gl, keys, pixels));
         if (pack is { Warnings.Count: > 0 }) {
             Console.WriteLine($"Resource pack problems ({pack.Warnings.Count}): {string.Join("; ", pack.Warnings.Take(10))}");
         }
-        _animator = new TextureAnimator(gl, _models.Textures, _models.Animations);
-        World = new WorldRenderer(gl, _models, (int)Block.Water.StateId) {
-            RenderDistance = options.ViewDistance, LodDistance = options.LodDistance, ColourMaps = colourMaps
+        TextureAnimator animator = new(_gl, models.Textures, models.Animations);
+        WorldRenderer world = new(_gl, models, (int)Block.Water.StateId) {
+            RenderDistance = _options.ViewDistance, LodDistance = _options.LodDistance, ColourMaps = colourMaps
         };
-        Lighting = new Lighting(gl);
-        GpuTimers = new GpuTimers(gl);
-        LoadPipeline();
-        Gui = new GuiRenderer(gl);
-        Font font = (pack != null ? Font.FromPack(gl, PackFiles!, pack) : null) ?? Font.BuiltIn(gl);
-        Text = new TextRenderer(Gui, font);
-        Sprites = new GuiSprites(gl, pack);
-        Icons = new HudIcons(gl, Sprites);
-        Glint = new EnchantmentGlint(gl, pack);
-        ItemModels = new ItemModelResolver(source, client);
-        Items = new ItemAtlas(gl, VanillaRegistry.Data, source, ItemModels, Glint);
-        Scene = new WorldScene(gl, client, Camera, World, _models, _animator, pack, art, Glint, ItemModels, font);
-        GuiEntities = new GuiEntityRenderer(gl, client, Scene.Entities, Scene.Textures, Scene.Flames, Lighting.LightmapTexture);
+        Font font = (pack != null ? Font.FromPack(_gl, packs!, pack, fontOptions) : null) ?? Font.BuiltIn(_gl);
+        GuiSprites sprites = new(_gl, pack);
+        EnchantmentGlint glint = new(_gl, pack);
+        ItemModelResolver itemModels = new(source, client);
+        WorldScene scene = new(_gl, client, Camera, world, models, animator, pack, art, glint, itemModels, font);
+        return new PackResources {
+            Packs = packs, Client = client, Models = models, Animator = animator, World = world, Text = new TextRenderer(Gui, font),
+            Sprites = sprites, Icons = new HudIcons(_gl, sprites), Glint = glint, ItemModels = itemModels,
+            Items = new ItemAtlas(_gl, VanillaRegistry.Data, source, itemModels, glint), Scene = scene,
+            GuiEntities = new GuiEntityRenderer(_gl, client, scene.Entities, scene.Textures, scene.Flames, Lighting.LightmapTexture),
+            EndPortalColours = EndPortalPalette.Read(packs)
+        };
+    }
+
+    /// <summary>
+    /// Puts a <see cref="Build"/> in use and drops what the last one built, remeshing every section as
+    /// <c>LevelRenderer.allChanged</c> does. The caller owns the packs and closes the old ones once nothing reads them.
+    /// </summary>
+    public void Swap(PackResources built) {
+        PackResources? old = _pack;
+        _pack = built;
+        EndPortalPalette.Colours = built.EndPortalColours;
+        if (old == null) {
+            return;
+        }
+        old.Scene.UnhookClient();
+        old.World.SetLevel(null);
+        World.Materials = old.World.Materials;
+        old.Dispose();
+        if (built.Client != _client) {
+            ItemModels.Client = _client;
+            GuiEntities.Attach(_client);
+            Scene.Attach(_client);
+        }
+        else {
+            Scene.HookClient();
+        }
+        World.SetLevel(_client.Level);
     }
 
     public void HookClient() {
         _client.LevelChanged += level => World.SetLevel(level);
         Scene.HookClient();
+        _client.PlayerSectionReady = PlayerSectionReady;
+    }
+
+    /// <summary>
+    /// Moves everything drawn from the client onto a fresh connection, dropping the old one's sections and
+    /// pickups. The pack's textures and models stay, as vanilla keeps its resources across a disconnect.
+    /// </summary>
+    public void Attach(MinecraftClient client) {
+        _client = client;
+        World.SetLevel(null);
+        ItemModels.Client = client;
+        GuiEntities.Attach(client);
+        _client.LevelChanged += level => World.SetLevel(level);
+        Scene.Attach(client);
         _client.PlayerSectionReady = PlayerSectionReady;
     }
 
@@ -151,7 +209,7 @@ public sealed class GameRenderer : IDisposable {
     }
 
     public void TickAnimations() {
-        _animator.Tick();
+        _pack.Animator.Tick();
         Scene.Flames.Update();
         Scene.CameraOverlays.Update();
         Scene.ScreenEffects.Update();
@@ -159,6 +217,7 @@ public sealed class GameRenderer : IDisposable {
 
     public void Tick() {
         Scene.Tick();
+        _lightning.Tick(_client);
         if (_client.Level is { TickRateManager.RunsNormally: true }) {
             Lighting.TickBossOverlay(_client.BossOverlay.ShouldDarkenScreen());
         }
@@ -166,6 +225,7 @@ public sealed class GameRenderer : IDisposable {
         if (_client.CameraEntity is { } camera && _client.Level is { } level) {
             Scene.CameraOverlays.Tick(camera, level, Lighting.SkyDarkening);
         }
+        _client.AnimateTicks.SkyDarkening = Lighting.SkyDarkening;
     }
 
     /// <summary>The CPU half of a frame: the camera, the world's bookkeeping and the overlay geometry. No GL calls.</summary>
@@ -189,11 +249,15 @@ public sealed class GameRenderer : IDisposable {
         int cx = (int)Math.Floor(position.X), cy = (int)Math.Floor(position.Y), cz = (int)Math.Floor(position.Z);
         bool underwater = level.GetBlock(cx, cy, cz).Fluid?.Key is "water" or "flowing_water";
         Minecraft.Data.Biomes.IBiome biome = BiomeAt(level, cx, cy, cz);
+        _weather = WeatherView.Of(level, _options.TestWeather);
+        bool bossFog = _client.BossOverlay.ShouldCreateWorldFog();
         Lighting.Update(level, partialTick, _options.ViewDistance, underwater,
             BiomeColours.Environment(level, biome, EnvironmentAttribute.VisualSkyColor, 0x78A7FF),
             BiomeColours.Environment(level, biome, EnvironmentAttribute.VisualFogColor, 0xC0D8FF),
             BiomeColours.Environment(level, biome, EnvironmentAttribute.VisualWaterFogColor, 0x050533),
-            _client.BossOverlay.ShouldCreateWorldFog());
+            _weather, _lightning.Flashing && !_settings.HideLightningFlashes, bossFog);
+        _profiler.Begin("sky");
+        PrepareSky(level, biome, partialTick, underwater || bossFog);
 
         _profiler.Begin("schedule");
         World.Schedule(new Vector3((float)position.X, (float)position.Y, (float)position.Z));
@@ -203,8 +267,28 @@ public sealed class GameRenderer : IDisposable {
         // LevelExtractor.extractVisibleEntities' Entity.setViewScale, on the effective render distance.
         Entities.EntityRenderer.ViewScale =
             Math.Clamp(Math.Min(_options.ViewDistance, _client.ServerViewDistance) / 8.0, 1.0, 2.5) * _settings.EntityDistanceScaling;
+        Scene.LineWidth = Math.Max(2.5F, size.X / 1920.0F * 2.5F);
+        Scene.ShowEntityShadows = _settings.EntityShadows;
+        // TextDisplayRenderer's default background, at getBackgroundOpacity(0.25F).
+        Scene.DefaultTextBackground = _settings.BackgroundColor(0x3F000000);
+        Scene.ShadowCasterLight = _pipeline.Pack.DrawsEntitiesFromShadowCamera ? ShadowCamera.LightDirection(SunDirection) : null;
         Scene.Collect(level, partialTick, cameraEntity, View.FirstPerson, HideGui);
         return new FramePlan(true, partialTick, underwater, size);
+    }
+
+    /// <summary>
+    /// The clouds and the rain or snow for this frame. The clouds fade out by <c>FogData.cloudEnd</c>: the cloud range,
+    /// or the attribute's distance if nearer, or with the world's fog pulled in, under water or by a boss, its end.
+    /// </summary>
+    private void PrepareSky(ClientLevel level, Minecraft.Data.Biomes.IBiome biome, float partialTick, bool fogPulledIn) {
+        float tickPartial = level.TickRateManager.RunsNormally ? partialTick : 0.0F;
+        Scene.Weather.Prepare(level, Camera.Position, partialTick, _weather.Rain, _settings.WeatherRadius, _weather.ForceSnow);
+        float fade = Math.Min(_settings.CloudRange * 16.0F, CloudAttributes.FogEnd(level, biome));
+        if (fogPulledIn) {
+            fade = Math.Min(fade, Lighting.FogEnd);
+        }
+        Scene.Clouds.Prepare(Camera.Position, level.GameTime, tickPartial, _settings.Clouds,
+            CloudAttributes.Colour(level, biome, level.DefaultClockTimeAt(partialTick), _weather), CloudAttributes.Height(level, biome), fade);
     }
 
     private static Minecraft.Data.Biomes.IBiome BiomeAt(ClientLevel level, int x, int y, int z) =>
@@ -220,7 +304,7 @@ public sealed class GameRenderer : IDisposable {
         }
         _profiler.Begin("upload");
         Lighting.Upload();
-        _animator.Upload();
+        _pack.Animator.Upload();
         World.UploadFinished(2.0);
         Scene.Upload();
         _profiler.Begin("cull");
@@ -243,7 +327,7 @@ public sealed class GameRenderer : IDisposable {
         FrameUniforms frame = FrameFor(level, plan.PartialTick, plan.Underwater);
         frame.ShadowView = shadowView;
         frame.ShadowProjection = shadowProjection;
-        _pipeline.Execute(ref frame, Scene, _models.Textures.Handle, Lighting.LightmapTexture, Scene.Textures.Handle,
+        _pipeline.Execute(ref frame, Scene, _pack.Models.Textures.Handle, Lighting.LightmapTexture, Scene.Textures.Handle,
             Scene.EndSkyTexture, Scene.EndPortalTexture, Glint.ItemTexture, Glint.ArmorTexture, plan.Size.X, plan.Size.Y, drawShadows);
     }
 
@@ -285,7 +369,7 @@ public sealed class GameRenderer : IDisposable {
             FogColour = new Vector4(Lighting.FogColour, 1),
             FogRange = new Vector4(Lighting.FogStart, Lighting.FogEnd, _options.ViewDistance * 16, level.DimensionType.HasSkyLight ? 1 : 0),
             Time = new Vector4(Lighting.TimeOfDay(dayTime), level.GameTime / 20.0F, (float)_clock.Elapsed.TotalSeconds, partialTick),
-            Weather = new Vector4(level.RainLevel, level.ThunderLevel, Lighting.SkyDarken, level.DimensionType.AmbientLight),
+            Weather = new Vector4(_weather.Rain, _weather.Thunder, Lighting.SkyDarken, level.DimensionType.AmbientLight),
             PreviousViewProjection = previousViewProjection,
             CameraMotion = new Vector4((float)motion.X, (float)motion.Y, (float)motion.Z, frameSeconds),
             Counters = new Vector4(_frameNumber & 0xFFFF, (float)((dayTime % 24000 + 24000) % 24000), (int)(((long)Math.Floor(dayTime / 24000) % 8 + 8) % 8),
@@ -306,17 +390,9 @@ public sealed class GameRenderer : IDisposable {
     }
 
     public void Dispose() {
-        World.Dispose();
-        Scene.Dispose();
-        GuiEntities.Dispose();
+        _pack.Dispose();
         Lighting.Dispose();
         _pipeline.Dispose();
-        Text.Dispose();
-        Icons.Dispose();
-        Items.Dispose();
-        Glint.Dispose();
-        Sprites.Dispose();
         Gui.Dispose();
-        _models.Textures.Dispose();
     }
 }

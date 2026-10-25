@@ -16,7 +16,19 @@ public static class MojangServices {
     private const string SessionHost = "https://sessionserver.mojang.com", ServicesHost = "https://api.minecraftservices.com";
 
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(30) };
-    private static readonly Lazy<Task<RSAParameters[]>> PropertyKeys = new(FetchPropertyKeys);
+    private static readonly Lazy<Task<ServicesKeySet>> KeySet = new(FetchKeySet);
+
+    /// <summary>The <c>/publickeys</c> sets: <c>profilePropertyKeys</c> and <c>playerCertificateKeys</c>.</summary>
+    private sealed record ServicesKeySet(RSAParameters[] PropertyKeys, RSAParameters[] CertificateKeys);
+
+    /// <summary>Starts fetching the services keys, as authlib does when its service is made, so a later wait is short.</summary>
+    public static void PrefetchKeys() => _ = KeySet.Value;
+
+    /// <summary>
+    /// The keys that sign players' chat keys, waiting for the fetch as <c>ServicesKeySet.lazy</c> does; empty when
+    /// the key server could not be reached, which is vanilla's <c>canValidateProfileKeys</c> being false.
+    /// </summary>
+    public static IReadOnlyList<RSAParameters> PlayerCertificateKeys => KeySet.Value.GetAwaiter().GetResult().CertificateKeys;
 
     // ProfileResolver.Cached forgets an entry ten minutes after its last use; these last the session.
     private static readonly ConcurrentDictionary<Guid, Task<GameProfile?>> ById = new();
@@ -38,7 +50,7 @@ public static class MojangServices {
             return SignatureState.Invalid;
         }
         byte[] hash = SHA1.HashData(Encoding.UTF8.GetBytes(property.Value));
-        foreach (RSAParameters key in await PropertyKeys.Value) {
+        foreach (RSAParameters key in (await KeySet.Value).PropertyKeys) {
             if (VerifySha1WithRsa(key, hash, signature)) {
                 return SignatureState.Signed;
             }
@@ -71,21 +83,23 @@ public static class MojangServices {
         return decoded.Length == length - 1 && decoded.AsSpan().SequenceEqual(expected.AsSpan(1));
     }
 
-    /// <summary><c>YggdrasilServicesKeyInfo.fetch</c>, without its retries: an empty set when the keys cannot be had.</summary>
-    private static async Task<RSAParameters[]> FetchPropertyKeys() {
+    /// <summary><c>YggdrasilServicesKeyInfo.fetch</c>, without its retries: empty sets when the keys cannot be had.</summary>
+    private static async Task<ServicesKeySet> FetchKeySet() {
         try {
             JObject response = JObject.Parse(await Http.GetStringAsync(ServicesHost + "/publickeys"));
-            return (response["profilePropertyKeys"] as JArray ?? []).Select(key => {
-                using RSA rsa = RSA.Create();
-                rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(key.Value<string>("publicKey")!), out _);
-                return rsa.ExportParameters(false);
-            }).ToArray();
+            return new ServicesKeySet(ParseList(response["profilePropertyKeys"]), ParseList(response["playerCertificateKeys"]));
         }
         catch (Exception e) when (e is HttpRequestException or TaskCanceledException or FormatException or CryptographicException
                                        or Newtonsoft.Json.JsonException) {
-            return [];
+            return new ServicesKeySet([], []);
         }
     }
+
+    private static RSAParameters[] ParseList(JToken? keys) => (keys as JArray ?? []).Select(key => {
+        using RSA rsa = RSA.Create();
+        rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(key.Value<string>("publicKey")!), out _);
+        return rsa.ExportParameters(false);
+    }).ToArray();
 
     /// <summary>
     /// <c>ProfileResolver.Cached.fetchByName</c>: the name's id from <c>/minecraft/profile/lookup/name</c>, then

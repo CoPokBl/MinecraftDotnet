@@ -1,6 +1,7 @@
 using ClientLib;
 using ClientLib.Player;
 using ClientLib.World;
+using GraphicalClient.Gui;
 using Minecraft.Data.EnvironmentAttributes;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Sound;
@@ -17,8 +18,8 @@ public static class Musics {
 }
 
 /// <summary>
-/// <c>MusicManager</c>, with <c>Minecraft.getSituationalMusic</c> and <c>getMusicVolume</c> deciding what plays.
-/// The now playing toast is left out: this client has no toasts.
+/// <c>MusicManager</c>, with <c>Minecraft.getSituationalMusic</c> and <c>getMusicVolume</c> deciding what plays,
+/// telling <see cref="Toasts"/> when a song starts and stops for the now playing toast.
 /// </summary>
 public sealed class MusicManager(SoundEngine engine, MinecraftClient client, Func<(double X, double Y, double Z)> camera) {
     private const int StartingDelay = 100;
@@ -31,9 +32,18 @@ public sealed class MusicManager(SoundEngine engine, MinecraftClient client, Fun
     private int _nextSongDelay = StartingDelay;
     private Identifier? _dimension;
     private LocalPlayer? _player;
+    private bool _toastShown;
 
-    /// <summary><c>Options.musicFrequency</c>.</summary>
+    /// <summary><c>Options.musicFrequency</c>; set it through <see cref="SetMinutesBetweenSongs"/> once playing.</summary>
     public MusicFrequency Frequency { get; set; } = MusicFrequency.Default;
+
+    public ToastManager? Toasts { get; set; }
+
+    /// <summary><c>setMinutesBetweenSongs</c>: the option changed, and the wait for the next song is drawn again.</summary>
+    public void SetMinutesBetweenSongs(MusicFrequency frequency) {
+        Frequency = frequency;
+        _nextSongDelay = frequency.NextSongDelay(SituationalMusic(), _random);
+    }
 
     public void Tick() {
         // ClientPacketListener.handleRespawn stops the music when the respawn changes dimension. Its next song
@@ -116,17 +126,54 @@ public sealed class MusicManager(SoundEngine engine, MinecraftClient client, Fun
 
     private void StartPlaying(Music music) {
         _currentMusic = SoundInstance.ForMusic(music.Sound.Type.Identifier);
-        engine.Play(_currentMusic);
+        switch (engine.Play(_currentMusic)) {
+            case PlayResult.Started:
+                Toasts?.ShowNowPlayingToast();
+                _toastShown = true;
+                break;
+            case PlayResult.StartedSilently:
+                _toastShown = false;
+                break;
+        }
         _nextSongDelay = int.MaxValue;
+    }
+
+    /// <summary>The music volume came up from nothing: a song that started silently gets its toast now.</summary>
+    public void ShowNowPlayingToastIfNeeded() {
+        if (!_toastShown) {
+            Toasts?.ShowNowPlayingToast();
+            _toastShown = true;
+        }
     }
 
     private void StopPlaying() {
         if (_currentMusic != null) {
             engine.Stop(_currentMusic);
             _currentMusic = null;
+            Toasts?.HideNowPlayingToast();
         }
         _nextSongDelay = Frequency.NextSongDelay(SituationalMusic(), _random) + StartingDelay;
     }
+
+    /// <summary>
+    /// <c>getCurrentMusicTranslationKey</c>: the key of the file the song resolved to rather than of its event, so
+    /// the language names the track. Null while nothing plays.
+    /// </summary>
+    public string? CurrentMusicTranslationKey {
+        get {
+            if (_currentMusic?.Sound is not { } sound) {
+                return null;
+            }
+            if (!ReferenceEquals(sound, _keyedSound)) {
+                _keyedSound = sound;
+                _key = sound.Location.Namespace == "minecraft" ? sound.Location.Key : $"{sound.Location.Namespace}.{sound.Location.Key}";
+            }
+            return _key;
+        }
+    }
+
+    private Sound? _keyedSound;
+    private string? _key;
 
     private bool FadePlaying(float volume) {
         if (_currentMusic == null) {
@@ -159,15 +206,25 @@ public sealed class MusicManager(SoundEngine engine, MinecraftClient client, Fun
 
 /// <summary><c>MusicManager.MusicFrequency</c>: the longest wait between songs, in minutes.</summary>
 public sealed class MusicFrequency {
-    public static readonly MusicFrequency Default = new(20);
-    public static readonly MusicFrequency Frequent = new(10);
-    public static readonly MusicFrequency Constant = new(0);
+    public static readonly MusicFrequency Default = new("DEFAULT", "options.music_frequency.default", 20);
+    public static readonly MusicFrequency Frequent = new("FREQUENT", "options.music_frequency.frequent", 10);
+    public static readonly MusicFrequency Constant = new("CONSTANT", "options.music_frequency.constant", 0);
+
+    public static readonly MusicFrequency[] All = [Default, Frequent, Constant];
 
     private readonly int _maxFrequency;
 
-    private MusicFrequency(int maxFrequencyMinutes) {
+    private MusicFrequency(string name, string caption, int maxFrequencyMinutes) {
+        Name = name;
+        Caption = caption;
         _maxFrequency = maxFrequencyMinutes * 1200;
     }
+
+    /// <summary><c>getSerializedName</c>, what <c>options.txt</c> stores.</summary>
+    public string Name { get; }
+
+    /// <summary>The translation key of its name on the option's button.</summary>
+    public string Caption { get; }
 
     /// <summary><c>getNextSongDelay</c>.</summary>
     public int NextSongDelay(Music? music, LegacyRandom random) {

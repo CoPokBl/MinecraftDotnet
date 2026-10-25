@@ -35,6 +35,7 @@ public static class RichSamples {
         typeof(ClientBoundDamageEventPacket),
         typeof(ClientBoundWaypointPacket),
         typeof(ClientBoundPlaceGhostRecipePacket),
+        typeof(ClientBoundRecipeBookAddPacket),
         typeof(ClientBoundUpdateLightPacket),
         typeof(ClientBoundDebugBlockValuePacket),
         typeof(ClientBoundDebugChunkValuePacket),
@@ -200,6 +201,34 @@ public static class RichSamples {
                 ],
                 new SlotDisplay.Item(Item.Torch),
                 new SlotDisplay.Item(Item.CraftingTable))
+        });
+
+        // The flags byte follows each entry, and a group and the requirements are both optional.
+        yield return ("ClientBoundRecipeBookAddPacket", new ClientBoundRecipeBookAddPacket {
+            Entries = [
+                new ClientBoundRecipeBookAddPacket.Entry(new RecipeDisplayEntry {
+                    Id = 1234,
+                    Display = new RecipeDisplay.ShapelessCrafting(
+                        [new SlotDisplay.Tag("minecraft:planks"), new SlotDisplay.Item(Item.Stick)],
+                        new SlotDisplay.Item(Item.Torch),
+                        new SlotDisplay.Item(Item.CraftingTable)),
+                    Group = 7,
+                    Category = RecipeBookCategory.CraftingMisc,
+                    CraftingRequirements = [new IdSet.Ids([1, 2]), new IdSet.Tag("minecraft:planks")]
+                }, true, false),
+                new ClientBoundRecipeBookAddPacket.Entry(new RecipeDisplayEntry {
+                    Id = 3,
+                    Display = new RecipeDisplay.Furnace(
+                        new SlotDisplay.Item(Item.RawIron),
+                        SlotDisplay.AnyFuel.Instance,
+                        new SlotDisplay.Item(Item.IronIngot),
+                        new SlotDisplay.Item(Item.Furnace),
+                        200,
+                        0.7f),
+                    Category = RecipeBookCategory.FurnaceMisc
+                }, false, true)
+            ],
+            Replace = true
         });
 
         yield return ("ClientBoundUpdateLightPacket", new ClientBoundUpdateLightPacket {

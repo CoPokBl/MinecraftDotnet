@@ -81,12 +81,18 @@ public sealed class ClientConnection : IDisposable {
         _socket = socket;
     }
 
-    public static async Task<ClientConnection> Connect(string host, int port, CancellationToken ct = default) {
-        Socket socket = new(SocketType.Stream, ProtocolType.Tcp) {
+    public static async Task<ClientConnection> Connect(System.Net.IPEndPoint endPoint, CancellationToken ct = default) {
+        Socket socket = new(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp) {
             NoDelay = true,
             ReceiveBufferSize = 1 << 20
         };
-        await socket.ConnectAsync(host, port, ct);
+        try {
+            await socket.ConnectAsync(endPoint, ct);
+        }
+        catch {
+            socket.Dispose();
+            throw;
+        }
         return new ClientConnection(socket);
     }
 

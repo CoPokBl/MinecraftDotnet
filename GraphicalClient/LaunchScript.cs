@@ -8,9 +8,13 @@ namespace GraphicalClient;
 
 /// <summary>The launch flags that drive the client by themselves, for scripted tests, screenshots and measuring.</summary>
 public sealed class LaunchScript(LaunchOptions options, MinecraftClient client, Stopwatch clock) {
-    private double _joinedAt = -1;
-    private bool _screenshotTaken, _used, _inventoryHeld, _useHeld;
-    private int _commandIndex, _pressIndex, _typeIndex, _clickIndex;
+    // A client started on the title screen counts every delay from launch, so a script can work the menus.
+    private double _joinedAt = options.ServerGiven && !options.Title ? -1 : 0;
+    private bool _loadedIn, _screenshotTaken, _used, _inventoryHeld, _useHeld, _attackHeld;
+    private int _commandIndex, _pressIndex, _typeIndex, _clickIndex, _scrollIndex;
+
+    /// <summary>Follows the connection a join makes; the script's progress carries over.</summary>
+    public void Attach(MinecraftClient joined) => client = joined;
 
     /// <summary><c>--run</c>: the next line on every 20th client tick once loaded in.</summary>
     public void SendCommands() {
@@ -28,27 +32,29 @@ public sealed class LaunchScript(LaunchOptions options, MinecraftClient client, 
 
     /// <summary>Notes the first frame the player is loaded in, which every delay counts from, and opens what was asked for then.</summary>
     public void CheckJoined(double now, ScreenManager screens) {
-        if (_joinedAt >= 0) {
-            DriveScreen(now - _joinedAt, screens);
+        if (_loadedIn || !client.ClientLoaded) {
+            if (_joinedAt >= 0) {
+                DriveScreen(now - _joinedAt, screens);
+            }
             return;
         }
-        if (!client.ClientLoaded) {
-            return;
+        _loadedIn = true;
+        if (_joinedAt < 0) {
+            _joinedAt = now;
         }
-        _joinedAt = now;
         if (options.OpenInventory) {
             screens.Set(ContainerScreens.PlayerInventory(client));
         }
         if (options.OpenChat != null) {
             // Typed rather than given as the initial text: vanilla only lists suggestions after an edit.
-            screens.OpenChat();
+            screens.OpenChat(Gui.ChatComponent.ChatMethod.Message);
             foreach (char c in options.OpenChat) {
                 screens.Current!.Char(screens.Context, c);
             }
         }
     }
 
-    /// <summary><c>--type</c> and <c>--click</c>, each once its time comes, on whatever screen is open then.</summary>
+    /// <summary><c>--type</c>, <c>--click</c> and <c>--scroll</c>, each once its time comes, on whatever screen is open then.</summary>
     private void DriveScreen(double sinceJoin, ScreenManager screens) {
         while (_typeIndex < options.Types.Count && sinceJoin >= options.Types[_typeIndex].At) {
             foreach (char c in options.Types[_typeIndex++].Text) {
@@ -61,11 +67,15 @@ public sealed class LaunchScript(LaunchOptions options, MinecraftClient client, 
             }
         }
         while (_clickIndex < options.Clicks.Count && sinceJoin >= options.Clicks[_clickIndex].At) {
-            (_, float x, float y) = options.Clicks[_clickIndex++];
+            (_, float x, float y, bool right) = options.Clicks[_clickIndex++];
+            Silk.NET.Input.MouseButton button = right ? Silk.NET.Input.MouseButton.Right : Silk.NET.Input.MouseButton.Left;
             screens.Current?.MouseMove(screens.Context, x, y);
-            screens.Current?.MouseDown(screens.Context, x, y, Silk.NET.Input.MouseButton.Left);
-            screens.Current?.MouseUp(screens.Context, x, y, Silk.NET.Input.MouseButton.Left);
+            screens.Current?.MouseDown(screens.Context, x, y, button);
+            screens.Current?.MouseUp(screens.Context, x, y, button);
             screens.CloseIfClosed();
+        }
+        while (_scrollIndex < options.Scrolls.Count && sinceJoin >= options.Scrolls[_scrollIndex].At) {
+            screens.Current?.Scroll(screens.Context, options.Scrolls[_scrollIndex++].Delta);
         }
     }
 
@@ -105,6 +115,20 @@ public sealed class LaunchScript(LaunchOptions options, MinecraftClient client, 
         return held;
     }
 
+    /// <summary>Whether <c>--hold attack</c> holds the attack button this tick; the tick it starts is a click as well.</summary>
+    public bool HoldsAttack(GameInput input) {
+        bool held = false;
+        if (_joinedAt >= 0) {
+            double sinceJoin = clock.Elapsed.TotalSeconds - _joinedAt;
+            held = options.Holds.Any(h => h.Keys.Contains("attack") && sinceJoin >= h.From && sinceJoin < h.To);
+        }
+        if (held && !_attackHeld) {
+            input.Press("attack");
+        }
+        _attackHeld = held;
+        return held;
+    }
+
     /// <summary><c>--use-after</c>, <c>--press</c>, <c>--screenshot</c> and <c>--exit-after</c>, checked once the frame is drawn.</summary>
     /// <param name="screenshot">Where to save this frame, when it is the one to save.</param>
     public void AfterFrame(double now, GameInput input, out string? screenshot, out bool exit) {
@@ -132,8 +156,15 @@ public sealed class LaunchScript(LaunchOptions options, MinecraftClient client, 
             ServerBoundAttackPacket attack => $"attack {attack.EntityId}",
             ServerBoundPlayerActionPacket action => $"{action.ActionStatus} sequence {action.Sequence}",
             ServerBoundUseItemOnPacket use => $"use item on sequence {use.Sequence}",
+            ServerBoundClientStatusPacket command => $"client command {command.Action}",
             ServerBoundSetPlayerPositionPacket move => $"move {move.Position.X:F4} {move.Position.Y:F4} {move.Position.Z:F4} {move.Flags}",
             ServerBoundSetPlayerPosAndRotPacket move => $"move {move.Position.X:F4} {move.Position.Y:F4} {move.Position.Z:F4} {move.Flags}",
+            ServerBoundChangeRecipeBookSettingsPacket book => $"recipe book {book.BookType} open {book.Open} filtering {book.Filtering}",
+            ServerBoundPlaceRecipePacket place => $"place recipe {place.RecipeId} in window {place.WindowId} max {place.UseMaxItems}",
+            ServerBoundSetSeenRecipePacket seen => $"seen recipe {seen.RecipeId}",
+            ServerBoundSeenAdvancementsPacket seen => $"seen advancements {seen.Action} {seen.Tab}",
+            ServerBoundClickContainerPacket click => $"click window {click.WindowId} slot {click.Slot} button {click.Button} mode {click.Mode}",
+            ServerBoundCloseContainerPacket close => $"close window {close.WindowId}",
             _ => null
         };
         if (what != null) {

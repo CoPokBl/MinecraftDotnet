@@ -226,6 +226,7 @@ RunFileStep("Block Classes", ClassChainCodeGen.GenerateBlockClassCode);
 RunFileStep("Path Types", PathTypeCodeGen.GeneratePathTypeCode);
 RunFileStep("Entity Data", EntityDataCodeGen.GenerateEntityDataCode);
 RunFileStep("Block Sound Groups", BlockSoundGroupCodeGen.GenerateBlockSoundGroupCode);
+RunFileStep("Block Conversions", BlockConversionCodeGen.GenerateBlockConversionCode);
 RunStep("Sounds", SoundCodeGen.CreateSoundEntries);
 RunStep("Inventory Types", InventoryTypeCodeGen.CreateInventoryTypeEntries);
 RunStep("Potion Effects", PotionEffectTypeGen.CreatePotionEffectTypes);

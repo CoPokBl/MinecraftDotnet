@@ -1,3 +1,4 @@
+using ClientLib.Chat;
 using ClientLib.Entities;
 using Minecraft.Data.Generated;
 using Minecraft.Packets;
@@ -9,9 +10,7 @@ using PlayerData = Minecraft.Packets.Play.ClientBound.ClientBoundPlayerInfoUpdat
 
 namespace ClientLib;
 
-public sealed record ChatLine(TextComponent Message, DateTime Received, int AddedTick);
-
-public sealed class PlayerListEntry(Guid uuid, string name, ProfileProperty[]? properties = null) {
+public sealed class PlayerListEntry(Guid uuid, string name, ProfileProperty[]? properties = null, bool enforcesSecureChat = false) {
     public Guid Uuid { get; } = uuid;
     public string Name { get; } = name;
 
@@ -23,11 +22,28 @@ public sealed class PlayerListEntry(Guid uuid, string name, ProfileProperty[]? p
     public TextComponent? DisplayName { get; set; }
     public int ListOrder { get; set; }
     public bool ShowHat { get; set; } = true;
+
+    /// <summary><c>PlayerInfo.chatSession</c>: the session their messages are checked against, once validated.</summary>
+    public RemoteChatSession? ChatSession { get; private set; }
+
+    public SignedMessageValidator MessageValidator { get; private set; } = FallbackMessageValidator(enforcesSecureChat);
+
+    public void SetChatSession(RemoteChatSession chatSession) {
+        ChatSession = chatSession;
+        MessageValidator = chatSession.CreateMessageValidator(ProfilePublicKey.ExpiryGracePeriod);
+    }
+
+    public void ClearChatSession(bool enforcesSecureChat) {
+        ChatSession = null;
+        MessageValidator = FallbackMessageValidator(enforcesSecureChat);
+    }
+
+    private static SignedMessageValidator FallbackMessageValidator(bool enforcesSecureChat) =>
+        enforcesSecureChat ? SignedMessageValidator.RejectAll : SignedMessageValidator.AcceptUnsigned;
 }
 
 /// <summary>Chat, titles, the action bar, the tab list, boss bars and the scoreboard.</summary>
 public sealed partial class MinecraftClient {
-    public List<ChatLine> Chat { get; } = [];
     public Dictionary<Guid, PlayerListEntry> PlayerList { get; } = new();
     public BossHealthOverlay BossOverlay { get; } = new();
     public Scoreboard Scoreboard { get; } = new();
@@ -53,23 +69,24 @@ public sealed partial class MinecraftClient {
     public int TitleTime { get; private set; }
     public (int FadeIn, int Stay, int FadeOut) TitleTimes { get; private set; } = (10, 70, 20);
 
-    public event Action<ChatLine>? ChatReceived;
-
     private bool HandleHudPacket(MinecraftPacket packet) {
         switch (packet) {
             case ClientBoundSystemChatMessagePacket system:
                 if (system.ActionBar) {
-                    SetActionBar(system.Content);
+                    ChatListener.HandleOverlay(system.Content);
                 }
                 else {
-                    AddChat(system.Content);
+                    ChatListener.HandleSystemMessage(system.Content, true);
                 }
                 return true;
             case ClientBoundPlayerChatMessagePacket chat:
-                AddChat(ChatDecoration.Decorate(Registry, chat.ChatType, chat.UnsignedContent ?? TextComponent.Text(chat.Content)));
+                HandlePlayerChat(chat);
                 return true;
             case ClientBoundDisguisedChatMessagePacket disguised:
-                AddChat(ChatDecoration.Decorate(Registry, disguised.ChatType, disguised.Message));
+                ChatListener.HandleDisguisedChatMessage(disguised.Message, disguised.ChatType);
+                return true;
+            case ClientBoundDeleteMessagePacket delete:
+                HandleDeleteChat(delete);
                 return true;
             case ClientBoundSetActionBarTextPacket actionBar:
                 SetActionBar(actionBar.Text);
@@ -113,17 +130,22 @@ public sealed partial class MinecraftClient {
         }
     }
 
+    /// <summary><c>handlePlayerInfoUpdate</c>: a player already known keeps their entry when added again.</summary>
     private void HandlePlayerInfo(ClientBoundPlayerInfoUpdatePacket packet) {
         foreach ((Guid uuid, PlayerData.IPlayerAction[] actions) in packet.Data.Data) {
+            if (actions.OfType<PlayerData.AddPlayer>().FirstOrDefault() is { } add) {
+                PlayerList.TryAdd(uuid, new PlayerListEntry(uuid, add.Name, add.Properties, EnforcesSecureChat));
+            }
+        }
+        foreach ((Guid uuid, PlayerData.IPlayerAction[] actions) in packet.Data.Data) {
+            if (!PlayerList.TryGetValue(uuid, out PlayerListEntry? entry)) {
+                continue;
+            }
             foreach (PlayerData.IPlayerAction action in actions) {
-                if (action is PlayerData.AddPlayer add) {
-                    PlayerList[uuid] = new PlayerListEntry(uuid, add.Name, add.Properties);
-                    continue;
-                }
-                if (!PlayerList.TryGetValue(uuid, out PlayerListEntry? entry)) {
-                    continue;
-                }
                 switch (action) {
+                    case PlayerData.InitializeChat chat:
+                        InitializeChatSession(chat, entry);
+                        break;
                     case PlayerData.UpdateGameMode gameMode:
                         entry.GameMode = gameMode.GameMode;
                         break;
@@ -147,41 +169,8 @@ public sealed partial class MinecraftClient {
         }
     }
 
-    private void SetActionBar(TextComponent text) {
+    internal void SetActionBar(TextComponent text) {
         ActionBar = text;
         ActionBarTime = 60;
-    }
-
-    private void AddChat(TextComponent message) {
-        ChatLine line = new(message, DateTime.Now, (int)ClientTicks);
-        Chat.Add(line);
-        if (Chat.Count > 100) {
-            Chat.RemoveAt(0);
-        }
-        Info($"[chat] {TextFlattener.Plain(message)}");
-        ChatReceived?.Invoke(line);
-    }
-
-    /// <summary>Sends a chat line, or a command when it starts with a slash, as an unsigned message.</summary>
-    public void SendChat(string message) {
-        message = message.Trim();
-        if (message.Length == 0) {
-            return;
-        }
-        if (message.StartsWith('/')) {
-            // Vanilla signs a command whose parse has a message argument. This client has no chat session
-            // to sign with, so a server enforcing secure chat rejects such a command.
-            Send(new ServerBoundChatCommandPacket { Command = message[1..] });
-            return;
-        }
-        Send(new ServerBoundChatMessagePacket {
-            Message = message.Length > 256 ? message[..256] : message,
-            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-            Salt = 0,
-            Signature = null,
-            MessageCount = 0,
-            Acknowledged = new byte[3],
-            Checksum = 0
-        });
     }
 }

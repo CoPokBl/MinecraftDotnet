@@ -12,7 +12,7 @@ public sealed class ClientCamel(MinecraftClient client) : ClientHorse(client) {
     private int _dashCooldown;
 
     /// <summary><c>Camel.ADULT_SITTING_DIMENSIONS</c>: the standing height less 1.43.</summary>
-    protected override (float Width, float Height) Dimensions {
+    public override (float Width, float Height) Dimensions {
         get {
             if (Get(EntityDataFields.Entity.Pose, Pose.Standing) != Pose.Sitting || IsBaby) {
                 return base.Dimensions;
@@ -134,6 +134,13 @@ public sealed class ClientCamel(MinecraftClient client) : ClientHorse(client) {
             }
         }
         return YRotate(new Vec3d(0.0, height, offset * scale), -YRot * (MathF.PI / 180.0F));
+    }
+
+    /// <summary><c>Camel.getLeashOffset(partialTicks)</c>.</summary>
+    public Vec3d LeashOffset(float partialTick) {
+        (float width, float height) = Dimensions;
+        float scale = IsBaby ? 0.5F : 1.0F;
+        return new Vec3d(0.0, BodyAnchorAnimationYOffset(true, partialTick, height, scale) - 0.2F * scale, width * 0.56F);
     }
 
     /// <summary><c>Camel.getBodyAnchorAnimationYOffset</c>.</summary>

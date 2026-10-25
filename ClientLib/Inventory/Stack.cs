@@ -92,5 +92,23 @@ public sealed class Stack {
 
     public bool Has<T>(IDataComponent<T> component) => !_template.IsAir() && _template.Has(component);
 
+    /// <summary>
+    /// <c>ItemStack.set</c>, in place. As in <c>PatchedDataComponentMap.set</c>, a value equal to the item's
+    /// default leaves the patch rather than joining it, which the hash a click sends depends on.
+    /// </summary>
+    /// <param name="missingDefault">The item's default where the generated defaults leave it out, as they do every empty list.</param>
+    public void Set<T>(IDataComponent<T> component, T value, T? missingDefault = default) where T : notnull {
+        if (_template.IsAir()) {
+            return;
+        }
+        Dictionary<IDataComponent, object> components = _template.Components.Where(c => !c.Key.Equals(component)).ToDictionary();
+        IDataComponent[] removed = _template.RemoveComponents.Where(c => !c.Equals(component)).ToArray();
+        object? fallback = Item.DefaultComponents.TryGetValue(component, out object? generated) ? generated : missingDefault;
+        if (fallback == null || !component.ValuesEqual(fallback, value)) {
+            components[component] = value;
+        }
+        _template = new ItemStack(_template.Type, _template.Count, components, removed);
+    }
+
     public override string ToString() => IsEmpty ? "empty" : $"{Count} {Item.Identifier}";
 }

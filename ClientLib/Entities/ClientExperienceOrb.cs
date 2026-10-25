@@ -20,6 +20,9 @@ public sealed class ClientExperienceOrb : SimulatedEntity {
 
     protected override float BelowThatAffectsMovementOffset => 0.999999F;
 
+    /// <summary><c>ExperienceOrb.age</c>, which is never sent: the client counts its own from the spawn.</summary>
+    public int Age { get; private set; }
+
     public override void InterpolateTo(Vec3d position, float yRot, float xRot) => _interpolation.InterpolateTo(position, yRot, xRot);
 
     public override void InterpolateTo(Vec3d position) => _interpolation.InterpolateTo(position, _interpolation.YRot, _interpolation.XRot);
@@ -63,6 +66,11 @@ public sealed class ClientExperienceOrb : SimulatedEntity {
         if (VerticalCollisionBelow && fallSpeed < -Gravity) {
             DeltaMovement = new Vec3d(DeltaMovement.X, -fallSpeed * 0.4, DeltaMovement.Z);
         }
+
+        Age++;
+        if (Age >= 6000) {
+            Client.Discard(this);
+        }
     }
 
     /// <summary><c>ExperienceOrb.setUnderwaterMovement</c>.</summary>
@@ -94,7 +102,7 @@ public sealed class ClientExperienceOrb : SimulatedEntity {
         double best = -1.0;
         ClientEntity? result = null;
         foreach (ClientEntity entity in Client.Entities.Values) {
-            if (entity.Type != EntityType.Player || IsSpectator(entity)) {
+            if (entity.Type.Identifier != EntityType.Player.Identifier || IsSpectator(entity)) {
                 continue;
             }
             double distance = entity.Position.DistanceToSqr(Position);

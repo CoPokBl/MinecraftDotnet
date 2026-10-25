@@ -14,12 +14,10 @@ public class BreezeRenderState : LivingEntityRenderState {
     public AnimationState LongJump = new();
 }
 
-/// <summary>
-/// <c>BreezeRenderer</c>. <c>BreezeWindLayer</c> is not drawn: its render type scrolls the texture with
-/// the entity's age, which the entity batches have no way to express.
-/// </summary>
+/// <summary><c>BreezeRenderer</c>.</summary>
 public sealed class BreezeRenderer : MobRenderer<BreezeRenderState, BreezeModel> {
     public BreezeRenderer(EntityRendererContext context) : base(new BreezeModel(BreezeModel.CreateBodyLayer().BakeRoot()), 0.5F) {
+        AddLayer(new BreezeWindLayer(this));
         AddLayer(new BreezeEyesLayer(this));
     }
 

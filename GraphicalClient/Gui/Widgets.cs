@@ -1,3 +1,5 @@
+using Minecraft.Text;
+
 namespace GraphicalClient.Gui;
 
 /// <summary>A vanilla widget at vanilla's size, sprites and sounds, which a <see cref="Screen"/> lays out and clicks.</summary>
@@ -22,6 +24,18 @@ public abstract class Widget(float x, float y, float w, float h) {
     /// <summary><c>mouseScrolled</c>: whether the widget took the scroll.</summary>
     public virtual bool MouseScrolled(double scrollY) => false;
 
+    /// <summary><c>updateWidgetNarration</c> for a hovered widget.</summary>
+    public virtual void UpdateNarration(Narration.INarrationOutput output) {
+    }
+
+    /// <summary><c>defaultButtonNarrationText</c>: the label as a button, and how to press it while it can be.</summary>
+    protected void ButtonNarration(Narration.INarrationOutput output, string label, TextComponent usage) {
+        output.Add(Narration.NarratedElementType.Title, TextComponent.Translatable("gui.narrate.button", null, [TextComponent.Text(label)]));
+        if (Active) {
+            output.Add(Narration.NarratedElementType.Usage, usage);
+        }
+    }
+
     protected static void Label(GuiContext context, string text, float x, float y, float w, float h) =>
         context.Text.DrawCentred(text, x + w / 2, y + (h - 8) / 2, 0xFFFFFFFF);
 }
@@ -32,6 +46,9 @@ public sealed class Button(string label, float x, float y, float w, Action onPre
     public Action<GuiContext> DownSound { get; init; } = Screen.PlayDownSound;
 
     public override void Render(GuiContext context, bool hovered) => Draw(context, label, X, Y, W, H, hovered, Active);
+
+    public override void UpdateNarration(Narration.INarrationOutput output) =>
+        ButtonNarration(output, label, TextComponent.Translatable("narration.button.usage.hovered"));
 
     public override void OnClick(GuiContext context, float mouseX) {
         DownSound(context);
@@ -62,6 +79,11 @@ public sealed class CycleButton<T>(IReadOnlyList<T> values, T value, Func<T, str
     public T Value { get; private set; } = value;
 
     public override void Render(GuiContext context, bool hovered) => Button.Draw(context, label(Value), X, Y, W, H, hovered, Active);
+
+    /// <summary>Says which value a click switches to.</summary>
+    public override void UpdateNarration(Narration.INarrationOutput output) =>
+        ButtonNarration(output, label(Value), TextComponent.Translatable("narration.cycle_button.usage.hovered", null,
+            [TextComponent.Text(label(values[(_index + 1) % values.Count]))]));
 
     public override void OnClick(GuiContext context, float mouseX) {
         Screen.PlayDownSound(context);
@@ -111,6 +133,13 @@ public sealed class Slider(float x, float y, float w, Func<double> get, Action<d
     public void SetFromMouse(float mouseX) => set(Math.Clamp((mouseX - (X + HandleWidth / 2.0)) / (W - HandleWidth), 0.0, 1.0));
 
     public override void OnClick(GuiContext context, float mouseX) => SetFromMouse(mouseX);
+
+    public override void UpdateNarration(Narration.INarrationOutput output) {
+        output.Add(Narration.NarratedElementType.Title, TextComponent.Translatable("gui.narrate.slider", null, [TextComponent.Text(label(get()))]));
+        if (Active) {
+            output.Add(Narration.NarratedElementType.Usage, TextComponent.Translatable("narration.slider.usage.hovered"));
+        }
+    }
 
     public override void Render(GuiContext context, bool hovered) {
         double value = get();

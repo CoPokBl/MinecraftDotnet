@@ -311,6 +311,9 @@ public sealed class ClientBoat(MinecraftClient client) : ClientVehicle(client) {
     /// the server's, whose launch arrives as a motion packet.
     /// </summary>
     protected override void OnAboveBubbleColumn(bool dragDown) {
+        if (!IsUnderWater) {
+            Client.Particles.Entities.BoatAboveBubbleColumn(this);
+        }
     }
 
     /// <summary><c>AbstractBoat.checkFallDamage</c>.</summary>

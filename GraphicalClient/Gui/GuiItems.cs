@@ -17,6 +17,15 @@ public static class GuiItems {
         if (stack.Count <= 0 || stack.Type.Identifier.Key == "air") {
             return;
         }
+        Icon(context, stack, x, y, seed, heldIn, carried);
+        Decorations(context, stack, x, y);
+    }
+
+    /// <summary><c>GuiGraphicsExtractor.fakeItem</c>: the icon and its glint, with no count, bar or cooldown.</summary>
+    public static void Icon(GuiContext context, ItemStack stack, float x, float y, int seed = 0, Hand? heldIn = null, bool carried = false) {
+        if (stack.Count <= 0 || stack.Type.Identifier.Key == "air") {
+            return;
+        }
         if (context.Items.TryUv(stack, seed, heldIn, carried, out (float U0, float V0, float U1, float V1) uv, out FoilType foil)) {
             context.Gui.Textured(context.Items.Texture, x, y, 16, 16, uv.U0, uv.V0, uv.U1, uv.V1);
             if (foil != FoilType.None) {
@@ -30,6 +39,9 @@ public static class GuiItems {
                 context.Gui.Glint(context.Items.Texture, x, y, 16, 16, uv, glint.ItemTexture, glintUvs, glint.Strength);
             }
         }
+    }
+
+    private static void Decorations(GuiContext context, ItemStack stack, float x, float y) {
         if (ItemBars.IsBarVisible(stack)) {
             float left = x + 2, top = y + 13;
             context.Gui.Rect(left, top, 13, 2, 0xFF000000);

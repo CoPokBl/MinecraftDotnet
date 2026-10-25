@@ -13,13 +13,11 @@ public class GuardianRenderState : LivingEntityRenderState {
     public float AttackTime, AttackScale;
 }
 
-/// <summary>
-/// <c>GuardianRenderer</c>, with the client half of <c>Guardian.aiStep</c> that animates it. The attack
-/// beam is not drawn: its texture scrolls and repeats along the beam, which an entity pass sampling an
-/// atlas cannot express. <c>shouldRender</c>'s extension to a guardian whose beam is on screen goes with it.
-/// </summary>
+/// <summary><c>GuardianRenderer</c>, with the client half of <c>Guardian.aiStep</c> that animates it.</summary>
 public class GuardianRenderer : MobRenderer<GuardianRenderState, GuardianModel> {
     private static readonly Random Random = new();
+    private const string BeamLocation = "minecraft:textures/entity/guardian/guardian_beam.png";
+    private const int TallRepeats = 16;
 
     public GuardianRenderer(EntityRendererContext context) : this(context, 0.5F, GuardianModel.CreateBodyLayer()) { }
 
@@ -42,9 +40,9 @@ public class GuardianRenderer : MobRenderer<GuardianRenderState, GuardianModel> 
     private static int AttackDuration(ClientEntity entity) => entity.Is(EntityClass.ElderGuardian) ? 60 : 80;
 
     /// <summary>
-    /// <c>Guardian.aiStep</c> on the client. The flop sound and the bubble particles are not produced, and
-    /// the look control turning the head toward an attack target is left to the head rotation the server
-    /// sends.
+    /// <c>Guardian.aiStep</c> on the client. The flop sound is not produced, the bubbles are
+    /// <see cref="ClientLib.Particles.EntityParticles"/>', and the look control turning the head toward an
+    /// attack target is left to the head rotation the server sends.
     /// </summary>
     public override void Tick(ClientEntity entity, ClientLevel level) {
         Guardian guardian = DataOf(entity);
@@ -148,8 +146,77 @@ public class GuardianRenderer : MobRenderer<GuardianRenderState, GuardianModel> 
         return new Vec3d(ySin * xCos, -xSin, yCos * xCos);
     }
 
+    /// <summary><c>shouldRender</c>: a guardian out of view whose beam is not.</summary>
+    public override bool ShouldRenderOutOfView(ClientEntity entity, Frustum frustum, EntityRenderContext context) {
+        if (entity.Get(EntityDataFields.Guardian.IdAttackTarget) == 0 || ActiveAttackTarget(entity, context) is not { } lookAtEntity) {
+            return false;
+        }
+        Vec3d camera = context.Camera.Position;
+        Vec3d targetPos = Position(lookAtEntity, lookAtEntity.Height * 0.5, 1.0F) - camera;
+        Vec3d startPos = Position(entity, entity.EyeHeight, 1.0F) - camera;
+        System.Numerics.Vector3 a = new((float)startPos.X, (float)startPos.Y, (float)startPos.Z), b = new((float)targetPos.X, (float)targetPos.Y, (float)targetPos.Z);
+        return frustum.Intersects(System.Numerics.Vector3.Min(a, b), System.Numerics.Vector3.Max(a, b));
+    }
+
     public override void Submit(GuardianRenderState state, PoseStack pose, EntityRenderContext context) {
         base.Submit(state, pose, context);
-        // renderBeam would draw here, toward state.AttackTargetPosition; see the class comment.
+        if (state.AttackTargetPosition is { } targetPosition) {
+            float texVOff = state.AttackTime * 0.5F % 1.0F;
+            pose.Push();
+            pose.Translate(0.0F, state.EyeHeight, 0.0F);
+            RenderBeam(pose, context, targetPosition - state.EyePosition, state.AttackTime, state.AttackScale, texVOff);
+            pose.Pop();
+        }
+    }
+
+    /// <summary><c>renderBeam</c>: two crossed planes along the beam, their texture scrolling down it, and a cap at the target.</summary>
+    private static void RenderBeam(PoseStack pose, EntityRenderContext context, Vec3d beamVector, float timeInTicks, float scale, float texVOff) {
+        if (context.Textures.Get(BeamLocation) is not { } texture) {
+            return;
+        }
+        float length = (float)(Math.Sqrt(beamVector.X * beamVector.X + beamVector.Y * beamVector.Y + beamVector.Z * beamVector.Z) + 1.0);
+        beamVector = beamVector.Normalize();
+        float xRot = (float)Math.Acos(beamVector.Y);
+        float yRot = (float)(Math.PI / 2) - (float)Math.Atan2(beamVector.Z, beamVector.X);
+        pose.RotateYDegrees(yRot * (180.0F / (float)Math.PI));
+        pose.RotateXDegrees(xRot * (180.0F / (float)Math.PI));
+        float rot = timeInTicks * 0.05F * -1.5F;
+        float colorScale = scale * scale;
+        int red = 64 + (int)(colorScale * 191.0F);
+        int green = 32 + (int)(colorScale * 191.0F);
+        int blue = 128 - (int)(colorScale * 64.0F);
+        float wnx = Mth.Cos(rot + (float)(Math.PI * 3.0 / 4.0)) * 0.282F;
+        float wnz = Mth.Sin(rot + (float)(Math.PI * 3.0 / 4.0)) * 0.282F;
+        float enx = Mth.Cos(rot + (float)(Math.PI / 4)) * 0.282F;
+        float enz = Mth.Sin(rot + (float)(Math.PI / 4)) * 0.282F;
+        float wsx = Mth.Cos(rot + (float)Math.PI * 5.0F / 4.0F) * 0.282F;
+        float wsz = Mth.Sin(rot + (float)Math.PI * 5.0F / 4.0F) * 0.282F;
+        float esx = Mth.Cos(rot + (float)Math.PI * 7.0F / 4.0F) * 0.282F;
+        float esz = Mth.Sin(rot + (float)Math.PI * 7.0F / 4.0F) * 0.282F;
+        float wx = Mth.Cos(rot + (float)Math.PI) * 0.2F;
+        float wz = Mth.Sin(rot + (float)Math.PI) * 0.2F;
+        float ex = Mth.Cos(rot + 0.0F) * 0.2F;
+        float ez = Mth.Sin(rot + 0.0F) * 0.2F;
+        float nx = Mth.Cos(rot + (float)(Math.PI / 2)) * 0.2F;
+        float nz = Mth.Sin(rot + (float)(Math.PI / 2)) * 0.2F;
+        float sx = Mth.Cos(rot + (float)(Math.PI * 3.0 / 2.0)) * 0.2F;
+        float sz = Mth.Sin(rot + (float)(Math.PI * 3.0 / 2.0)) * 0.2F;
+        float minV = -1.0F + texVOff;
+        float maxV = minV + length * 2.5F;
+        // entityCutout at full light, untouched by the overlay.
+        ModelDrawState draw = new(texture, 0xFF000000 | (uint)red << 16 | (uint)green << 8 | (uint)blue, 15, 15, 0) { NoOutline = true };
+        System.Numerics.Matrix4x4 m = pose.Matrix;
+        System.Numerics.Vector3 normal = pose.TransformNormal(System.Numerics.Vector3.UnitY);
+        System.Numerics.Vector3 V(float x, float y, float z) => System.Numerics.Vector3.Transform(new System.Numerics.Vector3(x, y, z), m);
+        // The sides repeat two and a half times a block, drawn from the texture tiled down once it is ready.
+        EntityTexture? tall = TiledTextures.Get(context.Textures, BeamLocation, 1, TallRepeats);
+        ModelDrawState sides = tall == null ? draw : draw with { Texture = tall };
+        float repeats = tall == null ? 1.0F : TallRepeats;
+        ReadOnlySpan<System.Numerics.Vector2> sideUvs = [new(0.4999F, maxV / repeats), new(0.4999F, minV / repeats), new(0.0F, minV / repeats), new(0.0F, maxV / repeats)];
+        context.Batch.RepeatingQuad([V(wx, length, wz), V(wx, 0.0F, wz), V(ex, 0.0F, ez), V(ex, length, ez)], sideUvs, normal, sides);
+        context.Batch.RepeatingQuad([V(nx, length, nz), V(nx, 0.0F, nz), V(sx, 0.0F, sz), V(sx, length, sz)], sideUvs, normal, sides);
+        float vBase = Mth.Floor(timeInTicks) % 2 == 0 ? 0.5F : 0.0F;
+        context.Batch.Quad([V(wnx, length, wnz), V(enx, length, enz), V(esx, length, esz), V(wsx, length, wsz)],
+            [new(0.5F, vBase + 0.5F), new(1.0F, vBase + 0.5F), new(1.0F, vBase), new(0.5F, vBase)], normal, draw);
     }
 }

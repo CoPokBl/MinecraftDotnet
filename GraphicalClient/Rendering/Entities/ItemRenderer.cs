@@ -108,6 +108,8 @@ public sealed class ItemRenderer {
         };
     }
 
+    public ItemModelResolver Resolver => _resolver;
+
     private static readonly string[] DisplayKeys = [
         "none", "thirdperson_lefthand", "thirdperson_righthand", "firstperson_lefthand", "firstperson_righthand", "head", "gui", "ground", "fixed", "on_shelf"
     ];

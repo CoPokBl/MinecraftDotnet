@@ -70,8 +70,12 @@ public sealed class VanillaAssets : PackFiles.IPack {
 
     private string ObjectPath(string hash) => Path.Combine(_objects, hash[..2], hash);
 
-    /// <summary>Pack paths are <c>assets/minecraft/...</c>; the index names the same files <c>minecraft/...</c>.</summary>
-    private static string? IndexName(string path) => path.StartsWith("assets/", StringComparison.Ordinal) ? path["assets/".Length..] : null;
+    /// <summary>
+    /// Pack paths are <c>assets/minecraft/...</c>; the index names the same files <c>minecraft/...</c>, and keeps
+    /// the game's own <c>pack.mcmeta</c>, which lists its languages, at its root.
+    /// </summary>
+    private static string? IndexName(string path) =>
+        path == "pack.mcmeta" ? path : path.StartsWith("assets/", StringComparison.Ordinal) ? path["assets/".Length..] : null;
 
     /// <summary>Every sound but music and records, which are most of the bytes and wait until they are played.</summary>
     private void PrefetchSounds() {
@@ -120,22 +124,37 @@ public sealed class VanillaAssets : PackFiles.IPack {
         }, cancellation));
     }
 
-    /// <summary>The file if it has arrived; otherwise null, and it is asked for.</summary>
+    /// <summary>
+    /// The file if it has arrived. A sound that has not is asked for and read as missing this once; anything
+    /// else is waited for, as it is a language, a font or a pack the player has just chosen.
+    /// </summary>
     public byte[]? Read(string path) {
+        if (LocalFile(path) is not { } file) {
+            return null;
+        }
+        try {
+            return File.ReadAllBytes(file);
+        }
+        catch (IOException) {
+            return null;
+        }
+    }
+
+    /// <summary>Where a file of the index is kept, fetched as <see cref="Read"/> fetches; null when it is not in the index or has not arrived.</summary>
+    public string? LocalFile(string path) {
         if (IndexName(path) is not { } name || !_index.TryGetValue(name, out (string Hash, long Size) entry)) {
             return null;
         }
         string file = ObjectPath(entry.Hash);
         if (File.Exists(file)) {
-            try {
-                return File.ReadAllBytes(file);
-            }
-            catch (IOException) {
-                return null;
-            }
+            return file;
         }
-        _ = Fetch(name, CancellationToken.None);
-        return null;
+        Task fetch = Fetch(name, CancellationToken.None);
+        if (name.StartsWith("minecraft/sounds/", StringComparison.Ordinal)) {
+            return null;
+        }
+        fetch.Wait(TimeSpan.FromMinutes(1));
+        return File.Exists(file) ? file : null;
     }
 
     public bool Exists(string path) => IndexName(path) is { } name && _index.ContainsKey(name);

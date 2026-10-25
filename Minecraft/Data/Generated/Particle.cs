@@ -35,7 +35,7 @@ public static class Particle {
     public static readonly DustColorTransitionParticle DustColorTransition = new("minecraft:dust_color_transition");
     public static readonly DustPillarParticle DustPillar = new("minecraft:dust_pillar");
     public static readonly SimpleParticle DustPlume = new("minecraft:dust_plume");
-    public static readonly SimpleParticle Effect = new("minecraft:effect");
+    public static readonly SpellParticle Effect = new("minecraft:effect");
     public static readonly SimpleParticle EggCrack = new("minecraft:egg_crack");
     public static readonly SimpleParticle ElderGuardian = new("minecraft:elder_guardian");
     public static readonly SimpleParticle ElectricSpark = new("minecraft:electric_spark");
@@ -58,7 +58,7 @@ public static class Particle {
     public static readonly SimpleParticle Firework = new("minecraft:firework");
     public static readonly SimpleParticle Fishing = new("minecraft:fishing");
     public static readonly SimpleParticle Flame = new("minecraft:flame");
-    public static readonly SimpleParticle Flash = new("minecraft:flash");
+    public static readonly ColorParticle Flash = new("minecraft:flash");
     public static readonly GeyserParticle Geyser = new("minecraft:geyser");
     public static readonly GeyserBaseParticle GeyserBase = new("minecraft:geyser_base");
     public static readonly GeyserParticle GeyserPlume = new("minecraft:geyser_plume");
@@ -71,7 +71,7 @@ public static class Particle {
     public static readonly SimpleParticle HappyVillager = new("minecraft:happy_villager");
     public static readonly SimpleParticle Heart = new("minecraft:heart");
     public static readonly SimpleParticle Infested = new("minecraft:infested");
-    public static readonly SimpleParticle InstantEffect = new("minecraft:instant_effect");
+    public static readonly SpellParticle InstantEffect = new("minecraft:instant_effect");
     public static readonly ItemParticle Item = new("minecraft:item");
     public static readonly SimpleParticle ItemCobweb = new("minecraft:item_cobweb");
     public static readonly SimpleParticle ItemSlime = new("minecraft:item_slime");

@@ -88,10 +88,12 @@ public class ClientBlockEntity {
         [BlockEntityType.MobSpawner.Identifier] = (t, x, y, z, s) => new SpawnerBlockEntity(t, x, y, z, s),
         [BlockEntityType.TrialSpawner.Identifier] = (t, x, y, z, s) => new TrialSpawnerBlockEntity(t, x, y, z, s),
         [BlockEntityType.Vault.Identifier] = (t, x, y, z, s) => new VaultBlockEntity(t, x, y, z, s),
+        [BlockEntityType.PotentSulfur.Identifier] = (t, x, y, z, s) => new PotentSulfurBlockEntity(t, x, y, z, s),
         [BlockEntityType.Campfire.Identifier] = (t, x, y, z, s) => new ItemDisplayBlockEntity(t, x, y, z, s),
         [BlockEntityType.Shelf.Identifier] = (t, x, y, z, s) => new ItemDisplayBlockEntity(t, x, y, z, s),
         [BlockEntityType.BrushableBlock.Identifier] = (t, x, y, z, s) => new BrushableBlockEntity(t, x, y, z, s),
         [BlockEntityType.Beacon.Identifier] = (t, x, y, z, s) => new BeaconBlockEntity(t, x, y, z, s),
+        [BlockEntityType.EndGateway.Identifier] = (t, x, y, z, s) => new EndGatewayBlockEntity(t, x, y, z, s),
         [BlockEntityType.CommandBlock.Identifier] = (t, x, y, z, s) => new CommandBlockEntity(t, x, y, z, s),
         [BlockEntityType.TestBlock.Identifier] = (t, x, y, z, s) => new TestBlockEntity(t, x, y, z, s),
         [BlockEntityType.Jigsaw.Identifier] = (t, x, y, z, s) => new JigsawBlockEntity(t, x, y, z, s)

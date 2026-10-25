@@ -75,11 +75,17 @@ public sealed partial class LocalPlayer : ClientEntity {
         CauseExtraKnockback(target, (float)Attributes.Value(Minecraft.Data.Generated.Attribute.AttackKnockback) / 2.0F + (knockbackAttack ? 0.5F : 0.0F));
         // isSweepAttack and doSweepAttack only play a sound for nobody and hurt on the server.
         if (criticalAttack) {
-            CriticalHit?.Invoke(target);
+            Crit(target);
         }
     }
 
-    /// <summary><c>LocalPlayer.crit</c>, which starts a tracking emitter of crit particles on the target.</summary>
+    /// <summary><c>LocalPlayer.crit</c>: a tracking emitter of crit particles on the target.</summary>
+    private void Crit(ClientEntity target) {
+        _client.Particles.CreateTrackingEmitter(target, Minecraft.Data.Generated.Particle.Crit);
+        CriticalHit?.Invoke(target);
+    }
+
+    /// <summary>A critical hit landed on the target, after its particles started.</summary>
     public event Action<ClientEntity>? CriticalHit;
 
     /// <summary>
@@ -118,7 +124,7 @@ public sealed partial class LocalPlayer : ClientEntity {
     /// crystal and a shulker bullet, false for every other entity, mobs included.
     /// </summary>
     private bool HurtClient(ClientEntity target) =>
-        target.Type == EntityType.Player && target != this || target.Is(EntityClass.VehicleEntity) || target.Is(EntityClass.ShulkerBullet)
+        target.Type.Identifier == EntityType.Player.Identifier && target != this || target.Is(EntityClass.VehicleEntity) || target.Is(EntityClass.ShulkerBullet)
         || target.Is(EntityClass.EndCrystal) && !target.IsRemoved;
 
     /// <summary><c>Player.causeExtraKnockback</c>.</summary>
@@ -310,6 +316,7 @@ public sealed partial class LocalPlayer : ClientEntity {
         }
         _lastOnGround = OnGround;
         _lastHorizontalCollision = HorizontalCollision;
+        _autoJumpEnabled = AutoJumpOption;
     }
 
     /// <summary><c>Entity.isSprinting</c>: shared flag 3, which the server clears on a sprint hit.</summary>

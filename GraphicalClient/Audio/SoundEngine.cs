@@ -5,6 +5,13 @@ using Minecraft.Schemas.Sound;
 
 namespace GraphicalClient.Audio;
 
+/// <summary><c>SoundEngine.PlayResult</c>.</summary>
+public enum PlayResult {
+    Started,
+    StartedSilently,
+    NotStarted
+}
+
 /// <summary>
 /// vanilla's <c>SoundEngine</c> and <c>SoundManager</c>: plays sound instances on the device, keeps the
 /// moving ones moving, loops and delays the ones that ask, and lets go of a channel once its sound
@@ -16,7 +23,7 @@ public sealed class SoundEngine : IDisposable {
     private const int MinSourceLifetime = 20;
 
     private readonly AudioDevice _device;
-    private readonly SoundBufferLibrary _buffers;
+    private SoundBufferLibrary _buffers;
     private readonly Dictionary<SoundInstance, Channel> _instanceToChannel = new();
     private readonly Dictionary<SoundInstance, int> _soundDeleteTime = new();
     private readonly List<TickableSoundInstance> _tickingSounds = [];
@@ -27,7 +34,7 @@ public sealed class SoundEngine : IDisposable {
     private readonly float[] _gainBySource = Enumerable.Repeat(1.0F, Enum.GetValues<SoundCategory>().Length).ToArray();
     private int _tickCount;
 
-    public SoundRegistry Registry { get; }
+    public SoundRegistry Registry { get; private set; }
 
     /// <summary>The volume sliders, <c>Options.getSoundSourceVolume</c>, by category.</summary>
     public float[] CategoryVolumes { get; } = Enumerable.Repeat(1.0F, Enum.GetValues<SoundCategory>().Length).ToArray();
@@ -36,6 +43,17 @@ public sealed class SoundEngine : IDisposable {
         _device = new AudioDevice();
         _buffers = new SoundBufferLibrary(_device, packs);
         Registry = new SoundRegistry(packs);
+    }
+
+    /// <summary>
+    /// <c>SoundManager.apply</c> after a resource reload, given the registry <c>prepare</c> read from the new packs
+    /// off the render thread: every sound stops, and the sounds are played from the new packs.
+    /// </summary>
+    public void Apply(PackFiles? packs, SoundRegistry registry) {
+        StopAll();
+        _buffers.Dispose();
+        _buffers = new SoundBufferLibrary(_device, packs);
+        Registry = registry;
     }
 
     public bool Available => _device.Available;
@@ -80,28 +98,32 @@ public sealed class SoundEngine : IDisposable {
         _soundDeleteTime.TryGetValue(instance, out int time) && time <= _tickCount || _instanceToChannel.ContainsKey(instance);
 
     /// <summary><c>play</c>.</summary>
-    public void Play(SoundInstance instance) {
+    public PlayResult Play(SoundInstance instance) {
         if (!_device.Available || !instance.CanPlaySound) {
-            return;
+            return PlayResult.NotStarted;
         }
         if (instance.Resolve(Registry) == null) {
-            return;
+            return PlayResult.NotStarted;
         }
         Sound sound = instance.Sound!;
         if (sound == Sound.IntentionallyEmpty || sound == Sound.Empty) {
-            return;
+            return PlayResult.NotStarted;
         }
         float instanceVolume = instance.Volume;
         float attenuationDistance = Math.Max(instanceVolume, 1.0F) * sound.AttenuationDistance;
         float volume = CalculateVolume(instanceVolume, instance.Source);
         float pitch = CalculatePitch(instance);
-        if (volume == 0.0F && !instance.CanStartSilent && instance.Source != SoundCategory.Music) {
-            return;
+        bool startedSilently = false;
+        if (volume == 0.0F) {
+            if (!instance.CanStartSilent && instance.Source != SoundCategory.Music) {
+                return PlayResult.NotStarted;
+            }
+            startedSilently = true;
         }
         bool looping = ShouldLoopAutomatically(instance);
         Channel? channel = _device.Acquire(sound.Stream);
         if (channel == null) {
-            return;
+            return PlayResult.NotStarted;
         }
         _soundDeleteTime[instance] = _tickCount + MinSourceLifetime;
         _instanceToChannel[instance] = channel;
@@ -126,6 +148,7 @@ public sealed class SoundEngine : IDisposable {
             _tickingSounds.Add(tickable);
         }
         StartReady();
+        return startedSilently ? PlayResult.StartedSilently : PlayResult.Started;
     }
 
     /// <summary>Attaches and starts the sounds whose data has arrived since they were played.</summary>

@@ -1,8 +1,11 @@
+using ClientLib.Entities;
+using ClientLib.Maths;
 using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Components.Types;
 using Minecraft.Data.Generated;
+using Minecraft.Physics;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 
@@ -106,10 +109,7 @@ public sealed class ShulkerBoxBlockEntity(IBlockEntityType type, int x, int y, i
 
     public override bool HasClientTicker => true;
 
-    /// <summary>
-    /// <c>updateAnimation</c>. Pushing entities out of the way as the lid rises is left out: the server
-    /// moves them, and the client would only predict it for the local player.
-    /// </summary>
+    /// <summary><c>updateAnimation</c>, without the neighbour shape updates of <c>doNeighborUpdates</c>.</summary>
     public override void Tick(BlockEntityTickContext context) {
         _progressOld = _progress;
         switch (Status) {
@@ -122,6 +122,7 @@ public sealed class ShulkerBoxBlockEntity(IBlockEntityType type, int x, int y, i
                     Status = AnimationStatus.Opened;
                     _progress = 1.0F;
                 }
+                MoveCollidedEntities(context);
                 break;
             case AnimationStatus.Opened:
                 _progress = 1.0F;
@@ -137,6 +138,31 @@ public sealed class ShulkerBoxBlockEntity(IBlockEntityType type, int x, int y, i
     }
 
     public float GetProgress(float a) => _progressOld + a * (_progress - _progressOld);
+
+    public bool IsClosed => Status == AnimationStatus.Closed;
+
+    /// <summary><c>getBoundingBox</c>, in the block's own coordinates: the shell with its lid raised by half the progress.</summary>
+    public Box BoundingBox => State is IDirectional { Facing: var facing }
+        ? ClientShulker.ProgressDeltaAabb(1.0F, facing, -1.0F, 0.5F * GetProgress(1.0F), new Vec3d(0.5, 0.0, 0.5))
+        : new Box(0, 0, 0, 1, 1, 1);
+
+    /// <summary>
+    /// <c>moveCollidedEntities</c>: whatever the rising lid swept into is moved clear by the sweep plus 0.01. None
+    /// of the entities this client moves has an <c>IGNORE</c> push reaction.
+    /// </summary>
+    private void MoveCollidedEntities(BlockEntityTickContext context) {
+        if (!BlockClasses.Is(State.Identifier, BlockClass.ShulkerBoxBlock) || State is not IDirectional { Facing: var direction }) {
+            return;
+        }
+        Box aabb = ClientShulker.ProgressDeltaAabb(1.0F, direction, _progressOld, _progress, new Vec3d(X + 0.5, Y, Z + 0.5));
+        (int stepX, int stepY, int stepZ) = DirectionUtil.Step(direction);
+        foreach (IBlockEntityMovable entity in context.Movable.Where(entity => entity.BoundingBox.Intersects(aabb)).ToList()) {
+            entity.MoveByShulkerBox(new Vec3d(
+                (aabb.MaxX - aabb.MinX + 0.01) * stepX,
+                (aabb.MaxY - aabb.MinY + 0.01) * stepY,
+                (aabb.MaxZ - aabb.MinZ + 0.01) * stepZ));
+        }
+    }
 }
 
 /// <summary><c>EnchantingTableBlockEntity</c>: the book that opens and turns toward a player nearby.</summary>
@@ -203,14 +229,26 @@ public sealed class EnchantingTableBlockEntity(IBlockEntityType type, int x, int
     }
 }
 
-/// <summary><c>BellBlockEntity</c>'s swing. The raider resonance and its particles are left out.</summary>
+/// <summary><c>BellBlockEntity</c>'s swing, and the particles over the raiders it rings out. The resonance's sound is left out.</summary>
 public sealed class BellBlockEntity(IBlockEntityType type, int x, int y, int z, IBlock state) : ClientBlockEntity(type, x, y, z, state) {
+    private static readonly Identifier Raiders = "minecraft:raiders";
+
     public int Ticks;
     public bool Shaking;
     public Cardinal ClickDirection = Cardinal.North;
 
+    private bool _resonating;
+    private int _resonationTicks;
+
+    /// <summary><c>nearbyEntities</c>, gathered at the first tick after a ring since the client's rings carry no level.</summary>
+    private List<Entities.ClientEntity>? _nearbyEntities;
+    private bool _gatherEntities;
+    private long _lastRingTimestamp;
+
     public override bool TriggerEvent(int b0, int b1) {
         if (b0 == 1) {
+            _gatherEntities = true;
+            _resonationTicks = 0;
             ClickDirection = DirectionUtil.From3DDataValue(b1);
             Ticks = 0;
             Shaking = true;
@@ -221,14 +259,82 @@ public sealed class BellBlockEntity(IBlockEntityType type, int x, int y, int z, 
 
     public override bool HasClientTicker => true;
 
-    /// <summary><c>BellBlockEntity.tick</c> as far as the swing goes.</summary>
+    /// <summary><c>BellBlockEntity.tick</c> with <c>showBellParticles</c> at the end of a resonance.</summary>
     public override void Tick(BlockEntityTickContext context) {
+        if (_gatherEntities) {
+            _gatherEntities = false;
+            UpdateEntities(context);
+        }
         if (Shaking) {
             Ticks++;
         }
         if (Ticks >= 50) {
             Shaking = false;
             Ticks = 0;
+        }
+        if (Ticks >= 5 && _resonationTicks == 0 && _nearbyEntities != null && context.Client is { } client
+            && _nearbyEntities.Any(entity => IsRaiderWithinRange(client, entity, 32.0))) {
+            _resonating = true;
+        }
+        if (_resonating) {
+            if (_resonationTicks < 40) {
+                _resonationTicks++;
+            }
+            else {
+                ShowBellParticles(context);
+                _resonating = false;
+            }
+        }
+    }
+
+    /// <summary><c>updateEntities</c>: the living entities within 48 blocks, kept for a few seconds of rings.</summary>
+    private void UpdateEntities(BlockEntityTickContext context) {
+        if (context.Client is not { } client || context.Level.GameTime <= _lastRingTimestamp + 60L && _nearbyEntities != null) {
+            return;
+        }
+        _lastRingTimestamp = context.Level.GameTime;
+        _nearbyEntities = [];
+        foreach (Entities.ClientEntity entity in client.Entities.Values) {
+            Maths.Vec3d p = entity.Position;
+            if (entity.IsLiving && p.X >= X - 48 && p.X <= X + 49 && p.Y >= Y - 48 && p.Y <= Y + 49 && p.Z >= Z - 48 && p.Z <= Z + 49) {
+                _nearbyEntities.Add(entity);
+            }
+        }
+    }
+
+    /// <summary><c>isRaiderWithinRange</c>, at a given distance from the bell's centre.</summary>
+    private bool IsRaiderWithinRange(MinecraftClient client, Entities.ClientEntity entity, double range) =>
+        entity is { IsRemoved: false, CurrentHealth: > 0.0F } && CloserToCenterThan(entity, range)
+        && client.Tags.GetValueOrDefault("minecraft:entity_type")?.GetValueOrDefault(Raiders) is { } raiders
+        && Array.IndexOf(raiders, client.Registry.EntityTypes.GetProtocolId(entity.Type)) >= 0;
+
+    private bool CloserToCenterThan(Entities.ClientEntity entity, double range) =>
+        entity.Position.DistanceToSqr(new Maths.Vec3d(X + 0.5, Y + 0.5, Z + 0.5)) < range * range;
+
+    /// <summary>
+    /// <c>showBellParticles</c>: a ring of coloured specks a block from the bell toward each raider. Vanilla passes an
+    /// RGB colour where the particle reads ARGB, which leaves them fully transparent; they are drawn opaque here, as
+    /// they were before the particle took an alpha.
+    /// </summary>
+    private void ShowBellParticles(BlockEntityTickContext context) {
+        if (context.Particles is not { } particles || context.Client is not { } client || _nearbyEntities == null) {
+            return;
+        }
+        int colour = 16700985;
+        int nearby = _nearbyEntities.Count(entity => CloserToCenterThan(entity, 48.0));
+        foreach (Entities.ClientEntity entity in _nearbyEntities) {
+            if (!IsRaiderWithinRange(client, entity, 48.0)) {
+                continue;
+            }
+            double dx = entity.Position.X - X, dz = entity.Position.Z - Z;
+            double distance = Math.Sqrt(dx * dx + dz * dz);
+            double x = X + 0.5F + 1.0 / distance * dx;
+            double z = Z + 0.5F + 1.0 / distance * dz;
+            int count = Math.Clamp((nearby - 21) / -2, 3, 15);
+            for (int i = 0; i < count; i++) {
+                colour += 5;
+                particles.AddParticle(Particle.EntityEffect with { Argb = unchecked((int)0xFF000000) | colour & 0xFFFFFF }, x, Y + 0.5F, z, 0.0, 0.0, 0.0);
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ namespace ClientLib.Testing.Player;
 public class LocalPlayerMechanicsTest {
     private const int Floor = 16;
 
-    private static (MinecraftClient Client, LocalPlayer Player) World(Func<int, int, int, uint> blocks, Vec3d start) {
+    internal static (MinecraftClient Client, LocalPlayer Player) World(Func<int, int, int, uint> blocks, Vec3d start) {
         MinecraftClient client = new(new ClientOptions { Username = "Test" });
         ClientLevel level = new(VanillaRegistry.Data, "minecraft:overworld",
             VanillaRegistry.Data.DimensionTypes["minecraft:overworld"], 63, true, 0);

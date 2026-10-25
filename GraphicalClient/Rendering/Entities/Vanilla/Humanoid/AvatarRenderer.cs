@@ -354,6 +354,9 @@ public sealed class AvatarRenderers : EntityRenderer, IFirstPersonArmRenderer {
     public override void Submit(EntityRenderState state, double x, double y, double z, PoseStack pose, EntityRenderContext context) =>
         (((AvatarRenderState)state).Skin.Slim ? _slim : _wide).Submit(state, x, y, z, pose, context);
 
+    protected internal override void SubmitShadow(EntityRenderState state, EntityShadows shadows, Vec3d camera) =>
+        (((AvatarRenderState)state).Skin.Slim ? _slim : _wide).SubmitShadow(state, shadows, camera);
+
     /// <summary>
     /// <c>ItemInHandRenderer.renderPlayerArm</c>'s draw: the arm of the renderer for the player's skin, with
     /// its sleeve when that part is shown. The texture is looked up through the sink when it is an entity

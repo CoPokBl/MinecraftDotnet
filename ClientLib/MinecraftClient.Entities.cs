@@ -21,7 +21,7 @@ public sealed partial class MinecraftClient {
     /// </summary>
     public event Action<ClientEntity, ClientEntity>? EntityTaken;
 
-    private bool HandleEntityPacket(MinecraftPacket packet) {
+    internal bool HandleEntityPacket(MinecraftPacket packet) {
         switch (packet) {
             case ClientBoundSpawnEntityPacket spawn:
                 HandleSpawn(spawn);
@@ -51,6 +51,12 @@ public sealed partial class MinecraftClient {
                 return true;
             case ClientBoundSetPassengersPacket passengers:
                 HandlePassengers(passengers);
+                return true;
+            case ClientBoundLinkEntitiesPacket link:
+                // handleEntityLinkPacket: setDelayedLeashHolderId, for a leashable entity only.
+                if (Entities.TryGetValue(link.AttachedEntityId, out ClientEntity? leashed) && Leashes.IsLeashable(leashed)) {
+                    leashed.LeashHolderId = link.HoldingEntityId;
+                }
                 return true;
             case ClientBoundMoveVehiclePacket moveVehicle:
                 HandleMoveVehicle(moveVehicle);
@@ -103,6 +109,7 @@ public sealed partial class MinecraftClient {
             case ClientBoundDamageEventPacket damage:
                 // LivingEntity.handleDamageEvent: the red flash for any living entity that took the hit.
                 if (Entities.TryGetValue(damage.EntityId, out ClientEntity? damaged) && damaged.IsLiving) {
+                    damaged.InvulnerableTime = 20;
                     damaged.HurtTime = 10;
                 }
                 return true;
@@ -138,6 +145,12 @@ public sealed partial class MinecraftClient {
                 break;
             case ClientBoundEntityAnimationPacket.AnimationType.LeaveBed:
                 entity.StopSleeping(Level);
+                break;
+            case ClientBoundEntityAnimationPacket.AnimationType.CriticalEffect:
+                Particles.CreateTrackingEmitter(entity, Minecraft.Data.Generated.Particle.Crit);
+                break;
+            case ClientBoundEntityAnimationPacket.AnimationType.MagicCriticalEffect:
+                Particles.CreateTrackingEmitter(entity, Minecraft.Data.Generated.Particle.EnchantedHit);
                 break;
         }
     }
@@ -198,11 +211,11 @@ public sealed partial class MinecraftClient {
                 from.Metadata[index] = new MetaField<ItemStack>(from.Metadata[index].Type, stack);
             }
             if (IsEmpty(stack)) {
-                Entities.Remove(packet.CollectedEntityId);
+                Discard(from);
             }
         }
         else if (!from.Is(EntityClass.ExperienceOrb)) {
-            Entities.Remove(packet.CollectedEntityId);
+            Discard(from);
         }
 
         // ItemStack.isEmpty: a count shrunk below zero is empty too.

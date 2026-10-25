@@ -35,6 +35,7 @@ public static partial class EntityRenderers {
         Register(EntityType.LeashKnot, _ => new LeashKnotRenderer());
         Register(EntityType.BlockDisplay, context => new DisplayRenderer.BlockDisplayRenderer(context));
         Register(EntityType.ItemDisplay, context => new DisplayRenderer.ItemDisplayRenderer(context));
+        Register(EntityType.TextDisplay, _ => new DisplayRenderer.TextDisplayRenderer());
         Register(EntityType.ExperienceOrb, _ => new ExperienceOrbRenderer());
         Register(EntityType.LightningBolt, _ => new LightningBoltRenderer());
         Register(EntityType.OminousItemSpawner, context => new OminousItemSpawnerRenderer(context));

@@ -13,6 +13,9 @@ public sealed unsafe class GuiRenderer : IDisposable {
     private struct GuiVertex {
         public float X, Y, U, V;
         public uint Colour;
+
+        /// <summary>0 for a plain rectangle, which then shares a batch with whatever texture is bound rather than flushing it.</summary>
+        public float Textured;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -39,8 +42,14 @@ public sealed unsafe class GuiRenderer : IDisposable {
     /// <summary>Extra magnification on top of <see cref="Scale"/>, for titles. Coordinates are in zoomed pixels.</summary>
     public float Zoom { get; set; } = 1.0F;
 
-    public int ScaledWidth => Width / Scale;
-    public int ScaledHeight => Height / Scale;
+    /// <summary>A transform of HUD pixels applied to every quad until reset, as a <c>pose</c> turns the title screen's splash.</summary>
+    public Matrix3x2 Pose { get; set; } = Matrix3x2.Identity;
+
+    /// <summary><c>Window.getGuiScaledWidth</c>: rounded up, so a layout centred on it lands where vanilla's does.</summary>
+    public int ScaledWidth => (Width + Scale - 1) / Scale;
+
+    /// <inheritdoc cref="ScaledWidth"/>
+    public int ScaledHeight => (Height + Scale - 1) / Scale;
 
     public GuiRenderer(GL gl) {
         _gl = gl;
@@ -56,6 +65,8 @@ public sealed unsafe class GuiRenderer : IDisposable {
         gl.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, stride, (void*)8);
         gl.EnableVertexAttribArray(2);
         gl.VertexAttribPointer(2, 4, VertexAttribPointerType.UnsignedByte, true, stride, (void*)16);
+        gl.EnableVertexAttribArray(3);
+        gl.VertexAttribPointer(3, 1, VertexAttribPointerType.Float, false, stride, (void*)20);
         gl.BindVertexArray(0);
 
         _glintShader = new ShaderProgram(gl, Shaders.GuiGlintVertex, Shaders.GuiGlintFragment);
@@ -87,6 +98,7 @@ public sealed unsafe class GuiRenderer : IDisposable {
         }
         Scale = scale;
         Zoom = 1.0F;
+        Pose = Matrix3x2.Identity;
         _count = 0;
         _texture = _white;
         _gl.Disable(EnableCap.DepthTest);
@@ -96,10 +108,7 @@ public sealed unsafe class GuiRenderer : IDisposable {
     }
 
     /// <summary>A rectangle in HUD pixels, colour as 0xAARRGGBB.</summary>
-    public void Rect(float x, float y, float w, float h, uint argb) {
-        UseTexture(_white);
-        Quad(x, y, w, h, 0, 0, 1, 1, argb);
-    }
+    public void Rect(float x, float y, float w, float h, uint argb) => Quad(x, y, w, h, 0, 0, 1, 1, argb, 0);
 
     public void Textured(uint texture, float x, float y, float w, float h, float u0, float v0, float u1, float v1, uint argb = 0xFFFFFFFF) {
         UseTexture(texture);
@@ -126,6 +135,16 @@ public sealed unsafe class GuiRenderer : IDisposable {
         _gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
     }
 
+    /// <summary>Part of a texture added to what is behind it by its alpha, as vanilla's <c>MOJANG_LOGO</c> pipeline blends.</summary>
+    public void TexturedLighten(uint texture, float x, float y, float w, float h, float u0, float v0, float u1, float v1, uint argb) {
+        Flush();
+        UseTexture(texture);
+        Quad(x, y, w, h, u0, v0, u1, v1, argb);
+        _gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
+        Flush();
+        _gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+    }
+
     /// <summary>A whole texture that darkens what is behind it by its colour, as vanilla's <c>VIGNETTE</c> pipeline blends.</summary>
     public void TexturedVignette(uint texture, float x, float y, float w, float h, uint argb) {
         Flush();
@@ -142,18 +161,25 @@ public sealed unsafe class GuiRenderer : IDisposable {
         uint abgr = Abgr(argb);
         Span<GuiVertex> v = stackalloc GuiVertex[4];
         for (int i = 0; i < 4; i++) {
-            v[i] = new GuiVertex { X = corners[i].X, Y = corners[i].Y, U = uvs[i].X, V = uvs[i].Y, Colour = abgr };
+            v[i] = new GuiVertex { X = corners[i].X, Y = corners[i].Y, U = uvs[i].X, V = uvs[i].Y, Colour = abgr, Textured = 1 };
         }
         Add(v[0], v[1], v[2], v[3]);
     }
 
-    private void Quad(float x, float y, float w, float h, float u0, float v0, float u1, float v1, uint argb) {
+    private void Quad(float x, float y, float w, float h, float u0, float v0, float u1, float v1, uint argb, float textured = 1) {
         float s = Scale * Zoom;
         uint abgr = Abgr(argb);
-        Add(new GuiVertex { X = x * s, Y = y * s, U = u0, V = v0, Colour = abgr },
-            new GuiVertex { X = (x + w) * s, Y = y * s, U = u1, V = v0, Colour = abgr },
-            new GuiVertex { X = (x + w) * s, Y = (y + h) * s, U = u1, V = v1, Colour = abgr },
-            new GuiVertex { X = x * s, Y = (y + h) * s, U = u0, V = v1, Colour = abgr });
+        if (!Pose.IsIdentity) {
+            Vector2 a = Vector2.Transform(new Vector2(x, y), Pose) * s, b = Vector2.Transform(new Vector2(x + w, y), Pose) * s;
+            Vector2 c = Vector2.Transform(new Vector2(x + w, y + h), Pose) * s, d = Vector2.Transform(new Vector2(x, y + h), Pose) * s;
+            Add(new GuiVertex { X = a.X, Y = a.Y, U = u0, V = v0, Colour = abgr, Textured = textured }, new GuiVertex { X = b.X, Y = b.Y, U = u1, V = v0, Colour = abgr, Textured = textured },
+                new GuiVertex { X = c.X, Y = c.Y, U = u1, V = v1, Colour = abgr, Textured = textured }, new GuiVertex { X = d.X, Y = d.Y, U = u0, V = v1, Colour = abgr, Textured = textured });
+            return;
+        }
+        Add(new GuiVertex { X = x * s, Y = y * s, U = u0, V = v0, Colour = abgr, Textured = textured },
+            new GuiVertex { X = (x + w) * s, Y = y * s, U = u1, V = v0, Colour = abgr, Textured = textured },
+            new GuiVertex { X = (x + w) * s, Y = (y + h) * s, U = u1, V = v1, Colour = abgr, Textured = textured },
+            new GuiVertex { X = x * s, Y = (y + h) * s, U = u0, V = v1, Colour = abgr, Textured = textured });
     }
 
     /// <summary>
@@ -234,6 +260,18 @@ public sealed unsafe class GuiRenderer : IDisposable {
         _gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)_count);
         _gl.BindVertexArray(0);
         _count = 0;
+    }
+
+    /// <summary><c>GuiGraphics.enableScissor</c>: only what falls inside the rectangle, in HUD pixels, is drawn until <see cref="DisableScissor"/>.</summary>
+    public void EnableScissor(int x0, int y0, int x1, int y1) {
+        Flush();
+        _gl.Enable(EnableCap.ScissorTest);
+        _gl.Scissor(x0 * Scale, Height - y1 * Scale, (uint)Math.Max(0, (x1 - x0) * Scale), (uint)Math.Max(0, (y1 - y0) * Scale));
+    }
+
+    public void DisableScissor() {
+        Flush();
+        _gl.Disable(EnableCap.ScissorTest);
     }
 
     public void End() {

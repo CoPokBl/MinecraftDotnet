@@ -230,11 +230,13 @@ public sealed class ModelPart {
     public bool SkipDraw;
     public PartPose InitialPose;
 
-    public IReadOnlyList<Cube> Cubes { get; }
+    private readonly Cube[] _cubes;
     private readonly List<(string Name, ModelPart Part)> _children;
 
+    public IReadOnlyList<Cube> Cubes => _cubes;
+
     public ModelPart(IReadOnlyList<Cube> cubes, List<(string Name, ModelPart Part)> children) {
-        Cubes = cubes;
+        _cubes = [.. cubes];
         _children = children;
     }
 
@@ -334,13 +336,13 @@ public sealed class ModelPart {
     }
 
     public void Render(PoseStack pose, IModelSink sink, ModelDrawState draw) {
-        if (!Visible || (Cubes.Count == 0 && _children.Count == 0)) {
+        if (!Visible || (_cubes.Length == 0 && _children.Count == 0)) {
             return;
         }
         pose.Push();
         TranslateAndRotate(pose);
         if (!SkipDraw) {
-            foreach (Cube cube in Cubes) {
+            foreach (Cube cube in _cubes) {
                 cube.Compile(pose, sink, draw);
             }
         }
@@ -386,15 +388,13 @@ public sealed class ModelPart {
         public void Compile(PoseStack pose, IModelSink sink, ModelDrawState draw) {
             Matrix4x4 matrix = pose.Matrix;
             Span<Vector3> corners = stackalloc Vector3[4];
-            Span<Vector2> uvs = stackalloc Vector2[4];
             foreach (Polygon polygon in Polygons) {
                 Vector3 normal = pose.TransformNormal(polygon.Normal);
+                Vector3[] positions = polygon.Positions;
                 for (int i = 0; i < 4; i++) {
-                    Vertex v = polygon.Vertices[i];
-                    corners[i] = Vector3.Transform(new Vector3(v.X / 16.0F, v.Y / 16.0F, v.Z / 16.0F), matrix);
-                    uvs[i] = new Vector2(v.U, v.V);
+                    corners[i] = Vector3.Transform(positions[i], matrix);
                 }
-                sink.Quad(corners, uvs, normal, draw);
+                sink.Quad(corners, polygon.Uvs, normal, draw);
             }
         }
     }
@@ -403,6 +403,10 @@ public sealed class ModelPart {
     public sealed class Polygon {
         public readonly Vertex[] Vertices;
         public readonly Vector3 Normal;
+
+        /// <summary><see cref="Vertices"/> in blocks rather than sixteenths, and their texture coordinates.</summary>
+        public readonly Vector3[] Positions;
+        public readonly Vector2[] Uvs;
 
         public Polygon(Vertex[] vertices, float u0, float v0, float u1, float v1, float xTexSize, float yTexSize, bool mirror, Vector3 normal) {
             // A mirrored cube's X faces swap sides, so their normals swap with them.
@@ -416,6 +420,8 @@ public sealed class ModelPart {
             if (mirror) {
                 Array.Reverse(Vertices);
             }
+            Positions = Array.ConvertAll(Vertices, v => new Vector3(v.X / 16.0F, v.Y / 16.0F, v.Z / 16.0F));
+            Uvs = Array.ConvertAll(Vertices, v => new Vector2(v.U, v.V));
         }
     }
 

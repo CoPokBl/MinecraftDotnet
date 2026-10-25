@@ -40,6 +40,9 @@ public sealed partial class MultiPlayerGameMode {
     /// <summary>Whether a screen is open, which stops <c>handleKeybinds</c> and holds attacks back; set by the host.</summary>
     public Func<bool> ScreenOpen { get; set; } = static () => false;
 
+    /// <summary>Whether an overlay such as a resource reload's covers the game, which also stops <c>handleKeybinds</c>; set by the host.</summary>
+    public Func<bool> OverlayOpen { get; set; } = static () => false;
+
     /// <summary>What the crosshair is on, refreshed every tick and every frame.</summary>
     public HitResult? Target { get; private set; }
 
@@ -111,6 +114,9 @@ public sealed partial class MultiPlayerGameMode {
         Target = Picking.Pick(Player, _client.CameraEntity ?? Player, Level, _client.Entities.Values, _client.PlayerList, partialTick);
     }
 
+    /// <summary><c>MouseHandler.grabMouse</c>'s <c>missTime = 10000</c>, so the click that takes the mouse attacks nothing.</summary>
+    public void OnMouseGrabbed() => _missTime = 10000;
+
     /// <summary>
     /// The interaction half of <c>Minecraft.tick</c>, in its order: delays, game mode tick, pick, then
     /// <c>handleKeybinds</c> unless a screen is open. <paramref name="hostKeybinds"/> is the host's own
@@ -125,9 +131,14 @@ public sealed partial class MultiPlayerGameMode {
             _rightClickDelay--;
         }
         EnsureHasSentCarriedItem();
+        // MultiPlayerGameMode.tick ticks the connection, whose listener sends a new chat session.
+        _client.TickChatSession();
         Pick(1.0F);
         if (ScreenOpen()) {
             _missTime = 10000;
+            return;
+        }
+        if (OverlayOpen()) {
             return;
         }
         hostKeybinds?.Invoke();
@@ -263,7 +274,7 @@ public sealed partial class MultiPlayerGameMode {
 
     /// <summary><c>AttackRange.isInRange</c> from the eyes to where the crosshair met the entity.</summary>
     private bool InAttackRange(AttackRangeComponent.Data range, Vec3d location) {
-        double distance = Math.Sqrt(location.DistanceToSqr(Picking.EyePosition(Player, 1.0F)));
+        double distance = Math.Sqrt(location.DistanceToSqr(Picking.EyePosition(Player)));
         double minReach = (Player.IsCreative ? range.MinCreativeReach : range.MinReach) - range.HitboxMargin;
         double maxReach = (Player.IsCreative ? range.MaxCreativeReach : range.MaxReach) + range.HitboxMargin;
         return distance >= minReach && distance <= maxReach;
@@ -293,6 +304,7 @@ public sealed partial class MultiPlayerGameMode {
         }
         if (down && Target is BlockHitResult blockHit && !Level.IsAir(Level.GetState(blockHit.X, blockHit.Y, blockHit.Z))) {
             if (ContinueDestroyBlock(blockHit.X, blockHit.Y, blockHit.Z, blockHit.Face)) {
+                _client.Particles.Crack(blockHit.X, blockHit.Y, blockHit.Z, blockHit.Face);
                 Swing(Hand.MainHand);
             }
         }
@@ -542,9 +554,11 @@ public sealed partial class MultiPlayerGameMode {
                 continue;
             }
             _pendingUseOn.RemoveAt(i);
-            UsedItemOn?.Invoke(new UseOnOutcome(use.Hand, use.Item,
+            UseOnOutcome outcome = new(use.Hand, use.Item,
                 use.Clicked, use.ClickedBefore, Level.GetState(use.Clicked.X, use.Clicked.Y, use.Clicked.Z),
-                use.Against, use.AgainstBefore, Level.GetState(use.Against.X, use.Against.Y, use.Against.Z)));
+                use.Against, use.AgainstBefore, Level.GetState(use.Against.X, use.Against.Y, use.Against.Z));
+            UsedItemOn?.Invoke(outcome);
+            ToolUseOn.RaiseLevelEvents(Level, outcome);
         }
     }
 
@@ -583,6 +597,8 @@ public sealed partial class MultiPlayerGameMode {
         foreach (Hand hand in Hands) {
             ItemStack held = hand == Hand.MainHand ? _client.Inventory.MainHand : _client.Inventory.Offhand;
             UseResult result = Target switch {
+                EntityHitResult entityHit when !Level.WorldBorder.IsWithinBounds((int)Math.Floor(entityHit.Entity.Position.X),
+                    (int)Math.Floor(entityHit.Entity.Position.Z)) => UseResult.Fail,
                 EntityHitResult entityHit when WithinEntityRange(entityHit.Entity) => Interact(entityHit, hand, held),
                 BlockHitResult blockHit => UseItemOn(hand, blockHit, held),
                 _ => UseResult.Pass
@@ -602,7 +618,7 @@ public sealed partial class MultiPlayerGameMode {
     private bool WithinEntityRange(ClientEntity entity) {
         double range = Player.Attributes.Value(Attribute.EntityInteractionRange);
         Minecraft.Physics.Box box = Picking.BoundingBox(entity);
-        Vec3d eye = Picking.EyePosition(Player, 1.0F);
+        Vec3d eye = Picking.EyePosition(Player);
         double dx = Math.Max(Math.Max(box.MinX - eye.X, eye.X - box.MaxX), 0);
         double dy = Math.Max(Math.Max(box.MinY - eye.Y, eye.Y - box.MaxY), 0);
         double dz = Math.Max(Math.Max(box.MinZ - eye.Z, eye.Z - box.MaxZ), 0);
@@ -628,6 +644,10 @@ public sealed partial class MultiPlayerGameMode {
             MinecartCommandBlockOpened?.Invoke(minecart);
             return UseResult.Success;
         }
+        // Interaction.interact: CONSUME, no swing, unless the server asked for a response.
+        if (hit.Entity.Is(EntityClass.Interaction)) {
+            return hit.Entity.Get(EntityDataFields.Interaction.Response) ? UseResult.Success : UseResult.Consume;
+        }
         return UsePrediction.InteractWithEntity(hit.Entity, held, Player.KeyPresses.Shift) ? UseResult.Success : UseResult.Pass;
     }
 
@@ -652,7 +672,7 @@ public sealed partial class MultiPlayerGameMode {
                 Face = hit.Face,
                 CursorPosition = new Vec3<float>((float)inside.X, (float)inside.Y, (float)inside.Z),
                 InsideBlock = hit.Inside,
-                WorldBorderHit = false,
+                WorldBorderHit = hit.WorldBorderHit,
                 Sequence = sequence
             };
         });

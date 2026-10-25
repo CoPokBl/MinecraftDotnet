@@ -79,9 +79,9 @@ public sealed partial class LocalPlayer {
     /// <summary><c>Block.fallOn</c>: the player lands on the block at the position, having fallen the distance.</summary>
     public event Action<(int X, int Y, int Z), IBlock, double>? FellOn;
 
-    public float Width => 0.6F;
+    public float BbWidth => 0.6F;
 
-    public float Height => DimensionsOf(Pose).Height;
+    public float BbHeight => DimensionsOf(Pose).Height;
 
     public override float CurrentEyeHeight => EyeHeightOf(Pose);
 
@@ -278,9 +278,15 @@ public sealed partial class LocalPlayer {
                     && (KeyPresses.Shift || !IsSleeping && !CanFitWhen(EntityPose.Standing));
 
         InputTick();
+        bool wasAutoJump = false;
+        if (_autoJumpTime > 0) {
+            _autoJumpTime--;
+            wasAutoJump = true;
+            KeyPresses = KeyPresses with { Jump = true };
+        }
 
         if (!NoPhysics) {
-            double half = Width * 0.35;
+            double half = BbWidth * 0.35;
             MoveTowardsClosestSpace(Position.X - half, Position.Z + half);
             MoveTowardsClosestSpace(Position.X - half, Position.Z - half);
             MoveTowardsClosestSpace(Position.X + half, Position.Z - half);
@@ -325,7 +331,7 @@ public sealed partial class LocalPlayer {
                     OnUpdateAbilities();
                 }
             }
-            else if (!wasJumping && KeyPresses.Jump) {
+            else if (!wasJumping && KeyPresses.Jump && !wasAutoJump) {
                 if (_jumpTriggerTime == 0) {
                     _jumpTriggerTime = 7;
                 }

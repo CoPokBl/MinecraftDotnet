@@ -88,8 +88,9 @@ public sealed class PassDefinition {
 
     /// <summary>
     /// For a geometry pass: <c>terrain_solid</c>, <c>terrain_cutout</c>, <c>terrain_translucent</c>,
-    /// <c>entities</c>, <c>entities_translucent</c>, <c>water_mask</c>, <c>hand</c>, <c>crumbling</c>, <c>glint</c>, <c>hand_glint</c>,
-    /// <c>entity_outline</c>, <c>lines</c> or <c>end_portal</c>.
+    /// <c>entities</c>, <c>entities_translucent</c>, <c>entities_additive</c>, <c>water_mask</c>, <c>hand</c>, <c>crumbling</c>, <c>glint</c>, <c>hand_glint</c>,
+    /// <c>entity_outline</c>, <c>lines</c>, <c>end_portal</c>, <c>particles</c>, <c>particles_translucent</c>, <c>weather</c>, <c>clouds</c>,
+    /// <c>text</c>, <c>text_see_through</c> or <c>entity_shadows</c>.
     /// </summary>
     [JsonProperty("geometry")] public string? Geometry;
 
@@ -98,6 +99,12 @@ public sealed class PassDefinition {
 
     /// <summary><c>main</c> or <c>shadow</c>: whose view the geometry is drawn from and culled for.</summary>
     [JsonProperty("camera")] public string Camera = "main";
+
+    /// <summary>
+    /// For a pass on the shadow camera: <c>always</c> runs it every frame, though the pack's <c>shadowUpdate</c> keeps
+    /// the others until something changes, for a map of things that move.
+    /// </summary>
+    [JsonProperty("update")] public string? Update;
 
     /// <summary>Base name of the program: <c>name.vsh</c> and <c>name.fsh</c> in the pack's shader folder.</summary>
     [JsonProperty("program")] public string Program = "";
@@ -167,6 +174,9 @@ public sealed class ShaderPack {
     [JsonProperty("materials")] public List<MaterialDefinition> Materials = [];
 
     [JsonIgnore] public bool UsesShadowCamera => Passes.Exists(p => p.Camera == "shadow");
+
+    /// <summary>Whether a pass draws <c>entities</c> from the shadow camera, which entities out of view are then drawn for.</summary>
+    [JsonIgnore] public bool DrawsEntitiesFromShadowCamera => Passes.Exists(p => p.Camera == "shadow" && p.Geometry == "entities");
     [JsonProperty("passes")] public List<PassDefinition> Passes = [];
 
     /// <summary>Reads a file of the pack by its path inside the pack's shader folder.</summary>

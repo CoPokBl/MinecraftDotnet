@@ -205,10 +205,8 @@ public class BookViewScreen : Screen {
             context.Text.Draw(lines[i], x, y, shadow: false);
             hovered = context.Text.RunAt(lines[i], x, y, context.MouseX, context.MouseY) ?? hovered;
         }
-        if (hovered?.Hover is { Action: "show_text" } hover && hover.Fields.FirstOrDefault(f => f.Key == "value").Tag is { } value) {
-            // GuiGraphicsExtractor.componentHoverEffect; show_item and show_entity tooltips are not ported.
-            List<List<TextRun>> tooltip = context.Text.Splitter.SplitLines(TextFlattener.Flatten(TextComponent.FromTag(value)), Math.Max(context.Width / 2, 200));
-            Tooltips.Draw(context, tooltip, context.MouseX, context.MouseY);
+        if (hovered?.Hover is { } hover) {
+            HoverEffects.Draw(context, hover, context.MouseX, context.MouseY);
         }
     }
 
@@ -231,10 +229,7 @@ public class BookViewScreen : Screen {
         base.MouseDown(context, x, y, button);
     }
 
-    /// <summary>
-    /// <c>handleClickEvent</c>. A command runs without the confirmation vanilla asks for one it cannot parse
-    /// or that needs signing, and links, files and dialogs are not opened.
-    /// </summary>
+    /// <summary><c>handleClickEvent</c>: a page turn here, a command with the book closed, anything else as any screen runs it.</summary>
     private bool HandleClickEvent(GuiContext context, ClickEvent clickEvent) {
         switch (clickEvent.Action) {
             case "change_page":
@@ -242,12 +237,10 @@ public class BookViewScreen : Screen {
                 break;
             case "run_command":
                 CloseContainerOnServer(context);
-                string command = Field(clickEvent, "command")?.GetString() ?? "";
-                context.Client.SendChat("/" + (command.StartsWith('/') ? command[1..] : command));
-                context.Open?.Invoke(null);
+                ClickEvents.ClickCommandAction(context, Field(clickEvent, "command")?.GetString() ?? "", null);
                 break;
-            case "copy_to_clipboard":
-                context.WriteClipboard?.Invoke(Field(clickEvent, "value")?.GetString() ?? "");
+            default:
+                ClickEvents.HandleGameClickEvent(context, clickEvent, this);
                 break;
         }
         return true;
@@ -698,6 +691,8 @@ public sealed class BookSignScreen(BookEditScreen bookEditScreen, MinecraftClien
     private string _titleValue = "";
 
     public override bool ShowsHud => false;
+
+    public override bool HasFocusedEditBox => true;
 
     protected override void Init(GuiContext context, int width, int height) {
         Button finalizeButton = new(Book.Tr("book.finalizeButton"), width / 2 - 100, 196, 98, () => {

@@ -116,7 +116,7 @@ public sealed partial class LocalPlayer {
             return;
         }
         foreach (Entities.ClientEntity entity in _client.Entities.Values) {
-            if (entity.Type != EntityType.FireworkRocket || entity.IsRemoved
+            if (entity.Type.Identifier != EntityType.FireworkRocket.Identifier || entity.IsRemoved
                 || entity.Get(EntityDataFields.FireworkRocketEntity.AttachedToTarget) is not { Present: true } target || target.Value != Id) {
                 continue;
             }

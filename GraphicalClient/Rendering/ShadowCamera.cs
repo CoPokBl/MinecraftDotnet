@@ -24,13 +24,16 @@ public sealed class ShadowCamera {
         return tilt == 0 ? sun : new Vector3(sun.X, sun.Y * MathF.Cos(tilt), -sun.Y * MathF.Sin(tilt));
     }
 
-    /// <returns>Whether the map needs drawing this frame: always when <paramref name="always"/>, otherwise only when it is stale.</returns>
-    public bool Update(Camera camera, Vector3 sun, float distance, int mapSize, int geometryVersion, bool always, out Matrix4x4 view, out Matrix4x4 projection) {
+    /// <summary>The unit vector toward the light the map is drawn along: the sun by day, the moon by night.</summary>
+    public static Vector3 LightDirection(Vector3 sun) {
         Vector3 light = sun.Y >= 0 ? sun : -sun;
         // A light at the horizon would stretch shadows across the whole map; hold it a little above.
-        if (light.Y < 0.15F) {
-            light = Vector3.Normalize(new Vector3(light.X, 0.15F, light.Z));
-        }
+        return light.Y < 0.15F ? Vector3.Normalize(new Vector3(light.X, 0.15F, light.Z)) : light;
+    }
+
+    /// <returns>Whether the map needs drawing this frame: always when <paramref name="always"/>, otherwise only when it is stale.</returns>
+    public bool Update(Camera camera, Vector3 sun, float distance, int mapSize, int geometryVersion, bool always, out Matrix4x4 view, out Matrix4x4 projection) {
+        Vector3 light = LightDirection(sun);
         Vector3 up = Math.Abs(light.Y) > 0.99F ? Vector3.UnitZ : Vector3.UnitY;
         Matrix4x4 lookAt = Matrix4x4.CreateLookAt(light * distance * 2, Vector3.Zero, up);
 

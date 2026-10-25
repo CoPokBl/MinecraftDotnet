@@ -8,17 +8,20 @@ public static class Shaders {
         layout(location = 0) in vec2 aPos;
         layout(location = 1) in vec2 aUv;
         layout(location = 2) in vec4 aColour;
+        layout(location = 3) in float aTextured;
 
         uniform vec2 uScreen;
 
         out vec2 vUv;
         out vec4 vColour;
+        flat out float vTextured;
 
         void main() {
             vec2 ndc = vec2(aPos.x / uScreen.x * 2.0 - 1.0, 1.0 - aPos.y / uScreen.y * 2.0);
             gl_Position = vec4(ndc, 0.0, 1.0);
             vUv = aUv;
             vColour = aColour;
+            vTextured = aTextured;
         }
         """;
 
@@ -26,13 +29,14 @@ public static class Shaders {
         #version 450 core
         in vec2 vUv;
         in vec4 vColour;
+        flat in float vTextured;
 
         uniform sampler2D uTexture;
 
         out vec4 fragColour;
 
         void main() {
-            fragColour = texture(uTexture, vUv) * vColour;
+            fragColour = mix(vec4(1.0), texture(uTexture, vUv), vTextured) * vColour;
             if (fragColour.a <= 0.0) {
                 discard;
             }

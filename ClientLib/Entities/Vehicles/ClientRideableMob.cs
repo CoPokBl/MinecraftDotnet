@@ -76,7 +76,7 @@ public class ClientRideableMob(MinecraftClient client) : ClientVehicle(client), 
     protected static bool IsHolding(ClientEntity entity, IItem item) =>
         entity.ItemInHand(Hand.MainHand).Type.Identifier.Equals(item.Identifier) || entity.ItemInHand(Hand.OffHand).Type.Identifier.Equals(item.Identifier);
 
-    protected override (float Width, float Height) Dimensions {
+    public override (float Width, float Height) Dimensions {
         get {
             float scale = AttachmentScale;
             return ((float)Width * scale, (float)Height * scale);
@@ -106,6 +106,10 @@ public class ClientRideableMob(MinecraftClient client) : ClientVehicle(client), 
     protected virtual bool OmnidirectionalAirMover => false;
 
     protected bool IsSprinting => (SharedFlags & 0x08) != 0;
+
+    /// <summary><c>LivingEntity.onBelowWorld</c>: the hurt is <c>hurtClient</c> on a client, which does nothing.</summary>
+    protected override void OnBelowWorld() {
+    }
 
     /// <summary><c>LivingEntity.tick</c> on the rider's client.</summary>
     protected override void ControlledTick() {

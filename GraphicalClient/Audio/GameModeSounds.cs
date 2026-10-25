@@ -70,6 +70,18 @@ public sealed class GameModeSounds {
         else if (item.Equals(Item.FlintAndSteel.Identifier)) {
             FlintAndSteelUseOn(use);
         }
+        else {
+            // AxeItem.evaluateNewBlockState; waxing sounds in its level event instead.
+            ISoundType? axe = ToolUseOn.Classify(item, StateOf(use.ClickedBefore), StateOf(use.ClickedAfter)) switch {
+                ToolBlockChange.Strip => SoundType.AxeStrip,
+                ToolBlockChange.Scrape => SoundType.AxeScrape,
+                ToolBlockChange.WaxOff => SoundType.AxeWaxOff,
+                _ => null
+            };
+            if (axe != null) {
+                PlayAt(use.Clicked, axe, 1.0F, 1.0F);
+            }
+        }
     }
 
     /// <summary><c>BlockItem.place</c>'s sound, from the state that ended up placed.</summary>

@@ -8,7 +8,8 @@ namespace GraphicalClient.Rendering.Entities;
 /// that is a pre-multiplication, which is why every method here puts the new matrix on the left.
 /// </summary>
 public sealed class PoseStack {
-    private readonly Stack<(Matrix4x4 Pose, Matrix4x4 Normal)> _saved = new();
+    private (Matrix4x4 Pose, Matrix4x4 Normal)[] _saved = new (Matrix4x4, Matrix4x4)[8];
+    private int _depth;
     private Matrix4x4 _pose = Matrix4x4.Identity;
     private Matrix4x4 _normal = Matrix4x4.Identity;
 
@@ -22,9 +23,30 @@ public sealed class PoseStack {
         _normal = start;
     }
 
-    public void Push() => _saved.Push((_pose, _normal));
+    [ThreadStatic] private static Stack<PoseStack>? _spare;
 
-    public void Pop() => (_pose, _normal) = _saved.Pop();
+    /// <summary>An identity stack to give back with <see cref="Return"/>, as every entity drawn each frame takes one.</summary>
+    public static PoseStack Rent() => _spare is { Count: > 0 } spare ? spare.Pop() : new PoseStack();
+
+    public static void Return(PoseStack pose) {
+        pose._depth = 0;
+        pose._pose = pose._normal = Matrix4x4.Identity;
+        (_spare ??= new Stack<PoseStack>()).Push(pose);
+    }
+
+    public void Push() {
+        if (_depth == _saved.Length) {
+            Array.Resize(ref _saved, _depth * 2);
+        }
+        _saved[_depth++] = (_pose, _normal);
+    }
+
+    public void Pop() {
+        if (_depth == 0) {
+            throw new InvalidOperationException("Pose stack is empty");
+        }
+        (_pose, _normal) = _saved[--_depth];
+    }
 
     public void Translate(float x, float y, float z) => _pose = Matrix4x4.CreateTranslation(x, y, z) * _pose;
 
