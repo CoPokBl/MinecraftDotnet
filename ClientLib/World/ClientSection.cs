@@ -99,6 +99,17 @@ public sealed class ClientSection {
 
     public ushort Get(int x, int y, int z) => Get(y << 8 | z << 4 | x);
 
+    /// <summary>
+    /// The states as they are now, safe to read on another thread: the next change copies the arrays
+    /// first, and the palette is only ever appended to, so it is shared as it stands.
+    /// </summary>
+    public SectionStates Share() {
+        if (_direct != null || _indices != null) {
+            _shared = true;
+        }
+        return new SectionStates(_uniform, _palette, _indices, _direct);
+    }
+
     /// <returns>The state that was there.</returns>
     public ushort Set(int index, ushort state, bool wasAir, bool isAir) {
         ushort old = Get(index);
@@ -178,5 +189,24 @@ public sealed class ClientSection {
         for (int i = from; i < Volume; i++) {
             _direct![i] = (ushort)states[i];
         }
+    }
+}
+
+/// <summary>A <see cref="ClientSection"/>'s states at the moment it was shared, see <see cref="ClientSection.Share"/>.</summary>
+public readonly struct SectionStates(ushort uniform, ushort[]? palette, byte[]? indices, ushort[]? direct) {
+    /// <summary>Copies the states from <paramref name="start"/> on, as many as <paramref name="destination"/> holds.</summary>
+    public void CopyTo(int start, Span<ushort> destination) {
+        if (direct != null) {
+            direct.AsSpan(start, destination.Length).CopyTo(destination);
+            return;
+        }
+        if (indices != null) {
+            ReadOnlySpan<byte> run = indices.AsSpan(start, destination.Length);
+            for (int i = 0; i < run.Length; i++) {
+                destination[i] = palette![run[i]];
+            }
+            return;
+        }
+        destination.Fill(uniform);
     }
 }

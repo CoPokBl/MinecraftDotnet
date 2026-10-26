@@ -109,7 +109,7 @@ public sealed class ClientExperienceOrb : SimulatedEntity {
         if (player is LocalPlayer local) {
             return local.IsSpectator;
         }
-        return Client.PlayerList.TryGetValue(player.Uuid, out PlayerListEntry? entry) && entry.GameMode == GameMode.Spectator;
+        return Client.PlayerInfoOf(player)?.GameMode == GameMode.Spectator;
     }
 
     /// <summary>

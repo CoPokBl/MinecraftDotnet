@@ -276,6 +276,44 @@ public class TextComponent : CompoundTagSerialisable {
         return null;
     }
 
+    /// <summary><c>ComponentSerialization.CODEC</c> through <c>JsonOps</c>.</summary>
+    public static TextComponent FromJson(string json) => FromJson(Newtonsoft.Json.Linq.JToken.Parse(json));
+
+    /// <inheritdoc cref="FromJson(string)"/>
+    public static TextComponent FromJson(Newtonsoft.Json.Linq.JToken json) => FromTag(JsonTag(json));
+
+    /// <summary>
+    /// <c>INbtTag.FromJson</c>, except that an array mixing types, which JSON text routinely does with
+    /// <c>"extra": ["a", {"text": "b"}]</c>, is wrapped the way <c>ListTag.wrapIfNeeded</c> writes one rather
+    /// than refused: every element that is not a compound, or is one that looks like a wrapper, goes
+    /// under an empty key, which <see cref="FromTag"/> unwraps.
+    /// </summary>
+    private static INbtTag JsonTag(Newtonsoft.Json.Linq.JToken json) {
+        switch (json) {
+            case Newtonsoft.Json.Linq.JObject obj:
+                return new CompoundTag(obj.Properties().Select(p => (p.Name, JsonTag(p.Value))).ToArray());
+            case Newtonsoft.Json.Linq.JArray array:
+                INbtTag[] items = array.Select(JsonTag).ToArray();
+                if (items.Any(i => i is LongTag)) {
+                    for (int i = 0; i < items.Length; i++) {
+                        if (items[i] is IntegerTag integer) {
+                            items[i] = new LongTag(integer.Value);
+                        }
+                    }
+                }
+                if (items.Select(i => i.GetPrefix()).Distinct().Count() > 1) {
+                    for (int i = 0; i < items.Length; i++) {
+                        if (items[i] is not CompoundTag compound || compound.Children.Select(c => c.key).SequenceEqual([""])) {
+                            items[i] = new CompoundTag(("", items[i]));
+                        }
+                    }
+                }
+                return new ListTag(items);
+            default:
+                return INbtTag.FromJson(json);
+        }
+    }
+
     public static TextComponent FromTag(INbtTag tag) {
         if (tag is StringTag str) {  // direct string
             return Text(str.Value);

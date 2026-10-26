@@ -39,9 +39,16 @@ public sealed unsafe class WorldRenderer : IDisposable {
     private readonly Dictionary<long, SectionEndPortals> _endPortals = new();
     private readonly List<long> _taken = [];
 
-    private readonly BlockingCollection<SectionSnapshot> _jobs = new();
+    // The game thread takes a lock a mesher can hold only once a frame, in WakeWorkers, never per job:
+    // with the cores busy, a preempted mesher holding one stalls the frame.
+    private readonly ConcurrentQueue<SectionSnapshot> _jobs = new();
     private readonly ConcurrentQueue<SectionMesh> _results = new();
-    private readonly ConcurrentBag<SectionSnapshot> _snapshotPool = [];
+    private readonly ConcurrentQueue<SectionSnapshot> _snapshotPool = new();
+
+    /// <summary>Wakes idle meshers, released once a frame for the whole batch.</summary>
+    private readonly SemaphoreSlim _jobSignal = new(0);
+    private int _idleWorkers;
+    private readonly VertexArrayPool _vertexPool = new();
     private readonly Thread[] _workers;
     private readonly CancellationTokenSource _cts = new();
 
@@ -150,16 +157,41 @@ public sealed unsafe class WorldRenderer : IDisposable {
     }
 
     private void Work() {
-        SectionMesher mesher = new(_models) { WaterState = _waterState };
-        try {
-            foreach (SectionSnapshot snapshot in _jobs.GetConsumingEnumerable(_cts.Token)) {
+        SectionMesher mesher = new(_models) { WaterState = _waterState, Pool = _vertexPool };
+        CancellationToken token = _cts.Token;
+        while (!token.IsCancellationRequested) {
+            if (_jobs.TryDequeue(out SectionSnapshot? snapshot)) {
+                snapshot.Fill();
                 SectionMesh mesh = mesher.Mesh(snapshot);
-                _snapshotPool.Add(snapshot);
+                _snapshotPool.Enqueue(snapshot);
                 _results.Enqueue(mesh);
+                continue;
+            }
+            // Counted idle before looking again, so a batch queued in between is either seen here or
+            // sees this worker idle and wakes it.
+            Interlocked.Increment(ref _idleWorkers);
+            try {
+                if (_jobs.IsEmpty) {
+                    _jobSignal.Wait(token);
+                }
+            }
+            catch (OperationCanceledException) {
+                return;
+            }
+            finally {
+                Interlocked.Decrement(ref _idleWorkers);
             }
         }
-        catch (OperationCanceledException) {
-            // Shutting down.
+    }
+
+    private void WakeWorkers(int queued) {
+        if (queued == 0) {
+            return;
+        }
+        Interlocked.MemoryBarrier();
+        int wake = Math.Min(queued, Volatile.Read(ref _idleWorkers)) - _jobSignal.CurrentCount;
+        if (wake > 0) {
+            _jobSignal.Release(wake);
         }
     }
 
@@ -237,7 +269,9 @@ public sealed unsafe class WorldRenderer : IDisposable {
         _built.Remove(key);
         _versions[key] = _versions.GetValueOrDefault(key) + 1;
         // A section on a chunk whose neighbours have not all arrived cannot be meshed yet; the last of
-        // them to load marks it dirty again, so it is not queued to be scanned past until then.
+        // them to load marks it dirty again, so it is not queued to be scanned past until then. That
+        // includes the diagonal ones, whose corner columns the border reads: meshed without them, a
+        // section is meshed again as each arrives, and chunks being generated arrive in no order.
         if (NeighboursLoaded(_level, x, z)) {
             _dirty.Add(key);
         }
@@ -249,8 +283,16 @@ public sealed unsafe class WorldRenderer : IDisposable {
         }
     }
 
-    private static bool NeighboursLoaded(ClientLevel level, int x, int z) =>
-        level.HasChunk(x - 1, z) && level.HasChunk(x + 1, z) && level.HasChunk(x, z - 1) && level.HasChunk(x, z + 1);
+    private static bool NeighboursLoaded(ClientLevel level, int x, int z) {
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                if ((dx != 0 || dz != 0) && !level.HasChunk(x + dx, z + dz)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     public bool IsSectionReady(int x, int y, int z) => _built.Contains(Key(x, y, z));
 
@@ -298,9 +340,10 @@ public sealed unsafe class WorldRenderer : IDisposable {
         }
         _taken.Clear();
         _dirty.TakeNearest(capacity, _inFlight, _taken);
-        // Snapshotting copies the section and its neighbours' edges; a whole queue's worth in one frame
-        // is a hitch, so past the budget the rest wait for the next frame.
+        // A capture takes references rather than copying, so this rarely reaches the budget; past it the
+        // rest wait for the next frame.
         long started = Stopwatch.GetTimestamp();
+        int queued = 0;
         for (int t = 0; t < _taken.Count; t++) {
             if (Stopwatch.GetElapsedTime(started).TotalMilliseconds > SnapshotBudgetMs) {
                 for (; t < _taken.Count; t++) {
@@ -308,11 +351,15 @@ public sealed unsafe class WorldRenderer : IDisposable {
                 }
                 break;
             }
-            Snapshot(level, _taken[t]);
+            if (Snapshot(level, _taken[t])) {
+                queued++;
+            }
         }
+        WakeWorkers(queued);
     }
 
-    private void Snapshot(ClientLevel level, long key) {
+    /// <returns>Whether a job was queued, rather than the section found to have nothing to draw.</returns>
+    private bool Snapshot(ClientLevel level, long key) {
         (int x, int y, int z) = Unpack(key);
         // A section of air with only air or nothing around it has no faces to draw.
         if (level.GetChunk(x, z) is not { } chunk || chunk.Sections[y] is { NonAirCount: 0, IsUniform: true }) {
@@ -321,17 +368,18 @@ public sealed unsafe class WorldRenderer : IDisposable {
             }
             _endPortals.Remove(key);
             MarkBuilt(key, VisibilityGraph.AllVisible);
-            return;
+            return false;
         }
-        SectionSnapshot snapshot = _snapshotPool.TryTake(out SectionSnapshot? pooled) ? pooled : new SectionSnapshot();
-        snapshot.Fill(level, x, y, z);
+        SectionSnapshot snapshot = _snapshotPool.TryDequeue(out SectionSnapshot? pooled) ? pooled : new SectionSnapshot();
+        snapshot.Capture(level, x, y, z);
         snapshot.Tints = _tints;
         snapshot.Materials = _materials;
         snapshot.Version = _versions.GetValueOrDefault(key);
         snapshot.BaseY = level.MinY + y * 16;
         snapshot.Lod = LodAt(LodDistanceOf(x, z));
         _inFlight.Add(key);
-        _jobs.Add(snapshot);
+        _jobs.Enqueue(snapshot);
+        return true;
     }
 
     private void MarkBuilt(long key, ulong visibility) {
@@ -351,6 +399,7 @@ public sealed unsafe class WorldRenderer : IDisposable {
             long key = Key(mesh.SectionX, mesh.SectionY, mesh.SectionZ);
             _inFlight.Remove(key);
             if (!level.HasChunk(mesh.SectionX, mesh.SectionZ) || mesh.Version != _versions.GetValueOrDefault(key)) {
+                _vertexPool.Return(mesh.Vertices);
                 continue;
             }
             if (mesh.EndPortals.Length > 0) {
@@ -360,6 +409,7 @@ public sealed unsafe class WorldRenderer : IDisposable {
                 _endPortals.Remove(key);
             }
             Upload(key, mesh);
+            _vertexPool.Return(mesh.Vertices);
             MarkBuilt(key, mesh.Visibility);
         }
         _uploads.EndFrame();
@@ -371,7 +421,7 @@ public sealed unsafe class WorldRenderer : IDisposable {
     /// </summary>
     private void Upload(long key, SectionMesh mesh) {
         _sections.TryGetValue(key, out SectionRender? section);
-        if (mesh.Vertices.Length == 0) {
+        if (mesh.VertexCount == 0) {
             if (section != null) {
                 _sections.Remove(key);
                 Release(section);
@@ -391,10 +441,10 @@ public sealed unsafe class WorldRenderer : IDisposable {
             _arena.Free(section.Offset, section.Vertices);
         }
 
-        section.Vertices = mesh.Vertices.Length;
+        section.Vertices = mesh.VertexCount;
         section.Lod = mesh.Lod;
-        section.Offset = _arena.Allocate(mesh.Vertices.Length);
-        _arena.Upload<BlockVertex>(section.Offset, mesh.Vertices);
+        section.Offset = _arena.Allocate(mesh.VertexCount);
+        _arena.Upload<BlockVertex>(section.Offset, mesh.Vertices.AsSpan(0, mesh.VertexCount));
         GeometryChanged(section.X, section.Z);
         _culler.Update(section.Slot, section.X, (_level!.MinY >> 4) + section.Y, section.Z, section.Offset, mesh.BucketQuads);
     }
@@ -533,7 +583,6 @@ public sealed unsafe class WorldRenderer : IDisposable {
 
     public void Dispose() {
         _cts.Cancel();
-        _jobs.CompleteAdding();
         _arena.Dispose();
         _uploads.Dispose();
         _gl.DeleteVertexArray(_vao);

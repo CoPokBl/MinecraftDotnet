@@ -10,6 +10,7 @@ using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Items;
 using Newtonsoft.Json.Linq;
 using Mth = GraphicalClient.Rendering.Entities.Mth;
+using PlayerSkin = GraphicalClient.Rendering.Entities.Vanilla.PlayerSkin;
 
 namespace GraphicalClient.Rendering.BlockEntities;
 
@@ -201,23 +202,25 @@ public static class BlockEntitySpecialRenderers {
 
     /// <summary>
     /// <c>PlayerHeadSpecialRenderer.Unbaked</c>: the head in the skin of the stack's profile, which is the
-    /// default skin its id picks until skins are downloaded.
+    /// default skin its id picks until its own is downloaded.
     /// </summary>
     private sealed record PlayerHeadSpecial : ISpecialModelUnbaked {
         public static readonly PlayerHeadSpecial Instance = new();
 
         public ISpecialModelRenderer Bake(SpecialModelBakingContext context) => new Renderer(context.Sprites, SkullBlockRenderer.CreateModel(SkullKind.Player));
 
-        private sealed class Renderer(ISpriteGetter sprites, SkullModelBase model) : SpecialModelRenderer<ProfileComponent.Data> {
-            public override ProfileComponent.Data? ExtractArgument(ItemStack stack) => stack.GetOrNull(DataComponent.Profile);
+        private sealed class Renderer(ISpriteGetter sprites, SkullModelBase model) : SpecialModelRenderer<PlayerSkin> {
+            public override PlayerSkin? ExtractArgument(ItemStack stack) =>
+                stack.GetOrNull(DataComponent.Profile) is { } profile ? Assets.Skins.SkinManager.GetOrDefault(profile) : null;
 
-            public override void Submit(ProfileComponent.Data? profile, PoseStack pose, IModelSink sink, float skyLight, float blockLight) =>
+            public override void Submit(PlayerSkin? skin, PoseStack pose, IModelSink sink, float skyLight, float blockLight) =>
                 SkullBlockRenderer.SubmitSkull(0.0F, pose, sink, skyLight, blockLight, model,
-                    sprites.Get(SkullBlockRenderer.ProfileSkin(profile) ?? SkullBlockRenderer.SkinByType(SkullKind.Player)));
+                    sprites.Get(skin != null ? Sheets.TextureSprite(skin.Body) : SkullBlockRenderer.SkinByType(SkullKind.Player)));
 
             public override void GetExtents(Action<Vector3> output) => model.RootPart.GetExtentsForGui(new PoseStack(), output);
 
-            public override string? IdentityOf(ProfileComponent.Data? profile) => profile?.UniqueId is { } id ? "head:" + id : null;
+            // By the skin rather than the profile, so an icon drawn in the default skin is drawn again once the profile's own is in.
+            public override string? IdentityOf(PlayerSkin? skin) => skin != null ? "head:" + skin.Body : null;
         }
     }
 

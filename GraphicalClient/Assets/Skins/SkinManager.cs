@@ -33,13 +33,13 @@ public static class SkinManager {
     public static MinecraftClient? Client { get; set; }
 
     /// <summary>
-    /// <c>PlayerInfo.getSkin</c>: the skin of the player list entry with the id, signed unless it is the local
-    /// player's own, else the default for the id.
+    /// <c>AbstractClientPlayer.getSkin</c>: its player info's skin, signed unless it is the local player's own, else
+    /// the default for its id.
     /// </summary>
-    public static PlayerSkin ForPlayer(Guid profileId) =>
-        Client != null && Client.PlayerList.TryGetValue(profileId, out PlayerListEntry? info)
-            ? Lookup(profileId, info.Properties, profileId != Client.Profile.Uuid)
-            : DefaultPlayerSkin.Get(profileId);
+    public static PlayerSkin ForPlayer(ClientLib.Entities.ClientEntity player) =>
+        Client?.PlayerInfoOf(player) is { } info
+            ? Lookup(player.Uuid, info.Properties, player.Uuid != Client.Profile.Uuid)
+            : DefaultPlayerSkin.Get(player.Uuid);
 
     /// <summary>
     /// <c>SkinManager.createLookup</c> for a game profile: its own skin once loaded, unless that is unsigned and

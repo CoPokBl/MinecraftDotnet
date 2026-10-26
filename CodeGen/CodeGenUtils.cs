@@ -99,10 +99,6 @@ public static class CodeGenUtils {
         
         List<(string, int)> entries = [];
         foreach ((string key, JToken? value) in entityEntriesJson) {
-            if (key == "minecraft:intentionally_empty") {
-                continue;  // for some reason, this is in the registry
-            }
-            
             int protocolId = value!["protocol_id"]!.Value<int>();
             entries.Add((key, protocolId));
         }
@@ -149,10 +145,6 @@ public static class CodeGenUtils {
                 continue;
             }
 
-            if (key == "minecraft:intentionally_empty") {
-                continue;  // for some reason, this is in the registry
-            }
-
             string pascalName = variableNameGetter(key);
             
             // Add to cs file
@@ -178,10 +170,6 @@ public static class CodeGenUtils {
 
         List<string> entryStrings = [];
         foreach ((string key, int protocolId) in entries) {
-            if (key == "minecraft:intentionally_empty") {
-                continue;  // for some reason, this is in the registry
-            }
-
             string pascalName = variableNameGetter(key);
             
             // Add to cs file

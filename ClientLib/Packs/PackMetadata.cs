@@ -189,7 +189,7 @@ public sealed record PackMetadata(TextComponent Description, PackCompatibility C
             return null;
         }
         try {
-            return TextComponent.FromTag(NBT.INbtTag.FromJson(description.ToString(Formatting.None)));
+            return TextComponent.FromJson(description);
         }
         catch (Exception e) when (e is not OutOfMemoryException) {
             return null;

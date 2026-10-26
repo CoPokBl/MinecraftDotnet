@@ -1809,6 +1809,7 @@ public static class SoundType {
     public static readonly SimpleSoundType MobEffectRaidOmen = new("minecraft:event.mob_effect.raid_omen");
     public static readonly SimpleSoundType MobEffectTrialOmen = new("minecraft:event.mob_effect.trial_omen");
     public static readonly SimpleSoundType RaidHorn = new("minecraft:event.raid.horn");
+    public static readonly SimpleSoundType IntentionallyEmpty = new("minecraft:intentionally_empty");
     public static readonly SimpleSoundType ArmorEquipChain = new("minecraft:item.armor.equip_chain");
     public static readonly SimpleSoundType ArmorEquipCopper = new("minecraft:item.armor.equip_copper");
     public static readonly SimpleSoundType ArmorEquipDiamond = new("minecraft:item.armor.equip_diamond");

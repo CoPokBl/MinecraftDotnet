@@ -15,6 +15,7 @@ namespace ClientLib.World;
 /// </summary>
 public sealed class ClientLevel {
     private readonly Dictionary<long, ClientChunk> _chunks = new();
+    private readonly HashSet<ClientChunk> _blockEntityChunks = [];
     private readonly bool[] _airByState;
 
     public MinecraftRegistry Registry { get; }
@@ -53,6 +54,12 @@ public sealed class ClientLevel {
     public float ThunderLevel { get; set; }
 
     public IReadOnlyCollection<ClientChunk> Chunks => _chunks.Values;
+
+    /// <summary>
+    /// The loaded chunks that have held a block entity since they arrived, a superset of those holding
+    /// one now. What draws block entities walks this rather than every chunk each frame.
+    /// </summary>
+    public IReadOnlyCollection<ClientChunk> ChunksWithBlockEntities => _blockEntityChunks;
 
     /// <summary>A chunk arrived, or was replaced by a newer copy.</summary>
     public event Action<ClientChunk>? ChunkLoaded;
@@ -118,7 +125,7 @@ public sealed class ClientLevel {
         }
         _chunks[Key(chunk.X, chunk.Z)] = chunk;
         foreach (ClientBlockEntity blockEntity in chunk.BlockEntities.Values) {
-            Register(blockEntity);
+            Register(chunk, blockEntity);
         }
         ChunkLoaded?.Invoke(chunk);
     }
@@ -312,7 +319,7 @@ public sealed class ClientLevel {
             return null;
         }
         chunk.BlockEntities[new Vec3<int>(x, y, z)] = created;
-        Register(created);
+        Register(chunk, created);
         return created;
     }
 
@@ -334,7 +341,7 @@ public sealed class ClientLevel {
             previous.Removed = true;
         }
         chunk.BlockEntities[position] = blockEntity;
-        Register(blockEntity);
+        Register(chunk, blockEntity);
         return true;
     }
 
@@ -365,7 +372,8 @@ public sealed class ClientLevel {
         }
     }
 
-    private void Register(ClientBlockEntity blockEntity) {
+    private void Register(ClientChunk chunk, ClientBlockEntity blockEntity) {
+        _blockEntityChunks.Add(chunk);
         blockEntity.Level = this;
         blockEntity.Removed = false;
         UpdateTicker(blockEntity);
@@ -379,7 +387,8 @@ public sealed class ClientLevel {
         }
     }
 
-    private static void ClearBlockEntities(ClientChunk chunk) {
+    private void ClearBlockEntities(ClientChunk chunk) {
+        _blockEntityChunks.Remove(chunk);
         foreach (ClientBlockEntity blockEntity in chunk.BlockEntities.Values) {
             blockEntity.Removed = true;
         }
@@ -402,7 +411,7 @@ public sealed class ClientLevel {
         if (blockEntity == null) {
             if (ClientBlockEntity.Create(Registry, x, y, z, state) is { } created) {
                 chunk.BlockEntities[position] = created;
-                Register(created);
+                Register(chunk, created);
             }
             return;
         }

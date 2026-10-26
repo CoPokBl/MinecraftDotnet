@@ -16,6 +16,10 @@ public sealed class Team(string name) {
     public ClientBoundUpdateTeamsPacket.TeamColor? Colour { get; set; }
     public ClientBoundUpdateTeamsPacket.NameTagVisibility? NameTags { get; set; }
     public ClientBoundUpdateTeamsPacket.CollisionRule Collision { get; set; } = ClientBoundUpdateTeamsPacket.CollisionRule.Always;
+    public ClientBoundUpdateTeamsPacket.FriendlyFlag FriendlyFlags { get; set; }
+
+    /// <summary><c>PlayerTeam.canSeeFriendlyInvisibles</c>.</summary>
+    public bool SeeFriendlyInvisibles => (FriendlyFlags & ClientBoundUpdateTeamsPacket.FriendlyFlag.SeeInvisibleTeammates) != 0;
     public HashSet<string> Members { get; } = [];
 
     /// <summary><c>TeamColor.rgb</c>, or null for a team without a colour.</summary>
@@ -53,6 +57,10 @@ public sealed class Scoreboard {
     private readonly Dictionary<string, Team> _teamOf = new();
 
     public Team? TeamOf(string holder) => _teamOf.GetValueOrDefault(holder);
+
+    /// <summary><c>getPlayerScoreInfo</c>: the holder's score on the objective, null for none.</summary>
+    public Score? ScoreOf(string holder, string objective) =>
+        Scores.TryGetValue(holder, out Dictionary<string, Score>? scores) ? scores.GetValueOrDefault(objective) : null;
 
     public Objective? DisplayedIn(ClientBoundDisplayObjectivePacket.DisplayPosition slot) {
         return Displayed.TryGetValue(slot, out string? name) ? Objectives.GetValueOrDefault(name) : null;
@@ -136,6 +144,7 @@ public sealed class Scoreboard {
             team.Colour = packet.Color ?? team.Colour;
             team.NameTags = packet.NameTagVisibilityRule ?? team.NameTags;
             team.Collision = packet.CollisionRuleOption ?? team.Collision;
+            team.FriendlyFlags = packet.FriendlyFlags ?? team.FriendlyFlags;
         }
         if (packet.Action is ClientBoundUpdateTeamsPacket.Method.CreateTeam or ClientBoundUpdateTeamsPacket.Method.AddEntities) {
             foreach (string member in packet.Entities ?? []) {

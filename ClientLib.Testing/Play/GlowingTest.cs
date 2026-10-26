@@ -11,10 +11,14 @@ namespace ClientLib.Testing.Play;
 
 /// <summary><c>Entity.isCurrentlyGlowing</c> and <c>Entity.getTeamColor</c> on the client, which colour a glowing entity's outline.</summary>
 public class GlowingTest {
-    private static ClientEntity Spawn(MinecraftClient client, IEntityType type, int id) {
+    private static ClientEntity Spawn(MinecraftClient client, IEntityType type, int id, string? profileName = null) {
+        Guid uuid = Guid.NewGuid();
+        if (profileName != null) {
+            client.PlayerList[uuid] = new PlayerListEntry(uuid, profileName);
+        }
         client.HandleSpawn(new ClientBoundSpawnEntityPacket {
             Id = id,
-            Uuid = Guid.NewGuid(),
+            Uuid = uuid,
             EntityType = type,
             Position = new Vec3<double>(0, 0, 0),
             Pitch = Angle.FromDegrees(0),
@@ -60,8 +64,7 @@ public class GlowingTest {
     [Test]
     public void TestAPlayersTeamIsFoundByItsProfileName() {
         MinecraftClient client = new(new ClientOptions { Username = "Test" });
-        ClientEntity player = Spawn(client, EntityType.Player, 1);
-        client.PlayerList[player.Uuid] = new PlayerListEntry(player.Uuid, "Steve");
+        ClientEntity player = Spawn(client, EntityType.Player, 1, "Steve");
         JoinTeam(client, "blue", ClientBoundUpdateTeamsPacket.TeamColor.DarkBlue, "Steve");
         Assert.That(client.TeamColour(player), Is.EqualTo(0x0000AA));
     }

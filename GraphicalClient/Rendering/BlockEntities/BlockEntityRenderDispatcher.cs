@@ -3,6 +3,7 @@ using ClientLib.Maths;
 using ClientLib.World;
 using ClientLib.World.BlockEntities;
 using GraphicalClient.Rendering.Entities;
+using Minecraft.Data.BlockEntityTypes;
 using Minecraft.Schemas;
 
 namespace GraphicalClient.Rendering.BlockEntities;
@@ -14,7 +15,20 @@ namespace GraphicalClient.Rendering.BlockEntities;
 /// apart from block entities hidden behind terrain.
 /// </summary>
 public sealed class BlockEntityRenderDispatcher(Dictionary<Identifier, BlockEntityRenderer> renderers) {
-    public BlockEntityRenderer? RendererFor(ClientBlockEntity blockEntity) => renderers.GetValueOrDefault(blockEntity.Type.Identifier);
+    /// <summary>
+    /// The renderer by type object, since every loaded block entity is looked up each frame and an
+    /// <see cref="Identifier"/> hashes two strings.
+    /// </summary>
+    private readonly Dictionary<IBlockEntityType, BlockEntityRenderer?> _byType = new(ReferenceEqualityComparer.Instance);
+
+    public BlockEntityRenderer? RendererFor(ClientBlockEntity blockEntity) {
+        IBlockEntityType type = blockEntity.Type;
+        if (!_byType.TryGetValue(type, out BlockEntityRenderer? renderer)) {
+            renderer = renderers.GetValueOrDefault(type.Identifier);
+            _byType[type] = renderer;
+        }
+        return renderer;
+    }
 
     public void Render(EntityRenderContext context) {
         ClientLevel level = context.Level;
@@ -22,7 +36,7 @@ public sealed class BlockEntityRenderDispatcher(Dictionary<Identifier, BlockEnti
         Vec3d cameraPosition = camera.Position;
         Frustum frustum = Frustum.FromMatrix(camera.View * camera.CullProjection);
         int reach = renderers.Values.Max(r => r.ViewDistance) + 16;
-        foreach (ClientChunk chunk in level.Chunks) {
+        foreach (ClientChunk chunk in level.ChunksWithBlockEntities) {
             if (chunk.BlockEntities.Count == 0) {
                 continue;
             }

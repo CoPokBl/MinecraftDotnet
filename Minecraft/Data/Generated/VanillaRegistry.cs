@@ -5498,6 +5498,7 @@ public static class VanillaRegistry {
         Data.SoundTypes.Add(1912, SoundType.MobEffectRaidOmen);
         Data.SoundTypes.Add(1911, SoundType.MobEffectTrialOmen);
         Data.SoundTypes.Add(1358, SoundType.RaidHorn);
+        Data.SoundTypes.Add(1119, SoundType.IntentionallyEmpty);
         Data.SoundTypes.Add(67, SoundType.ArmorEquipChain);
         Data.SoundTypes.Add(74, SoundType.ArmorEquipCopper);
         Data.SoundTypes.Add(68, SoundType.ArmorEquipDiamond);

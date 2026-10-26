@@ -14,12 +14,13 @@ public readonly record struct Glyph(float U0, float V0, float U1, float V1, floa
 
 /// <summary>
 /// A bitmap font in one texture, looked up by code point: this client's own <see cref="PixelFont"/>,
-/// or a resource pack's <c>font/default.json</c>. A pack's unifont glyphs are drawn into a spare part of
+/// or the packs' <c>font/default.json</c> over it. A pack's unifont glyphs are drawn into a spare part of
 /// the texture the first time each is asked for, as the full set would not fit.
 /// </summary>
 public sealed unsafe class Font : IDisposable {
     private readonly GL _gl;
     private readonly Dictionary<int, Glyph> _glyphs;
+    private readonly Dictionary<int, Glyph> _builtIn;
     private Glyph _missing;
     private readonly Dictionary<int, int[]> _byWidth;
     private readonly List<Dictionary<int, UnihexGlyph>> _unihex;
@@ -37,16 +38,17 @@ public sealed unsafe class Font : IDisposable {
     public int AtlasVersion { get; private set; }
 
     private Font(GL gl, int width, int height, byte[] rgba, Dictionary<int, Glyph> glyphs, Glyph missing,
-        List<Dictionary<int, UnihexGlyph>>? unihex = null, int lazyTop = 0) {
+        List<Dictionary<int, UnihexGlyph>>? unihex = null, int lazyTop = 0, Dictionary<int, Glyph>? builtIn = null) {
         _gl = gl;
         _glyphs = glyphs;
+        _builtIn = builtIn ?? [];
         _missing = missing;
         _unihex = unihex ?? [];
         _lazyTop = lazyTop;
         _shelfY = lazyTop;
         Atlas = new TextureImage(width, height, rgba);
         // The built in font has cells for the control characters, which no pack font maps.
-        _byWidth = glyphs.Where(g => g.Key is >= 32 and not 127).GroupBy(g => (int)MathF.Ceiling(g.Value.Advance))
+        _byWidth = glyphs.Concat(_builtIn.Where(g => !glyphs.ContainsKey(g.Key))).Where(g => g.Key is >= 32 and not 127).GroupBy(g => (int)MathF.Ceiling(g.Value.Advance))
             .ToDictionary(g => g.Key, g => g.Select(e => e.Key).ToArray());
         Texture = gl.GenTexture();
         gl.BindTexture(TextureTarget.Texture2D, Texture);
@@ -57,7 +59,10 @@ public sealed unsafe class Font : IDisposable {
         gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
     }
 
-    public Glyph this[int codePoint] => _glyphs.TryGetValue(codePoint, out Glyph glyph) ? glyph : _unihex.Count > 0 ? Unihex(codePoint) ?? _missing : _missing;
+    public Glyph this[int codePoint] =>
+        _glyphs.TryGetValue(codePoint, out Glyph glyph) ? glyph
+        : _unihex.Count > 0 && Unihex(codePoint) is { } unifont ? unifont
+        : _builtIn.TryGetValue(codePoint, out glyph) ? glyph : _missing;
 
     /// <summary>
     /// A unifont glyph, drawn into the texture's spare rows on the game thread; text drawn in the world copies
@@ -115,7 +120,15 @@ public sealed unsafe class Font : IDisposable {
 
     /// <summary>The built in font: 8 pixel cells, 16 to a row, Latin-1 only.</summary>
     public static Font BuiltIn(GL gl) {
-        byte[] atlas = PixelFont.BuildAtlas(out int[] widths);
+        Dictionary<int, Glyph> glyphs = BuiltInGlyphs(0, 0, BuiltInSize, BuiltInSize, out byte[] atlas);
+        return new Font(gl, BuiltInSize, BuiltInSize, atlas, glyphs, glyphs['?']);
+    }
+
+    private const int BuiltInSize = 128;
+
+    /// <summary>The built in font's glyphs with its page at (<paramref name="x"/>, <paramref name="y"/>) in an atlas of the given size.</summary>
+    private static Dictionary<int, Glyph> BuiltInGlyphs(int x, int y, int atlasWidth, int atlasHeight, out byte[] page) {
+        page = PixelFont.BuildAtlas(out int[] widths);
         Dictionary<int, Glyph> glyphs = new();
         for (int code = 0; code < 256; code++) {
             glyphs[code] = Cell(code % 16, code / 16, widths[code]);
@@ -127,18 +140,21 @@ public sealed unsafe class Font : IDisposable {
                 glyphs[code] = glyphs[decomposed[0]];
             }
         }
-        return new Font(gl, 128, 128, atlas, glyphs, glyphs['?']);
+        return glyphs;
 
-        static Glyph Cell(int column, int row, int width) => new(
-            column * 8 / 128.0F, row * 8 / 128.0F, (column * 8 + width) / 128.0F, (row * 8 + PixelFont.Rows) / 128.0F,
+        Glyph Cell(int column, int row, int width) => new(
+            (x + column * 8) / (float)atlasWidth, (y + row * 8) / (float)atlasHeight,
+            (x + column * 8 + width) / (float)atlasWidth, (y + row * 8 + PixelFont.Rows) / (float)atlasHeight,
             width, PixelFont.Rows, 0, width + 1);
     }
 
     /// <summary>
-    /// A pack's default font, following <c>reference</c> providers and keeping those whose <c>filter</c>
+    /// The packs' default font, following <c>reference</c> providers and keeping those whose <c>filter</c>
     /// matches <paramref name="options"/> (<c>uniform</c>, <c>jp</c>), as <c>FontManager</c> does. For each code
     /// point the first provider that has it wins, as <c>FontSet</c> searches, except that the bitmap and space
     /// providers are all searched before any unihex one, which only matters to a pack ordering them otherwise.
+    /// The built in font is searched last, standing in for vanilla's own pack, which a pack's font adds to
+    /// rather than replaces: a server's font defining only its private use glyphs still has letters under it.
     /// </summary>
     public static Font? FromPack(GL gl, PackFiles files, ResourcePackSource source, IReadOnlySet<string>? options = null) {
         List<JObject> providers = [];
@@ -168,6 +184,13 @@ public sealed unsafe class Font : IDisposable {
             shelfX += image.Width;
             shelfHeight = Math.Max(shelfHeight, image.Height);
         }
+        if (shelfX + BuiltInSize > atlasWidth) {
+            shelfX = 0;
+            shelfY += shelfHeight;
+            shelfHeight = 0;
+        }
+        int builtInX = shelfX, builtInY = shelfY;
+        shelfHeight = Math.Max(shelfHeight, BuiltInSize);
         List<Dictionary<int, UnihexGlyph>> unihex = [];
         foreach (JObject provider in providers) {
             if (provider.Value<string>("type") == "unihex" && UnihexGlyph.Load(files, provider) is { } loaded) {
@@ -204,26 +227,42 @@ public sealed unsafe class Font : IDisposable {
         if (glyphs.Count == 0 && unihex.Count == 0) {
             return null;
         }
-        Glyph missing = glyphs.TryGetValue('?', out Glyph question) ? question : glyphs.Values.FirstOrDefault();
-        Font font = new(gl, atlasWidth, atlasHeight, rgba, glyphs, missing, unihex, lazyTop);
-        if (!glyphs.ContainsKey('?') && font.Unihex('?') is { } unifontQuestion) {
+        Dictionary<int, Glyph> builtIn = BuiltInGlyphs(builtInX, builtInY, atlasWidth, atlasHeight, out byte[] builtInPage);
+        for (int row = 0; row < BuiltInSize; row++) {
+            Array.Copy(builtInPage, row * BuiltInSize * 4, rgba, ((builtInY + row) * atlasWidth + builtInX) * 4, BuiltInSize * 4);
+        }
+        Font font = new(gl, atlasWidth, atlasHeight, rgba, glyphs, builtIn['?'], unihex, lazyTop, builtIn);
+        if (glyphs.TryGetValue('?', out Glyph question)) {
+            font._missing = question;
+        }
+        else if (font.Unihex('?') is { } unifontQuestion) {
             font._missing = unifontQuestion;
         }
         return font;
     }
 
+    /// <summary>
+    /// <c>FontManager.loadResourceStack</c> and the reversal <c>apply</c> makes of it: the font's file from every
+    /// pack, the highest first, each in its own order. A file that does not parse is skipped alone.
+    /// </summary>
     private static void Collect(PackFiles files, string id, List<JObject> into, int depth, IReadOnlySet<string> options) {
+        if (depth > 8) {
+            return;
+        }
         Minecraft.Schemas.Identifier identifier = Minecraft.Schemas.Identifier.Parse(id);
-        if (depth > 8 || files.Read($"assets/{identifier.Namespace}/font/{identifier.Key}.json") is not { } data) {
-            return;
+        foreach (byte[] data in files.ReadEach($"assets/{identifier.Namespace}/font/{identifier.Key}.json").Reverse()) {
+            JObject json;
+            try {
+                json = JObject.Parse(Encoding.UTF8.GetString(data));
+            }
+            catch (Newtonsoft.Json.JsonException) {
+                continue;
+            }
+            CollectProviders(files, json, into, depth, options);
         }
-        JObject json;
-        try {
-            json = JObject.Parse(Encoding.UTF8.GetString(data));
-        }
-        catch (Newtonsoft.Json.JsonException) {
-            return;
-        }
+    }
+
+    private static void CollectProviders(PackFiles files, JObject json, List<JObject> into, int depth, IReadOnlySet<string> options) {
         foreach (JObject provider in (json["providers"] as JArray)?.OfType<JObject>() ?? []) {
             // FontOption.Filter: every option named must be on or off as it says.
             if (provider["filter"] is JObject filter && filter.Properties().Any(f => f.Value.Type != JTokenType.Boolean || options.Contains(f.Name) != f.Value.Value<bool>())) {

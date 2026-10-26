@@ -34,17 +34,13 @@ public sealed class ItemModelResolver(IResourceSource source, MinecraftClient? c
         return definition;
     }
 
-    /// <summary><c>DataComponents.ITEM_MODEL</c>, which the component's network read leaves as text.</summary>
+    /// <summary><c>DataComponents.ITEM_MODEL</c>.</summary>
     private static Identifier ModelIdOf(ItemStack stack) {
         if (!stack.Components.TryGetValue(DataComponent.ItemModel, out object? value)
             && (stack.RemoveComponents.Contains(DataComponent.ItemModel) || !stack.Type.DefaultComponents.TryGetValue(DataComponent.ItemModel, out value))) {
             return stack.Type.Identifier;
         }
-        return value switch {
-            Identifier id => id,
-            string text => Identifier.Parse(text),
-            _ => stack.Type.Identifier
-        };
+        return value is Identifier id ? id : stack.Type.Identifier;
     }
 
     /// <summary>

@@ -184,7 +184,7 @@ public sealed class ServerStatusPinger {
     public static ServerStatus ParseStatus(string json) {
         JObject root = JsonConvert.DeserializeObject<JObject>(json) ?? throw new JsonException("Status is not an object");
         return new ServerStatus(
-            Lenient(() => TextComponent.FromTag(INbtTag.FromJson(root["description"]!))) ?? TextComponent.Empty(),
+            Lenient(() => TextComponent.FromJson(root["description"]!)) ?? TextComponent.Empty(),
             Lenient(() => ParsePlayers((JObject)root["players"]!)),
             root["version"] is JObject version && version["name"] is JValue { Type: JTokenType.String } name && Int(version["protocol"]) is { } protocol
                 ? ((string)name!, protocol) : null,

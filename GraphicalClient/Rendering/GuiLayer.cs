@@ -1,14 +1,10 @@
-using System.Numerics;
 using ClientLib;
-using ClientLib.Entities;
 using ClientLib.Interaction;
 using GraphicalClient.Gui;
-using Minecraft.Data.Generated;
-using Minecraft.Schemas.Entities;
 
 namespace GraphicalClient.Rendering;
 
-/// <summary>Everything drawn over the world, in order: screen effects, crosshair, name tags, HUD, debug overlay and the open screen.</summary>
+/// <summary>Everything drawn over the world, in order: screen effects, crosshair, HUD, debug overlay and the open screen.</summary>
 public sealed class GuiLayer(GameRenderer renderer, MinecraftClient client, Hud hud, DebugOverlay debug, string rendererName) {
     /// <summary>The connection the HUD is drawn from, replaced on every join.</summary>
     public MinecraftClient Client { get; set; } = client;
@@ -41,7 +37,6 @@ public sealed class GuiLayer(GameRenderer renderer, MinecraftClient client, Hud 
                 DrawAttackIndicator();
                 Gui.FlushInverted();
             }
-            DrawNameTags(partialTick);
             context.PartialTick = partialTick;
             hud.ShowTabList = screen == null && tabHeld;
             hud.ScreenShowsEffects = screen != null && screen.ShowsActiveEffects(context);
@@ -109,58 +104,6 @@ public sealed class GuiLayer(GameRenderer renderer, MinecraftClient client, Hud 
             int progress = (int)(attackStrengthScale * 17.0F);
             sprites.Sprite(Gui, "hud/crosshair_attack_indicator_background", x, y, 16, 4);
             sprites.Sprite(Gui, "hud/crosshair_attack_indicator_progress", x, y, 16, 4, fraction: progress / 16.0F);
-        }
-    }
-
-    /// <summary>Names over players and named mobs, drawn on the HUD at the projected head position.</summary>
-    private void DrawNameTags(float partialTick) {
-        Matrix4x4 viewProjection = Camera.View * Camera.RenderProjection;
-        foreach (ClientEntity entity in Client.Entities.Values) {
-            // LivingEntityRenderer.shouldShowName: never the camera entity or a vehicle; the local player is the
-            // camera or, while it spectates another, not drawn at all.
-            if (entity == Client.CameraEntity || entity == Client.Player || entity.IsVehicle) {
-                continue;
-            }
-            // Entity.getDisplayName: a player by its profile name, anything else by its custom name, in its team's style.
-            string? holder;
-            Minecraft.Text.TextComponent? baseName;
-            if (entity.Type.Identifier == EntityType.Player.Identifier) {
-                holder = Client.PlayerList.TryGetValue(entity.Uuid, out PlayerListEntry? info) ? info.Name : null;
-                baseName = holder != null ? Minecraft.Text.TextComponent.Text(holder) : null;
-            }
-            else if (entity.Is(EntityClass.ItemFrame)) {
-                // ItemFrameRenderer.shouldShowName: the framed item's name, while the frame is looked at and the item is named.
-                baseName = Client.Interactions.Target is EntityHitResult { Entity: var target } && target == entity
-                           && entity.Get(EntityDataFields.ItemFrame.Item) is { } item && ItemNames.CustomName(item) != null
-                    ? ItemNames.HoverName(item)
-                    : null;
-                holder = baseName == null ? null : entity.Uuid.ToString();
-            }
-            else {
-                baseName = entity.Get(EntityDataFields.Entity.CustomName) is { Present: true } custom ? custom.Value : null;
-                holder = baseName == null ? null : entity.Uuid.ToString();
-            }
-            if (baseName == null || entity.IsInvisible) {
-                continue;
-            }
-            List<TextRun> name = TextFlattener.Flatten(Team.FormatNameForTeam(Client.Scoreboard.TeamOf(holder!), baseName));
-            double x = ClientEntity.Lerp(partialTick, entity.OldPosition.X, entity.Position.X) - Camera.Position.X;
-            // LivingEntity.SLEEPING_DIMENSIONS: a sleeper's name tag sits on the bed.
-            double height = entity.IsLiving && entity.Get(EntityDataFields.Entity.Pose) == EntityPose.Sleeping ? 0.2F : entity.Height;
-            double y = ClientEntity.Lerp(partialTick, entity.OldPosition.Y, entity.Position.Y) + height + 0.5 - Camera.Position.Y;
-            double z = ClientEntity.Lerp(partialTick, entity.OldPosition.Z, entity.Position.Z) - Camera.Position.Z;
-            if (x * x + y * y + z * z > 64 * 64) {
-                continue;
-            }
-            Vector4 clip = Vector4.Transform(new Vector4((float)x, (float)y, (float)z, 1), viewProjection);
-            if (clip.W <= 0.05F) {
-                continue;
-            }
-            float sx = (clip.X / clip.W * 0.5F + 0.5F) * Gui.ScaledWidth;
-            float sy = (0.5F - clip.Y / clip.W * 0.5F) * Gui.ScaledHeight;
-            int width = renderer.Text.Width(name);
-            Gui.Rect(sx - width / 2.0F - 1, sy - 1, width + 2, 9, 0x40000000);
-            renderer.Text.DrawCentred(name, sx, sy, entity.IsCrouching ? (byte)0x80 : (byte)0xFF, false);
         }
     }
 }

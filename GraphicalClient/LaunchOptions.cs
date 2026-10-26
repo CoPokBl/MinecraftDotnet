@@ -51,6 +51,7 @@ public sealed class LaunchOptions {
     public double ScreenshotAfter { get; private set; } = 8.0;
     public bool Verbose { get; private set; }
     public bool LogSent { get; private set; }
+    public bool LogInventory { get; private set; }
 
     /// <summary>Degrees a second the view turns by itself.</summary>
     public float Spin { get; private set; }
@@ -139,6 +140,7 @@ public sealed class LaunchOptions {
         new("--exit-after", "<s>", "Quit after this many seconds", (o, v) => o.ExitAfter = Double(v)),
         new("--verbose", null, "Log frame rate, section counts and the slowest frame every second", (o, _) => o.Verbose = true),
         new("--log-sent", null, "Log the sprint, held slot, attack, block action, client command, position,\ncontainer click, recipe book and seen advancements packets sent, for scripted tests", (o, _) => o.LogSent = true),
+        new("--log-inventory", null, "Log what the server puts in the player's inventory, with each stack's\ncomponents, and every change to the hotbar and the selected slot", (o, _) => o.LogInventory = true),
         new("--spin", "<degrees/s>", "Turn the view by itself, for measuring what looking around costs", (o, v) => o.Spin = Float(v)),
         new("--f3", null, "Start with the debug overlay open", (o, _) => o.DebugOverlay = true),
         new("--open-inventory", null, "Open the inventory once joined, for screenshots", (o, _) => o.OpenInventory = true),

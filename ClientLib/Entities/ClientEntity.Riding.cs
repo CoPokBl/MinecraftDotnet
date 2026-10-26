@@ -1,4 +1,6 @@
 using ClientLib.Maths;
+using Minecraft.Data.Generated;
+using Minecraft.Schemas.Entities;
 using Minecraft.Schemas.Vec;
 using Mth = Minecraft.Schemas.Mth;
 
@@ -167,6 +169,24 @@ public partial class ClientEntity {
     /// <summary><c>Entity.getDefaultPassengerAttachmentPoint</c>: the point at the passenger's index, clamped.</summary>
     protected virtual Vec3d PassengerAttachmentPoint(ClientEntity passenger, float scale) =>
         AttachmentPoint(Type.Attachments.Passenger, PassengerIndex(passenger), YRot, scale);
+
+    /// <summary>
+    /// <c>getAttachments().getNullable(NAME_TAG, 0, yRot)</c>. A player's or mannequin's follows its pose through
+    /// <c>Avatar.POSES</c>, none of which names a point, so it is the top of that box; a sleeping living entity's is the
+    /// top of <c>SLEEPING_DIMENSIONS</c>. A mob whose other poses change its size, a sitting camel or a digging warden,
+    /// keeps its standing point, as nothing here models those sizes.
+    /// </summary>
+    public Vec3d NameTagAttachmentPoint(float yRot) {
+        Player.EntityPose pose = IsLiving ? (Player.EntityPose)Get(EntityDataFields.Entity.Pose, EntityPose.Standing) : Player.EntityPose.Standing;
+        if (Is(EntityClass.Avatar)) {
+            float height = Player.LocalPlayer.DimensionsOf(pose).Height;
+            return new Vec3d(0.0, pose == Player.EntityPose.Dying ? height : height * AttachmentScale, 0.0);
+        }
+        if (pose == Player.EntityPose.Sleeping) {
+            return new Vec3d(0.0, 0.2F, 0.0);
+        }
+        return AttachmentPoint(Type.Attachments.NameTag, 0, yRot, AttachmentScale);
+    }
 
     /// <summary><c>EntityAttachments.getClamped</c>, on attachments scaled as <c>EntityDimensions.scale</c> scales them.</summary>
     protected static Vec3d AttachmentPoint(Vec3<double>[] points, int index, float yRot, float scale) {

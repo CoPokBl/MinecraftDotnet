@@ -34,6 +34,25 @@ public sealed class EntityRenderDispatcher(Dictionary<IEntityType, EntityRendere
     /// <summary>What an entity with no renderer draws as.</summary>
     public DevArtEntities Fallback => fallback;
 
+    /// <summary>Time spent drawing each type since the last <see cref="TakeTimings"/>, kept only while set, for <c>--verbose</c>.</summary>
+    public bool TimeByType { get; set; }
+
+    private readonly Dictionary<IEntityType, (long Ticks, int Count)> _timings = new(ReferenceEqualityComparer.Instance);
+
+    /// <summary>The types that took longest since the last call, worst first, as milliseconds over that time and calls.</summary>
+    public List<(IEntityType Type, double Milliseconds, int Count)> TakeTimings() {
+        List<(IEntityType, double, int)> result = _timings
+            .Select(t => (t.Key, t.Value.Ticks * 1000.0 / System.Diagnostics.Stopwatch.Frequency, t.Value.Count))
+            .OrderByDescending(t => t.Item2).ToList();
+        _timings.Clear();
+        return result;
+    }
+
+    private void Time(IEntityType type, long start) {
+        (long ticks, int count) = _timings.GetValueOrDefault(type);
+        _timings[type] = (ticks + System.Diagnostics.Stopwatch.GetTimestamp() - start, count + 1);
+    }
+
     /// <summary>The types vanilla gives a <c>NoopRenderer</c>: they have no look, so the built in art must not stand in.</summary>
     private static readonly HashSet<string> Invisible = [
         Minecraft.Data.Generated.EntityType.AreaEffectCloud.Identifier,
@@ -151,20 +170,48 @@ public sealed class EntityRenderDispatcher(Dictionary<IEntityType, EntityRendere
                 }
             }
             if (renderer != null) {
+                long start = TimeByType ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
                 renderer.Render(entity, context);
+                if (TimeByType) {
+                    Time(entity.Type, start);
+                }
                 continue;
             }
+            long fallbackStart = TimeByType ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
             context.SetOutlineColour(EntityRenderer.OutlineColourOf(entity, context.Client));
             fallback.Render(entity, context);
             context.SetOutlineColour(0);
+            int bx = (int)Math.Floor(camera.Position.X + x), by = (int)Math.Floor(camera.Position.Y + y + entity.EyeHeight), bz = (int)Math.Floor(camera.Position.Z + z);
+            int sky = context.Level.GetSkyLight(bx, by, bz);
             if (context.Flames != null && EntityRenderer.DisplayFireAnimation(entity, context.Client)) {
                 PoseStack pose = new();
                 pose.Translate(at);
-                int sky = context.Level.GetSkyLight((int)Math.Floor(camera.Position.X + x), (int)Math.Floor(camera.Position.Y + y + entity.EyeHeight),
-                    (int)Math.Floor(camera.Position.Z + z));
                 context.Flames.Submit(pose, (float)entity.Width, (float)entity.Height, sky, camera, context.Batch);
+            }
+            SubmitFallbackNameTags(entity, context, at, sky, entity.IsOnFire ? 15 : context.Level.GetBlockLight(bx, by, bz));
+            if (TimeByType) {
+                Time(entity.Type, fallbackStart);
             }
         }
         context.PartialTick = partialTick;
+    }
+
+    private readonly EntityRenderState _fallbackState = new();
+
+    /// <summary>The name tags of an entity drawn as the built in art, which has no render state of its own to carry them.</summary>
+    private void SubmitFallbackNameTags(ClientEntity entity, EntityRenderContext context, Vector3 at, float skyLight, float blockLight) {
+        EntityRenderState state = _fallbackState;
+        state.Entity = entity;
+        state.IsDiscrete = entity.IsCrouching;
+        state.SkyLight = skyLight;
+        state.BlockLight = blockLight;
+        NameTags.Extract(entity, state, context.PartialTick, context, NameTags.RuleFor(entity));
+        if (state.NameTagAttachment == null) {
+            return;
+        }
+        PoseStack pose = PoseStack.Rent();
+        pose.Translate(at);
+        NameTags.Submit(state, pose, context);
+        PoseStack.Return(pose);
     }
 }

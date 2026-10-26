@@ -38,11 +38,9 @@ public static class BlockSoundGroups {
         foreach ((string name, JToken? token) in groups) {
             JObject group = (JObject)token!;
             string member = CodeGenUtils.NamespacedIdToPascalName(name);
-            // The empty group's intentionally_empty has no category for SoundCodeGen to name it by, and the
-            // SoundType table leaves it out, so it is held directly.
             string Event(string key) {
                 string id = group.Value<string>(key)!;
-                return registered.ContainsKey(id) && id.Contains('.') ? "SoundType." + SoundCodeGen.GetVariableName(id) : $"new SimpleSoundType(\"{id}\")";
+                return registered.ContainsKey(id) ? "SoundType." + SoundCodeGen.GetVariableName(id) : $"new SimpleSoundType(\"{id}\")";
             }
             members.Append("    public static readonly BlockSoundGroup ").Append(member).Append(" = new(")
                 .Append(group.Value<float>("volume").ToString("R", CultureInfo.InvariantCulture)).Append("f, ")

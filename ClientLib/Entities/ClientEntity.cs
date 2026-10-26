@@ -44,6 +44,9 @@ public partial class ClientEntity {
     /// </summary>
     public object? RendererData { get; set; }
 
+    /// <summary><c>AbstractClientPlayer.playerInfo</c>, which <see cref="MinecraftClient.PlayerInfoOf"/> fills.</summary>
+    public PlayerListEntry? PlayerInfo { get; internal set; }
+
     /// <summary><c>Leashable.LeashData.delayedLeashHolderId</c>: the entity holding this one's lead, 0 for none.</summary>
     public int LeashHolderId { get; set; }
 

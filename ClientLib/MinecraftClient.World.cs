@@ -312,5 +312,5 @@ public sealed partial class MinecraftClient {
 
     private bool IsSpectator(Entities.ClientEntity player) => player is Player.LocalPlayer local
         ? local.IsSpectator
-        : PlayerList.TryGetValue(player.Uuid, out PlayerListEntry? entry) && entry.GameMode == Minecraft.Schemas.GameMode.Spectator;
+        : PlayerInfoOf(player)?.GameMode == Minecraft.Schemas.GameMode.Spectator;
 }

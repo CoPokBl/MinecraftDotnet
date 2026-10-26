@@ -39,8 +39,11 @@ public sealed class EntityRenderContext {
     /// <summary>Where the round shadows on the ground under entities go; null leaves them out.</summary>
     public EntityShadows? Shadows { get; init; }
 
-    /// <summary>Where text displays go; null leaves them out.</summary>
+    /// <summary>Where text displays and name tags go; null leaves them out.</summary>
     public TextDisplayBatch? TextDisplays { get; init; }
+
+    /// <summary><c>Hud.isHidden</c>, which hides most name tags with it.</summary>
+    public bool HideGui { get; init; }
 
     public EntityTextures Textures => Batch.Textures;
 
@@ -74,6 +77,14 @@ public class EntityRenderState {
     public uint OutlineColour;
 
     public List<LeashState>? LeashStates;
+
+    /// <summary><c>nameTag</c> and <c>scoreText</c>, null for none.</summary>
+    public List<TextRun>? NameTag, ScoreText;
+
+    /// <summary><c>nameTagAttachment</c>: where both hang, relative to the entity.</summary>
+    public Vector3? NameTagAttachment;
+
+    public double DistanceToCameraSq;
 
     public bool AppearsGlowing => OutlineColour != 0;
 }
@@ -197,7 +208,7 @@ public abstract class EntityRenderer {
         if (entity is ClientLib.Player.LocalPlayer local) {
             return local.IsSpectator;
         }
-        return entity.Is(EntityClass.Player) && client.PlayerList.TryGetValue(entity.Uuid, out PlayerListEntry? info) && info.GameMode == Minecraft.Schemas.GameMode.Spectator;
+        return client.PlayerInfoOf(entity)?.GameMode == Minecraft.Schemas.GameMode.Spectator;
     }
 
     /// <summary>
@@ -277,6 +288,7 @@ public abstract class EntityRenderer<S> : EntityRenderer where S : EntityRenderS
         if (state.DisplayFireAnimation) {
             context.Flames?.Submit(pose, state.BoundingBoxWidth, state.BoundingBoxHeight, state.SkyLight, context.Camera, context.Batch);
         }
+        NameTags.Submit(state, pose, context);
         pose.Pop();
     }
 
@@ -304,7 +316,11 @@ public abstract class EntityRenderer<S> : EntityRenderer where S : EntityRenderS
         int bx = (int)Math.Floor(state.X), by = (int)Math.Floor(state.Y + state.EyeHeight), bz = (int)Math.Floor(state.Z);
         state.SkyLight = context.Level.GetSkyLight(bx, by, bz);
         state.BlockLight = entity.IsOnFire ? 15 : context.Level.GetBlockLight(bx, by, bz);
+        NameTags.Extract(entity, state, partialTick, context, NameTagRule);
     }
+
+    /// <summary>Whose <c>shouldShowName</c> this renderer has.</summary>
+    protected virtual NameTagRule NameTagRule => NameTagRule.Entity;
 
     public abstract void Submit(S state, PoseStack pose, EntityRenderContext context);
 }
@@ -390,6 +406,8 @@ public abstract class LivingEntityRenderer<S, M> : EntityRenderer<S> where S : L
 
     /// <summary><c>isEntityUpsideDown</c>: named Dinnerbone or Grumm.</summary>
     protected virtual bool IsEntityUpsideDown(ClientEntity entity) => entity.CustomName is "Dinnerbone" or "Grumm";
+
+    protected override NameTagRule NameTagRule => NameTagRule.Living;
 
     /// <summary><c>LivingEntityRenderer.solveBodyRot</c>: a rider's body follows its mount's, within 85 degrees of its head.</summary>
     private static float SolveBodyRot(ClientEntity entity, float headRot, float partialTick) {
@@ -500,6 +518,8 @@ public abstract class LivingEntityRenderer<S, M> : EntityRenderer<S> where S : L
 /// <summary><c>MobRenderer</c>.</summary>
 public abstract class MobRenderer<S, M> : LivingEntityRenderer<S, M> where S : LivingEntityRenderState, new() where M : EntityModel<S> {
     protected MobRenderer(M model, float shadowRadius) : base(model, shadowRadius) { }
+
+    protected override NameTagRule NameTagRule => NameTagRule.Mob;
 
     protected override float GetShadowRadius(S state) => base.GetShadowRadius(state) * state.AgeScale;
 }

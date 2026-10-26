@@ -20,7 +20,7 @@ public static class BlockSoundGroups {
     public static readonly BlockSoundGroup Basalt = new(1f, 1f, SoundType.BasaltBreak, SoundType.BasaltStep, SoundType.BasaltPlace, SoundType.BasaltHit, SoundType.BasaltFall);
     public static readonly BlockSoundGroup BigDripleaf = new(1f, 1f, SoundType.BigDripleafBreak, SoundType.BigDripleafStep, SoundType.BigDripleafPlace, SoundType.BigDripleafHit, SoundType.BigDripleafFall);
     public static readonly BlockSoundGroup BoneBlock = new(1f, 1f, SoundType.BoneBlockBreak, SoundType.BoneBlockStep, SoundType.BoneBlockPlace, SoundType.BoneBlockHit, SoundType.BoneBlockFall);
-    public static readonly BlockSoundGroup CactusFlower = new(1f, 1f, SoundType.CactusFlowerBreak, new SimpleSoundType("minecraft:intentionally_empty"), SoundType.CactusFlowerPlace, new SimpleSoundType("minecraft:intentionally_empty"), new SimpleSoundType("minecraft:intentionally_empty"));
+    public static readonly BlockSoundGroup CactusFlower = new(1f, 1f, SoundType.CactusFlowerBreak, SoundType.IntentionallyEmpty, SoundType.CactusFlowerPlace, SoundType.IntentionallyEmpty, SoundType.IntentionallyEmpty);
     public static readonly BlockSoundGroup Calcite = new(1f, 1f, SoundType.CalciteBreak, SoundType.CalciteStep, SoundType.CalcitePlace, SoundType.CalciteHit, SoundType.CalciteFall);
     public static readonly BlockSoundGroup Candle = new(1f, 1f, SoundType.CandleBreak, SoundType.CandleStep, SoundType.CandlePlace, SoundType.CandleHit, SoundType.CandleFall);
     public static readonly BlockSoundGroup CaveVines = new(1f, 1f, SoundType.CaveVinesBreak, SoundType.CaveVinesStep, SoundType.CaveVinesPlace, SoundType.CaveVinesHit, SoundType.CaveVinesFall);
@@ -44,9 +44,9 @@ public static class BlockSoundGroups {
     public static readonly BlockSoundGroup Deepslate = new(1f, 1f, SoundType.DeepslateBreak, SoundType.DeepslateStep, SoundType.DeepslatePlace, SoundType.DeepslateHit, SoundType.DeepslateFall);
     public static readonly BlockSoundGroup DeepslateBricks = new(1f, 1f, SoundType.DeepslateBricksBreak, SoundType.DeepslateBricksStep, SoundType.DeepslateBricksPlace, SoundType.DeepslateBricksHit, SoundType.DeepslateBricksFall);
     public static readonly BlockSoundGroup DeepslateTiles = new(1f, 1f, SoundType.DeepslateTilesBreak, SoundType.DeepslateTilesStep, SoundType.DeepslateTilesPlace, SoundType.DeepslateTilesHit, SoundType.DeepslateTilesFall);
-    public static readonly BlockSoundGroup DriedGhast = new(1f, 1f, SoundType.DriedGhastBreak, SoundType.DriedGhastStep, new SimpleSoundType("minecraft:intentionally_empty"), new SimpleSoundType("minecraft:intentionally_empty"), SoundType.DriedGhastFall);
+    public static readonly BlockSoundGroup DriedGhast = new(1f, 1f, SoundType.DriedGhastBreak, SoundType.DriedGhastStep, SoundType.IntentionallyEmpty, SoundType.IntentionallyEmpty, SoundType.DriedGhastFall);
     public static readonly BlockSoundGroup DripstoneBlock = new(1f, 1f, SoundType.DripstoneBlockBreak, SoundType.DripstoneBlockStep, SoundType.DripstoneBlockPlace, SoundType.DripstoneBlockHit, SoundType.DripstoneBlockFall);
-    public static readonly BlockSoundGroup Empty = new(1f, 1f, new SimpleSoundType("minecraft:intentionally_empty"), new SimpleSoundType("minecraft:intentionally_empty"), new SimpleSoundType("minecraft:intentionally_empty"), new SimpleSoundType("minecraft:intentionally_empty"), new SimpleSoundType("minecraft:intentionally_empty"));
+    public static readonly BlockSoundGroup Empty = new(1f, 1f, SoundType.IntentionallyEmpty, SoundType.IntentionallyEmpty, SoundType.IntentionallyEmpty, SoundType.IntentionallyEmpty, SoundType.IntentionallyEmpty);
     public static readonly BlockSoundGroup FloweringAzalea = new(1f, 1f, SoundType.FloweringAzaleaBreak, SoundType.FloweringAzaleaStep, SoundType.FloweringAzaleaPlace, SoundType.FloweringAzaleaHit, SoundType.FloweringAzaleaFall);
     public static readonly BlockSoundGroup Froglight = new(1f, 1f, SoundType.FroglightBreak, SoundType.FroglightStep, SoundType.FroglightPlace, SoundType.FroglightHit, SoundType.FroglightFall);
     public static readonly BlockSoundGroup Frogspawn = new(1f, 1f, SoundType.FrogspawnBreak, SoundType.FrogspawnStep, SoundType.FrogspawnPlace, SoundType.FrogspawnHit, SoundType.FrogspawnFall);
@@ -94,8 +94,8 @@ public static class BlockSoundGroups {
     public static readonly BlockSoundGroup PoplarLeaves = new(1f, 1f, SoundType.PoplarLeavesBreak, SoundType.PoplarLeavesStep, SoundType.PoplarLeavesPlace, SoundType.PoplarLeavesHit, SoundType.PoplarLeavesFall);
     public static readonly BlockSoundGroup PotentSulfur = new(1f, 1f, SoundType.PotentSulfurBreak, SoundType.PotentSulfurStep, SoundType.PotentSulfurPlace, SoundType.PotentSulfurHit, SoundType.PotentSulfurFall);
     public static readonly BlockSoundGroup PowderSnow = new(1f, 1f, SoundType.PowderSnowBreak, SoundType.PowderSnowStep, SoundType.PowderSnowPlace, SoundType.PowderSnowHit, SoundType.PowderSnowFall);
-    public static readonly BlockSoundGroup RedShrub = new(1f, 1f, SoundType.RedShrubBreak, new SimpleSoundType("minecraft:intentionally_empty"), SoundType.RedShrubPlace, new SimpleSoundType("minecraft:intentionally_empty"), new SimpleSoundType("minecraft:intentionally_empty"));
-    public static readonly BlockSoundGroup Resin = new(1f, 1f, SoundType.ResinBreak, SoundType.ResinStep, SoundType.ResinPlace, new SimpleSoundType("minecraft:intentionally_empty"), SoundType.ResinFall);
+    public static readonly BlockSoundGroup RedShrub = new(1f, 1f, SoundType.RedShrubBreak, SoundType.IntentionallyEmpty, SoundType.RedShrubPlace, SoundType.IntentionallyEmpty, SoundType.IntentionallyEmpty);
+    public static readonly BlockSoundGroup Resin = new(1f, 1f, SoundType.ResinBreak, SoundType.ResinStep, SoundType.ResinPlace, SoundType.IntentionallyEmpty, SoundType.ResinFall);
     public static readonly BlockSoundGroup ResinBricks = new(1f, 1f, SoundType.ResinBricksBreak, SoundType.ResinBricksStep, SoundType.ResinBricksPlace, SoundType.ResinBricksHit, SoundType.ResinBricksFall);
     public static readonly BlockSoundGroup RootedDirt = new(1f, 1f, SoundType.RootedDirtBreak, SoundType.RootedDirtStep, SoundType.RootedDirtPlace, SoundType.RootedDirtHit, SoundType.RootedDirtFall);
     public static readonly BlockSoundGroup Roots = new(1f, 1f, SoundType.RootsBreak, SoundType.RootsStep, SoundType.RootsPlace, SoundType.RootsHit, SoundType.RootsFall);
@@ -107,7 +107,7 @@ public static class BlockSoundGroups {
     public static readonly BlockSoundGroup SculkShrieker = new(1f, 1f, SoundType.SculkShriekerBreak, SoundType.SculkShriekerStep, SoundType.SculkShriekerPlace, SoundType.SculkShriekerHit, SoundType.SculkShriekerFall);
     public static readonly BlockSoundGroup SculkVein = new(1f, 1f, SoundType.SculkVeinBreak, SoundType.SculkVeinStep, SoundType.SculkVeinPlace, SoundType.SculkVeinHit, SoundType.SculkVeinFall);
     public static readonly BlockSoundGroup Shelf = new(1f, 1f, SoundType.ShelfBreak, SoundType.ShelfStep, SoundType.ShelfPlace, SoundType.ShelfHit, SoundType.ShelfFall);
-    public static readonly BlockSoundGroup ShelfMushroom = new(1f, 1f, SoundType.ShelfMushroomBreak, SoundType.ShelfMushroomStep, SoundType.ShelfMushroomPlace, new SimpleSoundType("minecraft:intentionally_empty"), SoundType.ShelfMushroomFall);
+    public static readonly BlockSoundGroup ShelfMushroom = new(1f, 1f, SoundType.ShelfMushroomBreak, SoundType.ShelfMushroomStep, SoundType.ShelfMushroomPlace, SoundType.IntentionallyEmpty, SoundType.ShelfMushroomFall);
     public static readonly BlockSoundGroup Shroomlight = new(1f, 1f, SoundType.ShroomlightBreak, SoundType.ShroomlightStep, SoundType.ShroomlightPlace, SoundType.ShroomlightHit, SoundType.ShroomlightFall);
     public static readonly BlockSoundGroup SlimeBlock = new(1f, 1f, SoundType.SlimeBlockBreak, SoundType.SlimeBlockStep, SoundType.SlimeBlockPlace, SoundType.SlimeBlockHit, SoundType.SlimeBlockFall);
     public static readonly BlockSoundGroup SmallAmethystBud = new(1f, 1f, SoundType.SmallAmethystBudBreak, SoundType.AmethystClusterStep, SoundType.SmallAmethystBudPlace, SoundType.AmethystClusterHit, SoundType.AmethystClusterFall);

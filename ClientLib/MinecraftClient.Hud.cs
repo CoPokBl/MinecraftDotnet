@@ -48,9 +48,36 @@ public sealed partial class MinecraftClient {
     public BossHealthOverlay BossOverlay { get; } = new();
     public Scoreboard Scoreboard { get; } = new();
 
-    /// <summary><c>Entity.getTeam</c>: a player's team by its profile name, anything else's by its UUID.</summary>
-    public Team? TeamOf(ClientEntity entity) =>
-        Scoreboard.TeamOf(entity.Is(EntityClass.Player) && PlayerList.TryGetValue(entity.Uuid, out PlayerListEntry? entry) ? entry.Name : entity.Uuid.ToString());
+    /// <summary><c>Entity.getTeam</c>.</summary>
+    public Team? TeamOf(ClientEntity entity) => Scoreboard.TeamOf(ScoreboardName(entity));
+
+    /// <summary>
+    /// <c>AbstractClientPlayer.getPlayerInfo</c>: looked up until found, then kept, so a player the server takes off
+    /// the list, as servers do with the players they use as NPCs, keeps its name, skin and game mode.
+    /// </summary>
+    public PlayerListEntry? PlayerInfoOf(ClientEntity entity) {
+        if (entity.PlayerInfo == null && entity.Is(EntityClass.Player)) {
+            entity.PlayerInfo = PlayerList.GetValueOrDefault(entity.Uuid);
+        }
+        return entity.PlayerInfo;
+    }
+
+    /// <summary><c>Entity.getName</c>: a player's profile name, else the custom name, else the type's.</summary>
+    public TextComponent NameOf(ClientEntity entity) {
+        if (entity.Is(EntityClass.Player)) {
+            return TextComponent.Text(ScoreboardName(entity));
+        }
+        return entity.Get(EntityDataFields.Entity.CustomName) is { Present: true } custom
+            ? custom.Value
+            : TextComponent.Translatable($"entity.{entity.Type.Identifier.Namespace}.{entity.Type.Identifier.Key}");
+    }
+
+    /// <summary><c>Entity.getDisplayName</c>, without the hover event and insertion it carries into chat.</summary>
+    public TextComponent DisplayNameOf(ClientEntity entity) => Team.FormatNameForTeam(TeamOf(entity), NameOf(entity));
+
+    /// <summary><c>Entity.getScoreboardName</c>: a player's profile name, anything else's UUID.</summary>
+    public string ScoreboardName(ClientEntity entity) =>
+        entity == Player ? Profile.Username : entity.Is(EntityClass.Player) && PlayerInfoOf(entity) is { } info ? info.Name : entity.Uuid.ToString();
 
     /// <summary><c>Entity.getTeamColor</c>, with <c>Display</c>'s glow colour override: white without a coloured team.</summary>
     public int TeamColour(ClientEntity entity) {

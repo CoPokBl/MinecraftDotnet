@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using ClientLib;
 using ClientLib.Player;
+using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Schemas.Items;
 using GraphicalClient.Gui.Inventory;
 
 namespace GraphicalClient;
@@ -12,6 +14,8 @@ public sealed class LaunchScript(LaunchOptions options, MinecraftClient client, 
     private double _joinedAt = options.ServerGiven && !options.Title ? -1 : 0;
     private bool _loadedIn, _screenshotTaken, _used, _inventoryHeld, _useHeld, _attackHeld;
     private int _commandIndex, _pressIndex, _typeIndex, _clickIndex, _scrollIndex;
+    private const int HotbarSize = 9;
+    private readonly string?[] _hotbar = new string?[HotbarSize + 1];
 
     /// <summary>Follows the connection a join makes; the script's progress carries over.</summary>
     public void Attach(MinecraftClient joined) => client = joined;
@@ -171,4 +175,59 @@ public sealed class LaunchScript(LaunchOptions options, MinecraftClient client, 
             Console.WriteLine($"Sent at tick {client.ClientTicks}: {what}");
         }
     }
+
+    /// <summary>
+    /// <c>--log-inventory</c>, once a tick: each hotbar slot, and the selected one, that changed since the last
+    /// tick, whether the server or the client changed it.
+    /// </summary>
+    public void WatchHotbar() {
+        if (!options.LogInventory || client.Player == null) {
+            return;
+        }
+        PlayerInventory inventory = client.Inventory;
+        for (int i = 0; i <= HotbarSize; i++) {
+            string now = i < HotbarSize ? Describe(inventory.Hotbar(i)) : "selected " + inventory.SelectedSlot;
+            if (now != _hotbar[i]) {
+                _hotbar[i] = now;
+                Console.WriteLine($"Tick {client.ClientTicks}: hotbar {(i < HotbarSize ? $"slot {i} is {now}" : $"{now}")}");
+            }
+        }
+    }
+
+    /// <summary><c>--log-inventory</c>: the inventory packets as they arrive, before the client handles them.</summary>
+    public static void LogInventory(MinecraftClient client, Minecraft.Packets.MinecraftPacket packet) {
+        string? what = packet switch {
+            ClientBoundSetContainerContentPacket content => $"window {content.WindowId} state {content.StateId} contents "
+                + string.Join(", ", content.SlotData.Select((stack, slot) => (stack, slot)).Where(s => !s.stack.IsAir()).Select(s => $"{s.slot} = {Describe(s.stack)}"))
+                + $"; cursor {Describe(content.CursorItem)}",
+            ClientBoundSetContainerSlotPacket slot => $"window {slot.WindowId} state {slot.StateId} slot {slot.SlotId} = {Describe(slot.Data)}",
+            ClientBoundSetPlayerInventorySlotPacket slot => $"inventory slot {slot.Slot} = {Describe(slot.Contents)}",
+            ClientBoundSetCursorItemPacket cursor => $"cursor = {Describe(cursor.Item)}",
+            ClientBoundSetHeldItemPacket held => $"select hotbar slot {held.Slot}",
+            _ => null
+        };
+        if (what != null) {
+            Console.WriteLine($"Received at tick {client.ClientTicks}: {what}");
+        }
+    }
+
+    private static string Describe(ItemStack stack) {
+        if (stack.IsAir()) {
+            return stack.Type.Identifier == Minecraft.Data.Generated.Item.Air.Identifier ? "empty" : $"empty ({stack.Count} {stack.Type.Identifier})";
+        }
+        IEnumerable<string> components = stack.Components.Select(c => $"{c.Key.Identifier}={Format(c.Value)}")
+            .Concat(stack.RemoveComponents.Select(c => "!" + c.Identifier));
+        return $"{stack.Count} {stack.Type.Identifier} [{string.Join(", ", components)}]";
+    }
+
+    /// <summary>A component's value for the log: collections and tuples spelled out, registry entries by their id.</summary>
+    private static string Format(object? value) => value switch {
+        null => "null",
+        string text => text,
+        Minecraft.Data.Components.IDataComponent component => component.Identifier.ToString(),
+        System.Runtime.CompilerServices.ITuple tuple => "(" + string.Join(", ", Enumerable.Range(0, tuple.Length).Select(i => Format(tuple[i]))) + ")",
+        System.Collections.IEnumerable items => "[" + string.Join(", ", items.Cast<object?>().Select(Format)) + "]",
+        _ when value.GetType().GetProperty("Identifier")?.GetValue(value) is Minecraft.Schemas.Identifier id => id.ToString(),
+        _ => value.ToString() ?? ""
+    };
 }

@@ -54,9 +54,12 @@ public class EntityParticlesTest {
 
     private ClientEntity Spawn(MinecraftClient client, IEntityType type, double x, double y, double z) {
         int id = _nextId++;
+        Guid uuid = Guid.NewGuid();
+        // A player is refused without its player info.
+        client.PlayerList[uuid] = new PlayerListEntry(uuid, "Other");
         client.HandleSpawn(new ClientBoundSpawnEntityPacket {
             Id = id,
-            Uuid = Guid.NewGuid(),
+            Uuid = uuid,
             EntityType = type,
             Position = new Vec3<double>(x, y, z),
             Pitch = Angle.FromDegrees(0),

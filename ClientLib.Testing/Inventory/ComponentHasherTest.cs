@@ -1,4 +1,5 @@
 using ClientLib.Inventory;
+using Minecraft;
 using Minecraft.Data.Components;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
@@ -44,6 +45,18 @@ public class ComponentHasherTest {
         Assert.Multiple(() => {
             Assert.That(Hash(DataComponent.CustomName, TextComponent.Text("Bob")), Is.EqualTo(-378510004));
             Assert.That(Hash(DataComponent.CustomName, TextComponent.Text("Bob").WithColor(TextColor.Red).WithBold()), Is.EqualTo(396895550));
+        });
+    }
+
+    /// <summary>An identifier component as read off the wire, which a container click hashes as its id string.</summary>
+    [Test]
+    public void IdentifiersReadFromTheWire() {
+        Assert.Multiple(() => {
+            foreach (IDataComponent component in new IDataComponent[] { DataComponent.ItemModel, DataComponent.TooltipStyle, DataComponent.NoteBlockSound }) {
+                object value = component.ReadData(new DataReader(new DataWriter().WriteString("mapmaker:thing").ToArray()), VanillaRegistry.Data);
+                Assert.That(value, Is.EqualTo(Identifier.Parse("mapmaker:thing")), component.ToString());
+                Assert.That(Hash(component, value), Is.EqualTo((int)ComponentHasher.Hash(new NBT.Tags.StringTag("mapmaker:thing"))), component.ToString());
+            }
         });
     }
 

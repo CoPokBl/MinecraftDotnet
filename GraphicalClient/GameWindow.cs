@@ -311,6 +311,7 @@ public sealed class GameWindow : IDisposable, IMenuHost {
         _screens.Tick();
         _profiler.Begin("ticks");
         _script.SendCommands();
+        _script.WatchHotbar();
     }
 
     private void UpdateTitle() {
@@ -331,6 +332,12 @@ public sealed class GameWindow : IDisposable, IMenuHost {
             gc += $" day time {level.DefaultClockTime} game time {level.GameTime} tick rate {level.TickRateManager.TickRate}{(level.TickRateManager.IsFrozen ? " frozen" : "")}";
         }
         WorldRenderer world = _renderer.World;
+        WorldScene scene = _renderer.Scene;
+        scene.Entities.TimeByType = true;
+        double frames = Math.Max(1, _fps), perFrame = 1000.0 / Stopwatch.Frequency / frames;
+        gc += $" collect entities {scene.CollectTicks[0] * perFrame:F2} blockEntities {scene.CollectTicks[1] * perFrame:F2} particles {scene.CollectTicks[2] * perFrame:F2} ms/frame"
+              + $" ({string.Join(", ", scene.Entities.TakeTimings().Take(6).Select(t => $"{t.Type.Identifier.Key} {t.Count / frames:F0}x {t.Milliseconds / frames:F2}"))})";
+        Array.Clear(scene.CollectTicks);
         Console.WriteLine($"{_window.Title} - sections {world.VisibleSections}/{world.LoadedSections} (+{world.PendingSections}) - {gc} - {_profiler.Report()} walk {world.Timings[0] / Math.Max(1, _fps):F2} {_renderer.PipelineReport} {_renderer.GpuTimers.Report()} quads {world.QuadsDrawn.Main} ({world.LayerQuadsReport}) + shadow {world.QuadsDrawn.Shadow}");
         Array.Clear(world.Timings);
     }
@@ -374,6 +381,9 @@ public sealed class GameWindow : IDisposable, IMenuHost {
         client.RecipeSearchLines = stack => Gui.Inventory.Tooltips.Lines(stack).Select(line => string.Concat(line.Select(run => run.Text)).Trim());
         if (_options.LogSent) {
             client.PacketSent += packet => LaunchScript.LogSent(client, packet);
+        }
+        if (_options.LogInventory) {
+            client.PacketReceived += packet => LaunchScript.LogInventory(client, packet);
         }
         return client;
     }

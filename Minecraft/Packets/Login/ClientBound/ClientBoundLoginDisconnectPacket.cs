@@ -15,6 +15,6 @@ public class ClientBoundLoginDisconnectPacket : ClientBoundPacket {
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundLoginDisconnectPacket {
-        Reason = TextComponent.FromTag(INbtTag.FromJson(r.ReadString()))
+        Reason = TextComponent.FromJson(r.ReadString())
     };
 }

@@ -62,6 +62,19 @@ public class BlockEntityTest {
     }
 
     [Test]
+    public void OnlyChunksThatHeldABlockEntityAreListedAndUnloadingDropsThem() {
+        (MinecraftClient client, ClientLevel level, _) = World();
+        Assert.That(level.ChunksWithBlockEntities, Is.Empty);
+
+        Set(client, 18, 64, 3, Block.Chest);
+        ClientChunk chunk = level.GetChunk(1, 0)!;
+        Assert.That(level.ChunksWithBlockEntities, Is.EquivalentTo(new[] { chunk }));
+
+        level.RemoveChunk(1, 0);
+        Assert.That(level.ChunksWithBlockEntities, Is.Empty);
+    }
+
+    [Test]
     public void AWeatheringCopperChestKeepsItsBlockEntity() {
         (MinecraftClient client, ClientLevel level, _) = World();
         Set(client, 0, 64, 0, Block.CopperChest);

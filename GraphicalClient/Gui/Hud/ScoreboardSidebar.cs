@@ -22,7 +22,7 @@ public static class ScoreboardSidebar {
         foreach ((string holder, Score score) in client.Scoreboard.Ranked(objective.Name).Take(15)) {
             TextComponent ownerName = score.DisplayName ?? TextComponent.Text(holder);
             List<TextRun> name = TextFlattener.Flatten(Team.FormatNameForTeam(client.Scoreboard.TeamOf(holder), ownerName));
-            List<TextRun> scoreString = TextFlattener.Flatten(FormatValue(score.NumberFormat ?? objective.NumberFormat, score.Value));
+            List<TextRun> scoreString = TextFlattener.Flatten(FormatValue(score.NumberFormat ?? objective.NumberFormat, score.Value, TextColor.Red));
             entries.Add((name, scoreString, context.Text.Width(scoreString)));
         }
 
@@ -50,12 +50,12 @@ public static class ScoreboardSidebar {
         }
     }
 
-    /// <summary><c>NumberFormat.format</c>, with the sidebar's default of red numbers.</summary>
-    private static TextComponent FormatValue(INumberFormat? format, int value) => format switch {
+    /// <summary><c>NumberFormat.format</c>, a number without a format of its own in <paramref name="defaultColour"/>: the sidebar's red, or plain under a name.</summary>
+    internal static TextComponent FormatValue(INumberFormat? format, int value, TextColor? defaultColour) => format switch {
         BlankNumberFormat => TextComponent.Text(""),
         FixedNumberFormat fixedFormat => fixedFormat.Content,
         StyledNumberFormat styled => TextComponent.FromTag(new CompoundTag(styled.Styling.Children
             .Where(c => c.key != "text").Append(("text", new StringTag(value.ToString()))).ToArray())),
-        _ => TextComponent.Text(value.ToString()).WithColor(TextColor.Red)
+        _ => defaultColour is { } colour ? TextComponent.Text(value.ToString()).WithColor(colour) : TextComponent.Text(value.ToString())
     };
 }

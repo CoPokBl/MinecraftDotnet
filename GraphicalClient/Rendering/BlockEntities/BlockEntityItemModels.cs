@@ -65,15 +65,15 @@ public static class BlockEntityItemModels {
         Add(Item.DecoratedPot, Parse("minecraft:decorated_pot"), Matrix4x4.Identity);
         Add(Item.Conduit, Parse("minecraft:conduit"), Matrix4x4.CreateTranslation(0.5F, 0.5F, 0.5F));
 
-        // A head is half a block tall from the floor up; lifted so its middle is the block's.
+        // A head is half a block tall from the floor up; lifted so its middle is the block's. Turned to show its face in the GUI.
         Matrix4x4 head = BlockEntityTransforms.Transformation(new Vector3(0.5F, 0.25F, 0.5F), Matrix4x4.CreateRotationX(MathF.PI), Vector3.One);
-        Add(Item.SkeletonSkull, Parse("minecraft:head", ("kind", "skeleton")), head, 1.6F);
-        Add(Item.WitherSkeletonSkull, Parse("minecraft:head", ("kind", "wither_skeleton")), head, 1.6F);
-        Add(Item.ZombieHead, Parse("minecraft:head", ("kind", "zombie")), head, 1.6F);
-        Add(Item.CreeperHead, Parse("minecraft:head", ("kind", "creeper")), head, 1.6F);
-        Add(Item.PiglinHead, Parse("minecraft:head", ("kind", "piglin")), head, 1.6F);
-        Add(Item.DragonHead, Parse("minecraft:head", ("kind", "dragon")), head);
-        Add(Item.PlayerHead, Parse("minecraft:player_head"), head, 1.6F);
+        Add(Item.SkeletonSkull, Parse("minecraft:head", ("kind", "skeleton")), head, 1.6F, guiYRot: 45);
+        Add(Item.WitherSkeletonSkull, Parse("minecraft:head", ("kind", "wither_skeleton")), head, 1.6F, guiYRot: 45);
+        Add(Item.ZombieHead, Parse("minecraft:head", ("kind", "zombie")), head, 1.6F, guiYRot: 45);
+        Add(Item.CreeperHead, Parse("minecraft:head", ("kind", "creeper")), head, 1.6F, guiYRot: 45);
+        Add(Item.PiglinHead, Parse("minecraft:head", ("kind", "piglin")), head, 1.6F, guiYRot: 45);
+        Add(Item.DragonHead, Parse("minecraft:head", ("kind", "dragon")), head, guiYRot: 45);
+        Add(Item.PlayerHead, Parse("minecraft:player_head"), head, 1.6F, guiYRot: 45);
 
         (IItem[] Items, int Oxidation)[] statues = [
             ([Item.CopperGolemStatue, Item.WaxedCopperGolemStatue], 0),

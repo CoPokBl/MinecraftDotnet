@@ -165,6 +165,15 @@ public class ServerListTest {
         });
     }
 
+    /// <summary>JSON text mixes strings and objects in one array, which no list tag can hold.</summary>
+    [Test]
+    public void TestMotdMixingStringsAndObjectsReads() {
+        ServerStatusPinger.ServerStatus status = ServerStatusPinger.ParseStatus("""
+            {"description":{"text":"  ","extra":[{"color":"#DBDBDB","text":"Hollow Cube"}," ",{"text":"|"},"\n ",{"text":"next"}]}}
+            """);
+        Assert.That(TextFlattener.Plain(status.Description), Is.EqualTo("  Hollow Cube |\n next"));
+    }
+
     /// <summary>The 1.6 ping's bytes for localhost on the default port, worked by hand.</summary>
     [Test]
     public void TestLegacyPingRequest() {

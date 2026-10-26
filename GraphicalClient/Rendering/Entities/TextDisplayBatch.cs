@@ -9,7 +9,7 @@ using Silk.NET.OpenGL;
 namespace GraphicalClient.Rendering.Entities;
 
 /// <summary>
-/// Text displays, drawn the way <c>TextDisplayRenderer</c> lays them out. Each display's text becomes a mesh in
+/// Text displays, drawn the way <c>TextDisplayRenderer</c> lays them out, and name tags. Each display's text becomes a mesh in
 /// font pixels that stays on the GPU until its text, line width or style changes; a frame only sends each
 /// visible display's pose, light, text opacity and background colour, and draws every display of a geometry
 /// with one indirect call, back to front.
@@ -48,6 +48,8 @@ public sealed unsafe class TextDisplayBatch : IDisposable {
         public required object Text;
         public int LineWidth;
         public byte Flags;
+        public bool Shadow;
+        public int Alignment;
         public EntityTexture Atlas = null!;
 
         /// <summary>Built from a random pick of glyphs, so built again every frame it is drawn.</summary>
@@ -70,7 +72,8 @@ public sealed unsafe class TextDisplayBatch : IDisposable {
     private readonly EntityTextures _textures;
     private readonly StringSplitter _splitter;
     private readonly Random _obfuscation = new();
-    private readonly Dictionary<int, Mesh> _meshes = new();
+    /// <summary>By entity and what of it: its display text, its name tag or the score under it.</summary>
+    private readonly Dictionary<(int Entity, MeshSlot Slot), Mesh> _meshes = new();
     private readonly List<Draw> _depthTested = [], _seeThrough = [];
     private readonly List<Vertex> _building = [];
     private readonly uint _arena, _instances, _commands;
@@ -83,6 +86,8 @@ public sealed unsafe class TextDisplayBatch : IDisposable {
     private int _copiedFontVersion = -1;
     private EntityTexture? _atlas;
     private Frustum _frustum;
+
+    public enum MeshSlot : byte { Display, NameTag, Score }
 
     /// <summary>The colour of a display using the default background: the text background opacity option's black.</summary>
     public uint DefaultBackground { get; set; } = 0x3F000000;
@@ -145,6 +150,45 @@ public sealed unsafe class TextDisplayBatch : IDisposable {
         // pose.rotate(PI, 0, 1, 0), scale(-0.025), translate(1 - width / 2, -height, 0).
         Matrix4x4 matrix = Matrix4x4.CreateTranslation(1.0F - mesh.Width / 2.0F, -mesh.Height, 0.0F) * Matrix4x4.CreateScale(-0.025F)
             * Matrix4x4.CreateRotationY(MathF.PI) * pose;
+        Add(mesh, matrix, seeThrough, textOpacity, background, skyLight, blockLight);
+    }
+
+    /// <summary>
+    /// One unwrapped line without a shadow, its left edge at <paramref name="x"/> and its top at <paramref name="y"/>
+    /// in the pose: <c>SubmitNodeCollection.submitNameTag</c>'s text.
+    /// </summary>
+    public void SubmitLine(int entityId, MeshSlot slot, IReadOnlyList<TextRun> runs, Matrix4x4 pose, float x, float y, bool seeThrough,
+        byte textOpacity, uint background, float skyLight, float blockLight) {
+        if (_atlas is not { } atlas) {
+            return;
+        }
+        if (!_meshes.TryGetValue((entityId, slot), out Mesh? mesh) || mesh.Atlas != atlas || mesh.Text is not IReadOnlyList<TextRun> built
+            || !built.SequenceEqual(runs)) {
+            if (mesh != null) {
+                Free(mesh);
+            }
+            mesh = new Mesh { Text = runs.ToArray(), Atlas = atlas };
+            _meshes[(entityId, slot)] = mesh;
+            IReadOnlyList<TextRun> visual = BidiReorder.Reorder(runs, Translations.DefaultRightToLeft);
+            int width = (int)MathF.Ceiling(_splitter.StringWidth(visual));
+            mesh.Lines = [(visual, width)];
+            mesh.Width = width;
+            mesh.Height = LineSpacing - 1;
+            Emit(mesh);
+        }
+        else if (mesh.Obfuscated && mesh.LastUsed != _frame) {
+            Emit(mesh);
+        }
+        mesh.LastUsed = _frame;
+        if (mesh.Count > 0) {
+            Add(mesh, Matrix4x4.CreateTranslation(x, y, 0.0F) * pose, seeThrough, textOpacity, background, skyLight, blockLight);
+        }
+    }
+
+    /// <summary>The text width <see cref="SubmitLine"/> lays a line out at, which <c>Font.width</c> gives vanilla.</summary>
+    public int Width(IReadOnlyList<TextRun> runs) => (int)MathF.Ceiling(_splitter.StringWidth(runs));
+
+    private void Add(Mesh mesh, Matrix4x4 matrix, bool seeThrough, byte textOpacity, uint background, float skyLight, float blockLight) {
         if (!InView(mesh, matrix)) {
             return;
         }
@@ -170,17 +214,20 @@ public sealed unsafe class TextDisplayBatch : IDisposable {
     private Mesh MeshFor(int entityId, DisplayRenderer.TextRenderState state, EntityTexture atlas) {
         // The shadow flag and the alignment change the mesh; the rest is per draw.
         byte layoutFlags = (byte)(state.Flags & (1 | 8 | 16));
-        if (!_meshes.TryGetValue(entityId, out Mesh? mesh) || !ReferenceEquals(mesh.Text, state.Text) || mesh.LineWidth != state.LineWidth
+        if (!_meshes.TryGetValue((entityId, MeshSlot.Display), out Mesh? mesh) || !ReferenceEquals(mesh.Text, state.Text) || mesh.LineWidth != state.LineWidth
             || mesh.Flags != layoutFlags || mesh.Atlas != atlas) {
             if (mesh != null) {
                 Free(mesh);
             }
-            mesh = new Mesh { Text = state.Text, LineWidth = state.LineWidth, Flags = layoutFlags, Atlas = atlas };
-            _meshes[entityId] = mesh;
+            mesh = new Mesh {
+                Text = state.Text, LineWidth = state.LineWidth, Flags = layoutFlags, Atlas = atlas,
+                Shadow = (state.Flags & 1) != 0, Alignment = (state.Flags & 8) != 0 ? -1 : (state.Flags & 16) != 0 ? 1 : 0
+            };
+            _meshes[(entityId, MeshSlot.Display)] = mesh;
             Build(mesh, state);
         }
         else if (mesh.Obfuscated && mesh.LastUsed != _frame) {
-            Emit(mesh, state);
+            Emit(mesh);
         }
         mesh.LastUsed = _frame;
         return mesh;
@@ -202,16 +249,16 @@ public sealed unsafe class TextDisplayBatch : IDisposable {
         }
         mesh.Width = width;
         mesh.Height = lines.Count * LineSpacing - 1;
-        Emit(mesh, state);
+        Emit(mesh);
     }
 
     private const int LineSpacing = TextRenderer.LineHeight + 1;
 
     /// <summary>The mesh's vertices from its laid out lines.</summary>
-    private void Emit(Mesh mesh, DisplayRenderer.TextRenderState state) {
+    private void Emit(Mesh mesh) {
         int width = mesh.Width, height = mesh.Height;
-        bool shadow = (state.Flags & 1) != 0;
-        int alignment = (state.Flags & 8) != 0 ? -1 : (state.Flags & 16) != 0 ? 1 : 0;
+        bool shadow = mesh.Shadow;
+        int alignment = mesh.Alignment;
 
         _building.Clear();
         bool obfuscated = false;
@@ -342,10 +389,10 @@ public sealed unsafe class TextDisplayBatch : IDisposable {
 
     /// <summary>Places new and changed meshes, then sends this frame's draws, each geometry's back to front.</summary>
     public void Upload() {
-        foreach ((int id, Mesh mesh) in _meshes) {
+        foreach (((int, MeshSlot) key, Mesh mesh) in _meshes) {
             if (_frame - mesh.LastUsed > EvictAfterFrames) {
                 Free(mesh);
-                _meshes.Remove(id);
+                _meshes.Remove(key);
             }
         }
         PlaceMeshes();

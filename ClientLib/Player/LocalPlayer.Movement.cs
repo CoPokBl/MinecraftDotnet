@@ -92,7 +92,8 @@ public sealed partial class LocalPlayer {
         _ => 1.62F
     };
 
-    private static (float Width, float Height) DimensionsOf(EntityPose pose) => pose switch {
+    /// <summary><c>Avatar.POSES</c>' sizes, before the scale attribute; a dying one's is fixed rather than scaled.</summary>
+    internal static (float Width, float Height) DimensionsOf(EntityPose pose) => pose switch {
         EntityPose.Crouching => (0.6F, 1.5F),
         EntityPose.Swimming or EntityPose.FallFlying or EntityPose.SpinAttack => (0.6F, 0.6F),
         EntityPose.Dying or EntityPose.Sleeping => (0.2F, 0.2F),

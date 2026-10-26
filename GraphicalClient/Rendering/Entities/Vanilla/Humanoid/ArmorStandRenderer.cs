@@ -77,6 +77,8 @@ public sealed class ArmorStandRenderer : LivingEntityRenderer<ArmorStandRenderSt
         return distanceSqr < size * size;
     }
 
+    protected override NameTagRule NameTagRule => NameTagRule.ArmorStand;
+
     public override void ExtractRenderState(ClientEntity entity, ArmorStandRenderState state, float partialTick, EntityRenderContext context) {
         base.ExtractRenderState(entity, state, partialTick, context);
         HumanoidMobRenderer.ExtractHumanoidRenderState(entity, state, partialTick, _items, context);

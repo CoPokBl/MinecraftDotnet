@@ -115,6 +115,8 @@ public sealed class AvatarRenderer : LivingEntityRenderer<AvatarRenderState, Pla
 
     public override void Tick(ClientEntity entity) => HumanoidEntityData.TickFor<AvatarEntityData>(entity);
 
+    protected override NameTagRule NameTagRule => NameTagRule.Avatar;
+
     public override System.Numerics.Vector3 GetRenderOffset(AvatarRenderState state) =>
         state.IsCrouching ? new System.Numerics.Vector3(0.0F, state.Scale * -2.0F / 16.0F, 0.0F) : System.Numerics.Vector3.Zero;
 
@@ -172,7 +174,7 @@ public sealed class AvatarRenderer : LivingEntityRenderer<AvatarRenderState, Pla
     /// </summary>
     public static PlayerSkin SkinOf(ClientEntity entity) {
         if (entity.Is(EntityClass.Player)) {
-            return SkinManager.ForPlayer(entity.Uuid);
+            return SkinManager.ForPlayer(entity);
         }
         return entity.Get(EntityDataFields.Mannequin.Profile) is ProfileComponent.Data profile
             ? SkinManager.Lookup(profile) ?? DefaultPlayerSkin.Get(Guid.Empty)
@@ -320,7 +322,7 @@ public sealed class AvatarRenderer : LivingEntityRenderer<AvatarRenderState, Pla
             return false;
         }
         if (entity.Is(EntityClass.Player)) {
-            return _context != null && _context.Client.PlayerList.TryGetValue(entity.Uuid, out PlayerListEntry? info) && info.Name is "Dinnerbone" or "Grumm";
+            return _context?.Client.PlayerInfoOf(entity)?.Name is "Dinnerbone" or "Grumm";
         }
         return base.IsEntityUpsideDown(entity);
     }

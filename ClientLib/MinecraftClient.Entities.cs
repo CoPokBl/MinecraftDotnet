@@ -183,8 +183,15 @@ public sealed partial class MinecraftClient {
     private static readonly Identifier IgnoresPoisonAndRegen = "minecraft:ignores_poison_and_regen";
 
     internal void HandleSpawn(ClientBoundSpawnEntityPacket spawn) {
+        // createEntityFromPacket: a player is made from its player info's profile, and refused without one.
+        PlayerListEntry? playerInfo = null;
+        if (spawn.EntityType.Identifier == Minecraft.Data.Generated.EntityType.Player.Identifier && !PlayerList.TryGetValue(spawn.Uuid, out playerInfo)) {
+            Info($"Server attempted to add player prior to sending player info (Player id {spawn.Uuid})");
+            return;
+        }
         Vec3d position = new(spawn.Position.X, spawn.Position.Y, spawn.Position.Z);
         ClientEntity entity = EntityKinds.Create(this, spawn.EntityType, spawn.Uuid, spawn.Data);
+        entity.PlayerInfo = playerInfo;
         entity.Id = spawn.Id;
         entity.DeltaMovement = new Vec3d(spawn.Velocity.X, spawn.Velocity.Y, spawn.Velocity.Z);
         entity.Snap(position, spawn.Yaw.DegreesF, spawn.Pitch.DegreesF);

@@ -188,7 +188,7 @@ public static class EntityCollisions {
         if (entity is LocalPlayer local) {
             return local.IsSpectator;
         }
-        return entity.Is(EntityClass.Player) && client.PlayerList.TryGetValue(entity.Uuid, out PlayerListEntry? entry) && entry.GameMode == GameMode.Spectator;
+        return client.PlayerInfoOf(entity)?.GameMode == GameMode.Spectator;
     }
 
     private static bool OnClimbable(MinecraftClient client, ClientEntity entity) {

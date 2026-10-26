@@ -21,6 +21,9 @@ public static class SoundCodeGen {
         string name = key.Split(':')[1];
         // then get rid of category
         string[] catAndName = name.Split('.', 2);
+        if (catAndName.Length == 1) {
+            return CodeGenUtils.NamespacedIdToPascalName(name);  // minecraft:intentionally_empty has no category
+        }
         string prefix = catAndName[0] switch {
             "music_disc" => "Disc",
             _ => ""

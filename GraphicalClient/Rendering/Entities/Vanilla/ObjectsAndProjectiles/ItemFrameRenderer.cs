@@ -120,6 +120,8 @@ public sealed class ItemFrameRenderer : EntityRenderer<ItemFrameRenderState> {
         _ => -1
     };
 
+    protected override NameTagRule NameTagRule => NameTagRule.ItemFrame;
+
     public override void ExtractRenderState(ClientEntity entity, ItemFrameRenderState state, float partialTick, EntityRenderContext context) {
         base.ExtractRenderState(entity, state, partialTick, context);
         state.IsGlowFrame = entity.Type.Equals(EntityType.GlowItemFrame);

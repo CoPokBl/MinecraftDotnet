@@ -27,14 +27,17 @@ public sealed class SectionMesh {
     public int SectionX, SectionY, SectionZ;
     public int Version;
     public int Lod;
+
+    /// <summary>The first <see cref="VertexCount"/> are the mesh; the array may be longer, and pooled.</summary>
     public BlockVertex[] Vertices = [];
+    public int VertexCount;
 
     /// <summary>
     /// Quads per bucket, the vertices laid out bucket after bucket. A bucket is a <see cref="RenderLayer"/>
     /// and a facing: the six <see cref="Face"/>s, then <see cref="Unaligned"/> for anything that is not
     /// axis aligned. Facing is what lets the renderer skip the faces pointing away from the camera.
     /// </summary>
-    public int[] BucketQuads = new int[Buckets];
+    public int[] BucketQuads = [];
 
     public const int Facings = 7;
     public const int Unaligned = 6;
@@ -76,6 +79,9 @@ public sealed partial class SectionMesher(BlockModels models) {
     /// <summary>The plain water state, whose model carries the water texture.</summary>
     public int WaterState { get; set; }
 
+    /// <summary>Where vertex arrays are rented from, or null to allocate each one.</summary>
+    internal VertexArrayPool? Pool { get; init; }
+
     private List<BlockVertex> Target(RenderLayer layer, int facing) => _buckets[SectionMesh.Bucket(layer, facing)];
 
     private static byte MaterialBits(byte material) => (byte)(material << MaterialShift);
@@ -101,7 +107,7 @@ public sealed partial class SectionMesher(BlockModels models) {
         for (int face = 0; face < 6; face++) {
             _merger.SortBackToFront(_buckets[SectionMesh.Bucket(RenderLayer.Translucent, face)], face);
         }
-        BlockVertex[] vertices = new BlockVertex[total];
+        BlockVertex[] vertices = Pool?.Rent(total) ?? new BlockVertex[total];
         int[] quads = new int[SectionMesh.Buckets];
         int at = 0;
         for (int i = 0; i < SectionMesh.Buckets; i++) {
@@ -116,6 +122,7 @@ public sealed partial class SectionMesher(BlockModels models) {
             Version = snapshot.Version,
             Lod = snapshot.Lod,
             Vertices = vertices,
+            VertexCount = total,
             BucketQuads = quads,
             Visibility = _visibility.Resolve(snapshot, _models),
             EndPortals = EndPortalRenderer.Scan(snapshot, _models)

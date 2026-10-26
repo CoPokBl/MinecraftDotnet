@@ -14,8 +14,8 @@ public record ItemModelComponent() : IDataComponent<Identifier> {
         return writer.Write(val);
     }
 
-    public override string ReadData(DataReader reader, MinecraftRegistry registry) {
-        return reader.ReadString();
+    public override object ReadData(DataReader reader, MinecraftRegistry registry) {
+        return Identifier.Parse(reader.ReadString());
     }
 
     public override bool ValuesEqual(Identifier val1, Identifier val2) {

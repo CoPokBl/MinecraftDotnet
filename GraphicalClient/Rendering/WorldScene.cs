@@ -159,13 +159,16 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
     }
 
     /// <summary>Entities, the hand, the block outline and dig cracks for this frame.</summary>
+    /// <summary>Stopwatch ticks <see cref="Collect"/> has spent on entities, block entities and particles, for <c>--verbose</c> to read and clear.</summary>
+    public long[] CollectTicks { get; } = new long[3];
+
     public void Collect(ClientLevel level, float partialTick, ClientEntity cameraEntity, bool firstPerson, bool hideGui) {
         _textDisplays.Begin(Frustum.FromMatrix(_camera.View * _camera.CullProjection));
         _entityShadows.Begin();
         EntityRenderContext context = new() {
             Client = _client, Level = level, Camera = _camera, Batch = _entityBatch, TranslucentBatch = _translucentBatch, PartialTick = partialTick,
             Flames = Flames, WaterMaskBatch = _waterMaskBatch, AdditiveBatch = _additiveBatch, Lines = _overlay,
-            FirstPerson = firstPerson, Shadows = ShowEntityShadows ? _entityShadows : null, TextDisplays = _textDisplays
+            FirstPerson = firstPerson, Shadows = ShowEntityShadows ? _entityShadows : null, TextDisplays = _textDisplays, HideGui = hideGui
         };
         ShadowCasters? casters = ShowEntityShadows && ShadowCasterLight is { } light
             ? new ShadowCasters(new EntityRenderContext {
@@ -173,9 +176,15 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
                 FirstPerson = firstPerson
             }, light)
             : null;
+        long start = System.Diagnostics.Stopwatch.GetTimestamp();
         Entities.Render(context, cameraEntity, !firstPerson, casters);
+        long entitiesDone = System.Diagnostics.Stopwatch.GetTimestamp();
         BlockEntities.Render(context);
+        long blockEntitiesDone = System.Diagnostics.Stopwatch.GetTimestamp();
         Particles.Collect(context, _translucentBatch);
+        CollectTicks[0] += entitiesDone - start;
+        CollectTicks[1] += blockEntitiesDone - entitiesDone;
+        CollectTicks[2] += System.Diagnostics.Stopwatch.GetTimestamp() - blockEntitiesDone;
         _endPortals.Collect(_world.EndPortals, _camera);
         if (firstPerson && !hideGui && _client.Player is { IsSpectator: false } handPlayer && !handPlayer.IsSleeping) {
             RenderHand(level, handPlayer, partialTick);
