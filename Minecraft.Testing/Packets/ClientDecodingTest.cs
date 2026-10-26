@@ -136,8 +136,9 @@ public class ClientDecodingTest {
 
         AdvancementDisplay read = AdvancementDisplay.Read(new DataReader(writer.ToArray()), VanillaRegistry.Data);
 
+        // The position travels beside the advancement, not in the display.
         Assert.That(read.Background, Is.Null);
-        Assert.That(read.X, Is.EqualTo(1));
+        Assert.That(read.X, Is.EqualTo(0));
     }
 
     /// <summary>

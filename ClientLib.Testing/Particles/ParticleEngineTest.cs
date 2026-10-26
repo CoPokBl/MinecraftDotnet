@@ -51,19 +51,21 @@ public class ParticleEngineTest {
 
     private static ClientBoundParticlePacket Packet(IParticle particle, Vec3<double> position, Vec3<float> offset, float speed, int count,
         bool longDistance = false, bool alwaysVisible = false) => new() {
-        LongDistance = longDistance, AlwaysVisible = alwaysVisible, Position = position, Offset = offset, MaxSpeed = speed, ParticleCount = count,
+        LongDistance = longDistance, AlwaysVisible = alwaysVisible, Position = position, Offset = offset, MaxSpeed = new Vec3<float>(speed, speed, speed), ParticleCount = count,
         Particle = particle
     };
 
-    /// <summary>The packet's fields before the particle, as <c>ClientboundLevelParticlesPacket.write</c> puts them.</summary>
+    /// <summary>The particle's type, which <c>ClientboundLevelParticlesPacket.write</c> puts first, before its options.</summary>
     private static DataWriter Header(IParticle type) => new DataWriter()
-        .WriteBoolean(false).WriteBoolean(false)
-        .WriteDouble(1.0).WriteDouble(2.0).WriteDouble(3.0)
-        .WriteFloat(0.0F).WriteFloat(0.0F).WriteFloat(0.0F)
-        .WriteFloat(0.0F).WriteInteger(0)
         .WriteVarInt(VanillaRegistry.Data.Particles.GetProtocolId(type));
 
+    /// <summary>Ends the packet after the options with the rest of its fields, then reads it.</summary>
     private static IParticle Decode(DataWriter writer) {
+        writer.WriteBoolean(false).WriteBoolean(false)
+            .WriteDouble(1.0).WriteDouble(2.0).WriteDouble(3.0)
+            .WriteFloat(0.0F).WriteFloat(0.0F).WriteFloat(0.0F)
+            .WriteFloat(0.0F).WriteFloat(0.0F).WriteFloat(0.0F)
+            .WriteVarInt(0).WriteVarInt(0);
         DataReader reader = new(writer.ToArray());
         ClientBoundParticlePacket packet = (ClientBoundParticlePacket)ClientBoundParticlePacket.Deserialiser(reader, VanillaRegistry.Data);
         Assert.That(reader.HasRemaining, Is.False, "the particle's options were not read to the end");

@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock, IDoubleHalved {
-    private static readonly BlockInfo Data = new("minecraft:tall_seagrass", "block.minecraft.tall_seagrass", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, null, BlockInfo.VanillaOnly, "minecraft:blocks/tall_seagrass");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 12, "wet_grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S827, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.tall_seagrass", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, null, BlockInfo.VanillaOnly, "minecraft:blocks/tall_seagrass");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Popped, 12, "wet_grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S828, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock,
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock,
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,8 +69,8 @@ public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock,
     public uint StateId {
         get {
             return Half switch {
-                BlockHalf.Upper => 2255,
-                BlockHalf.Lower => 2256,
+                BlockHalf.Upper => 2371,
+                BlockHalf.Lower => 2372,
                 _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
             };
         }
@@ -78,8 +78,8 @@ public record TallSeagrassBlock(Identifier Identifier, BlockHalf Half) : IBlock,
     
     public IBlock WithState(uint state) {
         return state switch {
-            2255 => new TallSeagrassBlock(Identifier, BlockHalf.Upper),
-            2256 => new TallSeagrassBlock(Identifier, BlockHalf.Lower),
+            2371 => new TallSeagrassBlock(Identifier, BlockHalf.Upper),
+            2372 => new TallSeagrassBlock(Identifier, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

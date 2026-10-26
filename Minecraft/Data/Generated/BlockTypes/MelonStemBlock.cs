@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MelonStemBlock(Identifier Identifier, int Age) : IBlock, IAged {
-    private static readonly BlockInfo Data = new("minecraft:stem", "block.minecraft.melon_stem", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:melon_seeds", BlockInfo.VanillaOnly, "minecraft:blocks/melon_stem");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "hard_crop", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, true, false, true, [], null, BlockShapes.S649, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S650 };
+    private static readonly BlockInfo Data = new("block.minecraft.melon_stem", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:melon_seeds", BlockInfo.VanillaOnly, "minecraft:blocks/melon_stem");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Popped, 7, "hard_crop", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S650, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S651 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S366 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S651 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S652 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S653 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S654 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S652 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S653 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S654 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S655 };
     private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S387 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 8350];
+    public BlockStateInfo StateInfo => States[StateId - 10084];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record MelonStemBlock(Identifier Identifier, int Age) : IBlock, IAged {
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record MelonStemBlock(Identifier Identifier, int Age) : IBlock, IAged {
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -79,14 +79,14 @@ public record MelonStemBlock(Identifier Identifier, int Age) : IBlock, IAged {
     public uint StateId {
         get {
             return Age switch {
-                0 => 8350,
-                1 => 8351,
-                2 => 8352,
-                3 => 8353,
-                4 => 8354,
-                5 => 8355,
-                6 => 8356,
-                7 => 8357,
+                0 => 10084,
+                1 => 10085,
+                2 => 10086,
+                3 => 10087,
+                4 => 10088,
+                5 => 10089,
+                6 => 10090,
+                7 => 10091,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -94,14 +94,14 @@ public record MelonStemBlock(Identifier Identifier, int Age) : IBlock, IAged {
     
     public IBlock WithState(uint state) {
         return state switch {
-            8350 => new MelonStemBlock(Identifier, 0),
-            8351 => new MelonStemBlock(Identifier, 1),
-            8352 => new MelonStemBlock(Identifier, 2),
-            8353 => new MelonStemBlock(Identifier, 3),
-            8354 => new MelonStemBlock(Identifier, 4),
-            8355 => new MelonStemBlock(Identifier, 5),
-            8356 => new MelonStemBlock(Identifier, 6),
-            8357 => new MelonStemBlock(Identifier, 7),
+            10084 => new MelonStemBlock(Identifier, 0),
+            10085 => new MelonStemBlock(Identifier, 1),
+            10086 => new MelonStemBlock(Identifier, 2),
+            10087 => new MelonStemBlock(Identifier, 3),
+            10088 => new MelonStemBlock(Identifier, 4),
+            10089 => new MelonStemBlock(Identifier, 5),
+            10090 => new MelonStemBlock(Identifier, 6),
+            10091 => new MelonStemBlock(Identifier, 7),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

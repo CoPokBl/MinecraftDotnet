@@ -91,8 +91,10 @@ public static class BlockSoundGroups {
     public static readonly BlockSoundGroup PointedDripstone = new(1f, 1f, SoundType.PointedDripstoneBreak, SoundType.PointedDripstoneStep, SoundType.PointedDripstonePlace, SoundType.PointedDripstoneHit, SoundType.PointedDripstoneFall);
     public static readonly BlockSoundGroup PolishedDeepslate = new(1f, 1f, SoundType.PolishedDeepslateBreak, SoundType.PolishedDeepslateStep, SoundType.PolishedDeepslatePlace, SoundType.PolishedDeepslateHit, SoundType.PolishedDeepslateFall);
     public static readonly BlockSoundGroup PolishedTuff = new(1f, 1f, SoundType.PolishedTuffBreak, SoundType.PolishedTuffStep, SoundType.PolishedTuffPlace, SoundType.PolishedTuffHit, SoundType.PolishedTuffFall);
+    public static readonly BlockSoundGroup PoplarLeaves = new(1f, 1f, SoundType.PoplarLeavesBreak, SoundType.PoplarLeavesStep, SoundType.PoplarLeavesPlace, SoundType.PoplarLeavesHit, SoundType.PoplarLeavesFall);
     public static readonly BlockSoundGroup PotentSulfur = new(1f, 1f, SoundType.PotentSulfurBreak, SoundType.PotentSulfurStep, SoundType.PotentSulfurPlace, SoundType.PotentSulfurHit, SoundType.PotentSulfurFall);
     public static readonly BlockSoundGroup PowderSnow = new(1f, 1f, SoundType.PowderSnowBreak, SoundType.PowderSnowStep, SoundType.PowderSnowPlace, SoundType.PowderSnowHit, SoundType.PowderSnowFall);
+    public static readonly BlockSoundGroup RedShrub = new(1f, 1f, SoundType.RedShrubBreak, new SimpleSoundType("minecraft:intentionally_empty"), SoundType.RedShrubPlace, new SimpleSoundType("minecraft:intentionally_empty"), new SimpleSoundType("minecraft:intentionally_empty"));
     public static readonly BlockSoundGroup Resin = new(1f, 1f, SoundType.ResinBreak, SoundType.ResinStep, SoundType.ResinPlace, new SimpleSoundType("minecraft:intentionally_empty"), SoundType.ResinFall);
     public static readonly BlockSoundGroup ResinBricks = new(1f, 1f, SoundType.ResinBricksBreak, SoundType.ResinBricksStep, SoundType.ResinBricksPlace, SoundType.ResinBricksHit, SoundType.ResinBricksFall);
     public static readonly BlockSoundGroup RootedDirt = new(1f, 1f, SoundType.RootedDirtBreak, SoundType.RootedDirtStep, SoundType.RootedDirtPlace, SoundType.RootedDirtHit, SoundType.RootedDirtFall);
@@ -105,6 +107,7 @@ public static class BlockSoundGroups {
     public static readonly BlockSoundGroup SculkShrieker = new(1f, 1f, SoundType.SculkShriekerBreak, SoundType.SculkShriekerStep, SoundType.SculkShriekerPlace, SoundType.SculkShriekerHit, SoundType.SculkShriekerFall);
     public static readonly BlockSoundGroup SculkVein = new(1f, 1f, SoundType.SculkVeinBreak, SoundType.SculkVeinStep, SoundType.SculkVeinPlace, SoundType.SculkVeinHit, SoundType.SculkVeinFall);
     public static readonly BlockSoundGroup Shelf = new(1f, 1f, SoundType.ShelfBreak, SoundType.ShelfStep, SoundType.ShelfPlace, SoundType.ShelfHit, SoundType.ShelfFall);
+    public static readonly BlockSoundGroup ShelfMushroom = new(1f, 1f, SoundType.ShelfMushroomBreak, SoundType.ShelfMushroomStep, SoundType.ShelfMushroomPlace, new SimpleSoundType("minecraft:intentionally_empty"), SoundType.ShelfMushroomFall);
     public static readonly BlockSoundGroup Shroomlight = new(1f, 1f, SoundType.ShroomlightBreak, SoundType.ShroomlightStep, SoundType.ShroomlightPlace, SoundType.ShroomlightHit, SoundType.ShroomlightFall);
     public static readonly BlockSoundGroup SlimeBlock = new(1f, 1f, SoundType.SlimeBlockBreak, SoundType.SlimeBlockStep, SoundType.SlimeBlockPlace, SoundType.SlimeBlockHit, SoundType.SlimeBlockFall);
     public static readonly BlockSoundGroup SmallAmethystBud = new(1f, 1f, SoundType.SmallAmethystBudBreak, SoundType.AmethystClusterStep, SoundType.SmallAmethystBudPlace, SoundType.AmethystClusterHit, SoundType.AmethystClusterFall);
@@ -117,6 +120,7 @@ public static class BlockSoundGroups {
     public static readonly BlockSoundGroup SporeBlossom = new(1f, 1f, SoundType.SporeBlossomBreak, SoundType.SporeBlossomStep, SoundType.SporeBlossomPlace, SoundType.SporeBlossomHit, SoundType.SporeBlossomFall);
     public static readonly BlockSoundGroup Stem = new(1f, 1f, SoundType.StemBreak, SoundType.StemStep, SoundType.StemPlace, SoundType.StemHit, SoundType.StemFall);
     public static readonly BlockSoundGroup Stone = new(1f, 1f, SoundType.StoneBreak, SoundType.StoneStep, SoundType.StonePlace, SoundType.StoneHit, SoundType.StoneFall);
+    public static readonly BlockSoundGroup StrawBed = new(1f, 1f, SoundType.StrawBedBreak, SoundType.StrawBedStep, SoundType.StrawBedPlace, SoundType.StrawBedHit, SoundType.StrawBedFall);
     public static readonly BlockSoundGroup Sulfur = new(1f, 1f, SoundType.SulfurBreak, SoundType.SulfurStep, SoundType.SulfurPlace, SoundType.SulfurHit, SoundType.SulfurFall);
     public static readonly BlockSoundGroup SulfurSpike = new(1f, 1f, SoundType.SulfurSpikeBreak, SoundType.SulfurSpikeStep, SoundType.SulfurSpikePlace, SoundType.SulfurSpikeHit, SoundType.SulfurSpikeFall);
     public static readonly BlockSoundGroup SuspiciousGravel = new(1f, 1f, SoundType.SuspiciousGravelBreak, SoundType.SuspiciousGravelStep, SoundType.SuspiciousGravelPlace, SoundType.SuspiciousGravelHit, SoundType.SuspiciousGravelFall);
@@ -220,8 +224,10 @@ public static class BlockSoundGroups {
         ["pointed_dripstone"] = PointedDripstone,
         ["polished_deepslate"] = PolishedDeepslate,
         ["polished_tuff"] = PolishedTuff,
+        ["poplar_leaves"] = PoplarLeaves,
         ["potent_sulfur"] = PotentSulfur,
         ["powder_snow"] = PowderSnow,
+        ["red_shrub"] = RedShrub,
         ["resin"] = Resin,
         ["resin_bricks"] = ResinBricks,
         ["rooted_dirt"] = RootedDirt,
@@ -234,6 +240,7 @@ public static class BlockSoundGroups {
         ["sculk_shrieker"] = SculkShrieker,
         ["sculk_vein"] = SculkVein,
         ["shelf"] = Shelf,
+        ["shelf_mushroom"] = ShelfMushroom,
         ["shroomlight"] = Shroomlight,
         ["slime_block"] = SlimeBlock,
         ["small_amethyst_bud"] = SmallAmethystBud,
@@ -246,6 +253,7 @@ public static class BlockSoundGroups {
         ["spore_blossom"] = SporeBlossom,
         ["stem"] = Stem,
         ["stone"] = Stone,
+        ["straw_bed"] = StrawBed,
         ["sulfur"] = Sulfur,
         ["sulfur_spike"] = SulfurSpike,
         ["suspicious_gravel"] = SuspiciousGravel,

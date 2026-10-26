@@ -123,8 +123,18 @@ public class BlockParticlesTest {
         [Block.OakLeaves, Particle.TintedLeaves, 0.01F],
         [Block.CherryLeaves, Particle.CherryLeaves, 0.1F],
         [Block.PaleOakLeaves, Particle.PaleOakLeaves, 0.02F],
-        [Block.AzaleaLeaves, Particle.TintedLeaves, 0.01F]
+        [Block.AzaleaLeaves, Particle.TintedLeaves, 0.01F],
+        [Block.RedPoplarLeaves, Particle.RedPoplarLeaves, 0.01F],
+        [Block.YellowPoplarLeaves, Particle.YellowPoplarLeaves, 0.01F]
     ];
+
+    /// <summary>Spruce leaves are a plain <c>LeavesBlock</c>, which has no falling leaf.</summary>
+    [Test]
+    public void SpruceLeavesDropNothing() {
+        (MinecraftClient client, ClientLevel level, _) = World();
+        level.SetState(0, Floor + 3, 3, (ushort)Block.SpruceLeaves.StateId);
+        Assert.That(Animate(client, 0, Floor + 3, 3, 2000), Is.Empty);
+    }
 
     [Test]
     public void LeavesOnAFullBlockDropNothing() {

@@ -2,6 +2,7 @@ using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Worlds;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Generated;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Schemas;
@@ -42,11 +43,16 @@ public static class BlockInteraction {
         }
 
         BlockHit hit = HitOf(use);
-        InteractionResult result = UseItemOn(player, world, player.GetItemInHand(use.ActiveHand),
-            use.ActiveHand, hit);
+        ItemStack stack = player.GetItemInHand(use.ActiveHand);
+        SwingAnimation swing = stack.Get(DataComponent.InteractAnimation);
+        InteractionResult result = UseItemOn(player, world, stack, use.ActiveHand, hit);
 
-        if (result.Swing == SwingSource.Server) {
-            player.SwingArm(use.ActiveHand);
+        // Vanilla has two branches after the use, one per build limit message, and each ends in the
+        // swing, so a success swings twice. The second is not refused: startIfAble only refuses once
+        // the swing has ticked, and the first left it at tick zero.
+        if (result.Kind == InteractionResultKind.Success) {
+            player.SwingAfterInteraction(use.ActiveHand, swing, result.Swing);
+            player.SwingAfterInteraction(use.ActiveHand, swing, result.Swing);
         }
 
         // Vanilla's last two statements, and they are unconditional: the clicked block and the one
@@ -75,7 +81,9 @@ public static class BlockInteraction {
             // Vanilla opens the block's menu read only here, through BlockState.getMenuProvider. That
             // needs block entity behaviour, which does not exist: BlockEntity is the wire record sent
             // with chunk data and carries no contents and no menu. So a spectator interacts with
-            // nothing, which is the same answer vanilla gives for a block with no menu.
+            // nothing, which is the same answer vanilla gives for a block with no menu. A spectator
+            // clicking a portal is teleported through it upstream; there is no portal travel here, so
+            // that branch has nothing to call.
             return InteractionResult.Pass;
         }
 
@@ -117,7 +125,18 @@ public static class BlockInteraction {
             return InteractionResult.Pass;
         }
 
-        return UseItem(player, world, hit, hand, stack);
+        InteractionResult result = UseItem(player, world, hit, hand, stack);
+
+        // The hand ends up holding what the use transformed it into. Upstream compares the stack by
+        // identity against the one it handed in, which a mutable stack consumed in place still is;
+        // here a feature that consumed one has already written the hand, so only a transform the
+        // result names, and that is not already there, is written.
+        if (result is { Kind: InteractionResultKind.Success, HeldItemTransformedTo: { } transformed }
+            && !ReferenceEquals(transformed, player.GetItemInHand(hand))) {
+            player.SetItemInHand(hand, transformed);
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -175,7 +194,62 @@ public static class BlockInteraction {
             Result = InteractionResult.Pass
         };
         player.Events.CallEvent(e);
-        return e.Result;
+
+        if (e.Result.Kind != InteractionResultKind.Success) {
+            return e.Result;
+        }
+
+        // The hand as the use left it is upstream's `this`, the stack consumed in place.
+        ItemStack transformTo = e.Result.HeldItemTransformedTo ?? player.GetItemInHand(hand);
+        return e.Result.WithHeldItemTransformedTo(ApplyAfterUseComponentSideEffects(player, transformTo, stack));
+    }
+
+    /// <summary>
+    /// <c>ItemStack.applyAfterUseComponentSideEffects</c>, read off the stack as it was before the use.
+    /// <p/>
+    /// <c>use_cooldown</c> is not applied: the cooldowns are <c>ItemCooldownsFeature</c>'s, kept on a
+    /// player tag core cannot reach, so an item used on a block starts no cooldown.
+    /// </summary>
+    private static ItemStack ApplyAfterUseComponentSideEffects(Player player, ItemStack used, ItemStack before) {
+        if (before.GetOrNull(DataComponent.UseRemainder) is not { } remainder) {
+            return used;
+        }
+
+        return ConvertIntoRemainder(remainder, used, before.Count, player.GameMode == GameMode.Creative, player);
+    }
+
+    /// <summary>
+    /// <c>UseRemainder.convertIntoRemainder</c>: a use that took from the stack leaves the remainder
+    /// behind, in the hand once the stack is gone and alongside it while some is left.
+    /// </summary>
+    private static ItemStack ConvertIntoRemainder(ItemStack convertInto, ItemStack used, int countBefore,
+        bool hasInfiniteMaterials, Player player) {
+        if (hasInfiniteMaterials || used.Count >= countBefore) {
+            return used;
+        }
+
+        if (used.IsAir()) {
+            return convertInto;
+        }
+
+        HandleExtraItemsCreatedOnUse(player, convertInto);
+        return used;
+    }
+
+    /// <summary>
+    /// <c>Player.handleExtraItemsCreatedOnUse</c>: into the inventory, and what does not fit is dropped.
+    /// The drop goes through <see cref="PlayerDropItemEvent"/>, so with nothing listening it is lost.
+    /// </summary>
+    private static void HandleExtraItemsCreatedOnUse(Player player, ItemStack stack) {
+        if (player.Inventory.AddItem(stack) is not { } left || left.IsAir() || player.World is not { } world) {
+            return;
+        }
+
+        player.Events.CallEvent(new PlayerDropItemEvent {
+            World = world,
+            Player = player,
+            Item = left
+        });
     }
 
     /// <summary>

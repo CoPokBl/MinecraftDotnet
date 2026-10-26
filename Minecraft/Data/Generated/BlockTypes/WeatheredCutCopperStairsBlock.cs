@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WeatheredCutCopperStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:weathering_copper_stair", "block.minecraft.weathered_cut_copper_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:weathered_cut_copper_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/weathered_cut_copper_stairs");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 56, "copper", NoteBlockInstrument.TrumpetWeathered, false, true, true, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.weathered_cut_copper_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:weathered_cut_copper_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/weathered_cut_copper_stairs");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 56, "copper", NoteBlockInstrument.TrumpetWeathered, false, true, true, false, false, false, false, true, false, false, true, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record WeatheredCutCopperStairsBlock(Identifier Identifier, Direction Fac
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 27968];
+    public BlockStateInfo StateInfo => States[StateId - 31325];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record WeatheredCutCopperStairsBlock(Identifier Identifier, Direction Fac
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record WeatheredCutCopperStairsBlock(Identifier Identifier, Direction Fac
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record WeatheredCutCopperStairsBlock(Identifier Identifier, Direction Fac
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 27968,
-                            false => 27969,
+                            true => 31325,
+                            false => 31326,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 27970,
-                            false => 27971,
+                            true => 31327,
+                            false => 31328,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 27972,
-                            false => 27973,
+                            true => 31329,
+                            false => 31330,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 27974,
-                            false => 27975,
+                            true => 31331,
+                            false => 31332,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 27976,
-                            false => 27977,
+                            true => 31333,
+                            false => 31334,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 27978,
-                            false => 27979,
+                            true => 31335,
+                            false => 31336,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 27980,
-                            false => 27981,
+                            true => 31337,
+                            false => 31338,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 27982,
-                            false => 27983,
+                            true => 31339,
+                            false => 31340,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 27984,
-                            false => 27985,
+                            true => 31341,
+                            false => 31342,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 27986,
-                            false => 27987,
+                            true => 31343,
+                            false => 31344,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record WeatheredCutCopperStairsBlock(Identifier Identifier, Direction Fac
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 27988,
-                            false => 27989,
+                            true => 31345,
+                            false => 31346,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 27990,
-                            false => 27991,
+                            true => 31347,
+                            false => 31348,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 27992,
-                            false => 27993,
+                            true => 31349,
+                            false => 31350,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 27994,
-                            false => 27995,
+                            true => 31351,
+                            false => 31352,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 27996,
-                            false => 27997,
+                            true => 31353,
+                            false => 31354,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 27998,
-                            false => 27999,
+                            true => 31355,
+                            false => 31356,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 28000,
-                            false => 28001,
+                            true => 31357,
+                            false => 31358,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 28002,
-                            false => 28003,
+                            true => 31359,
+                            false => 31360,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 28004,
-                            false => 28005,
+                            true => 31361,
+                            false => 31362,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 28006,
-                            false => 28007,
+                            true => 31363,
+                            false => 31364,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record WeatheredCutCopperStairsBlock(Identifier Identifier, Direction Fac
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 28008,
-                            false => 28009,
+                            true => 31365,
+                            false => 31366,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 28010,
-                            false => 28011,
+                            true => 31367,
+                            false => 31368,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 28012,
-                            false => 28013,
+                            true => 31369,
+                            false => 31370,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 28014,
-                            false => 28015,
+                            true => 31371,
+                            false => 31372,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 28016,
-                            false => 28017,
+                            true => 31373,
+                            false => 31374,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 28018,
-                            false => 28019,
+                            true => 31375,
+                            false => 31376,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 28020,
-                            false => 28021,
+                            true => 31377,
+                            false => 31378,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 28022,
-                            false => 28023,
+                            true => 31379,
+                            false => 31380,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 28024,
-                            false => 28025,
+                            true => 31381,
+                            false => 31382,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 28026,
-                            false => 28027,
+                            true => 31383,
+                            false => 31384,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record WeatheredCutCopperStairsBlock(Identifier Identifier, Direction Fac
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 28028,
-                            false => 28029,
+                            true => 31385,
+                            false => 31386,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 28030,
-                            false => 28031,
+                            true => 31387,
+                            false => 31388,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 28032,
-                            false => 28033,
+                            true => 31389,
+                            false => 31390,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 28034,
-                            false => 28035,
+                            true => 31391,
+                            false => 31392,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 28036,
-                            false => 28037,
+                            true => 31393,
+                            false => 31394,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 28038,
-                            false => 28039,
+                            true => 31395,
+                            false => 31396,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 28040,
-                            false => 28041,
+                            true => 31397,
+                            false => 31398,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 28042,
-                            false => 28043,
+                            true => 31399,
+                            false => 31400,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 28044,
-                            false => 28045,
+                            true => 31401,
+                            false => 31402,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 28046,
-                            false => 28047,
+                            true => 31403,
+                            false => 31404,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record WeatheredCutCopperStairsBlock(Identifier Identifier, Direction Fac
     
     public IBlock WithState(uint state) {
         return state switch {
-            27968 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            27969 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            27970 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            27971 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            27972 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            27973 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            27974 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            27975 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            27976 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            27977 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            27978 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            27979 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            27980 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            27981 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            27982 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            27983 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            27984 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            27985 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            27986 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            27987 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            27988 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            27989 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            27990 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            27991 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            27992 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            27993 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            27994 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            27995 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            27996 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            27997 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            27998 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            27999 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            28000 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            28001 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            28002 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            28003 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            28004 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            28005 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            28006 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            28007 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            28008 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            28009 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            28010 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            28011 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            28012 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            28013 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            28014 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            28015 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            28016 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            28017 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            28018 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            28019 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            28020 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            28021 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            28022 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            28023 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            28024 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            28025 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            28026 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            28027 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            28028 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            28029 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            28030 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            28031 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            28032 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            28033 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            28034 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            28035 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            28036 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            28037 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            28038 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            28039 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            28040 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            28041 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            28042 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            28043 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            28044 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            28045 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            28046 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            28047 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            31325 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            31326 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            31327 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            31328 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            31329 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            31330 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            31331 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            31332 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            31333 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            31334 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            31335 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            31336 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            31337 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            31338 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            31339 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            31340 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            31341 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            31342 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            31343 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            31344 => new WeatheredCutCopperStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            31345 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            31346 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            31347 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            31348 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            31349 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            31350 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            31351 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            31352 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            31353 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            31354 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            31355 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            31356 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            31357 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            31358 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            31359 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            31360 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            31361 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            31362 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            31363 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            31364 => new WeatheredCutCopperStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            31365 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            31366 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            31367 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            31368 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            31369 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            31370 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            31371 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            31372 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            31373 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            31374 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            31375 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            31376 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            31377 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            31378 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            31379 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            31380 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            31381 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            31382 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            31383 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            31384 => new WeatheredCutCopperStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            31385 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            31386 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            31387 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            31388 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            31389 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            31390 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            31391 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            31392 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            31393 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            31394 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            31395 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            31396 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            31397 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            31398 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            31399 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            31400 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            31401 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            31402 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            31403 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            31404 => new WeatheredCutCopperStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

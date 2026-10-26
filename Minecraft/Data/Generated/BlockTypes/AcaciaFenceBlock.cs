@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:fence", "block.minecraft.acacia_fence", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_fence", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_fence");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 15, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_fence", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_fence", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 15, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
     private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
@@ -48,15 +48,15 @@ public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, boo
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 13868];
+    public BlockStateInfo StateInfo => States[StateId - 15747];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -70,7 +70,6 @@ public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, boo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -90,6 +89,7 @@ public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, boo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -125,44 +125,44 @@ public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13868,
-                                false => 13869,
+                                true => 15747,
+                                false => 15748,
                             },
                             false => West switch {
-                                true => 13870,
-                                false => 13871,
+                                true => 15749,
+                                false => 15750,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13872,
-                                false => 13873,
+                                true => 15751,
+                                false => 15752,
                             },
                             false => West switch {
-                                true => 13874,
-                                false => 13875,
+                                true => 15753,
+                                false => 15754,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13876,
-                                false => 13877,
+                                true => 15755,
+                                false => 15756,
                             },
                             false => West switch {
-                                true => 13878,
-                                false => 13879,
+                                true => 15757,
+                                false => 15758,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13880,
-                                false => 13881,
+                                true => 15759,
+                                false => 15760,
                             },
                             false => West switch {
-                                true => 13882,
-                                false => 13883,
+                                true => 15761,
+                                false => 15762,
                             },
                         },
                     },
@@ -171,44 +171,44 @@ public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13884,
-                                false => 13885,
+                                true => 15763,
+                                false => 15764,
                             },
                             false => West switch {
-                                true => 13886,
-                                false => 13887,
+                                true => 15765,
+                                false => 15766,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13888,
-                                false => 13889,
+                                true => 15767,
+                                false => 15768,
                             },
                             false => West switch {
-                                true => 13890,
-                                false => 13891,
+                                true => 15769,
+                                false => 15770,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13892,
-                                false => 13893,
+                                true => 15771,
+                                false => 15772,
                             },
                             false => West switch {
-                                true => 13894,
-                                false => 13895,
+                                true => 15773,
+                                false => 15774,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13896,
-                                false => 13897,
+                                true => 15775,
+                                false => 15776,
                             },
                             false => West switch {
-                                true => 13898,
-                                false => 13899,
+                                true => 15777,
+                                false => 15778,
                             },
                         },
                     },
@@ -219,38 +219,38 @@ public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            13868 => new AcaciaFenceBlock(Identifier, true, true, true, true, true),
-            13869 => new AcaciaFenceBlock(Identifier, true, true, true, true, false),
-            13870 => new AcaciaFenceBlock(Identifier, true, true, true, false, true),
-            13871 => new AcaciaFenceBlock(Identifier, true, true, true, false, false),
-            13872 => new AcaciaFenceBlock(Identifier, true, true, false, true, true),
-            13873 => new AcaciaFenceBlock(Identifier, true, true, false, true, false),
-            13874 => new AcaciaFenceBlock(Identifier, true, true, false, false, true),
-            13875 => new AcaciaFenceBlock(Identifier, true, true, false, false, false),
-            13876 => new AcaciaFenceBlock(Identifier, true, false, true, true, true),
-            13877 => new AcaciaFenceBlock(Identifier, true, false, true, true, false),
-            13878 => new AcaciaFenceBlock(Identifier, true, false, true, false, true),
-            13879 => new AcaciaFenceBlock(Identifier, true, false, true, false, false),
-            13880 => new AcaciaFenceBlock(Identifier, true, false, false, true, true),
-            13881 => new AcaciaFenceBlock(Identifier, true, false, false, true, false),
-            13882 => new AcaciaFenceBlock(Identifier, true, false, false, false, true),
-            13883 => new AcaciaFenceBlock(Identifier, true, false, false, false, false),
-            13884 => new AcaciaFenceBlock(Identifier, false, true, true, true, true),
-            13885 => new AcaciaFenceBlock(Identifier, false, true, true, true, false),
-            13886 => new AcaciaFenceBlock(Identifier, false, true, true, false, true),
-            13887 => new AcaciaFenceBlock(Identifier, false, true, true, false, false),
-            13888 => new AcaciaFenceBlock(Identifier, false, true, false, true, true),
-            13889 => new AcaciaFenceBlock(Identifier, false, true, false, true, false),
-            13890 => new AcaciaFenceBlock(Identifier, false, true, false, false, true),
-            13891 => new AcaciaFenceBlock(Identifier, false, true, false, false, false),
-            13892 => new AcaciaFenceBlock(Identifier, false, false, true, true, true),
-            13893 => new AcaciaFenceBlock(Identifier, false, false, true, true, false),
-            13894 => new AcaciaFenceBlock(Identifier, false, false, true, false, true),
-            13895 => new AcaciaFenceBlock(Identifier, false, false, true, false, false),
-            13896 => new AcaciaFenceBlock(Identifier, false, false, false, true, true),
-            13897 => new AcaciaFenceBlock(Identifier, false, false, false, true, false),
-            13898 => new AcaciaFenceBlock(Identifier, false, false, false, false, true),
-            13899 => new AcaciaFenceBlock(Identifier, false, false, false, false, false),
+            15747 => new AcaciaFenceBlock(Identifier, true, true, true, true, true),
+            15748 => new AcaciaFenceBlock(Identifier, true, true, true, true, false),
+            15749 => new AcaciaFenceBlock(Identifier, true, true, true, false, true),
+            15750 => new AcaciaFenceBlock(Identifier, true, true, true, false, false),
+            15751 => new AcaciaFenceBlock(Identifier, true, true, false, true, true),
+            15752 => new AcaciaFenceBlock(Identifier, true, true, false, true, false),
+            15753 => new AcaciaFenceBlock(Identifier, true, true, false, false, true),
+            15754 => new AcaciaFenceBlock(Identifier, true, true, false, false, false),
+            15755 => new AcaciaFenceBlock(Identifier, true, false, true, true, true),
+            15756 => new AcaciaFenceBlock(Identifier, true, false, true, true, false),
+            15757 => new AcaciaFenceBlock(Identifier, true, false, true, false, true),
+            15758 => new AcaciaFenceBlock(Identifier, true, false, true, false, false),
+            15759 => new AcaciaFenceBlock(Identifier, true, false, false, true, true),
+            15760 => new AcaciaFenceBlock(Identifier, true, false, false, true, false),
+            15761 => new AcaciaFenceBlock(Identifier, true, false, false, false, true),
+            15762 => new AcaciaFenceBlock(Identifier, true, false, false, false, false),
+            15763 => new AcaciaFenceBlock(Identifier, false, true, true, true, true),
+            15764 => new AcaciaFenceBlock(Identifier, false, true, true, true, false),
+            15765 => new AcaciaFenceBlock(Identifier, false, true, true, false, true),
+            15766 => new AcaciaFenceBlock(Identifier, false, true, true, false, false),
+            15767 => new AcaciaFenceBlock(Identifier, false, true, false, true, true),
+            15768 => new AcaciaFenceBlock(Identifier, false, true, false, true, false),
+            15769 => new AcaciaFenceBlock(Identifier, false, true, false, false, true),
+            15770 => new AcaciaFenceBlock(Identifier, false, true, false, false, false),
+            15771 => new AcaciaFenceBlock(Identifier, false, false, true, true, true),
+            15772 => new AcaciaFenceBlock(Identifier, false, false, true, true, false),
+            15773 => new AcaciaFenceBlock(Identifier, false, false, true, false, true),
+            15774 => new AcaciaFenceBlock(Identifier, false, false, true, false, false),
+            15775 => new AcaciaFenceBlock(Identifier, false, false, false, true, true),
+            15776 => new AcaciaFenceBlock(Identifier, false, false, false, true, false),
+            15777 => new AcaciaFenceBlock(Identifier, false, false, false, false, true),
+            15778 => new AcaciaFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

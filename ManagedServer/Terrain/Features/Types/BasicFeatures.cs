@@ -4,6 +4,7 @@ using ManagedServer.Terrain.Features.Values;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;
+using Minecraft.Fluids;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Chunks;
@@ -27,8 +28,8 @@ public sealed record NoOpFeature : ConfiguredFeature {
 /// </summary>
 /// <remarks>
 /// This is what grass, flowers and most single block vegetation are placed by. The scattering is not
-/// here: it is the <c>count</c> and <c>random_offset</c> modifiers on the placed feature, which is why
-/// the configured feature is just a state provider.
+/// here: it is the <c>count</c> and <c>offset</c> modifiers on the placed feature, which is why the
+/// configured feature is just a state provider.
 /// <p/>
 /// A two block tall plant writes both halves, since placing only the lower one gives a plant the
 /// client draws with no top.
@@ -49,17 +50,33 @@ public sealed record SimpleBlockFeature(BlockStateProvider ToPlace) : Configured
 
         if (state is IDoubleHalved doubled) {
             Vec3<int> above = origin.WithY(origin.Y + 1);
-            if (!level.Blocks.IsAir(level.GetState(above.X, above.Y, above.Z))) {
+            uint aboveState = level.GetState(above.X, above.Y, above.Z);
+
+            // Air, or something replaceable holding the same fluid, so tall seagrass places under
+            // water and a tall flower over short grass.
+            if (!level.Blocks.IsAir(aboveState)
+                && (FluidState.Of(state) != FluidState.Of(level.Registry.Blocks.GetByStateId(aboveState))
+                    || !level.Blocks.IsReplaceable(aboveState))) {
                 return false;
             }
 
-            level.SetState(origin.X, origin.Y, origin.Z, doubled.WithHalf(BlockHalf.Lower).StateId);
-            level.SetState(above.X, above.Y, above.Z, doubled.WithHalf(BlockHalf.Upper).StateId);
+            // DoublePlantBlock.placeAt: each half takes its waterlogging from the block it replaces.
+            level.SetState(origin.X, origin.Y, origin.Z,
+                CopyWaterloggedFrom(level, origin, doubled.WithHalf(BlockHalf.Lower)).StateId);
+            level.SetState(above.X, above.Y, above.Z,
+                CopyWaterloggedFrom(level, above, doubled.WithHalf(BlockHalf.Upper)).StateId);
             return true;
         }
 
         level.SetState(origin.X, origin.Y, origin.Z, state.StateId);
         return true;
+    }
+
+    /// <summary><c>DoublePlantBlock.copyWaterloggedFrom</c>, which asks <c>isWaterAt</c>, flowing or not.</summary>
+    private static IBlock CopyWaterloggedFrom(IFeatureLevel level, Vec3<int> pos, IBlock state) {
+        return state is IWaterlogged waterlogged
+            ? waterlogged.WithWaterlogged(FeatureFluids.IsWater(level, level.GetState(pos.X, pos.Y, pos.Z)))
+            : state;
     }
 }
 

@@ -19,7 +19,7 @@ public sealed class TransmuteRecipe(
     Ingredient material,
     int minMaterialCount,
     int maxMaterialCount,
-    ItemStack result,
+    TransmuteResult result,
     bool addMaterialCountToResult) : ICraftingRecipe {
 
     /// <summary>Vanilla's <c>MIN_MATERIAL_COUNT</c>, and the default when the range is absent.</summary>
@@ -33,7 +33,7 @@ public sealed class TransmuteRecipe(
     public Ingredient Material { get; } = material;
     public int MinMaterialCount { get; } = minMaterialCount;
     public int MaxMaterialCount { get; } = maxMaterialCount;
-    public ItemStack Result { get; } = result;
+    public TransmuteResult Result { get; } = result;
     public bool AddMaterialCountToResult { get; } = addMaterialCountToResult;
 
     public PlacementInfo PlacementInfo { get; } =
@@ -127,7 +127,7 @@ public sealed class TransmuteRecipe(
     }
 
     private ItemStack ComputeResult(ItemStack inputIngredient, int materialCount) {
-        return CreateWithOriginalComponents(Result, inputIngredient, materialCount);
+        return CreateWithOriginalComponents(Result.Resolve(inputIngredient.Type), inputIngredient, materialCount);
     }
 
     /// <summary>

@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PolishedBlackstonePressurePlateBlock(Identifier Identifier, bool Powered) : IBlock, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:pressure_plate", "block.minecraft.polished_blackstone_pressure_plate", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:polished_blackstone_pressure_plate", BlockInfo.VanillaOnly, "minecraft:blocks/polished_blackstone_pressure_plate");
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 29, "stone", NoteBlockInstrument.Basedrum, true, false, false, true, false, false, false, false, true, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S80, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.polished_blackstone_pressure_plate", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:polished_blackstone_pressure_plate", BlockInfo.VanillaOnly, "minecraft:blocks/polished_blackstone_pressure_plate");
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Popped, 29, "stone", NoteBlockInstrument.Basedrum, true, false, false, false, false, false, false, true, false, true, false, false, false, false, true, true, false, true, [], null, BlockShapes.S80, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S81 };
     private static readonly BlockStateInfo[] States = [
         I0, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 22743];
+    public BlockStateInfo StateInfo => States[StateId - 26100];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record PolishedBlackstonePressurePlateBlock(Identifier Identifier, bool P
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record PolishedBlackstonePressurePlateBlock(Identifier Identifier, bool P
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -73,16 +73,16 @@ public record PolishedBlackstonePressurePlateBlock(Identifier Identifier, bool P
     public uint StateId {
         get {
             return Powered switch {
-                true => 22743,
-                false => 22744,
+                true => 26100,
+                false => 26101,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            22743 => new PolishedBlackstonePressurePlateBlock(Identifier, true),
-            22744 => new PolishedBlackstonePressurePlateBlock(Identifier, false),
+            26100 => new PolishedBlackstonePressurePlateBlock(Identifier, true),
+            26101 => new PolishedBlackstonePressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

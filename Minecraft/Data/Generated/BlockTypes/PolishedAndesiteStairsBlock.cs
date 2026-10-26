@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PolishedAndesiteStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.polished_andesite_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:polished_andesite_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/polished_andesite_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.polished_andesite_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:polished_andesite_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/polished_andesite_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record PolishedAndesiteStairsBlock(Identifier Identifier, Direction Facin
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 16256];
+    public BlockStateInfo StateInfo => States[StateId - 19613];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record PolishedAndesiteStairsBlock(Identifier Identifier, Direction Facin
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record PolishedAndesiteStairsBlock(Identifier Identifier, Direction Facin
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record PolishedAndesiteStairsBlock(Identifier Identifier, Direction Facin
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16256,
-                            false => 16257,
+                            true => 19613,
+                            false => 19614,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16258,
-                            false => 16259,
+                            true => 19615,
+                            false => 19616,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16260,
-                            false => 16261,
+                            true => 19617,
+                            false => 19618,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16262,
-                            false => 16263,
+                            true => 19619,
+                            false => 19620,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16264,
-                            false => 16265,
+                            true => 19621,
+                            false => 19622,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16266,
-                            false => 16267,
+                            true => 19623,
+                            false => 19624,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16268,
-                            false => 16269,
+                            true => 19625,
+                            false => 19626,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16270,
-                            false => 16271,
+                            true => 19627,
+                            false => 19628,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16272,
-                            false => 16273,
+                            true => 19629,
+                            false => 19630,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16274,
-                            false => 16275,
+                            true => 19631,
+                            false => 19632,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record PolishedAndesiteStairsBlock(Identifier Identifier, Direction Facin
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16276,
-                            false => 16277,
+                            true => 19633,
+                            false => 19634,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16278,
-                            false => 16279,
+                            true => 19635,
+                            false => 19636,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16280,
-                            false => 16281,
+                            true => 19637,
+                            false => 19638,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16282,
-                            false => 16283,
+                            true => 19639,
+                            false => 19640,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16284,
-                            false => 16285,
+                            true => 19641,
+                            false => 19642,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16286,
-                            false => 16287,
+                            true => 19643,
+                            false => 19644,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16288,
-                            false => 16289,
+                            true => 19645,
+                            false => 19646,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16290,
-                            false => 16291,
+                            true => 19647,
+                            false => 19648,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16292,
-                            false => 16293,
+                            true => 19649,
+                            false => 19650,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16294,
-                            false => 16295,
+                            true => 19651,
+                            false => 19652,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record PolishedAndesiteStairsBlock(Identifier Identifier, Direction Facin
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16296,
-                            false => 16297,
+                            true => 19653,
+                            false => 19654,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16298,
-                            false => 16299,
+                            true => 19655,
+                            false => 19656,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16300,
-                            false => 16301,
+                            true => 19657,
+                            false => 19658,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16302,
-                            false => 16303,
+                            true => 19659,
+                            false => 19660,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16304,
-                            false => 16305,
+                            true => 19661,
+                            false => 19662,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16306,
-                            false => 16307,
+                            true => 19663,
+                            false => 19664,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16308,
-                            false => 16309,
+                            true => 19665,
+                            false => 19666,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16310,
-                            false => 16311,
+                            true => 19667,
+                            false => 19668,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16312,
-                            false => 16313,
+                            true => 19669,
+                            false => 19670,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16314,
-                            false => 16315,
+                            true => 19671,
+                            false => 19672,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record PolishedAndesiteStairsBlock(Identifier Identifier, Direction Facin
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16316,
-                            false => 16317,
+                            true => 19673,
+                            false => 19674,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16318,
-                            false => 16319,
+                            true => 19675,
+                            false => 19676,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16320,
-                            false => 16321,
+                            true => 19677,
+                            false => 19678,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16322,
-                            false => 16323,
+                            true => 19679,
+                            false => 19680,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16324,
-                            false => 16325,
+                            true => 19681,
+                            false => 19682,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16326,
-                            false => 16327,
+                            true => 19683,
+                            false => 19684,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16328,
-                            false => 16329,
+                            true => 19685,
+                            false => 19686,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16330,
-                            false => 16331,
+                            true => 19687,
+                            false => 19688,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16332,
-                            false => 16333,
+                            true => 19689,
+                            false => 19690,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16334,
-                            false => 16335,
+                            true => 19691,
+                            false => 19692,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record PolishedAndesiteStairsBlock(Identifier Identifier, Direction Facin
     
     public IBlock WithState(uint state) {
         return state switch {
-            16256 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            16257 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            16258 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            16259 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            16260 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            16261 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            16262 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            16263 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            16264 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            16265 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            16266 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            16267 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            16268 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16269 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16270 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            16271 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            16272 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16273 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16274 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            16275 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            16276 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            16277 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            16278 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            16279 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            16280 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            16281 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            16282 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            16283 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            16284 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            16285 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            16286 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            16287 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            16288 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16289 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16290 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            16291 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            16292 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16293 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16294 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            16295 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            16296 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            16297 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            16298 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            16299 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            16300 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            16301 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            16302 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            16303 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            16304 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            16305 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            16306 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            16307 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            16308 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16309 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16310 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            16311 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            16312 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16313 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16314 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            16315 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            16316 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            16317 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            16318 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            16319 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            16320 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            16321 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            16322 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            16323 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            16324 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            16325 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            16326 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            16327 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            16328 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16329 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16330 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            16331 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            16332 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16333 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16334 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            16335 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            19613 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            19614 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            19615 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            19616 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            19617 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            19618 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            19619 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            19620 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            19621 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            19622 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            19623 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            19624 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            19625 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19626 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19627 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            19628 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            19629 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19630 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19631 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            19632 => new PolishedAndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            19633 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            19634 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            19635 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            19636 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            19637 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            19638 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            19639 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            19640 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            19641 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            19642 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            19643 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            19644 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            19645 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19646 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19647 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            19648 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            19649 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19650 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19651 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            19652 => new PolishedAndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            19653 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            19654 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            19655 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            19656 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            19657 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            19658 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            19659 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            19660 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            19661 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            19662 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            19663 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            19664 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            19665 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19666 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19667 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            19668 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            19669 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19670 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19671 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            19672 => new PolishedAndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            19673 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            19674 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            19675 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            19676 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            19677 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            19678 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            19679 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            19680 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            19681 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            19682 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            19683 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            19684 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            19685 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19686 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19687 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            19688 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            19689 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19690 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19691 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            19692 => new PolishedAndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock, IDirectional {
-    private static readonly BlockInfo Data = new("minecraft:shulker_box", "block.minecraft.shulker_box", 2f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.None, 0f, 0f, "minecraft:shulker_box", "minecraft:shulker_box", BlockInfo.VanillaOnly, "minecraft:blocks/shulker_box");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Destroy, 24, "stone", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.shulker_box", 2f, 0.6f, 1f, 1f, 0f, 0f, false, true, BlockOffsetType.None, 0f, 0f, "minecraft:shulker_box", "minecraft:shulker_box", BlockInfo.VanillaOnly, "minecraft:blocks/shulker_box");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Popped, 24, "stone", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock, 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock, 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,12 +69,12 @@ public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock, 
     public uint StateId {
         get {
             return Facing switch {
-                Cardinal.North => 14864,
-                Cardinal.East => 14865,
-                Cardinal.South => 14866,
-                Cardinal.West => 14867,
-                Cardinal.Up => 14868,
-                Cardinal.Down => 14869,
+                Cardinal.North => 16845,
+                Cardinal.East => 16846,
+                Cardinal.South => 16847,
+                Cardinal.West => 16848,
+                Cardinal.Up => 16849,
+                Cardinal.Down => 16850,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -82,12 +82,12 @@ public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock, 
     
     public IBlock WithState(uint state) {
         return state switch {
-            14864 => new ShulkerBoxBlock(Identifier, Cardinal.North),
-            14865 => new ShulkerBoxBlock(Identifier, Cardinal.East),
-            14866 => new ShulkerBoxBlock(Identifier, Cardinal.South),
-            14867 => new ShulkerBoxBlock(Identifier, Cardinal.West),
-            14868 => new ShulkerBoxBlock(Identifier, Cardinal.Up),
-            14869 => new ShulkerBoxBlock(Identifier, Cardinal.Down),
+            16845 => new ShulkerBoxBlock(Identifier, Cardinal.North),
+            16846 => new ShulkerBoxBlock(Identifier, Cardinal.East),
+            16847 => new ShulkerBoxBlock(Identifier, Cardinal.South),
+            16848 => new ShulkerBoxBlock(Identifier, Cardinal.West),
+            16849 => new ShulkerBoxBlock(Identifier, Cardinal.Up),
+            16850 => new ShulkerBoxBlock(Identifier, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

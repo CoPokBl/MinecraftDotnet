@@ -4,6 +4,7 @@ using ClientLib.World.BlockEntities;
 using GraphicalClient.Rendering.BlockEntities;
 using Minecraft.Data.Generated;
 using Minecraft.Packets.Play.ServerBound;
+using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
 using Silk.NET.Input;

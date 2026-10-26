@@ -132,7 +132,7 @@ public sealed class FluidInteraction {
             float neighbourHeight = OwnHeight(neighbour);
             float distance = 0.0F;
             if (neighbourHeight == 0.0F) {
-                if (!neighbour.BlocksMotion) {
+                if (!neighbour.BlocksFluidFlow) {
                     MovementBlocks.Entry below = MovementBlocks.Get(registry, level.GetState(nx, y - 1, nz));
                     if (AffectsFlow(state, below)) {
                         neighbourHeight = OwnHeight(below);

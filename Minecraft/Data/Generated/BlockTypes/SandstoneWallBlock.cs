@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide North, WallSide South, bool Up, bool Waterlogged, WallSide West) : IBlock, IWaterlogged, IFaceConnected, IWallConnected {
-    private static readonly BlockInfo Data = new("minecraft:wall", "block.minecraft.sandstone_wall", 0.8f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sandstone_wall", BlockInfo.VanillaOnly, "minecraft:blocks/sandstone_wall");
-    private static readonly BlockStateInfo I0 = new(0.8f, 0, 1, PushReaction.Normal, 2, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S87, BlockShapes.S132, BlockShapes.S1, BlockShapes.S87, BlockShapes.S132, BlockShapes.S132);
+    private static readonly BlockInfo Data = new("block.minecraft.sandstone_wall", 0.8f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sandstone_wall", BlockInfo.VanillaOnly, "minecraft:blocks/sandstone_wall");
+    private static readonly BlockStateInfo I0 = new(0.8f, 0, 1, PushReaction.PushPull, 2, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S87, BlockShapes.S132, BlockShapes.S1, BlockShapes.S87, BlockShapes.S132, BlockShapes.S132);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S133, CollisionShape = BlockShapes.S134, OcclusionShape = BlockShapes.S133, VisualShape = BlockShapes.S134, SupportShape = BlockShapes.S134 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S135, CollisionShape = BlockShapes.S134, OcclusionShape = BlockShapes.S135, VisualShape = BlockShapes.S134, SupportShape = BlockShapes.S134 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null };
@@ -340,15 +340,15 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I42, I43, I44, I45, I46, I47, I48, I49, I50, I51, I52, I53, I54, I55, I56, I57, I58, I59, I60, I61, I62, I63, I64, I65, I66, I67, I68, I69, I70, I71, I72, I73, I74, I75, I76, I77, I78, I79, I80, I81, I82, I83, I84, I85, I86, I87, I88, I89, I90, I91, I92, I93, I94, I95, I96, I97, I98, I99, I100, I101, I102, I103, I104, I105, I106, I107, I108, I109, I110, I111, I112, I113, I114, I115, I116, I117, I118, I119, I120, I121, I122, I123, I124, I125, I126, I127, I128, I129, I130, I131, I132, I133, I134, I135, I136, I137, I138, I139, I140, I141, I142, I143, I144, I145, I146, I147, I148, I149, I150, I151, I152, I153, I154, I155, I156, I157, I158, I159, I160, I161, I162, I163, I164, I165, I166, I167, I168, I169, I170, I171, I172, I173, I174, I175, I176, I177, I178, I179, I180, I181, I182, I183, I184, I185, I186, I187, I188, I189, I190, I191, I192, I193, I194, I195, I196, I197, I198, I199, I200, I201, I202, I203, I204, I205, I206, I207, I208, I209, I210, I211, I212, I213, I214, I215, I216, I217, I218, I219, I220, I221, I222, I223, I224, I225, I226, I227, I228, I229, I230, I231, I232, I233, I234, I235, I236, I237, I238, I239, I240, I241, I242, I243, I244, I245, I246, I247, I248, I249, I250, I251, I252, I253, I254, I255, I256, I257, I258, I259, I260, I261, I262, I263, I264, I265, I266, I267, I268, I269, I270, I271, I272, I273, I274, I275, I276, I277, I278, I279, I280, I281, I282, I283, I284, I285, I286, I287, I288, I289, I290, I291, I292, I293, I294, I295, I296, I297, I298, I299, I300, I301, I302, I303, I304, I305, I306, I307, I308, I309, I310, I311, I312, I313, I314, I315, I316, I317, I318, I319, I320, I321, I322, I323
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 19734];
+    public BlockStateInfo StateInfo => States[StateId - 23091];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -362,7 +362,6 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -382,6 +381,7 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -428,29 +428,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19734,
-                                    WallSide.Low => 19735,
-                                    WallSide.Tall => 19736,
+                                    WallSide.None => 23091,
+                                    WallSide.Low => 23092,
+                                    WallSide.Tall => 23093,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19737,
-                                    WallSide.Low => 19738,
-                                    WallSide.Tall => 19739,
+                                    WallSide.None => 23094,
+                                    WallSide.Low => 23095,
+                                    WallSide.Tall => 23096,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19740,
-                                    WallSide.Low => 19741,
-                                    WallSide.Tall => 19742,
+                                    WallSide.None => 23097,
+                                    WallSide.Low => 23098,
+                                    WallSide.Tall => 23099,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19743,
-                                    WallSide.Low => 19744,
-                                    WallSide.Tall => 19745,
+                                    WallSide.None => 23100,
+                                    WallSide.Low => 23101,
+                                    WallSide.Tall => 23102,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -458,29 +458,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19746,
-                                    WallSide.Low => 19747,
-                                    WallSide.Tall => 19748,
+                                    WallSide.None => 23103,
+                                    WallSide.Low => 23104,
+                                    WallSide.Tall => 23105,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19749,
-                                    WallSide.Low => 19750,
-                                    WallSide.Tall => 19751,
+                                    WallSide.None => 23106,
+                                    WallSide.Low => 23107,
+                                    WallSide.Tall => 23108,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19752,
-                                    WallSide.Low => 19753,
-                                    WallSide.Tall => 19754,
+                                    WallSide.None => 23109,
+                                    WallSide.Low => 23110,
+                                    WallSide.Tall => 23111,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19755,
-                                    WallSide.Low => 19756,
-                                    WallSide.Tall => 19757,
+                                    WallSide.None => 23112,
+                                    WallSide.Low => 23113,
+                                    WallSide.Tall => 23114,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -488,29 +488,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19758,
-                                    WallSide.Low => 19759,
-                                    WallSide.Tall => 19760,
+                                    WallSide.None => 23115,
+                                    WallSide.Low => 23116,
+                                    WallSide.Tall => 23117,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19761,
-                                    WallSide.Low => 19762,
-                                    WallSide.Tall => 19763,
+                                    WallSide.None => 23118,
+                                    WallSide.Low => 23119,
+                                    WallSide.Tall => 23120,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19764,
-                                    WallSide.Low => 19765,
-                                    WallSide.Tall => 19766,
+                                    WallSide.None => 23121,
+                                    WallSide.Low => 23122,
+                                    WallSide.Tall => 23123,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19767,
-                                    WallSide.Low => 19768,
-                                    WallSide.Tall => 19769,
+                                    WallSide.None => 23124,
+                                    WallSide.Low => 23125,
+                                    WallSide.Tall => 23126,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -521,29 +521,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19770,
-                                    WallSide.Low => 19771,
-                                    WallSide.Tall => 19772,
+                                    WallSide.None => 23127,
+                                    WallSide.Low => 23128,
+                                    WallSide.Tall => 23129,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19773,
-                                    WallSide.Low => 19774,
-                                    WallSide.Tall => 19775,
+                                    WallSide.None => 23130,
+                                    WallSide.Low => 23131,
+                                    WallSide.Tall => 23132,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19776,
-                                    WallSide.Low => 19777,
-                                    WallSide.Tall => 19778,
+                                    WallSide.None => 23133,
+                                    WallSide.Low => 23134,
+                                    WallSide.Tall => 23135,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19779,
-                                    WallSide.Low => 19780,
-                                    WallSide.Tall => 19781,
+                                    WallSide.None => 23136,
+                                    WallSide.Low => 23137,
+                                    WallSide.Tall => 23138,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -551,29 +551,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19782,
-                                    WallSide.Low => 19783,
-                                    WallSide.Tall => 19784,
+                                    WallSide.None => 23139,
+                                    WallSide.Low => 23140,
+                                    WallSide.Tall => 23141,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19785,
-                                    WallSide.Low => 19786,
-                                    WallSide.Tall => 19787,
+                                    WallSide.None => 23142,
+                                    WallSide.Low => 23143,
+                                    WallSide.Tall => 23144,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19788,
-                                    WallSide.Low => 19789,
-                                    WallSide.Tall => 19790,
+                                    WallSide.None => 23145,
+                                    WallSide.Low => 23146,
+                                    WallSide.Tall => 23147,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19791,
-                                    WallSide.Low => 19792,
-                                    WallSide.Tall => 19793,
+                                    WallSide.None => 23148,
+                                    WallSide.Low => 23149,
+                                    WallSide.Tall => 23150,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -581,29 +581,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19794,
-                                    WallSide.Low => 19795,
-                                    WallSide.Tall => 19796,
+                                    WallSide.None => 23151,
+                                    WallSide.Low => 23152,
+                                    WallSide.Tall => 23153,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19797,
-                                    WallSide.Low => 19798,
-                                    WallSide.Tall => 19799,
+                                    WallSide.None => 23154,
+                                    WallSide.Low => 23155,
+                                    WallSide.Tall => 23156,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19800,
-                                    WallSide.Low => 19801,
-                                    WallSide.Tall => 19802,
+                                    WallSide.None => 23157,
+                                    WallSide.Low => 23158,
+                                    WallSide.Tall => 23159,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19803,
-                                    WallSide.Low => 19804,
-                                    WallSide.Tall => 19805,
+                                    WallSide.None => 23160,
+                                    WallSide.Low => 23161,
+                                    WallSide.Tall => 23162,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -614,29 +614,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19806,
-                                    WallSide.Low => 19807,
-                                    WallSide.Tall => 19808,
+                                    WallSide.None => 23163,
+                                    WallSide.Low => 23164,
+                                    WallSide.Tall => 23165,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19809,
-                                    WallSide.Low => 19810,
-                                    WallSide.Tall => 19811,
+                                    WallSide.None => 23166,
+                                    WallSide.Low => 23167,
+                                    WallSide.Tall => 23168,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19812,
-                                    WallSide.Low => 19813,
-                                    WallSide.Tall => 19814,
+                                    WallSide.None => 23169,
+                                    WallSide.Low => 23170,
+                                    WallSide.Tall => 23171,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19815,
-                                    WallSide.Low => 19816,
-                                    WallSide.Tall => 19817,
+                                    WallSide.None => 23172,
+                                    WallSide.Low => 23173,
+                                    WallSide.Tall => 23174,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -644,29 +644,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19818,
-                                    WallSide.Low => 19819,
-                                    WallSide.Tall => 19820,
+                                    WallSide.None => 23175,
+                                    WallSide.Low => 23176,
+                                    WallSide.Tall => 23177,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19821,
-                                    WallSide.Low => 19822,
-                                    WallSide.Tall => 19823,
+                                    WallSide.None => 23178,
+                                    WallSide.Low => 23179,
+                                    WallSide.Tall => 23180,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19824,
-                                    WallSide.Low => 19825,
-                                    WallSide.Tall => 19826,
+                                    WallSide.None => 23181,
+                                    WallSide.Low => 23182,
+                                    WallSide.Tall => 23183,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19827,
-                                    WallSide.Low => 19828,
-                                    WallSide.Tall => 19829,
+                                    WallSide.None => 23184,
+                                    WallSide.Low => 23185,
+                                    WallSide.Tall => 23186,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -674,29 +674,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19830,
-                                    WallSide.Low => 19831,
-                                    WallSide.Tall => 19832,
+                                    WallSide.None => 23187,
+                                    WallSide.Low => 23188,
+                                    WallSide.Tall => 23189,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19833,
-                                    WallSide.Low => 19834,
-                                    WallSide.Tall => 19835,
+                                    WallSide.None => 23190,
+                                    WallSide.Low => 23191,
+                                    WallSide.Tall => 23192,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19836,
-                                    WallSide.Low => 19837,
-                                    WallSide.Tall => 19838,
+                                    WallSide.None => 23193,
+                                    WallSide.Low => 23194,
+                                    WallSide.Tall => 23195,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19839,
-                                    WallSide.Low => 19840,
-                                    WallSide.Tall => 19841,
+                                    WallSide.None => 23196,
+                                    WallSide.Low => 23197,
+                                    WallSide.Tall => 23198,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -710,29 +710,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19842,
-                                    WallSide.Low => 19843,
-                                    WallSide.Tall => 19844,
+                                    WallSide.None => 23199,
+                                    WallSide.Low => 23200,
+                                    WallSide.Tall => 23201,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19845,
-                                    WallSide.Low => 19846,
-                                    WallSide.Tall => 19847,
+                                    WallSide.None => 23202,
+                                    WallSide.Low => 23203,
+                                    WallSide.Tall => 23204,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19848,
-                                    WallSide.Low => 19849,
-                                    WallSide.Tall => 19850,
+                                    WallSide.None => 23205,
+                                    WallSide.Low => 23206,
+                                    WallSide.Tall => 23207,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19851,
-                                    WallSide.Low => 19852,
-                                    WallSide.Tall => 19853,
+                                    WallSide.None => 23208,
+                                    WallSide.Low => 23209,
+                                    WallSide.Tall => 23210,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -740,29 +740,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19854,
-                                    WallSide.Low => 19855,
-                                    WallSide.Tall => 19856,
+                                    WallSide.None => 23211,
+                                    WallSide.Low => 23212,
+                                    WallSide.Tall => 23213,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19857,
-                                    WallSide.Low => 19858,
-                                    WallSide.Tall => 19859,
+                                    WallSide.None => 23214,
+                                    WallSide.Low => 23215,
+                                    WallSide.Tall => 23216,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19860,
-                                    WallSide.Low => 19861,
-                                    WallSide.Tall => 19862,
+                                    WallSide.None => 23217,
+                                    WallSide.Low => 23218,
+                                    WallSide.Tall => 23219,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19863,
-                                    WallSide.Low => 19864,
-                                    WallSide.Tall => 19865,
+                                    WallSide.None => 23220,
+                                    WallSide.Low => 23221,
+                                    WallSide.Tall => 23222,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -770,29 +770,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19866,
-                                    WallSide.Low => 19867,
-                                    WallSide.Tall => 19868,
+                                    WallSide.None => 23223,
+                                    WallSide.Low => 23224,
+                                    WallSide.Tall => 23225,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19869,
-                                    WallSide.Low => 19870,
-                                    WallSide.Tall => 19871,
+                                    WallSide.None => 23226,
+                                    WallSide.Low => 23227,
+                                    WallSide.Tall => 23228,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19872,
-                                    WallSide.Low => 19873,
-                                    WallSide.Tall => 19874,
+                                    WallSide.None => 23229,
+                                    WallSide.Low => 23230,
+                                    WallSide.Tall => 23231,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19875,
-                                    WallSide.Low => 19876,
-                                    WallSide.Tall => 19877,
+                                    WallSide.None => 23232,
+                                    WallSide.Low => 23233,
+                                    WallSide.Tall => 23234,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -803,29 +803,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19878,
-                                    WallSide.Low => 19879,
-                                    WallSide.Tall => 19880,
+                                    WallSide.None => 23235,
+                                    WallSide.Low => 23236,
+                                    WallSide.Tall => 23237,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19881,
-                                    WallSide.Low => 19882,
-                                    WallSide.Tall => 19883,
+                                    WallSide.None => 23238,
+                                    WallSide.Low => 23239,
+                                    WallSide.Tall => 23240,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19884,
-                                    WallSide.Low => 19885,
-                                    WallSide.Tall => 19886,
+                                    WallSide.None => 23241,
+                                    WallSide.Low => 23242,
+                                    WallSide.Tall => 23243,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19887,
-                                    WallSide.Low => 19888,
-                                    WallSide.Tall => 19889,
+                                    WallSide.None => 23244,
+                                    WallSide.Low => 23245,
+                                    WallSide.Tall => 23246,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -833,29 +833,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19890,
-                                    WallSide.Low => 19891,
-                                    WallSide.Tall => 19892,
+                                    WallSide.None => 23247,
+                                    WallSide.Low => 23248,
+                                    WallSide.Tall => 23249,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19893,
-                                    WallSide.Low => 19894,
-                                    WallSide.Tall => 19895,
+                                    WallSide.None => 23250,
+                                    WallSide.Low => 23251,
+                                    WallSide.Tall => 23252,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19896,
-                                    WallSide.Low => 19897,
-                                    WallSide.Tall => 19898,
+                                    WallSide.None => 23253,
+                                    WallSide.Low => 23254,
+                                    WallSide.Tall => 23255,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19899,
-                                    WallSide.Low => 19900,
-                                    WallSide.Tall => 19901,
+                                    WallSide.None => 23256,
+                                    WallSide.Low => 23257,
+                                    WallSide.Tall => 23258,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -863,29 +863,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19902,
-                                    WallSide.Low => 19903,
-                                    WallSide.Tall => 19904,
+                                    WallSide.None => 23259,
+                                    WallSide.Low => 23260,
+                                    WallSide.Tall => 23261,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19905,
-                                    WallSide.Low => 19906,
-                                    WallSide.Tall => 19907,
+                                    WallSide.None => 23262,
+                                    WallSide.Low => 23263,
+                                    WallSide.Tall => 23264,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19908,
-                                    WallSide.Low => 19909,
-                                    WallSide.Tall => 19910,
+                                    WallSide.None => 23265,
+                                    WallSide.Low => 23266,
+                                    WallSide.Tall => 23267,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19911,
-                                    WallSide.Low => 19912,
-                                    WallSide.Tall => 19913,
+                                    WallSide.None => 23268,
+                                    WallSide.Low => 23269,
+                                    WallSide.Tall => 23270,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -896,29 +896,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19914,
-                                    WallSide.Low => 19915,
-                                    WallSide.Tall => 19916,
+                                    WallSide.None => 23271,
+                                    WallSide.Low => 23272,
+                                    WallSide.Tall => 23273,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19917,
-                                    WallSide.Low => 19918,
-                                    WallSide.Tall => 19919,
+                                    WallSide.None => 23274,
+                                    WallSide.Low => 23275,
+                                    WallSide.Tall => 23276,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19920,
-                                    WallSide.Low => 19921,
-                                    WallSide.Tall => 19922,
+                                    WallSide.None => 23277,
+                                    WallSide.Low => 23278,
+                                    WallSide.Tall => 23279,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19923,
-                                    WallSide.Low => 19924,
-                                    WallSide.Tall => 19925,
+                                    WallSide.None => 23280,
+                                    WallSide.Low => 23281,
+                                    WallSide.Tall => 23282,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -926,29 +926,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19926,
-                                    WallSide.Low => 19927,
-                                    WallSide.Tall => 19928,
+                                    WallSide.None => 23283,
+                                    WallSide.Low => 23284,
+                                    WallSide.Tall => 23285,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19929,
-                                    WallSide.Low => 19930,
-                                    WallSide.Tall => 19931,
+                                    WallSide.None => 23286,
+                                    WallSide.Low => 23287,
+                                    WallSide.Tall => 23288,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19932,
-                                    WallSide.Low => 19933,
-                                    WallSide.Tall => 19934,
+                                    WallSide.None => 23289,
+                                    WallSide.Low => 23290,
+                                    WallSide.Tall => 23291,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19935,
-                                    WallSide.Low => 19936,
-                                    WallSide.Tall => 19937,
+                                    WallSide.None => 23292,
+                                    WallSide.Low => 23293,
+                                    WallSide.Tall => 23294,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -956,29 +956,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19938,
-                                    WallSide.Low => 19939,
-                                    WallSide.Tall => 19940,
+                                    WallSide.None => 23295,
+                                    WallSide.Low => 23296,
+                                    WallSide.Tall => 23297,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19941,
-                                    WallSide.Low => 19942,
-                                    WallSide.Tall => 19943,
+                                    WallSide.None => 23298,
+                                    WallSide.Low => 23299,
+                                    WallSide.Tall => 23300,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19944,
-                                    WallSide.Low => 19945,
-                                    WallSide.Tall => 19946,
+                                    WallSide.None => 23301,
+                                    WallSide.Low => 23302,
+                                    WallSide.Tall => 23303,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19947,
-                                    WallSide.Low => 19948,
-                                    WallSide.Tall => 19949,
+                                    WallSide.None => 23304,
+                                    WallSide.Low => 23305,
+                                    WallSide.Tall => 23306,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -992,29 +992,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19950,
-                                    WallSide.Low => 19951,
-                                    WallSide.Tall => 19952,
+                                    WallSide.None => 23307,
+                                    WallSide.Low => 23308,
+                                    WallSide.Tall => 23309,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19953,
-                                    WallSide.Low => 19954,
-                                    WallSide.Tall => 19955,
+                                    WallSide.None => 23310,
+                                    WallSide.Low => 23311,
+                                    WallSide.Tall => 23312,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19956,
-                                    WallSide.Low => 19957,
-                                    WallSide.Tall => 19958,
+                                    WallSide.None => 23313,
+                                    WallSide.Low => 23314,
+                                    WallSide.Tall => 23315,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19959,
-                                    WallSide.Low => 19960,
-                                    WallSide.Tall => 19961,
+                                    WallSide.None => 23316,
+                                    WallSide.Low => 23317,
+                                    WallSide.Tall => 23318,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1022,29 +1022,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19962,
-                                    WallSide.Low => 19963,
-                                    WallSide.Tall => 19964,
+                                    WallSide.None => 23319,
+                                    WallSide.Low => 23320,
+                                    WallSide.Tall => 23321,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19965,
-                                    WallSide.Low => 19966,
-                                    WallSide.Tall => 19967,
+                                    WallSide.None => 23322,
+                                    WallSide.Low => 23323,
+                                    WallSide.Tall => 23324,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19968,
-                                    WallSide.Low => 19969,
-                                    WallSide.Tall => 19970,
+                                    WallSide.None => 23325,
+                                    WallSide.Low => 23326,
+                                    WallSide.Tall => 23327,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19971,
-                                    WallSide.Low => 19972,
-                                    WallSide.Tall => 19973,
+                                    WallSide.None => 23328,
+                                    WallSide.Low => 23329,
+                                    WallSide.Tall => 23330,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1052,29 +1052,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19974,
-                                    WallSide.Low => 19975,
-                                    WallSide.Tall => 19976,
+                                    WallSide.None => 23331,
+                                    WallSide.Low => 23332,
+                                    WallSide.Tall => 23333,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19977,
-                                    WallSide.Low => 19978,
-                                    WallSide.Tall => 19979,
+                                    WallSide.None => 23334,
+                                    WallSide.Low => 23335,
+                                    WallSide.Tall => 23336,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19980,
-                                    WallSide.Low => 19981,
-                                    WallSide.Tall => 19982,
+                                    WallSide.None => 23337,
+                                    WallSide.Low => 23338,
+                                    WallSide.Tall => 23339,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19983,
-                                    WallSide.Low => 19984,
-                                    WallSide.Tall => 19985,
+                                    WallSide.None => 23340,
+                                    WallSide.Low => 23341,
+                                    WallSide.Tall => 23342,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1085,29 +1085,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19986,
-                                    WallSide.Low => 19987,
-                                    WallSide.Tall => 19988,
+                                    WallSide.None => 23343,
+                                    WallSide.Low => 23344,
+                                    WallSide.Tall => 23345,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19989,
-                                    WallSide.Low => 19990,
-                                    WallSide.Tall => 19991,
+                                    WallSide.None => 23346,
+                                    WallSide.Low => 23347,
+                                    WallSide.Tall => 23348,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19992,
-                                    WallSide.Low => 19993,
-                                    WallSide.Tall => 19994,
+                                    WallSide.None => 23349,
+                                    WallSide.Low => 23350,
+                                    WallSide.Tall => 23351,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 19995,
-                                    WallSide.Low => 19996,
-                                    WallSide.Tall => 19997,
+                                    WallSide.None => 23352,
+                                    WallSide.Low => 23353,
+                                    WallSide.Tall => 23354,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1115,29 +1115,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 19998,
-                                    WallSide.Low => 19999,
-                                    WallSide.Tall => 20000,
+                                    WallSide.None => 23355,
+                                    WallSide.Low => 23356,
+                                    WallSide.Tall => 23357,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 20001,
-                                    WallSide.Low => 20002,
-                                    WallSide.Tall => 20003,
+                                    WallSide.None => 23358,
+                                    WallSide.Low => 23359,
+                                    WallSide.Tall => 23360,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 20004,
-                                    WallSide.Low => 20005,
-                                    WallSide.Tall => 20006,
+                                    WallSide.None => 23361,
+                                    WallSide.Low => 23362,
+                                    WallSide.Tall => 23363,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 20007,
-                                    WallSide.Low => 20008,
-                                    WallSide.Tall => 20009,
+                                    WallSide.None => 23364,
+                                    WallSide.Low => 23365,
+                                    WallSide.Tall => 23366,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1145,29 +1145,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 20010,
-                                    WallSide.Low => 20011,
-                                    WallSide.Tall => 20012,
+                                    WallSide.None => 23367,
+                                    WallSide.Low => 23368,
+                                    WallSide.Tall => 23369,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 20013,
-                                    WallSide.Low => 20014,
-                                    WallSide.Tall => 20015,
+                                    WallSide.None => 23370,
+                                    WallSide.Low => 23371,
+                                    WallSide.Tall => 23372,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 20016,
-                                    WallSide.Low => 20017,
-                                    WallSide.Tall => 20018,
+                                    WallSide.None => 23373,
+                                    WallSide.Low => 23374,
+                                    WallSide.Tall => 23375,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 20019,
-                                    WallSide.Low => 20020,
-                                    WallSide.Tall => 20021,
+                                    WallSide.None => 23376,
+                                    WallSide.Low => 23377,
+                                    WallSide.Tall => 23378,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1178,29 +1178,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 20022,
-                                    WallSide.Low => 20023,
-                                    WallSide.Tall => 20024,
+                                    WallSide.None => 23379,
+                                    WallSide.Low => 23380,
+                                    WallSide.Tall => 23381,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 20025,
-                                    WallSide.Low => 20026,
-                                    WallSide.Tall => 20027,
+                                    WallSide.None => 23382,
+                                    WallSide.Low => 23383,
+                                    WallSide.Tall => 23384,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 20028,
-                                    WallSide.Low => 20029,
-                                    WallSide.Tall => 20030,
+                                    WallSide.None => 23385,
+                                    WallSide.Low => 23386,
+                                    WallSide.Tall => 23387,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 20031,
-                                    WallSide.Low => 20032,
-                                    WallSide.Tall => 20033,
+                                    WallSide.None => 23388,
+                                    WallSide.Low => 23389,
+                                    WallSide.Tall => 23390,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1208,29 +1208,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 20034,
-                                    WallSide.Low => 20035,
-                                    WallSide.Tall => 20036,
+                                    WallSide.None => 23391,
+                                    WallSide.Low => 23392,
+                                    WallSide.Tall => 23393,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 20037,
-                                    WallSide.Low => 20038,
-                                    WallSide.Tall => 20039,
+                                    WallSide.None => 23394,
+                                    WallSide.Low => 23395,
+                                    WallSide.Tall => 23396,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 20040,
-                                    WallSide.Low => 20041,
-                                    WallSide.Tall => 20042,
+                                    WallSide.None => 23397,
+                                    WallSide.Low => 23398,
+                                    WallSide.Tall => 23399,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 20043,
-                                    WallSide.Low => 20044,
-                                    WallSide.Tall => 20045,
+                                    WallSide.None => 23400,
+                                    WallSide.Low => 23401,
+                                    WallSide.Tall => 23402,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1238,29 +1238,29 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 20046,
-                                    WallSide.Low => 20047,
-                                    WallSide.Tall => 20048,
+                                    WallSide.None => 23403,
+                                    WallSide.Low => 23404,
+                                    WallSide.Tall => 23405,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 20049,
-                                    WallSide.Low => 20050,
-                                    WallSide.Tall => 20051,
+                                    WallSide.None => 23406,
+                                    WallSide.Low => 23407,
+                                    WallSide.Tall => 23408,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 20052,
-                                    WallSide.Low => 20053,
-                                    WallSide.Tall => 20054,
+                                    WallSide.None => 23409,
+                                    WallSide.Low => 23410,
+                                    WallSide.Tall => 23411,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 20055,
-                                    WallSide.Low => 20056,
-                                    WallSide.Tall => 20057,
+                                    WallSide.None => 23412,
+                                    WallSide.Low => 23413,
+                                    WallSide.Tall => 23414,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1276,330 +1276,330 @@ public record SandstoneWallBlock(Identifier Identifier, WallSide East, WallSide 
     
     public IBlock WithState(uint state) {
         return state switch {
-            19734 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.None),
-            19735 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.Low),
-            19736 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.Tall),
-            19737 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.None),
-            19738 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.Low),
-            19739 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.Tall),
-            19740 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.None),
-            19741 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.Low),
-            19742 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.Tall),
-            19743 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.None),
-            19744 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.Low),
-            19745 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.Tall),
-            19746 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.None),
-            19747 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.Low),
-            19748 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
-            19749 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.None),
-            19750 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.Low),
-            19751 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
-            19752 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.None),
-            19753 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.Low),
-            19754 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
-            19755 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.None),
-            19756 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.Low),
-            19757 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
-            19758 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.None),
-            19759 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
-            19760 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
-            19761 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.None),
-            19762 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
-            19763 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
-            19764 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.None),
-            19765 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
-            19766 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
-            19767 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.None),
-            19768 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
-            19769 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
-            19770 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.None),
-            19771 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.Low),
-            19772 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
-            19773 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.None),
-            19774 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.Low),
-            19775 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
-            19776 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.None),
-            19777 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.Low),
-            19778 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
-            19779 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.None),
-            19780 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.Low),
-            19781 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
-            19782 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.None),
-            19783 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
-            19784 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
-            19785 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.None),
-            19786 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
-            19787 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
-            19788 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.None),
-            19789 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
-            19790 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
-            19791 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.None),
-            19792 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
-            19793 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
-            19794 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
-            19795 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
-            19796 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
-            19797 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
-            19798 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
-            19799 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
-            19800 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
-            19801 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
-            19802 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
-            19803 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
-            19804 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
-            19805 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
-            19806 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.None),
-            19807 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
-            19808 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
-            19809 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.None),
-            19810 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
-            19811 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
-            19812 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.None),
-            19813 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
-            19814 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
-            19815 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.None),
-            19816 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
-            19817 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
-            19818 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
-            19819 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
-            19820 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
-            19821 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
-            19822 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
-            19823 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
-            19824 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
-            19825 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
-            19826 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
-            19827 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
-            19828 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
-            19829 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
-            19830 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
-            19831 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
-            19832 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
-            19833 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
-            19834 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
-            19835 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
-            19836 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
-            19837 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
-            19838 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
-            19839 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
-            19840 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
-            19841 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
-            19842 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.None),
-            19843 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.Low),
-            19844 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.Tall),
-            19845 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.None),
-            19846 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.Low),
-            19847 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.Tall),
-            19848 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.None),
-            19849 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.Low),
-            19850 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.Tall),
-            19851 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.None),
-            19852 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.Low),
-            19853 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.Tall),
-            19854 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.None),
-            19855 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.Low),
-            19856 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
-            19857 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.None),
-            19858 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.Low),
-            19859 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
-            19860 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.None),
-            19861 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.Low),
-            19862 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
-            19863 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.None),
-            19864 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.Low),
-            19865 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
-            19866 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.None),
-            19867 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
-            19868 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
-            19869 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.None),
-            19870 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
-            19871 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
-            19872 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.None),
-            19873 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
-            19874 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
-            19875 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.None),
-            19876 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
-            19877 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
-            19878 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.None),
-            19879 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.Low),
-            19880 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
-            19881 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.None),
-            19882 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.Low),
-            19883 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
-            19884 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.None),
-            19885 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.Low),
-            19886 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
-            19887 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.None),
-            19888 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.Low),
-            19889 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
-            19890 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.None),
-            19891 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
-            19892 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
-            19893 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.None),
-            19894 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
-            19895 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
-            19896 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.None),
-            19897 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
-            19898 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
-            19899 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.None),
-            19900 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
-            19901 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
-            19902 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
-            19903 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
-            19904 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
-            19905 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
-            19906 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
-            19907 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
-            19908 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
-            19909 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
-            19910 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
-            19911 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
-            19912 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
-            19913 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
-            19914 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.None),
-            19915 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
-            19916 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
-            19917 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.None),
-            19918 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
-            19919 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
-            19920 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.None),
-            19921 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
-            19922 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
-            19923 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.None),
-            19924 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
-            19925 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
-            19926 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
-            19927 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
-            19928 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
-            19929 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
-            19930 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
-            19931 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
-            19932 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
-            19933 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
-            19934 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
-            19935 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
-            19936 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
-            19937 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
-            19938 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
-            19939 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
-            19940 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
-            19941 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
-            19942 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
-            19943 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
-            19944 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
-            19945 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
-            19946 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
-            19947 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
-            19948 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
-            19949 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
-            19950 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.None),
-            19951 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.Low),
-            19952 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.Tall),
-            19953 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.None),
-            19954 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.Low),
-            19955 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.Tall),
-            19956 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.None),
-            19957 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.Low),
-            19958 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.Tall),
-            19959 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.None),
-            19960 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.Low),
-            19961 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.Tall),
-            19962 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.None),
-            19963 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.Low),
-            19964 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
-            19965 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.None),
-            19966 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.Low),
-            19967 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
-            19968 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.None),
-            19969 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.Low),
-            19970 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
-            19971 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.None),
-            19972 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.Low),
-            19973 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
-            19974 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.None),
-            19975 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
-            19976 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
-            19977 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.None),
-            19978 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
-            19979 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
-            19980 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.None),
-            19981 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
-            19982 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
-            19983 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.None),
-            19984 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
-            19985 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
-            19986 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.None),
-            19987 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.Low),
-            19988 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
-            19989 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.None),
-            19990 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.Low),
-            19991 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
-            19992 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.None),
-            19993 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.Low),
-            19994 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
-            19995 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.None),
-            19996 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.Low),
-            19997 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
-            19998 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.None),
-            19999 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
-            20000 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
-            20001 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.None),
-            20002 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
-            20003 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
-            20004 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.None),
-            20005 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
-            20006 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
-            20007 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.None),
-            20008 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
-            20009 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
-            20010 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
-            20011 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
-            20012 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
-            20013 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
-            20014 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
-            20015 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
-            20016 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
-            20017 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
-            20018 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
-            20019 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
-            20020 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
-            20021 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
-            20022 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.None),
-            20023 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
-            20024 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
-            20025 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.None),
-            20026 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
-            20027 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
-            20028 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.None),
-            20029 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
-            20030 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
-            20031 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.None),
-            20032 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
-            20033 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
-            20034 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
-            20035 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
-            20036 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
-            20037 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
-            20038 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
-            20039 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
-            20040 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
-            20041 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
-            20042 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
-            20043 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
-            20044 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
-            20045 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
-            20046 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
-            20047 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
-            20048 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
-            20049 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
-            20050 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
-            20051 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
-            20052 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
-            20053 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
-            20054 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
-            20055 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
-            20056 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
-            20057 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
+            23091 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.None),
+            23092 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.Low),
+            23093 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.Tall),
+            23094 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.None),
+            23095 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.Low),
+            23096 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.Tall),
+            23097 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.None),
+            23098 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.Low),
+            23099 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.Tall),
+            23100 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.None),
+            23101 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.Low),
+            23102 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.Tall),
+            23103 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.None),
+            23104 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.Low),
+            23105 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
+            23106 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.None),
+            23107 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.Low),
+            23108 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
+            23109 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.None),
+            23110 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.Low),
+            23111 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
+            23112 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.None),
+            23113 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.Low),
+            23114 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
+            23115 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.None),
+            23116 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
+            23117 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
+            23118 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.None),
+            23119 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
+            23120 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
+            23121 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.None),
+            23122 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
+            23123 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
+            23124 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.None),
+            23125 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
+            23126 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
+            23127 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.None),
+            23128 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.Low),
+            23129 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
+            23130 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.None),
+            23131 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.Low),
+            23132 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
+            23133 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.None),
+            23134 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.Low),
+            23135 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
+            23136 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.None),
+            23137 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.Low),
+            23138 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
+            23139 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.None),
+            23140 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
+            23141 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
+            23142 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.None),
+            23143 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
+            23144 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
+            23145 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.None),
+            23146 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
+            23147 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
+            23148 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.None),
+            23149 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
+            23150 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
+            23151 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
+            23152 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
+            23153 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
+            23154 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
+            23155 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
+            23156 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
+            23157 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
+            23158 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
+            23159 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
+            23160 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
+            23161 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
+            23162 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
+            23163 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.None),
+            23164 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
+            23165 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
+            23166 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.None),
+            23167 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
+            23168 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
+            23169 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.None),
+            23170 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
+            23171 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
+            23172 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.None),
+            23173 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
+            23174 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
+            23175 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
+            23176 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
+            23177 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
+            23178 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
+            23179 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
+            23180 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
+            23181 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
+            23182 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
+            23183 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
+            23184 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
+            23185 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
+            23186 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
+            23187 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
+            23188 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
+            23189 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
+            23190 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
+            23191 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
+            23192 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
+            23193 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
+            23194 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
+            23195 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
+            23196 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
+            23197 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
+            23198 => new SandstoneWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
+            23199 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.None),
+            23200 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.Low),
+            23201 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.Tall),
+            23202 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.None),
+            23203 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.Low),
+            23204 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.Tall),
+            23205 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.None),
+            23206 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.Low),
+            23207 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.Tall),
+            23208 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.None),
+            23209 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.Low),
+            23210 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.Tall),
+            23211 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.None),
+            23212 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.Low),
+            23213 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
+            23214 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.None),
+            23215 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.Low),
+            23216 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
+            23217 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.None),
+            23218 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.Low),
+            23219 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
+            23220 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.None),
+            23221 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.Low),
+            23222 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
+            23223 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.None),
+            23224 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
+            23225 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
+            23226 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.None),
+            23227 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
+            23228 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
+            23229 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.None),
+            23230 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
+            23231 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
+            23232 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.None),
+            23233 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
+            23234 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
+            23235 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.None),
+            23236 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.Low),
+            23237 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
+            23238 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.None),
+            23239 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.Low),
+            23240 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
+            23241 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.None),
+            23242 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.Low),
+            23243 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
+            23244 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.None),
+            23245 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.Low),
+            23246 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
+            23247 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.None),
+            23248 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
+            23249 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
+            23250 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.None),
+            23251 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
+            23252 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
+            23253 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.None),
+            23254 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
+            23255 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
+            23256 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.None),
+            23257 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
+            23258 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
+            23259 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
+            23260 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
+            23261 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
+            23262 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
+            23263 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
+            23264 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
+            23265 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
+            23266 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
+            23267 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
+            23268 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
+            23269 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
+            23270 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
+            23271 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.None),
+            23272 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
+            23273 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
+            23274 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.None),
+            23275 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
+            23276 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
+            23277 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.None),
+            23278 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
+            23279 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
+            23280 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.None),
+            23281 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
+            23282 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
+            23283 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
+            23284 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
+            23285 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
+            23286 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
+            23287 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
+            23288 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
+            23289 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
+            23290 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
+            23291 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
+            23292 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
+            23293 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
+            23294 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
+            23295 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
+            23296 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
+            23297 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
+            23298 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
+            23299 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
+            23300 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
+            23301 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
+            23302 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
+            23303 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
+            23304 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
+            23305 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
+            23306 => new SandstoneWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
+            23307 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.None),
+            23308 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.Low),
+            23309 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.Tall),
+            23310 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.None),
+            23311 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.Low),
+            23312 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.Tall),
+            23313 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.None),
+            23314 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.Low),
+            23315 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.Tall),
+            23316 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.None),
+            23317 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.Low),
+            23318 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.Tall),
+            23319 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.None),
+            23320 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.Low),
+            23321 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
+            23322 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.None),
+            23323 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.Low),
+            23324 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
+            23325 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.None),
+            23326 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.Low),
+            23327 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
+            23328 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.None),
+            23329 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.Low),
+            23330 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
+            23331 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.None),
+            23332 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
+            23333 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
+            23334 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.None),
+            23335 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
+            23336 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
+            23337 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.None),
+            23338 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
+            23339 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
+            23340 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.None),
+            23341 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
+            23342 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
+            23343 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.None),
+            23344 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.Low),
+            23345 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
+            23346 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.None),
+            23347 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.Low),
+            23348 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
+            23349 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.None),
+            23350 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.Low),
+            23351 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
+            23352 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.None),
+            23353 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.Low),
+            23354 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
+            23355 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.None),
+            23356 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
+            23357 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
+            23358 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.None),
+            23359 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
+            23360 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
+            23361 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.None),
+            23362 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
+            23363 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
+            23364 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.None),
+            23365 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
+            23366 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
+            23367 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
+            23368 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
+            23369 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
+            23370 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
+            23371 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
+            23372 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
+            23373 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
+            23374 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
+            23375 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
+            23376 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
+            23377 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
+            23378 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
+            23379 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.None),
+            23380 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
+            23381 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
+            23382 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.None),
+            23383 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
+            23384 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
+            23385 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.None),
+            23386 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
+            23387 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
+            23388 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.None),
+            23389 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
+            23390 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
+            23391 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
+            23392 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
+            23393 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
+            23394 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
+            23395 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
+            23396 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
+            23397 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
+            23398 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
+            23399 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
+            23400 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
+            23401 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
+            23402 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
+            23403 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
+            23404 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
+            23405 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
+            23406 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
+            23407 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
+            23408 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
+            23409 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
+            23410 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
+            23411 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
+            23412 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
+            23413 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
+            23414 => new SandstoneWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

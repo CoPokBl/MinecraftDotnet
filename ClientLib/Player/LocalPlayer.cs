@@ -217,9 +217,15 @@ public sealed partial class LocalPlayer : ClientEntity {
     private bool _wasSprinting;
     private ServerBoundPlayerInputPacket.Input _lastSentInput;
 
+    /// <summary>
+    /// <c>LocalPlayer.postEffects</c>: the post processing chains the server asked for, by id. A respawn's new
+    /// player starts with none.
+    /// </summary>
+    public IReadOnlyList<Identifier> ActivePostEffects { get; internal set; } = [];
+
     public LocalPlayer(MinecraftClient client) {
         _client = client;
-        InterpolationSteps = 0;
+        Interpolation = new SteppedInterpolationHandler(client, this, InterpolationHandlers.UpdateInterval(EntityType.Player));
     }
 
     /// <summary>

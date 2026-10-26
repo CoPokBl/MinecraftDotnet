@@ -167,7 +167,7 @@ public class AttackRangePickingTest {
         client.Interactions.Tick();
         Assert.That(sent.OfType<ServerBoundInteractPacket>().Select(p => p.EntityId), Is.EqualTo(new[] { b.Id }));
         Assert.That(sent.OfType<ServerBoundUseItemPacket>(), Is.Empty);
-        Assert.That(sent.OfType<ServerBoundSwingArmPacket>(), Is.Empty);
+        Assert.That(sent.OfType<ServerBoundPunchPacket>(), Is.Empty);
 
         client.Inventory.SetInventorySlot(0, ItemStack.Air);
         Assert.That(Pick(client) is EntityHitResult { Entity: var picked } && picked == a, Is.True);

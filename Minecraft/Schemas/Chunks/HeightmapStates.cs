@@ -19,10 +19,13 @@ public static class HeightmapStates {
     /// <summary><c>Heightmap.NOT_AIR</c>, which is <see cref="HeightmapType.WorldSurface"/>.</summary>
     public const byte NotAir = 1;
 
-    /// <summary><c>state.blocksMotion() || !state.getFluidState().isEmpty()</c>.</summary>
+    /// <summary><c>state.is(BLOCKS_MOTION_IN_HEIGHTMAP) || !state.getFluidState().isEmpty()</c>.</summary>
     public const byte MotionBlocking = 2;
 
-    /// <summary>The above, and not a <c>LeavesBlock</c>.</summary>
+    /// <summary>
+    /// The same over <c>BLOCKS_MOTION_IN_HEIGHTMAP_NO_LEAVES</c>. The fluid half is not narrowed by it,
+    /// so waterlogged leaves count.
+    /// </summary>
     public const byte MotionBlockingNoLeaves = 4;
 
     /// <summary>Set on a cached entry so that a resolved "matches nothing" is not read as absent.</summary>
@@ -66,14 +69,23 @@ public static class HeightmapStates {
 
         // Vanilla's MOTION_BLOCKING predicate is a disjunction, so water counts even though nothing
         // walks on it. Dropping the fluid half is what puts rain through an ocean's surface.
-        if (block.BlocksMotion || block.Fluid is not null) {
+        bool fluid = block.Fluid is not null;
+        if (fluid || InTag(registry, BlocksMotionInHeightmap, block.Identifier)) {
             flags |= MotionBlocking;
-            if (!BlockClasses.Of(block.Identifier).Contains(BlockClass.LeavesBlock)) {
-                flags |= MotionBlockingNoLeaves;
-            }
+        }
+
+        if (fluid || InTag(registry, BlocksMotionInHeightmapNoLeaves, block.Identifier)) {
+            flags |= MotionBlockingNoLeaves;
         }
 
         return flags;
+    }
+
+    private static readonly Identifier BlocksMotionInHeightmap = "minecraft:blocks_motion_in_heightmap";
+    private static readonly Identifier BlocksMotionInHeightmapNoLeaves = "minecraft:blocks_motion_in_heightmap_no_leaves";
+
+    private static bool InTag(MinecraftRegistry registry, Identifier tag, Identifier block) {
+        return registry.Blocks.Tags.Contains(tag) && registry.Blocks.Tags[tag].GetValueIds(registry).Contains(block);
     }
 
     private static byte[] Grow(MinecraftRegistry registry, uint stateId) {

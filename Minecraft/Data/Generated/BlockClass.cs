@@ -34,6 +34,7 @@ public readonly record struct BlockClass {
     }
 
     public static readonly BlockClass AbstractBannerBlock = new("AbstractBannerBlock");
+    public static readonly BlockClass AbstractBedBlock = new("AbstractBedBlock");
     public static readonly BlockClass AbstractCandleBlock = new("AbstractCandleBlock");
     public static readonly BlockClass AbstractCauldronBlock = new("AbstractCauldronBlock");
     public static readonly BlockClass AbstractChestBlock = new("AbstractChestBlock");
@@ -121,7 +122,6 @@ public readonly record struct BlockClass {
     public static readonly BlockClass DetectorRailBlock = new("DetectorRailBlock");
     public static readonly BlockClass DiodeBlock = new("DiodeBlock");
     public static readonly BlockClass DirectionalBlock = new("DirectionalBlock");
-    public static readonly BlockClass DirtPathBlock = new("DirtPathBlock");
     public static readonly BlockClass DispenserBlock = new("DispenserBlock");
     public static readonly BlockClass DoorBlock = new("DoorBlock");
     public static readonly BlockClass DoublePlantBlock = new("DoublePlantBlock");
@@ -139,6 +139,7 @@ public readonly record struct BlockClass {
     public static readonly BlockClass EyeblossomBlock = new("EyeblossomBlock");
     public static readonly BlockClass FaceAttachedHorizontalDirectionalBlock = new("FaceAttachedHorizontalDirectionalBlock");
     public static readonly BlockClass FallingBlock = new("FallingBlock");
+    public static readonly BlockClass FallingParticlesLeavesBlock = new("FallingParticlesLeavesBlock");
     public static readonly BlockClass FarmlandBlock = new("FarmlandBlock");
     public static readonly BlockClass FenceBlock = new("FenceBlock");
     public static readonly BlockClass FenceGateBlock = new("FenceGateBlock");
@@ -207,6 +208,7 @@ public readonly record struct BlockClass {
     public static readonly BlockClass NoteBlock = new("NoteBlock");
     public static readonly BlockClass NyliumBlock = new("NyliumBlock");
     public static readonly BlockClass ObserverBlock = new("ObserverBlock");
+    public static readonly BlockClass PathBlock = new("PathBlock");
     public static readonly BlockClass PiglinWallSkullBlock = new("PiglinWallSkullBlock");
     public static readonly BlockClass PipeBlock = new("PipeBlock");
     public static readonly BlockClass PistonBaseBlock = new("PistonBaseBlock");
@@ -224,10 +226,10 @@ public readonly record struct BlockClass {
     public static readonly BlockClass PumpkinBlock = new("PumpkinBlock");
     public static readonly BlockClass RailBlock = new("RailBlock");
     public static readonly BlockClass RedStoneOreBlock = new("RedStoneOreBlock");
-    public static readonly BlockClass RedStoneWireBlock = new("RedStoneWireBlock");
     public static readonly BlockClass RedstoneLampBlock = new("RedstoneLampBlock");
     public static readonly BlockClass RedstoneTorchBlock = new("RedstoneTorchBlock");
     public static readonly BlockClass RedstoneWallTorchBlock = new("RedstoneWallTorchBlock");
+    public static readonly BlockClass RedstoneWireBlock = new("RedstoneWireBlock");
     public static readonly BlockClass RepeaterBlock = new("RepeaterBlock");
     public static readonly BlockClass RespawnAnchorBlock = new("RespawnAnchorBlock");
     public static readonly BlockClass RodBlock = new("RodBlock");
@@ -244,6 +246,7 @@ public readonly record struct BlockClass {
     public static readonly BlockClass SeaPickleBlock = new("SeaPickleBlock");
     public static readonly BlockClass SeagrassBlock = new("SeagrassBlock");
     public static readonly BlockClass ShelfBlock = new("ShelfBlock");
+    public static readonly BlockClass ShelfMushroomBlock = new("ShelfMushroomBlock");
     public static readonly BlockClass ShortDryGrassBlock = new("ShortDryGrassBlock");
     public static readonly BlockClass ShulkerBoxBlock = new("ShulkerBoxBlock");
     public static readonly BlockClass SignBlock = new("SignBlock");
@@ -269,6 +272,7 @@ public readonly record struct BlockClass {
     public static readonly BlockClass StandingSignBlock = new("StandingSignBlock");
     public static readonly BlockClass StemBlock = new("StemBlock");
     public static readonly BlockClass StonecutterBlock = new("StonecutterBlock");
+    public static readonly BlockClass StrawBedBlock = new("StrawBedBlock");
     public static readonly BlockClass StructureBlock = new("StructureBlock");
     public static readonly BlockClass StructureVoidBlock = new("StructureVoidBlock");
     public static readonly BlockClass SugarCaneBlock = new("SugarCaneBlock");

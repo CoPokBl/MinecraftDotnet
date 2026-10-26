@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DeepslateBrickStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.deepslate_brick_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:deepslate_brick_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/deepslate_brick_stairs");
-    private static readonly BlockStateInfo I0 = new(3.5f, 0, 1, PushReaction.Normal, 59, "deepslate_bricks", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.deepslate_brick_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:deepslate_brick_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/deepslate_brick_stairs");
+    private static readonly BlockStateInfo I0 = new(3.5f, 0, 1, PushReaction.PushPull, 59, "deepslate_bricks", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record DeepslateBrickStairsBlock(Identifier Identifier, Direction Facing,
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 31653];
+    public BlockStateInfo StateInfo => States[StateId - 35010];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record DeepslateBrickStairsBlock(Identifier Identifier, Direction Facing,
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record DeepslateBrickStairsBlock(Identifier Identifier, Direction Facing,
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record DeepslateBrickStairsBlock(Identifier Identifier, Direction Facing,
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 31653,
-                            false => 31654,
+                            true => 35010,
+                            false => 35011,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 31655,
-                            false => 31656,
+                            true => 35012,
+                            false => 35013,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 31657,
-                            false => 31658,
+                            true => 35014,
+                            false => 35015,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 31659,
-                            false => 31660,
+                            true => 35016,
+                            false => 35017,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 31661,
-                            false => 31662,
+                            true => 35018,
+                            false => 35019,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 31663,
-                            false => 31664,
+                            true => 35020,
+                            false => 35021,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 31665,
-                            false => 31666,
+                            true => 35022,
+                            false => 35023,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 31667,
-                            false => 31668,
+                            true => 35024,
+                            false => 35025,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 31669,
-                            false => 31670,
+                            true => 35026,
+                            false => 35027,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 31671,
-                            false => 31672,
+                            true => 35028,
+                            false => 35029,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record DeepslateBrickStairsBlock(Identifier Identifier, Direction Facing,
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 31673,
-                            false => 31674,
+                            true => 35030,
+                            false => 35031,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 31675,
-                            false => 31676,
+                            true => 35032,
+                            false => 35033,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 31677,
-                            false => 31678,
+                            true => 35034,
+                            false => 35035,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 31679,
-                            false => 31680,
+                            true => 35036,
+                            false => 35037,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 31681,
-                            false => 31682,
+                            true => 35038,
+                            false => 35039,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 31683,
-                            false => 31684,
+                            true => 35040,
+                            false => 35041,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 31685,
-                            false => 31686,
+                            true => 35042,
+                            false => 35043,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 31687,
-                            false => 31688,
+                            true => 35044,
+                            false => 35045,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 31689,
-                            false => 31690,
+                            true => 35046,
+                            false => 35047,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 31691,
-                            false => 31692,
+                            true => 35048,
+                            false => 35049,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record DeepslateBrickStairsBlock(Identifier Identifier, Direction Facing,
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 31693,
-                            false => 31694,
+                            true => 35050,
+                            false => 35051,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 31695,
-                            false => 31696,
+                            true => 35052,
+                            false => 35053,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 31697,
-                            false => 31698,
+                            true => 35054,
+                            false => 35055,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 31699,
-                            false => 31700,
+                            true => 35056,
+                            false => 35057,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 31701,
-                            false => 31702,
+                            true => 35058,
+                            false => 35059,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 31703,
-                            false => 31704,
+                            true => 35060,
+                            false => 35061,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 31705,
-                            false => 31706,
+                            true => 35062,
+                            false => 35063,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 31707,
-                            false => 31708,
+                            true => 35064,
+                            false => 35065,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 31709,
-                            false => 31710,
+                            true => 35066,
+                            false => 35067,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 31711,
-                            false => 31712,
+                            true => 35068,
+                            false => 35069,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record DeepslateBrickStairsBlock(Identifier Identifier, Direction Facing,
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 31713,
-                            false => 31714,
+                            true => 35070,
+                            false => 35071,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 31715,
-                            false => 31716,
+                            true => 35072,
+                            false => 35073,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 31717,
-                            false => 31718,
+                            true => 35074,
+                            false => 35075,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 31719,
-                            false => 31720,
+                            true => 35076,
+                            false => 35077,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 31721,
-                            false => 31722,
+                            true => 35078,
+                            false => 35079,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 31723,
-                            false => 31724,
+                            true => 35080,
+                            false => 35081,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 31725,
-                            false => 31726,
+                            true => 35082,
+                            false => 35083,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 31727,
-                            false => 31728,
+                            true => 35084,
+                            false => 35085,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 31729,
-                            false => 31730,
+                            true => 35086,
+                            false => 35087,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 31731,
-                            false => 31732,
+                            true => 35088,
+                            false => 35089,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record DeepslateBrickStairsBlock(Identifier Identifier, Direction Facing,
     
     public IBlock WithState(uint state) {
         return state switch {
-            31653 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            31654 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            31655 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            31656 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            31657 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            31658 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            31659 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            31660 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            31661 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            31662 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            31663 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            31664 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            31665 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            31666 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            31667 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            31668 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            31669 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            31670 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            31671 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            31672 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            31673 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            31674 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            31675 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            31676 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            31677 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            31678 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            31679 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            31680 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            31681 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            31682 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            31683 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            31684 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            31685 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            31686 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            31687 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            31688 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            31689 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            31690 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            31691 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            31692 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            31693 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            31694 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            31695 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            31696 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            31697 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            31698 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            31699 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            31700 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            31701 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            31702 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            31703 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            31704 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            31705 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            31706 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            31707 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            31708 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            31709 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            31710 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            31711 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            31712 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            31713 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            31714 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            31715 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            31716 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            31717 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            31718 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            31719 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            31720 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            31721 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            31722 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            31723 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            31724 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            31725 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            31726 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            31727 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            31728 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            31729 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            31730 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            31731 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            31732 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            35010 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            35011 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            35012 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            35013 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            35014 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            35015 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            35016 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            35017 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            35018 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            35019 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            35020 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            35021 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            35022 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            35023 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            35024 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            35025 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            35026 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            35027 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            35028 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            35029 => new DeepslateBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            35030 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            35031 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            35032 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            35033 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            35034 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            35035 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            35036 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            35037 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            35038 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            35039 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            35040 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            35041 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            35042 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            35043 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            35044 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            35045 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            35046 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            35047 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            35048 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            35049 => new DeepslateBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            35050 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            35051 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            35052 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            35053 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            35054 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            35055 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            35056 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            35057 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            35058 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            35059 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            35060 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            35061 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            35062 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            35063 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            35064 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            35065 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            35066 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            35067 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            35068 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            35069 => new DeepslateBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            35070 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            35071 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            35072 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            35073 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            35074 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            35075 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            35076 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            35077 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            35078 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            35079 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            35080 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            35081 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            35082 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            35083 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            35084 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            35085 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            35086 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            35087 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            35088 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            35089 => new DeepslateBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

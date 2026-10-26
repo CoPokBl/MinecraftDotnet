@@ -191,12 +191,12 @@ public sealed class FurnaceMenu : ContainerMenu {
         _inputSet = inputSet;
         SimpleContainer container = new(3);
         AddSlot(new Slot(container, 0, 56, 17));
-        AddSlot(new FuelSlot(this, container, 1, 56, 53));
+        AddSlot(new FuelSlot(container, 1, 56, 53));
         AddSlot(new OutputSlot(container, 2, 116, 35));
         AddStandardInventorySlots(inventory, 8, 84);
     }
 
-    private bool IsFuel(Stack stack) => ItemRules.IsFuel(stack, Data);
+    private static bool IsFuel(Stack stack) => ItemRules.IsFuel(stack);
 
     public float BurnProgress => Property(3) != 0 && Property(2) != 0 ? Math.Clamp((float)Property(2) / Property(3), 0, 1) : 0;
     public float LitProgress => Property(1) == 0 ? 0 : Math.Clamp((float)Property(0) / Property(1), 0, 1);
@@ -218,31 +218,41 @@ public sealed class FurnaceMenu : ContainerMenu {
         return MoveWithinInventory(stack, slotIndex, 3);
     }
 
-    private sealed class FuelSlot(FurnaceMenu menu, Container container, int containerSlot, int x, int y) : Slot(container, containerSlot, x, y) {
-        public override bool MayPlace(Stack stack) => menu.IsFuel(stack) || stack.Is(Items.Bucket);
+    private sealed class FuelSlot(Container container, int containerSlot, int x, int y) : Slot(container, containerSlot, x, y) {
+        public override bool MayPlace(Stack stack) => IsFuel(stack) || stack.Is(Items.Bucket);
         public override int MaxStackSizeFor(Stack stack) => stack.Is(Items.Bucket) ? 1 : base.MaxStackSizeFor(stack);
     }
 }
 
-/// <summary><c>BrewingStandMenu</c>: three bottles, an ingredient and blaze powder. Data 0 brew time, 1 fuel.</summary>
+/// <summary>
+/// <c>BrewingStandMenu</c>: three bottles, an ingredient and blaze powder. Data 0 brew time, 1 fuel, 2 the
+/// brew's total ticks and 3 the fuel's total.
+/// </summary>
 public sealed class BrewingStandMenu : ContainerMenu {
     private readonly Slot _ingredient;
 
     public BrewingStandMenu(int windowId, IInventoryType type, TextComponent title, PlayerInventory inventory, MenuData data)
         : base(windowId, type, title, data) {
         SimpleContainer container = new(5);
-        AddSlot(new FilteredSlot(container, 0, 56, 51, ItemRules.IsPotionContainer, 1));
-        AddSlot(new FilteredSlot(container, 1, 79, 58, ItemRules.IsPotionContainer, 1));
-        AddSlot(new FilteredSlot(container, 2, 102, 51, ItemRules.IsPotionContainer, 1));
-        _ingredient = AddSlot(new FilteredSlot(container, 3, 79, 17, ItemRules.IsBrewingIngredient));
+        AddSlot(new FilteredSlot(container, 0, 56, 51, IsPotionInput, 1));
+        AddSlot(new FilteredSlot(container, 1, 79, 58, IsPotionInput, 1));
+        AddSlot(new FilteredSlot(container, 2, 102, 51, IsPotionInput, 1));
+        _ingredient = AddSlot(new FilteredSlot(container, 3, 79, 17, stack => Data.InItemSet(stack, "minecraft:brewing_reagent")));
         AddSlot(new FilteredSlot(container, 4, 17, 17, IsBrewingFuel));
         AddStandardInventorySlots(inventory, 8, 84);
     }
 
-    private bool IsBrewingFuel(Stack stack) => Data.InTag(stack, "minecraft:brewing_fuel");
+    /// <summary><c>FuelSlot.mayPlaceItem</c>.</summary>
+    private static bool IsBrewingFuel(Stack stack) => stack.Has(DataComponent.BrewingFuel);
+
+    /// <summary><c>PotionIngredient.isPotionInput</c>: what a brewing recipe takes, or <c>#brewing_potion_inputs</c>.</summary>
+    private bool IsPotionInput(Stack stack) =>
+        Data.InItemSet(stack, "minecraft:brewing_input") || Data.InTag(stack, "minecraft:brewing_potion_inputs");
 
     public int BrewTime => Property(0);
     public int Fuel => Property(1);
+    public int TotalBrewingTicks => Property(2);
+    public int TotalFuel => Property(3);
 
     protected override bool QuickMove(int slotIndex, Stack stack) {
         if (slotIndex is >= 0 and <= 4) {
@@ -255,7 +265,7 @@ public sealed class BrewingStandMenu : ContainerMenu {
         if (_ingredient.MayPlace(stack)) {
             return MoveItemStackTo(stack, 3, 4, false);
         }
-        if (ItemRules.IsPotionContainer(stack)) {
+        if (IsPotionInput(stack)) {
             return MoveItemStackTo(stack, 0, 3, false);
         }
         return MoveWithinInventory(stack, slotIndex, 5, true);

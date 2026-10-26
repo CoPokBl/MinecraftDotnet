@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SnowBlock(Identifier Identifier, int Layers) : IBlock, IStackable {
-    private static readonly BlockInfo Data = new("minecraft:snow_layer", "block.minecraft.snow", 0.1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:snow", BlockInfo.VanillaOnly, "minecraft:blocks/snow");
-    private static readonly BlockStateInfo I0 = new(0.1f, 0, 0, PushReaction.Destroy, 8, "snow", NoteBlockInstrument.Harp, true, true, true, false, false, false, false, true, false, false, false, true, false, false, true, true, false, false, [], null, BlockShapes.S124, BlockShapes.S1, BlockShapes.S1, BlockShapes.S124, BlockShapes.S124, BlockShapes.S124);
+    private static readonly BlockInfo Data = new("block.minecraft.snow", 0.1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:snow", BlockInfo.VanillaOnly, "minecraft:blocks/snow");
+    private static readonly BlockStateInfo I0 = new(0.1f, 0, 0, PushReaction.Popped, 8, "snow", NoteBlockInstrument.Harp, true, true, true, false, false, false, true, false, false, false, true, false, false, false, true, true, false, false, [], null, BlockShapes.S124, BlockShapes.S1, BlockShapes.S1, BlockShapes.S124, BlockShapes.S124, BlockShapes.S124);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S333, CollisionShape = BlockShapes.S124, OcclusionShape = BlockShapes.S333, VisualShape = BlockShapes.S333, SupportShape = BlockShapes.S333 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S334, CollisionShape = BlockShapes.S333, OcclusionShape = BlockShapes.S334, VisualShape = BlockShapes.S334, SupportShape = BlockShapes.S334 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S89, CollisionShape = BlockShapes.S334, OcclusionShape = BlockShapes.S89, VisualShape = BlockShapes.S89, SupportShape = BlockShapes.S89 };
-    private static readonly BlockStateInfo I4 = I0 with { PathfindableLand = false, BlockShape = BlockShapes.S923, CollisionShape = BlockShapes.S89, OcclusionShape = BlockShapes.S923, VisualShape = BlockShapes.S923, SupportShape = BlockShapes.S923 };
-    private static readonly BlockStateInfo I5 = I0 with { PathfindableLand = false, BlockShape = BlockShapes.S524, CollisionShape = BlockShapes.S923, OcclusionShape = BlockShapes.S524, VisualShape = BlockShapes.S524, SupportShape = BlockShapes.S524 };
-    private static readonly BlockStateInfo I6 = I0 with { PathfindableLand = false, BlockShape = BlockShapes.S655, CollisionShape = BlockShapes.S524, OcclusionShape = BlockShapes.S655, VisualShape = BlockShapes.S655, SupportShape = BlockShapes.S655 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 15, ViewBlocking = true, PathfindableLand = false, ValidSpawnFor = null, BlockShape = BlockShapes.S79, CollisionShape = BlockShapes.S655, OcclusionShape = BlockShapes.S79, VisualShape = BlockShapes.S79, SupportShape = BlockShapes.S79 };
+    private static readonly BlockStateInfo I4 = I0 with { PathfindableLand = false, BlockShape = BlockShapes.S932, CollisionShape = BlockShapes.S89, OcclusionShape = BlockShapes.S932, VisualShape = BlockShapes.S932, SupportShape = BlockShapes.S932 };
+    private static readonly BlockStateInfo I5 = I0 with { PathfindableLand = false, BlockShape = BlockShapes.S525, CollisionShape = BlockShapes.S932, OcclusionShape = BlockShapes.S525, VisualShape = BlockShapes.S525, SupportShape = BlockShapes.S525 };
+    private static readonly BlockStateInfo I6 = I0 with { PathfindableLand = false, BlockShape = BlockShapes.S656, CollisionShape = BlockShapes.S525, OcclusionShape = BlockShapes.S656, VisualShape = BlockShapes.S656, SupportShape = BlockShapes.S656 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 15, ViewBlocking = true, PathfindableLand = false, ValidSpawnFor = null, BlockShape = BlockShapes.S79, CollisionShape = BlockShapes.S656, OcclusionShape = BlockShapes.S79, VisualShape = BlockShapes.S79, SupportShape = BlockShapes.S79 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6919];
+    public BlockStateInfo StateInfo => States[StateId - 8589];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock, IStackable 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock, IStackable 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -83,14 +83,14 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock, IStackable 
     public uint StateId {
         get {
             return Layers switch {
-                1 => 6919,
-                2 => 6920,
-                3 => 6921,
-                4 => 6922,
-                5 => 6923,
-                6 => 6924,
-                7 => 6925,
-                8 => 6926,
+                1 => 8589,
+                2 => 8590,
+                3 => 8591,
+                4 => 8592,
+                5 => 8593,
+                6 => 8594,
+                7 => 8595,
+                8 => 8596,
                 _ => throw new ArgumentOutOfRangeException(nameof(Layers), Layers, "Unknown value for property layers.")
             };
         }
@@ -98,14 +98,14 @@ public record SnowBlock(Identifier Identifier, int Layers) : IBlock, IStackable 
     
     public IBlock WithState(uint state) {
         return state switch {
-            6919 => new SnowBlock(Identifier, 1),
-            6920 => new SnowBlock(Identifier, 2),
-            6921 => new SnowBlock(Identifier, 3),
-            6922 => new SnowBlock(Identifier, 4),
-            6923 => new SnowBlock(Identifier, 5),
-            6924 => new SnowBlock(Identifier, 6),
-            6925 => new SnowBlock(Identifier, 7),
-            6926 => new SnowBlock(Identifier, 8),
+            8589 => new SnowBlock(Identifier, 1),
+            8590 => new SnowBlock(Identifier, 2),
+            8591 => new SnowBlock(Identifier, 3),
+            8592 => new SnowBlock(Identifier, 4),
+            8593 => new SnowBlock(Identifier, 5),
+            8594 => new SnowBlock(Identifier, 6),
+            8595 => new SnowBlock(Identifier, 7),
+            8596 => new SnowBlock(Identifier, 8),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

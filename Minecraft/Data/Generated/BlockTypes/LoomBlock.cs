@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:loom", "block.minecraft.loom", 2.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:loom", BlockInfo.VanillaOnly, "minecraft:blocks/loom");
-    private static readonly BlockStateInfo I0 = new(2.5f, 0, 15, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.loom", 2.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:loom", BlockInfo.VanillaOnly, "minecraft:blocks/loom");
+    private static readonly BlockStateInfo I0 = new(2.5f, 0, 15, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock, IHori
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock, IHori
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,10 +69,10 @@ public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock, IHori
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 20738,
-                Direction.South => 20739,
-                Direction.West => 20740,
-                Direction.East => 20741,
+                Direction.North => 24095,
+                Direction.South => 24096,
+                Direction.West => 24097,
+                Direction.East => 24098,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -80,10 +80,10 @@ public record LoomBlock(Identifier Identifier, Direction Facing) : IBlock, IHori
     
     public IBlock WithState(uint state) {
         return state switch {
-            20738 => new LoomBlock(Identifier, Direction.North),
-            20739 => new LoomBlock(Identifier, Direction.South),
-            20740 => new LoomBlock(Identifier, Direction.West),
-            20741 => new LoomBlock(Identifier, Direction.East),
+            24095 => new LoomBlock(Identifier, Direction.North),
+            24096 => new LoomBlock(Identifier, Direction.South),
+            24097 => new LoomBlock(Identifier, Direction.West),
+            24098 => new LoomBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

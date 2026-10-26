@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PearlescentFroglightBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
-    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.pearlescent_froglight", 0.3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pearlescent_froglight", BlockInfo.VanillaOnly, "minecraft:blocks/pearlescent_froglight");
-    private static readonly BlockStateInfo I0 = new(0.3f, 15, 15, PushReaction.Normal, 20, "froglight", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, [], null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.pearlescent_froglight", 0.3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pearlescent_froglight", BlockInfo.VanillaOnly, "minecraft:blocks/pearlescent_froglight");
+    private static readonly BlockStateInfo I0 = new(0.3f, 15, 15, PushReaction.PushPull, 20, "froglight", NoteBlockInstrument.Harp, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, [], null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record PearlescentFroglightBlock(Identifier Identifier, Axis Axis) : IBlo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record PearlescentFroglightBlock(Identifier Identifier, Axis Axis) : IBlo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,9 +69,9 @@ public record PearlescentFroglightBlock(Identifier Identifier, Axis Axis) : IBlo
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 32081,
-                Axis.Y => 32082,
-                Axis.Z => 32083,
+                Axis.X => 35438,
+                Axis.Y => 35439,
+                Axis.Z => 35440,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -79,9 +79,9 @@ public record PearlescentFroglightBlock(Identifier Identifier, Axis Axis) : IBlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            32081 => new PearlescentFroglightBlock(Identifier, Axis.X),
-            32082 => new PearlescentFroglightBlock(Identifier, Axis.Y),
-            32083 => new PearlescentFroglightBlock(Identifier, Axis.Z),
+            35438 => new PearlescentFroglightBlock(Identifier, Axis.X),
+            35439 => new PearlescentFroglightBlock(Identifier, Axis.Y),
+            35440 => new PearlescentFroglightBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

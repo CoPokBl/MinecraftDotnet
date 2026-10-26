@@ -86,46 +86,8 @@ public static class ItemRules {
 
     private static bool IsBlockItemOf(Stack stack, BlockClass type) => stack.Item.CorrespondingBlock is { } block && BlockClasses.Is(block, type);
 
-    /// <summary>
-    /// <c>FuelValues.vanillaBurnTimes</c>' membership, which is all a fuel slot asks: the items and
-    /// tags it lists, less <c>#non_flammable_wood</c>.
-    /// </summary>
-    public static bool IsFuel(Stack stack, MenuData data) {
-        if (stack.IsEmpty || data.InTag(stack, "minecraft:non_flammable_wood")) {
-            return false;
-        }
-        return FuelTags.Any(tag => data.InTag(stack, tag)) || FuelItems.Contains(stack.Item.Identifier);
-    }
-
-    private static readonly Identifier[] FuelTags = [
-        "minecraft:logs", "minecraft:bamboo_blocks", "minecraft:planks", "minecraft:wooden_stairs",
-        "minecraft:wooden_slabs", "minecraft:wooden_trapdoors", "minecraft:wooden_pressure_plates",
-        "minecraft:wooden_shelves", "minecraft:wooden_fences", "minecraft:fence_gates", "minecraft:banners",
-        "minecraft:signs", "minecraft:hanging_signs", "minecraft:wooden_doors", "minecraft:boats", "minecraft:wool",
-        "minecraft:wooden_buttons", "minecraft:saplings", "minecraft:wool_carpets"
-    ];
-
-    private static readonly HashSet<Identifier> FuelItems = Ids(
-        Items.LavaBucket, Items.CoalBlock, Items.BlazeRod, Items.Coal, Items.Charcoal, Items.BambooMosaic, Items.BambooMosaicStairs,
-        Items.BambooMosaicSlab, Items.NoteBlock, Items.Bookshelf, Items.ChiseledBookshelf, Items.Lectern, Items.Jukebox, Items.Chest,
-        Items.TrappedChest, Items.CraftingTable, Items.DaylightDetector, Items.Bow, Items.FishingRod, Items.Ladder, Items.WoodenShovel,
-        Items.WoodenSword, Items.WoodenSpear, Items.WoodenHoe, Items.WoodenAxe, Items.WoodenPickaxe, Items.Stick, Items.Bowl,
-        Items.DriedKelpBlock, Items.Crossbow, Items.Bamboo, Items.DeadBush, Items.ShortDryGrass, Items.TallDryGrass, Items.Scaffolding,
-        Items.Loom, Items.Barrel, Items.CartographyTable, Items.FletchingTable, Items.SmithingTable, Items.Composter, Items.Azalea,
-        Items.FloweringAzalea, Items.MangroveRoots, Items.LeafLitter);
-
-    /// <summary><c>PotionBrewing.isIngredient</c> over vanilla's mixes.</summary>
-    public static bool IsBrewingIngredient(Stack stack) => !stack.IsEmpty && BrewingIngredients.Contains(stack.Item.Identifier);
-
-    private static readonly HashSet<Identifier> BrewingIngredients = Ids(
-        Items.BlazePowder, Items.BreezeRod, Items.Cobweb, Items.DragonBreath, Items.FermentedSpiderEye, Items.GhastTear,
-        Items.GlisteringMelonSlice, Items.GlowstoneDust, Items.GoldenCarrot, Items.Gunpowder, Items.MagmaCream, Items.NetherWart,
-        Items.PhantomMembrane, Items.Pufferfish, Items.RabbitFoot, Items.Redstone, Items.SlimeBlock, Items.SpiderEye, Items.Stone, Items.Sugar,
-        Items.TurtleHelmet);
-
-    /// <summary><c>BrewingStandMenu.PotionSlot.mayPlaceItem</c>.</summary>
-    public static bool IsPotionContainer(Stack stack) =>
-        stack.Is(Items.Potion) || stack.Is(Items.SplashPotion) || stack.Is(Items.LingeringPotion) || stack.Is(Items.GlassBottle);
+    /// <summary><c>AbstractFurnaceMenu.isFuel</c>: whatever burns has <c>cooking_fuel</c>.</summary>
+    public static bool IsFuel(Stack stack) => stack.Has(DataComponent.CookingFuel);
 
     /// <summary><c>instanceof BannerItem</c>.</summary>
     public static bool IsBanner(Stack stack) => !stack.IsEmpty && IsBlockItemOf(stack, BlockClass.BannerBlock);

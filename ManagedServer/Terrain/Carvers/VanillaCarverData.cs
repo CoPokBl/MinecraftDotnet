@@ -7,13 +7,10 @@ using Minecraft.Schemas;
 namespace ManagedServer.Terrain.Carvers;
 
 /// <summary>
-/// The vanilla configured carvers and the per biome carver lists, embedded and parsed on demand.
+/// The <c>worldgen/carver</c> registry and the per biome carver lists, read from the datapack and
+/// parsed on demand.
 /// </summary>
 /// <remarks>
-/// The same bargain as the worldgen and feature data beside it: the four carver files are copied
-/// verbatim rather than transcribed, and the biome files are the ones the feature pass already
-/// embeds, trimmed to their <c>features</c> and <c>carvers</c> lists on the way in.
-/// <p/>
 /// Unlike the feature table there is no global ordering to build. A carver's seed comes from the
 /// source chunk and its <b>index in that biome's own list</b>, so two biomes listing the same carver
 /// in different positions genuinely give it different seeds, and nothing has to be reconciled between
@@ -31,15 +28,11 @@ public sealed class VanillaCarverData {
     private readonly Dictionary<Identifier, JsonDocument> _carverJson = [];
     private readonly Dictionary<Identifier, JsonDocument> _biomeJson = [];
 
-    private readonly Dictionary<Identifier, ConfiguredWorldCarver> _carvers = [];
-    private readonly Dictionary<Identifier, IReadOnlyList<ConfiguredWorldCarver>> _perBiome = [];
-
-    private readonly CarverParser _parser;
+    private readonly Dictionary<Identifier, IWorldCarver> _carvers = [];
+    private readonly Dictionary<Identifier, IReadOnlyList<IWorldCarver>> _perBiome = [];
 
     private VanillaCarverData(MinecraftRegistry registry, IDatapackSource source) {
-        _parser = new CarverParser(new BlockParser(registry));
-
-        Read(source, "worldgen/configured_carver", _carverJson);
+        Read(source, "worldgen/carver", _carverJson);
         Read(source, "worldgen/biome", _biomeJson);
     }
 
@@ -77,13 +70,13 @@ public sealed class VanillaCarverData {
     /// The list is a <c>HolderSet</c>, so a biome with exactly one carver writes it as a bare string
     /// rather than as an array. All five nether biomes do.
     /// </remarks>
-    public IReadOnlyList<ConfiguredWorldCarver> For(Identifier biome) {
+    public IReadOnlyList<IWorldCarver> For(Identifier biome) {
         lock (CacheLock) {
-            if (_perBiome.TryGetValue(biome, out IReadOnlyList<ConfiguredWorldCarver>? existing)) {
+            if (_perBiome.TryGetValue(biome, out IReadOnlyList<IWorldCarver>? existing)) {
                 return existing;
             }
 
-            List<ConfiguredWorldCarver> carvers = [];
+            List<IWorldCarver> carvers = [];
 
             if (_biomeJson.TryGetValue(biome, out JsonDocument? document)) {
                 JsonElement listed = document.RootElement.GetProperty("carvers");
@@ -107,7 +100,7 @@ public sealed class VanillaCarverData {
     /// vanilla has no carver tags, and a biome silently losing its caves is exactly the failure this
     /// data set is copied verbatim to avoid.
     /// </summary>
-    private ConfiguredWorldCarver GetListed(JsonElement entry) {
+    private IWorldCarver GetListed(JsonElement entry) {
         string value = entry.GetString()!;
 
         if (value.StartsWith('#')) {
@@ -118,20 +111,20 @@ public sealed class VanillaCarverData {
         return Get(Identifier.Parse(value));
     }
 
-    /// <summary>Every configured carver in the data, by the id vanilla registers it under.</summary>
+    /// <summary>Every carver in the data, by the id vanilla registers it under.</summary>
     public IReadOnlyCollection<Identifier> Ids => _carverJson.Keys;
 
-    /// <summary>A configured carver by id, parsed on first use.</summary>
-    public ConfiguredWorldCarver Get(Identifier id) {
-        if (_carvers.TryGetValue(id, out ConfiguredWorldCarver? existing)) {
+    /// <summary>A carver by id, parsed on first use.</summary>
+    public IWorldCarver Get(Identifier id) {
+        if (_carvers.TryGetValue(id, out IWorldCarver? existing)) {
             return existing;
         }
 
         if (!_carverJson.TryGetValue(id, out JsonDocument? document)) {
-            throw new InvalidOperationException($"No configured carver registered as \"{id}\".");
+            throw new InvalidOperationException($"No carver registered as \"{id}\".");
         }
 
-        ConfiguredWorldCarver carver = _parser.Parse(document.RootElement);
+        IWorldCarver carver = CarverParser.Parse(document.RootElement);
         _carvers[id] = carver;
         return carver;
     }

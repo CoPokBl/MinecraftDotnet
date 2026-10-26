@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed, bool East, bool North, bool Powered, bool South, bool West) : IBlock, IAttached, IPowered, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:tripwire", "block.minecraft.tripwire", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:string", BlockInfo.VanillaOnly, "minecraft:blocks/tripwire");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S925, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.tripwire", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:string", BlockInfo.VanillaOnly, "minecraft:blocks/tripwire");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Popped, 0, "stone", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S938, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S89 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 9599];
+    public BlockStateInfo StateInfo => States[StateId - 11341];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -99,44 +99,44 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
                             true => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9599,
-                                        false => 9600,
+                                        true => 11341,
+                                        false => 11342,
                                     },
                                     false => West switch {
-                                        true => 9601,
-                                        false => 9602,
+                                        true => 11343,
+                                        false => 11344,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9603,
-                                        false => 9604,
+                                        true => 11345,
+                                        false => 11346,
                                     },
                                     false => West switch {
-                                        true => 9605,
-                                        false => 9606,
+                                        true => 11347,
+                                        false => 11348,
                                     },
                                 },
                             },
                             false => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9607,
-                                        false => 9608,
+                                        true => 11349,
+                                        false => 11350,
                                     },
                                     false => West switch {
-                                        true => 9609,
-                                        false => 9610,
+                                        true => 11351,
+                                        false => 11352,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9611,
-                                        false => 9612,
+                                        true => 11353,
+                                        false => 11354,
                                     },
                                     false => West switch {
-                                        true => 9613,
-                                        false => 9614,
+                                        true => 11355,
+                                        false => 11356,
                                     },
                                 },
                             },
@@ -145,44 +145,44 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
                             true => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9615,
-                                        false => 9616,
+                                        true => 11357,
+                                        false => 11358,
                                     },
                                     false => West switch {
-                                        true => 9617,
-                                        false => 9618,
+                                        true => 11359,
+                                        false => 11360,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9619,
-                                        false => 9620,
+                                        true => 11361,
+                                        false => 11362,
                                     },
                                     false => West switch {
-                                        true => 9621,
-                                        false => 9622,
+                                        true => 11363,
+                                        false => 11364,
                                     },
                                 },
                             },
                             false => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9623,
-                                        false => 9624,
+                                        true => 11365,
+                                        false => 11366,
                                     },
                                     false => West switch {
-                                        true => 9625,
-                                        false => 9626,
+                                        true => 11367,
+                                        false => 11368,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9627,
-                                        false => 9628,
+                                        true => 11369,
+                                        false => 11370,
                                     },
                                     false => West switch {
-                                        true => 9629,
-                                        false => 9630,
+                                        true => 11371,
+                                        false => 11372,
                                     },
                                 },
                             },
@@ -193,44 +193,44 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
                             true => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9631,
-                                        false => 9632,
+                                        true => 11373,
+                                        false => 11374,
                                     },
                                     false => West switch {
-                                        true => 9633,
-                                        false => 9634,
+                                        true => 11375,
+                                        false => 11376,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9635,
-                                        false => 9636,
+                                        true => 11377,
+                                        false => 11378,
                                     },
                                     false => West switch {
-                                        true => 9637,
-                                        false => 9638,
+                                        true => 11379,
+                                        false => 11380,
                                     },
                                 },
                             },
                             false => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9639,
-                                        false => 9640,
+                                        true => 11381,
+                                        false => 11382,
                                     },
                                     false => West switch {
-                                        true => 9641,
-                                        false => 9642,
+                                        true => 11383,
+                                        false => 11384,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9643,
-                                        false => 9644,
+                                        true => 11385,
+                                        false => 11386,
                                     },
                                     false => West switch {
-                                        true => 9645,
-                                        false => 9646,
+                                        true => 11387,
+                                        false => 11388,
                                     },
                                 },
                             },
@@ -239,44 +239,44 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
                             true => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9647,
-                                        false => 9648,
+                                        true => 11389,
+                                        false => 11390,
                                     },
                                     false => West switch {
-                                        true => 9649,
-                                        false => 9650,
+                                        true => 11391,
+                                        false => 11392,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9651,
-                                        false => 9652,
+                                        true => 11393,
+                                        false => 11394,
                                     },
                                     false => West switch {
-                                        true => 9653,
-                                        false => 9654,
+                                        true => 11395,
+                                        false => 11396,
                                     },
                                 },
                             },
                             false => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9655,
-                                        false => 9656,
+                                        true => 11397,
+                                        false => 11398,
                                     },
                                     false => West switch {
-                                        true => 9657,
-                                        false => 9658,
+                                        true => 11399,
+                                        false => 11400,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9659,
-                                        false => 9660,
+                                        true => 11401,
+                                        false => 11402,
                                     },
                                     false => West switch {
-                                        true => 9661,
-                                        false => 9662,
+                                        true => 11403,
+                                        false => 11404,
                                     },
                                 },
                             },
@@ -289,44 +289,44 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
                             true => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9663,
-                                        false => 9664,
+                                        true => 11405,
+                                        false => 11406,
                                     },
                                     false => West switch {
-                                        true => 9665,
-                                        false => 9666,
+                                        true => 11407,
+                                        false => 11408,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9667,
-                                        false => 9668,
+                                        true => 11409,
+                                        false => 11410,
                                     },
                                     false => West switch {
-                                        true => 9669,
-                                        false => 9670,
+                                        true => 11411,
+                                        false => 11412,
                                     },
                                 },
                             },
                             false => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9671,
-                                        false => 9672,
+                                        true => 11413,
+                                        false => 11414,
                                     },
                                     false => West switch {
-                                        true => 9673,
-                                        false => 9674,
+                                        true => 11415,
+                                        false => 11416,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9675,
-                                        false => 9676,
+                                        true => 11417,
+                                        false => 11418,
                                     },
                                     false => West switch {
-                                        true => 9677,
-                                        false => 9678,
+                                        true => 11419,
+                                        false => 11420,
                                     },
                                 },
                             },
@@ -335,44 +335,44 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
                             true => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9679,
-                                        false => 9680,
+                                        true => 11421,
+                                        false => 11422,
                                     },
                                     false => West switch {
-                                        true => 9681,
-                                        false => 9682,
+                                        true => 11423,
+                                        false => 11424,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9683,
-                                        false => 9684,
+                                        true => 11425,
+                                        false => 11426,
                                     },
                                     false => West switch {
-                                        true => 9685,
-                                        false => 9686,
+                                        true => 11427,
+                                        false => 11428,
                                     },
                                 },
                             },
                             false => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9687,
-                                        false => 9688,
+                                        true => 11429,
+                                        false => 11430,
                                     },
                                     false => West switch {
-                                        true => 9689,
-                                        false => 9690,
+                                        true => 11431,
+                                        false => 11432,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9691,
-                                        false => 9692,
+                                        true => 11433,
+                                        false => 11434,
                                     },
                                     false => West switch {
-                                        true => 9693,
-                                        false => 9694,
+                                        true => 11435,
+                                        false => 11436,
                                     },
                                 },
                             },
@@ -383,44 +383,44 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
                             true => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9695,
-                                        false => 9696,
+                                        true => 11437,
+                                        false => 11438,
                                     },
                                     false => West switch {
-                                        true => 9697,
-                                        false => 9698,
+                                        true => 11439,
+                                        false => 11440,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9699,
-                                        false => 9700,
+                                        true => 11441,
+                                        false => 11442,
                                     },
                                     false => West switch {
-                                        true => 9701,
-                                        false => 9702,
+                                        true => 11443,
+                                        false => 11444,
                                     },
                                 },
                             },
                             false => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9703,
-                                        false => 9704,
+                                        true => 11445,
+                                        false => 11446,
                                     },
                                     false => West switch {
-                                        true => 9705,
-                                        false => 9706,
+                                        true => 11447,
+                                        false => 11448,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9707,
-                                        false => 9708,
+                                        true => 11449,
+                                        false => 11450,
                                     },
                                     false => West switch {
-                                        true => 9709,
-                                        false => 9710,
+                                        true => 11451,
+                                        false => 11452,
                                     },
                                 },
                             },
@@ -429,44 +429,44 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
                             true => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9711,
-                                        false => 9712,
+                                        true => 11453,
+                                        false => 11454,
                                     },
                                     false => West switch {
-                                        true => 9713,
-                                        false => 9714,
+                                        true => 11455,
+                                        false => 11456,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9715,
-                                        false => 9716,
+                                        true => 11457,
+                                        false => 11458,
                                     },
                                     false => West switch {
-                                        true => 9717,
-                                        false => 9718,
+                                        true => 11459,
+                                        false => 11460,
                                     },
                                 },
                             },
                             false => Powered switch {
                                 true => South switch {
                                     true => West switch {
-                                        true => 9719,
-                                        false => 9720,
+                                        true => 11461,
+                                        false => 11462,
                                     },
                                     false => West switch {
-                                        true => 9721,
-                                        false => 9722,
+                                        true => 11463,
+                                        false => 11464,
                                     },
                                 },
                                 false => South switch {
                                     true => West switch {
-                                        true => 9723,
-                                        false => 9724,
+                                        true => 11465,
+                                        false => 11466,
                                     },
                                     false => West switch {
-                                        true => 9725,
-                                        false => 9726,
+                                        true => 11467,
+                                        false => 11468,
                                     },
                                 },
                             },
@@ -479,134 +479,134 @@ public record TripwireBlock(Identifier Identifier, bool Attached, bool Disarmed,
     
     public IBlock WithState(uint state) {
         return state switch {
-            9599 => new TripwireBlock(Identifier, true, true, true, true, true, true, true),
-            9600 => new TripwireBlock(Identifier, true, true, true, true, true, true, false),
-            9601 => new TripwireBlock(Identifier, true, true, true, true, true, false, true),
-            9602 => new TripwireBlock(Identifier, true, true, true, true, true, false, false),
-            9603 => new TripwireBlock(Identifier, true, true, true, true, false, true, true),
-            9604 => new TripwireBlock(Identifier, true, true, true, true, false, true, false),
-            9605 => new TripwireBlock(Identifier, true, true, true, true, false, false, true),
-            9606 => new TripwireBlock(Identifier, true, true, true, true, false, false, false),
-            9607 => new TripwireBlock(Identifier, true, true, true, false, true, true, true),
-            9608 => new TripwireBlock(Identifier, true, true, true, false, true, true, false),
-            9609 => new TripwireBlock(Identifier, true, true, true, false, true, false, true),
-            9610 => new TripwireBlock(Identifier, true, true, true, false, true, false, false),
-            9611 => new TripwireBlock(Identifier, true, true, true, false, false, true, true),
-            9612 => new TripwireBlock(Identifier, true, true, true, false, false, true, false),
-            9613 => new TripwireBlock(Identifier, true, true, true, false, false, false, true),
-            9614 => new TripwireBlock(Identifier, true, true, true, false, false, false, false),
-            9615 => new TripwireBlock(Identifier, true, true, false, true, true, true, true),
-            9616 => new TripwireBlock(Identifier, true, true, false, true, true, true, false),
-            9617 => new TripwireBlock(Identifier, true, true, false, true, true, false, true),
-            9618 => new TripwireBlock(Identifier, true, true, false, true, true, false, false),
-            9619 => new TripwireBlock(Identifier, true, true, false, true, false, true, true),
-            9620 => new TripwireBlock(Identifier, true, true, false, true, false, true, false),
-            9621 => new TripwireBlock(Identifier, true, true, false, true, false, false, true),
-            9622 => new TripwireBlock(Identifier, true, true, false, true, false, false, false),
-            9623 => new TripwireBlock(Identifier, true, true, false, false, true, true, true),
-            9624 => new TripwireBlock(Identifier, true, true, false, false, true, true, false),
-            9625 => new TripwireBlock(Identifier, true, true, false, false, true, false, true),
-            9626 => new TripwireBlock(Identifier, true, true, false, false, true, false, false),
-            9627 => new TripwireBlock(Identifier, true, true, false, false, false, true, true),
-            9628 => new TripwireBlock(Identifier, true, true, false, false, false, true, false),
-            9629 => new TripwireBlock(Identifier, true, true, false, false, false, false, true),
-            9630 => new TripwireBlock(Identifier, true, true, false, false, false, false, false),
-            9631 => new TripwireBlock(Identifier, true, false, true, true, true, true, true),
-            9632 => new TripwireBlock(Identifier, true, false, true, true, true, true, false),
-            9633 => new TripwireBlock(Identifier, true, false, true, true, true, false, true),
-            9634 => new TripwireBlock(Identifier, true, false, true, true, true, false, false),
-            9635 => new TripwireBlock(Identifier, true, false, true, true, false, true, true),
-            9636 => new TripwireBlock(Identifier, true, false, true, true, false, true, false),
-            9637 => new TripwireBlock(Identifier, true, false, true, true, false, false, true),
-            9638 => new TripwireBlock(Identifier, true, false, true, true, false, false, false),
-            9639 => new TripwireBlock(Identifier, true, false, true, false, true, true, true),
-            9640 => new TripwireBlock(Identifier, true, false, true, false, true, true, false),
-            9641 => new TripwireBlock(Identifier, true, false, true, false, true, false, true),
-            9642 => new TripwireBlock(Identifier, true, false, true, false, true, false, false),
-            9643 => new TripwireBlock(Identifier, true, false, true, false, false, true, true),
-            9644 => new TripwireBlock(Identifier, true, false, true, false, false, true, false),
-            9645 => new TripwireBlock(Identifier, true, false, true, false, false, false, true),
-            9646 => new TripwireBlock(Identifier, true, false, true, false, false, false, false),
-            9647 => new TripwireBlock(Identifier, true, false, false, true, true, true, true),
-            9648 => new TripwireBlock(Identifier, true, false, false, true, true, true, false),
-            9649 => new TripwireBlock(Identifier, true, false, false, true, true, false, true),
-            9650 => new TripwireBlock(Identifier, true, false, false, true, true, false, false),
-            9651 => new TripwireBlock(Identifier, true, false, false, true, false, true, true),
-            9652 => new TripwireBlock(Identifier, true, false, false, true, false, true, false),
-            9653 => new TripwireBlock(Identifier, true, false, false, true, false, false, true),
-            9654 => new TripwireBlock(Identifier, true, false, false, true, false, false, false),
-            9655 => new TripwireBlock(Identifier, true, false, false, false, true, true, true),
-            9656 => new TripwireBlock(Identifier, true, false, false, false, true, true, false),
-            9657 => new TripwireBlock(Identifier, true, false, false, false, true, false, true),
-            9658 => new TripwireBlock(Identifier, true, false, false, false, true, false, false),
-            9659 => new TripwireBlock(Identifier, true, false, false, false, false, true, true),
-            9660 => new TripwireBlock(Identifier, true, false, false, false, false, true, false),
-            9661 => new TripwireBlock(Identifier, true, false, false, false, false, false, true),
-            9662 => new TripwireBlock(Identifier, true, false, false, false, false, false, false),
-            9663 => new TripwireBlock(Identifier, false, true, true, true, true, true, true),
-            9664 => new TripwireBlock(Identifier, false, true, true, true, true, true, false),
-            9665 => new TripwireBlock(Identifier, false, true, true, true, true, false, true),
-            9666 => new TripwireBlock(Identifier, false, true, true, true, true, false, false),
-            9667 => new TripwireBlock(Identifier, false, true, true, true, false, true, true),
-            9668 => new TripwireBlock(Identifier, false, true, true, true, false, true, false),
-            9669 => new TripwireBlock(Identifier, false, true, true, true, false, false, true),
-            9670 => new TripwireBlock(Identifier, false, true, true, true, false, false, false),
-            9671 => new TripwireBlock(Identifier, false, true, true, false, true, true, true),
-            9672 => new TripwireBlock(Identifier, false, true, true, false, true, true, false),
-            9673 => new TripwireBlock(Identifier, false, true, true, false, true, false, true),
-            9674 => new TripwireBlock(Identifier, false, true, true, false, true, false, false),
-            9675 => new TripwireBlock(Identifier, false, true, true, false, false, true, true),
-            9676 => new TripwireBlock(Identifier, false, true, true, false, false, true, false),
-            9677 => new TripwireBlock(Identifier, false, true, true, false, false, false, true),
-            9678 => new TripwireBlock(Identifier, false, true, true, false, false, false, false),
-            9679 => new TripwireBlock(Identifier, false, true, false, true, true, true, true),
-            9680 => new TripwireBlock(Identifier, false, true, false, true, true, true, false),
-            9681 => new TripwireBlock(Identifier, false, true, false, true, true, false, true),
-            9682 => new TripwireBlock(Identifier, false, true, false, true, true, false, false),
-            9683 => new TripwireBlock(Identifier, false, true, false, true, false, true, true),
-            9684 => new TripwireBlock(Identifier, false, true, false, true, false, true, false),
-            9685 => new TripwireBlock(Identifier, false, true, false, true, false, false, true),
-            9686 => new TripwireBlock(Identifier, false, true, false, true, false, false, false),
-            9687 => new TripwireBlock(Identifier, false, true, false, false, true, true, true),
-            9688 => new TripwireBlock(Identifier, false, true, false, false, true, true, false),
-            9689 => new TripwireBlock(Identifier, false, true, false, false, true, false, true),
-            9690 => new TripwireBlock(Identifier, false, true, false, false, true, false, false),
-            9691 => new TripwireBlock(Identifier, false, true, false, false, false, true, true),
-            9692 => new TripwireBlock(Identifier, false, true, false, false, false, true, false),
-            9693 => new TripwireBlock(Identifier, false, true, false, false, false, false, true),
-            9694 => new TripwireBlock(Identifier, false, true, false, false, false, false, false),
-            9695 => new TripwireBlock(Identifier, false, false, true, true, true, true, true),
-            9696 => new TripwireBlock(Identifier, false, false, true, true, true, true, false),
-            9697 => new TripwireBlock(Identifier, false, false, true, true, true, false, true),
-            9698 => new TripwireBlock(Identifier, false, false, true, true, true, false, false),
-            9699 => new TripwireBlock(Identifier, false, false, true, true, false, true, true),
-            9700 => new TripwireBlock(Identifier, false, false, true, true, false, true, false),
-            9701 => new TripwireBlock(Identifier, false, false, true, true, false, false, true),
-            9702 => new TripwireBlock(Identifier, false, false, true, true, false, false, false),
-            9703 => new TripwireBlock(Identifier, false, false, true, false, true, true, true),
-            9704 => new TripwireBlock(Identifier, false, false, true, false, true, true, false),
-            9705 => new TripwireBlock(Identifier, false, false, true, false, true, false, true),
-            9706 => new TripwireBlock(Identifier, false, false, true, false, true, false, false),
-            9707 => new TripwireBlock(Identifier, false, false, true, false, false, true, true),
-            9708 => new TripwireBlock(Identifier, false, false, true, false, false, true, false),
-            9709 => new TripwireBlock(Identifier, false, false, true, false, false, false, true),
-            9710 => new TripwireBlock(Identifier, false, false, true, false, false, false, false),
-            9711 => new TripwireBlock(Identifier, false, false, false, true, true, true, true),
-            9712 => new TripwireBlock(Identifier, false, false, false, true, true, true, false),
-            9713 => new TripwireBlock(Identifier, false, false, false, true, true, false, true),
-            9714 => new TripwireBlock(Identifier, false, false, false, true, true, false, false),
-            9715 => new TripwireBlock(Identifier, false, false, false, true, false, true, true),
-            9716 => new TripwireBlock(Identifier, false, false, false, true, false, true, false),
-            9717 => new TripwireBlock(Identifier, false, false, false, true, false, false, true),
-            9718 => new TripwireBlock(Identifier, false, false, false, true, false, false, false),
-            9719 => new TripwireBlock(Identifier, false, false, false, false, true, true, true),
-            9720 => new TripwireBlock(Identifier, false, false, false, false, true, true, false),
-            9721 => new TripwireBlock(Identifier, false, false, false, false, true, false, true),
-            9722 => new TripwireBlock(Identifier, false, false, false, false, true, false, false),
-            9723 => new TripwireBlock(Identifier, false, false, false, false, false, true, true),
-            9724 => new TripwireBlock(Identifier, false, false, false, false, false, true, false),
-            9725 => new TripwireBlock(Identifier, false, false, false, false, false, false, true),
-            9726 => new TripwireBlock(Identifier, false, false, false, false, false, false, false),
+            11341 => new TripwireBlock(Identifier, true, true, true, true, true, true, true),
+            11342 => new TripwireBlock(Identifier, true, true, true, true, true, true, false),
+            11343 => new TripwireBlock(Identifier, true, true, true, true, true, false, true),
+            11344 => new TripwireBlock(Identifier, true, true, true, true, true, false, false),
+            11345 => new TripwireBlock(Identifier, true, true, true, true, false, true, true),
+            11346 => new TripwireBlock(Identifier, true, true, true, true, false, true, false),
+            11347 => new TripwireBlock(Identifier, true, true, true, true, false, false, true),
+            11348 => new TripwireBlock(Identifier, true, true, true, true, false, false, false),
+            11349 => new TripwireBlock(Identifier, true, true, true, false, true, true, true),
+            11350 => new TripwireBlock(Identifier, true, true, true, false, true, true, false),
+            11351 => new TripwireBlock(Identifier, true, true, true, false, true, false, true),
+            11352 => new TripwireBlock(Identifier, true, true, true, false, true, false, false),
+            11353 => new TripwireBlock(Identifier, true, true, true, false, false, true, true),
+            11354 => new TripwireBlock(Identifier, true, true, true, false, false, true, false),
+            11355 => new TripwireBlock(Identifier, true, true, true, false, false, false, true),
+            11356 => new TripwireBlock(Identifier, true, true, true, false, false, false, false),
+            11357 => new TripwireBlock(Identifier, true, true, false, true, true, true, true),
+            11358 => new TripwireBlock(Identifier, true, true, false, true, true, true, false),
+            11359 => new TripwireBlock(Identifier, true, true, false, true, true, false, true),
+            11360 => new TripwireBlock(Identifier, true, true, false, true, true, false, false),
+            11361 => new TripwireBlock(Identifier, true, true, false, true, false, true, true),
+            11362 => new TripwireBlock(Identifier, true, true, false, true, false, true, false),
+            11363 => new TripwireBlock(Identifier, true, true, false, true, false, false, true),
+            11364 => new TripwireBlock(Identifier, true, true, false, true, false, false, false),
+            11365 => new TripwireBlock(Identifier, true, true, false, false, true, true, true),
+            11366 => new TripwireBlock(Identifier, true, true, false, false, true, true, false),
+            11367 => new TripwireBlock(Identifier, true, true, false, false, true, false, true),
+            11368 => new TripwireBlock(Identifier, true, true, false, false, true, false, false),
+            11369 => new TripwireBlock(Identifier, true, true, false, false, false, true, true),
+            11370 => new TripwireBlock(Identifier, true, true, false, false, false, true, false),
+            11371 => new TripwireBlock(Identifier, true, true, false, false, false, false, true),
+            11372 => new TripwireBlock(Identifier, true, true, false, false, false, false, false),
+            11373 => new TripwireBlock(Identifier, true, false, true, true, true, true, true),
+            11374 => new TripwireBlock(Identifier, true, false, true, true, true, true, false),
+            11375 => new TripwireBlock(Identifier, true, false, true, true, true, false, true),
+            11376 => new TripwireBlock(Identifier, true, false, true, true, true, false, false),
+            11377 => new TripwireBlock(Identifier, true, false, true, true, false, true, true),
+            11378 => new TripwireBlock(Identifier, true, false, true, true, false, true, false),
+            11379 => new TripwireBlock(Identifier, true, false, true, true, false, false, true),
+            11380 => new TripwireBlock(Identifier, true, false, true, true, false, false, false),
+            11381 => new TripwireBlock(Identifier, true, false, true, false, true, true, true),
+            11382 => new TripwireBlock(Identifier, true, false, true, false, true, true, false),
+            11383 => new TripwireBlock(Identifier, true, false, true, false, true, false, true),
+            11384 => new TripwireBlock(Identifier, true, false, true, false, true, false, false),
+            11385 => new TripwireBlock(Identifier, true, false, true, false, false, true, true),
+            11386 => new TripwireBlock(Identifier, true, false, true, false, false, true, false),
+            11387 => new TripwireBlock(Identifier, true, false, true, false, false, false, true),
+            11388 => new TripwireBlock(Identifier, true, false, true, false, false, false, false),
+            11389 => new TripwireBlock(Identifier, true, false, false, true, true, true, true),
+            11390 => new TripwireBlock(Identifier, true, false, false, true, true, true, false),
+            11391 => new TripwireBlock(Identifier, true, false, false, true, true, false, true),
+            11392 => new TripwireBlock(Identifier, true, false, false, true, true, false, false),
+            11393 => new TripwireBlock(Identifier, true, false, false, true, false, true, true),
+            11394 => new TripwireBlock(Identifier, true, false, false, true, false, true, false),
+            11395 => new TripwireBlock(Identifier, true, false, false, true, false, false, true),
+            11396 => new TripwireBlock(Identifier, true, false, false, true, false, false, false),
+            11397 => new TripwireBlock(Identifier, true, false, false, false, true, true, true),
+            11398 => new TripwireBlock(Identifier, true, false, false, false, true, true, false),
+            11399 => new TripwireBlock(Identifier, true, false, false, false, true, false, true),
+            11400 => new TripwireBlock(Identifier, true, false, false, false, true, false, false),
+            11401 => new TripwireBlock(Identifier, true, false, false, false, false, true, true),
+            11402 => new TripwireBlock(Identifier, true, false, false, false, false, true, false),
+            11403 => new TripwireBlock(Identifier, true, false, false, false, false, false, true),
+            11404 => new TripwireBlock(Identifier, true, false, false, false, false, false, false),
+            11405 => new TripwireBlock(Identifier, false, true, true, true, true, true, true),
+            11406 => new TripwireBlock(Identifier, false, true, true, true, true, true, false),
+            11407 => new TripwireBlock(Identifier, false, true, true, true, true, false, true),
+            11408 => new TripwireBlock(Identifier, false, true, true, true, true, false, false),
+            11409 => new TripwireBlock(Identifier, false, true, true, true, false, true, true),
+            11410 => new TripwireBlock(Identifier, false, true, true, true, false, true, false),
+            11411 => new TripwireBlock(Identifier, false, true, true, true, false, false, true),
+            11412 => new TripwireBlock(Identifier, false, true, true, true, false, false, false),
+            11413 => new TripwireBlock(Identifier, false, true, true, false, true, true, true),
+            11414 => new TripwireBlock(Identifier, false, true, true, false, true, true, false),
+            11415 => new TripwireBlock(Identifier, false, true, true, false, true, false, true),
+            11416 => new TripwireBlock(Identifier, false, true, true, false, true, false, false),
+            11417 => new TripwireBlock(Identifier, false, true, true, false, false, true, true),
+            11418 => new TripwireBlock(Identifier, false, true, true, false, false, true, false),
+            11419 => new TripwireBlock(Identifier, false, true, true, false, false, false, true),
+            11420 => new TripwireBlock(Identifier, false, true, true, false, false, false, false),
+            11421 => new TripwireBlock(Identifier, false, true, false, true, true, true, true),
+            11422 => new TripwireBlock(Identifier, false, true, false, true, true, true, false),
+            11423 => new TripwireBlock(Identifier, false, true, false, true, true, false, true),
+            11424 => new TripwireBlock(Identifier, false, true, false, true, true, false, false),
+            11425 => new TripwireBlock(Identifier, false, true, false, true, false, true, true),
+            11426 => new TripwireBlock(Identifier, false, true, false, true, false, true, false),
+            11427 => new TripwireBlock(Identifier, false, true, false, true, false, false, true),
+            11428 => new TripwireBlock(Identifier, false, true, false, true, false, false, false),
+            11429 => new TripwireBlock(Identifier, false, true, false, false, true, true, true),
+            11430 => new TripwireBlock(Identifier, false, true, false, false, true, true, false),
+            11431 => new TripwireBlock(Identifier, false, true, false, false, true, false, true),
+            11432 => new TripwireBlock(Identifier, false, true, false, false, true, false, false),
+            11433 => new TripwireBlock(Identifier, false, true, false, false, false, true, true),
+            11434 => new TripwireBlock(Identifier, false, true, false, false, false, true, false),
+            11435 => new TripwireBlock(Identifier, false, true, false, false, false, false, true),
+            11436 => new TripwireBlock(Identifier, false, true, false, false, false, false, false),
+            11437 => new TripwireBlock(Identifier, false, false, true, true, true, true, true),
+            11438 => new TripwireBlock(Identifier, false, false, true, true, true, true, false),
+            11439 => new TripwireBlock(Identifier, false, false, true, true, true, false, true),
+            11440 => new TripwireBlock(Identifier, false, false, true, true, true, false, false),
+            11441 => new TripwireBlock(Identifier, false, false, true, true, false, true, true),
+            11442 => new TripwireBlock(Identifier, false, false, true, true, false, true, false),
+            11443 => new TripwireBlock(Identifier, false, false, true, true, false, false, true),
+            11444 => new TripwireBlock(Identifier, false, false, true, true, false, false, false),
+            11445 => new TripwireBlock(Identifier, false, false, true, false, true, true, true),
+            11446 => new TripwireBlock(Identifier, false, false, true, false, true, true, false),
+            11447 => new TripwireBlock(Identifier, false, false, true, false, true, false, true),
+            11448 => new TripwireBlock(Identifier, false, false, true, false, true, false, false),
+            11449 => new TripwireBlock(Identifier, false, false, true, false, false, true, true),
+            11450 => new TripwireBlock(Identifier, false, false, true, false, false, true, false),
+            11451 => new TripwireBlock(Identifier, false, false, true, false, false, false, true),
+            11452 => new TripwireBlock(Identifier, false, false, true, false, false, false, false),
+            11453 => new TripwireBlock(Identifier, false, false, false, true, true, true, true),
+            11454 => new TripwireBlock(Identifier, false, false, false, true, true, true, false),
+            11455 => new TripwireBlock(Identifier, false, false, false, true, true, false, true),
+            11456 => new TripwireBlock(Identifier, false, false, false, true, true, false, false),
+            11457 => new TripwireBlock(Identifier, false, false, false, true, false, true, true),
+            11458 => new TripwireBlock(Identifier, false, false, false, true, false, true, false),
+            11459 => new TripwireBlock(Identifier, false, false, false, true, false, false, true),
+            11460 => new TripwireBlock(Identifier, false, false, false, true, false, false, false),
+            11461 => new TripwireBlock(Identifier, false, false, false, false, true, true, true),
+            11462 => new TripwireBlock(Identifier, false, false, false, false, true, true, false),
+            11463 => new TripwireBlock(Identifier, false, false, false, false, true, false, true),
+            11464 => new TripwireBlock(Identifier, false, false, false, false, true, false, false),
+            11465 => new TripwireBlock(Identifier, false, false, false, false, false, true, true),
+            11466 => new TripwireBlock(Identifier, false, false, false, false, false, true, false),
+            11467 => new TripwireBlock(Identifier, false, false, false, false, false, false, true),
+            11468 => new TripwireBlock(Identifier, false, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

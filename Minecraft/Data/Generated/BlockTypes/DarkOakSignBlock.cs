@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DarkOakSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock, IRotated, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:standing_sign", "block.minecraft.dark_oak_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:dark_oak_sign", BlockInfo.VanillaOnly, "minecraft:blocks/dark_oak_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 26, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.dark_oak_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:dark_oak_sign", BlockInfo.VanillaOnly, "minecraft:blocks/dark_oak_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 26, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 5527];
+    public BlockStateInfo StateInfo => States[StateId - 7083];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record DarkOakSignBlock(Identifier Identifier, int Rotation, bool Waterlo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record DarkOakSignBlock(Identifier Identifier, int Rotation, bool Waterlo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -76,68 +76,68 @@ public record DarkOakSignBlock(Identifier Identifier, int Rotation, bool Waterlo
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 5527,
-                    false => 5528,
+                    true => 7083,
+                    false => 7084,
                 },
                 1 => Waterlogged switch {
-                    true => 5529,
-                    false => 5530,
+                    true => 7085,
+                    false => 7086,
                 },
                 2 => Waterlogged switch {
-                    true => 5531,
-                    false => 5532,
+                    true => 7087,
+                    false => 7088,
                 },
                 3 => Waterlogged switch {
-                    true => 5533,
-                    false => 5534,
+                    true => 7089,
+                    false => 7090,
                 },
                 4 => Waterlogged switch {
-                    true => 5535,
-                    false => 5536,
+                    true => 7091,
+                    false => 7092,
                 },
                 5 => Waterlogged switch {
-                    true => 5537,
-                    false => 5538,
+                    true => 7093,
+                    false => 7094,
                 },
                 6 => Waterlogged switch {
-                    true => 5539,
-                    false => 5540,
+                    true => 7095,
+                    false => 7096,
                 },
                 7 => Waterlogged switch {
-                    true => 5541,
-                    false => 5542,
+                    true => 7097,
+                    false => 7098,
                 },
                 8 => Waterlogged switch {
-                    true => 5543,
-                    false => 5544,
+                    true => 7099,
+                    false => 7100,
                 },
                 9 => Waterlogged switch {
-                    true => 5545,
-                    false => 5546,
+                    true => 7101,
+                    false => 7102,
                 },
                 10 => Waterlogged switch {
-                    true => 5547,
-                    false => 5548,
+                    true => 7103,
+                    false => 7104,
                 },
                 11 => Waterlogged switch {
-                    true => 5549,
-                    false => 5550,
+                    true => 7105,
+                    false => 7106,
                 },
                 12 => Waterlogged switch {
-                    true => 5551,
-                    false => 5552,
+                    true => 7107,
+                    false => 7108,
                 },
                 13 => Waterlogged switch {
-                    true => 5553,
-                    false => 5554,
+                    true => 7109,
+                    false => 7110,
                 },
                 14 => Waterlogged switch {
-                    true => 5555,
-                    false => 5556,
+                    true => 7111,
+                    false => 7112,
                 },
                 15 => Waterlogged switch {
-                    true => 5557,
-                    false => 5558,
+                    true => 7113,
+                    false => 7114,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -146,38 +146,38 @@ public record DarkOakSignBlock(Identifier Identifier, int Rotation, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            5527 => new DarkOakSignBlock(Identifier, 0, true),
-            5528 => new DarkOakSignBlock(Identifier, 0, false),
-            5529 => new DarkOakSignBlock(Identifier, 1, true),
-            5530 => new DarkOakSignBlock(Identifier, 1, false),
-            5531 => new DarkOakSignBlock(Identifier, 2, true),
-            5532 => new DarkOakSignBlock(Identifier, 2, false),
-            5533 => new DarkOakSignBlock(Identifier, 3, true),
-            5534 => new DarkOakSignBlock(Identifier, 3, false),
-            5535 => new DarkOakSignBlock(Identifier, 4, true),
-            5536 => new DarkOakSignBlock(Identifier, 4, false),
-            5537 => new DarkOakSignBlock(Identifier, 5, true),
-            5538 => new DarkOakSignBlock(Identifier, 5, false),
-            5539 => new DarkOakSignBlock(Identifier, 6, true),
-            5540 => new DarkOakSignBlock(Identifier, 6, false),
-            5541 => new DarkOakSignBlock(Identifier, 7, true),
-            5542 => new DarkOakSignBlock(Identifier, 7, false),
-            5543 => new DarkOakSignBlock(Identifier, 8, true),
-            5544 => new DarkOakSignBlock(Identifier, 8, false),
-            5545 => new DarkOakSignBlock(Identifier, 9, true),
-            5546 => new DarkOakSignBlock(Identifier, 9, false),
-            5547 => new DarkOakSignBlock(Identifier, 10, true),
-            5548 => new DarkOakSignBlock(Identifier, 10, false),
-            5549 => new DarkOakSignBlock(Identifier, 11, true),
-            5550 => new DarkOakSignBlock(Identifier, 11, false),
-            5551 => new DarkOakSignBlock(Identifier, 12, true),
-            5552 => new DarkOakSignBlock(Identifier, 12, false),
-            5553 => new DarkOakSignBlock(Identifier, 13, true),
-            5554 => new DarkOakSignBlock(Identifier, 13, false),
-            5555 => new DarkOakSignBlock(Identifier, 14, true),
-            5556 => new DarkOakSignBlock(Identifier, 14, false),
-            5557 => new DarkOakSignBlock(Identifier, 15, true),
-            5558 => new DarkOakSignBlock(Identifier, 15, false),
+            7083 => new DarkOakSignBlock(Identifier, 0, true),
+            7084 => new DarkOakSignBlock(Identifier, 0, false),
+            7085 => new DarkOakSignBlock(Identifier, 1, true),
+            7086 => new DarkOakSignBlock(Identifier, 1, false),
+            7087 => new DarkOakSignBlock(Identifier, 2, true),
+            7088 => new DarkOakSignBlock(Identifier, 2, false),
+            7089 => new DarkOakSignBlock(Identifier, 3, true),
+            7090 => new DarkOakSignBlock(Identifier, 3, false),
+            7091 => new DarkOakSignBlock(Identifier, 4, true),
+            7092 => new DarkOakSignBlock(Identifier, 4, false),
+            7093 => new DarkOakSignBlock(Identifier, 5, true),
+            7094 => new DarkOakSignBlock(Identifier, 5, false),
+            7095 => new DarkOakSignBlock(Identifier, 6, true),
+            7096 => new DarkOakSignBlock(Identifier, 6, false),
+            7097 => new DarkOakSignBlock(Identifier, 7, true),
+            7098 => new DarkOakSignBlock(Identifier, 7, false),
+            7099 => new DarkOakSignBlock(Identifier, 8, true),
+            7100 => new DarkOakSignBlock(Identifier, 8, false),
+            7101 => new DarkOakSignBlock(Identifier, 9, true),
+            7102 => new DarkOakSignBlock(Identifier, 9, false),
+            7103 => new DarkOakSignBlock(Identifier, 10, true),
+            7104 => new DarkOakSignBlock(Identifier, 10, false),
+            7105 => new DarkOakSignBlock(Identifier, 11, true),
+            7106 => new DarkOakSignBlock(Identifier, 11, false),
+            7107 => new DarkOakSignBlock(Identifier, 12, true),
+            7108 => new DarkOakSignBlock(Identifier, 12, false),
+            7109 => new DarkOakSignBlock(Identifier, 13, true),
+            7110 => new DarkOakSignBlock(Identifier, 13, false),
+            7111 => new DarkOakSignBlock(Identifier, 14, true),
+            7112 => new DarkOakSignBlock(Identifier, 14, false),
+            7113 => new DarkOakSignBlock(Identifier, 15, true),
+            7114 => new DarkOakSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

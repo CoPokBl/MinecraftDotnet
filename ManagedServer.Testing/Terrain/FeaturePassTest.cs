@@ -188,6 +188,36 @@ public class FeaturePassTest {
             "A feature type was skipped without being on the not-transcribed list.");
     }
 
+    /// <summary>
+    /// Every feature, placed feature and block state provider the pack registers parses, whether or
+    /// not a biome asks for it.
+    /// </summary>
+    /// <remarks>
+    /// The biome tables only reach what a biome names, which leaves out everything a structure, a
+    /// bone meal action or another feature's nested reference reaches, and those fail at the moment
+    /// they are first placed rather than at load.
+    /// </remarks>
+    [Test]
+    public void EveryFeatureInThePackParses() {
+        VanillaFeatureData data = VanillaFeatureData.Load(VanillaPack.Source);
+
+        foreach (Identifier id in data.BlockStateProviders) {
+            Assert.DoesNotThrow(() => data.Provider(id), $"block state provider {id}");
+        }
+
+        foreach (Identifier id in data.Features) {
+            Assert.DoesNotThrow(() => data.Feature(id), $"feature {id}");
+        }
+
+        foreach (Identifier id in data.PlacedFeatures) {
+            Assert.DoesNotThrow(() => data.Placed(id), $"placed feature {id}");
+        }
+
+        List<string> unnamed = data.Skipped.Keys
+            .Where(type => !FeatureParser.NotTranscribed.ContainsKey(type) && !type.Contains(' ')).ToList();
+        Assert.That(unnamed, Is.Empty, "A feature type was skipped without being on the not-transcribed list.");
+    }
+
     /// <summary>How many blocks of each kind a set of chunks came out holding.</summary>
     private static Dictionary<Identifier, int> Generate(VanillaTerrainGenerator generator,
         IReadOnlyList<Vec2<int>> chunks) {

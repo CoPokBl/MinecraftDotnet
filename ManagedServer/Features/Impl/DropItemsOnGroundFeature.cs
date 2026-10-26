@@ -1,5 +1,7 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
+using Minecraft.Schemas;
+using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Features.Impl;
 
@@ -12,7 +14,12 @@ public class DropItemsOnGroundFeature : ScopedFeature {
             }
 
             Player player = e.Player;
-            
+
+            // LivingEntity.drop swings the main hand for every drop. Every drop that reaches this event
+            // is one the client predicted (a thrown stack, a click outside the window, a crafting grid
+            // emptied on close), which is PREDICTED upstream, so the dropper's own client is not sent it.
+            player.Swing(Hand.MainHand, SwingAnimation.Default, sendToSelf: false);
+
             ItemEntity itemEntity = e.World.DropItem(
                 player.Position.WithY(player.Position.Y + player.EyeHeight - 0.3), e.Item);
             itemEntity.Thrower = player;

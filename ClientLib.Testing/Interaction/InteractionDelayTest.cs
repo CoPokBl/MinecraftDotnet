@@ -88,6 +88,35 @@ public class InteractionDelayTest {
         }
     }
 
+    /// <summary>
+    /// <c>continueDestroyBlock</c> tells the server when the face being dug changes, and not as digging starts,
+    /// which names its face itself. Dug from a hole beside it, then from on top, the block turns from east to up.
+    /// </summary>
+    [Test]
+    public void TestTurningToAnotherFaceWhileDiggingIsSent() {
+        Rig rig = DirtColumn();
+        rig.Client.Level!.SetState(1, Floor - 1, 0, 0);
+        rig.Player.Position = new Vec3d(1.5, Floor - 1, 0.5);
+        rig.Player.YRot = rig.Player.YRotO = 90.0F;
+        rig.Player.XRot = rig.Player.XRotO = 60.0F;
+        rig.Sent.Clear();
+        rig.Keys.Attack.Press();
+        rig.Tick(3);
+        Assert.That(rig.Sent.Select(s => s.Packet).OfType<ServerBoundPlayerActionPacket>()
+            .Single(action => action.ActionStatus == ServerBoundPlayerActionPacket.Status.StartedDigging).Face, Is.EqualTo(BlockFace.PosX));
+        Assert.That(rig.TicksOf(ServerBoundPlayerActionPacket.Status.ChangeDestroyDirection), Is.Empty);
+
+        rig.Player.Position = new Vec3d(0.5, Floor, 0.5);
+        rig.Player.XRot = rig.Player.XRotO = 90.0F;
+        rig.Tick(3);
+        List<ServerBoundPlayerActionPacket> changes = rig.Sent.Select(s => s.Packet).OfType<ServerBoundPlayerActionPacket>()
+            .Where(action => action.ActionStatus == ServerBoundPlayerActionPacket.Status.ChangeDestroyDirection).ToList();
+        Assert.That(changes, Has.Count.EqualTo(1));
+        Assert.That(changes[0].Face, Is.EqualTo(BlockFace.PosY));
+        Assert.That(changes[0].Location, Is.EqualTo(new Minecraft.Schemas.Vec.Vec3<int>(0, Floor - 1, 0)));
+        Assert.That(rig.TicksOf(ServerBoundPlayerActionPacket.Status.StartedDigging), Has.Count.EqualTo(1));
+    }
+
     [Test]
     public void TestAFreshClickStartsTheNextBlockAtOnceAsVanillasDoes() {
         Rig rig = DirtColumn();
@@ -139,7 +168,7 @@ public class InteractionDelayTest {
         rig.Keys.Attack.Press();
         rig.Tick();
         int swung = rig.Ticks;
-        Assert.That(rig.TicksOf<ServerBoundSwingArmPacket>(), Is.EqualTo(new[] { swung }));
+        Assert.That(rig.TicksOf<ServerBoundPunchPacket>(), Is.EqualTo(new[] { swung }));
 
         rig.Player.XRot = rig.Player.XRotO = 90.0F;
         rig.Tick(15);
@@ -160,9 +189,9 @@ public class InteractionDelayTest {
         List<MinecraftPacket> sent = rig.Sent.Select(s => s.Packet).ToList();
         int swap = sent.FindIndex(p => p is ServerBoundPlayerActionPacket { ActionStatus: ServerBoundPlayerActionPacket.Status.SwapItem });
         int drop = sent.FindIndex(p => p is ServerBoundPlayerActionPacket { ActionStatus: ServerBoundPlayerActionPacket.Status.DropItem });
-        int swing = sent.FindIndex(p => p is ServerBoundSwingArmPacket);
         int move = sent.FindIndex(p => p is ServerBoundSetPlayerPositionPacket or ServerBoundSetPlayerPosAndRotPacket);
-        Assert.That(new[] { swap, drop, swing, move }, Is.Ordered.And.All.GreaterThanOrEqualTo(0));
+        Assert.That(new[] { swap, drop, move }, Is.Ordered.And.All.GreaterThanOrEqualTo(0));
+        Assert.That(rig.Player.IsSwinging, Is.True);
         Assert.That(rig.Client.Inventory.MainHand.Count, Is.EqualTo(1));
     }
 
@@ -173,6 +202,6 @@ public class InteractionDelayTest {
         rig.Keys.Drop.Press();
         rig.Tick();
         Assert.That(rig.TicksOf(ServerBoundPlayerActionPacket.Status.DropItem), Has.Count.EqualTo(1));
-        Assert.That(rig.TicksOf<ServerBoundSwingArmPacket>(), Is.Empty);
+        Assert.That(rig.Player.IsSwinging, Is.False);
     }
 }

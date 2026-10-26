@@ -18,7 +18,8 @@ namespace GraphicalClient.Assets.ResourcePacks;
 public sealed class VanillaAssets : PackFiles.IPack {
     /// <summary>The asset indexes this build knows, by version, which is all the protocol needs.</summary>
     private static readonly IReadOnlyDictionary<string, string> IndexUrls = new Dictionary<string, string> {
-        ["26.2"] = "https://piston-meta.mojang.com/v1/packages/72b2ca7f98a3af7c84ac7c47a3292faea80280c5/32.json"
+        ["26.2"] = "https://piston-meta.mojang.com/v1/packages/72b2ca7f98a3af7c84ac7c47a3292faea80280c5/32.json",
+        ["26.3"] = "https://piston-meta.mojang.com/v1/packages/0c8f43b28f837869c1e54a6aeb22c396a1548946/34.json"
     };
 
     private const string ObjectUrl = "https://resources.download.minecraft.net/";

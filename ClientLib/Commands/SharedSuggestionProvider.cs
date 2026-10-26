@@ -25,6 +25,9 @@ public interface ISharedSuggestionProvider {
 
     IEnumerable<Identifier> AvailableSounds { get; }
 
+    /// <summary><c>getAvailablePostEffects</c>: the post chains the client could run.</summary>
+    IEnumerable<Identifier> AvailablePostEffects => [];
+
     Task<Suggestions> CustomSuggestion<TSource>(CommandContext<TSource> context);
 
     IReadOnlyCollection<SharedSuggestionProvider.TextCoordinates> RelevantCoordinates => [SharedSuggestionProvider.TextCoordinates.DefaultGlobal];

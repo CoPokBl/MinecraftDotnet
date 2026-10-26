@@ -366,15 +366,9 @@ public class Mob : LivingEntity {
     /// <summary>The last thing this mob hit, <c>LivingEntity.lastHurtMob</c>.</summary>
     public LivingEntity? LastHurtMob { get; set; }
 
-    /// <summary>
-    /// Plays the arm swing, <c>LivingEntity.swing</c>. It is cosmetic and viewer only, so nothing is
-    /// gated on it; a hit with no swing simply looks like the mob did not move.
-    /// </summary>
-    public void Swing() {
-        SendToSelfAndViewers(new ClientBoundEntityAnimationPacket {
-            EntityId = NetId,
-            Animation = ClientBoundEntityAnimationPacket.AnimationType.SwingMainArm
-        });
+    /// <summary><c>Mob.swingForAttack</c>: the swing of the held item's attack animation.</summary>
+    public void SwingForAttack(Hand hand) {
+        Swing(hand, GetItemInHand(hand).Get(DataComponent.AttackAnimation), false);
     }
 
     #endregion

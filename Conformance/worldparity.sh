@@ -17,7 +17,7 @@
 # something this script can do on your behalf, hence MCDOTNET_ACCEPT_EULA.
 set -euo pipefail
 
-version="${1:-26.2}"
+version="${1:-26.3}"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 jars="$repo/CodeGen/bin/Debug/net10.0"
 work="${TMPDIR:-/tmp}/mcdotnet-conformance/worldparity"
@@ -29,7 +29,7 @@ port="${MCDOTNET_SERVER_PORT:-25599}"
 
 # name:chunkX:chunkZ:size, the bottom left chunk of each scene and how many chunks square it is. Chosen
 # for what is over and under them rather than at random: two villages, an ocean whose floor is an
-# aquifer, and four biomes whose surface rules and vegetation differ.
+# aquifer, and four biomes whose material rules and vegetation differ.
 scenes=(
     "jungle:-1:-1:3"
     "desert:55:-7:3"

@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, WallSide North, WallSide South, bool Up, bool Waterlogged, WallSide West) : IBlock, IWaterlogged, IFaceConnected, IWallConnected {
-    private static readonly BlockInfo Data = new("minecraft:wall", "block.minecraft.polished_sulfur_wall", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:polished_sulfur_wall", BlockInfo.VanillaOnly, "minecraft:blocks/polished_sulfur_wall");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 18, "sulfur", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S87, BlockShapes.S132, BlockShapes.S1, BlockShapes.S87, BlockShapes.S132, BlockShapes.S132);
+    private static readonly BlockInfo Data = new("block.minecraft.polished_sulfur_wall", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:polished_sulfur_wall", BlockInfo.VanillaOnly, "minecraft:blocks/polished_sulfur_wall");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 18, "sulfur", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S87, BlockShapes.S132, BlockShapes.S1, BlockShapes.S87, BlockShapes.S132, BlockShapes.S132);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S133, CollisionShape = BlockShapes.S134, OcclusionShape = BlockShapes.S133, VisualShape = BlockShapes.S134, SupportShape = BlockShapes.S134 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S135, CollisionShape = BlockShapes.S134, OcclusionShape = BlockShapes.S135, VisualShape = BlockShapes.S134, SupportShape = BlockShapes.S134 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null };
@@ -340,15 +340,15 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I42, I43, I44, I45, I46, I47, I48, I49, I50, I51, I52, I53, I54, I55, I56, I57, I58, I59, I60, I61, I62, I63, I64, I65, I66, I67, I68, I69, I70, I71, I72, I73, I74, I75, I76, I77, I78, I79, I80, I81, I82, I83, I84, I85, I86, I87, I88, I89, I90, I91, I92, I93, I94, I95, I96, I97, I98, I99, I100, I101, I102, I103, I104, I105, I106, I107, I108, I109, I110, I111, I112, I113, I114, I115, I116, I117, I118, I119, I120, I121, I122, I123, I124, I125, I126, I127, I128, I129, I130, I131, I132, I133, I134, I135, I136, I137, I138, I139, I140, I141, I142, I143, I144, I145, I146, I147, I148, I149, I150, I151, I152, I153, I154, I155, I156, I157, I158, I159, I160, I161, I162, I163, I164, I165, I166, I167, I168, I169, I170, I171, I172, I173, I174, I175, I176, I177, I178, I179, I180, I181, I182, I183, I184, I185, I186, I187, I188, I189, I190, I191, I192, I193, I194, I195, I196, I197, I198, I199, I200, I201, I202, I203, I204, I205, I206, I207, I208, I209, I210, I211, I212, I213, I214, I215, I216, I217, I218, I219, I220, I221, I222, I223, I224, I225, I226, I227, I228, I229, I230, I231, I232, I233, I234, I235, I236, I237, I238, I239, I240, I241, I242, I243, I244, I245, I246, I247, I248, I249, I250, I251, I252, I253, I254, I255, I256, I257, I258, I259, I260, I261, I262, I263, I264, I265, I266, I267, I268, I269, I270, I271, I272, I273, I274, I275, I276, I277, I278, I279, I280, I281, I282, I283, I284, I285, I286, I287, I288, I289, I290, I291, I292, I293, I294, I295, I296, I297, I298, I299, I300, I301, I302, I303, I304, I305, I306, I307, I308, I309, I310, I311, I312, I313, I314, I315, I316, I317, I318, I319, I320, I321, I322, I323
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 25190];
+    public BlockStateInfo StateInfo => States[StateId - 28547];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -362,7 +362,6 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -382,6 +381,7 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -428,29 +428,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25190,
-                                    WallSide.Low => 25191,
-                                    WallSide.Tall => 25192,
+                                    WallSide.None => 28547,
+                                    WallSide.Low => 28548,
+                                    WallSide.Tall => 28549,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25193,
-                                    WallSide.Low => 25194,
-                                    WallSide.Tall => 25195,
+                                    WallSide.None => 28550,
+                                    WallSide.Low => 28551,
+                                    WallSide.Tall => 28552,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25196,
-                                    WallSide.Low => 25197,
-                                    WallSide.Tall => 25198,
+                                    WallSide.None => 28553,
+                                    WallSide.Low => 28554,
+                                    WallSide.Tall => 28555,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25199,
-                                    WallSide.Low => 25200,
-                                    WallSide.Tall => 25201,
+                                    WallSide.None => 28556,
+                                    WallSide.Low => 28557,
+                                    WallSide.Tall => 28558,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -458,29 +458,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25202,
-                                    WallSide.Low => 25203,
-                                    WallSide.Tall => 25204,
+                                    WallSide.None => 28559,
+                                    WallSide.Low => 28560,
+                                    WallSide.Tall => 28561,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25205,
-                                    WallSide.Low => 25206,
-                                    WallSide.Tall => 25207,
+                                    WallSide.None => 28562,
+                                    WallSide.Low => 28563,
+                                    WallSide.Tall => 28564,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25208,
-                                    WallSide.Low => 25209,
-                                    WallSide.Tall => 25210,
+                                    WallSide.None => 28565,
+                                    WallSide.Low => 28566,
+                                    WallSide.Tall => 28567,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25211,
-                                    WallSide.Low => 25212,
-                                    WallSide.Tall => 25213,
+                                    WallSide.None => 28568,
+                                    WallSide.Low => 28569,
+                                    WallSide.Tall => 28570,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -488,29 +488,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25214,
-                                    WallSide.Low => 25215,
-                                    WallSide.Tall => 25216,
+                                    WallSide.None => 28571,
+                                    WallSide.Low => 28572,
+                                    WallSide.Tall => 28573,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25217,
-                                    WallSide.Low => 25218,
-                                    WallSide.Tall => 25219,
+                                    WallSide.None => 28574,
+                                    WallSide.Low => 28575,
+                                    WallSide.Tall => 28576,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25220,
-                                    WallSide.Low => 25221,
-                                    WallSide.Tall => 25222,
+                                    WallSide.None => 28577,
+                                    WallSide.Low => 28578,
+                                    WallSide.Tall => 28579,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25223,
-                                    WallSide.Low => 25224,
-                                    WallSide.Tall => 25225,
+                                    WallSide.None => 28580,
+                                    WallSide.Low => 28581,
+                                    WallSide.Tall => 28582,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -521,29 +521,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25226,
-                                    WallSide.Low => 25227,
-                                    WallSide.Tall => 25228,
+                                    WallSide.None => 28583,
+                                    WallSide.Low => 28584,
+                                    WallSide.Tall => 28585,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25229,
-                                    WallSide.Low => 25230,
-                                    WallSide.Tall => 25231,
+                                    WallSide.None => 28586,
+                                    WallSide.Low => 28587,
+                                    WallSide.Tall => 28588,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25232,
-                                    WallSide.Low => 25233,
-                                    WallSide.Tall => 25234,
+                                    WallSide.None => 28589,
+                                    WallSide.Low => 28590,
+                                    WallSide.Tall => 28591,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25235,
-                                    WallSide.Low => 25236,
-                                    WallSide.Tall => 25237,
+                                    WallSide.None => 28592,
+                                    WallSide.Low => 28593,
+                                    WallSide.Tall => 28594,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -551,29 +551,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25238,
-                                    WallSide.Low => 25239,
-                                    WallSide.Tall => 25240,
+                                    WallSide.None => 28595,
+                                    WallSide.Low => 28596,
+                                    WallSide.Tall => 28597,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25241,
-                                    WallSide.Low => 25242,
-                                    WallSide.Tall => 25243,
+                                    WallSide.None => 28598,
+                                    WallSide.Low => 28599,
+                                    WallSide.Tall => 28600,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25244,
-                                    WallSide.Low => 25245,
-                                    WallSide.Tall => 25246,
+                                    WallSide.None => 28601,
+                                    WallSide.Low => 28602,
+                                    WallSide.Tall => 28603,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25247,
-                                    WallSide.Low => 25248,
-                                    WallSide.Tall => 25249,
+                                    WallSide.None => 28604,
+                                    WallSide.Low => 28605,
+                                    WallSide.Tall => 28606,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -581,29 +581,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25250,
-                                    WallSide.Low => 25251,
-                                    WallSide.Tall => 25252,
+                                    WallSide.None => 28607,
+                                    WallSide.Low => 28608,
+                                    WallSide.Tall => 28609,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25253,
-                                    WallSide.Low => 25254,
-                                    WallSide.Tall => 25255,
+                                    WallSide.None => 28610,
+                                    WallSide.Low => 28611,
+                                    WallSide.Tall => 28612,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25256,
-                                    WallSide.Low => 25257,
-                                    WallSide.Tall => 25258,
+                                    WallSide.None => 28613,
+                                    WallSide.Low => 28614,
+                                    WallSide.Tall => 28615,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25259,
-                                    WallSide.Low => 25260,
-                                    WallSide.Tall => 25261,
+                                    WallSide.None => 28616,
+                                    WallSide.Low => 28617,
+                                    WallSide.Tall => 28618,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -614,29 +614,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25262,
-                                    WallSide.Low => 25263,
-                                    WallSide.Tall => 25264,
+                                    WallSide.None => 28619,
+                                    WallSide.Low => 28620,
+                                    WallSide.Tall => 28621,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25265,
-                                    WallSide.Low => 25266,
-                                    WallSide.Tall => 25267,
+                                    WallSide.None => 28622,
+                                    WallSide.Low => 28623,
+                                    WallSide.Tall => 28624,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25268,
-                                    WallSide.Low => 25269,
-                                    WallSide.Tall => 25270,
+                                    WallSide.None => 28625,
+                                    WallSide.Low => 28626,
+                                    WallSide.Tall => 28627,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25271,
-                                    WallSide.Low => 25272,
-                                    WallSide.Tall => 25273,
+                                    WallSide.None => 28628,
+                                    WallSide.Low => 28629,
+                                    WallSide.Tall => 28630,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -644,29 +644,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25274,
-                                    WallSide.Low => 25275,
-                                    WallSide.Tall => 25276,
+                                    WallSide.None => 28631,
+                                    WallSide.Low => 28632,
+                                    WallSide.Tall => 28633,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25277,
-                                    WallSide.Low => 25278,
-                                    WallSide.Tall => 25279,
+                                    WallSide.None => 28634,
+                                    WallSide.Low => 28635,
+                                    WallSide.Tall => 28636,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25280,
-                                    WallSide.Low => 25281,
-                                    WallSide.Tall => 25282,
+                                    WallSide.None => 28637,
+                                    WallSide.Low => 28638,
+                                    WallSide.Tall => 28639,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25283,
-                                    WallSide.Low => 25284,
-                                    WallSide.Tall => 25285,
+                                    WallSide.None => 28640,
+                                    WallSide.Low => 28641,
+                                    WallSide.Tall => 28642,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -674,29 +674,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25286,
-                                    WallSide.Low => 25287,
-                                    WallSide.Tall => 25288,
+                                    WallSide.None => 28643,
+                                    WallSide.Low => 28644,
+                                    WallSide.Tall => 28645,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25289,
-                                    WallSide.Low => 25290,
-                                    WallSide.Tall => 25291,
+                                    WallSide.None => 28646,
+                                    WallSide.Low => 28647,
+                                    WallSide.Tall => 28648,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25292,
-                                    WallSide.Low => 25293,
-                                    WallSide.Tall => 25294,
+                                    WallSide.None => 28649,
+                                    WallSide.Low => 28650,
+                                    WallSide.Tall => 28651,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25295,
-                                    WallSide.Low => 25296,
-                                    WallSide.Tall => 25297,
+                                    WallSide.None => 28652,
+                                    WallSide.Low => 28653,
+                                    WallSide.Tall => 28654,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -710,29 +710,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25298,
-                                    WallSide.Low => 25299,
-                                    WallSide.Tall => 25300,
+                                    WallSide.None => 28655,
+                                    WallSide.Low => 28656,
+                                    WallSide.Tall => 28657,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25301,
-                                    WallSide.Low => 25302,
-                                    WallSide.Tall => 25303,
+                                    WallSide.None => 28658,
+                                    WallSide.Low => 28659,
+                                    WallSide.Tall => 28660,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25304,
-                                    WallSide.Low => 25305,
-                                    WallSide.Tall => 25306,
+                                    WallSide.None => 28661,
+                                    WallSide.Low => 28662,
+                                    WallSide.Tall => 28663,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25307,
-                                    WallSide.Low => 25308,
-                                    WallSide.Tall => 25309,
+                                    WallSide.None => 28664,
+                                    WallSide.Low => 28665,
+                                    WallSide.Tall => 28666,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -740,29 +740,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25310,
-                                    WallSide.Low => 25311,
-                                    WallSide.Tall => 25312,
+                                    WallSide.None => 28667,
+                                    WallSide.Low => 28668,
+                                    WallSide.Tall => 28669,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25313,
-                                    WallSide.Low => 25314,
-                                    WallSide.Tall => 25315,
+                                    WallSide.None => 28670,
+                                    WallSide.Low => 28671,
+                                    WallSide.Tall => 28672,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25316,
-                                    WallSide.Low => 25317,
-                                    WallSide.Tall => 25318,
+                                    WallSide.None => 28673,
+                                    WallSide.Low => 28674,
+                                    WallSide.Tall => 28675,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25319,
-                                    WallSide.Low => 25320,
-                                    WallSide.Tall => 25321,
+                                    WallSide.None => 28676,
+                                    WallSide.Low => 28677,
+                                    WallSide.Tall => 28678,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -770,29 +770,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25322,
-                                    WallSide.Low => 25323,
-                                    WallSide.Tall => 25324,
+                                    WallSide.None => 28679,
+                                    WallSide.Low => 28680,
+                                    WallSide.Tall => 28681,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25325,
-                                    WallSide.Low => 25326,
-                                    WallSide.Tall => 25327,
+                                    WallSide.None => 28682,
+                                    WallSide.Low => 28683,
+                                    WallSide.Tall => 28684,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25328,
-                                    WallSide.Low => 25329,
-                                    WallSide.Tall => 25330,
+                                    WallSide.None => 28685,
+                                    WallSide.Low => 28686,
+                                    WallSide.Tall => 28687,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25331,
-                                    WallSide.Low => 25332,
-                                    WallSide.Tall => 25333,
+                                    WallSide.None => 28688,
+                                    WallSide.Low => 28689,
+                                    WallSide.Tall => 28690,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -803,29 +803,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25334,
-                                    WallSide.Low => 25335,
-                                    WallSide.Tall => 25336,
+                                    WallSide.None => 28691,
+                                    WallSide.Low => 28692,
+                                    WallSide.Tall => 28693,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25337,
-                                    WallSide.Low => 25338,
-                                    WallSide.Tall => 25339,
+                                    WallSide.None => 28694,
+                                    WallSide.Low => 28695,
+                                    WallSide.Tall => 28696,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25340,
-                                    WallSide.Low => 25341,
-                                    WallSide.Tall => 25342,
+                                    WallSide.None => 28697,
+                                    WallSide.Low => 28698,
+                                    WallSide.Tall => 28699,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25343,
-                                    WallSide.Low => 25344,
-                                    WallSide.Tall => 25345,
+                                    WallSide.None => 28700,
+                                    WallSide.Low => 28701,
+                                    WallSide.Tall => 28702,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -833,29 +833,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25346,
-                                    WallSide.Low => 25347,
-                                    WallSide.Tall => 25348,
+                                    WallSide.None => 28703,
+                                    WallSide.Low => 28704,
+                                    WallSide.Tall => 28705,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25349,
-                                    WallSide.Low => 25350,
-                                    WallSide.Tall => 25351,
+                                    WallSide.None => 28706,
+                                    WallSide.Low => 28707,
+                                    WallSide.Tall => 28708,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25352,
-                                    WallSide.Low => 25353,
-                                    WallSide.Tall => 25354,
+                                    WallSide.None => 28709,
+                                    WallSide.Low => 28710,
+                                    WallSide.Tall => 28711,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25355,
-                                    WallSide.Low => 25356,
-                                    WallSide.Tall => 25357,
+                                    WallSide.None => 28712,
+                                    WallSide.Low => 28713,
+                                    WallSide.Tall => 28714,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -863,29 +863,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25358,
-                                    WallSide.Low => 25359,
-                                    WallSide.Tall => 25360,
+                                    WallSide.None => 28715,
+                                    WallSide.Low => 28716,
+                                    WallSide.Tall => 28717,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25361,
-                                    WallSide.Low => 25362,
-                                    WallSide.Tall => 25363,
+                                    WallSide.None => 28718,
+                                    WallSide.Low => 28719,
+                                    WallSide.Tall => 28720,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25364,
-                                    WallSide.Low => 25365,
-                                    WallSide.Tall => 25366,
+                                    WallSide.None => 28721,
+                                    WallSide.Low => 28722,
+                                    WallSide.Tall => 28723,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25367,
-                                    WallSide.Low => 25368,
-                                    WallSide.Tall => 25369,
+                                    WallSide.None => 28724,
+                                    WallSide.Low => 28725,
+                                    WallSide.Tall => 28726,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -896,29 +896,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25370,
-                                    WallSide.Low => 25371,
-                                    WallSide.Tall => 25372,
+                                    WallSide.None => 28727,
+                                    WallSide.Low => 28728,
+                                    WallSide.Tall => 28729,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25373,
-                                    WallSide.Low => 25374,
-                                    WallSide.Tall => 25375,
+                                    WallSide.None => 28730,
+                                    WallSide.Low => 28731,
+                                    WallSide.Tall => 28732,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25376,
-                                    WallSide.Low => 25377,
-                                    WallSide.Tall => 25378,
+                                    WallSide.None => 28733,
+                                    WallSide.Low => 28734,
+                                    WallSide.Tall => 28735,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25379,
-                                    WallSide.Low => 25380,
-                                    WallSide.Tall => 25381,
+                                    WallSide.None => 28736,
+                                    WallSide.Low => 28737,
+                                    WallSide.Tall => 28738,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -926,29 +926,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25382,
-                                    WallSide.Low => 25383,
-                                    WallSide.Tall => 25384,
+                                    WallSide.None => 28739,
+                                    WallSide.Low => 28740,
+                                    WallSide.Tall => 28741,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25385,
-                                    WallSide.Low => 25386,
-                                    WallSide.Tall => 25387,
+                                    WallSide.None => 28742,
+                                    WallSide.Low => 28743,
+                                    WallSide.Tall => 28744,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25388,
-                                    WallSide.Low => 25389,
-                                    WallSide.Tall => 25390,
+                                    WallSide.None => 28745,
+                                    WallSide.Low => 28746,
+                                    WallSide.Tall => 28747,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25391,
-                                    WallSide.Low => 25392,
-                                    WallSide.Tall => 25393,
+                                    WallSide.None => 28748,
+                                    WallSide.Low => 28749,
+                                    WallSide.Tall => 28750,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -956,29 +956,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25394,
-                                    WallSide.Low => 25395,
-                                    WallSide.Tall => 25396,
+                                    WallSide.None => 28751,
+                                    WallSide.Low => 28752,
+                                    WallSide.Tall => 28753,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25397,
-                                    WallSide.Low => 25398,
-                                    WallSide.Tall => 25399,
+                                    WallSide.None => 28754,
+                                    WallSide.Low => 28755,
+                                    WallSide.Tall => 28756,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25400,
-                                    WallSide.Low => 25401,
-                                    WallSide.Tall => 25402,
+                                    WallSide.None => 28757,
+                                    WallSide.Low => 28758,
+                                    WallSide.Tall => 28759,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25403,
-                                    WallSide.Low => 25404,
-                                    WallSide.Tall => 25405,
+                                    WallSide.None => 28760,
+                                    WallSide.Low => 28761,
+                                    WallSide.Tall => 28762,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -992,29 +992,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25406,
-                                    WallSide.Low => 25407,
-                                    WallSide.Tall => 25408,
+                                    WallSide.None => 28763,
+                                    WallSide.Low => 28764,
+                                    WallSide.Tall => 28765,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25409,
-                                    WallSide.Low => 25410,
-                                    WallSide.Tall => 25411,
+                                    WallSide.None => 28766,
+                                    WallSide.Low => 28767,
+                                    WallSide.Tall => 28768,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25412,
-                                    WallSide.Low => 25413,
-                                    WallSide.Tall => 25414,
+                                    WallSide.None => 28769,
+                                    WallSide.Low => 28770,
+                                    WallSide.Tall => 28771,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25415,
-                                    WallSide.Low => 25416,
-                                    WallSide.Tall => 25417,
+                                    WallSide.None => 28772,
+                                    WallSide.Low => 28773,
+                                    WallSide.Tall => 28774,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1022,29 +1022,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25418,
-                                    WallSide.Low => 25419,
-                                    WallSide.Tall => 25420,
+                                    WallSide.None => 28775,
+                                    WallSide.Low => 28776,
+                                    WallSide.Tall => 28777,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25421,
-                                    WallSide.Low => 25422,
-                                    WallSide.Tall => 25423,
+                                    WallSide.None => 28778,
+                                    WallSide.Low => 28779,
+                                    WallSide.Tall => 28780,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25424,
-                                    WallSide.Low => 25425,
-                                    WallSide.Tall => 25426,
+                                    WallSide.None => 28781,
+                                    WallSide.Low => 28782,
+                                    WallSide.Tall => 28783,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25427,
-                                    WallSide.Low => 25428,
-                                    WallSide.Tall => 25429,
+                                    WallSide.None => 28784,
+                                    WallSide.Low => 28785,
+                                    WallSide.Tall => 28786,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1052,29 +1052,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25430,
-                                    WallSide.Low => 25431,
-                                    WallSide.Tall => 25432,
+                                    WallSide.None => 28787,
+                                    WallSide.Low => 28788,
+                                    WallSide.Tall => 28789,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25433,
-                                    WallSide.Low => 25434,
-                                    WallSide.Tall => 25435,
+                                    WallSide.None => 28790,
+                                    WallSide.Low => 28791,
+                                    WallSide.Tall => 28792,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25436,
-                                    WallSide.Low => 25437,
-                                    WallSide.Tall => 25438,
+                                    WallSide.None => 28793,
+                                    WallSide.Low => 28794,
+                                    WallSide.Tall => 28795,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25439,
-                                    WallSide.Low => 25440,
-                                    WallSide.Tall => 25441,
+                                    WallSide.None => 28796,
+                                    WallSide.Low => 28797,
+                                    WallSide.Tall => 28798,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1085,29 +1085,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25442,
-                                    WallSide.Low => 25443,
-                                    WallSide.Tall => 25444,
+                                    WallSide.None => 28799,
+                                    WallSide.Low => 28800,
+                                    WallSide.Tall => 28801,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25445,
-                                    WallSide.Low => 25446,
-                                    WallSide.Tall => 25447,
+                                    WallSide.None => 28802,
+                                    WallSide.Low => 28803,
+                                    WallSide.Tall => 28804,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25448,
-                                    WallSide.Low => 25449,
-                                    WallSide.Tall => 25450,
+                                    WallSide.None => 28805,
+                                    WallSide.Low => 28806,
+                                    WallSide.Tall => 28807,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25451,
-                                    WallSide.Low => 25452,
-                                    WallSide.Tall => 25453,
+                                    WallSide.None => 28808,
+                                    WallSide.Low => 28809,
+                                    WallSide.Tall => 28810,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1115,29 +1115,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25454,
-                                    WallSide.Low => 25455,
-                                    WallSide.Tall => 25456,
+                                    WallSide.None => 28811,
+                                    WallSide.Low => 28812,
+                                    WallSide.Tall => 28813,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25457,
-                                    WallSide.Low => 25458,
-                                    WallSide.Tall => 25459,
+                                    WallSide.None => 28814,
+                                    WallSide.Low => 28815,
+                                    WallSide.Tall => 28816,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25460,
-                                    WallSide.Low => 25461,
-                                    WallSide.Tall => 25462,
+                                    WallSide.None => 28817,
+                                    WallSide.Low => 28818,
+                                    WallSide.Tall => 28819,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25463,
-                                    WallSide.Low => 25464,
-                                    WallSide.Tall => 25465,
+                                    WallSide.None => 28820,
+                                    WallSide.Low => 28821,
+                                    WallSide.Tall => 28822,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1145,29 +1145,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25466,
-                                    WallSide.Low => 25467,
-                                    WallSide.Tall => 25468,
+                                    WallSide.None => 28823,
+                                    WallSide.Low => 28824,
+                                    WallSide.Tall => 28825,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25469,
-                                    WallSide.Low => 25470,
-                                    WallSide.Tall => 25471,
+                                    WallSide.None => 28826,
+                                    WallSide.Low => 28827,
+                                    WallSide.Tall => 28828,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25472,
-                                    WallSide.Low => 25473,
-                                    WallSide.Tall => 25474,
+                                    WallSide.None => 28829,
+                                    WallSide.Low => 28830,
+                                    WallSide.Tall => 28831,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25475,
-                                    WallSide.Low => 25476,
-                                    WallSide.Tall => 25477,
+                                    WallSide.None => 28832,
+                                    WallSide.Low => 28833,
+                                    WallSide.Tall => 28834,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1178,29 +1178,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.None => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25478,
-                                    WallSide.Low => 25479,
-                                    WallSide.Tall => 25480,
+                                    WallSide.None => 28835,
+                                    WallSide.Low => 28836,
+                                    WallSide.Tall => 28837,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25481,
-                                    WallSide.Low => 25482,
-                                    WallSide.Tall => 25483,
+                                    WallSide.None => 28838,
+                                    WallSide.Low => 28839,
+                                    WallSide.Tall => 28840,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25484,
-                                    WallSide.Low => 25485,
-                                    WallSide.Tall => 25486,
+                                    WallSide.None => 28841,
+                                    WallSide.Low => 28842,
+                                    WallSide.Tall => 28843,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25487,
-                                    WallSide.Low => 25488,
-                                    WallSide.Tall => 25489,
+                                    WallSide.None => 28844,
+                                    WallSide.Low => 28845,
+                                    WallSide.Tall => 28846,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1208,29 +1208,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Low => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25490,
-                                    WallSide.Low => 25491,
-                                    WallSide.Tall => 25492,
+                                    WallSide.None => 28847,
+                                    WallSide.Low => 28848,
+                                    WallSide.Tall => 28849,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25493,
-                                    WallSide.Low => 25494,
-                                    WallSide.Tall => 25495,
+                                    WallSide.None => 28850,
+                                    WallSide.Low => 28851,
+                                    WallSide.Tall => 28852,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25496,
-                                    WallSide.Low => 25497,
-                                    WallSide.Tall => 25498,
+                                    WallSide.None => 28853,
+                                    WallSide.Low => 28854,
+                                    WallSide.Tall => 28855,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25499,
-                                    WallSide.Low => 25500,
-                                    WallSide.Tall => 25501,
+                                    WallSide.None => 28856,
+                                    WallSide.Low => 28857,
+                                    WallSide.Tall => 28858,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1238,29 +1238,29 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
                         WallSide.Tall => Up switch {
                             true => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25502,
-                                    WallSide.Low => 25503,
-                                    WallSide.Tall => 25504,
+                                    WallSide.None => 28859,
+                                    WallSide.Low => 28860,
+                                    WallSide.Tall => 28861,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25505,
-                                    WallSide.Low => 25506,
-                                    WallSide.Tall => 25507,
+                                    WallSide.None => 28862,
+                                    WallSide.Low => 28863,
+                                    WallSide.Tall => 28864,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
                             false => Waterlogged switch {
                                 true => West switch {
-                                    WallSide.None => 25508,
-                                    WallSide.Low => 25509,
-                                    WallSide.Tall => 25510,
+                                    WallSide.None => 28865,
+                                    WallSide.Low => 28866,
+                                    WallSide.Tall => 28867,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                                 false => West switch {
-                                    WallSide.None => 25511,
-                                    WallSide.Low => 25512,
-                                    WallSide.Tall => 25513,
+                                    WallSide.None => 28868,
+                                    WallSide.Low => 28869,
+                                    WallSide.Tall => 28870,
                                     _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                                 },
                             },
@@ -1276,330 +1276,330 @@ public record PolishedSulfurWallBlock(Identifier Identifier, WallSide East, Wall
     
     public IBlock WithState(uint state) {
         return state switch {
-            25190 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.None),
-            25191 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.Low),
-            25192 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.Tall),
-            25193 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.None),
-            25194 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.Low),
-            25195 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.Tall),
-            25196 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.None),
-            25197 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.Low),
-            25198 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.Tall),
-            25199 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.None),
-            25200 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.Low),
-            25201 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.Tall),
-            25202 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.None),
-            25203 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.Low),
-            25204 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
-            25205 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.None),
-            25206 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.Low),
-            25207 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
-            25208 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.None),
-            25209 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.Low),
-            25210 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
-            25211 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.None),
-            25212 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.Low),
-            25213 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
-            25214 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.None),
-            25215 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
-            25216 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
-            25217 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.None),
-            25218 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
-            25219 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
-            25220 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.None),
-            25221 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
-            25222 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
-            25223 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.None),
-            25224 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
-            25225 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
-            25226 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.None),
-            25227 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.Low),
-            25228 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
-            25229 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.None),
-            25230 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.Low),
-            25231 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
-            25232 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.None),
-            25233 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.Low),
-            25234 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
-            25235 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.None),
-            25236 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.Low),
-            25237 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
-            25238 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.None),
-            25239 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
-            25240 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
-            25241 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.None),
-            25242 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
-            25243 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
-            25244 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.None),
-            25245 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
-            25246 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
-            25247 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.None),
-            25248 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
-            25249 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
-            25250 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
-            25251 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
-            25252 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
-            25253 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
-            25254 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
-            25255 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
-            25256 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
-            25257 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
-            25258 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
-            25259 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
-            25260 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
-            25261 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
-            25262 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.None),
-            25263 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
-            25264 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
-            25265 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.None),
-            25266 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
-            25267 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
-            25268 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.None),
-            25269 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
-            25270 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
-            25271 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.None),
-            25272 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
-            25273 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
-            25274 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
-            25275 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
-            25276 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
-            25277 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
-            25278 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
-            25279 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
-            25280 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
-            25281 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
-            25282 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
-            25283 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
-            25284 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
-            25285 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
-            25286 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
-            25287 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
-            25288 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
-            25289 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
-            25290 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
-            25291 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
-            25292 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
-            25293 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
-            25294 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
-            25295 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
-            25296 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
-            25297 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
-            25298 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.None),
-            25299 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.Low),
-            25300 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.Tall),
-            25301 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.None),
-            25302 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.Low),
-            25303 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.Tall),
-            25304 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.None),
-            25305 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.Low),
-            25306 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.Tall),
-            25307 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.None),
-            25308 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.Low),
-            25309 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.Tall),
-            25310 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.None),
-            25311 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.Low),
-            25312 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
-            25313 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.None),
-            25314 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.Low),
-            25315 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
-            25316 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.None),
-            25317 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.Low),
-            25318 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
-            25319 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.None),
-            25320 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.Low),
-            25321 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
-            25322 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.None),
-            25323 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
-            25324 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
-            25325 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.None),
-            25326 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
-            25327 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
-            25328 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.None),
-            25329 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
-            25330 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
-            25331 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.None),
-            25332 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
-            25333 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
-            25334 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.None),
-            25335 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.Low),
-            25336 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
-            25337 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.None),
-            25338 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.Low),
-            25339 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
-            25340 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.None),
-            25341 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.Low),
-            25342 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
-            25343 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.None),
-            25344 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.Low),
-            25345 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
-            25346 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.None),
-            25347 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
-            25348 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
-            25349 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.None),
-            25350 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
-            25351 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
-            25352 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.None),
-            25353 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
-            25354 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
-            25355 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.None),
-            25356 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
-            25357 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
-            25358 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
-            25359 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
-            25360 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
-            25361 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
-            25362 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
-            25363 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
-            25364 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
-            25365 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
-            25366 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
-            25367 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
-            25368 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
-            25369 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
-            25370 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.None),
-            25371 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
-            25372 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
-            25373 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.None),
-            25374 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
-            25375 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
-            25376 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.None),
-            25377 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
-            25378 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
-            25379 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.None),
-            25380 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
-            25381 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
-            25382 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
-            25383 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
-            25384 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
-            25385 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
-            25386 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
-            25387 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
-            25388 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
-            25389 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
-            25390 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
-            25391 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
-            25392 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
-            25393 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
-            25394 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
-            25395 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
-            25396 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
-            25397 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
-            25398 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
-            25399 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
-            25400 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
-            25401 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
-            25402 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
-            25403 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
-            25404 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
-            25405 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
-            25406 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.None),
-            25407 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.Low),
-            25408 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.Tall),
-            25409 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.None),
-            25410 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.Low),
-            25411 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.Tall),
-            25412 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.None),
-            25413 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.Low),
-            25414 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.Tall),
-            25415 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.None),
-            25416 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.Low),
-            25417 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.Tall),
-            25418 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.None),
-            25419 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.Low),
-            25420 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
-            25421 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.None),
-            25422 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.Low),
-            25423 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
-            25424 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.None),
-            25425 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.Low),
-            25426 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
-            25427 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.None),
-            25428 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.Low),
-            25429 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
-            25430 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.None),
-            25431 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
-            25432 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
-            25433 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.None),
-            25434 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
-            25435 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
-            25436 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.None),
-            25437 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
-            25438 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
-            25439 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.None),
-            25440 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
-            25441 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
-            25442 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.None),
-            25443 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.Low),
-            25444 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
-            25445 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.None),
-            25446 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.Low),
-            25447 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
-            25448 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.None),
-            25449 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.Low),
-            25450 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
-            25451 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.None),
-            25452 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.Low),
-            25453 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
-            25454 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.None),
-            25455 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
-            25456 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
-            25457 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.None),
-            25458 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
-            25459 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
-            25460 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.None),
-            25461 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
-            25462 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
-            25463 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.None),
-            25464 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
-            25465 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
-            25466 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
-            25467 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
-            25468 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
-            25469 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
-            25470 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
-            25471 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
-            25472 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
-            25473 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
-            25474 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
-            25475 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
-            25476 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
-            25477 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
-            25478 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.None),
-            25479 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
-            25480 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
-            25481 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.None),
-            25482 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
-            25483 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
-            25484 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.None),
-            25485 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
-            25486 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
-            25487 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.None),
-            25488 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
-            25489 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
-            25490 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
-            25491 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
-            25492 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
-            25493 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
-            25494 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
-            25495 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
-            25496 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
-            25497 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
-            25498 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
-            25499 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
-            25500 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
-            25501 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
-            25502 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
-            25503 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
-            25504 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
-            25505 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
-            25506 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
-            25507 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
-            25508 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
-            25509 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
-            25510 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
-            25511 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
-            25512 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
-            25513 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
+            28547 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.None),
+            28548 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.Low),
+            28549 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, true, WallSide.Tall),
+            28550 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.None),
+            28551 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.Low),
+            28552 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, true, false, WallSide.Tall),
+            28553 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.None),
+            28554 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.Low),
+            28555 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, true, WallSide.Tall),
+            28556 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.None),
+            28557 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.Low),
+            28558 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.None, false, false, WallSide.Tall),
+            28559 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.None),
+            28560 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.Low),
+            28561 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
+            28562 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.None),
+            28563 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.Low),
+            28564 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
+            28565 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.None),
+            28566 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.Low),
+            28567 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
+            28568 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.None),
+            28569 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.Low),
+            28570 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
+            28571 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.None),
+            28572 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
+            28573 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
+            28574 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.None),
+            28575 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
+            28576 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
+            28577 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.None),
+            28578 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
+            28579 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
+            28580 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.None),
+            28581 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
+            28582 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
+            28583 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.None),
+            28584 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.Low),
+            28585 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
+            28586 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.None),
+            28587 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.Low),
+            28588 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
+            28589 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.None),
+            28590 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.Low),
+            28591 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
+            28592 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.None),
+            28593 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.Low),
+            28594 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
+            28595 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.None),
+            28596 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
+            28597 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
+            28598 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.None),
+            28599 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
+            28600 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
+            28601 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.None),
+            28602 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
+            28603 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
+            28604 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.None),
+            28605 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
+            28606 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
+            28607 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
+            28608 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
+            28609 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
+            28610 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
+            28611 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
+            28612 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
+            28613 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
+            28614 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
+            28615 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
+            28616 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
+            28617 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
+            28618 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
+            28619 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.None),
+            28620 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
+            28621 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
+            28622 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.None),
+            28623 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
+            28624 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
+            28625 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.None),
+            28626 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
+            28627 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
+            28628 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.None),
+            28629 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
+            28630 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
+            28631 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
+            28632 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
+            28633 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
+            28634 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
+            28635 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
+            28636 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
+            28637 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
+            28638 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
+            28639 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
+            28640 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
+            28641 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
+            28642 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
+            28643 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
+            28644 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
+            28645 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
+            28646 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
+            28647 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
+            28648 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
+            28649 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
+            28650 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
+            28651 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
+            28652 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
+            28653 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
+            28654 => new PolishedSulfurWallBlock(Identifier, WallSide.None, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
+            28655 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.None),
+            28656 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.Low),
+            28657 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, true, WallSide.Tall),
+            28658 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.None),
+            28659 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.Low),
+            28660 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, true, false, WallSide.Tall),
+            28661 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.None),
+            28662 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.Low),
+            28663 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, true, WallSide.Tall),
+            28664 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.None),
+            28665 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.Low),
+            28666 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.None, false, false, WallSide.Tall),
+            28667 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.None),
+            28668 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.Low),
+            28669 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
+            28670 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.None),
+            28671 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.Low),
+            28672 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
+            28673 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.None),
+            28674 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.Low),
+            28675 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
+            28676 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.None),
+            28677 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.Low),
+            28678 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
+            28679 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.None),
+            28680 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
+            28681 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
+            28682 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.None),
+            28683 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
+            28684 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
+            28685 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.None),
+            28686 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
+            28687 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
+            28688 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.None),
+            28689 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
+            28690 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
+            28691 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.None),
+            28692 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.Low),
+            28693 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
+            28694 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.None),
+            28695 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.Low),
+            28696 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
+            28697 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.None),
+            28698 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.Low),
+            28699 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
+            28700 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.None),
+            28701 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.Low),
+            28702 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
+            28703 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.None),
+            28704 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
+            28705 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
+            28706 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.None),
+            28707 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
+            28708 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
+            28709 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.None),
+            28710 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
+            28711 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
+            28712 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.None),
+            28713 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
+            28714 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
+            28715 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
+            28716 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
+            28717 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
+            28718 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
+            28719 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
+            28720 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
+            28721 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
+            28722 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
+            28723 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
+            28724 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
+            28725 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
+            28726 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
+            28727 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.None),
+            28728 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
+            28729 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
+            28730 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.None),
+            28731 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
+            28732 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
+            28733 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.None),
+            28734 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
+            28735 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
+            28736 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.None),
+            28737 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
+            28738 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
+            28739 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
+            28740 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
+            28741 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
+            28742 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
+            28743 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
+            28744 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
+            28745 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
+            28746 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
+            28747 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
+            28748 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
+            28749 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
+            28750 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
+            28751 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
+            28752 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
+            28753 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
+            28754 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
+            28755 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
+            28756 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
+            28757 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
+            28758 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
+            28759 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
+            28760 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
+            28761 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
+            28762 => new PolishedSulfurWallBlock(Identifier, WallSide.Low, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
+            28763 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.None),
+            28764 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.Low),
+            28765 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, true, WallSide.Tall),
+            28766 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.None),
+            28767 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.Low),
+            28768 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, true, false, WallSide.Tall),
+            28769 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.None),
+            28770 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.Low),
+            28771 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, true, WallSide.Tall),
+            28772 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.None),
+            28773 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.Low),
+            28774 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.None, false, false, WallSide.Tall),
+            28775 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.None),
+            28776 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.Low),
+            28777 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, true, WallSide.Tall),
+            28778 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.None),
+            28779 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.Low),
+            28780 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, true, false, WallSide.Tall),
+            28781 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.None),
+            28782 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.Low),
+            28783 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, true, WallSide.Tall),
+            28784 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.None),
+            28785 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.Low),
+            28786 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Low, false, false, WallSide.Tall),
+            28787 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.None),
+            28788 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.Low),
+            28789 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, true, WallSide.Tall),
+            28790 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.None),
+            28791 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.Low),
+            28792 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, true, false, WallSide.Tall),
+            28793 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.None),
+            28794 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.Low),
+            28795 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, true, WallSide.Tall),
+            28796 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.None),
+            28797 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.Low),
+            28798 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.None, WallSide.Tall, false, false, WallSide.Tall),
+            28799 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.None),
+            28800 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.Low),
+            28801 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, true, WallSide.Tall),
+            28802 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.None),
+            28803 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.Low),
+            28804 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, true, false, WallSide.Tall),
+            28805 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.None),
+            28806 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.Low),
+            28807 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, true, WallSide.Tall),
+            28808 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.None),
+            28809 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.Low),
+            28810 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.None, false, false, WallSide.Tall),
+            28811 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.None),
+            28812 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.Low),
+            28813 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, true, WallSide.Tall),
+            28814 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.None),
+            28815 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.Low),
+            28816 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, true, false, WallSide.Tall),
+            28817 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.None),
+            28818 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.Low),
+            28819 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, true, WallSide.Tall),
+            28820 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.None),
+            28821 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.Low),
+            28822 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Low, false, false, WallSide.Tall),
+            28823 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.None),
+            28824 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.Low),
+            28825 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, true, WallSide.Tall),
+            28826 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.None),
+            28827 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.Low),
+            28828 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, true, false, WallSide.Tall),
+            28829 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.None),
+            28830 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.Low),
+            28831 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, true, WallSide.Tall),
+            28832 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.None),
+            28833 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.Low),
+            28834 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Low, WallSide.Tall, false, false, WallSide.Tall),
+            28835 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.None),
+            28836 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.Low),
+            28837 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, true, WallSide.Tall),
+            28838 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.None),
+            28839 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.Low),
+            28840 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, true, false, WallSide.Tall),
+            28841 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.None),
+            28842 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.Low),
+            28843 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, true, WallSide.Tall),
+            28844 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.None),
+            28845 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.Low),
+            28846 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.None, false, false, WallSide.Tall),
+            28847 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.None),
+            28848 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.Low),
+            28849 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, true, WallSide.Tall),
+            28850 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.None),
+            28851 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.Low),
+            28852 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, true, false, WallSide.Tall),
+            28853 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.None),
+            28854 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.Low),
+            28855 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, true, WallSide.Tall),
+            28856 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.None),
+            28857 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.Low),
+            28858 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Low, false, false, WallSide.Tall),
+            28859 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.None),
+            28860 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.Low),
+            28861 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, true, WallSide.Tall),
+            28862 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.None),
+            28863 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.Low),
+            28864 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, true, false, WallSide.Tall),
+            28865 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.None),
+            28866 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.Low),
+            28867 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, true, WallSide.Tall),
+            28868 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.None),
+            28869 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.Low),
+            28870 => new PolishedSulfurWallBlock(Identifier, WallSide.Tall, WallSide.Tall, WallSide.Tall, false, false, WallSide.Tall),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

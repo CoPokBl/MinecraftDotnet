@@ -32,6 +32,9 @@ public class ClientBoundExplosionPacket : ClientBoundPacket {
     /// <summary>Particles thrown out from the destroyed blocks, picked at random by weight.</summary>
     public BlockParticle[] BlockParticles { get; init; } = [];
 
+    /// <summary>Whether the client plays the sound, which a silenced source turns off.</summary>
+    public bool PlaySound { get; init; } = true;
+
     protected override DataWriter WriteData(DataWriter w, MinecraftRegistry reg) {
         w.WriteVec3(Center)
             .WriteFloat(Radius)
@@ -52,7 +55,8 @@ public class ClientBoundExplosionPacket : ClientBoundPacket {
             .Write(pw => particle.Particle.WriteData(pw, reg))
             .WriteFloat(particle.Scaling)
             .WriteFloat(particle.Speed)
-            .WriteVarInt(particle.Weight));
+            .WriteVarInt(particle.Weight))
+            .WriteBoolean(PlaySound);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, reg) => {
@@ -77,7 +81,8 @@ public class ClientBoundExplosionPacket : ClientBoundPacket {
                 reg.Particles[reader.ReadVarInt()].ReadData(reader, reg),
                 reader.ReadFloat(),
                 reader.ReadFloat(),
-                reader.ReadVarInt()))
+                reader.ReadVarInt())),
+            PlaySound = r.ReadBoolean()
         };
     };
 

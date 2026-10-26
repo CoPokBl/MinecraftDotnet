@@ -43,9 +43,8 @@ namespace ManagedServer.Features.Impl;
 /// reached from <c>Player.blockUsingItem</c> and not from the <c>LivingEntity</c> one it overrides. A
 /// mob's shield therefore neither wears out nor can be knocked aside.
 /// <p/>
-/// What is left out is the knockback a blocked melee hit gives the blocker (<c>blockedByItem</c>).
-/// There is no <c>LivingEntity.knockback</c> port to build it on, and every other push here comes from
-/// whatever feature owns combat.
+/// A melee hit the item only partly stopped also pushes the blocker (<c>blockedByItem</c>); one it
+/// stopped whole does not.
 /// </summary>
 public class ShieldFeature : ScopedFeature, IDamageBlocker {
     /// <summary>
@@ -158,15 +157,31 @@ public class ShieldFeature : ScopedFeature, IDamageBlocker {
         // top of hurtServer for the same reason.
         entity.SetTag(BlockedWithTag, data);
 
-        // A shot arrow leaves nothing to disable; vanilla only reaches blockUsingItem for a melee hit
-        // from something alive, and only its Player override disables anything.
-        if (entity is Player player
-            && !source.IsIn(registry, DamageTypeTags.IsProjectile)
-            && source.Direct is LivingEntity) {
-            TryDisable(player, blockingWith, data, source);
+        // Vanilla only reaches blockUsingItem for a melee hit from something alive. The attacker's
+        // blockedByItem runs first, then the Player override's disable.
+        if (!source.IsIn(registry, DamageTypeTags.IsProjectile) && source.Direct is LivingEntity attacker) {
+            BlockedByItem(attacker, entity, blocked >= amount);
+
+            if (entity is Player player) {
+                TryDisable(player, blockingWith, data, source);
+            }
         }
 
         return blocked;
+    }
+
+    /// <summary>
+    /// <c>LivingEntity.blockedByItem</c>: a hit the item only partly stopped pushes the blocker, a hit
+    /// it stopped whole does not. The push is along the blocker minus the attacker, which
+    /// <c>knockback</c> subtracts, so it is towards the attacker; that is the vanilla arithmetic. The
+    /// overrides in <c>Hoglin</c>, <c>Zoglin</c> and <c>Ravager</c> are not ported, so those attackers
+    /// push the same way as any other.
+    /// </summary>
+    private static void BlockedByItem(LivingEntity attacker, LivingEntity defender, bool fullyBlocked) {
+        if (!fullyBlocked) {
+            defender.Knockback(0.5, defender.Position.X - attacker.Position.X,
+                defender.Position.Z - attacker.Position.Z);
+        }
     }
 
     /// <summary>

@@ -13,7 +13,7 @@ namespace ManagedServer.Testing.Terrain;
 /// <remarks>
 /// Deliberately weak on exact values, which is what <c>Conformance/terrain.sh</c> is for. What this
 /// catches is a whole stage silently doing nothing: an unbound noise reads as flat zero and a dropped
-/// surface rule leaves bare stone, and both of those produce a world that generates without error and
+/// material rule leaves bare stone, and both of those produce a world that generates without error and
 /// is obviously wrong to look at.
 /// </remarks>
 [TestFixture]
@@ -73,10 +73,10 @@ public class VanillaTerrainSmokeTest {
     }
 
     [Test]
-    public void TestSurfaceRulesRan() {
+    public void TestMaterialRulesRan() {
         VanillaTerrainGenerator generator = VanillaTerrainGenerator.Overworld(VanillaPack.Source, Seed);
 
-        // A wide enough sweep that at least one column lands on dry ground: the surface rules put
+        // A wide enough sweep that at least one column lands on dry ground: the material rules put
         // something other than stone on top of it. Bare stone everywhere means the rules were parsed
         // and then never applied.
         HashSet<uint> topBlocks = [];
@@ -103,7 +103,7 @@ public class VanillaTerrainSmokeTest {
 
         Assert.That(topBlocks, Is.Not.Empty);
         Assert.That(topBlocks, Does.Not.Contain(Block.Stone.StateId).Or.Count.GreaterThan(1),
-            "Every column tops out in plain stone, so no surface rule ever matched.");
+            "Every column tops out in plain stone, so no material rule ever matched.");
     }
 
     [Test]

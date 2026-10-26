@@ -17,13 +17,16 @@ block property gets noticed instead of silently missing.
 
 ### 2. Check for Changes
 - New packets
+- New synchronised registries. Each needs an entry in `CodeGen/Program.cs`, a sub-registry in
+`MinecraftRegistry` and a line in `SynchronisedRegistryVerification`, or the client is sent a registry
+set the vanilla client rejects.
 - Check code gen for warnings of missing types (data components, etc.)
 - Run `./Conformance/run.sh <version>` and fix everything it reports. Packets whose *fields*
 changed don't fail to compile and still round-trip through our own deserialiser, so this is
 what catches them: it decodes our packets with the vanilla codecs the client uses.
 - Regenerate the other fixtures too: `registries.sh`, `lighting.sh`, `clip.sh`, `fluid-wall.sh`,
 `pathtype.sh`, `placement.sh`, `heightmap.sh`, `terrain.sh`, `terrainstage.sh`, `blocktransform.sh`,
-`featureorder.sh`, `worldparity.sh` and `structurelayout.sh`, each with the same version. They are committed answers from the old jar, so until they are regenerated
+`featureorder.sh`, `crafting.sh`, `picking.sh`, `worldparity.sh` and `structurelayout.sh`, each with the same version. They are committed answers from the old jar, so until they are regenerated
 they pin last version's behaviour. `worldparity.sh` and `structurelayout.sh` run the dedicated server,
 so they want `MCDOTNET_ACCEPT_EULA=1`. World parity's baselines belong to the fixture rather than to
 the seed: re-record every number in `WorldParityConformanceTest.Baseline` from the run against the new

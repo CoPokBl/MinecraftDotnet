@@ -75,8 +75,8 @@ public sealed class ItemInHandRenderer {
     /// <summary><c>submitHandsWithItems</c>, through a pose that already takes view space to wherever the batch draws.</summary>
     public void SubmitHandsWithItems(float frameInterp, PoseStack pose, IModelSink sink, LocalPlayer player, MinecraftClient client,
         float skyLight, float blockLight) {
-        float attackValue = player.GetAttackAnim(frameInterp);
-        Hand attackHand = player.SwingingArm;
+        float attackValue = player.GetSwingAnimation(frameInterp);
+        Hand attackHand = player.CurrentSwing?.Hand ?? Hand.MainHand;
         float xRot = Mth.Lerp(frameInterp, player.XRotO, player.XRot);
         (bool renderMainHand, bool renderOffHand) = EvaluateWhichHandsToRender(player);
         // xBob and yBob are the camera rotation smoothed by LocalPlayer.aiStep; the arm lags the camera by
@@ -251,7 +251,7 @@ public sealed class ItemInHandRenderer {
         }
         else {
             ApplyItemArmTransform(pose, arm, inverseArmHeight);
-            switch (itemStack.Get(DataComponent.SwingAnimation).Type) {
+            switch (player.CurrentSwing is { } swing && swing.Hand == hand ? swing.Animation.Type : SwingAnimationType.None) {
                 case SwingAnimationType.Whack:
                     SwingArm(attack, pose, invert, arm);
                     break;

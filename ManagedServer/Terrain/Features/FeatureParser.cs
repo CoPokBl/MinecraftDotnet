@@ -30,7 +30,7 @@ public sealed class FeatureNotPortedException(string type)
 }
 
 /// <summary>
-/// The <c>ConfiguredFeature</c> codec, as a parser.
+/// The <c>Feature</c> codec, as a parser.
 /// </summary>
 /// <remarks>
 /// <b>An unknown type throws and a known but untranscribed one is skipped</b>, and the difference is
@@ -60,6 +60,7 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
         ["end_island"] = "the end is not generated",
         ["void_start_platform"] = "only reachable in the void world preset",
         ["chorus_plant"] = "the end is not generated",
+        ["end_podium"] = "the end is not generated",
     };
 
     /// <summary>
@@ -78,7 +79,7 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
 
     public ConfiguredFeature Parse(JsonElement element) {
         string type = ValueParser.TypeOf(element);
-        JsonElement config = element.TryGetProperty("config", out JsonElement c) ? c : default;
+        JsonElement config = element;
 
         if (NotTranscribed.ContainsKey(type)) {
             throw new FeatureNotPortedException(type);
@@ -87,9 +88,6 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
         switch (type) {
             case "no_op":
                 return NoOpFeature.Instance;
-
-            case "desert_well":
-                return DesertWellFeature.Instance;
 
             case "monster_room":
                 return MonsterRoomFeature.Instance;
@@ -103,7 +101,8 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
                     config.GetProperty("max_empty_corners_allowed").GetInt32());
 
             case "template":
-                return new TemplateFeature(templates, ParseTemplateEntries(config));
+                return new TemplateFeature(templates, ParseTemplateEntries(config),
+                    config.TryGetProperty("processors", out JsonElement processors) ? Processors(processors) : []);
 
             case "freeze_top_layer":
                 return SnowAndFreezeFeature.Instance;
@@ -155,9 +154,7 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
                     config.GetProperty("amount_per_charge").GetInt32(),
                     config.GetProperty("spread_attempts").GetInt32(),
                     config.GetProperty("spread_rounds").GetInt32(),
-                    config.GetProperty("growth_rounds").GetInt32(),
-                    config.GetProperty("catalyst_chance").GetSingle(),
-                    ValueParser.ParseInt(config.GetProperty("extra_rare_growths")));
+                    config.GetProperty("growth_rounds").GetInt32());
 
             case "scattered_ore":
                 return new ScatteredOreFeature(config.GetProperty("size").GetInt32(),
@@ -206,14 +203,8 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
                     blocks.ParseStateId(config.GetProperty("state")),
                     ValueParser.ParseInt(config.GetProperty("radius")));
 
-            case "glowstone_blob":
-                return GlowstoneFeature.Instance;
-
             case "blue_ice":
                 return BlueIceFeature.Instance;
-
-            case "basalt_pillar":
-                return BasaltPillarFeature.Instance;
 
             case "spike":
                 return new SpikeFeature(blocks.ParseStateId(config.GetProperty("state")),
@@ -319,10 +310,6 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
             case "iceberg":
                 return new IcebergFeature(blocks.ParseStateId(config.GetProperty("state")));
 
-            case "basalt_columns":
-                return new BasaltColumnsFeature(ValueParser.ParseInt(config.GetProperty("reach")),
-                    ValueParser.ParseInt(config.GetProperty("height")));
-
             case "delta_feature":
                 return new DeltaFeature(blocks.ParseStateId(config.GetProperty("contents")),
                     blocks.ParseStateId(config.GetProperty("rim")),
@@ -330,13 +317,52 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
                     ValueParser.ParseInt(config.GetProperty("rim_size")));
 
             case "coral_tree":
-                return CoralTreeFeature.Instance;
+                return new CoralTreeFeature(ParseNestedOrThrow(config.GetProperty("feature")));
 
             case "coral_claw":
-                return CoralClawFeature.Instance;
+                return new CoralClawFeature(ParseNestedOrThrow(config.GetProperty("feature")));
 
-            case "coral_mushroom":
-                return CoralMushroomFeature.Instance;
+            case "overlay":
+                return new OverlayFeature(ParseNestedList(config.GetProperty("features"), "overlay"));
+
+            case "single_block_pillar": {
+                BlockFace direction = BlockParser.ParseDirection(config.GetProperty("direction").GetString()!);
+                if (direction is not (BlockFace.PosY or BlockFace.NegY)) {
+                    throw new FormatException("A single_block_pillar's direction must be up or down.");
+                }
+
+                return new SingleBlockPillarFeature(blocks.ParseProvider(config.GetProperty("block")),
+                    config.TryGetProperty("can_replace", out JsonElement canReplace)
+                        ? blocks.ParsePredicate(canReplace)
+                        : BlockPredicate.True.Instance,
+                    direction,
+                    ValueParser.OptionalFloat(config, "chance_to_continue", 1.0f),
+                    config.TryGetProperty("cap_feature", out JsonElement cap) ? ParseNestedOrThrow(cap) : null);
+            }
+
+            case "projected_random_patchy_square":
+                return new ProjectedRandomPatchySquareFeature(blocks.ParseProvider(config.GetProperty("block")),
+                    blocks.ParsePredicate(config.GetProperty("project_through")),
+                    ValueParser.ParseInt(config.GetProperty("size")),
+                    config.GetProperty("max_projection_height").GetInt32());
+
+            case "random_neighbor_spread":
+                return new RandomNeighborSpreadFeature(blocks.ParseProvider(config.GetProperty("block")),
+                    blocks.ParseIdentifierSet(config.GetProperty("accepted_neighbors")),
+                    blocks.ParsePredicate(config.GetProperty("can_replace")),
+                    ValueParser.ParseInt(config.GetProperty("attempts")),
+                    ValueParser.ParseInt(config.GetProperty("xz_offset")),
+                    ValueParser.ParseInt(config.GetProperty("y_offset")));
+
+            case "stepped_column_cluster":
+                return new SteppedColumnClusterFeature(blocks.ParseProvider(config.GetProperty("block")),
+                    blocks.ParsePredicate(config.GetProperty("continue_through")),
+                    blocks.ParsePredicate(config.GetProperty("can_replace")),
+                    blocks.ParseIdentifierSet(config.GetProperty("cannot_place_on")),
+                    ValueParser.ParseInt(config.GetProperty("cluster_reach")),
+                    ValueParser.ParseInt(config.GetProperty("column_count")),
+                    ValueParser.ParseInt(config.GetProperty("column_reach")),
+                    ValueParser.ParseInt(config.GetProperty("height")));
 
             case "weighted_random_selector": {
                 List<(PlacedFeature, int)> weighted = [];
@@ -348,20 +374,6 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
 
                 return new WeightedRandomSelectorFeature(weighted);
             }
-
-            case "nether_forest_vegetation":
-                return new NetherForestVegetationFeature(
-                    blocks.ParseProvider(config.GetProperty("state_provider")),
-                    config.GetProperty("spread_width").GetInt32(),
-                    config.GetProperty("spread_height").GetInt32());
-
-            case "twisting_vines":
-                return new TwistingVinesFeature(config.GetProperty("spread_width").GetInt32(),
-                    config.GetProperty("spread_height").GetInt32(),
-                    config.GetProperty("max_height").GetInt32());
-
-            case "weeping_vines":
-                return WeepingVinesFeature.Instance;
 
             case "huge_brown_mushroom":
                 return new HugeBrownMushroomFeature(blocks.ParseProvider(config.GetProperty("cap_provider")),
@@ -410,15 +422,6 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
                     ValueParser.OptionalFloat(config, "chance_of_spreading", 0.5f),
                     blocks.ParseIdentifierSet(config.GetProperty("can_be_placed_on")));
 
-            case "seagrass":
-                return new SeagrassFeature(config.GetProperty("probability").GetDouble());
-
-            case "kelp":
-                return KelpFeature.Instance;
-
-            case "sea_pickle":
-                return new SeaPickleFeature(ValueParser.ParseInt(config.GetProperty("count")));
-
             case "bamboo":
                 return new BambooFeature(config.GetProperty("probability").GetSingle());
 
@@ -428,7 +431,7 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
                     config.GetProperty("placement_probability_per_valid_position").GetSingle());
 
             default:
-                throw new FormatException($"Unknown configured feature type \"{type}\".");
+                throw new FormatException($"Unknown feature type \"{type}\".");
         }
     }
 
@@ -446,12 +449,12 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
     /// than written out again here.
     /// </remarks>
     private uint ParseFluidStateAsBlock(JsonElement element) {
-        string name = element.GetProperty("Name").GetString()!;
+        string name = element.GetProperty("id").GetString()!;
 
         bool falling = false;
         int amount = 8;
 
-        if (element.TryGetProperty("Properties", out JsonElement properties)) {
+        if (element.TryGetProperty("properties", out JsonElement properties)) {
             if (properties.TryGetProperty("falling", out JsonElement fallingValue)) {
                 falling = fallingValue.GetString() == "true";
             }
@@ -506,12 +509,13 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
     /// </summary>
     /// <remarks>
     /// It is keyed on <c>predicate_type</c> and not <c>type</c>, and it tests a state it is handed
-    /// rather than a position. Mapped onto a <see cref="BlockPredicate"/> at the position because the
-    /// only difference that makes is which block it reads, and it reads the one it is asked about.
+    /// together with that state's position. Mapped onto a <see cref="BlockPredicate"/> at the position
+    /// because the only difference that makes is which block it reads, and it reads the one it is asked
+    /// about.
     /// <p/>
-    /// <c>random_block_match</c> and <c>random_blockstate_match</c> take a probability, and vanilla
-    /// draws it <b>after</b> the block test. Getting the order wrong changes how much random every
-    /// later ore in the chunk gets.
+    /// <c>random_block_match</c> and <c>random_blockstate_match</c> are not read here: they draw from
+    /// the random a rule test is handed, which a block predicate has no access to, and no vanilla
+    /// feature uses them.
     /// </remarks>
     private BlockPredicate ParseRuleTest(JsonElement element) {
         string type = Identifier.Parse(element.GetProperty("predicate_type").GetString()!).Key;
@@ -525,14 +529,26 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
                     new HashSet<Identifier> { Identifier.Parse(element.GetProperty("block").GetString()!) });
 
             case "blockstate_match":
-                return new BlockPredicate.MatchingBlocks(new Vec3<int>(0, 0, 0),
-                    new HashSet<Identifier> {
-                        blocks.ParseState(element.GetProperty("block_state")).Identifier
-                    });
+                return new BlockPredicate.MatchingState(blocks.ParseStateId(element.GetProperty("block_state")));
 
             case "tag_match":
                 return new BlockPredicate.MatchingBlockTag(new Vec3<int>(0, 0, 0),
                     Identifier.Parse(element.GetProperty("tag").GetString()!));
+
+            case "all_of":
+                return new BlockPredicate.AllOf(element.GetProperty("rules").EnumerateArray()
+                    .Select(ParseRuleTest).ToList());
+
+            case "any_of":
+                return new BlockPredicate.AnyOf(element.GetProperty("rules").EnumerateArray()
+                    .Select(ParseRuleTest).ToList());
+
+            case "not":
+                return new BlockPredicate.Not(ParseRuleTest(element.GetProperty("rule")));
+
+            case "height_match":
+                return new BlockPredicate.HeightMatch(element.GetProperty("min_inclusive").GetInt32(),
+                    element.GetProperty("max_inclusive").GetInt32());
 
             default:
                 throw new FormatException($"Unknown rule test type \"{type}\".");
@@ -586,10 +602,7 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
             blocks.ParseProvider(config.GetProperty("foliage_provider")),
             ParseFoliagePlacer(config.GetProperty("foliage_placer")),
             config.TryGetProperty("root_placer", out JsonElement root) ? ParseRootPlacer(root) : null,
-            // Absent for a tree that leaves the ground alone, which is every nether and mushroom one.
-            config.TryGetProperty("below_trunk_provider", out JsonElement below)
-                ? blocks.ParseProvider(below)
-                : new BlockStateProvider.RuleBased(null, []),
+            blocks.ParseProvider(config.GetProperty("below_trunk_provider")),
             ParseFeatureSize(config.GetProperty("minimum_size")),
             decorators,
             ValueParser.OptionalBool(config, "ignore_vines", false),
@@ -643,6 +656,11 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
                         start.GetProperty("max_inclusive").GetInt32()),
                     ValueParser.ParseInt(element.GetProperty("branch_end_offset_from_top")));
             }
+
+            case "poplar_trunk_placer":
+                return new TrunkPlacers.Poplar(baseHeight, randA, randB,
+                    ValueParser.ParseInt(element.GetProperty("trunk_height_above_branches")),
+                    ValueParser.ParseInt(element.GetProperty("branch_amount")));
 
             default:
                 throw new FormatException($"Unknown trunk placer type \"{type}\".");
@@ -698,6 +716,10 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
                     element.GetProperty("corner_hole_chance").GetSingle(),
                     element.GetProperty("hanging_leaves_chance").GetSingle(),
                     element.GetProperty("hanging_leaves_extension_chance").GetSingle());
+
+            case "poplar_foliage_placer":
+                return new FoliagePlacers.Poplar(radius, offset, ValueParser.ParseInt(element.GetProperty("height")),
+                    element.GetProperty("side_hole_chance").GetSingle());
 
             default:
                 throw new FormatException($"Unknown foliage placer type \"{type}\".");
@@ -817,6 +839,9 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
                     element.GetProperty("ground_probability").GetSingle(),
                     () => resolveConfigured("minecraft:pale_moss_patch"));
 
+            case "shelf_mushroom":
+                return new TreeDecorator.ShelfMushroom(element.GetProperty("probability").GetSingle());
+
             default:
                 throw new FormatException($"Unknown tree decorator type \"{type}\".");
         }
@@ -887,8 +912,18 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
     /// nothing at generation time.
     /// </remarks>
     private List<PlacedFeature> ParseNestedList(JsonElement element, string owner) {
+        // A HolderSet: a list, or one holder written bare, or a tag.
+        if (element.ValueKind == JsonValueKind.String && element.GetString()!.StartsWith('#')) {
+            throw new FormatException($"{owner} names the placed feature tag {element.GetString()}, "
+                + "and placed feature tags are not read.");
+        }
+
+        IEnumerable<JsonElement> entries = element.ValueKind == JsonValueKind.Array
+            ? element.EnumerateArray()
+            : [element];
+
         List<PlacedFeature> features = [];
-        foreach (JsonElement entry in element.EnumerateArray()) {
+        foreach (JsonElement entry in entries) {
             if (ParseNested(entry) is { } nested) {
                 features.Add(nested);
             }

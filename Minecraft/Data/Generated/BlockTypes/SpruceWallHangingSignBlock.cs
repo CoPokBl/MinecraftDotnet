@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SpruceWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:wall_hanging_sign", "block.minecraft.spruce_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:spruce_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/spruce_hanging_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 13, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
+    private static readonly BlockInfo Data = new("block.minecraft.spruce_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:spruce_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/spruce_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 13, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
@@ -20,15 +20,15 @@ public record SpruceWallHangingSignBlock(Identifier Identifier, Direction Facing
         I0, I1, I0, I1, I2, I3, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6683];
+    public BlockStateInfo StateInfo => States[StateId - 8343];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record SpruceWallHangingSignBlock(Identifier Identifier, Direction Facing
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record SpruceWallHangingSignBlock(Identifier Identifier, Direction Facing
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,20 +78,20 @@ public record SpruceWallHangingSignBlock(Identifier Identifier, Direction Facing
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6683,
-                    false => 6684,
+                    true => 8343,
+                    false => 8344,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6685,
-                    false => 6686,
+                    true => 8345,
+                    false => 8346,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6687,
-                    false => 6688,
+                    true => 8347,
+                    false => 8348,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6689,
-                    false => 6690,
+                    true => 8349,
+                    false => 8350,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -100,14 +100,14 @@ public record SpruceWallHangingSignBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            6683 => new SpruceWallHangingSignBlock(Identifier, Direction.North, true),
-            6684 => new SpruceWallHangingSignBlock(Identifier, Direction.North, false),
-            6685 => new SpruceWallHangingSignBlock(Identifier, Direction.South, true),
-            6686 => new SpruceWallHangingSignBlock(Identifier, Direction.South, false),
-            6687 => new SpruceWallHangingSignBlock(Identifier, Direction.West, true),
-            6688 => new SpruceWallHangingSignBlock(Identifier, Direction.West, false),
-            6689 => new SpruceWallHangingSignBlock(Identifier, Direction.East, true),
-            6690 => new SpruceWallHangingSignBlock(Identifier, Direction.East, false),
+            8343 => new SpruceWallHangingSignBlock(Identifier, Direction.North, true),
+            8344 => new SpruceWallHangingSignBlock(Identifier, Direction.North, false),
+            8345 => new SpruceWallHangingSignBlock(Identifier, Direction.South, true),
+            8346 => new SpruceWallHangingSignBlock(Identifier, Direction.South, false),
+            8347 => new SpruceWallHangingSignBlock(Identifier, Direction.West, true),
+            8348 => new SpruceWallHangingSignBlock(Identifier, Direction.West, false),
+            8349 => new SpruceWallHangingSignBlock(Identifier, Direction.East, true),
+            8350 => new SpruceWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

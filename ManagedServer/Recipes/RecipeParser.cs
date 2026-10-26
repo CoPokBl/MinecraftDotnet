@@ -92,7 +92,7 @@ public static class RecipeParser {
                         ParseIngredient(root.GetProperty("input"), id, registry),
                         ParseIngredient(root.GetProperty("material"), id, registry),
                         min, max,
-                        Result(root, id, registry),
+                        TransmuteResultOf(root, id, registry),
                         Bool(root, "add_material_count_to_result"));
                 }
 
@@ -232,10 +232,19 @@ public static class RecipeParser {
             return new ItemStack(registry.Items[ItemId(result.GetString()!, id, registry)]);
         }
 
-        Consumed(result, id, "id", "count", "components");
+        if (String(result, "id") is not { } item) {
+            throw new InvalidOperationException($"{id}: result with no id.");
+        }
 
-        ItemStack stack = new(registry.Items[ItemId(String(result, "id")!, id, registry)],
-            Int(result, "count", 1));
+        return Components(result, id, registry,
+            new ItemStack(registry.Items[ItemId(item, id, registry)], Int(result, "count", 1)));
+    }
+
+    /// <summary>A result's <c>components</c> patch, applied over <paramref name="stack"/>.</summary>
+    private static ItemStack Components(JsonElement result, Identifier id, MinecraftRegistry registry,
+        ItemStack stack) {
+
+        Consumed(result, id, "id", "count", "components");
 
         if (!result.TryGetProperty("components", out JsonElement components)) {
             return stack;
@@ -255,6 +264,22 @@ public static class RecipeParser {
         }
 
         return stack;
+    }
+
+    /// <summary>
+    /// <c>TransmuteResult.CODEC</c>: the result shape with <c>id</c> optional, absent meaning the input's
+    /// own item, or a bare id.
+    /// </summary>
+    private static TransmuteResult TransmuteResultOf(JsonElement recipe, Identifier id, MinecraftRegistry registry) {
+        if (recipe.TryGetProperty("result", out JsonElement result) && result.ValueKind == JsonValueKind.Object
+            && !result.TryGetProperty("id", out _)) {
+
+            ItemStack patch = Components(result, id, registry, new ItemStack(ItemStack.Air.Type, Int(result, "count", 1)));
+            return new TransmuteResult(null, patch.Count, patch.Components, patch.RemoveComponents);
+        }
+
+        ItemStack stack = Result(recipe, id, registry);
+        return new TransmuteResult(stack.Type, stack.Count, stack.Components, stack.RemoveComponents);
     }
 
     private static Identifier ItemId(string name, Identifier id, MinecraftRegistry registry) {

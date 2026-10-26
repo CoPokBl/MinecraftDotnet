@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Generated;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Shapes;
@@ -68,8 +69,7 @@ public static class BlockPhysicsData {
     private static readonly Entry Missing =
         new([], false, null, 0.6f, 1.0f, 1.0f, 0.0f, false, false, false, false, false);
 
-    private static readonly Identifier WallCategory = "minecraft:wall";
-    private static readonly Identifier FenceGateCategory = "minecraft:fence_gate";
+    private static readonly Identifier WallTag = "minecraft:walls";
     private static readonly Identifier FenceTag = "minecraft:fences";
     private static readonly Identifier FallDamageResettingTag = "minecraft:fall_damage_resetting";
     private static readonly Identifier SuppressesBounceTag = "minecraft:suppresses_bounce";
@@ -96,7 +96,6 @@ public static class BlockPhysicsData {
             }
         }
 
-        Identifier category = block.Category;
         Identifier identifier = block.Identifier;
 
         return new Entry(
@@ -108,7 +107,7 @@ public static class BlockPhysicsData {
             block.JumpFactor,
             block.BounceRestitution,
             InTag(registry, SuppressesBounceTag, identifier),
-            category.Equals(WallCategory) || category.Equals(FenceGateCategory),
+            InTag(registry, WallTag, identifier) || BlockClasses.Is(identifier, BlockClass.FenceGateBlock),
             InTag(registry, FenceTag, identifier),
             identifier.Equals(Water) || identifier.Equals(BubbleColumn),
             InTag(registry, FallDamageResettingTag, identifier));

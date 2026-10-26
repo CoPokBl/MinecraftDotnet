@@ -1,6 +1,7 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Worlds;
 using Minecraft;
+using Minecraft.Schemas;
 
 namespace ManagedServer.Ai.Goals.Impl;
 
@@ -60,7 +61,7 @@ public class MeleeAttackGoal : Goal {
         // Vanilla builds the path here and keeps it for Start, so the route is computed once rather
         // than twice. Being unable to route is not on its own a refusal: a mob already in range
         // attacks from where it stands.
-        _hasPath = Mob.Navigation.MoveTo(target, _speedModifier);
+        _hasPath = Mob.Navigation.MoveTo(target, 0, _speedModifier);
         return _hasPath || Mob.IsWithinMeleeAttackRange(target);
     }
 
@@ -83,7 +84,7 @@ public class MeleeAttackGoal : Goal {
         // rather than recomputing. Reissuing it is the same thing given a navigation that holds one
         // destination, and it also covers the in-range-but-unroutable case CanUse allows through.
         if (_hasPath) {
-            Mob.Navigation.MoveTo(Mob.Target!, _speedModifier);
+            Mob.Navigation.MoveTo(Mob.Target!, 0, _speedModifier);
         }
 
         Mob.Aggressive = true;
@@ -133,7 +134,7 @@ public class MeleeAttackGoal : Goal {
                 _ticksUntilNextPathRecalculation += 5;
             }
 
-            if (!Mob.Navigation.MoveTo(target, _speedModifier)) {
+            if (!Mob.Navigation.MoveTo(target, 0, _speedModifier)) {
                 _ticksUntilNextPathRecalculation += 15;
             }
 
@@ -150,7 +151,7 @@ public class MeleeAttackGoal : Goal {
         }
 
         ResetAttackCooldown();
-        Mob.Swing();
+        Mob.SwingForAttack(Hand.MainHand);
         Mob.DoHurtTarget(World, target);
     }
 

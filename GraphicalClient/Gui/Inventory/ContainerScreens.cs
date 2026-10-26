@@ -240,11 +240,15 @@ public sealed class FurnaceScreen(MinecraftClient client, FurnaceMenu menu) : Re
 
 public sealed class BrewingStandScreen(MinecraftClient client, BrewingStandMenu menu) : ContainerScreen(client, menu) {
     protected override void DrawBackground(GuiContext context) {
-        float brew = menu.BrewTime > 0 ? 1.0F - menu.BrewTime / 400.0F : 0;
+        // BrewingStandScreen's fractions: of the totals the stand sends, nothing shown while a total is zero,
+        // and the fuel bar rounded up so the last charge still shows.
+        int totalTicks = menu.TotalBrewingTicks, totalFuel = menu.TotalFuel;
+        float brew = menu.BrewTime > 0 && totalTicks > 0 ? (int)(28.0F * (1.0F - (float)menu.BrewTime / totalTicks)) : 0;
+        int fuel = totalFuel > 0 ? Math.Clamp((int)Math.Ceiling(18.0 * menu.Fuel / totalFuel), 0, 18) : 0;
         context.Gui.Rect(Left + 97, Top + 16, 9, 28, 0xFF8B8B8B);
-        context.Gui.Rect(Left + 97, Top + 16, 9, 28 * brew, 0xFFFFFFFF);
+        context.Gui.Rect(Left + 97, Top + 16, 9, brew, 0xFFFFFFFF);
         context.Gui.Rect(Left + 60, Top + 44, 18, 4, 0xFF8B8B8B);
-        context.Gui.Rect(Left + 60, Top + 44, 18 * Math.Clamp(menu.Fuel / 20.0F, 0, 1), 4, 0xFFFF8020);
+        context.Gui.Rect(Left + 60, Top + 44, fuel, 4, 0xFFFF8020);
     }
 }
 

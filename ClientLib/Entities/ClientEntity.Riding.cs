@@ -37,6 +37,9 @@ public partial class ClientEntity {
     /// <summary><c>Entity.isLocalInstanceAuthoritative</c> on a client.</summary>
     public bool IsLocalInstanceAuthoritative => IsLocalClientAuthoritative;
 
+    /// <summary><c>Entity.canSimulateMovement</c> on a client: what it steers, and what both sides simulate.</summary>
+    public virtual bool CanSimulateMovement => IsLocalInstanceAuthoritative;
+
     /// <summary><c>Entity.getControlledVehicle</c>.</summary>
     public ClientEntity? ControlledVehicle => Vehicle != null && Vehicle.ControllingPassenger == this ? Vehicle : null;
 

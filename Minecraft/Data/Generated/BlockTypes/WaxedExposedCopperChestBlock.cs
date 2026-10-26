@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WaxedExposedCopperChestBlock(Identifier Identifier, ChestType Type, Direction Facing, bool Waterlogged) : IBlock, IChestTyped, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:copper_chest", "block.minecraft.waxed_exposed_copper_chest", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chest", "minecraft:waxed_exposed_copper_chest", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_exposed_copper_chest");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 44, "copper", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
+    private static readonly BlockInfo Data = new("block.minecraft.waxed_exposed_copper_chest", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chest", "minecraft:waxed_exposed_copper_chest", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_exposed_copper_chest");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 44, "copper", NoteBlockInstrument.Harp, false, true, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
@@ -26,15 +26,15 @@ public record WaxedExposedCopperChestBlock(Identifier Identifier, ChestType Type
         I0, I1, I2, I3, I4, I5, I0, I1, I4, I5, I2, I3, I0, I1, I6, I7, I8, I9, I0, I1, I8, I9, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 29688];
+    public BlockStateInfo StateInfo => States[StateId - 33045];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -48,7 +48,6 @@ public record WaxedExposedCopperChestBlock(Identifier Identifier, ChestType Type
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -68,6 +67,7 @@ public record WaxedExposedCopperChestBlock(Identifier Identifier, ChestType Type
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -87,58 +87,58 @@ public record WaxedExposedCopperChestBlock(Identifier Identifier, ChestType Type
             return Type switch {
                 ChestType.Single => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 29688,
-                        false => 29689,
+                        true => 33045,
+                        false => 33046,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 29694,
-                        false => 29695,
+                        true => 33051,
+                        false => 33052,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 29700,
-                        false => 29701,
+                        true => 33057,
+                        false => 33058,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 29706,
-                        false => 29707,
+                        true => 33063,
+                        false => 33064,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 ChestType.Left => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 29690,
-                        false => 29691,
+                        true => 33047,
+                        false => 33048,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 29696,
-                        false => 29697,
+                        true => 33053,
+                        false => 33054,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 29702,
-                        false => 29703,
+                        true => 33059,
+                        false => 33060,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 29708,
-                        false => 29709,
+                        true => 33065,
+                        false => 33066,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 ChestType.Right => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 29692,
-                        false => 29693,
+                        true => 33049,
+                        false => 33050,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 29698,
-                        false => 29699,
+                        true => 33055,
+                        false => 33056,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 29704,
-                        false => 29705,
+                        true => 33061,
+                        false => 33062,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 29710,
-                        false => 29711,
+                        true => 33067,
+                        false => 33068,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -149,30 +149,30 @@ public record WaxedExposedCopperChestBlock(Identifier Identifier, ChestType Type
     
     public IBlock WithState(uint state) {
         return state switch {
-            29688 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.North, true),
-            29689 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.North, false),
-            29690 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.North, true),
-            29691 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.North, false),
-            29692 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.North, true),
-            29693 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.North, false),
-            29694 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.South, true),
-            29695 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.South, false),
-            29696 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.South, true),
-            29697 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.South, false),
-            29698 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.South, true),
-            29699 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.South, false),
-            29700 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.West, true),
-            29701 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.West, false),
-            29702 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.West, true),
-            29703 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.West, false),
-            29704 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.West, true),
-            29705 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.West, false),
-            29706 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.East, true),
-            29707 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.East, false),
-            29708 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.East, true),
-            29709 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.East, false),
-            29710 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.East, true),
-            29711 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.East, false),
+            33045 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.North, true),
+            33046 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.North, false),
+            33047 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.North, true),
+            33048 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.North, false),
+            33049 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.North, true),
+            33050 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.North, false),
+            33051 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.South, true),
+            33052 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.South, false),
+            33053 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.South, true),
+            33054 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.South, false),
+            33055 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.South, true),
+            33056 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.South, false),
+            33057 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.West, true),
+            33058 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.West, false),
+            33059 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.West, true),
+            33060 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.West, false),
+            33061 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.West, true),
+            33062 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.West, false),
+            33063 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.East, true),
+            33064 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Single, Direction.East, false),
+            33065 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.East, true),
+            33066 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Left, Direction.East, false),
+            33067 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.East, true),
+            33068 => new WaxedExposedCopperChestBlock(Identifier, ChestType.Right, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

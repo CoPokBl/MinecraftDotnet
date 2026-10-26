@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CopperWallTorchBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:wall_torch", "block.minecraft.copper_torch", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:copper_torch", BlockInfo.VanillaOnly, "minecraft:blocks/copper_torch");
-    private static readonly BlockStateInfo I0 = new(0f, 14, 0, PushReaction.Destroy, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S511, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.copper_torch", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:copper_torch", BlockInfo.VanillaOnly, "minecraft:blocks/copper_torch");
+    private static readonly BlockStateInfo I0 = new(0f, 14, 0, PushReaction.Popped, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S511, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S512 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S513 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S514 };
@@ -20,15 +20,15 @@ public record CopperWallTorchBlock(Identifier Identifier, Direction Facing) : IB
         I0, I1, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 7012];
+    public BlockStateInfo StateInfo => States[StateId - 8682];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record CopperWallTorchBlock(Identifier Identifier, Direction Facing) : IB
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record CopperWallTorchBlock(Identifier Identifier, Direction Facing) : IB
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -75,10 +75,10 @@ public record CopperWallTorchBlock(Identifier Identifier, Direction Facing) : IB
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 7012,
-                Direction.South => 7013,
-                Direction.West => 7014,
-                Direction.East => 7015,
+                Direction.North => 8682,
+                Direction.South => 8683,
+                Direction.West => 8684,
+                Direction.East => 8685,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -86,10 +86,10 @@ public record CopperWallTorchBlock(Identifier Identifier, Direction Facing) : IB
     
     public IBlock WithState(uint state) {
         return state switch {
-            7012 => new CopperWallTorchBlock(Identifier, Direction.North),
-            7013 => new CopperWallTorchBlock(Identifier, Direction.South),
-            7014 => new CopperWallTorchBlock(Identifier, Direction.West),
-            7015 => new CopperWallTorchBlock(Identifier, Direction.East),
+            8682 => new CopperWallTorchBlock(Identifier, Direction.North),
+            8683 => new CopperWallTorchBlock(Identifier, Direction.South),
+            8684 => new CopperWallTorchBlock(Identifier, Direction.West),
+            8685 => new CopperWallTorchBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

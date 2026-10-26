@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CherryStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.cherry_stairs", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cherry_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_stairs");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 36, "cherry_wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.cherry_stairs", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cherry_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 36, "cherry_wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record CherryStairsBlock(Identifier Identifier, Direction Facing, TopBott
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 12052];
+    public BlockStateInfo StateInfo => States[StateId - 13819];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record CherryStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record CherryStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record CherryStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12052,
-                            false => 12053,
+                            true => 13819,
+                            false => 13820,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12054,
-                            false => 12055,
+                            true => 13821,
+                            false => 13822,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12056,
-                            false => 12057,
+                            true => 13823,
+                            false => 13824,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12058,
-                            false => 12059,
+                            true => 13825,
+                            false => 13826,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12060,
-                            false => 12061,
+                            true => 13827,
+                            false => 13828,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12062,
-                            false => 12063,
+                            true => 13829,
+                            false => 13830,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12064,
-                            false => 12065,
+                            true => 13831,
+                            false => 13832,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12066,
-                            false => 12067,
+                            true => 13833,
+                            false => 13834,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12068,
-                            false => 12069,
+                            true => 13835,
+                            false => 13836,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12070,
-                            false => 12071,
+                            true => 13837,
+                            false => 13838,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record CherryStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12072,
-                            false => 12073,
+                            true => 13839,
+                            false => 13840,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12074,
-                            false => 12075,
+                            true => 13841,
+                            false => 13842,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12076,
-                            false => 12077,
+                            true => 13843,
+                            false => 13844,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12078,
-                            false => 12079,
+                            true => 13845,
+                            false => 13846,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12080,
-                            false => 12081,
+                            true => 13847,
+                            false => 13848,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12082,
-                            false => 12083,
+                            true => 13849,
+                            false => 13850,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12084,
-                            false => 12085,
+                            true => 13851,
+                            false => 13852,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12086,
-                            false => 12087,
+                            true => 13853,
+                            false => 13854,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12088,
-                            false => 12089,
+                            true => 13855,
+                            false => 13856,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12090,
-                            false => 12091,
+                            true => 13857,
+                            false => 13858,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record CherryStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12092,
-                            false => 12093,
+                            true => 13859,
+                            false => 13860,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12094,
-                            false => 12095,
+                            true => 13861,
+                            false => 13862,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12096,
-                            false => 12097,
+                            true => 13863,
+                            false => 13864,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12098,
-                            false => 12099,
+                            true => 13865,
+                            false => 13866,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12100,
-                            false => 12101,
+                            true => 13867,
+                            false => 13868,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12102,
-                            false => 12103,
+                            true => 13869,
+                            false => 13870,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12104,
-                            false => 12105,
+                            true => 13871,
+                            false => 13872,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12106,
-                            false => 12107,
+                            true => 13873,
+                            false => 13874,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12108,
-                            false => 12109,
+                            true => 13875,
+                            false => 13876,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12110,
-                            false => 12111,
+                            true => 13877,
+                            false => 13878,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record CherryStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12112,
-                            false => 12113,
+                            true => 13879,
+                            false => 13880,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12114,
-                            false => 12115,
+                            true => 13881,
+                            false => 13882,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12116,
-                            false => 12117,
+                            true => 13883,
+                            false => 13884,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12118,
-                            false => 12119,
+                            true => 13885,
+                            false => 13886,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12120,
-                            false => 12121,
+                            true => 13887,
+                            false => 13888,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12122,
-                            false => 12123,
+                            true => 13889,
+                            false => 13890,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12124,
-                            false => 12125,
+                            true => 13891,
+                            false => 13892,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12126,
-                            false => 12127,
+                            true => 13893,
+                            false => 13894,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12128,
-                            false => 12129,
+                            true => 13895,
+                            false => 13896,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12130,
-                            false => 12131,
+                            true => 13897,
+                            false => 13898,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record CherryStairsBlock(Identifier Identifier, Direction Facing, TopBott
     
     public IBlock WithState(uint state) {
         return state switch {
-            12052 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            12053 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            12054 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            12055 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            12056 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            12057 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            12058 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            12059 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            12060 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            12061 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            12062 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            12063 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            12064 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12065 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12066 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            12067 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            12068 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12069 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12070 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            12071 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            12072 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            12073 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            12074 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            12075 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            12076 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            12077 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            12078 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            12079 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            12080 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            12081 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            12082 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            12083 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            12084 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12085 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12086 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            12087 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            12088 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12089 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12090 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            12091 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            12092 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            12093 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            12094 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            12095 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            12096 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            12097 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            12098 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            12099 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            12100 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            12101 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            12102 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            12103 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            12104 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12105 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12106 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            12107 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            12108 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12109 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12110 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            12111 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            12112 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            12113 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            12114 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            12115 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            12116 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            12117 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            12118 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            12119 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            12120 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            12121 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            12122 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            12123 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            12124 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12125 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12126 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            12127 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            12128 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12129 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12130 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            12131 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            13819 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            13820 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            13821 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            13822 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            13823 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            13824 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            13825 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            13826 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            13827 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            13828 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            13829 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            13830 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            13831 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13832 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13833 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            13834 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            13835 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13836 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13837 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            13838 => new CherryStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            13839 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            13840 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            13841 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            13842 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            13843 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            13844 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            13845 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            13846 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            13847 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            13848 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            13849 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            13850 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            13851 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13852 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13853 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            13854 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            13855 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13856 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13857 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            13858 => new CherryStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            13859 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            13860 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            13861 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            13862 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            13863 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            13864 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            13865 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            13866 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            13867 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            13868 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            13869 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            13870 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            13871 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13872 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13873 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            13874 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            13875 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13876 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13877 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            13878 => new CherryStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            13879 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            13880 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            13881 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            13882 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            13883 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            13884 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            13885 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            13886 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            13887 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            13888 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            13889 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            13890 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            13891 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13892 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13893 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            13894 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            13895 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13896 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13897 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            13898 => new CherryStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

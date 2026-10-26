@@ -28,7 +28,7 @@ if [[ $# -lt 1 ]]; then
     exit 2
 fi
 
-version="${VERSION:-26.2}"
+version="${VERSION:-26.3}"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 jars="$repo/CodeGen/bin/Debug/net10.0"
 work="${TMPDIR:-/tmp}/mcdotnet-conformance"

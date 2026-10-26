@@ -23,6 +23,9 @@ public sealed partial class MultiPlayerGameMode {
     private readonly MinecraftClient _client;
     private readonly BlockTags _tags;
 
+    /// <summary>The block transformers the server synchronised, as a tool's use is judged by.</summary>
+    public BlockTransforms Transforms { get; }
+
     private int _carriedIndex;
     private bool _isDestroying;
     private (int X, int Y, int Z) _destroyPos = (-1, -1, -1);
@@ -30,6 +33,7 @@ public sealed partial class MultiPlayerGameMode {
     private float _destroyProgress;
     private float _destroyTicks;
     private int _destroyDelay;
+    private BlockFace? _destroyDirection;
     private int _rightClickDelay;
     private int _missTime;
 
@@ -62,7 +66,10 @@ public sealed partial class MultiPlayerGameMode {
     /// <summary>The player's <see cref="LocalPlayer.UseItem"/>.</summary>
     public ItemStack UsedStack => _client.Player?.UseItem ?? ItemStack.Air;
 
-    /// <summary><c>continueDestroyBlock</c>'s hit sound: every fourth tick of digging the block at the position, from the first.</summary>
+    /// <summary>
+    /// The hit sound <c>addBreakingBlockEffects</c> plays as digging the block at the position starts; the
+    /// server's level event 2020 brings the rest while it goes on.
+    /// </summary>
     public event Action<(int X, int Y, int Z), IBlock>? DestroyHit;
 
     /// <summary><c>Item.use</c> starting to hold an item in use.</summary>
@@ -93,11 +100,12 @@ public sealed partial class MultiPlayerGameMode {
 
     private readonly List<(int Sequence, PendingUseOn Use)> _pendingUseOn = [];
 
-    private readonly record struct PendingUseOn(Hand Hand, ItemStack Item, (int X, int Y, int Z) Clicked, ushort ClickedBefore, (int X, int Y, int Z) Against, ushort AgainstBefore);
+    private readonly record struct PendingUseOn(Hand Hand, ItemStack Item, (int X, int Y, int Z) Clicked, BlockFace Face, ushort ClickedBefore, (int X, int Y, int Z) Against, ushort AgainstBefore);
 
     public MultiPlayerGameMode(MinecraftClient client) {
         _client = client;
         _tags = new BlockTags(client);
+        Transforms = new BlockTransforms(client, _tags);
         // A new level counts its sequence from zero again, so an old use would match a new acknowledgement.
         client.LevelChanged += _ => _pendingUseOn.Clear();
     }
@@ -166,8 +174,8 @@ public sealed partial class MultiPlayerGameMode {
             }
         }
         while (Keys.Drop.ConsumeClick()) {
-            if (!Player.IsSpectator && Drop(Keys.ControlDown)) {
-                Swing(Hand.MainHand);
+            if (!Player.IsSpectator) {
+                DropItem(Keys.ControlDown);
             }
         }
 
@@ -237,9 +245,9 @@ public sealed partial class MultiPlayerGameMode {
         if (CannotAttackWithItem(held)) {
             return false;
         }
+        SwingAnimation attackAnimation = AttackAnimationOf(held);
         if (ItemComponents.Has(held, DataComponent.PiercingWeapon)) {
-            PiercingAttack();
-            Swing(Hand.MainHand);
+            PiercingAttack(attackAnimation);
             return true;
         }
 
@@ -261,7 +269,7 @@ public sealed partial class MultiPlayerGameMode {
                 Player.ResetAttackStrengthTicker();
                 break;
         }
-        Swing(Hand.MainHand);
+        Punch(attackAnimation);
         return endAttack;
     }
 
@@ -286,13 +294,17 @@ public sealed partial class MultiPlayerGameMode {
         _client.Send(new ServerBoundAttackPacket { EntityId = entity.Id });
         Player.Attack(entity);
         Player.ResetAttackStrengthTicker();
+        if (Player.InstaBuild) {
+            _destroyDelay = 5;
+        }
     }
 
     /// <summary><c>MultiPlayerGameMode.piercingAttack</c>: the stab is the server's, and its sound is not played here.</summary>
-    private void PiercingAttack() {
+    private void PiercingAttack(SwingAnimation attackAnimation) {
         EnsureHasSentCarriedItem();
         _client.Send(Action(ServerBoundPlayerActionPacket.Status.Stab));
         Player.OnAttack();
+        Player.Swing(Hand.MainHand, attackAnimation);
     }
 
     private void ContinueAttack(bool down) {
@@ -304,8 +316,7 @@ public sealed partial class MultiPlayerGameMode {
         }
         if (down && Target is BlockHitResult blockHit && !Level.IsAir(Level.GetState(blockHit.X, blockHit.Y, blockHit.Z))) {
             if (ContinueDestroyBlock(blockHit.X, blockHit.Y, blockHit.Z, blockHit.Face)) {
-                _client.Particles.Crack(blockHit.X, blockHit.Y, blockHit.Z, blockHit.Face);
-                Swing(Hand.MainHand);
+                Punch(AttackAnimationOf(_client.Inventory.MainHand));
             }
         }
         else {
@@ -313,11 +324,16 @@ public sealed partial class MultiPlayerGameMode {
         }
     }
 
-    /// <summary><c>LocalPlayer.swing</c>: the animation here, the packet to everyone else.</summary>
-    private void Swing(Hand hand) {
-        Player.Swing(hand);
-        _client.Send(new ServerBoundSwingArmPacket { UsedHand = hand });
+    /// <summary>
+    /// An attack's swing, which is the one swing the server is told about: everything else is swung on
+    /// the server by the use it answers.
+    /// </summary>
+    private void Punch(SwingAnimation attackAnimation) {
+        Player.Swing(Hand.MainHand, attackAnimation);
+        _client.Send(new ServerBoundPunchPacket());
     }
+
+    private static SwingAnimation AttackAnimationOf(ItemStack stack) => ItemComponents.Get(stack, DataComponent.AttackAnimation) ?? SwingAnimation.Default;
 
     private void StartPrediction(Func<int, ServerBoundPacket> action) {
         int sequence = Predictions.Begin();
@@ -376,9 +392,11 @@ public sealed partial class MultiPlayerGameMode {
             else {
                 _isDestroying = true;
                 _destroyPos = (x, y, z);
+                _destroyDirection = face;
                 _destroyingItem = _client.Inventory.MainHand;
                 _destroyProgress = 0.0F;
                 _destroyTicks = 0.0F;
+                AddBreakingBlockEffects(x, y, z, face);
             }
             return Action(ServerBoundPlayerActionPacket.Status.StartedDigging, (x, y, z), face, sequence);
         });
@@ -415,9 +433,6 @@ public sealed partial class MultiPlayerGameMode {
             return false;
         }
         _destroyProgress += DestroyProgress(state);
-        if (_destroyTicks % 4.0F == 0.0F) {
-            DestroyHit?.Invoke((x, y, z), Level.Registry.Blocks.GetByStateId(state));
-        }
         _destroyTicks++;
         if (_destroyProgress >= 1.0F) {
             _isDestroying = false;
@@ -425,11 +440,29 @@ public sealed partial class MultiPlayerGameMode {
                 DestroyBlock(x, y, z);
                 return Action(ServerBoundPlayerActionPacket.Status.FinishedDigging, (x, y, z), face, sequence);
             });
+            _destroyDirection = null;
             _destroyProgress = 0.0F;
             _destroyTicks = 0.0F;
             _destroyDelay = 5;
         }
+        else if (_destroyDirection != face) {
+            _destroyDirection = face;
+            _client.Send(Action(ServerBoundPlayerActionPacket.Status.ChangeDestroyDirection, (x, y, z), face));
+        }
         return true;
+    }
+
+    /// <summary>
+    /// <c>ClientLevel.addBreakingBlockEffects</c> with its sound: the hit sound and one crack particle off
+    /// the face, for a block that is not air.
+    /// </summary>
+    private void AddBreakingBlockEffects(int x, int y, int z, BlockFace face) {
+        ushort state = Level.GetState(x, y, z);
+        if (Level.IsAir(state)) {
+            return;
+        }
+        DestroyHit?.Invoke((x, y, z), Level.Registry.Blocks.GetByStateId(state));
+        _client.Particles.Crack(x, y, z, face);
     }
 
     /// <summary>
@@ -522,13 +555,7 @@ public sealed partial class MultiPlayerGameMode {
         }
 
         if (Player.GetEffect(PotionEffectType.MiningFatigue) is { } fatigue) {
-            float scale = fatigue.Amplifier switch {
-                0 => 0.3F,
-                1 => 0.09F,
-                2 => 0.0027F,
-                _ => 8.1E-4F
-            };
-            speed *= scale;
+            speed *= (float)Math.Pow(0.3, fatigue.Amplifier + 1);
         }
 
         speed *= (float)Player.Attributes.Value(Attribute.BlockBreakSpeed);
@@ -555,8 +582,9 @@ public sealed partial class MultiPlayerGameMode {
             }
             _pendingUseOn.RemoveAt(i);
             UseOnOutcome outcome = new(use.Hand, use.Item,
-                use.Clicked, use.ClickedBefore, Level.GetState(use.Clicked.X, use.Clicked.Y, use.Clicked.Z),
+                use.Clicked, use.Face, use.ClickedBefore, Level.GetState(use.Clicked.X, use.Clicked.Y, use.Clicked.Z),
                 use.Against, use.AgainstBefore, Level.GetState(use.Against.X, use.Against.Y, use.Against.Z));
+            outcome = outcome with { Tool = ToolUseOn.Classify(Transforms, Level, outcome) };
             UsedItemOn?.Invoke(outcome);
             ToolUseOn.RaiseLevelEvents(Level, outcome);
         }
@@ -575,9 +603,9 @@ public sealed partial class MultiPlayerGameMode {
 
     private enum UseResult {
         Pass,
-        /// <summary>Consumed, with the swing played on this side.</summary>
+        /// <summary>Consumed, with the swing predicted on this side.</summary>
         Success,
-        /// <summary>Consumed with no swing here, <c>SwingSource.NONE</c> or <c>SERVER</c>.</summary>
+        /// <summary>Consumed with no swing here, <c>SwingSource.NONE</c> or <c>SERVER_ONLY</c>.</summary>
         Consume,
         /// <summary>Refused: nothing else is tried for the click.</summary>
         Fail
@@ -596,6 +624,7 @@ public sealed partial class MultiPlayerGameMode {
         }
         foreach (Hand hand in Hands) {
             ItemStack held = hand == Hand.MainHand ? _client.Inventory.MainHand : _client.Inventory.Offhand;
+            SwingAnimation swingAnimation = ItemComponents.Get(held, DataComponent.InteractAnimation) ?? SwingAnimation.Default;
             UseResult result = Target switch {
                 EntityHitResult entityHit when !Level.WorldBorder.IsWithinBounds((int)Math.Floor(entityHit.Entity.Position.X),
                     (int)Math.Floor(entityHit.Entity.Position.Z)) => UseResult.Fail,
@@ -607,7 +636,7 @@ public sealed partial class MultiPlayerGameMode {
                 result = UseItem(hand, held);
             }
             if (result == UseResult.Success) {
-                Swing(hand);
+                Player.Swing(hand, swingAnimation);
             }
             if (result != UseResult.Pass) {
                 return;
@@ -662,7 +691,7 @@ public sealed partial class MultiPlayerGameMode {
             result = PerformUseItemOn(hand, hit, held, out bool itemUsedOn);
             if (itemUsedOn) {
                 (int X, int Y, int Z) against = Relative(hit.X, hit.Y, hit.Z, hit.Face);
-                _pendingUseOn.Add((sequence, new PendingUseOn(hand, held, (hit.X, hit.Y, hit.Z), Level.GetState(hit.X, hit.Y, hit.Z),
+                _pendingUseOn.Add((sequence, new PendingUseOn(hand, held, (hit.X, hit.Y, hit.Z), hit.Face, Level.GetState(hit.X, hit.Y, hit.Z),
                     against, Level.GetState(against.X, against.Y, against.Z))));
             }
             Vec3d inside = hit.Location - new Vec3d(hit.X, hit.Y, hit.Z);
@@ -720,8 +749,21 @@ public sealed partial class MultiPlayerGameMode {
                 : placed;
         }
         itemUsedOn = true;
+        // Item.useOn: a block transformer is the whole of what the item does on a block.
+        if (ItemComponents.Has(held, DataComponent.BlockTransformer)) {
+            return !BlockingItemUseIntent(hand) && Transforms.Find(held, hit.X, hit.Y, hit.Z, hit.Face, Level.GetState) != null
+                ? UseResult.Success
+                : UseResult.Pass;
+        }
         return UsePrediction.ItemUseOnConsumes(held, block) ? UseResult.Success : UseResult.Pass;
     }
+
+    /// <summary>
+    /// <c>BlockTransformer.playerHasBlockingItemUseIntent</c>: a shield in the off hand wins the main hand's
+    /// click unless the player is sneaking.
+    /// </summary>
+    private bool BlockingItemUseIntent(Hand hand) =>
+        hand == Hand.MainHand && ItemComponents.Has(_client.Inventory.Offhand, DataComponent.BlocksAttacks) && !Player.KeyPresses.Shift;
 
     /// <summary><c>Consumable.startConsuming</c>, which a block item that could not be placed falls back to.</summary>
     private UseResult StartConsuming(Hand hand, ItemStack held) {
@@ -776,15 +818,18 @@ public sealed partial class MultiPlayerGameMode {
         ReleasedUsingItem?.Invoke(hand, stack);
     }
 
-    /// <summary><c>LocalPlayer.drop</c>: true when there was something in the hand to drop.</summary>
-    private bool Drop(bool all) {
+    /// <summary><c>MultiPlayerGameMode.dropItem</c>: the hand is emptied here first, and swings only if it held something.</summary>
+    private void DropItem(bool all) {
         ItemStack held = _client.Inventory.MainHand;
         if (!ItemComponents.IsEmpty(held)) {
             int remaining = all ? 0 : held.Count - 1;
             _client.Inventory.SetInventorySlot(_client.Inventory.SelectedSlot, remaining <= 0 ? ItemStack.Air : held.WithCount(remaining));
         }
+        EnsureHasSentCarriedItem();
         _client.Send(Action(all ? ServerBoundPlayerActionPacket.Status.DropItemStack : ServerBoundPlayerActionPacket.Status.DropItem));
-        return !ItemComponents.IsEmpty(held);
+        if (!ItemComponents.IsEmpty(held)) {
+            Player.Swing(Hand.MainHand, SwingAnimation.Default);
+        }
     }
 
     /// <summary><c>Minecraft.pickBlock</c>: the server decides what goes in the hand.</summary>
@@ -808,17 +853,24 @@ public sealed partial class MultiPlayerGameMode {
         _destroyProgress = 0.0F;
         _destroyTicks = 0.0F;
         _destroyDelay = 0;
+        _destroyDirection = null;
         Target = null;
     }
 }
 
-/// <summary>What one acknowledged <c>use_item_on</c> did: the clicked block and the block against its face, before and after.</summary>
+/// <summary>
+/// What one acknowledged <c>use_item_on</c> did: the clicked block and the block against its face, before
+/// and after, and the tool use that explains the change if one does.
+/// </summary>
 public readonly record struct UseOnOutcome(
     Hand Hand,
     ItemStack Item,
     (int X, int Y, int Z) Clicked,
+    BlockFace Face,
     ushort ClickedBefore,
     ushort ClickedAfter,
     (int X, int Y, int Z) Against,
     ushort AgainstBefore,
-    ushort AgainstAfter);
+    ushort AgainstAfter) {
+    public ToolUse? Tool { get; init; }
+}

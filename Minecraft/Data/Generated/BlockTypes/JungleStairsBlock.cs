@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record JungleStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.jungle_stairs", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jungle_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_stairs");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 10, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.jungle_stairs", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jungle_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 10, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record JungleStairsBlock(Identifier Identifier, Direction Facing, TopBott
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 9888];
+    public BlockStateInfo StateInfo => States[StateId - 11630];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record JungleStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record JungleStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record JungleStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9888,
-                            false => 9889,
+                            true => 11630,
+                            false => 11631,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9890,
-                            false => 9891,
+                            true => 11632,
+                            false => 11633,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9892,
-                            false => 9893,
+                            true => 11634,
+                            false => 11635,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9894,
-                            false => 9895,
+                            true => 11636,
+                            false => 11637,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9896,
-                            false => 9897,
+                            true => 11638,
+                            false => 11639,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9898,
-                            false => 9899,
+                            true => 11640,
+                            false => 11641,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9900,
-                            false => 9901,
+                            true => 11642,
+                            false => 11643,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9902,
-                            false => 9903,
+                            true => 11644,
+                            false => 11645,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9904,
-                            false => 9905,
+                            true => 11646,
+                            false => 11647,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9906,
-                            false => 9907,
+                            true => 11648,
+                            false => 11649,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record JungleStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9908,
-                            false => 9909,
+                            true => 11650,
+                            false => 11651,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9910,
-                            false => 9911,
+                            true => 11652,
+                            false => 11653,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9912,
-                            false => 9913,
+                            true => 11654,
+                            false => 11655,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9914,
-                            false => 9915,
+                            true => 11656,
+                            false => 11657,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9916,
-                            false => 9917,
+                            true => 11658,
+                            false => 11659,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9918,
-                            false => 9919,
+                            true => 11660,
+                            false => 11661,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9920,
-                            false => 9921,
+                            true => 11662,
+                            false => 11663,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9922,
-                            false => 9923,
+                            true => 11664,
+                            false => 11665,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9924,
-                            false => 9925,
+                            true => 11666,
+                            false => 11667,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9926,
-                            false => 9927,
+                            true => 11668,
+                            false => 11669,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record JungleStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9928,
-                            false => 9929,
+                            true => 11670,
+                            false => 11671,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9930,
-                            false => 9931,
+                            true => 11672,
+                            false => 11673,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9932,
-                            false => 9933,
+                            true => 11674,
+                            false => 11675,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9934,
-                            false => 9935,
+                            true => 11676,
+                            false => 11677,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9936,
-                            false => 9937,
+                            true => 11678,
+                            false => 11679,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9938,
-                            false => 9939,
+                            true => 11680,
+                            false => 11681,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9940,
-                            false => 9941,
+                            true => 11682,
+                            false => 11683,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9942,
-                            false => 9943,
+                            true => 11684,
+                            false => 11685,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9944,
-                            false => 9945,
+                            true => 11686,
+                            false => 11687,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9946,
-                            false => 9947,
+                            true => 11688,
+                            false => 11689,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record JungleStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9948,
-                            false => 9949,
+                            true => 11690,
+                            false => 11691,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9950,
-                            false => 9951,
+                            true => 11692,
+                            false => 11693,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9952,
-                            false => 9953,
+                            true => 11694,
+                            false => 11695,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9954,
-                            false => 9955,
+                            true => 11696,
+                            false => 11697,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9956,
-                            false => 9957,
+                            true => 11698,
+                            false => 11699,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9958,
-                            false => 9959,
+                            true => 11700,
+                            false => 11701,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9960,
-                            false => 9961,
+                            true => 11702,
+                            false => 11703,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9962,
-                            false => 9963,
+                            true => 11704,
+                            false => 11705,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9964,
-                            false => 9965,
+                            true => 11706,
+                            false => 11707,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9966,
-                            false => 9967,
+                            true => 11708,
+                            false => 11709,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record JungleStairsBlock(Identifier Identifier, Direction Facing, TopBott
     
     public IBlock WithState(uint state) {
         return state switch {
-            9888 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            9889 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            9890 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            9891 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            9892 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            9893 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            9894 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            9895 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            9896 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            9897 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            9898 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            9899 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            9900 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            9901 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            9902 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            9903 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            9904 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            9905 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            9906 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            9907 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            9908 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            9909 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            9910 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            9911 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            9912 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            9913 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            9914 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            9915 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            9916 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            9917 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            9918 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            9919 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            9920 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            9921 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            9922 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            9923 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            9924 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            9925 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            9926 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            9927 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            9928 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            9929 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            9930 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            9931 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            9932 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            9933 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            9934 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            9935 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            9936 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            9937 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            9938 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            9939 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            9940 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            9941 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            9942 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            9943 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            9944 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            9945 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            9946 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            9947 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            9948 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            9949 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            9950 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            9951 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            9952 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            9953 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            9954 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            9955 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            9956 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            9957 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            9958 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            9959 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            9960 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            9961 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            9962 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            9963 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            9964 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            9965 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            9966 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            9967 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            11630 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            11631 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            11632 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            11633 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            11634 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            11635 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            11636 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            11637 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            11638 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            11639 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            11640 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            11641 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            11642 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            11643 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            11644 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            11645 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            11646 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            11647 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            11648 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            11649 => new JungleStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            11650 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            11651 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            11652 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            11653 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            11654 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            11655 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            11656 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            11657 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            11658 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            11659 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            11660 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            11661 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            11662 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            11663 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            11664 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            11665 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            11666 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            11667 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            11668 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            11669 => new JungleStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            11670 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            11671 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            11672 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            11673 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            11674 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            11675 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            11676 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            11677 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            11678 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            11679 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            11680 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            11681 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            11682 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            11683 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            11684 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            11685 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            11686 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            11687 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            11688 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            11689 => new JungleStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            11690 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            11691 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            11692 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            11693 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            11694 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            11695 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            11696 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            11697 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            11698 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            11699 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            11700 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            11701 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            11702 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            11703 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            11704 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            11705 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            11706 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            11707 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            11708 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            11709 => new JungleStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

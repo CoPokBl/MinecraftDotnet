@@ -206,7 +206,7 @@ public static class BlockStateTransform {
     }
 
     /// <summary>
-    /// <c>CrossCollisionBlock</c>, <c>WallBlock</c> and <c>RedStoneWireBlock</c>: the four horizontal
+    /// <c>CrossCollisionBlock</c>, <c>WallBlock</c> and <c>RedstoneWireBlock</c>: the four horizontal
     /// sides move round together, and a mirror swaps one opposite pair.
     /// </summary>
     private static readonly Rule Connections = new(
@@ -556,7 +556,7 @@ public static class BlockStateTransform {
             { BlockClass.TripWireBlock, Connections },
             { BlockClass.VineBlock, Connections },
             { BlockClass.MultifaceBlock, Connections },
-            { BlockClass.RedStoneWireBlock, Connections },
+            { BlockClass.RedstoneWireBlock, Connections },
             { BlockClass.MossyCarpetBlock, Connections },
             { BlockClass.HugeMushroomBlock, Connections },
             { BlockClass.FlowerBedBlock, Facing },

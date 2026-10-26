@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Minecraft.Data.Blocks;
 using Minecraft.Registry;
 using Minecraft.Schemas;
@@ -27,6 +28,28 @@ public static class StateParser {
         IBlock block = registry.Blocks[name];
 
         return properties is null ? block : Apply(block, properties);
+    }
+
+    /// <summary>
+    /// <c>BlockState.CODEC</c> over datapack JSON: the bare name of a block for its default state, or
+    /// <c>{id, properties}</c> for any state.
+    /// </summary>
+    public static IBlock ReadJson(MinecraftRegistry registry, JsonElement element) {
+        if (element.ValueKind == JsonValueKind.String) {
+            return Read(registry, Identifier.Parse(element.GetString()!), null);
+        }
+
+        CompoundTag? properties = null;
+        if (element.TryGetProperty("properties", out JsonElement written)) {
+            List<(string, INbtTag)> tags = [];
+            foreach (JsonProperty property in written.EnumerateObject()) {
+                tags.Add((property.Name, new StringTag(property.Value.GetString()!)));
+            }
+
+            properties = new CompoundTag(tags.ToArray());
+        }
+
+        return Read(registry, Identifier.Parse(element.GetProperty("id").GetString()!), properties);
     }
 
     /// <summary>The state with the given properties applied, throwing for one it does not have.</summary>

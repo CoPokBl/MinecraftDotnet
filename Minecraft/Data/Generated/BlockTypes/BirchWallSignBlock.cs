@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BirchWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:wall_sign", "block.minecraft.birch_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:birch_sign", BlockInfo.VanillaOnly, "minecraft:blocks/birch_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 2, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S120, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.birch_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:birch_sign", BlockInfo.VanillaOnly, "minecraft:blocks/birch_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 2, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S120, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S121 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S121 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S121 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S122 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S122 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S122 };
     private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S123 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S123 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S123 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 5843];
+    public BlockStateInfo StateInfo => States[StateId - 7431];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record BirchWallSignBlock(Identifier Identifier, Direction Facing, bool W
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record BirchWallSignBlock(Identifier Identifier, Direction Facing, bool W
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -82,20 +82,20 @@ public record BirchWallSignBlock(Identifier Identifier, Direction Facing, bool W
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5843,
-                    false => 5844,
+                    true => 7431,
+                    false => 7432,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5845,
-                    false => 5846,
+                    true => 7433,
+                    false => 7434,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5847,
-                    false => 5848,
+                    true => 7435,
+                    false => 7436,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5849,
-                    false => 5850,
+                    true => 7437,
+                    false => 7438,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -104,14 +104,14 @@ public record BirchWallSignBlock(Identifier Identifier, Direction Facing, bool W
     
     public IBlock WithState(uint state) {
         return state switch {
-            5843 => new BirchWallSignBlock(Identifier, Direction.North, true),
-            5844 => new BirchWallSignBlock(Identifier, Direction.North, false),
-            5845 => new BirchWallSignBlock(Identifier, Direction.South, true),
-            5846 => new BirchWallSignBlock(Identifier, Direction.South, false),
-            5847 => new BirchWallSignBlock(Identifier, Direction.West, true),
-            5848 => new BirchWallSignBlock(Identifier, Direction.West, false),
-            5849 => new BirchWallSignBlock(Identifier, Direction.East, true),
-            5850 => new BirchWallSignBlock(Identifier, Direction.East, false),
+            7431 => new BirchWallSignBlock(Identifier, Direction.North, true),
+            7432 => new BirchWallSignBlock(Identifier, Direction.North, false),
+            7433 => new BirchWallSignBlock(Identifier, Direction.South, true),
+            7434 => new BirchWallSignBlock(Identifier, Direction.South, false),
+            7435 => new BirchWallSignBlock(Identifier, Direction.West, true),
+            7436 => new BirchWallSignBlock(Identifier, Direction.West, false),
+            7437 => new BirchWallSignBlock(Identifier, Direction.East, true),
+            7438 => new BirchWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

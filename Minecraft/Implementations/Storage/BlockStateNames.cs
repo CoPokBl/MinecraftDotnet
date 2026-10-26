@@ -91,7 +91,7 @@ public static class BlockStateNames {
     }
 
     /// <summary>
-    /// A state as Anvil's palette entry: <c>{Name: "minecraft:oak_stairs", Properties: {...}}</c>.
+    /// A state as Anvil's palette entry: <c>{id: "minecraft:oak_stairs", properties: {...}}</c>.
     /// </summary>
     /// <remarks>
     /// The tag is shared rather than copied. Nothing writes to an <see cref="INbtTag"/>, so a palette
@@ -107,16 +107,31 @@ public static class BlockStateNames {
         CompoundTag properties = block.ToStateNbt();
 
         CompoundTag tag = properties.ChildCount == 0
-            ? new CompoundTag(("Name", new StringTag(block.Identifier.ToString())))
-            : new CompoundTag(("Name", new StringTag(block.Identifier.ToString())), ("Properties", properties));
+            ? new CompoundTag(("id", new StringTag(block.Identifier.ToString())))
+            : new CompoundTag(("id", new StringTag(block.Identifier.ToString())), ("properties", properties));
 
         cache.Tags[stateId] = tag;
         return tag;
     }
 
-    public static uint FromPaletteTag(CompoundTag tag, MinecraftRegistry registry) {
-        IBlock block = Lookup(tag["Name"].GetString(), registry);
-        return tag["Properties"] is CompoundTag properties ? block.WithState(properties).StateId : block.StateId;
+    /// <remarks>
+    /// <c>BlockState.CODEC</c> writes a default state as its bare name, and a list mixing names with
+    /// objects reaches the disk with each name wrapped as <c>{"": name}</c>. Data written before version
+    /// 5006 spells the two fields <c>Name</c> and <c>Properties</c>, which <c>BlockStateFieldNamesFix</c>
+    /// renames on load; nothing writes both, so reading whichever is there is the same fix.
+    /// </remarks>
+    public static uint FromPaletteTag(INbtTag tag, MinecraftRegistry registry) {
+        if (tag is StringTag name) {
+            return Lookup(name.Value, registry).StateId;
+        }
+
+        CompoundTag compound = tag.GetCompound();
+        if (compound[""] is { } wrapped) {
+            return FromPaletteTag(wrapped, registry);
+        }
+
+        IBlock block = Lookup((compound["id"] ?? compound["Name"]).GetString(), registry);
+        return (compound["properties"] ?? compound["Properties"]) is CompoundTag properties ? block.WithState(properties).StateId : block.StateId;
     }
 
     /// <summary>

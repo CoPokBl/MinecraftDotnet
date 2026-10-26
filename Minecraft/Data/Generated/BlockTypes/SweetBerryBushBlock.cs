@@ -11,23 +11,23 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock, IAged {
-    private static readonly BlockInfo Data = new("minecraft:sweet_berry_bush", "block.minecraft.sweet_berry_bush", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sweet_berries", BlockInfo.VanillaOnly, "minecraft:blocks/sweet_berry_bush");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "sweet_berry_bush", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, false, false, false, false, true, false, false, true, true, false, true, [], null, BlockShapes.S789, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.sweet_berry_bush", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sweet_berries", BlockInfo.VanillaOnly, "minecraft:blocks/sweet_berry_bush");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Popped, 7, "sweet_berry_bush", NoteBlockInstrument.Harp, true, false, false, true, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S790, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S401 };
     private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S79 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I1, I2
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 20941];
+    public BlockStateInfo StateInfo => States[StateId - 24298];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -41,7 +41,6 @@ public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock, IAge
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -61,6 +60,7 @@ public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock, IAge
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -74,10 +74,10 @@ public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock, IAge
     public uint StateId {
         get {
             return Age switch {
-                0 => 20941,
-                1 => 20942,
-                2 => 20943,
-                3 => 20944,
+                0 => 24298,
+                1 => 24299,
+                2 => 24300,
+                3 => 24301,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -85,10 +85,10 @@ public record SweetBerryBushBlock(Identifier Identifier, int Age) : IBlock, IAge
     
     public IBlock WithState(uint state) {
         return state switch {
-            20941 => new SweetBerryBushBlock(Identifier, 0),
-            20942 => new SweetBerryBushBlock(Identifier, 1),
-            20943 => new SweetBerryBushBlock(Identifier, 2),
-            20944 => new SweetBerryBushBlock(Identifier, 3),
+            24298 => new SweetBerryBushBlock(Identifier, 0),
+            24299 => new SweetBerryBushBlock(Identifier, 1),
+            24300 => new SweetBerryBushBlock(Identifier, 2),
+            24301 => new SweetBerryBushBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -237,8 +237,9 @@ public sealed class RuinedPortalPiece : TemplateStructurePiece {
     /// A stalactite of netherrack hanging from a position, up to eight blocks long.
     /// </summary>
     /// <remarks>
-    /// The first block is unconditional and each further one is a fresh half chance, so the length is
-    /// geometric rather than uniform and most columns are one or two blocks.
+    /// The first position is always tried and each further one is a fresh half chance, drawn whether or
+    /// not the position before it took a block, so the length is geometric rather than uniform and
+    /// most columns are one or two blocks.
     /// </remarks>
     private void AddNetherrackDripColumn(RandomSource random, IFeatureLevel level, Vec3<int> pos) {
         Vec3<int> current = pos;
@@ -263,7 +264,7 @@ public sealed class RuinedPortalPiece : TemplateStructurePiece {
     /// <p/>
     /// <b>The surface height is the level's frozen heightmap, not the noise column.</b> Those are
     /// different answers: <c>getBaseHeight</c> walks the density function and knows nothing about the
-    /// surface rules or the carvers, so a skirt laid against it sits a block or more off wherever they
+    /// material rules or the carvers, so a skirt laid against it sits a block or more off wherever they
     /// moved the ground. The piece is placed only by the chunk holding its centre and the skirt
     /// reaches fourteen blocks, so every column it asks about is inside the level's three by three.
     /// </remarks>
@@ -324,7 +325,15 @@ public sealed class RuinedPortalPiece : TemplateStructurePiece {
             && (_placement == RuinedPortalPlacement.InNether || !id.Equals(Block.Lava.Identifier));
     }
 
+    /// <summary>
+    /// Netherrack or a magma block, over anything <see cref="CanBeReplaced"/> allows. The test comes
+    /// first, so a drip column reaching air or lava neither writes nor spends the magma draw there.
+    /// </summary>
     private void PlaceNetherrackOrMagma(RandomSource random, IFeatureLevel level, Vec3<int> pos) {
+        if (!CanBeReplaced(level, pos)) {
+            return;
+        }
+
         bool magma = !_properties.Cold && random.NextFloat() < MagmaInsteadOfNetherrackProbability;
 
         level.SetState(pos.X, pos.Y, pos.Z,

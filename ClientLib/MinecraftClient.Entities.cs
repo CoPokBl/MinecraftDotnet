@@ -35,10 +35,10 @@ public sealed partial class MinecraftClient {
                 HandleTakeItemEntity(take);
                 return true;
             case ClientBoundUpdateEntityPositionPacket move:
-                HandleMove(move.EntityId, move.Delta, null, null, move.OnGround);
+                HandleMove(move.EntityId, (move.Delta, move.Steps), null, null, move.OnGround);
                 return true;
             case ClientBoundUpdateEntityPosAndRotPacket moveRot:
-                HandleMove(moveRot.EntityId, moveRot.Delta, moveRot.Yaw.DegreesF, moveRot.Pitch.DegreesF, moveRot.OnGround);
+                HandleMove(moveRot.EntityId, (moveRot.Delta, moveRot.Steps), moveRot.Yaw.DegreesF, moveRot.Pitch.DegreesF, moveRot.OnGround);
                 return true;
             case ClientBoundUpdateEntityRotationPacket rot:
                 HandleMove(rot.EntityId, null, rot.Yaw.DegreesF, rot.Pitch.DegreesF, rot.OnGround);
@@ -126,6 +126,11 @@ public sealed partial class MinecraftClient {
                     HandleAnimation(animated, animation.Animation);
                 }
                 return true;
+            case ClientBoundSwingAnimationPacket swing:
+                if (Entities.TryGetValue(swing.EntityId, out ClientEntity? swinging) && swinging.IsLiving) {
+                    swinging.Swing(swing.Hand, swing.Animation);
+                }
+                return true;
             default:
                 return false;
         }
@@ -133,12 +138,6 @@ public sealed partial class MinecraftClient {
 
     private void HandleAnimation(ClientEntity entity, ClientBoundEntityAnimationPacket.AnimationType animation) {
         switch (animation) {
-            case ClientBoundEntityAnimationPacket.AnimationType.SwingMainArm:
-                entity.Swing(Hand.MainHand);
-                break;
-            case ClientBoundEntityAnimationPacket.AnimationType.SwingOffhand:
-                entity.Swing(Hand.OffHand);
-                break;
             // Player.stopSleepInBed(false, false), for any player.
             case ClientBoundEntityAnimationPacket.AnimationType.LeaveBed when entity is LocalPlayer waking:
                 waking.StopSleepInBed(false);
@@ -222,30 +221,37 @@ public sealed partial class MinecraftClient {
         static bool IsEmpty(ItemStack? stack) => stack == null || stack.IsAir() || stack.Count <= 0;
     }
 
-    internal void HandleMove(int id, Vec3<float>? delta, float? yRot, float? xRot, bool onGround) {
+    /// <summary>
+    /// <c>FishingHook.handleEntityEvent</c>'s pull, toward the owner the spawn named. Vanilla resolves
+    /// <c>hookedIn</c> as the hooked entity id arrives; here it is looked up as the pull does, which differs only
+    /// for an entity that arrived in between.
+    /// </summary>
+    private void PullHookedEntity(ClientEntity hook) {
+        int hookedId = hook.Get(EntityDataFields.FishingHook.HookedEntity);
+        if (hookedId <= 0 || !Entities.TryGetValue(hookedId - 1, out ClientEntity? hooked)
+            || !Entities.TryGetValue(hook.SpawnData, out ClientEntity? owner) || !hooked.CanSimulateMovement) {
+            return;
+        }
+        Vec3d delta = new Vec3d(owner.Position.X - hook.Position.X, owner.Position.Y - hook.Position.Y, owner.Position.Z - hook.Position.Z) * 0.1;
+        hooked.DeltaMovement += delta;
+    }
+
+    /// <summary><c>ClientPacketListener.handleMoveEntity</c>.</summary>
+    internal void HandleMove(int id, (Vec3<float> Delta, IReadOnlyList<MovementDelta.Step>? Steps)? delta, float? yRot, float? xRot, bool onGround) {
         if (!Entities.TryGetValue(id, out ClientEntity? entity) || entity == Player) {
             return;
         }
-        Vec3d? position = delta is { } d
-            ? entity.DecodeDelta((long)Math.Round(d.X * 4096.0), (long)Math.Round(d.Y * 4096.0), (long)Math.Round(d.Z * 4096.0))
-            : null;
-        if (position is { } moved) {
-            entity.SetCodecBase(moved);
+        PositionPath? path = delta is { } d ? entity.DecodeDelta(d.Steps?.ToArray(), d.Delta) : null;
+        if (path != null) {
+            entity.SetCodecBase(path.EndPosition);
         }
         if (entity.IsLocalInstanceAuthoritative) {
             return;
         }
 
-        if (position is { } target) {
-            if (yRot != null) {
-                entity.InterpolateTo(target, yRot.Value, xRot!.Value);
-            }
-            else {
-                entity.InterpolateTo(target);
-            }
-        }
-        else if (yRot != null) {
-            entity.InterpolateRotation(yRot.Value, xRot!.Value);
+        bool hasRotation = yRot != null;
+        if (path != null || hasRotation) {
+            entity.MoveOrInterpolateTo(path, yRot ?? 0.0F, xRot ?? 0.0F, hasRotation);
         }
         entity.SetOnGroundFromServer(onGround);
     }

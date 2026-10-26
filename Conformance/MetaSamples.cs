@@ -93,7 +93,8 @@ public static class MetaSamples {
         { MetaFieldType.Vector3, "VECTOR3" },
         { MetaFieldType.Quaternion, "QUATERNION" },
         { MetaFieldType.ResolvableProfile, "RESOLVABLE_PROFILE" },
-        { MetaFieldType.HumanoidArm, "HUMANOID_ARM" }
+        { MetaFieldType.HumanoidArm, "HUMANOID_ARM" },
+        { MetaFieldType.DyeColor, "DYE_COLOR" }
     };
 
     /// <summary>
@@ -144,6 +145,7 @@ public static class MetaSamples {
         yield return (MetaFieldType.Vector3, new Vec3<float>(0, 0, 0));
         yield return (MetaFieldType.Quaternion, new Quaternion(0, 0, 0, 1));
         yield return (MetaFieldType.HumanoidArm, HumanoidArm.Right);
+        yield return (MetaFieldType.DyeColor, DyeColor.LightBlue);
     }
 
     /// <summary>Types with no sample above, so the runner can say so out loud.</summary>

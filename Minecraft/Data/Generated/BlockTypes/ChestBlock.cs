@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ChestBlock(Identifier Identifier, ChestType Type, Direction Facing, bool Waterlogged) : IBlock, IChestTyped, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:chest", "block.minecraft.chest", 2.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chest", "minecraft:chest", BlockInfo.VanillaOnly, "minecraft:blocks/chest");
-    private static readonly BlockStateInfo I0 = new(2.5f, 0, 1, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
+    private static readonly BlockInfo Data = new("block.minecraft.chest", 2.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chest", "minecraft:chest", BlockInfo.VanillaOnly, "minecraft:blocks/chest");
+    private static readonly BlockStateInfo I0 = new(2.5f, 0, 1, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
@@ -26,15 +26,15 @@ public record ChestBlock(Identifier Identifier, ChestType Type, Direction Facing
         I0, I1, I2, I3, I4, I5, I0, I1, I4, I5, I2, I3, I0, I1, I6, I7, I8, I9, I0, I1, I8, I9, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 3987];
+    public BlockStateInfo StateInfo => States[StateId - 5543];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -48,7 +48,6 @@ public record ChestBlock(Identifier Identifier, ChestType Type, Direction Facing
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -68,6 +67,7 @@ public record ChestBlock(Identifier Identifier, ChestType Type, Direction Facing
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -87,58 +87,58 @@ public record ChestBlock(Identifier Identifier, ChestType Type, Direction Facing
             return Type switch {
                 ChestType.Single => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 3987,
-                        false => 3988,
+                        true => 5543,
+                        false => 5544,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 3993,
-                        false => 3994,
+                        true => 5549,
+                        false => 5550,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 3999,
-                        false => 4000,
+                        true => 5555,
+                        false => 5556,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 4005,
-                        false => 4006,
+                        true => 5561,
+                        false => 5562,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 ChestType.Left => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 3989,
-                        false => 3990,
+                        true => 5545,
+                        false => 5546,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 3995,
-                        false => 3996,
+                        true => 5551,
+                        false => 5552,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 4001,
-                        false => 4002,
+                        true => 5557,
+                        false => 5558,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 4007,
-                        false => 4008,
+                        true => 5563,
+                        false => 5564,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 ChestType.Right => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 3991,
-                        false => 3992,
+                        true => 5547,
+                        false => 5548,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 3997,
-                        false => 3998,
+                        true => 5553,
+                        false => 5554,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 4003,
-                        false => 4004,
+                        true => 5559,
+                        false => 5560,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 4009,
-                        false => 4010,
+                        true => 5565,
+                        false => 5566,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -149,30 +149,30 @@ public record ChestBlock(Identifier Identifier, ChestType Type, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            3987 => new ChestBlock(Identifier, ChestType.Single, Direction.North, true),
-            3988 => new ChestBlock(Identifier, ChestType.Single, Direction.North, false),
-            3989 => new ChestBlock(Identifier, ChestType.Left, Direction.North, true),
-            3990 => new ChestBlock(Identifier, ChestType.Left, Direction.North, false),
-            3991 => new ChestBlock(Identifier, ChestType.Right, Direction.North, true),
-            3992 => new ChestBlock(Identifier, ChestType.Right, Direction.North, false),
-            3993 => new ChestBlock(Identifier, ChestType.Single, Direction.South, true),
-            3994 => new ChestBlock(Identifier, ChestType.Single, Direction.South, false),
-            3995 => new ChestBlock(Identifier, ChestType.Left, Direction.South, true),
-            3996 => new ChestBlock(Identifier, ChestType.Left, Direction.South, false),
-            3997 => new ChestBlock(Identifier, ChestType.Right, Direction.South, true),
-            3998 => new ChestBlock(Identifier, ChestType.Right, Direction.South, false),
-            3999 => new ChestBlock(Identifier, ChestType.Single, Direction.West, true),
-            4000 => new ChestBlock(Identifier, ChestType.Single, Direction.West, false),
-            4001 => new ChestBlock(Identifier, ChestType.Left, Direction.West, true),
-            4002 => new ChestBlock(Identifier, ChestType.Left, Direction.West, false),
-            4003 => new ChestBlock(Identifier, ChestType.Right, Direction.West, true),
-            4004 => new ChestBlock(Identifier, ChestType.Right, Direction.West, false),
-            4005 => new ChestBlock(Identifier, ChestType.Single, Direction.East, true),
-            4006 => new ChestBlock(Identifier, ChestType.Single, Direction.East, false),
-            4007 => new ChestBlock(Identifier, ChestType.Left, Direction.East, true),
-            4008 => new ChestBlock(Identifier, ChestType.Left, Direction.East, false),
-            4009 => new ChestBlock(Identifier, ChestType.Right, Direction.East, true),
-            4010 => new ChestBlock(Identifier, ChestType.Right, Direction.East, false),
+            5543 => new ChestBlock(Identifier, ChestType.Single, Direction.North, true),
+            5544 => new ChestBlock(Identifier, ChestType.Single, Direction.North, false),
+            5545 => new ChestBlock(Identifier, ChestType.Left, Direction.North, true),
+            5546 => new ChestBlock(Identifier, ChestType.Left, Direction.North, false),
+            5547 => new ChestBlock(Identifier, ChestType.Right, Direction.North, true),
+            5548 => new ChestBlock(Identifier, ChestType.Right, Direction.North, false),
+            5549 => new ChestBlock(Identifier, ChestType.Single, Direction.South, true),
+            5550 => new ChestBlock(Identifier, ChestType.Single, Direction.South, false),
+            5551 => new ChestBlock(Identifier, ChestType.Left, Direction.South, true),
+            5552 => new ChestBlock(Identifier, ChestType.Left, Direction.South, false),
+            5553 => new ChestBlock(Identifier, ChestType.Right, Direction.South, true),
+            5554 => new ChestBlock(Identifier, ChestType.Right, Direction.South, false),
+            5555 => new ChestBlock(Identifier, ChestType.Single, Direction.West, true),
+            5556 => new ChestBlock(Identifier, ChestType.Single, Direction.West, false),
+            5557 => new ChestBlock(Identifier, ChestType.Left, Direction.West, true),
+            5558 => new ChestBlock(Identifier, ChestType.Left, Direction.West, false),
+            5559 => new ChestBlock(Identifier, ChestType.Right, Direction.West, true),
+            5560 => new ChestBlock(Identifier, ChestType.Right, Direction.West, false),
+            5561 => new ChestBlock(Identifier, ChestType.Single, Direction.East, true),
+            5562 => new ChestBlock(Identifier, ChestType.Single, Direction.East, false),
+            5563 => new ChestBlock(Identifier, ChestType.Left, Direction.East, true),
+            5564 => new ChestBlock(Identifier, ChestType.Left, Direction.East, false),
+            5565 => new ChestBlock(Identifier, ChestType.Right, Direction.East, true),
+            5566 => new ChestBlock(Identifier, ChestType.Right, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

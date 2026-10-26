@@ -5,7 +5,7 @@ set -euo pipefail
 
 HOST="${1:-127.0.0.1}"
 PORT="${2:-25565}"
-VERSION="${MC_VERSION:-26.2}"
+VERSION="${MC_VERSION:-26.3}"
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DATA_DIR="${MC_DATA_DIR:-$HERE/../CodeGen/bin/Debug/net10.0}"

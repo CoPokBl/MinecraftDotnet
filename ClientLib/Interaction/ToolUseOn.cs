@@ -1,80 +1,85 @@
 using ClientLib.World;
 using ClientLib.World.BlockEntities;
+using Minecraft.Data.BlockTransformer;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;
+using Minecraft.Data.Sounds;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 
 namespace ClientLib.Interaction;
 
-/// <summary>Which of its block changes an axe's or a honeycomb's <c>useOn</c> made.</summary>
-public enum ToolBlockChange : byte {
-    None,
-
-    /// <summary><c>AxeItem.getStripped</c>.</summary>
-    Strip,
-
-    /// <summary><c>WeatheringCopper.getPrevious</c>: level event 3005.</summary>
-    Scrape,
-
-    /// <summary><c>HoneycombItem.WAX_OFF_BY_BLOCK</c>: level event 3004.</summary>
-    WaxOff,
-
-    /// <summary><c>HoneycombItem.getWaxed</c>: level event 3003.</summary>
-    WaxOn
-}
+/// <summary>
+/// What an acknowledged tool use did to the clicked block as its own player hears and sees it: the
+/// transform entry's sound and particle, or a honeycomb's waxing.
+/// </summary>
+/// <param name="LevelEvent">The level event raised at the clicked block, or 0 for none.</param>
+/// <param name="Sound">Played at the clicked block, or null for none.</param>
+/// <param name="ChestPartner">Whether the other half of a double chest gets the level event too.</param>
+/// <param name="PartnerRepeatsSound">
+/// Whether that half plays the sound a second time, at the clicked block, as <c>HoneycombItem.useOn</c> does.
+/// </param>
+public sealed record ToolUse(int LevelEvent, ISoundType? Sound, bool ChestPartner, bool PartnerRepeatsSound);
 
 /// <summary>
-/// <c>AxeItem.useOn</c> and <c>HoneycombItem.useOn</c> as their own player sees them, told from what an
-/// acknowledged use changed rather than predicted: the level events they raise with the player as the
-/// source, which the server sends to everyone else.
+/// <c>BlockTransformer.transformBlock</c> and <c>HoneycombItem.useOn</c> as their own player sees them,
+/// told from what an acknowledged use changed rather than predicted: the sounds and level events they
+/// play with the player as the source, which the server sends to everyone else.
 /// </summary>
 public static class ToolUseOn {
-    /// <summary>What the use changed the clicked block by, in <c>AxeItem.evaluateNewBlockState</c>'s order for an axe.</summary>
-    public static ToolBlockChange Classify(Identifier item, IBlock before, IBlock after) {
-        if (before.StateId == after.StateId) {
-            return ToolBlockChange.None;
-        }
-        if (item.Equals(Item.Honeycomb.Identifier)) {
-            return Turns(BlockConversions.Waxables, before, after) ? ToolBlockChange.WaxOn : ToolBlockChange.None;
-        }
-        if (!UsePrediction.Axes.Contains(item)) {
-            return ToolBlockChange.None;
-        }
-        if (BlockConversions.Strippables.ContainsKey(before.Identifier)) {
-            return Turns(BlockConversions.Strippables, before, after) ? ToolBlockChange.Strip : ToolBlockChange.None;
-        }
-        if (BlockConversions.WeatheringPrevious.ContainsKey(before.Identifier)) {
-            return Turns(BlockConversions.WeatheringPrevious, before, after) ? ToolBlockChange.Scrape : ToolBlockChange.None;
-        }
-        return Turns(BlockConversions.WaxOff, before, after) ? ToolBlockChange.WaxOff : ToolBlockChange.None;
-    }
-
-    private static bool Turns(IReadOnlyDictionary<Identifier, IBlock> table, IBlock before, IBlock after) =>
-        table.TryGetValue(before.Identifier, out IBlock? to) && to.Identifier == after.Identifier;
-
     /// <summary>
-    /// The level event the use raised at the clicked block, and at the other half of a double chest
-    /// (<c>ChestBlock.getConnectedBlockPos</c>) as the copper chests have.
+    /// The tool use that made the change, if one did: the transform entry that, asked about the block
+    /// as it was, answers the block it became.
     /// </summary>
-    public static void RaiseLevelEvents(ClientLevel level, UseOnOutcome use) {
-        IBlock before = level.Registry.Blocks.GetByStateId(use.ClickedBefore);
-        int type = Classify(use.Item.Type.Identifier, before, level.Registry.Blocks.GetByStateId(use.ClickedAfter)) switch {
-            ToolBlockChange.Scrape => 3005,
-            ToolBlockChange.WaxOff => 3004,
-            ToolBlockChange.WaxOn => 3003,
+    public static ToolUse? Classify(BlockTransforms transforms, ClientLevel level, UseOnOutcome use) {
+        if (use.ClickedBefore == use.ClickedAfter) {
+            return null;
+        }
+        MinecraftRegistry registry = level.Registry;
+        IBlock before = registry.Blocks.GetByStateId(use.ClickedBefore), after = registry.Blocks.GetByStateId(use.ClickedAfter);
+        if (use.Item.Type.Identifier.Equals(Item.Honeycomb.Identifier)) {
+            return BlockConversions.Waxables.TryGetValue(before.Identifier, out IBlock? waxed) && waxed.Identifier == after.Identifier
+                ? new ToolUse(3003, SoundType.HoneycombWaxOn, IsDoubleChest(before), IsDoubleChest(before))
+                : null;
+        }
+        (int cx, int cy, int cz) = use.Clicked;
+        BlockTransforms.Match? match = transforms.Find(use.Item, cx, cy, cz, use.Face,
+            (x, y, z) => x == cx && y == cy && z == cz ? use.ClickedBefore : level.GetState(x, y, z));
+        if (match == null || match.Result.Identifier != after.Identifier) {
+            return null;
+        }
+        BlockTransformData data = match.Data;
+        ISoundType? sound = data.Sound switch {
+            null => null,
+            { IsValue1: true } named => named.Value1!.Identifier == BlockTransformData.EmptySound ? null : named.Value1,
+            { } inline => inline.Value2!.Type
+        };
+        int levelEvent = data.Particle switch {
+            TransformParticle.Scrape => 3005,
+            TransformParticle.WaxOn => 3003,
+            TransformParticle.WaxOff => 3004,
             _ => 0
         };
-        if (type == 0) {
+        return new ToolUse(levelEvent, sound, data.TransformType == TransformType.CopperChest && IsDoubleChest(before), false);
+    }
+
+    private static bool IsDoubleChest(IBlock block) =>
+        BlockClasses.Is(block.Identifier, BlockClass.ChestBlock) && block is IChestTyped { Type: not ChestType.Single };
+
+    /// <summary>The level event at the clicked block, and at the other half of a double chest (<c>ChestBlock.getConnectedBlockPos</c>).</summary>
+    public static void RaiseLevelEvents(ClientLevel level, UseOnOutcome use) {
+        if (use.Tool is not { LevelEvent: not 0 } tool) {
             return;
         }
         (int x, int y, int z) = use.Clicked;
-        level.RaiseLevelEvent(type, x, y, z, 0);
-        if (before is IChestTyped { Type: not ChestType.Single } chest and IHorizontalFacing facing) {
+        level.RaiseLevelEvent(tool.LevelEvent, x, y, z, 0);
+        IBlock before = level.Registry.Blocks.GetByStateId(use.ClickedBefore);
+        if (tool.ChestPartner && before is IChestTyped chest and IHorizontalFacing facing) {
             Direction connected = chest.Type == ChestType.Left ? DirectionUtil.ClockWise(facing.Facing) : DirectionUtil.CounterClockWise(facing.Facing);
             (int stepX, int stepZ) = DirectionUtil.Step(connected);
-            level.RaiseLevelEvent(type, x + stepX, y, z + stepZ, 0);
+            level.RaiseLevelEvent(tool.LevelEvent, x + stepX, y, z + stepZ, 0);
         }
     }
 }

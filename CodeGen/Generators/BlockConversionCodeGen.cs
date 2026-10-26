@@ -4,8 +4,9 @@ using Newtonsoft.Json.Linq;
 namespace CodeGen.Generators;
 
 /// <summary>
-/// Turns block_conversion.json into <c>BlockConversions</c>: the axe's strippables, copper's weathering
-/// stages and the honeycomb's waxables, each with its inverse where vanilla reads one.
+/// Turns block_conversion.json into <c>BlockConversions</c>: copper's weathering stages and the
+/// honeycomb's waxables, each with its inverse. What a tool turns a block into is not here: that is the
+/// block_transformer registry, which a datapack decides.
 /// </summary>
 public static class BlockConversionCodeGen {
     private const string FileTemplate =
@@ -17,17 +18,13 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 
-/// <summary>Vanilla's block to block conversion tables, keyed by the block a tool is used on.</summary>
+/// <summary>Vanilla's block to block conversion tables, keyed by the block being converted.</summary>
 public static class BlockConversions {
-    /// <summary><c>AxeItem.STRIPPABLES</c>: what an axe strips a block to.</summary>
-    public static readonly IReadOnlyDictionary<Identifier, IBlock> Strippables = new Dictionary<Identifier, IBlock> {
-{strippables}    };
-
     /// <summary><c>WeatheringCopper.NEXT_BY_BLOCK</c>: the stage a block weathers to.</summary>
     public static readonly IReadOnlyDictionary<Identifier, IBlock> WeatheringNext = new Dictionary<Identifier, IBlock> {
 {next}    };
 
-    /// <summary><c>WeatheringCopper.PREVIOUS_BY_BLOCK</c>: the stage an axe scrapes a block back to.</summary>
+    /// <summary><c>WeatheringCopper.PREVIOUS_BY_BLOCK</c>: the stage before a block's.</summary>
     public static readonly IReadOnlyDictionary<Identifier, IBlock> WeatheringPrevious = new Dictionary<Identifier, IBlock> {
 {previous}    };
 
@@ -35,7 +32,7 @@ public static class BlockConversions {
     public static readonly IReadOnlyDictionary<Identifier, IBlock> Waxables = new Dictionary<Identifier, IBlock> {
 {waxables}    };
 
-    /// <summary><c>HoneycombItem.WAX_OFF_BY_BLOCK</c>: what an axe takes the wax off a block to.</summary>
+    /// <summary><c>HoneycombItem.WAX_OFF_BY_BLOCK</c>: a waxed block without its wax.</summary>
     public static readonly IReadOnlyDictionary<Identifier, IBlock> WaxOff = new Dictionary<Identifier, IBlock> {
 {waxOff}    };
 }
@@ -49,7 +46,6 @@ public static class BlockConversions {
         (string, string)[] weathering = Pairs("weathering");
         (string, string)[] waxables = Pairs("waxables");
         File.WriteAllText("BlockConversions.cs", FileTemplate
-            .Replace("{strippables}", Entries(Pairs("strippables")))
             .Replace("{next}", Entries(weathering))
             .Replace("{previous}", Entries(weathering.Select(p => (p.Item2, p.Item1))))
             .Replace("{waxables}", Entries(waxables))

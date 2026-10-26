@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CrimsonFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock, IHorizontalFacing, IInWall, IOpenable, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:fence_gate", "block.minecraft.crimson_fence_gate", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:crimson_fence_gate", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_fence_gate");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.Normal, 53, "nether_wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S68, BlockShapes.S1, BlockShapes.S1, BlockShapes.S69, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.crimson_fence_gate", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:crimson_fence_gate", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_fence_gate");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.PushPull, 53, "nether_wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S68, BlockShapes.S1, BlockShapes.S1, BlockShapes.S69, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { PathfindableLand = false, PathfindableAir = false, CollisionShape = BlockShapes.S40, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S39, OcclusionShape = BlockShapes.S71 };
     private static readonly BlockStateInfo I3 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S71, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
@@ -24,15 +24,15 @@ public record CrimsonFenceGateBlock(Identifier Identifier, Direction Facing, boo
         I0, I0, I1, I1, I2, I2, I3, I3, I0, I0, I1, I1, I2, I2, I3, I3, I4, I4, I5, I5, I6, I6, I7, I7, I4, I4, I5, I5, I6, I6, I7, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 21242];
+    public BlockStateInfo StateInfo => States[StateId - 24599];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record CrimsonFenceGateBlock(Identifier Identifier, Direction Facing, boo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record CrimsonFenceGateBlock(Identifier Identifier, Direction Facing, boo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -88,88 +88,88 @@ public record CrimsonFenceGateBlock(Identifier Identifier, Direction Facing, boo
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 21242,
-                            false => 21243,
+                            true => 24599,
+                            false => 24600,
                         },
                         false => Powered switch {
-                            true => 21244,
-                            false => 21245,
+                            true => 24601,
+                            false => 24602,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 21246,
-                            false => 21247,
+                            true => 24603,
+                            false => 24604,
                         },
                         false => Powered switch {
-                            true => 21248,
-                            false => 21249,
+                            true => 24605,
+                            false => 24606,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 21250,
-                            false => 21251,
+                            true => 24607,
+                            false => 24608,
                         },
                         false => Powered switch {
-                            true => 21252,
-                            false => 21253,
+                            true => 24609,
+                            false => 24610,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 21254,
-                            false => 21255,
+                            true => 24611,
+                            false => 24612,
                         },
                         false => Powered switch {
-                            true => 21256,
-                            false => 21257,
+                            true => 24613,
+                            false => 24614,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 21258,
-                            false => 21259,
+                            true => 24615,
+                            false => 24616,
                         },
                         false => Powered switch {
-                            true => 21260,
-                            false => 21261,
+                            true => 24617,
+                            false => 24618,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 21262,
-                            false => 21263,
+                            true => 24619,
+                            false => 24620,
                         },
                         false => Powered switch {
-                            true => 21264,
-                            false => 21265,
+                            true => 24621,
+                            false => 24622,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 21266,
-                            false => 21267,
+                            true => 24623,
+                            false => 24624,
                         },
                         false => Powered switch {
-                            true => 21268,
-                            false => 21269,
+                            true => 24625,
+                            false => 24626,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 21270,
-                            false => 21271,
+                            true => 24627,
+                            false => 24628,
                         },
                         false => Powered switch {
-                            true => 21272,
-                            false => 21273,
+                            true => 24629,
+                            false => 24630,
                         },
                     },
                 },
@@ -180,38 +180,38 @@ public record CrimsonFenceGateBlock(Identifier Identifier, Direction Facing, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            21242 => new CrimsonFenceGateBlock(Identifier, Direction.North, true, true, true),
-            21243 => new CrimsonFenceGateBlock(Identifier, Direction.North, true, true, false),
-            21244 => new CrimsonFenceGateBlock(Identifier, Direction.North, true, false, true),
-            21245 => new CrimsonFenceGateBlock(Identifier, Direction.North, true, false, false),
-            21246 => new CrimsonFenceGateBlock(Identifier, Direction.North, false, true, true),
-            21247 => new CrimsonFenceGateBlock(Identifier, Direction.North, false, true, false),
-            21248 => new CrimsonFenceGateBlock(Identifier, Direction.North, false, false, true),
-            21249 => new CrimsonFenceGateBlock(Identifier, Direction.North, false, false, false),
-            21250 => new CrimsonFenceGateBlock(Identifier, Direction.South, true, true, true),
-            21251 => new CrimsonFenceGateBlock(Identifier, Direction.South, true, true, false),
-            21252 => new CrimsonFenceGateBlock(Identifier, Direction.South, true, false, true),
-            21253 => new CrimsonFenceGateBlock(Identifier, Direction.South, true, false, false),
-            21254 => new CrimsonFenceGateBlock(Identifier, Direction.South, false, true, true),
-            21255 => new CrimsonFenceGateBlock(Identifier, Direction.South, false, true, false),
-            21256 => new CrimsonFenceGateBlock(Identifier, Direction.South, false, false, true),
-            21257 => new CrimsonFenceGateBlock(Identifier, Direction.South, false, false, false),
-            21258 => new CrimsonFenceGateBlock(Identifier, Direction.West, true, true, true),
-            21259 => new CrimsonFenceGateBlock(Identifier, Direction.West, true, true, false),
-            21260 => new CrimsonFenceGateBlock(Identifier, Direction.West, true, false, true),
-            21261 => new CrimsonFenceGateBlock(Identifier, Direction.West, true, false, false),
-            21262 => new CrimsonFenceGateBlock(Identifier, Direction.West, false, true, true),
-            21263 => new CrimsonFenceGateBlock(Identifier, Direction.West, false, true, false),
-            21264 => new CrimsonFenceGateBlock(Identifier, Direction.West, false, false, true),
-            21265 => new CrimsonFenceGateBlock(Identifier, Direction.West, false, false, false),
-            21266 => new CrimsonFenceGateBlock(Identifier, Direction.East, true, true, true),
-            21267 => new CrimsonFenceGateBlock(Identifier, Direction.East, true, true, false),
-            21268 => new CrimsonFenceGateBlock(Identifier, Direction.East, true, false, true),
-            21269 => new CrimsonFenceGateBlock(Identifier, Direction.East, true, false, false),
-            21270 => new CrimsonFenceGateBlock(Identifier, Direction.East, false, true, true),
-            21271 => new CrimsonFenceGateBlock(Identifier, Direction.East, false, true, false),
-            21272 => new CrimsonFenceGateBlock(Identifier, Direction.East, false, false, true),
-            21273 => new CrimsonFenceGateBlock(Identifier, Direction.East, false, false, false),
+            24599 => new CrimsonFenceGateBlock(Identifier, Direction.North, true, true, true),
+            24600 => new CrimsonFenceGateBlock(Identifier, Direction.North, true, true, false),
+            24601 => new CrimsonFenceGateBlock(Identifier, Direction.North, true, false, true),
+            24602 => new CrimsonFenceGateBlock(Identifier, Direction.North, true, false, false),
+            24603 => new CrimsonFenceGateBlock(Identifier, Direction.North, false, true, true),
+            24604 => new CrimsonFenceGateBlock(Identifier, Direction.North, false, true, false),
+            24605 => new CrimsonFenceGateBlock(Identifier, Direction.North, false, false, true),
+            24606 => new CrimsonFenceGateBlock(Identifier, Direction.North, false, false, false),
+            24607 => new CrimsonFenceGateBlock(Identifier, Direction.South, true, true, true),
+            24608 => new CrimsonFenceGateBlock(Identifier, Direction.South, true, true, false),
+            24609 => new CrimsonFenceGateBlock(Identifier, Direction.South, true, false, true),
+            24610 => new CrimsonFenceGateBlock(Identifier, Direction.South, true, false, false),
+            24611 => new CrimsonFenceGateBlock(Identifier, Direction.South, false, true, true),
+            24612 => new CrimsonFenceGateBlock(Identifier, Direction.South, false, true, false),
+            24613 => new CrimsonFenceGateBlock(Identifier, Direction.South, false, false, true),
+            24614 => new CrimsonFenceGateBlock(Identifier, Direction.South, false, false, false),
+            24615 => new CrimsonFenceGateBlock(Identifier, Direction.West, true, true, true),
+            24616 => new CrimsonFenceGateBlock(Identifier, Direction.West, true, true, false),
+            24617 => new CrimsonFenceGateBlock(Identifier, Direction.West, true, false, true),
+            24618 => new CrimsonFenceGateBlock(Identifier, Direction.West, true, false, false),
+            24619 => new CrimsonFenceGateBlock(Identifier, Direction.West, false, true, true),
+            24620 => new CrimsonFenceGateBlock(Identifier, Direction.West, false, true, false),
+            24621 => new CrimsonFenceGateBlock(Identifier, Direction.West, false, false, true),
+            24622 => new CrimsonFenceGateBlock(Identifier, Direction.West, false, false, false),
+            24623 => new CrimsonFenceGateBlock(Identifier, Direction.East, true, true, true),
+            24624 => new CrimsonFenceGateBlock(Identifier, Direction.East, true, true, false),
+            24625 => new CrimsonFenceGateBlock(Identifier, Direction.East, true, false, true),
+            24626 => new CrimsonFenceGateBlock(Identifier, Direction.East, true, false, false),
+            24627 => new CrimsonFenceGateBlock(Identifier, Direction.East, false, true, true),
+            24628 => new CrimsonFenceGateBlock(Identifier, Direction.East, false, true, false),
+            24629 => new CrimsonFenceGateBlock(Identifier, Direction.East, false, false, true),
+            24630 => new CrimsonFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

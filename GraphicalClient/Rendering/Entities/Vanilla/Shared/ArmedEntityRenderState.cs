@@ -63,10 +63,9 @@ public class ArmedEntityRenderState : LivingEntityRenderState {
     /// <summary><c>ArmedEntityRenderState.extractArmedEntityRenderState</c>.</summary>
     public static void ExtractArmedEntityRenderState(ClientEntity entity, ArmedEntityRenderState state, ItemRenderer items, float partialTick) {
         state.MainArm = MainArmOf(entity);
-        state.AttackArm = entity.SwingingArm != Hand.OffHand ? state.MainArm : Opposite(state.MainArm);
-        ItemStack attacking = ItemHeldByArm(entity, state.AttackArm);
-        state.SwingAnimationType = attacking.Get(DataComponent.SwingAnimation).Type;
-        state.AttackTime = entity.GetAttackAnim(partialTick);
+        state.AttackArm = entity.CurrentSwing?.Hand != Hand.OffHand ? state.MainArm : Opposite(state.MainArm);
+        state.SwingAnimationType = entity.CurrentSwing?.Animation.Type ?? SwingAnimationType.Whack;
+        state.AttackTime = entity.GetSwingAnimation(partialTick);
         state.RightHandItemStack = ItemHeldByArm(entity, HumanoidArm.Right);
         state.LeftHandItemStack = ItemHeldByArm(entity, HumanoidArm.Left);
         state.RightHandItemState = state.RightHandItemStack.IsAir() ? null

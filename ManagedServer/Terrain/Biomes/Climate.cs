@@ -79,26 +79,38 @@ public sealed record ClimateParameterPoint(ClimateParameter Temperature, Climate
 }
 
 /// <summary>
-/// Samples the six climate noises at a position, vanilla's <c>Climate.Sampler</c>.
+/// The six climate functions bound to one sampler context, vanilla's <c>Climate.Sampler</c>.
 /// </summary>
 /// <remarks>
-/// Takes <b>quart</b> coordinates, not block ones: biomes are stored one per 4x4x4 cell, so this is
-/// asked once per cell rather than once per block.
+/// Takes <b>quart</b> coordinates, not block ones: biomes are stored one per 4x4x4 cell.
 /// </remarks>
-public sealed class ClimateSampler(IDensityFunction temperature, IDensityFunction humidity,
-    IDensityFunction continentalness, IDensityFunction erosion, IDensityFunction depth,
-    IDensityFunction weirdness) {
+public sealed record ClimateSampler(BoundSampler Temperature, BoundSampler Humidity, BoundSampler Continentalness,
+    BoundSampler Erosion, BoundSampler Depth, BoundSampler Weirdness) {
 
     public ClimateTargetPoint Sample(int quartX, int quartY, int quartZ) {
-        SinglePointContext context = new(quartX << 2, quartY << 2, quartZ << 2);
+        int blockX = quartX << 2;
+        int blockY = quartY << 2;
+        int blockZ = quartZ << 2;
+        return Target(
+            Temperature.SampleValue(blockX, blockY, blockZ),
+            Humidity.SampleValue(blockX, blockY, blockZ),
+            Continentalness.SampleValue(blockX, blockY, blockZ),
+            Erosion.SampleValue(blockX, blockY, blockZ),
+            Depth.SampleValue(blockX, blockY, blockZ),
+            Weirdness.SampleValue(blockX, blockY, blockZ));
+    }
+
+    /// <summary><c>Climate.target</c>.</summary>
+    public static ClimateTargetPoint Target(float temperature, float humidity, float continentalness, float erosion,
+        float depth, float weirdness) {
 
         return new ClimateTargetPoint(
-            ClimateParameter.Quantize((float)temperature.Compute(context)),
-            ClimateParameter.Quantize((float)humidity.Compute(context)),
-            ClimateParameter.Quantize((float)continentalness.Compute(context)),
-            ClimateParameter.Quantize((float)erosion.Compute(context)),
-            ClimateParameter.Quantize((float)depth.Compute(context)),
-            ClimateParameter.Quantize((float)weirdness.Compute(context)));
+            ClimateParameter.Quantize(temperature),
+            ClimateParameter.Quantize(humidity),
+            ClimateParameter.Quantize(continentalness),
+            ClimateParameter.Quantize(erosion),
+            ClimateParameter.Quantize(depth),
+            ClimateParameter.Quantize(weirdness));
     }
 }
 
@@ -169,7 +181,7 @@ public sealed class ClimateParameterList<T> {
     }
 
     private const int Dimensions = 7;
-    private const int ChildrenPerNode = 6;
+    private const int ChildrenPerNode = 19;
 
     private abstract class RTreeNode(ClimateParameter[] parameterSpace) {
         public readonly ClimateParameter[] ParameterSpace = parameterSpace;
@@ -323,8 +335,8 @@ public sealed class ClimateParameterList<T> {
     }
 
     /// <summary>
-    /// Splits a sorted list into buckets of the largest power of six that fits, which is what keeps
-    /// the tree balanced at six children a node.
+    /// Splits a sorted list into buckets of the largest power of <see cref="ChildrenPerNode"/> that
+    /// fits, which is what keeps the tree balanced.
     /// </summary>
     private static List<RTreeSubTree> Bucketize(List<RTreeNode> nodes) {
         List<RTreeSubTree> buckets = [];
@@ -418,5 +430,34 @@ public sealed class MultiNoiseBiomeSource(ClimateParameterList<Identifier> param
     /// <summary>Quart coordinates, as <see cref="ClimateSampler.Sample"/> takes.</summary>
     public Identifier GetBiome(int quartX, int quartY, int quartZ, ClimateSampler sampler) {
         return parameters.FindValue(sampler.Sample(quartX, quartY, quartZ));
+    }
+
+    /// <summary>
+    /// <c>createResolverForChunk</c>: the six climate functions sampled as volumes over a chunk's quart
+    /// grid, then answered from the buffers. The volume path rounds differently from the point path,
+    /// so a chunk's stored biomes are not always what <see cref="GetBiome"/> says for the same cells.
+    /// </summary>
+    public Func<int, int, int, Identifier> ResolverForChunk(ClimateSampler sampler, int minQuartX, int minQuartY, int minQuartZ,
+        int quartSizeX, int quartSizeY, int quartSizeZ) {
+
+        DensityVolume volume = new(quartSizeX, quartSizeY, quartSizeZ, minQuartX << 2, minQuartY << 2, minQuartZ << 2, 4, 4, 4);
+        DensityBuffer temperature = DensityBuffer.CreateUnpooled(volume.Size);
+        DensityBuffer vegetation = DensityBuffer.CreateUnpooled(volume.Size);
+        DensityBuffer continents = DensityBuffer.CreateUnpooled(volume.Size);
+        DensityBuffer erosion = DensityBuffer.CreateUnpooled(volume.Size);
+        DensityBuffer depth = DensityBuffer.CreateUnpooled(volume.Size);
+        DensityBuffer ridges = DensityBuffer.CreateUnpooled(volume.Size);
+        sampler.Temperature.SampleVolume(temperature, volume);
+        sampler.Humidity.SampleVolume(vegetation, volume);
+        sampler.Continentalness.SampleVolume(continents, volume);
+        sampler.Erosion.SampleVolume(erosion, volume);
+        sampler.Depth.SampleVolume(depth, volume);
+        sampler.Weirdness.SampleVolume(ridges, volume);
+
+        return (quartX, quartY, quartZ) => {
+            int index = volume.IndexUnchecked(quartX - minQuartX, quartY - minQuartY, quartZ - minQuartZ);
+            return parameters.FindValue(ClimateSampler.Target(temperature[index], vegetation[index], continents[index],
+                erosion[index], depth[index], ridges[index]));
+        };
     }
 }

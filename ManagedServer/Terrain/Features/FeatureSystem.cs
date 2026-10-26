@@ -57,7 +57,7 @@ public sealed class FeatureSystem {
     /// Every biome in this chunk's own grid. Vanilla takes the union over the <b>three by three</b>
     /// around the chunk, because it has those chunks' biome arrays to hand and this does not. The
     /// difference is a feature that only a neighbouring chunk's biome asks for and whose scattered
-    /// position lands inside this one, which needs both a biome border and a <c>random_offset</c> to
+    /// position lands inside this one, which needs both a biome border and an <c>offset</c> to
     /// reach. It cannot shift any other feature's seed, because those are keyed on the global index
     /// rather than on how many features ran.
     /// </param>
@@ -86,7 +86,7 @@ public sealed class FeatureSystem {
             ChunkFeatureLevel level = new(column, outside, biomes, _registry, chunkX, chunkZ, unit.MinY,
                 unit.MaxY, seaLevel, _seed, _levelRandom.At(chunkX << 4, 0, chunkZ << 4), neighbours);
 
-            GenerationHeightContext heights = new(unit.MinY, unit.MaxY - unit.MinY);
+            GenerationHeightContext heights = new(unit.MinY, unit.MaxY - unit.MinY, seaLevel);
             PlacementContext context = new(level, heights, HasFeature, null);
 
             WorldgenRandom random = new(new XoroshiroRandomSource(RandomSupportUniqueSeed()));

@@ -232,6 +232,11 @@ public static class EntityDataFields {
         public static readonly EntityDataField<bool> IsIgnited = new(18);
     }
 
+    public static class Cushion {
+        /// <summary><c>DATA_COLOR</c>.</summary>
+        public static readonly EntityDataField<DyeColor> Color = new(8);
+    }
+
     public static class Display {
         /// <summary><c>DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID</c>.</summary>
         public static readonly EntityDataField<int> TransformationInterpolationStartDeltaTicks = new(8);
@@ -284,7 +289,7 @@ public static class EntityDataFields {
         public static readonly EntityDataField<int> Phase = new(16);
     }
 
-    public static class EnderMan {
+    public static class Enderman {
         /// <summary><c>DATA_CARRY_STATE</c>.</summary>
         public static readonly EntityDataField<Optional<IBlock>> CarryState = new(16);
         /// <summary><c>DATA_CREEPY</c>.</summary>

@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record JackOLanternBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:jack_o_lantern", "block.minecraft.jack_o_lantern", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jack_o_lantern", BlockInfo.VanillaOnly, "minecraft:blocks/jack_o_lantern");
-    private static readonly BlockStateInfo I0 = new(1f, 15, 15, PushReaction.Destroy, 15, "wood", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.jack_o_lantern", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jack_o_lantern", BlockInfo.VanillaOnly, "minecraft:blocks/jack_o_lantern");
+    private static readonly BlockStateInfo I0 = new(1f, 15, 15, PushReaction.Popped, 15, "wood", NoteBlockInstrument.Harp, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record JackOLanternBlock(Identifier Identifier, Direction Facing) : IBloc
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record JackOLanternBlock(Identifier Identifier, Direction Facing) : IBloc
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,10 +69,10 @@ public record JackOLanternBlock(Identifier Identifier, Direction Facing) : IBloc
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 7023,
-                Direction.South => 7024,
-                Direction.West => 7025,
-                Direction.East => 7026,
+                Direction.North => 8693,
+                Direction.South => 8694,
+                Direction.West => 8695,
+                Direction.East => 8696,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -80,10 +80,10 @@ public record JackOLanternBlock(Identifier Identifier, Direction Facing) : IBloc
     
     public IBlock WithState(uint state) {
         return state switch {
-            7023 => new JackOLanternBlock(Identifier, Direction.North),
-            7024 => new JackOLanternBlock(Identifier, Direction.South),
-            7025 => new JackOLanternBlock(Identifier, Direction.West),
-            7026 => new JackOLanternBlock(Identifier, Direction.East),
+            8693 => new JackOLanternBlock(Identifier, Direction.North),
+            8694 => new JackOLanternBlock(Identifier, Direction.South),
+            8695 => new JackOLanternBlock(Identifier, Direction.West),
+            8696 => new JackOLanternBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

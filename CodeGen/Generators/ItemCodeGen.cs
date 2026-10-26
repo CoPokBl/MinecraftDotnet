@@ -298,7 +298,9 @@ public static class Item {
                 ? null
                 : $"new ItemAttributeModifier[] {{ {string.Join(", ", modifiers)} }}";
         } },
-        { "Identifier", token => $"\"{token.ToObject<string>()!}\"" },
+        // Cast rather than left a string: the value is boxed into an object dictionary, where the
+        // implicit conversion never runs and a reader's cast to Identifier would throw.
+        { "Identifier", token => $"(Identifier)\"{token.ToObject<string>()!}\"" },
         { "ItemRarity", token => {
             string rarityStr = token.ToObject<string>()!;
             string rarityGuess = CodeGenUtils.NamespacedIdToPascalName(rarityStr);
@@ -459,10 +461,28 @@ public static class Item {
             return $"new UseEffectsComponent.Data({Bool(obj["can_sprint"], false)}, " +
                    $"{Bool(obj["interact_vibrations"], true)}, {Float(obj["speed_multiplier"]?.Value<float>() ?? 0.2f)})";
         } },
-        { "SwingAnimationComponent.Data", token => {
+        { "SwingAnimation", token => {
             JObject obj = token.ToObject<JObject>()!;
             string type = CodeGenUtils.NamespacedIdToPascalName(obj["type"]?.Value<string>() ?? "whack");
-            return $"new SwingAnimationComponent.Data(SwingAnimationType.{type}, {obj["duration"]?.Value<int>() ?? 6})";
+            return $"new SwingAnimation(SwingAnimationType.{type}, {obj["duration"]?.Value<int>() ?? 6})";
+        } },
+        { "PotDecorationsComponent.Data", token => {
+            JObject obj = token.ToObject<JObject>()!;
+            IEnumerable<string> sides = new[] { "back", "left", "right", "front" }.Select(side => obj[side] is { } stack
+                ? $"new ItemStack({CodeGenUtils.NamespacedIdToPascalName((stack.Type == JTokenType.String ? stack : stack["id"])!.ToObject<string>()!)}, {stack["count"]?.ToObject<int>() ?? 1})"
+                : "null");
+            return $"new PotDecorationsComponent.Data({string.Join(", ", sides)})";
+        } },
+        { "CookingFuelComponent.Data", token => $"new CookingFuelComponent.Data({ResolvableInt(token["burn_time"]!)}, {ResolvableFloat(token["speed_multiplier"]!)})" },
+        { "BrewingFuelComponent.Data", token => $"new BrewingFuelComponent.Data({ResolvableInt(token["uses"]!)}, {ResolvableFloat(token["speed_multiplier"]!)})" },
+        { "MobVisibilityComponent.Data", token =>
+            $"new MobVisibilityComponent.Data({GetIdSet(token["targeting_entity_types"]!, id => id)}, {Float(token["visibility"]!.Value<float>())})" },
+        { "SignText", token => {
+            // Every sign reports the empty text, and anything else would need the text written out.
+            JObject obj = token.ToObject<JObject>()!;
+            bool empty = (obj["color"]?.Value<string>() ?? "black") == "black" && !(obj["has_glowing_text"]?.Value<bool>() ?? false)
+                         && obj["filtered_messages"] == null && obj["messages"]!.All(line => line.Type == JTokenType.String && line.Value<string>() == "");
+            return empty ? "SignText.Empty" : throw new Exception("Sign text default " + token + " is not the empty text, which is not supported.");
         } },
         { "AttackRangeComponent.Data", token => {
             JObject obj = token.ToObject<JObject>()!;
@@ -503,11 +523,6 @@ public static class Item {
             // The type is the only key vanilla reports, and it travels beside the tag rather than in it.
             return $"new EntityData(EntityType.{type}, new CompoundTag())";
         } },
-        { "IItem[]", token => {
-            IEnumerable<string> items = token.ToObject<JArray>()!
-                .Select(item => CodeGenUtils.NamespacedIdToPascalName(item.ToObject<string>()!));
-            return $"new IItem[] {{ {string.Join(", ", items)} }}";
-        } },
         { "Dictionary<string, string>", token => {
             IEnumerable<string> properties = token.ToObject<JObject>()!
                 .Properties()
@@ -538,6 +553,9 @@ public static class Item {
         { "minecraft:repairable", token => GetIdSet(token["items"]!, id => id) },
         { "minecraft:damage_resistant", token => DamageTypeSet(token["types"]!) },
         { "minecraft:glider", _ => "GliderComponent.Value" },
+        { "minecraft:waxed", _ => "WaxedComponent.Value" },
+        { "minecraft:villager_food", token => token["nutrition"]!.Value<int>().ToString() },
+        { "minecraft:compostable", token => ResolvableInt(token["layers"]!) },
         { "minecraft:death_protection", token => {
             IEnumerable<string> effects = (token["death_effects"]?.ToObject<JArray>() ?? [])
                 .Select(ConsumeEffect);
@@ -546,6 +564,14 @@ public static class Item {
     };
 
     private static Dictionary<string, int> _protocolIdLookup = new();
+
+    private static string ResolvableInt(JToken token) {
+        return token.Type == JTokenType.String ? $"ResolvableInt.Of(\"{token.Value<string>()}\")" : $"ResolvableInt.Of({token.Value<int>()})";
+    }
+
+    private static string ResolvableFloat(JToken token) {
+        return token.Type == JTokenType.String ? $"ResolvableFloat.Of(\"{token.Value<string>()}\")" : $"ResolvableFloat.Of({Float(token.Value<float>())})";
+    }
 
     private static string GetIdSet(JToken obj, Func<string, string> transformer) {
         if (obj.Type == JTokenType.String) {

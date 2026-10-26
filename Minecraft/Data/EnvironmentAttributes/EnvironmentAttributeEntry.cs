@@ -79,7 +79,9 @@ public enum EnvironmentAttributeOperation {
     Or,
     Nor,
     Xor,
-    Xnor
+    Xnor,
+    Append,
+    Overlay
 }
 
 public static class EnvironmentAttributeOperationExtensions {
@@ -98,6 +100,8 @@ public static class EnvironmentAttributeOperationExtensions {
         EnvironmentAttributeOperation.Nor => "nor",
         EnvironmentAttributeOperation.Xor => "xor",
         EnvironmentAttributeOperation.Xnor => "xnor",
+        EnvironmentAttributeOperation.Append => "append",
+        EnvironmentAttributeOperation.Overlay => "overlay",
         _ => throw new ArgumentOutOfRangeException(nameof(operation), operation, null)
     };
 
@@ -116,6 +120,8 @@ public static class EnvironmentAttributeOperationExtensions {
         "nor" => EnvironmentAttributeOperation.Nor,
         "xor" => EnvironmentAttributeOperation.Xor,
         "xnor" => EnvironmentAttributeOperation.Xnor,
+        "append" => EnvironmentAttributeOperation.Append,
+        "overlay" => EnvironmentAttributeOperation.Overlay,
         _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown environment attribute modifier")
     };
 }

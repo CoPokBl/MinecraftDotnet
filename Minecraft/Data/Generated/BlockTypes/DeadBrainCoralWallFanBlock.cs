@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DeadBrainCoralWallFanBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:base_coral_wall_fan", "block.minecraft.dead_brain_coral_wall_fan", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:dead_brain_coral_fan", BlockInfo.VanillaOnly, "minecraft:blocks/dead_brain_coral_fan");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Normal, 21, "stone", NoteBlockInstrument.Basedrum, false, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S394, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.dead_brain_coral_wall_fan", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:dead_brain_coral_fan", BlockInfo.VanillaOnly, "minecraft:blocks/dead_brain_coral_fan");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.PushPull, 21, "stone", NoteBlockInstrument.Basedrum, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S394, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S395 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S395 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S395 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S396 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S396 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S396 };
     private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S397 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S397 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S397 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 15195];
+    public BlockStateInfo StateInfo => States[StateId - 18552];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record DeadBrainCoralWallFanBlock(Identifier Identifier, Direction Facing
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record DeadBrainCoralWallFanBlock(Identifier Identifier, Direction Facing
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -82,20 +82,20 @@ public record DeadBrainCoralWallFanBlock(Identifier Identifier, Direction Facing
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 15195,
-                    false => 15196,
+                    true => 18552,
+                    false => 18553,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 15197,
-                    false => 15198,
+                    true => 18554,
+                    false => 18555,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 15199,
-                    false => 15200,
+                    true => 18556,
+                    false => 18557,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 15201,
-                    false => 15202,
+                    true => 18558,
+                    false => 18559,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -104,14 +104,14 @@ public record DeadBrainCoralWallFanBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            15195 => new DeadBrainCoralWallFanBlock(Identifier, Direction.North, true),
-            15196 => new DeadBrainCoralWallFanBlock(Identifier, Direction.North, false),
-            15197 => new DeadBrainCoralWallFanBlock(Identifier, Direction.South, true),
-            15198 => new DeadBrainCoralWallFanBlock(Identifier, Direction.South, false),
-            15199 => new DeadBrainCoralWallFanBlock(Identifier, Direction.West, true),
-            15200 => new DeadBrainCoralWallFanBlock(Identifier, Direction.West, false),
-            15201 => new DeadBrainCoralWallFanBlock(Identifier, Direction.East, true),
-            15202 => new DeadBrainCoralWallFanBlock(Identifier, Direction.East, false),
+            18552 => new DeadBrainCoralWallFanBlock(Identifier, Direction.North, true),
+            18553 => new DeadBrainCoralWallFanBlock(Identifier, Direction.North, false),
+            18554 => new DeadBrainCoralWallFanBlock(Identifier, Direction.South, true),
+            18555 => new DeadBrainCoralWallFanBlock(Identifier, Direction.South, false),
+            18556 => new DeadBrainCoralWallFanBlock(Identifier, Direction.West, true),
+            18557 => new DeadBrainCoralWallFanBlock(Identifier, Direction.West, false),
+            18558 => new DeadBrainCoralWallFanBlock(Identifier, Direction.East, true),
+            18559 => new DeadBrainCoralWallFanBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

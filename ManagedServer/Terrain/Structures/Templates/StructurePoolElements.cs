@@ -278,25 +278,6 @@ public sealed class ListPoolElement : IStructurePoolElement {
 public sealed class FeaturePoolElement(Identifier featureId, PlacedFeature feature,
     PoolProjection projection) : IStructurePoolElement {
 
-    /// <summary>What a jigsaw block on a feature element is named, <c>DEFAULT_JIGSAW_NAME</c>.</summary>
-    /// <remarks>
-    /// <b>Load bearing, and the whole of what lets a feature element attach to anything.</b>
-    /// <c>canAttach</c> asks that the source's <c>target</c> equal the candidate's <c>name</c>, and
-    /// every decoration connection in the game targets <c>bottom</c>. Named anything else, a feature
-    /// element matches no connection, and a village comes out with no trees or hay beside its roads.
-    /// </remarks>
-    private static readonly Identifier DefaultJigsawName = "minecraft:bottom";
-
-    /// <summary>
-    /// The jigsaw block entity every feature element pretends to have, <c>fillDefaultJigsawNBT</c>.
-    /// </summary>
-    private static readonly CompoundTag DefaultJigsawNbt = new(
-        ("name", new StringTag(DefaultJigsawName)),
-        ("final_state", new StringTag("minecraft:air")),
-        ("pool", new StringTag(TemplatePools.Empty)),
-        ("target", new StringTag(JigsawBlockInfo.Empty)),
-        ("joint", new StringTag("rollable")));
-
     public PoolProjection Projection { get; set; } = projection;
 
     public Identifier FeatureId => featureId;
@@ -311,7 +292,10 @@ public sealed class FeaturePoolElement(Identifier featureId, PlacedFeature featu
         uint jigsaw = ((IOriented)Block.Jigsaw)
             .WithOrientation(Orientations.Join(BlockFace.NegY, BlockFace.PosZ)).StateId;
 
-        return [JigsawBlockInfo.Of(new TemplateBlockInfo(position, jigsaw, DefaultJigsawNbt), registry)];
+        // No name, which canAttach reads as accepting whatever a connection targets: a feature element
+        // joins any upward facing jigsaw that reaches its pool.
+        return [new JigsawBlockInfo(new TemplateBlockInfo(position, jigsaw, null), JointType.Rollable, null,
+            TemplatePools.Empty, JigsawBlockInfo.Empty, 0, 0)];
     }
 
     public BoundingBox GetBoundingBox(StructureTemplateManager templates, Vec3<int> position,

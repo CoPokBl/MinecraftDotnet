@@ -8,6 +8,7 @@ using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
+using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Placement;
 
 namespace ManagedServer.Interaction.Rules;
@@ -47,6 +48,12 @@ public sealed class CandleInteractionRule : IBlockInteractionRule {
 /// <c>DragonEggBlock</c>: clicking it makes it jump somewhere else nearby.
 /// </summary>
 public sealed class DragonEggInteractionRule : IBlockInteractionRule {
+    /// <summary>The level event the client draws the egg's portal trail from.</summary>
+    private const int TeleportEvent = 2015;
+
+    private const int HorizontalRadius = 16;
+    private const int VerticalRadius = 8;
+
     public BlockClass VanillaClass => BlockClass.DragonEggBlock;
 
     public InteractionResult UseWithoutItem(IBlock block, World world, Vec3<int> pos, Player player,
@@ -83,11 +90,41 @@ public sealed class DragonEggInteractionRule : IBlockInteractionRule {
                 continue;
             }
 
-            // setBlock 2 then removeBlock: the egg appears before it disappears, and neither write
-            // runs the neighbour change pass.
+            // The portal trail is drawn by the client from where the egg went, packed relative to
+            // where it was; the event goes out before either write.
+            world.GetAudienceOf(pos).SendPacket(new ClientBoundWorldEventPacket {
+                Event = TeleportEvent,
+                Location = pos,
+                Data = PackDifferenceInPosition(pos, testPos, HorizontalRadius, VerticalRadius, HorizontalRadius),
+                DisableRelativeVolume = false
+            });
+
+            // setBlock 2 then removeBlock: the egg appears before it disappears. Only the removal runs
+            // the neighbour change pass, since removeBlock writes with the default flags.
             world.SetBlock(testPos, block, flags: BlockUpdateFlags.Clients);
-            world.SetBlock(pos, Block.Air, flags: BlockUpdateFlags.Clients);
+            world.SetBlock(pos, Block.Air);
             return;
         }
+    }
+
+    /// <summary>
+    /// <c>BlockUtil.packDifferenceInPosition</c>: each axis's offset shifted up by its radius into a
+    /// byte, x highest. An offset past 127 either way is refused, as vanilla refuses it.
+    /// </summary>
+    private static int PackDifferenceInPosition(Vec3<int> pos, Vec3<int> testPos, int xRadius, int yRadius,
+        int zRadius) {
+        int xDiff = CheckDifferenceInBounds(testPos.X, pos.X);
+        int yDiff = CheckDifferenceInBounds(testPos.Y, pos.Y);
+        int zDiff = CheckDifferenceInBounds(testPos.Z, pos.Z);
+        return (xDiff + xRadius & 0xFF) << 16 | (yDiff + yRadius & 0xFF) << 8 | (zDiff + zRadius & 0xFF);
+    }
+
+    private static int CheckDifferenceInBounds(int from, int to) {
+        int difference = from - to;
+        if (difference is > 127 or < -127) {
+            throw new ArgumentException("The difference must be within [127,-127]");
+        }
+
+        return difference;
     }
 }

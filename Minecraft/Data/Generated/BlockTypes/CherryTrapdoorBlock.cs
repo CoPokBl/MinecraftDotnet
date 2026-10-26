@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CherryTrapdoorBlock(Identifier Identifier, Direction Facing, TopBottom Half, bool Open, bool Powered, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IOpenable, IPowered, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:trapdoor", "block.minecraft.cherry_trapdoor", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cherry_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_trapdoor");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 36, "cherry_wood", NoteBlockInstrument.Bass, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockInfo Data = new("block.minecraft.cherry_trapdoor", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cherry_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_trapdoor");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 36, "cherry_wood", NoteBlockInstrument.Bass, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
@@ -28,15 +28,15 @@ public record CherryTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
         I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I4, I5, I4, I5, I6, I7, I6, I7, I2, I3, I2, I3, I6, I7, I6, I7, I4, I5, I4, I5, I8, I9, I8, I9, I2, I3, I2, I3, I8, I9, I8, I9, I4, I5, I4, I5, I10, I11, I10, I11, I2, I3, I2, I3, I10, I11, I10, I11, I4, I5, I4, I5
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 7434];
+    public BlockStateInfo StateInfo => States[StateId - 9104];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -50,7 +50,6 @@ public record CherryTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -70,6 +69,7 @@ public record CherryTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -95,44 +95,44 @@ public record CherryTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7434,
-                                false => 7435,
+                                true => 9104,
+                                false => 9105,
                             },
                             false => Waterlogged switch {
-                                true => 7436,
-                                false => 7437,
+                                true => 9106,
+                                false => 9107,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7438,
-                                false => 7439,
+                                true => 9108,
+                                false => 9109,
                             },
                             false => Waterlogged switch {
-                                true => 7440,
-                                false => 7441,
+                                true => 9110,
+                                false => 9111,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7442,
-                                false => 7443,
+                                true => 9112,
+                                false => 9113,
                             },
                             false => Waterlogged switch {
-                                true => 7444,
-                                false => 7445,
+                                true => 9114,
+                                false => 9115,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7446,
-                                false => 7447,
+                                true => 9116,
+                                false => 9117,
                             },
                             false => Waterlogged switch {
-                                true => 7448,
-                                false => 7449,
+                                true => 9118,
+                                false => 9119,
                             },
                         },
                     },
@@ -142,44 +142,44 @@ public record CherryTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7450,
-                                false => 7451,
+                                true => 9120,
+                                false => 9121,
                             },
                             false => Waterlogged switch {
-                                true => 7452,
-                                false => 7453,
+                                true => 9122,
+                                false => 9123,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7454,
-                                false => 7455,
+                                true => 9124,
+                                false => 9125,
                             },
                             false => Waterlogged switch {
-                                true => 7456,
-                                false => 7457,
+                                true => 9126,
+                                false => 9127,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7458,
-                                false => 7459,
+                                true => 9128,
+                                false => 9129,
                             },
                             false => Waterlogged switch {
-                                true => 7460,
-                                false => 7461,
+                                true => 9130,
+                                false => 9131,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7462,
-                                false => 7463,
+                                true => 9132,
+                                false => 9133,
                             },
                             false => Waterlogged switch {
-                                true => 7464,
-                                false => 7465,
+                                true => 9134,
+                                false => 9135,
                             },
                         },
                     },
@@ -189,44 +189,44 @@ public record CherryTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7466,
-                                false => 7467,
+                                true => 9136,
+                                false => 9137,
                             },
                             false => Waterlogged switch {
-                                true => 7468,
-                                false => 7469,
+                                true => 9138,
+                                false => 9139,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7470,
-                                false => 7471,
+                                true => 9140,
+                                false => 9141,
                             },
                             false => Waterlogged switch {
-                                true => 7472,
-                                false => 7473,
+                                true => 9142,
+                                false => 9143,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7474,
-                                false => 7475,
+                                true => 9144,
+                                false => 9145,
                             },
                             false => Waterlogged switch {
-                                true => 7476,
-                                false => 7477,
+                                true => 9146,
+                                false => 9147,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7478,
-                                false => 7479,
+                                true => 9148,
+                                false => 9149,
                             },
                             false => Waterlogged switch {
-                                true => 7480,
-                                false => 7481,
+                                true => 9150,
+                                false => 9151,
                             },
                         },
                     },
@@ -236,44 +236,44 @@ public record CherryTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7482,
-                                false => 7483,
+                                true => 9152,
+                                false => 9153,
                             },
                             false => Waterlogged switch {
-                                true => 7484,
-                                false => 7485,
+                                true => 9154,
+                                false => 9155,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7486,
-                                false => 7487,
+                                true => 9156,
+                                false => 9157,
                             },
                             false => Waterlogged switch {
-                                true => 7488,
-                                false => 7489,
+                                true => 9158,
+                                false => 9159,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7490,
-                                false => 7491,
+                                true => 9160,
+                                false => 9161,
                             },
                             false => Waterlogged switch {
-                                true => 7492,
-                                false => 7493,
+                                true => 9162,
+                                false => 9163,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7494,
-                                false => 7495,
+                                true => 9164,
+                                false => 9165,
                             },
                             false => Waterlogged switch {
-                                true => 7496,
-                                false => 7497,
+                                true => 9166,
+                                false => 9167,
                             },
                         },
                     },
@@ -286,70 +286,70 @@ public record CherryTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     
     public IBlock WithState(uint state) {
         return state switch {
-            7434 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
-            7435 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
-            7436 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
-            7437 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
-            7438 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
-            7439 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
-            7440 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
-            7441 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
-            7442 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
-            7443 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
-            7444 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
-            7445 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
-            7446 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
-            7447 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
-            7448 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
-            7449 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
-            7450 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
-            7451 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
-            7452 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
-            7453 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
-            7454 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
-            7455 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
-            7456 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
-            7457 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
-            7458 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
-            7459 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
-            7460 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
-            7461 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
-            7462 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
-            7463 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
-            7464 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
-            7465 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
-            7466 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
-            7467 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
-            7468 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
-            7469 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
-            7470 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
-            7471 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
-            7472 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
-            7473 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
-            7474 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
-            7475 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
-            7476 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
-            7477 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
-            7478 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
-            7479 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
-            7480 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
-            7481 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
-            7482 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
-            7483 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
-            7484 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
-            7485 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
-            7486 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
-            7487 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
-            7488 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
-            7489 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
-            7490 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
-            7491 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
-            7492 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
-            7493 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
-            7494 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
-            7495 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
-            7496 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
-            7497 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
+            9104 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
+            9105 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
+            9106 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
+            9107 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
+            9108 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
+            9109 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
+            9110 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
+            9111 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
+            9112 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
+            9113 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
+            9114 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
+            9115 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
+            9116 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
+            9117 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
+            9118 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
+            9119 => new CherryTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
+            9120 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
+            9121 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
+            9122 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
+            9123 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
+            9124 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
+            9125 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
+            9126 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
+            9127 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
+            9128 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
+            9129 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
+            9130 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
+            9131 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
+            9132 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
+            9133 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
+            9134 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
+            9135 => new CherryTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
+            9136 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
+            9137 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
+            9138 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
+            9139 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
+            9140 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
+            9141 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
+            9142 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
+            9143 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
+            9144 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
+            9145 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
+            9146 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
+            9147 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
+            9148 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
+            9149 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
+            9150 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
+            9151 => new CherryTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
+            9152 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
+            9153 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
+            9154 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
+            9155 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
+            9156 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
+            9157 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
+            9158 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
+            9159 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
+            9160 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
+            9161 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
+            9162 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
+            9163 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
+            9164 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
+            9165 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
+            9166 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
+            9167 => new CherryTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

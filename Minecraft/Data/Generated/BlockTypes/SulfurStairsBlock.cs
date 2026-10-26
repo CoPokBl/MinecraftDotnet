@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SulfurStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.sulfur_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sulfur_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/sulfur_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 18, "sulfur", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.sulfur_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sulfur_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/sulfur_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 18, "sulfur", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record SulfurStairsBlock(Identifier Identifier, Direction Facing, TopBott
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 24699];
+    public BlockStateInfo StateInfo => States[StateId - 28056];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record SulfurStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record SulfurStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record SulfurStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 24699,
-                            false => 24700,
+                            true => 28056,
+                            false => 28057,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 24701,
-                            false => 24702,
+                            true => 28058,
+                            false => 28059,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 24703,
-                            false => 24704,
+                            true => 28060,
+                            false => 28061,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 24705,
-                            false => 24706,
+                            true => 28062,
+                            false => 28063,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 24707,
-                            false => 24708,
+                            true => 28064,
+                            false => 28065,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 24709,
-                            false => 24710,
+                            true => 28066,
+                            false => 28067,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 24711,
-                            false => 24712,
+                            true => 28068,
+                            false => 28069,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 24713,
-                            false => 24714,
+                            true => 28070,
+                            false => 28071,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 24715,
-                            false => 24716,
+                            true => 28072,
+                            false => 28073,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 24717,
-                            false => 24718,
+                            true => 28074,
+                            false => 28075,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record SulfurStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 24719,
-                            false => 24720,
+                            true => 28076,
+                            false => 28077,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 24721,
-                            false => 24722,
+                            true => 28078,
+                            false => 28079,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 24723,
-                            false => 24724,
+                            true => 28080,
+                            false => 28081,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 24725,
-                            false => 24726,
+                            true => 28082,
+                            false => 28083,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 24727,
-                            false => 24728,
+                            true => 28084,
+                            false => 28085,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 24729,
-                            false => 24730,
+                            true => 28086,
+                            false => 28087,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 24731,
-                            false => 24732,
+                            true => 28088,
+                            false => 28089,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 24733,
-                            false => 24734,
+                            true => 28090,
+                            false => 28091,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 24735,
-                            false => 24736,
+                            true => 28092,
+                            false => 28093,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 24737,
-                            false => 24738,
+                            true => 28094,
+                            false => 28095,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record SulfurStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 24739,
-                            false => 24740,
+                            true => 28096,
+                            false => 28097,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 24741,
-                            false => 24742,
+                            true => 28098,
+                            false => 28099,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 24743,
-                            false => 24744,
+                            true => 28100,
+                            false => 28101,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 24745,
-                            false => 24746,
+                            true => 28102,
+                            false => 28103,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 24747,
-                            false => 24748,
+                            true => 28104,
+                            false => 28105,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 24749,
-                            false => 24750,
+                            true => 28106,
+                            false => 28107,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 24751,
-                            false => 24752,
+                            true => 28108,
+                            false => 28109,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 24753,
-                            false => 24754,
+                            true => 28110,
+                            false => 28111,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 24755,
-                            false => 24756,
+                            true => 28112,
+                            false => 28113,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 24757,
-                            false => 24758,
+                            true => 28114,
+                            false => 28115,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record SulfurStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 24759,
-                            false => 24760,
+                            true => 28116,
+                            false => 28117,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 24761,
-                            false => 24762,
+                            true => 28118,
+                            false => 28119,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 24763,
-                            false => 24764,
+                            true => 28120,
+                            false => 28121,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 24765,
-                            false => 24766,
+                            true => 28122,
+                            false => 28123,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 24767,
-                            false => 24768,
+                            true => 28124,
+                            false => 28125,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 24769,
-                            false => 24770,
+                            true => 28126,
+                            false => 28127,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 24771,
-                            false => 24772,
+                            true => 28128,
+                            false => 28129,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 24773,
-                            false => 24774,
+                            true => 28130,
+                            false => 28131,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 24775,
-                            false => 24776,
+                            true => 28132,
+                            false => 28133,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 24777,
-                            false => 24778,
+                            true => 28134,
+                            false => 28135,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record SulfurStairsBlock(Identifier Identifier, Direction Facing, TopBott
     
     public IBlock WithState(uint state) {
         return state switch {
-            24699 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            24700 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            24701 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            24702 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            24703 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            24704 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            24705 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            24706 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            24707 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            24708 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            24709 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            24710 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            24711 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            24712 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            24713 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            24714 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            24715 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            24716 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            24717 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            24718 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            24719 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            24720 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            24721 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            24722 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            24723 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            24724 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            24725 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            24726 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            24727 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            24728 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            24729 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            24730 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            24731 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            24732 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            24733 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            24734 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            24735 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            24736 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            24737 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            24738 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            24739 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            24740 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            24741 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            24742 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            24743 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            24744 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            24745 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            24746 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            24747 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            24748 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            24749 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            24750 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            24751 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            24752 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            24753 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            24754 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            24755 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            24756 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            24757 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            24758 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            24759 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            24760 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            24761 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            24762 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            24763 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            24764 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            24765 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            24766 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            24767 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            24768 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            24769 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            24770 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            24771 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            24772 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            24773 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            24774 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            24775 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            24776 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            24777 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            24778 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            28056 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            28057 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            28058 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            28059 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            28060 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            28061 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            28062 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            28063 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            28064 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            28065 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            28066 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            28067 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            28068 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            28069 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            28070 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            28071 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            28072 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            28073 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            28074 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            28075 => new SulfurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            28076 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            28077 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            28078 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            28079 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            28080 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            28081 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            28082 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            28083 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            28084 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            28085 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            28086 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            28087 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            28088 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            28089 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            28090 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            28091 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            28092 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            28093 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            28094 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            28095 => new SulfurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            28096 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            28097 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            28098 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            28099 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            28100 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            28101 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            28102 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            28103 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            28104 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            28105 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            28106 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            28107 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            28108 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            28109 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            28110 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            28111 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            28112 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            28113 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            28114 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            28115 => new SulfurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            28116 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            28117 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            28118 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            28119 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            28120 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            28121 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            28122 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            28123 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            28124 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            28125 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            28126 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            28127 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            28128 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            28129 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            28130 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            28131 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            28132 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            28133 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            28134 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            28135 => new SulfurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

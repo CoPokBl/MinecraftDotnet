@@ -217,8 +217,8 @@ public sealed class RuinedPortalStructure(Structure.StructureSettings settings,
     }
 
     private static bool IsOpaque(StructureGenerationContext context, uint stateId, bool oceanFloor) {
-        IBlock block = context.Registry.Blocks.GetByStateId(stateId);
-        return oceanFloor ? block.BlocksMotion : !block.Air;
+        FeatureBlockData blocks = FeatureBlockData.For(context.Registry);
+        return oceanFloor ? blocks.BlocksMotionInHeightmapAt(stateId) : !blocks.IsAir(stateId);
     }
 
     private static int WithinInterval(RandomSource random, int preferredMin, int max) {

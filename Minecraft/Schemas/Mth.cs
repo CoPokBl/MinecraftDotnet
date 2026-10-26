@@ -314,9 +314,7 @@ public static class Mth {
 
     /// <summary>
     /// Java's <c>Math.round(float)</c>, which <see cref="Math.Round(double)"/> is not: C# rounds a tie
-    /// to the nearest even, so a half comes back as zero rather than as one. <c>NumberProvider.getInt</c>
-    /// is this method, so a loot table asking for half a roll rolls once upstream and would roll
-    /// nothing here.
+    /// to the nearest even, so a half comes back as zero rather than as one.
     /// <p/>
     /// Transcribed rather than written as <c>floor(x + 0.5f)</c>, which is what the Java docs say but
     /// not what the method does: adding a half to the float just below it rounds up in the addition
@@ -549,17 +547,56 @@ public static class Mth {
             Lerp2(alphaX, alphaY, x001, x101, x011, x111));
     }
 
+    /// <summary><c>Mth.lerp2(float...)</c>.</summary>
+    public static float Lerp2(float alphaX, float alphaY, float x00, float x10, float x01, float x11) {
+        return Lerp(alphaY, Lerp(alphaX, x00, x10), Lerp(alphaX, x01, x11));
+    }
+
+    /// <summary><c>Mth.lerp3(float...)</c>.</summary>
+    public static float Lerp3(float alphaX, float alphaY, float alphaZ,
+        float x000, float x100, float x010, float x110,
+        float x001, float x101, float x011, float x111) {
+
+        return Lerp(alphaZ, Lerp2(alphaX, alphaY, x000, x100, x010, x110),
+            Lerp2(alphaX, alphaY, x001, x101, x011, x111));
+    }
+
     /// <summary>
     /// <c>Mth.smoothstep</c>, the fifth order fade Perlin noise interpolates with. Not the cubic
     /// <c>3x^2 - 2x^3</c> that goes by the same name elsewhere.
     /// </summary>
-    public static double Smoothstep(double x) {
-        return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
+    public static float Smoothstep(float x) {
+        return x * x * x * (x * (x * 6.0F - 15.0F) + 10.0F);
     }
 
     /// <summary><c>Mth.smoothstepDerivative</c>.</summary>
-    public static double SmoothstepDerivative(double x) {
-        return 30.0 * x * x * (x - 1.0) * (x - 1.0);
+    public static float SmoothstepDerivative(float x) {
+        return 30.0F * x * x * (x - 1.0F) * (x - 1.0F);
+    }
+
+    /// <summary><c>Mth.cube(float)</c>.</summary>
+    public static float Cube(float value) {
+        return value * value * value;
+    }
+
+    /// <summary><c>Mth.lengthSquared(float, float)</c>.</summary>
+    public static float LengthSquared(float x, float y) {
+        return x * x + y * y;
+    }
+
+    /// <summary><c>Mth.lengthSquared(float, float, float)</c>.</summary>
+    public static float LengthSquared(float x, float y, float z) {
+        return x * x + y * y + z * z;
+    }
+
+    /// <summary><c>Mth.length(float, float)</c>.</summary>
+    public static float Length(float x, float y) {
+        return Sqrt(LengthSquared(x, y));
+    }
+
+    /// <summary><c>Mth.length(float, float, float)</c>.</summary>
+    public static float Length(float x, float y, float z) {
+        return Sqrt(LengthSquared(x, y, z));
     }
 
     /// <summary><c>Mth.catmullrom</c>, the spline segment cubic spline density functions use.</summary>

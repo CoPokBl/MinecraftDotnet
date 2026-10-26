@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:end_portal_frame", "block.minecraft.end_portal_frame", 3600000f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:end_portal_frame", BlockInfo.VanillaOnly, null);
-    private static readonly BlockStateInfo I0 = new(-1f, 1, 0, PushReaction.Normal, 27, "glass", NoteBlockInstrument.Basedrum, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S526, BlockShapes.S526, BlockShapes.S1, BlockShapes.S526, BlockShapes.S526, BlockShapes.S526);
+    private static readonly BlockInfo Data = new("block.minecraft.end_portal_frame", 3600000f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:end_portal_frame", BlockInfo.VanillaOnly, null);
+    private static readonly BlockStateInfo I0 = new(-1f, 1, 0, PushReaction.PushPull, 27, "glass", NoteBlockInstrument.Basedrum, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S527, BlockShapes.S527, BlockShapes.S1, BlockShapes.S527, BlockShapes.S527, BlockShapes.S527);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S400, CollisionShape = BlockShapes.S400, OcclusionShape = BlockShapes.S400, VisualShape = BlockShapes.S400, SupportShape = BlockShapes.S400 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I0, I0, I1, I1, I1, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 9469];
+    public BlockStateInfo StateInfo => States[StateId - 11203];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -74,17 +74,17 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
         get {
             return Eye switch {
                 true => Facing switch {
-                    Direction.North => 9469,
-                    Direction.South => 9470,
-                    Direction.West => 9471,
-                    Direction.East => 9472,
+                    Direction.North => 11203,
+                    Direction.South => 11204,
+                    Direction.West => 11205,
+                    Direction.East => 11206,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
-                    Direction.North => 9473,
-                    Direction.South => 9474,
-                    Direction.West => 9475,
-                    Direction.East => 9476,
+                    Direction.North => 11207,
+                    Direction.South => 11208,
+                    Direction.West => 11209,
+                    Direction.East => 11210,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
             };
@@ -93,14 +93,14 @@ public record EndPortalFrameBlock(Identifier Identifier, bool Eye, Direction Fac
     
     public IBlock WithState(uint state) {
         return state switch {
-            9469 => new EndPortalFrameBlock(Identifier, true, Direction.North),
-            9470 => new EndPortalFrameBlock(Identifier, true, Direction.South),
-            9471 => new EndPortalFrameBlock(Identifier, true, Direction.West),
-            9472 => new EndPortalFrameBlock(Identifier, true, Direction.East),
-            9473 => new EndPortalFrameBlock(Identifier, false, Direction.North),
-            9474 => new EndPortalFrameBlock(Identifier, false, Direction.South),
-            9475 => new EndPortalFrameBlock(Identifier, false, Direction.West),
-            9476 => new EndPortalFrameBlock(Identifier, false, Direction.East),
+            11203 => new EndPortalFrameBlock(Identifier, true, Direction.North),
+            11204 => new EndPortalFrameBlock(Identifier, true, Direction.South),
+            11205 => new EndPortalFrameBlock(Identifier, true, Direction.West),
+            11206 => new EndPortalFrameBlock(Identifier, true, Direction.East),
+            11207 => new EndPortalFrameBlock(Identifier, false, Direction.North),
+            11208 => new EndPortalFrameBlock(Identifier, false, Direction.South),
+            11209 => new EndPortalFrameBlock(Identifier, false, Direction.West),
+            11210 => new EndPortalFrameBlock(Identifier, false, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -367,11 +367,22 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
                 break;
             }
 
-            // don't move player when they haven't sent ack for teleports
+            // ServerGamePacketListenerImpl.handleAcceptTeleportPacket: no other move counts until the
+            // teleport is acknowledged, and the acknowledgement is itself the move off the teleport.
             case ServerBoundConfirmTeleportPacket ct: {
-                if (ct.TeleportId == _waitingTeleport) {
-                    _waitingTeleport = -1;
+                if (ct.TeleportId != _waitingTeleport) {
+                    break;
                 }
+
+                _waitingTeleport = -1;
+                // Vanilla disconnects for a NaN position or a non finite rotation. Nothing here validates a
+                // move packet, so the move is dropped instead.
+                if (!IsValidMove(ct.Position, ct.Yaw, ct.Pitch)) {
+                    break;
+                }
+
+                OnGround = false;
+                MoveFromClient(ct.Position, Angle.FromDegrees(ct.Yaw), Angle.FromDegrees(ct.Pitch));
                 break;
             }
 
@@ -440,6 +451,12 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     /// the fall out of what came back (<c>ServerGamePacketListenerImpl.handleMovePlayer</c>); a player's
     /// client owns their movement, so the position it sent is what that is here.
     /// </summary>
+    /// <summary><c>ServerGamePacketListenerImpl.containsInvalidValues</c>, the other way round.</summary>
+    private static bool IsValidMove(Vec3<double> position, float yaw, float pitch) {
+        return !double.IsNaN(position.X) && !double.IsNaN(position.Y) && !double.IsNaN(position.Z)
+               && float.IsFinite(yaw) && float.IsFinite(pitch);
+    }
+
     private void MoveFromClient(Vec3<double> newPos, Angle? yaw = null, Angle? pitch = null) {
         double startY = Position.Y;
         Move(newPos, yaw, pitch);
@@ -726,20 +743,14 @@ public class Player : LivingEntity, IAudience, IPermissionHolder {
     }
 
     /// <summary>
-    /// <c>ServerPlayer.swing(hand, true)</c>: play the swing animation for everyone, this player
-    /// included.
-    /// <p/>
-    /// Most swings need nothing from the server, because the client animates its own and
-    /// <c>ArmSwingFeature</c> only relays it to onlookers. This is for the case where the server
-    /// decided: an interaction answering <c>InteractionResult.SuccessServer</c> has to be shown to the
-    /// player who did it, since their client had no reason to think anything happened.
+    /// The swing after an interaction that answered a <see cref="SwingSource"/> other than none, as
+    /// the packet handlers end <c>handleUseItemOn</c>, <c>handleUseItem</c> and <c>handleInteract</c>.
+    /// The player's own client is only told when it did not predict the swing itself.
     /// </summary>
-    public void SwingArm(Hand hand) {
-        SendToSelfAndViewers(new ClientBoundEntityAnimationPacket {
-            EntityId = NetId,
-            Animation = hand == Hand.OffHand
-                ? ClientBoundEntityAnimationPacket.AnimationType.SwingOffhand
-                : ClientBoundEntityAnimationPacket.AnimationType.SwingMainArm
-        });
+    /// <param name="animation">The used stack's interact animation, read before the use changed it.</param>
+    public void SwingAfterInteraction(Hand hand, SwingAnimation animation, SwingSource source) {
+        if (source != SwingSource.None) {
+            Swing(hand, animation, source != SwingSource.Predicted);
+        }
     }
 }

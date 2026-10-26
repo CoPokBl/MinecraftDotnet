@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PrismarineBrickStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.prismarine_brick_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:prismarine_brick_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/prismarine_brick_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 31, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.prismarine_brick_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:prismarine_brick_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/prismarine_brick_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 31, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record PrismarineBrickStairsBlock(Identifier Identifier, Direction Facing
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 12714];
+    public BlockStateInfo StateInfo => States[StateId - 14561];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record PrismarineBrickStairsBlock(Identifier Identifier, Direction Facing
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record PrismarineBrickStairsBlock(Identifier Identifier, Direction Facing
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record PrismarineBrickStairsBlock(Identifier Identifier, Direction Facing
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12714,
-                            false => 12715,
+                            true => 14561,
+                            false => 14562,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12716,
-                            false => 12717,
+                            true => 14563,
+                            false => 14564,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12718,
-                            false => 12719,
+                            true => 14565,
+                            false => 14566,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12720,
-                            false => 12721,
+                            true => 14567,
+                            false => 14568,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12722,
-                            false => 12723,
+                            true => 14569,
+                            false => 14570,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12724,
-                            false => 12725,
+                            true => 14571,
+                            false => 14572,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12726,
-                            false => 12727,
+                            true => 14573,
+                            false => 14574,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12728,
-                            false => 12729,
+                            true => 14575,
+                            false => 14576,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12730,
-                            false => 12731,
+                            true => 14577,
+                            false => 14578,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12732,
-                            false => 12733,
+                            true => 14579,
+                            false => 14580,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record PrismarineBrickStairsBlock(Identifier Identifier, Direction Facing
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12734,
-                            false => 12735,
+                            true => 14581,
+                            false => 14582,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12736,
-                            false => 12737,
+                            true => 14583,
+                            false => 14584,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12738,
-                            false => 12739,
+                            true => 14585,
+                            false => 14586,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12740,
-                            false => 12741,
+                            true => 14587,
+                            false => 14588,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12742,
-                            false => 12743,
+                            true => 14589,
+                            false => 14590,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12744,
-                            false => 12745,
+                            true => 14591,
+                            false => 14592,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12746,
-                            false => 12747,
+                            true => 14593,
+                            false => 14594,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12748,
-                            false => 12749,
+                            true => 14595,
+                            false => 14596,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12750,
-                            false => 12751,
+                            true => 14597,
+                            false => 14598,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12752,
-                            false => 12753,
+                            true => 14599,
+                            false => 14600,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record PrismarineBrickStairsBlock(Identifier Identifier, Direction Facing
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12754,
-                            false => 12755,
+                            true => 14601,
+                            false => 14602,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12756,
-                            false => 12757,
+                            true => 14603,
+                            false => 14604,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12758,
-                            false => 12759,
+                            true => 14605,
+                            false => 14606,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12760,
-                            false => 12761,
+                            true => 14607,
+                            false => 14608,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12762,
-                            false => 12763,
+                            true => 14609,
+                            false => 14610,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12764,
-                            false => 12765,
+                            true => 14611,
+                            false => 14612,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12766,
-                            false => 12767,
+                            true => 14613,
+                            false => 14614,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12768,
-                            false => 12769,
+                            true => 14615,
+                            false => 14616,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12770,
-                            false => 12771,
+                            true => 14617,
+                            false => 14618,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12772,
-                            false => 12773,
+                            true => 14619,
+                            false => 14620,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record PrismarineBrickStairsBlock(Identifier Identifier, Direction Facing
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12774,
-                            false => 12775,
+                            true => 14621,
+                            false => 14622,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12776,
-                            false => 12777,
+                            true => 14623,
+                            false => 14624,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12778,
-                            false => 12779,
+                            true => 14625,
+                            false => 14626,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12780,
-                            false => 12781,
+                            true => 14627,
+                            false => 14628,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12782,
-                            false => 12783,
+                            true => 14629,
+                            false => 14630,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12784,
-                            false => 12785,
+                            true => 14631,
+                            false => 14632,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12786,
-                            false => 12787,
+                            true => 14633,
+                            false => 14634,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12788,
-                            false => 12789,
+                            true => 14635,
+                            false => 14636,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12790,
-                            false => 12791,
+                            true => 14637,
+                            false => 14638,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12792,
-                            false => 12793,
+                            true => 14639,
+                            false => 14640,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record PrismarineBrickStairsBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            12714 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            12715 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            12716 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            12717 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            12718 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            12719 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            12720 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            12721 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            12722 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            12723 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            12724 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            12725 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            12726 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12727 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12728 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            12729 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            12730 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12731 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12732 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            12733 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            12734 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            12735 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            12736 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            12737 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            12738 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            12739 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            12740 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            12741 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            12742 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            12743 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            12744 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            12745 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            12746 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12747 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12748 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            12749 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            12750 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12751 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12752 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            12753 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            12754 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            12755 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            12756 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            12757 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            12758 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            12759 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            12760 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            12761 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            12762 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            12763 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            12764 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            12765 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            12766 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12767 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12768 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            12769 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            12770 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12771 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12772 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            12773 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            12774 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            12775 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            12776 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            12777 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            12778 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            12779 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            12780 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            12781 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            12782 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            12783 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            12784 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            12785 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            12786 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12787 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12788 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            12789 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            12790 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12791 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12792 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            12793 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            14561 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            14562 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            14563 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            14564 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            14565 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            14566 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            14567 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            14568 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            14569 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            14570 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            14571 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            14572 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            14573 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14574 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14575 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            14576 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            14577 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14578 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14579 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            14580 => new PrismarineBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            14581 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            14582 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            14583 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            14584 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            14585 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            14586 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            14587 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            14588 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            14589 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            14590 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            14591 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            14592 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            14593 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14594 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14595 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            14596 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            14597 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14598 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14599 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            14600 => new PrismarineBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            14601 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            14602 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            14603 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            14604 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            14605 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            14606 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            14607 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            14608 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            14609 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            14610 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            14611 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            14612 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            14613 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14614 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14615 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            14616 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            14617 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14618 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14619 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            14620 => new PrismarineBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            14621 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            14622 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            14623 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            14624 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            14625 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            14626 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            14627 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            14628 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            14629 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            14630 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            14631 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            14632 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            14633 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14634 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14635 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            14636 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            14637 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14638 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14639 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            14640 => new PrismarineBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

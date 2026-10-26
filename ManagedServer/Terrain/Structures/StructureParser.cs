@@ -336,6 +336,10 @@ public sealed class StructureParser(MinecraftRegistry registry,
     private StructurePlacement ParsePlacement(JsonElement placement) {
         Identifier type = Identifier.Parse(placement.GetProperty("type").GetString()!);
 
+        if (type.Key == "dimension_origin") {
+            return new DimensionOriginStructurePlacement();
+        }
+
         Vec3<int> locateOffset = placement.TryGetProperty("locate_offset", out JsonElement offset)
             ? new Vec3<int>(offset[0].GetInt32(), offset[1].GetInt32(), offset[2].GetInt32())
             : new Vec3<int>(0, 0, 0);

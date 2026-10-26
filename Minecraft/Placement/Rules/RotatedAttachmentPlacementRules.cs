@@ -246,3 +246,38 @@ public sealed class CocoaPlacementRule : IBlockPlacementRule {
             : block;
     }
 }
+
+/// <summary>
+/// <c>ShelfMushroomBlock</c>: the ladder's attachment, the facing pointing away from the wall it grows
+/// on, without the ladder's waterlogging or its refusal to extend sideways.
+/// </summary>
+public sealed class ShelfMushroomPlacementRule : IBlockPlacementRule {
+    public BlockClass VanillaClass => BlockClass.ShelfMushroomBlock;
+
+    public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
+        if (block is not IHorizontalFacing mushroom) {
+            return null;
+        }
+
+        return PlacementHelpers.FirstSurviving(context, this, face =>
+            Directions.IsHorizontal(face) ? mushroom.WithFacing(face.Opposite().ToDirection()) : null);
+    }
+
+    public bool CanSurvive(IBlock block, IPlacementLevel world, Vec3<int> pos) {
+        if (block is not IHorizontalFacing mushroom) {
+            return false;
+        }
+
+        BlockFace facing = mushroom.Facing.ToFace();
+        return PlacementHelpers.FaceSturdy(world, pos.GetBlockTowards(facing.Opposite()), facing);
+    }
+
+    public IBlock UpdateShape(IBlock block, IPlacementLevel world, Vec3<int> pos, BlockFace toNeighbour,
+        Vec3<int> neighbourPos, IBlock neighbourState) {
+        return block is IHorizontalFacing mushroom
+               && toNeighbour == mushroom.Facing.ToFace().Opposite()
+               && !CanSurvive(block, world, pos)
+            ? Block.Air
+            : block;
+    }
+}

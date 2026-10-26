@@ -43,6 +43,10 @@
     "kind": "Boolean",
     "syncable": true
   },
+  "minecraft:gameplay/creature_world_gen_spawn_probability": {
+    "kind": "Float",
+    "syncable": false
+  },
   "minecraft:gameplay/eyeblossom_open": {
     "kind": "TriState",
     "syncable": false
@@ -57,6 +61,10 @@
   },
   "minecraft:gameplay/monsters_burn": {
     "kind": "Boolean",
+    "syncable": false
+  },
+  "minecraft:gameplay/natural_mob_spawns": {
+    "kind": "MobSpawnSettings",
     "syncable": false
   },
   "minecraft:gameplay/nether_portal_spawns_piglin": {
@@ -77,6 +85,10 @@
   },
   "minecraft:gameplay/snow_golem_melts": {
     "kind": "Boolean",
+    "syncable": false
+  },
+  "minecraft:gameplay/straw_bed_rule": {
+    "kind": "BedRule",
     "syncable": false
   },
   "minecraft:gameplay/surface_slime_spawn_chance": {

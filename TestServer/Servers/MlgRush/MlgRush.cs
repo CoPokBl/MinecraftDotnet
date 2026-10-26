@@ -159,7 +159,7 @@ public static class MlgRush {
                 MinecraftPacket packet = new ClientBoundParticlePacket {
                     AlwaysVisible = true,
                     LongDistance = true,
-                    MaxSpeed = 1f,
+                    MaxSpeed = new Vec3<float>(1f, 1f, 1f),
                     Offset = Vec3<float>.Zero,
                     Position = pos,
                     ParticleCount = count,
@@ -220,7 +220,6 @@ public static class MlgRush {
                 e.Entity.SendToViewers(new ClientBoundTeleportEntityPacket {
                     EntityId = e.Entity.NetId,
                     Position = new Vec3<double>(0, -100, 0),
-                    Velocity = Vec3<double>.Zero,
                     Yaw = Angle.Zero,
                     Pitch = Angle.Zero,
                     OnGround = false

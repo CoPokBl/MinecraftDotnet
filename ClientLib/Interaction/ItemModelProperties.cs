@@ -128,10 +128,6 @@ public static class ItemModelProperties {
         return Opaque(red / colours.Length << 16 | green / colours.Length << 8 | blue / colours.Length);
     }
 
-    /// <summary><c>MapColor.calculate</c>.</summary>
-    public static int MapColour(ItemStack stack, int defaultColour) =>
-        Opaque(ItemComponents.Has(stack, DataComponent.MapColor) ? ItemComponents.Get(stack, DataComponent.MapColor) : defaultColour);
-
     /// <summary><c>Potion.calculate</c> over <c>PotionContents.getColorOr</c>.</summary>
     public static int PotionColour(ItemStack stack, int defaultColour) {
         if (ItemComponents.Get(stack, DataComponent.PotionContents) is not { } contents) {

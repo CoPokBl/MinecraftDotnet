@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:wall_hanging_sign", "block.minecraft.oak_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:oak_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/oak_hanging_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 13, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
+    private static readonly BlockInfo Data = new("block.minecraft.oak_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:oak_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/oak_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 13, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
@@ -20,15 +20,15 @@ public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, b
         I0, I1, I0, I1, I2, I3, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6675];
+    public BlockStateInfo StateInfo => States[StateId - 8335];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, b
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, b
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,20 +78,20 @@ public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, b
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6675,
-                    false => 6676,
+                    true => 8335,
+                    false => 8336,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6677,
-                    false => 6678,
+                    true => 8337,
+                    false => 8338,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6679,
-                    false => 6680,
+                    true => 8339,
+                    false => 8340,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6681,
-                    false => 6682,
+                    true => 8341,
+                    false => 8342,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -100,14 +100,14 @@ public record OakWallHangingSignBlock(Identifier Identifier, Direction Facing, b
     
     public IBlock WithState(uint state) {
         return state switch {
-            6675 => new OakWallHangingSignBlock(Identifier, Direction.North, true),
-            6676 => new OakWallHangingSignBlock(Identifier, Direction.North, false),
-            6677 => new OakWallHangingSignBlock(Identifier, Direction.South, true),
-            6678 => new OakWallHangingSignBlock(Identifier, Direction.South, false),
-            6679 => new OakWallHangingSignBlock(Identifier, Direction.West, true),
-            6680 => new OakWallHangingSignBlock(Identifier, Direction.West, false),
-            6681 => new OakWallHangingSignBlock(Identifier, Direction.East, true),
-            6682 => new OakWallHangingSignBlock(Identifier, Direction.East, false),
+            8335 => new OakWallHangingSignBlock(Identifier, Direction.North, true),
+            8336 => new OakWallHangingSignBlock(Identifier, Direction.North, false),
+            8337 => new OakWallHangingSignBlock(Identifier, Direction.South, true),
+            8338 => new OakWallHangingSignBlock(Identifier, Direction.South, false),
+            8339 => new OakWallHangingSignBlock(Identifier, Direction.West, true),
+            8340 => new OakWallHangingSignBlock(Identifier, Direction.West, false),
+            8341 => new OakWallHangingSignBlock(Identifier, Direction.East, true),
+            8342 => new OakWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

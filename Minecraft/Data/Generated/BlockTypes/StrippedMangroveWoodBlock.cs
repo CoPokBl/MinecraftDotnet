@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record StrippedMangroveWoodBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
-    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.stripped_mangrove_wood", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stripped_mangrove_wood", BlockInfo.VanillaOnly, "minecraft:blocks/stripped_mangrove_wood");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.Normal, 28, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.stripped_mangrove_wood", 2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stripped_mangrove_wood", BlockInfo.VanillaOnly, "minecraft:blocks/stripped_mangrove_wood");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.PushPull, 28, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record StrippedMangroveWoodBlock(Identifier Identifier, Axis Axis) : IBlo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record StrippedMangroveWoodBlock(Identifier Identifier, Axis Axis) : IBlo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,9 +69,9 @@ public record StrippedMangroveWoodBlock(Identifier Identifier, Axis Axis) : IBlo
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 249,
-                Axis.Y => 250,
-                Axis.Z => 251,
+                Axis.X => 261,
+                Axis.Y => 262,
+                Axis.Z => 263,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -79,9 +79,9 @@ public record StrippedMangroveWoodBlock(Identifier Identifier, Axis Axis) : IBlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            249 => new StrippedMangroveWoodBlock(Identifier, Axis.X),
-            250 => new StrippedMangroveWoodBlock(Identifier, Axis.Y),
-            251 => new StrippedMangroveWoodBlock(Identifier, Axis.Z),
+            261 => new StrippedMangroveWoodBlock(Identifier, Axis.X),
+            262 => new StrippedMangroveWoodBlock(Identifier, Axis.Y),
+            263 => new StrippedMangroveWoodBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

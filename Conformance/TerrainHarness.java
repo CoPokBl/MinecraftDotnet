@@ -7,10 +7,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
-import net.minecraft.world.level.levelgen.DensityFunction;
+import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.NoiseRouter;
 import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.densityfunction.DensityBuffer;
+import net.minecraft.world.level.levelgen.densityfunction.DensityFunction;
+import net.minecraft.world.level.levelgen.densityfunction.DensityVolume;
+import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
 import java.io.DataOutputStream;
@@ -22,34 +26,35 @@ import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * Runs the real vanilla noise router over a grid of positions and writes down every number it
+ * Runs the real vanilla density functions over a grid of positions and writes down every number they
  * produced, for {@code TerrainConformanceTest} to replay.
  *
- * <p>This is the only thing that can tell the density function port from a plausible impostor. Our own
- * tests can check that terrain has a ground level and that biomes vary, and a tree with a wrong
- * constant, a wrong spline derivative or a noise seeded from the wrong name passes all of them while
- * producing a different world. The router is what every part of terrain generation reads, so pinning
- * its fifteen entries pins the noise primitives, the whole density function tree, the JSON parsing and
- * the per octave seeding at once.
+ * <p>This is the only thing that can tell the density function port from a plausible impostor: a wrong
+ * constant, a wrong spline derivative or a noise seeded from the wrong name all produce terrain that
+ * looks like Minecraft and is not the world vanilla would have generated.
  *
- * <p>Sampled through {@code RandomState}, which is the seeded tree with no chunk caches attached: a
- * cache is per chunk and a marker computes exactly what it wraps, so the values are the same either
- * way and this needs no {@code ChunkAccess}.
+ * <p>Two halves, because the compiled samplers have two paths that round differently. The point half
+ * is {@code sampleBlockValueUncached}, every entry of {@link #ENTRIES} at every position. The volume
+ * half samples whole chunks through a caching context the way the noise fill and the biome fill do:
+ * the final density over 16 by height by 16, the six climate functions over the chunk's quart grid,
+ * and {@code chunk_surface_level} over 16 by 1 by 16 at y 0.
  *
- * <p>The climate half is sampled separately and quantised, because that is what the biome search
- * actually compares.
- *
- * <p>Fixture format, all big endian: an int count, then per sample the three int coordinates followed
- * by fifteen doubles in {@link #ROUTER_ENTRIES} order. Then an int count of climate samples, each
- * three ints and six longs.
+ * <p>Fixture format, all big endian: the seed; an int count, then per sample three int coordinates
+ * and one float per entry; an int count of climate samples, each three ints and six longs; the
+ * biome each resolves to as a UTF string; then an int count of chunks, each two ints followed by the
+ * three volumes' floats in buffer order.
  */
 public final class TerrainHarness {
-    /** The order the doubles are written in, and the order the C# side reads them back. */
-    static final String[] ROUTER_ENTRIES = {
-        "barrier", "fluid_level_floodedness", "fluid_level_spread", "lava",
-        "temperature", "vegetation", "continents", "erosion", "depth", "ridges",
-        "preliminary_surface_level", "final_density", "vein_toggle", "vein_ridged", "vein_gap"
+    /** The order the floats are written in, and the order the C# side reads them back. */
+    static final String[] ENTRIES = {
+        "temperature", "vegetation", "continents", "erosion", "depth", "ridges", "chunk_surface_level", "final_density",
+        "aquifer_barrier", "aquifer_fluid_level_floodedness", "aquifer_fluid_level_spread", "aquifer_lava",
+        "aquifer_exclusion", "aquifer_surface_level",
+        "overworld/ore_vein/toggle", "overworld/ore_vein/mask", "overworld/ore_vein/gap",
+        "overworld/ore_vein/richness", "overworld/ore_vein/copper_density", "overworld/ore_vein/iron_density"
     };
+
+    static final int[][] VOLUME_CHUNKS = {{0, 0}, {-5, 3}, {41, -17}};
 
     private static final long SEED = 1234567890L;
 
@@ -63,14 +68,16 @@ public final class TerrainHarness {
         // Decoded from the vanilla pack rather than taken from VanillaRegistries' bootstrap objects,
         // because the pack is what a server reads and the port parses. See Harness.buildRegistryAccess.
         RegistryAccess.Frozen vanilla = Harness.buildRegistryAccess();
-        HolderLookup.RegistryLookup<NoiseGeneratorSettings> settingsLookup =
-                vanilla.lookupOrThrow(Registries.NOISE_SETTINGS);
-        HolderLookup.RegistryLookup<NormalNoise.NoiseParameters> noises =
-                vanilla.lookupOrThrow(Registries.NOISE);
+        HolderLookup.RegistryLookup<NoiseGeneratorSettings> settingsLookup = vanilla.lookupOrThrow(Registries.NOISE_SETTINGS);
+        HolderLookup.RegistryLookup<NormalNoise> noises = vanilla.lookupOrThrow(Registries.NOISE);
+        HolderLookup.RegistryLookup<DensityFunction> functions = vanilla.lookupOrThrow(Registries.DENSITY_FUNCTION);
 
         NoiseGeneratorSettings settings = settingsLookup.getOrThrow(NoiseGeneratorSettings.OVERWORLD).value();
-        RandomState randomState = RandomState.create(settings, noises, SEED);
-        NoiseRouter router = randomState.router();
+        RandomState randomState = RandomState.create(noises, SEED, settings);
+        NoiseRouter router = settings.noiseRouter();
+        Aquifer.Config aquifers = settings.aquifers().orElseThrow();
+        int minY = settings.noiseSettings().minY();
+        int height = settings.noiseSettings().height();
 
         List<int[]> positions = samplePositions();
 
@@ -85,27 +92,22 @@ public final class TerrainHarness {
                 data.writeInt(position[0]);
                 data.writeInt(position[1]);
                 data.writeInt(position[2]);
-
-                DensityFunction.FunctionContext context =
-                        new DensityFunction.SinglePointContext(position[0], position[1], position[2]);
-
-                for (String entry : ROUTER_ENTRIES) {
-                    data.writeDouble(entryOf(router, entry).compute(context));
+                for (String entry : ENTRIES) {
+                    data.writeFloat(randomState.sampleBlockValueUncached(entryOf(router, aquifers, functions, entry),
+                        position[0], position[1], position[2]));
                 }
             }
 
-            Climate.Sampler sampler = randomState.sampler();
+            Climate.Sampler sampler = randomState.createClimateSampler(SamplerContext.EMPTY_UNCACHED);
             data.writeInt(positions.size());
             for (int[] position : positions) {
                 // Quart coordinates, which is what the biome grid is indexed by.
                 int quartX = position[0] >> 2;
                 int quartY = position[1] >> 2;
                 int quartZ = position[2] >> 2;
-
                 data.writeInt(quartX);
                 data.writeInt(quartY);
                 data.writeInt(quartZ);
-
                 Climate.TargetPoint target = sampler.sample(quartX, quartY, quartZ);
                 data.writeLong(target.temperature());
                 data.writeLong(target.humidity());
@@ -115,40 +117,69 @@ public final class TerrainHarness {
                 data.writeLong(target.weirdness());
             }
 
-            // The biome each of those climates resolves to, which is what pins the R-tree search
-            // against the 7599 region table rather than against our own reading of it.
+            // The biome each of those climates resolves to, which pins the R-tree search against the
+            // region table rather than against our own reading of it.
             Climate.ParameterList<ResourceKey<Biome>> parameters =
                     net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterList.knownPresets()
                             .get(net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterList.Preset.OVERWORLD);
-
-            data.writeInt(positions.size());
             for (int[] position : positions) {
                 Climate.TargetPoint target = sampler.sample(position[0] >> 2, position[1] >> 2, position[2] >> 2);
                 data.writeUTF(parameters.findValue(target).identifier().toString());
             }
+
+            data.writeInt(VOLUME_CHUNKS.length);
+            for (int[] chunk : VOLUME_CHUNKS) {
+                data.writeInt(chunk[0]);
+                data.writeInt(chunk[1]);
+
+                // One caching context per chunk, as NoiseChunk has, with nothing in its fields: no
+                // beardifier reads as zero.
+                SamplerContext fill = SamplerContext.builder().enableCaches().build();
+                DensityVolume volume = new DensityVolume(16, height, 16, chunk[0] << 4, minY, chunk[1] << 4);
+                writeVolume(data, randomState, fill, router.finalDensity(), volume);
+
+                SamplerContext biomes = SamplerContext.builder().enableCaches().build();
+                DensityVolume quarts = new DensityVolume(4, height >> 2, 4, chunk[0] << 4, minY, chunk[1] << 4, 4, 4, 4);
+                for (DensityFunction climate : new DensityFunction[]{router.temperature(), router.vegetation(), router.continents(),
+                        router.erosion(), router.depth(), router.ridges()}) {
+                    writeVolume(data, randomState, biomes, climate, quarts);
+                }
+
+                DensityVolume surface = new DensityVolume(16, 1, 16, chunk[0] << 4, 0, chunk[1] << 4);
+                writeVolume(data, randomState, fill, router.chunkSurfaceLevel(), surface);
+            }
         }
 
-        System.out.println("Wrote " + positions.size() + " samples to " + out);
+        System.out.println("Wrote " + positions.size() + " samples and " + VOLUME_CHUNKS.length + " chunk volumes to " + out);
     }
 
-    private static DensityFunction entryOf(NoiseRouter router, String name) {
+    private static void writeVolume(DataOutputStream data, RandomState randomState, SamplerContext context, DensityFunction function,
+            DensityVolume volume) throws java.io.IOException {
+        DensityBuffer buffer = DensityBuffer.createUnpooled(volume.size());
+        randomState.getSampler(function).sampleVolume(context, buffer, volume);
+        for (int i = 0; i < volume.size(); i++) {
+            data.writeFloat(buffer.get(i));
+        }
+    }
+
+    private static DensityFunction entryOf(NoiseRouter router, Aquifer.Config aquifers, HolderLookup.RegistryLookup<DensityFunction> functions,
+            String name) {
         return switch (name) {
-            case "barrier" -> router.barrierNoise();
-            case "fluid_level_floodedness" -> router.fluidLevelFloodednessNoise();
-            case "fluid_level_spread" -> router.fluidLevelSpreadNoise();
-            case "lava" -> router.lavaNoise();
             case "temperature" -> router.temperature();
             case "vegetation" -> router.vegetation();
             case "continents" -> router.continents();
             case "erosion" -> router.erosion();
             case "depth" -> router.depth();
             case "ridges" -> router.ridges();
-            case "preliminary_surface_level" -> router.preliminarySurfaceLevel();
+            case "chunk_surface_level" -> router.chunkSurfaceLevel();
             case "final_density" -> router.finalDensity();
-            case "vein_toggle" -> router.veinToggle();
-            case "vein_ridged" -> router.veinRidged();
-            case "vein_gap" -> router.veinGap();
-            default -> throw new IllegalArgumentException("Unknown router entry: " + name);
+            case "aquifer_barrier" -> aquifers.barrierNoise();
+            case "aquifer_fluid_level_floodedness" -> aquifers.fluidLevelFloodednessNoise();
+            case "aquifer_fluid_level_spread" -> aquifers.fluidLevelSpreadNoise();
+            case "aquifer_lava" -> aquifers.lavaNoise();
+            case "aquifer_exclusion" -> aquifers.exclusion();
+            case "aquifer_surface_level" -> aquifers.surfaceLevel();
+            default -> functions.getOrThrow(ResourceKey.create(Registries.DENSITY_FUNCTION, Identifier.withDefaultNamespace(name))).value();
         };
     }
 

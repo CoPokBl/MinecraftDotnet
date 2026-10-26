@@ -132,8 +132,8 @@ public class ChatSigningHarness {
                         ServerboundChatPacket packet = ServerboundChatPacket.STREAM_CODEC.decode(body);
                         expectConsumed(body, where);
                         LastSeenMessages lastSeen = applyUpdate(validator, packet.lastSeenMessages(), where);
-                        expect(signed == (packet.signature() != null), where + ": signature present " + (packet.signature() != null));
-                        decoder.unpack(packet.signature(), new SignedMessageBody(packet.message(), packet.timeStamp(), packet.salt(), lastSeen));
+                        expect(signed == packet.signature().isPresent(), where + ": signature present " + packet.signature().isPresent());
+                        decoder.unpack(packet.signature().orElse(null), new SignedMessageBody(packet.message(), packet.timeStamp(), packet.salt(), lastSeen));
                         System.out.println("ok   " + where + ": '" + packet.message() + "', " + lastSeen.entries().size() + " last seen");
                     }
                     case "chat_command_signed" -> {

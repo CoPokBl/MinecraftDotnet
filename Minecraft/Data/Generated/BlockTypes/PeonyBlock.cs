@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PeonyBlock(Identifier Identifier, BlockHalf Half) : IBlock, IDoubleHalved {
-    private static readonly BlockInfo Data = new("minecraft:tall_flower", "block.minecraft.peony", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:peony", BlockInfo.VanillaOnly, "minecraft:blocks/peony");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "grass", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.peony", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:peony", BlockInfo.VanillaOnly, "minecraft:blocks/peony");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Popped, 7, "grass", NoteBlockInstrument.Harp, true, false, false, true, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record PeonyBlock(Identifier Identifier, BlockHalf Half) : IBlock, IDoubl
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record PeonyBlock(Identifier Identifier, BlockHalf Half) : IBlock, IDoubl
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,8 +69,8 @@ public record PeonyBlock(Identifier Identifier, BlockHalf Half) : IBlock, IDoubl
     public uint StateId {
         get {
             return Half switch {
-                BlockHalf.Upper => 12921,
-                BlockHalf.Lower => 12922,
+                BlockHalf.Upper => 14768,
+                BlockHalf.Lower => 14769,
                 _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
             };
         }
@@ -78,8 +78,8 @@ public record PeonyBlock(Identifier Identifier, BlockHalf Half) : IBlock, IDoubl
     
     public IBlock WithState(uint state) {
         return state switch {
-            12921 => new PeonyBlock(Identifier, BlockHalf.Upper),
-            12922 => new PeonyBlock(Identifier, BlockHalf.Lower),
+            14768 => new PeonyBlock(Identifier, BlockHalf.Upper),
+            14769 => new PeonyBlock(Identifier, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

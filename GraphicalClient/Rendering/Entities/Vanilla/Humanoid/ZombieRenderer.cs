@@ -33,13 +33,6 @@ public abstract class AbstractZombieRenderer<S, M> : HumanoidMobRenderer<S, M>
     }
 
     protected override bool IsShaking(S state) => base.IsShaking(state) || state.IsConverting;
-
-    protected override ArmPose GetArmPose(ClientEntity mob, HumanoidArm arm, EntityRenderContext context) {
-        ItemStack other = ArmedEntityRenderState.ItemHeldByArm(mob, ArmedEntityRenderState.Opposite(arm));
-        return HumanoidMobRenderer.IsStab(other)
-            ? ArmPose.Spear
-            : base.GetArmPose(mob, arm, context);
-    }
 }
 
 /// <summary><c>ZombieRenderer</c>.</summary>

@@ -29,7 +29,6 @@ public static class FluidBlockData {
         public required bool FullCube { get; init; }
 
         public required bool EmptyShape { get; init; }
-        public required bool BlocksMotion { get; init; }
         public required bool Solid { get; init; }
         public required bool Air { get; init; }
 
@@ -70,18 +69,7 @@ public static class FluidBlockData {
 
     private const double Epsilon = 1.0E-7;
 
-    private static readonly Identifier DoorCategory = "minecraft:door";
-    private static readonly Identifier SignsTag = "minecraft:signs";
-
-    private static readonly Identifier[] NeverHoldsFluid = [
-        "minecraft:ladder",
-        "minecraft:sugar_cane",
-        "minecraft:bubble_column",
-        "minecraft:nether_portal",
-        "minecraft:end_portal",
-        "minecraft:end_gateway",
-        "minecraft:structure_void"
-    ];
+    private static readonly Identifier WashedAwayByFluidsTag = "minecraft:washed_away_by_fluids";
 
     private static readonly ConcurrentDictionary<uint, Entry> Cache = new();
 
@@ -163,7 +151,6 @@ public static class FluidBlockData {
             Offsets = null,
             FullCube = true,
             EmptyShape = false,
-            BlocksMotion = true,
             Solid = true,
             Air = false,
             Container = false,
@@ -192,7 +179,6 @@ public static class FluidBlockData {
             // check against it never holds for one.
             FullCube = offsets == null && IsFullCube(boxes),
             EmptyShape = boxes.Length == 0,
-            BlocksMotion = block.BlocksMotion,
             Solid = block.Solid,
             Air = block.Air,
             Container = container,
@@ -215,26 +201,7 @@ public static class FluidBlockData {
 
     /// <summary><c>FlowingFluid.canHoldAnyFluid</c>.</summary>
     private static bool CanHoldAnyFluid(MinecraftRegistry registry, IBlock block, bool container) {
-        if (container) {
-            return true;
-        }
-
-        if (block.BlocksMotion) {
-            return false;
-        }
-
-        if (block.Category.Equals(DoorCategory)) {
-            return false;
-        }
-
-        Identifier identifier = block.Identifier;
-        foreach (Identifier excluded in NeverHoldsFluid) {
-            if (excluded.Equals(identifier)) {
-                return false;
-            }
-        }
-
-        return !InTag(registry, SignsTag, identifier);
+        return container || InTag(registry, WashedAwayByFluidsTag, block.Identifier);
     }
 
     private static bool InTag(MinecraftRegistry registry, Identifier tag, Identifier block) {

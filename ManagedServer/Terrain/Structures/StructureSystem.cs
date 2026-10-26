@@ -53,12 +53,21 @@ public sealed class StructureSystem : IStructurePlacementState {
 
     private readonly BiomeAtQuart _biomes;
 
+    private readonly Lazy<Vec2<int>> _dimensionOrigin;
+
     private readonly ConcurrentDictionary<ConcentricRingsStructurePlacement,
         Lazy<IReadOnlyList<Vec2<int>>>> _rings = new();
 
+    /// <param name="dimensionOrigin">
+    /// The chunk <see cref="IStructurePlacementState.DimensionOrigin"/> answers, asked on first use. Left
+    /// out, it is chunk zero, which is vanilla's answer for a generator without spawn targets; a noise
+    /// generator's is the chunk of <c>NoiseSpawnFinder.findSpawnPosition</c>.
+    /// </param>
     public StructureSystem(VanillaStructureData data, MinecraftRegistry registry, long seed,
-        BiomeAtQuart biomes) {
+        BiomeAtQuart biomes, Func<Vec2<int>>? dimensionOrigin = null) {
 
+        _dimensionOrigin = new Lazy<Vec2<int>>(dimensionOrigin ?? (() => new Vec2<int>(0, 0)),
+            LazyThreadSafetyMode.ExecutionAndPublication);
         _data = data;
         _registry = registry;
         _seed = seed;
@@ -311,6 +320,8 @@ public sealed class StructureSystem : IStructurePlacementState {
 
         return false;
     }
+
+    public Vec2<int> DimensionOrigin => _dimensionOrigin.Value;
 
     /// <summary>
     /// The stronghold ring positions, worked out on the first ask and kept.

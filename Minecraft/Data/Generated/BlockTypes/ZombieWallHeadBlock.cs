@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:wall_skull", "block.minecraft.zombie_head", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:zombie_head", BlockInfo.VanillaOnly, "minecraft:blocks/zombie_head");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S516, BlockShapes.S516, BlockShapes.S1, BlockShapes.S516, BlockShapes.S516, BlockShapes.S516);
+    private static readonly BlockInfo Data = new("block.minecraft.zombie_head", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:zombie_head", BlockInfo.VanillaOnly, "minecraft:blocks/zombie_head");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Popped, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S516, BlockShapes.S516, BlockShapes.S1, BlockShapes.S516, BlockShapes.S516, BlockShapes.S516);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S517, CollisionShape = BlockShapes.S517, OcclusionShape = BlockShapes.S517, VisualShape = BlockShapes.S517, SupportShape = BlockShapes.S517 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S518, CollisionShape = BlockShapes.S518, OcclusionShape = BlockShapes.S518, VisualShape = BlockShapes.S518, SupportShape = BlockShapes.S518 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S519, CollisionShape = BlockShapes.S519, OcclusionShape = BlockShapes.S519, VisualShape = BlockShapes.S519, SupportShape = BlockShapes.S519 };
@@ -20,15 +20,15 @@ public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         I0, I0, I1, I1, I2, I2, I3, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 11027];
+    public BlockStateInfo StateInfo => States[StateId - 12794];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,20 +78,20 @@ public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 11027,
-                    false => 11028,
+                    true => 12794,
+                    false => 12795,
                 },
                 Direction.South => Powered switch {
-                    true => 11029,
-                    false => 11030,
+                    true => 12796,
+                    false => 12797,
                 },
                 Direction.West => Powered switch {
-                    true => 11031,
-                    false => 11032,
+                    true => 12798,
+                    false => 12799,
                 },
                 Direction.East => Powered switch {
-                    true => 11033,
-                    false => 11034,
+                    true => 12800,
+                    false => 12801,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -100,14 +100,14 @@ public record ZombieWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            11027 => new ZombieWallHeadBlock(Identifier, Direction.North, true),
-            11028 => new ZombieWallHeadBlock(Identifier, Direction.North, false),
-            11029 => new ZombieWallHeadBlock(Identifier, Direction.South, true),
-            11030 => new ZombieWallHeadBlock(Identifier, Direction.South, false),
-            11031 => new ZombieWallHeadBlock(Identifier, Direction.West, true),
-            11032 => new ZombieWallHeadBlock(Identifier, Direction.West, false),
-            11033 => new ZombieWallHeadBlock(Identifier, Direction.East, true),
-            11034 => new ZombieWallHeadBlock(Identifier, Direction.East, false),
+            12794 => new ZombieWallHeadBlock(Identifier, Direction.North, true),
+            12795 => new ZombieWallHeadBlock(Identifier, Direction.North, false),
+            12796 => new ZombieWallHeadBlock(Identifier, Direction.South, true),
+            12797 => new ZombieWallHeadBlock(Identifier, Direction.South, false),
+            12798 => new ZombieWallHeadBlock(Identifier, Direction.West, true),
+            12799 => new ZombieWallHeadBlock(Identifier, Direction.West, false),
+            12800 => new ZombieWallHeadBlock(Identifier, Direction.East, true),
+            12801 => new ZombieWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

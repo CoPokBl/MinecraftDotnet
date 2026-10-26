@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WeatheredCopperChestBlock(Identifier Identifier, ChestType Type, Direction Facing, bool Waterlogged) : IBlock, IChestTyped, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:weathering_copper_chest", "block.minecraft.weathered_copper_chest", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chest", "minecraft:weathered_copper_chest", BlockInfo.VanillaOnly, "minecraft:blocks/weathered_copper_chest");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 56, "copper", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
+    private static readonly BlockInfo Data = new("block.minecraft.weathered_copper_chest", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chest", "minecraft:weathered_copper_chest", BlockInfo.VanillaOnly, "minecraft:blocks/weathered_copper_chest");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 56, "copper", NoteBlockInstrument.Harp, false, true, true, false, false, false, false, true, false, false, true, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
@@ -26,15 +26,15 @@ public record WeatheredCopperChestBlock(Identifier Identifier, ChestType Type, D
         I0, I1, I2, I3, I4, I5, I0, I1, I4, I5, I2, I3, I0, I1, I6, I7, I8, I9, I0, I1, I8, I9, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 29616];
+    public BlockStateInfo StateInfo => States[StateId - 32973];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -48,7 +48,6 @@ public record WeatheredCopperChestBlock(Identifier Identifier, ChestType Type, D
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -68,6 +67,7 @@ public record WeatheredCopperChestBlock(Identifier Identifier, ChestType Type, D
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -87,58 +87,58 @@ public record WeatheredCopperChestBlock(Identifier Identifier, ChestType Type, D
             return Type switch {
                 ChestType.Single => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 29616,
-                        false => 29617,
+                        true => 32973,
+                        false => 32974,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 29622,
-                        false => 29623,
+                        true => 32979,
+                        false => 32980,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 29628,
-                        false => 29629,
+                        true => 32985,
+                        false => 32986,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 29634,
-                        false => 29635,
+                        true => 32991,
+                        false => 32992,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 ChestType.Left => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 29618,
-                        false => 29619,
+                        true => 32975,
+                        false => 32976,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 29624,
-                        false => 29625,
+                        true => 32981,
+                        false => 32982,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 29630,
-                        false => 29631,
+                        true => 32987,
+                        false => 32988,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 29636,
-                        false => 29637,
+                        true => 32993,
+                        false => 32994,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 ChestType.Right => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 29620,
-                        false => 29621,
+                        true => 32977,
+                        false => 32978,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 29626,
-                        false => 29627,
+                        true => 32983,
+                        false => 32984,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 29632,
-                        false => 29633,
+                        true => 32989,
+                        false => 32990,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 29638,
-                        false => 29639,
+                        true => 32995,
+                        false => 32996,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -149,30 +149,30 @@ public record WeatheredCopperChestBlock(Identifier Identifier, ChestType Type, D
     
     public IBlock WithState(uint state) {
         return state switch {
-            29616 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.North, true),
-            29617 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.North, false),
-            29618 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.North, true),
-            29619 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.North, false),
-            29620 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.North, true),
-            29621 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.North, false),
-            29622 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.South, true),
-            29623 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.South, false),
-            29624 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.South, true),
-            29625 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.South, false),
-            29626 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.South, true),
-            29627 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.South, false),
-            29628 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.West, true),
-            29629 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.West, false),
-            29630 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.West, true),
-            29631 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.West, false),
-            29632 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.West, true),
-            29633 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.West, false),
-            29634 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.East, true),
-            29635 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.East, false),
-            29636 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.East, true),
-            29637 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.East, false),
-            29638 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.East, true),
-            29639 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.East, false),
+            32973 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.North, true),
+            32974 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.North, false),
+            32975 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.North, true),
+            32976 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.North, false),
+            32977 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.North, true),
+            32978 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.North, false),
+            32979 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.South, true),
+            32980 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.South, false),
+            32981 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.South, true),
+            32982 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.South, false),
+            32983 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.South, true),
+            32984 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.South, false),
+            32985 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.West, true),
+            32986 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.West, false),
+            32987 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.West, true),
+            32988 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.West, false),
+            32989 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.West, true),
+            32990 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.West, false),
+            32991 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.East, true),
+            32992 => new WeatheredCopperChestBlock(Identifier, ChestType.Single, Direction.East, false),
+            32993 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.East, true),
+            32994 => new WeatheredCopperChestBlock(Identifier, ChestType.Left, Direction.East, false),
+            32995 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.East, true),
+            32996 => new WeatheredCopperChestBlock(Identifier, ChestType.Right, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

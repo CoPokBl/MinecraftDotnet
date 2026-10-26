@@ -11,27 +11,27 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) : IBlock, IAged, IDoubleHalved {
-    private static readonly BlockInfo Data = new("minecraft:pitcher_crop", "block.minecraft.pitcher_crop", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pitcher_pod", BlockInfo.VanillaOnly, "minecraft:blocks/pitcher_crop");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "crop", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S819, CollisionShape = BlockShapes.S819, VisualShape = BlockShapes.S819, SupportShape = BlockShapes.S819 };
-    private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S820, CollisionShape = BlockShapes.S821, VisualShape = BlockShapes.S821, SupportShape = BlockShapes.S821 };
-    private static readonly BlockStateInfo I3 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S822, CollisionShape = BlockShapes.S821, VisualShape = BlockShapes.S821, SupportShape = BlockShapes.S821 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S823 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S824 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S822, CollisionShape = BlockShapes.S821, VisualShape = BlockShapes.S821, SupportShape = BlockShapes.S821 };
+    private static readonly BlockInfo Data = new("block.minecraft.pitcher_crop", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pitcher_pod", BlockInfo.VanillaOnly, "minecraft:blocks/pitcher_crop");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Popped, 7, "crop", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S820, CollisionShape = BlockShapes.S820, VisualShape = BlockShapes.S820, SupportShape = BlockShapes.S820 };
+    private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S821, CollisionShape = BlockShapes.S822, VisualShape = BlockShapes.S822, SupportShape = BlockShapes.S822 };
+    private static readonly BlockStateInfo I3 = I0 with { RandomlyTicking = true, BlockShape = BlockShapes.S823, CollisionShape = BlockShapes.S822, VisualShape = BlockShapes.S822, SupportShape = BlockShapes.S822 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S824 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S825 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S823, CollisionShape = BlockShapes.S822, VisualShape = BlockShapes.S822, SupportShape = BlockShapes.S822 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I2, I0, I3, I4, I3, I5, I6
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 14799];
+    public BlockStateInfo StateInfo => States[StateId - 16780];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -45,7 +45,6 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -65,6 +64,7 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -81,28 +81,28 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
         get {
             return Age switch {
                 0 => Half switch {
-                    BlockHalf.Upper => 14799,
-                    BlockHalf.Lower => 14800,
+                    BlockHalf.Upper => 16780,
+                    BlockHalf.Lower => 16781,
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 1 => Half switch {
-                    BlockHalf.Upper => 14801,
-                    BlockHalf.Lower => 14802,
+                    BlockHalf.Upper => 16782,
+                    BlockHalf.Lower => 16783,
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 2 => Half switch {
-                    BlockHalf.Upper => 14803,
-                    BlockHalf.Lower => 14804,
+                    BlockHalf.Upper => 16784,
+                    BlockHalf.Lower => 16785,
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 3 => Half switch {
-                    BlockHalf.Upper => 14805,
-                    BlockHalf.Lower => 14806,
+                    BlockHalf.Upper => 16786,
+                    BlockHalf.Lower => 16787,
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 4 => Half switch {
-                    BlockHalf.Upper => 14807,
-                    BlockHalf.Lower => 14808,
+                    BlockHalf.Upper => 16788,
+                    BlockHalf.Lower => 16789,
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
@@ -112,16 +112,16 @@ public record PitcherCropBlock(Identifier Identifier, int Age, BlockHalf Half) :
     
     public IBlock WithState(uint state) {
         return state switch {
-            14799 => new PitcherCropBlock(Identifier, 0, BlockHalf.Upper),
-            14800 => new PitcherCropBlock(Identifier, 0, BlockHalf.Lower),
-            14801 => new PitcherCropBlock(Identifier, 1, BlockHalf.Upper),
-            14802 => new PitcherCropBlock(Identifier, 1, BlockHalf.Lower),
-            14803 => new PitcherCropBlock(Identifier, 2, BlockHalf.Upper),
-            14804 => new PitcherCropBlock(Identifier, 2, BlockHalf.Lower),
-            14805 => new PitcherCropBlock(Identifier, 3, BlockHalf.Upper),
-            14806 => new PitcherCropBlock(Identifier, 3, BlockHalf.Lower),
-            14807 => new PitcherCropBlock(Identifier, 4, BlockHalf.Upper),
-            14808 => new PitcherCropBlock(Identifier, 4, BlockHalf.Lower),
+            16780 => new PitcherCropBlock(Identifier, 0, BlockHalf.Upper),
+            16781 => new PitcherCropBlock(Identifier, 0, BlockHalf.Lower),
+            16782 => new PitcherCropBlock(Identifier, 1, BlockHalf.Upper),
+            16783 => new PitcherCropBlock(Identifier, 1, BlockHalf.Lower),
+            16784 => new PitcherCropBlock(Identifier, 2, BlockHalf.Upper),
+            16785 => new PitcherCropBlock(Identifier, 2, BlockHalf.Lower),
+            16786 => new PitcherCropBlock(Identifier, 3, BlockHalf.Upper),
+            16787 => new PitcherCropBlock(Identifier, 3, BlockHalf.Lower),
+            16788 => new PitcherCropBlock(Identifier, 4, BlockHalf.Upper),
+            16789 => new PitcherCropBlock(Identifier, 4, BlockHalf.Lower),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

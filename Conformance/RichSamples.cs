@@ -53,6 +53,21 @@ public static class RichSamples {
     private static readonly byte[] SubscriptionValue = new DataWriter().WriteLong(0).ToArray();
 
     public static IEnumerable<(string Name, MinecraftPacket Packet)> Build() {
+        // A path rather than one jump: the step count rides in the properties varint, and each step
+        // carries its own tick offset ahead of its shorts.
+        MovementDelta.Step[] steps = [new(1, new Vec3<float>(0.5F, 0, -0.25F)), new(3, new Vec3<float>(0, 1, 0))];
+        yield return ("ClientBoundUpdateEntityPositionPacket[stepped]", new ClientBoundUpdateEntityPositionPacket {
+            EntityId = 7, Delta = new Vec3<float>(0.5F, 1, -0.25F), OnGround = true, Steps = steps
+        });
+        yield return ("ClientBoundUpdateEntityPosAndRotPacket[stepped]", new ClientBoundUpdateEntityPosAndRotPacket {
+            EntityId = 7, Delta = new Vec3<float>(0.5F, 1, -0.25F), Yaw = Angle.FromDegrees(90), Pitch = Angle.FromDegrees(-45),
+            OnGround = false, Steps = steps
+        });
+        yield return ("ClientBoundTeleportEntityPacket[stepped]", new ClientBoundTeleportEntityPacket {
+            EntityId = 7, Position = new Vec3<double>(4, 65, 2), Yaw = Angle.FromDegrees(90), Pitch = Angle.Zero, OnGround = true,
+            Steps = [new(new Vec3<double>(3, 64, 2), 2), new(new Vec3<double>(4, 65, 2), 5)]
+        });
+
         yield return ("ClientBoundShowDialogPacket",
             ClientBoundShowDialogPacket.Reference(Dialog.QuickActions.Identifier));
 
@@ -196,7 +211,7 @@ public static class RichSamples {
                 [
                     new SlotDisplay.Item(Item.Stick),
                     SlotDisplay.Empty.Instance,
-                    new SlotDisplay.Tag("minecraft:planks"),
+                    new SlotDisplay.Tag(new IdSet.Tag("minecraft:planks")),
                     new SlotDisplay.Composite([new SlotDisplay.Stack(new Minecraft.Schemas.Items.ItemStack(Item.Stone, 3))])
                 ],
                 new SlotDisplay.Item(Item.Torch),
@@ -209,7 +224,7 @@ public static class RichSamples {
                 new ClientBoundRecipeBookAddPacket.Entry(new RecipeDisplayEntry {
                     Id = 1234,
                     Display = new RecipeDisplay.ShapelessCrafting(
-                        [new SlotDisplay.Tag("minecraft:planks"), new SlotDisplay.Item(Item.Stick)],
+                        [new SlotDisplay.Tag(new IdSet.Tag("minecraft:planks")), new SlotDisplay.Item(Item.Stick)],
                         new SlotDisplay.Item(Item.Torch),
                         new SlotDisplay.Item(Item.CraftingTable)),
                     Group = 7,

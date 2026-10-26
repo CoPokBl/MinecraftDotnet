@@ -38,7 +38,7 @@ public static class MovementBlocks {
     public readonly record struct Entry(
         bool Climbable,
         bool Suffocating,
-        bool BlocksMotion,
+        bool BlocksFluidFlow,
         FluidKind Fluid,
         int FluidAmount,
         bool FluidFalling,
@@ -53,6 +53,7 @@ public static class MovementBlocks {
 
     private static readonly ConcurrentDictionary<uint, Entry> Cache = new();
     private static readonly Identifier ClimbableTag = "minecraft:climbable";
+    private static readonly Identifier BlocksFluidFlowTag = "minecraft:blocks_fluid_flow";
 
     /// <summary><c>LivingEntity.onClimbable</c> for an entity whose block position is given, before the spectator check.</summary>
     public static bool OnClimbable(World.ClientLevel level, int x, int y, int z) {
@@ -78,7 +79,7 @@ public static class MovementBlocks {
         return new Entry(
             InTag(registry, ClimbableTag, block.Identifier),
             block.StateInfo.Suffocating,
-            block.BlocksMotion,
+            InTag(registry, BlocksFluidFlowTag, block.Identifier),
             fluid,
             amount,
             falling,

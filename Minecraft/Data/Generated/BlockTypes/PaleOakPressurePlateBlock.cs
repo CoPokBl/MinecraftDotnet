@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PaleOakPressurePlateBlock(Identifier Identifier, bool Powered) : IBlock, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:pressure_plate", "block.minecraft.pale_oak_pressure_plate", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pale_oak_pressure_plate", BlockInfo.VanillaOnly, "minecraft:blocks/pale_oak_pressure_plate");
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 14, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S80, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.pale_oak_pressure_plate", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pale_oak_pressure_plate", BlockInfo.VanillaOnly, "minecraft:blocks/pale_oak_pressure_plate");
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Popped, 14, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, true, false, false, false, false, true, true, false, true, [], null, BlockShapes.S80, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S81 };
     private static readonly BlockStateInfo[] States = [
         I0, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6875];
+    public BlockStateInfo StateInfo => States[StateId - 8543];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record PaleOakPressurePlateBlock(Identifier Identifier, bool Powered) : I
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record PaleOakPressurePlateBlock(Identifier Identifier, bool Powered) : I
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -73,16 +73,16 @@ public record PaleOakPressurePlateBlock(Identifier Identifier, bool Powered) : I
     public uint StateId {
         get {
             return Powered switch {
-                true => 6875,
-                false => 6876,
+                true => 8543,
+                false => 8544,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6875 => new PaleOakPressurePlateBlock(Identifier, true),
-            6876 => new PaleOakPressurePlateBlock(Identifier, false),
+            8543 => new PaleOakPressurePlateBlock(Identifier, true),
+            8544 => new PaleOakPressurePlateBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

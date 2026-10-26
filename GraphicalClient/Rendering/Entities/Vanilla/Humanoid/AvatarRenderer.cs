@@ -133,7 +133,7 @@ public sealed class AvatarRenderer : LivingEntityRenderer<AvatarRenderState, Pla
         if (itemInHand.IsAir()) {
             return ArmPose.Empty;
         }
-        if (!avatar.Swinging && itemInHand.Is(Item.Crossbow) && IsCharged(itemInHand)) {
+        if (!avatar.IsSwinging && itemInHand.Is(Item.Crossbow) && IsCharged(itemInHand)) {
             return ArmPose.CrossbowHold;
         }
         // getUseItemRemainingTicks() > 0: the remaining ticks run out only after the item's use
@@ -153,10 +153,9 @@ public sealed class AvatarRenderer : LivingEntityRenderer<AvatarRenderState, Pla
         if (usePose is { } pose) {
             return pose;
         }
-        if (HumanoidMobRenderer.IsStab(itemInHand) && avatar.Swinging) {
-            return ArmPose.Spear;
-        }
-        return HumanoidEntityData.IsSpear(itemInHand, context) ? ArmPose.Spear : ArmPose.Item;
+        HumanoidArm mainArm = ArmedEntityRenderState.MainArmOf(avatar);
+        HumanoidArm arm = hand == Hand.MainHand ? mainArm : ArmedEntityRenderState.Opposite(mainArm);
+        return HumanoidMobRenderer.UsesSpearPose(itemInHand, arm, avatar, context) ? ArmPose.Spear : ArmPose.Item;
     }
 
     /// <summary><c>CrossbowItem.isCharged</c>.</summary>

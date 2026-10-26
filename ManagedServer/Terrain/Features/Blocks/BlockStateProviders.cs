@@ -1,9 +1,13 @@
+using ManagedServer.Terrain.Data;
 using ManagedServer.Terrain.Features.Values;
 using ManagedServer.Terrain.Noise;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas;
+using Minecraft.Placement;
 using Minecraft.Schemas.Blocks.BlockEnums;
+using NBT;
+using NBT.Tags;
 
 namespace ManagedServer.Terrain.Features.Blocks;
 
@@ -18,8 +22,8 @@ public abstract record BlockStateProvider {
     public abstract IBlock GetState(IFeatureLevel level, RandomSource random, int x, int y, int z);
 
     /// <summary>
-    /// <c>getOptionalState</c>: null where the provider declines. Only the rule based provider ever
-    /// does, and only that one overrides this.
+    /// <c>getOptionalState</c>: null where the provider declines. The rule based and random block
+    /// providers are the ones that can.
     /// </summary>
     public virtual IBlock? GetOptionalState(IFeatureLevel level, RandomSource random, int x, int y, int z) {
         return GetState(level, random, x, y, z);
@@ -40,44 +44,79 @@ public abstract record BlockStateProvider {
     }
 
     /// <summary>
-    /// <c>RotatedBlockProvider</c>: a pillar block on a random axis.
+    /// <c>RotatedBlockProvider</c>: the inner provider's state turned to face a direction, a drawn one
+    /// unless the data names it.
     /// </summary>
     /// <remarks>
-    /// <c>Axis.getRandom</c> is a plain draw over the three values in their declaration order, so the
-    /// axis order matters and is x, y, z.
+    /// The draw is <c>Direction.getRandom</c>, one <c>nextInt(6)</c> over <c>Direction.values()</c>,
+    /// and it happens <b>before</b> the inner provider is asked, since vanilla evaluates the
+    /// direction first. Each property is set only where the state has it: <c>axis</c> to the
+    /// direction's axis, the six way <c>facing</c>, and for a horizontal direction the four way one.
     /// </remarks>
-    public sealed record Rotated(IBlock Block) : BlockStateProvider {
-        private static readonly Axis[] Axes = [Axis.X, Axis.Y, Axis.Z];
-
+    public sealed record Rotated(BlockStateProvider State, BlockFace? Direction) : BlockStateProvider {
         public override IBlock GetState(IFeatureLevel level, RandomSource random, int x, int y, int z) {
-            Axis axis = Axes[random.NextInt(Axes.Length)];
-            return Block is IAxisAligned aligned ? aligned.WithAxis(axis) : Block;
+            BlockFace direction = Direction ?? Directions.All[random.NextInt(Directions.All.Length)];
+            IBlock state = State.GetState(level, random, x, y, z);
+
+            if (state is IAxisAligned aligned) {
+                state = aligned.WithAxis(AxisOf(direction));
+            }
+
+            if (state is IDirectional directional) {
+                state = directional.WithFacing(direction.ToCardinal());
+            }
+
+            if (Directions.IsHorizontal(direction) && state is IHorizontalFacing horizontal) {
+                state = horizontal.WithFacing(direction.ToDirection());
+            }
+
+            return state;
         }
+
+        private static Axis AxisOf(BlockFace face) => face switch {
+            BlockFace.NegX or BlockFace.PosX => Axis.X,
+            BlockFace.NegY or BlockFace.PosY => Axis.Y,
+            _ => Axis.Z
+        };
     }
 
     /// <summary>
     /// <c>RandomizedIntStateProvider</c>: the source's state with an integer property redrawn.
     /// </summary>
     /// <remarks>
-    /// The property name comes out of the datapack as a string, and the only one the vanilla data
-    /// names is <c>age</c>, so it resolves through <see cref="IAged"/> rather than through
-    /// <c>WithState(CompoundTag)</c>. The parser is what rejects any other name: going through NBT
-    /// would silently ignore a property the block does not have, which is a feature that quietly
-    /// places its source state forever.
-    /// <p/>
-    /// A source state with no age still places, as vanilla's does when the property is missing.
+    /// The property is found by name on whatever state the source produced, and a state without an
+    /// integer property of that name places unchanged, as vanilla's does. <c>age</c>, which is
+    /// nearly every use, goes through <see cref="IAged"/>; any other name goes through the state's
+    /// properties by string, which <see cref="StateParser.Apply"/> refuses rather than ignoring when
+    /// the key is not there.
     /// </remarks>
-    public sealed record RandomizedAge(BlockStateProvider Source, IIntProvider Values) : BlockStateProvider {
+    public sealed record RandomizedInt(BlockStateProvider Source, string Property, IIntProvider Values)
+        : BlockStateProvider {
+
         public override IBlock GetState(IFeatureLevel level, RandomSource random, int x, int y, int z) {
             IBlock state = Source.GetState(level, random, x, y, z);
-            return state is IAged aged ? aged.WithAge(Values.Sample(random)) : state;
+
+            if (Property == "age") {
+                return state is IAged aged ? aged.WithAge(Values.Sample(random)) : state;
+            }
+
+            if (state.ToStateNbt()[Property] is not StringTag current || !int.TryParse(current.Value, out _)) {
+                return state;
+            }
+
+            return StateParser.Apply(state,
+                new CompoundTag((Property, new StringTag(Values.Sample(random).ToString()))));
         }
     }
 
     /// <summary>
-    /// <c>RuleBasedStateProvider</c>: the first rule whose predicate holds, else the fallback, else
-    /// whatever is already there.
+    /// <c>RuleBasedStateProvider</c>: the first rule whose predicate holds and whose provider answers,
+    /// else the fallback, else whatever is already there.
     /// </summary>
+    /// <remarks>
+    /// A rule's provider is asked for its <b>optional</b> state, and a decline moves on to the next
+    /// rule rather than ending the search.
+    /// </remarks>
     public sealed record RuleBased(BlockStateProvider? Fallback,
         IReadOnlyList<(BlockPredicate IfTrue, BlockStateProvider Then)> Rules) : BlockStateProvider {
 
@@ -90,12 +129,69 @@ public abstract record BlockStateProvider {
             int z) {
 
             foreach ((BlockPredicate ifTrue, BlockStateProvider then) in Rules) {
-                if (ifTrue.Test(level, x, y, z)) {
-                    return then.GetState(level, random, x, y, z);
+                if (ifTrue.Test(level, x, y, z)
+                    && then.GetOptionalState(level, random, x, y, z) is { } state) {
+
+                    return state;
                 }
             }
 
-            return Fallback?.GetState(level, random, x, y, z);
+            return Fallback?.GetOptionalState(level, random, x, y, z);
+        }
+    }
+
+    /// <summary>
+    /// <c>CopyPropertiesProvider</c>: the source's state with every property the block already at the
+    /// position shares with it copied across.
+    /// </summary>
+    /// <remarks>
+    /// <c>withPropertiesOf</c> matches properties by object identity, and two blocks share a property
+    /// object exactly when they share the vanilla constant. This matches by name and copies only a
+    /// value the target accepts, which is the same answer wherever two same named properties have the
+    /// same values; where they do not (two <c>age</c> ranges) a value the target lacks is skipped
+    /// rather than copied. No vanilla worldgen data uses this provider.
+    /// </remarks>
+    public sealed record CopyProperties(BlockStateProvider Source) : BlockStateProvider {
+        public override IBlock GetState(IFeatureLevel level, RandomSource random, int x, int y, int z) {
+            IBlock state = Source.GetState(level, random, x, y, z);
+            IBlock there = level.Registry.Blocks.GetByStateId(level.GetState(x, y, z));
+
+            CompoundTag own = state.ToStateNbt();
+            foreach ((string name, INbtTag value) in there.ToStateNbt().Children) {
+                if (!own.Contains(name)) {
+                    continue;
+                }
+
+                IBlock changed = state.WithState(new CompoundTag((name, value)));
+                if (changed.ToStateNbt()[name] is StringTag set && value is StringTag wanted
+                    && set.Value == wanted.Value) {
+
+                    state = changed;
+                }
+            }
+
+            return state;
+        }
+    }
+
+    /// <summary>
+    /// <c>RandomBlockProvider</c>: the default state of a block drawn from a set, in the set's own
+    /// order.
+    /// </summary>
+    /// <remarks>
+    /// An empty set declines through <see cref="GetOptionalState"/> without drawing, and
+    /// <see cref="GetState"/> then answers the block already there.
+    /// </remarks>
+    public sealed record RandomBlock(IReadOnlyList<IBlock> Blocks) : BlockStateProvider {
+        public override IBlock GetState(IFeatureLevel level, RandomSource random, int x, int y, int z) {
+            return GetOptionalState(level, random, x, y, z)
+                ?? level.Registry.Blocks.GetByStateId(level.GetState(x, y, z));
+        }
+
+        public override IBlock? GetOptionalState(IFeatureLevel level, RandomSource random, int x, int y,
+            int z) {
+
+            return Blocks.Count == 0 ? null : Blocks[random.NextInt(Blocks.Count)];
         }
     }
 
@@ -111,10 +207,10 @@ public abstract record BlockStateProvider {
     public abstract record NoiseBased(long Seed, NoiseParameters Parameters, float Scale)
         : BlockStateProvider {
 
-        private readonly NormalNoise _noise = NormalNoise.Create(new LegacyRandomSource(Seed), Parameters);
+        private readonly INoise _noise = new NormalNoise(Parameters).Create(new LegacyRandomSource(Seed));
 
-        protected double NoiseValue(int x, int y, int z, double scale) {
-            return _noise.GetValue(x * scale, y * scale, z * scale);
+        protected float NoiseValue(int x, int y, int z, double scale) {
+            return _noise.Get(x * scale, y * scale, z * scale);
         }
     }
 
@@ -169,7 +265,7 @@ public abstract record BlockStateProvider {
         float SlowScale, long Seed, NoiseParameters Parameters, float Scale, IReadOnlyList<IBlock> States)
         : Noise(Seed, Parameters, Scale, States) {
 
-        private readonly NormalNoise _slowNoise = NormalNoise.Create(new LegacyRandomSource(Seed), SlowParameters);
+        private readonly INoise _slowNoise = new NormalNoise(SlowParameters).Create(new LegacyRandomSource(Seed));
 
         public override IBlock GetState(IFeatureLevel level, RandomSource random, int x, int y, int z) {
             double variety = SlowNoiseValue(x, y, z);
@@ -183,8 +279,9 @@ public abstract record BlockStateProvider {
             return StateAt(possible, x, y, z, Scale);
         }
 
-        private double SlowNoiseValue(int x, int y, int z) {
-            return _slowNoise.GetValue(x * SlowScale, y * SlowScale, z * SlowScale);
+        /// <summary>The scale is a float multiplied into an int, so the coordinate is a float before it widens.</summary>
+        private float SlowNoiseValue(int x, int y, int z) {
+            return _slowNoise.Get(x * SlowScale, y * SlowScale, z * SlowScale);
         }
     }
 }

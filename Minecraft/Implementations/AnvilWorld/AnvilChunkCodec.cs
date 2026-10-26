@@ -178,7 +178,7 @@ public sealed class AnvilChunkCodec(MinecraftRegistry registry) : IChunkCodec {
         if (tag["block_states"] is CompoundTag blocks && blocks["palette"] is ListTag blockPalette) {
             uint[] values = new uint[blockPalette.Tags.Length];
             for (int i = 0; i < values.Length; i++) {
-                values[i] = BlockStateNames.FromPaletteTag(blockPalette.Tags[i].GetCompound(), registry);
+                values[i] = BlockStateNames.FromPaletteTag(blockPalette.Tags[i], registry);
             }
 
             section.Palette = ReadContainer(values, blocks["data"], ChunkSection.Size, StateBits(values.Length),

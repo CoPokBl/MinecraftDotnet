@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record JungleLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
-    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.jungle_log", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jungle_log", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_log");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.Normal, 34, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.jungle_log", 2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jungle_log", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_log");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.PushPull, 34, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { MapColorId = 10 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 145];
+    public BlockStateInfo StateInfo => States[StateId - 148];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record JungleLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAl
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record JungleLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAl
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -73,9 +73,9 @@ public record JungleLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAl
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 145,
-                Axis.Y => 146,
-                Axis.Z => 147,
+                Axis.X => 148,
+                Axis.Y => 149,
+                Axis.Z => 150,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -83,9 +83,9 @@ public record JungleLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAl
     
     public IBlock WithState(uint state) {
         return state switch {
-            145 => new JungleLogBlock(Identifier, Axis.X),
-            146 => new JungleLogBlock(Identifier, Axis.Y),
-            147 => new JungleLogBlock(Identifier, Axis.Z),
+            148 => new JungleLogBlock(Identifier, Axis.X),
+            149 => new JungleLogBlock(Identifier, Axis.Y),
+            150 => new JungleLogBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

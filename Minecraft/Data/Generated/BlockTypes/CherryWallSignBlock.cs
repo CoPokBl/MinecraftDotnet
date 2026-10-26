@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CherryWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:wall_sign", "block.minecraft.cherry_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:cherry_sign", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 36, "cherry_wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S120, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.cherry_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:cherry_sign", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 36, "cherry_wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S120, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S121 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S121 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S121 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S122 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S122 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S122 };
     private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S123 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S123 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S123 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 5859];
+    public BlockStateInfo StateInfo => States[StateId - 7447];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record CherryWallSignBlock(Identifier Identifier, Direction Facing, bool 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record CherryWallSignBlock(Identifier Identifier, Direction Facing, bool 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -82,20 +82,20 @@ public record CherryWallSignBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5859,
-                    false => 5860,
+                    true => 7447,
+                    false => 7448,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5861,
-                    false => 5862,
+                    true => 7449,
+                    false => 7450,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5863,
-                    false => 5864,
+                    true => 7451,
+                    false => 7452,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5865,
-                    false => 5866,
+                    true => 7453,
+                    false => 7454,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -104,14 +104,14 @@ public record CherryWallSignBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            5859 => new CherryWallSignBlock(Identifier, Direction.North, true),
-            5860 => new CherryWallSignBlock(Identifier, Direction.North, false),
-            5861 => new CherryWallSignBlock(Identifier, Direction.South, true),
-            5862 => new CherryWallSignBlock(Identifier, Direction.South, false),
-            5863 => new CherryWallSignBlock(Identifier, Direction.West, true),
-            5864 => new CherryWallSignBlock(Identifier, Direction.West, false),
-            5865 => new CherryWallSignBlock(Identifier, Direction.East, true),
-            5866 => new CherryWallSignBlock(Identifier, Direction.East, false),
+            7447 => new CherryWallSignBlock(Identifier, Direction.North, true),
+            7448 => new CherryWallSignBlock(Identifier, Direction.North, false),
+            7449 => new CherryWallSignBlock(Identifier, Direction.South, true),
+            7450 => new CherryWallSignBlock(Identifier, Direction.South, false),
+            7451 => new CherryWallSignBlock(Identifier, Direction.West, true),
+            7452 => new CherryWallSignBlock(Identifier, Direction.West, false),
+            7453 => new CherryWallSignBlock(Identifier, Direction.East, true),
+            7454 => new CherryWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,24 +11,24 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AcaciaLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock, IDistanced, IPersistent, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:tinted_particle_leaves", "block.minecraft.acacia_leaves", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_leaves");
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Destroy, 7, "grass", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { Flammable = true, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_leaves", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_leaves");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Popped, 7, "grass", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { Flammable = true, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true };
-    private static readonly BlockStateInfo I3 = I0 with { Flammable = true, RandomlyTicking = true, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { Flammable = true, RandomlyTicking = true, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 364];
+    public BlockStateInfo StateInfo => States[StateId - 379];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record AcaciaLeavesBlock(Identifier Identifier, int Distance, bool Persis
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record AcaciaLeavesBlock(Identifier Identifier, int Distance, bool Persis
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -81,72 +81,72 @@ public record AcaciaLeavesBlock(Identifier Identifier, int Distance, bool Persis
             return Distance switch {
                 1 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 364,
-                        false => 365,
+                        true => 379,
+                        false => 380,
                     },
                     false => Waterlogged switch {
-                        true => 366,
-                        false => 367,
+                        true => 381,
+                        false => 382,
                     },
                 },
                 2 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 368,
-                        false => 369,
+                        true => 383,
+                        false => 384,
                     },
                     false => Waterlogged switch {
-                        true => 370,
-                        false => 371,
+                        true => 385,
+                        false => 386,
                     },
                 },
                 3 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 372,
-                        false => 373,
+                        true => 387,
+                        false => 388,
                     },
                     false => Waterlogged switch {
-                        true => 374,
-                        false => 375,
+                        true => 389,
+                        false => 390,
                     },
                 },
                 4 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 376,
-                        false => 377,
+                        true => 391,
+                        false => 392,
                     },
                     false => Waterlogged switch {
-                        true => 378,
-                        false => 379,
+                        true => 393,
+                        false => 394,
                     },
                 },
                 5 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 380,
-                        false => 381,
+                        true => 395,
+                        false => 396,
                     },
                     false => Waterlogged switch {
-                        true => 382,
-                        false => 383,
+                        true => 397,
+                        false => 398,
                     },
                 },
                 6 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 384,
-                        false => 385,
+                        true => 399,
+                        false => 400,
                     },
                     false => Waterlogged switch {
-                        true => 386,
-                        false => 387,
+                        true => 401,
+                        false => 402,
                     },
                 },
                 7 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 388,
-                        false => 389,
+                        true => 403,
+                        false => 404,
                     },
                     false => Waterlogged switch {
-                        true => 390,
-                        false => 391,
+                        true => 405,
+                        false => 406,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
@@ -156,34 +156,34 @@ public record AcaciaLeavesBlock(Identifier Identifier, int Distance, bool Persis
     
     public IBlock WithState(uint state) {
         return state switch {
-            364 => new AcaciaLeavesBlock(Identifier, 1, true, true),
-            365 => new AcaciaLeavesBlock(Identifier, 1, true, false),
-            366 => new AcaciaLeavesBlock(Identifier, 1, false, true),
-            367 => new AcaciaLeavesBlock(Identifier, 1, false, false),
-            368 => new AcaciaLeavesBlock(Identifier, 2, true, true),
-            369 => new AcaciaLeavesBlock(Identifier, 2, true, false),
-            370 => new AcaciaLeavesBlock(Identifier, 2, false, true),
-            371 => new AcaciaLeavesBlock(Identifier, 2, false, false),
-            372 => new AcaciaLeavesBlock(Identifier, 3, true, true),
-            373 => new AcaciaLeavesBlock(Identifier, 3, true, false),
-            374 => new AcaciaLeavesBlock(Identifier, 3, false, true),
-            375 => new AcaciaLeavesBlock(Identifier, 3, false, false),
-            376 => new AcaciaLeavesBlock(Identifier, 4, true, true),
-            377 => new AcaciaLeavesBlock(Identifier, 4, true, false),
-            378 => new AcaciaLeavesBlock(Identifier, 4, false, true),
-            379 => new AcaciaLeavesBlock(Identifier, 4, false, false),
-            380 => new AcaciaLeavesBlock(Identifier, 5, true, true),
-            381 => new AcaciaLeavesBlock(Identifier, 5, true, false),
-            382 => new AcaciaLeavesBlock(Identifier, 5, false, true),
-            383 => new AcaciaLeavesBlock(Identifier, 5, false, false),
-            384 => new AcaciaLeavesBlock(Identifier, 6, true, true),
-            385 => new AcaciaLeavesBlock(Identifier, 6, true, false),
-            386 => new AcaciaLeavesBlock(Identifier, 6, false, true),
-            387 => new AcaciaLeavesBlock(Identifier, 6, false, false),
-            388 => new AcaciaLeavesBlock(Identifier, 7, true, true),
-            389 => new AcaciaLeavesBlock(Identifier, 7, true, false),
-            390 => new AcaciaLeavesBlock(Identifier, 7, false, true),
-            391 => new AcaciaLeavesBlock(Identifier, 7, false, false),
+            379 => new AcaciaLeavesBlock(Identifier, 1, true, true),
+            380 => new AcaciaLeavesBlock(Identifier, 1, true, false),
+            381 => new AcaciaLeavesBlock(Identifier, 1, false, true),
+            382 => new AcaciaLeavesBlock(Identifier, 1, false, false),
+            383 => new AcaciaLeavesBlock(Identifier, 2, true, true),
+            384 => new AcaciaLeavesBlock(Identifier, 2, true, false),
+            385 => new AcaciaLeavesBlock(Identifier, 2, false, true),
+            386 => new AcaciaLeavesBlock(Identifier, 2, false, false),
+            387 => new AcaciaLeavesBlock(Identifier, 3, true, true),
+            388 => new AcaciaLeavesBlock(Identifier, 3, true, false),
+            389 => new AcaciaLeavesBlock(Identifier, 3, false, true),
+            390 => new AcaciaLeavesBlock(Identifier, 3, false, false),
+            391 => new AcaciaLeavesBlock(Identifier, 4, true, true),
+            392 => new AcaciaLeavesBlock(Identifier, 4, true, false),
+            393 => new AcaciaLeavesBlock(Identifier, 4, false, true),
+            394 => new AcaciaLeavesBlock(Identifier, 4, false, false),
+            395 => new AcaciaLeavesBlock(Identifier, 5, true, true),
+            396 => new AcaciaLeavesBlock(Identifier, 5, true, false),
+            397 => new AcaciaLeavesBlock(Identifier, 5, false, true),
+            398 => new AcaciaLeavesBlock(Identifier, 5, false, false),
+            399 => new AcaciaLeavesBlock(Identifier, 6, true, true),
+            400 => new AcaciaLeavesBlock(Identifier, 6, true, false),
+            401 => new AcaciaLeavesBlock(Identifier, 6, false, true),
+            402 => new AcaciaLeavesBlock(Identifier, 6, false, false),
+            403 => new AcaciaLeavesBlock(Identifier, 7, true, true),
+            404 => new AcaciaLeavesBlock(Identifier, 7, true, false),
+            405 => new AcaciaLeavesBlock(Identifier, 7, false, true),
+            406 => new AcaciaLeavesBlock(Identifier, 7, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

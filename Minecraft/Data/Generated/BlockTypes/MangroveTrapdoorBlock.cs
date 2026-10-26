@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MangroveTrapdoorBlock(Identifier Identifier, Direction Facing, TopBottom Half, bool Open, bool Powered, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IOpenable, IPowered, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:trapdoor", "block.minecraft.mangrove_trapdoor", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_trapdoor");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 28, "wood", NoteBlockInstrument.Bass, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_trapdoor", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_trapdoor");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 28, "wood", NoteBlockInstrument.Bass, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
@@ -28,15 +28,15 @@ public record MangroveTrapdoorBlock(Identifier Identifier, Direction Facing, Top
         I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I4, I5, I4, I5, I6, I7, I6, I7, I2, I3, I2, I3, I6, I7, I6, I7, I4, I5, I4, I5, I8, I9, I8, I9, I2, I3, I2, I3, I8, I9, I8, I9, I4, I5, I4, I5, I10, I11, I10, I11, I2, I3, I2, I3, I10, I11, I10, I11, I4, I5, I4, I5
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 7626];
+    public BlockStateInfo StateInfo => States[StateId - 9296];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -50,7 +50,6 @@ public record MangroveTrapdoorBlock(Identifier Identifier, Direction Facing, Top
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -70,6 +69,7 @@ public record MangroveTrapdoorBlock(Identifier Identifier, Direction Facing, Top
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -95,44 +95,44 @@ public record MangroveTrapdoorBlock(Identifier Identifier, Direction Facing, Top
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7626,
-                                false => 7627,
+                                true => 9296,
+                                false => 9297,
                             },
                             false => Waterlogged switch {
-                                true => 7628,
-                                false => 7629,
+                                true => 9298,
+                                false => 9299,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7630,
-                                false => 7631,
+                                true => 9300,
+                                false => 9301,
                             },
                             false => Waterlogged switch {
-                                true => 7632,
-                                false => 7633,
+                                true => 9302,
+                                false => 9303,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7634,
-                                false => 7635,
+                                true => 9304,
+                                false => 9305,
                             },
                             false => Waterlogged switch {
-                                true => 7636,
-                                false => 7637,
+                                true => 9306,
+                                false => 9307,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7638,
-                                false => 7639,
+                                true => 9308,
+                                false => 9309,
                             },
                             false => Waterlogged switch {
-                                true => 7640,
-                                false => 7641,
+                                true => 9310,
+                                false => 9311,
                             },
                         },
                     },
@@ -142,44 +142,44 @@ public record MangroveTrapdoorBlock(Identifier Identifier, Direction Facing, Top
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7642,
-                                false => 7643,
+                                true => 9312,
+                                false => 9313,
                             },
                             false => Waterlogged switch {
-                                true => 7644,
-                                false => 7645,
+                                true => 9314,
+                                false => 9315,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7646,
-                                false => 7647,
+                                true => 9316,
+                                false => 9317,
                             },
                             false => Waterlogged switch {
-                                true => 7648,
-                                false => 7649,
+                                true => 9318,
+                                false => 9319,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7650,
-                                false => 7651,
+                                true => 9320,
+                                false => 9321,
                             },
                             false => Waterlogged switch {
-                                true => 7652,
-                                false => 7653,
+                                true => 9322,
+                                false => 9323,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7654,
-                                false => 7655,
+                                true => 9324,
+                                false => 9325,
                             },
                             false => Waterlogged switch {
-                                true => 7656,
-                                false => 7657,
+                                true => 9326,
+                                false => 9327,
                             },
                         },
                     },
@@ -189,44 +189,44 @@ public record MangroveTrapdoorBlock(Identifier Identifier, Direction Facing, Top
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7658,
-                                false => 7659,
+                                true => 9328,
+                                false => 9329,
                             },
                             false => Waterlogged switch {
-                                true => 7660,
-                                false => 7661,
+                                true => 9330,
+                                false => 9331,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7662,
-                                false => 7663,
+                                true => 9332,
+                                false => 9333,
                             },
                             false => Waterlogged switch {
-                                true => 7664,
-                                false => 7665,
+                                true => 9334,
+                                false => 9335,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7666,
-                                false => 7667,
+                                true => 9336,
+                                false => 9337,
                             },
                             false => Waterlogged switch {
-                                true => 7668,
-                                false => 7669,
+                                true => 9338,
+                                false => 9339,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7670,
-                                false => 7671,
+                                true => 9340,
+                                false => 9341,
                             },
                             false => Waterlogged switch {
-                                true => 7672,
-                                false => 7673,
+                                true => 9342,
+                                false => 9343,
                             },
                         },
                     },
@@ -236,44 +236,44 @@ public record MangroveTrapdoorBlock(Identifier Identifier, Direction Facing, Top
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7674,
-                                false => 7675,
+                                true => 9344,
+                                false => 9345,
                             },
                             false => Waterlogged switch {
-                                true => 7676,
-                                false => 7677,
+                                true => 9346,
+                                false => 9347,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7678,
-                                false => 7679,
+                                true => 9348,
+                                false => 9349,
                             },
                             false => Waterlogged switch {
-                                true => 7680,
-                                false => 7681,
+                                true => 9350,
+                                false => 9351,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7682,
-                                false => 7683,
+                                true => 9352,
+                                false => 9353,
                             },
                             false => Waterlogged switch {
-                                true => 7684,
-                                false => 7685,
+                                true => 9354,
+                                false => 9355,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7686,
-                                false => 7687,
+                                true => 9356,
+                                false => 9357,
                             },
                             false => Waterlogged switch {
-                                true => 7688,
-                                false => 7689,
+                                true => 9358,
+                                false => 9359,
                             },
                         },
                     },
@@ -286,70 +286,70 @@ public record MangroveTrapdoorBlock(Identifier Identifier, Direction Facing, Top
     
     public IBlock WithState(uint state) {
         return state switch {
-            7626 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
-            7627 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
-            7628 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
-            7629 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
-            7630 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
-            7631 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
-            7632 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
-            7633 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
-            7634 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
-            7635 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
-            7636 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
-            7637 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
-            7638 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
-            7639 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
-            7640 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
-            7641 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
-            7642 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
-            7643 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
-            7644 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
-            7645 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
-            7646 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
-            7647 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
-            7648 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
-            7649 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
-            7650 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
-            7651 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
-            7652 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
-            7653 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
-            7654 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
-            7655 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
-            7656 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
-            7657 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
-            7658 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
-            7659 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
-            7660 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
-            7661 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
-            7662 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
-            7663 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
-            7664 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
-            7665 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
-            7666 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
-            7667 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
-            7668 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
-            7669 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
-            7670 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
-            7671 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
-            7672 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
-            7673 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
-            7674 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
-            7675 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
-            7676 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
-            7677 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
-            7678 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
-            7679 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
-            7680 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
-            7681 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
-            7682 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
-            7683 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
-            7684 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
-            7685 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
-            7686 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
-            7687 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
-            7688 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
-            7689 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
+            9296 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
+            9297 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
+            9298 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
+            9299 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
+            9300 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
+            9301 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
+            9302 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
+            9303 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
+            9304 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
+            9305 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
+            9306 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
+            9307 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
+            9308 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
+            9309 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
+            9310 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
+            9311 => new MangroveTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
+            9312 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
+            9313 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
+            9314 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
+            9315 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
+            9316 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
+            9317 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
+            9318 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
+            9319 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
+            9320 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
+            9321 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
+            9322 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
+            9323 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
+            9324 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
+            9325 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
+            9326 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
+            9327 => new MangroveTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
+            9328 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
+            9329 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
+            9330 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
+            9331 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
+            9332 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
+            9333 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
+            9334 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
+            9335 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
+            9336 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
+            9337 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
+            9338 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
+            9339 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
+            9340 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
+            9341 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
+            9342 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
+            9343 => new MangroveTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
+            9344 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
+            9345 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
+            9346 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
+            9347 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
+            9348 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
+            9349 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
+            9350 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
+            9351 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
+            9352 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
+            9353 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
+            9354 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
+            9355 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
+            9356 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
+            9357 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
+            9358 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
+            9359 => new MangroveTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

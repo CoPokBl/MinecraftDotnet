@@ -215,8 +215,16 @@ public abstract class PathNavigation {
     /// Heads for an entity. Vanilla recomputes towards a moving target every few ticks rather than
     /// following a stale route, which is what a chasing goal relies on.
     /// </summary>
-    public virtual bool MoveTo(Entity target, double speedModifier) {
-        Path? path = CreatePath(target, 1);
+    public bool MoveTo(Entity target, double speedModifier) {
+        return MoveTo(target, 1, speedModifier);
+    }
+
+    /// <summary>
+    /// The same with how close counts as arrived, <c>PathNavigation.moveTo(Entity, int, double)</c>.
+    /// A melee chase passes zero.
+    /// </summary>
+    public virtual bool MoveTo(Entity target, int reachRange, double speedModifier) {
+        Path? path = CreatePath(target, reachRange);
         return path != null && MoveTo(path, speedModifier);
     }
 

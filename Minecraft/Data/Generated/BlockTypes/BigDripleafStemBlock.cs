@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:big_dripleaf_stem", "block.minecraft.big_dripleaf_stem", 0.1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:big_dripleaf", BlockInfo.VanillaOnly, "minecraft:blocks/big_dripleaf_stem");
-    private static readonly BlockStateInfo I0 = new(0.1f, 0, 1, PushReaction.Destroy, 7, "big_dripleaf", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S358, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.big_dripleaf_stem", 0.1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:big_dripleaf", BlockInfo.VanillaOnly, "minecraft:blocks/big_dripleaf_stem");
+    private static readonly BlockStateInfo I0 = new(0.1f, 0, 1, PushReaction.Popped, 7, "big_dripleaf", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S358, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S359 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S359 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S359 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S360 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S360 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S360 };
     private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S361 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S361 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S361 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 30388];
+    public BlockStateInfo StateInfo => States[StateId - 33745];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -82,20 +82,20 @@ public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 30388,
-                    false => 30389,
+                    true => 33745,
+                    false => 33746,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 30390,
-                    false => 30391,
+                    true => 33747,
+                    false => 33748,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 30392,
-                    false => 30393,
+                    true => 33749,
+                    false => 33750,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 30394,
-                    false => 30395,
+                    true => 33751,
+                    false => 33752,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -104,14 +104,14 @@ public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            30388 => new BigDripleafStemBlock(Identifier, Direction.North, true),
-            30389 => new BigDripleafStemBlock(Identifier, Direction.North, false),
-            30390 => new BigDripleafStemBlock(Identifier, Direction.South, true),
-            30391 => new BigDripleafStemBlock(Identifier, Direction.South, false),
-            30392 => new BigDripleafStemBlock(Identifier, Direction.West, true),
-            30393 => new BigDripleafStemBlock(Identifier, Direction.West, false),
-            30394 => new BigDripleafStemBlock(Identifier, Direction.East, true),
-            30395 => new BigDripleafStemBlock(Identifier, Direction.East, false),
+            33745 => new BigDripleafStemBlock(Identifier, Direction.North, true),
+            33746 => new BigDripleafStemBlock(Identifier, Direction.North, false),
+            33747 => new BigDripleafStemBlock(Identifier, Direction.South, true),
+            33748 => new BigDripleafStemBlock(Identifier, Direction.South, false),
+            33749 => new BigDripleafStemBlock(Identifier, Direction.West, true),
+            33750 => new BigDripleafStemBlock(Identifier, Direction.West, false),
+            33751 => new BigDripleafStemBlock(Identifier, Direction.East, true),
+            33752 => new BigDripleafStemBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

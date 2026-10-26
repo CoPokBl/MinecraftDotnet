@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AcaciaButtonBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock, IAttachFaced, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:button", "block.minecraft.acacia_button", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_button", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_button");
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S0, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_button", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_button", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_button");
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Popped, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, true, false, true, [], null, BlockShapes.S0, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S2 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S3 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S4 };
@@ -32,15 +32,15 @@ public record AcaciaButtonBlock(Identifier Identifier, AttachDirection Face, Dir
         I0, I1, I0, I1, I2, I3, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I12, I13, I14, I15, I14, I15
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 10771];
+    public BlockStateInfo StateInfo => States[StateId - 12514];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -54,7 +54,6 @@ public record AcaciaButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -74,6 +73,7 @@ public record AcaciaButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -93,58 +93,58 @@ public record AcaciaButtonBlock(Identifier Identifier, AttachDirection Face, Dir
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10771,
-                        false => 10772,
+                        true => 12514,
+                        false => 12515,
                     },
                     Direction.South => Powered switch {
-                        true => 10773,
-                        false => 10774,
+                        true => 12516,
+                        false => 12517,
                     },
                     Direction.West => Powered switch {
-                        true => 10775,
-                        false => 10776,
+                        true => 12518,
+                        false => 12519,
                     },
                     Direction.East => Powered switch {
-                        true => 10777,
-                        false => 10778,
+                        true => 12520,
+                        false => 12521,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10779,
-                        false => 10780,
+                        true => 12522,
+                        false => 12523,
                     },
                     Direction.South => Powered switch {
-                        true => 10781,
-                        false => 10782,
+                        true => 12524,
+                        false => 12525,
                     },
                     Direction.West => Powered switch {
-                        true => 10783,
-                        false => 10784,
+                        true => 12526,
+                        false => 12527,
                     },
                     Direction.East => Powered switch {
-                        true => 10785,
-                        false => 10786,
+                        true => 12528,
+                        false => 12529,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10787,
-                        false => 10788,
+                        true => 12530,
+                        false => 12531,
                     },
                     Direction.South => Powered switch {
-                        true => 10789,
-                        false => 10790,
+                        true => 12532,
+                        false => 12533,
                     },
                     Direction.West => Powered switch {
-                        true => 10791,
-                        false => 10792,
+                        true => 12534,
+                        false => 12535,
                     },
                     Direction.East => Powered switch {
-                        true => 10793,
-                        false => 10794,
+                        true => 12536,
+                        false => 12537,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -155,30 +155,30 @@ public record AcaciaButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     
     public IBlock WithState(uint state) {
         return state switch {
-            10771 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            10772 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            10773 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            10774 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            10775 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            10776 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            10777 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            10778 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            10779 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            10780 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            10781 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            10782 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            10783 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            10784 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            10785 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            10786 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            10787 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            10788 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            10789 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            10790 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            10791 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            10792 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            10793 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            10794 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            12514 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            12515 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            12516 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            12517 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            12518 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            12519 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            12520 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            12521 => new AcaciaButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            12522 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            12523 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            12524 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            12525 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            12526 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            12527 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            12528 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            12529 => new AcaciaButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            12530 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            12531 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            12532 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            12533 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            12534 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            12535 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            12536 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            12537 => new AcaciaButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record YellowBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock, IHorizontalFacing, IOccupied, IBedParted {
-    private static readonly BlockInfo Data = new("minecraft:bed", "block.minecraft.yellow_bed", 0.2f, 0.6f, 1f, 1f, 0.75f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:yellow_bed", BlockInfo.VanillaOnly, "minecraft:blocks/yellow_bed");
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Destroy, 3, "wood", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S362, BlockShapes.S362, BlockShapes.S1, BlockShapes.S1, BlockShapes.S362, BlockShapes.S362);
+    private static readonly BlockInfo Data = new("block.minecraft.yellow_bed", 0.2f, 0.6f, 1f, 1f, 0.75f, 0.5f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:yellow_bed", BlockInfo.VanillaOnly, "minecraft:blocks/yellow_bed");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Popped, 3, "wood", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S362, BlockShapes.S362, BlockShapes.S1, BlockShapes.S1, BlockShapes.S362, BlockShapes.S362);
     private static readonly BlockStateInfo I1 = I0 with { MapColorId = 18, BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363, SupportShape = BlockShapes.S363 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363, SupportShape = BlockShapes.S363 };
     private static readonly BlockStateInfo I3 = I0 with { MapColorId = 18 };
@@ -24,15 +24,15 @@ public record YellowBedBlock(Identifier Identifier, Direction Facing, bool Occup
         I0, I1, I0, I1, I2, I3, I2, I3, I4, I5, I4, I5, I6, I7, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 1995];
+    public BlockStateInfo StateInfo => States[StateId - 2094];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record YellowBedBlock(Identifier Identifier, Direction Facing, bool Occup
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record YellowBedBlock(Identifier Identifier, Direction Facing, bool Occup
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -85,49 +85,49 @@ public record YellowBedBlock(Identifier Identifier, Direction Facing, bool Occup
             return Facing switch {
                 Direction.North => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 1995,
-                        BedPart.Foot => 1996,
+                        BedPart.Head => 2094,
+                        BedPart.Foot => 2095,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 1997,
-                        BedPart.Foot => 1998,
+                        BedPart.Head => 2096,
+                        BedPart.Foot => 2097,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
                 Direction.South => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 1999,
-                        BedPart.Foot => 2000,
+                        BedPart.Head => 2098,
+                        BedPart.Foot => 2099,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 2001,
-                        BedPart.Foot => 2002,
+                        BedPart.Head => 2100,
+                        BedPart.Foot => 2101,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
                 Direction.West => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 2003,
-                        BedPart.Foot => 2004,
+                        BedPart.Head => 2102,
+                        BedPart.Foot => 2103,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 2005,
-                        BedPart.Foot => 2006,
+                        BedPart.Head => 2104,
+                        BedPart.Foot => 2105,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
                 Direction.East => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 2007,
-                        BedPart.Foot => 2008,
+                        BedPart.Head => 2106,
+                        BedPart.Foot => 2107,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 2009,
-                        BedPart.Foot => 2010,
+                        BedPart.Head => 2108,
+                        BedPart.Foot => 2109,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
@@ -138,22 +138,22 @@ public record YellowBedBlock(Identifier Identifier, Direction Facing, bool Occup
     
     public IBlock WithState(uint state) {
         return state switch {
-            1995 => new YellowBedBlock(Identifier, Direction.North, true, BedPart.Head),
-            1996 => new YellowBedBlock(Identifier, Direction.North, true, BedPart.Foot),
-            1997 => new YellowBedBlock(Identifier, Direction.North, false, BedPart.Head),
-            1998 => new YellowBedBlock(Identifier, Direction.North, false, BedPart.Foot),
-            1999 => new YellowBedBlock(Identifier, Direction.South, true, BedPart.Head),
-            2000 => new YellowBedBlock(Identifier, Direction.South, true, BedPart.Foot),
-            2001 => new YellowBedBlock(Identifier, Direction.South, false, BedPart.Head),
-            2002 => new YellowBedBlock(Identifier, Direction.South, false, BedPart.Foot),
-            2003 => new YellowBedBlock(Identifier, Direction.West, true, BedPart.Head),
-            2004 => new YellowBedBlock(Identifier, Direction.West, true, BedPart.Foot),
-            2005 => new YellowBedBlock(Identifier, Direction.West, false, BedPart.Head),
-            2006 => new YellowBedBlock(Identifier, Direction.West, false, BedPart.Foot),
-            2007 => new YellowBedBlock(Identifier, Direction.East, true, BedPart.Head),
-            2008 => new YellowBedBlock(Identifier, Direction.East, true, BedPart.Foot),
-            2009 => new YellowBedBlock(Identifier, Direction.East, false, BedPart.Head),
-            2010 => new YellowBedBlock(Identifier, Direction.East, false, BedPart.Foot),
+            2094 => new YellowBedBlock(Identifier, Direction.North, true, BedPart.Head),
+            2095 => new YellowBedBlock(Identifier, Direction.North, true, BedPart.Foot),
+            2096 => new YellowBedBlock(Identifier, Direction.North, false, BedPart.Head),
+            2097 => new YellowBedBlock(Identifier, Direction.North, false, BedPart.Foot),
+            2098 => new YellowBedBlock(Identifier, Direction.South, true, BedPart.Head),
+            2099 => new YellowBedBlock(Identifier, Direction.South, true, BedPart.Foot),
+            2100 => new YellowBedBlock(Identifier, Direction.South, false, BedPart.Head),
+            2101 => new YellowBedBlock(Identifier, Direction.South, false, BedPart.Foot),
+            2102 => new YellowBedBlock(Identifier, Direction.West, true, BedPart.Head),
+            2103 => new YellowBedBlock(Identifier, Direction.West, true, BedPart.Foot),
+            2104 => new YellowBedBlock(Identifier, Direction.West, false, BedPart.Head),
+            2105 => new YellowBedBlock(Identifier, Direction.West, false, BedPart.Foot),
+            2106 => new YellowBedBlock(Identifier, Direction.East, true, BedPart.Head),
+            2107 => new YellowBedBlock(Identifier, Direction.East, true, BedPart.Foot),
+            2108 => new YellowBedBlock(Identifier, Direction.East, false, BedPart.Head),
+            2109 => new YellowBedBlock(Identifier, Direction.East, false, BedPart.Foot),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

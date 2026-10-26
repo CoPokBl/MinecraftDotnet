@@ -5,12 +5,14 @@ using NBT.Tags;
 namespace Minecraft.Data.EnvironmentAttributes;
 
 /// <summary>What a bed does when a player right clicks one here.</summary>
-/// <param name="Explodes">Whether using the bed blows it up instead.</param>
+/// <param name="DestroyOnUse">Whether using the bed destroys it instead, which is the explosion outside the overworld.</param>
+/// <param name="DestroyOnLeave">Whether getting up out of the bed destroys it, as a straw bed does.</param>
 /// <param name="ErrorMessage">Shown when <see cref="CanSleep"/> refuses.</param>
 public record BedRule(
     BedRuleCondition CanSleep,
     BedRuleCondition CanSetSpawn,
-    bool Explodes,
+    bool DestroyOnUse,
+    bool DestroyOnLeave,
     TextComponent? ErrorMessage) {
 
     public INbtTag ToNbt() {
@@ -19,8 +21,12 @@ public record BedRule(
             ("can_set_spawn", new StringTag(CanSetSpawn.ToProtocolString()))
         ];
 
-        if (Explodes) {
-            children.Add(("explodes", new BooleanTag(true)));
+        if (DestroyOnUse) {
+            children.Add(("destroy_on_use", new BooleanTag(true)));
+        }
+
+        if (DestroyOnLeave) {
+            children.Add(("destroy_on_leave", new BooleanTag(true)));
         }
 
         if (ErrorMessage != null) {
@@ -35,7 +41,8 @@ public record BedRule(
         return new BedRule(
             BedRuleConditionExtensions.ParseBedRuleCondition(compound["can_sleep"]!.GetString()),
             BedRuleConditionExtensions.ParseBedRuleCondition(compound["can_set_spawn"]!.GetString()),
-            compound.Contains("explodes") && compound["explodes"]!.AsBool(),
+            compound.Contains("destroy_on_use") && compound["destroy_on_use"]!.AsBool(),
+            compound.Contains("destroy_on_leave") && compound["destroy_on_leave"]!.AsBool(),
             compound.Contains("error_message") ? TextComponent.FromTag(compound["error_message"]!) : null);
     }
 }

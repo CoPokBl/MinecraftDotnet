@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using GraphicalClient.Assets.ResourcePacks;
 using GraphicalClient.Rendering.Entities.Special;
 using Minecraft.Data.Blocks;
@@ -150,6 +151,15 @@ public sealed class DevArtSource : IResourceSource {
             [..Enumerable.Range(0, FireFrames).Select(frame => (frame, 1))], false);
     }
 
+    /// <summary>The kind of block, as the snake case of its own class without the suffix: <c>StairBlock</c> is <c>stair</c>.</summary>
+    private static string Category(IBlock state) {
+        if (BlockClasses.Of(state.Identifier) is not [var nearest, ..]) {
+            return "";
+        }
+        string name = nearest.Name.EndsWith("Block") ? nearest.Name[..^"Block".Length] : nearest.Name;
+        return Regex.Replace(name, "(?<!^)([A-Z])", "_$1").ToLowerInvariant();
+    }
+
     private string Register(string key, DevArt.Spec spec) {
         _specs.TryAdd(key, spec);
         return key;
@@ -157,10 +167,9 @@ public sealed class DevArtSource : IResourceSource {
 
     public BlockAppearance Appearance(IBlock state) {
         string path = state.Identifier.Key;
-        string category = state.Category.Key;
-
+        string category = Category(state);
         if (state.Air || path is "barrier" or "light" or "structure_void" or "moving_piston" or "end_gateway"
-            || category is "end_portal" or "bubble_column" || Rendering.BlockEntities.BlockEntityRenderers.DrawsWholeBlock(state)) {
+            || BlockClasses.Is(state.Identifier, BlockClass.EndPortalBlock) || BlockClasses.Is(state.Identifier, BlockClass.BubbleColumnBlock) || Rendering.BlockEntities.BlockEntityRenderers.DrawsWholeBlock(state)) {
             return BlockAppearance.Invisible;
         }
 

@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BambooMosaicStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.bamboo_mosaic_stairs", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:bamboo_mosaic_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/bamboo_mosaic_stairs");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 18, "bamboo_wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.bamboo_mosaic_stairs", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:bamboo_mosaic_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/bamboo_mosaic_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 18, "bamboo_wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record BambooMosaicStairsBlock(Identifier Identifier, Direction Facing, T
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 12452];
+    public BlockStateInfo StateInfo => States[StateId - 14299];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record BambooMosaicStairsBlock(Identifier Identifier, Direction Facing, T
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record BambooMosaicStairsBlock(Identifier Identifier, Direction Facing, T
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record BambooMosaicStairsBlock(Identifier Identifier, Direction Facing, T
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12452,
-                            false => 12453,
+                            true => 14299,
+                            false => 14300,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12454,
-                            false => 12455,
+                            true => 14301,
+                            false => 14302,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12456,
-                            false => 12457,
+                            true => 14303,
+                            false => 14304,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12458,
-                            false => 12459,
+                            true => 14305,
+                            false => 14306,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12460,
-                            false => 12461,
+                            true => 14307,
+                            false => 14308,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12462,
-                            false => 12463,
+                            true => 14309,
+                            false => 14310,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12464,
-                            false => 12465,
+                            true => 14311,
+                            false => 14312,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12466,
-                            false => 12467,
+                            true => 14313,
+                            false => 14314,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12468,
-                            false => 12469,
+                            true => 14315,
+                            false => 14316,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12470,
-                            false => 12471,
+                            true => 14317,
+                            false => 14318,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record BambooMosaicStairsBlock(Identifier Identifier, Direction Facing, T
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12472,
-                            false => 12473,
+                            true => 14319,
+                            false => 14320,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12474,
-                            false => 12475,
+                            true => 14321,
+                            false => 14322,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12476,
-                            false => 12477,
+                            true => 14323,
+                            false => 14324,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12478,
-                            false => 12479,
+                            true => 14325,
+                            false => 14326,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12480,
-                            false => 12481,
+                            true => 14327,
+                            false => 14328,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12482,
-                            false => 12483,
+                            true => 14329,
+                            false => 14330,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12484,
-                            false => 12485,
+                            true => 14331,
+                            false => 14332,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12486,
-                            false => 12487,
+                            true => 14333,
+                            false => 14334,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12488,
-                            false => 12489,
+                            true => 14335,
+                            false => 14336,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12490,
-                            false => 12491,
+                            true => 14337,
+                            false => 14338,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record BambooMosaicStairsBlock(Identifier Identifier, Direction Facing, T
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12492,
-                            false => 12493,
+                            true => 14339,
+                            false => 14340,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12494,
-                            false => 12495,
+                            true => 14341,
+                            false => 14342,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12496,
-                            false => 12497,
+                            true => 14343,
+                            false => 14344,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12498,
-                            false => 12499,
+                            true => 14345,
+                            false => 14346,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12500,
-                            false => 12501,
+                            true => 14347,
+                            false => 14348,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12502,
-                            false => 12503,
+                            true => 14349,
+                            false => 14350,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12504,
-                            false => 12505,
+                            true => 14351,
+                            false => 14352,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12506,
-                            false => 12507,
+                            true => 14353,
+                            false => 14354,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12508,
-                            false => 12509,
+                            true => 14355,
+                            false => 14356,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12510,
-                            false => 12511,
+                            true => 14357,
+                            false => 14358,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record BambooMosaicStairsBlock(Identifier Identifier, Direction Facing, T
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12512,
-                            false => 12513,
+                            true => 14359,
+                            false => 14360,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12514,
-                            false => 12515,
+                            true => 14361,
+                            false => 14362,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12516,
-                            false => 12517,
+                            true => 14363,
+                            false => 14364,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12518,
-                            false => 12519,
+                            true => 14365,
+                            false => 14366,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12520,
-                            false => 12521,
+                            true => 14367,
+                            false => 14368,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12522,
-                            false => 12523,
+                            true => 14369,
+                            false => 14370,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12524,
-                            false => 12525,
+                            true => 14371,
+                            false => 14372,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12526,
-                            false => 12527,
+                            true => 14373,
+                            false => 14374,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12528,
-                            false => 12529,
+                            true => 14375,
+                            false => 14376,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12530,
-                            false => 12531,
+                            true => 14377,
+                            false => 14378,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record BambooMosaicStairsBlock(Identifier Identifier, Direction Facing, T
     
     public IBlock WithState(uint state) {
         return state switch {
-            12452 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            12453 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            12454 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            12455 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            12456 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            12457 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            12458 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            12459 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            12460 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            12461 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            12462 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            12463 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            12464 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12465 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12466 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            12467 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            12468 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12469 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12470 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            12471 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            12472 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            12473 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            12474 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            12475 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            12476 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            12477 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            12478 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            12479 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            12480 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            12481 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            12482 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            12483 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            12484 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12485 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12486 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            12487 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            12488 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12489 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12490 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            12491 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            12492 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            12493 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            12494 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            12495 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            12496 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            12497 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            12498 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            12499 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            12500 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            12501 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            12502 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            12503 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            12504 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12505 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12506 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            12507 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            12508 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12509 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12510 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            12511 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            12512 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            12513 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            12514 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            12515 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            12516 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            12517 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            12518 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            12519 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            12520 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            12521 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            12522 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            12523 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            12524 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12525 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12526 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            12527 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            12528 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12529 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12530 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            12531 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            14299 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            14300 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            14301 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            14302 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            14303 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            14304 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            14305 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            14306 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            14307 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            14308 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            14309 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            14310 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            14311 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14312 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14313 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            14314 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            14315 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14316 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14317 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            14318 => new BambooMosaicStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            14319 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            14320 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            14321 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            14322 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            14323 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            14324 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            14325 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            14326 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            14327 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            14328 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            14329 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            14330 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            14331 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14332 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14333 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            14334 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            14335 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14336 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14337 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            14338 => new BambooMosaicStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            14339 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            14340 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            14341 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            14342 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            14343 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            14344 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            14345 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            14346 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            14347 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            14348 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            14349 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            14350 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            14351 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14352 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14353 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            14354 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            14355 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14356 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14357 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            14358 => new BambooMosaicStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            14359 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            14360 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            14361 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            14362 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            14363 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            14364 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            14365 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            14366 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            14367 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            14368 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            14369 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            14370 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            14371 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14372 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14373 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            14374 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            14375 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14376 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14377 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            14378 => new BambooMosaicStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

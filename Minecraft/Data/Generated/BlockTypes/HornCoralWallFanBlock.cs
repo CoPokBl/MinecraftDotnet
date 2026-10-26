@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record HornCoralWallFanBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:coral_wall_fan", "block.minecraft.horn_coral_wall_fan", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:horn_coral_fan", BlockInfo.VanillaOnly, "minecraft:blocks/horn_coral_fan");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 18, "wet_grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S394, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.horn_coral_wall_fan", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:horn_coral_fan", BlockInfo.VanillaOnly, "minecraft:blocks/horn_coral_fan");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Popped, 18, "wet_grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S394, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S395 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S395 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S395 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S396 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S396 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S396 };
     private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S397 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S397 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S397 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 15259];
+    public BlockStateInfo StateInfo => States[StateId - 18616];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record HornCoralWallFanBlock(Identifier Identifier, Direction Facing, boo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record HornCoralWallFanBlock(Identifier Identifier, Direction Facing, boo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -82,20 +82,20 @@ public record HornCoralWallFanBlock(Identifier Identifier, Direction Facing, boo
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 15259,
-                    false => 15260,
+                    true => 18616,
+                    false => 18617,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 15261,
-                    false => 15262,
+                    true => 18618,
+                    false => 18619,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 15263,
-                    false => 15264,
+                    true => 18620,
+                    false => 18621,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 15265,
-                    false => 15266,
+                    true => 18622,
+                    false => 18623,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -104,14 +104,14 @@ public record HornCoralWallFanBlock(Identifier Identifier, Direction Facing, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            15259 => new HornCoralWallFanBlock(Identifier, Direction.North, true),
-            15260 => new HornCoralWallFanBlock(Identifier, Direction.North, false),
-            15261 => new HornCoralWallFanBlock(Identifier, Direction.South, true),
-            15262 => new HornCoralWallFanBlock(Identifier, Direction.South, false),
-            15263 => new HornCoralWallFanBlock(Identifier, Direction.West, true),
-            15264 => new HornCoralWallFanBlock(Identifier, Direction.West, false),
-            15265 => new HornCoralWallFanBlock(Identifier, Direction.East, true),
-            15266 => new HornCoralWallFanBlock(Identifier, Direction.East, false),
+            18616 => new HornCoralWallFanBlock(Identifier, Direction.North, true),
+            18617 => new HornCoralWallFanBlock(Identifier, Direction.North, false),
+            18618 => new HornCoralWallFanBlock(Identifier, Direction.South, true),
+            18619 => new HornCoralWallFanBlock(Identifier, Direction.South, false),
+            18620 => new HornCoralWallFanBlock(Identifier, Direction.West, true),
+            18621 => new HornCoralWallFanBlock(Identifier, Direction.West, false),
+            18622 => new HornCoralWallFanBlock(Identifier, Direction.East, true),
+            18623 => new HornCoralWallFanBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

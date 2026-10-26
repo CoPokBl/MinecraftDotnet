@@ -17,7 +17,7 @@ public sealed partial class MinecraftClient {
     private Task<RecipeSearchTree>? _recipeSearch;
     private CancellationTokenSource? _recipeSearchCancel;
     private int _recipeSearchLanguage;
-    private (Dictionary<Identifier, Dictionary<Identifier, int[]>> Tags, IReadOnlyList<IItem> Items)? _fuelItems;
+    private (Minecraft.Registry.MinecraftRegistry Registry, IReadOnlyList<IItem> Items)? _fuelItems;
 
     /// <summary>
     /// <c>LocalPlayer.getRecipeBook</c>. Vanilla hands the book from one player to the next on a respawn and makes
@@ -142,22 +142,21 @@ public sealed partial class MinecraftClient {
     public SlotDisplayContext SlotDisplayContext() => new(Registry, tag => TagMembers("minecraft:item", tag), FuelItems);
 
     /// <summary>
-    /// <c>FuelValues.fuelItems</c>, in item registry order. Only what a slot cycles through depends on the order, and
-    /// only membership reaches the server, through what a furnace's fuel slot accepts.
+    /// <c>SlotDisplay.AnyFuel.resolve</c>: every item whose defaults carry <c>cooking_fuel</c>, in item registry
+    /// order. Only what a slot cycles through depends on the order.
     /// </summary>
     private IReadOnlyList<IItem> FuelItems() {
-        if (_fuelItems is { } cached && ReferenceEquals(cached.Tags, Tags)) {
+        if (_fuelItems is { } cached && ReferenceEquals(cached.Registry, Registry)) {
             return cached.Items;
         }
-        SyncMenuData();
         List<IItem> items = [];
         for (int id = 0; id < Registry.Items.Count; id++) {
             IItem item = Registry.Items[id];
-            if (ItemRules.IsFuel(Stack.Of(new ItemStack(item)), Inventory.Data)) {
+            if (ItemRules.IsFuel(Stack.Of(new ItemStack(item)))) {
                 items.Add(item);
             }
         }
-        _fuelItems = (Tags, items);
+        _fuelItems = (Registry, items);
         return items;
     }
 

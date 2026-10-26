@@ -10,6 +10,7 @@ namespace ClientLib.Commands;
 /// <summary>Vanilla's <c>SuggestionProviders</c>, as the client resolves a node's suggestions id.</summary>
 public static class SuggestionProviders {
     private static readonly Identifier IdAvailableSounds = "minecraft:available_sounds";
+    private static readonly Identifier IdPostEffects = "minecraft:post_effects";
 
     private static Task<Suggestions> AskServer<TSource>(CommandContext<TSource> c, SuggestionsBuilder p) =>
         ((ISharedSuggestionProvider)c.Source!).CustomSuggestion(c);
@@ -17,11 +18,15 @@ public static class SuggestionProviders {
     private static Task<Suggestions> AvailableSounds<TSource>(CommandContext<TSource> c, SuggestionsBuilder p) =>
         SharedSuggestionProvider.SuggestResource(((ISharedSuggestionProvider)c.Source!).AvailableSounds, p);
 
+    private static Task<Suggestions> PostEffects<TSource>(CommandContext<TSource> c, SuggestionsBuilder p) =>
+        SharedSuggestionProvider.SuggestResource(((ISharedSuggestionProvider)c.Source!).AvailablePostEffects, p);
+
     /// <summary>
     /// <c>getProvider</c>: an unknown id asks the server. Vanilla suggests <c>summonable_entities</c>
     /// locally by <c>canSummon</c>, which the entity type data lacks, so that asks the server too.
     /// </summary>
-    public static SuggestionProvider<TSource> GetProvider<TSource>(Identifier name) => name == IdAvailableSounds ? AvailableSounds : AskServer;
+    public static SuggestionProvider<TSource> GetProvider<TSource>(Identifier name) =>
+        name == IdAvailableSounds ? AvailableSounds : name == IdPostEffects ? PostEffects : AskServer;
 }
 
 /// <summary>

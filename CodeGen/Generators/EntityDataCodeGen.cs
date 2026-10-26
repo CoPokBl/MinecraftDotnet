@@ -82,7 +82,8 @@ public static class EntityDataFields {
         ["QUATERNION"] = "Quaternion",
         // No reader decodes a profile yet, so nothing can be typed tighter than what the field holds.
         ["RESOLVABLE_PROFILE"] = "object",
-        ["HUMANOID_ARM"] = "HumanoidArm"
+        ["HUMANOID_ARM"] = "HumanoidArm",
+        ["DYE_COLOR"] = "DyeColor"
     };
 
     public static void GenerateEntityDataCode(JObject _) {

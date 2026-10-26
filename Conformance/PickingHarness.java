@@ -99,10 +99,10 @@ public final class PickingHarness {
         SharedConstants.tryDetectVersion();
         Bootstrap.bootStrap();
         MultiPackResourceManager resources = new MultiPackResourceManager(PackType.SERVER_DATA,
-                List.of(ServerPacksSource.createVanillaPackSource()));
+                List.of(ServerPacksSource.createVanillaPackSource().fullResources()));
         TagLoader.loadTagsForExistingRegistries(resources, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY))
                 .forEach(Registry.PendingTags::apply);
-        BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(VanillaRegistries.createLookup())
+        BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(VanillaRegistries.createReloadableLookup(VanillaRegistries.createWorldLookup()))
                 .forEach(DataComponentInitializers.PendingComponents::apply);
 
         double[][] rays = rays();
@@ -720,15 +720,7 @@ public final class PickingHarness {
             throw new UnsupportedOperationException();
         }
 
-        @Override
-        public net.minecraft.world.item.alchemy.PotionBrewing potionBrewing() {
-            throw new UnsupportedOperationException();
-        }
 
-        @Override
-        public net.minecraft.world.level.block.entity.FuelValues fuelValues() {
-            throw new UnsupportedOperationException();
-        }
 
         @Override
         public net.minecraft.world.level.chunk.ChunkSource getChunkSource() {

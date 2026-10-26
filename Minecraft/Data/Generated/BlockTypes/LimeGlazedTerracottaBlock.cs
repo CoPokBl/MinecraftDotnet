@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LimeGlazedTerracottaBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:glazed_terracotta", "block.minecraft.lime_glazed_terracotta", 1.4f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:lime_glazed_terracotta", BlockInfo.VanillaOnly, "minecraft:blocks/lime_glazed_terracotta");
-    private static readonly BlockStateInfo I0 = new(1.4f, 0, 15, PushReaction.PushOnly, 19, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.lime_glazed_terracotta", 1.4f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:lime_glazed_terracotta", BlockInfo.VanillaOnly, "minecraft:blocks/lime_glazed_terracotta");
+    private static readonly BlockStateInfo I0 = new(1.4f, 0, 15, PushReaction.Push, 19, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record LimeGlazedTerracottaBlock(Identifier Identifier, Direction Facing)
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record LimeGlazedTerracottaBlock(Identifier Identifier, Direction Facing)
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,10 +69,10 @@ public record LimeGlazedTerracottaBlock(Identifier Identifier, Direction Facing)
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 14986,
-                Direction.South => 14987,
-                Direction.West => 14988,
-                Direction.East => 14989,
+                Direction.North => 16967,
+                Direction.South => 16968,
+                Direction.West => 16969,
+                Direction.East => 16970,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -80,10 +80,10 @@ public record LimeGlazedTerracottaBlock(Identifier Identifier, Direction Facing)
     
     public IBlock WithState(uint state) {
         return state switch {
-            14986 => new LimeGlazedTerracottaBlock(Identifier, Direction.North),
-            14987 => new LimeGlazedTerracottaBlock(Identifier, Direction.South),
-            14988 => new LimeGlazedTerracottaBlock(Identifier, Direction.West),
-            14989 => new LimeGlazedTerracottaBlock(Identifier, Direction.East),
+            16967 => new LimeGlazedTerracottaBlock(Identifier, Direction.North),
+            16968 => new LimeGlazedTerracottaBlock(Identifier, Direction.South),
+            16969 => new LimeGlazedTerracottaBlock(Identifier, Direction.West),
+            16970 => new LimeGlazedTerracottaBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

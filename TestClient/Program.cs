@@ -199,7 +199,10 @@ while (true) {
             case ClientBoundSynchronisePlayerPositionPacket spp: {
                 position = spp.Position;
                 connection.SendPacket(new ServerBoundConfirmTeleportPacket {
-                    TeleportId = spp.TeleportId
+                    TeleportId = spp.TeleportId,
+                    Position = spp.Position,
+                    Yaw = spp.Yaw.DegreesF,
+                    Pitch = spp.Pitch.DegreesF
                 });
                 break;
             }

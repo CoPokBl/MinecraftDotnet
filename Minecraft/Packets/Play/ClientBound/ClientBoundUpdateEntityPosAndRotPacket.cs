@@ -7,33 +7,34 @@ public class ClientBoundUpdateEntityPosAndRotPacket : ClientBoundPacket {
     public override Identifier Identifier => "minecraft:move_entity_pos_rot";
     
     public required int EntityId { get; init; }
+
+    /// <inheritdoc cref="ClientBoundUpdateEntityPositionPacket.Delta"/>
     public required Vec3<float> Delta { get; init; }
     public required Angle Yaw { get; init; }
     public required Angle Pitch { get; init; }
     public required bool OnGround { get; init; }
 
+    /// <inheritdoc cref="ClientBoundUpdateEntityPositionPacket.Steps"/>
+    public IReadOnlyList<MovementDelta.Step>? Steps { get; init; }
+
     protected override DataWriter WriteData(DataWriter w) {
-        Vec3<short> deltaPos = new(
-            (short)(Delta.X*4096), 
-            (short)(Delta.Y*4096), 
-            (short)(Delta.Z*4096));
-        
-        return w
-            .WriteVarInt(EntityId)
-            .WriteVec3(deltaPos)
+        MovementDelta.WriteProperties(w.WriteVarInt(EntityId), OnGround, Steps);
+        return MovementDelta.WriteDelta(w, Delta, Steps)
             .WriteAngle(Yaw)
-            .WriteAngle(Pitch)
-            .WriteBoolean(OnGround);
+            .WriteAngle(Pitch);
     }
     
-    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundUpdateEntityPosAndRotPacket {
-        EntityId = r.ReadVarInt(),
-        Delta = new Vec3<float>(
-            (float)r.ReadShort() / 4096, 
-            (float)r.ReadShort() / 4096, 
-            (float)r.ReadShort() / 4096),
-        Yaw = r.ReadAngle(),
-        Pitch = r.ReadAngle(),
-        OnGround = r.ReadBoolean()
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
+        int entityId = r.ReadVarInt();
+        int properties = r.ReadVarInt();
+        (Vec3<float> delta, MovementDelta.Step[]? steps) = MovementDelta.Read(r, properties);
+        return new ClientBoundUpdateEntityPosAndRotPacket {
+            EntityId = entityId,
+            Delta = delta,
+            Steps = steps,
+            Yaw = r.ReadAngle(),
+            Pitch = r.ReadAngle(),
+            OnGround = MovementDelta.OnGround(properties)
+        };
     };
 }

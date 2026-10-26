@@ -8,5 +8,5 @@ public static class GameVersion {
     /// <c>world_version</c>, which vanilla writes as <c>DataVersion</c> on every chunk, level and
     /// structure file and reads to decide which data fixers a file needs.
     /// </summary>
-    public const int DataVersion = 4903;
+    public const int DataVersion = 5023;
 }

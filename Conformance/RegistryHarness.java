@@ -142,7 +142,7 @@ public class RegistryHarness {
         });
 
         MultiPackResourceManager resources = new MultiPackResourceManager(PackType.SERVER_DATA,
-            List.of(ServerPacksSource.createVanillaPackSource()));
+            List.of(ServerPacksSource.createVanillaPackSource().fullResources()));
 
         // Tags twice, and both are needed. The block and item tags have to be bound before the pack
         // decodes or a dimension type naming #infiniburn_overworld fails its whole registry; the
@@ -155,7 +155,7 @@ public class RegistryHarness {
         all.forEach(registry -> lookups.add((HolderLookup.RegistryLookup<?>) registry));
 
         RegistryDataLoader
-            .load(resources, lookups, RegistryDataLoader.WORLDGEN_REGISTRIES, Runnable::run)
+            .load(resources, lookups, RegistryDataLoader.WORLD_REGISTRIES, Runnable::run)
             .join()
             .registries().filter(entry -> !seen.contains(entry.key()))
             .forEach(entry -> all.add(entry.value()));

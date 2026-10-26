@@ -13,6 +13,9 @@ public class ServerBoundPlayerActionPacket : ServerBoundPacket {
 
     public enum Status {
         StartedDigging,
+
+        /// <summary>The face being dug changed, which turns the cracking particles. Sent with sequence 0.</summary>
+        ChangeDestroyDirection,
         CancelledDigging,
         FinishedDigging,
         DropItemStack,

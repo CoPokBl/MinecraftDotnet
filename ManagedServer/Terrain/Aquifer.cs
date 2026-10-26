@@ -1,5 +1,5 @@
 using ManagedServer.Terrain.Density;
-using ManagedServer.Terrain.Surface;
+using ManagedServer.Terrain.Material;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 
@@ -28,33 +28,37 @@ internal static class AquiferConstants {
 }
 
 /// <summary>
+/// The six density functions an aquifer reads, vanilla's <c>Aquifer.Config</c>: the
+/// <c>aquifers</c> object of a noise settings file. A dimension without one has the disabled aquifer.
+/// </summary>
+public sealed record AquiferConfig(IDensityFunction Barrier, IDensityFunction FluidLevelFloodedness,
+    IDensityFunction FluidLevelSpread, IDensityFunction Lava, IDensityFunction Exclusion, IDensityFunction SurfaceLevel) {
+
+    public IAquifer Create(IDensitySamplerSet cachingSamplers, IPositionalRandomFactory positionalRandomFactory,
+        DensityVolume volume, IFluidPicker fluidRule) {
+
+        return new NoiseBasedAquifer(cachingSamplers, this, positionalRandomFactory, volume, fluidRule);
+    }
+}
+
+/// <summary>
 /// Decides whether a position with no terrain in it is air, water or lava, vanilla's <c>Aquifer</c>.
 /// </summary>
 public interface IAquifer {
-    /// <summary>
-    /// The state at a position, or null for the terrain block. Only called where the terrain density
-    /// has already been computed, and the density is passed in rather than recomputed.
-    /// </summary>
-    uint? ComputeSubstance(IFunctionContext context, double density);
+    /// <summary>The state at a position, or null for the terrain block.</summary>
+    uint? ComputeSubstance(int blockX, int blockY, int blockZ, double density);
 
-    /// <summary>
-    /// Whether the last position computed sits on a boundary between two aquifers of different levels,
-    /// which vanilla uses to schedule a fluid tick there.
-    /// </summary>
+    /// <summary>Whether the last position computed sits on a boundary worth a fluid tick.</summary>
     bool ShouldScheduleFluidUpdate { get; }
 }
 
 /// <summary>
-/// The aquifer for a world with them turned off: everything below the global fluid level is that
-/// fluid and everything above it is air.
+/// The aquifer for a dimension without one: below the global fluid level is that fluid, above it air.
+/// The nether's is this, with its sea of lava at 32.
 /// </summary>
 public sealed class DisabledAquifer(IFluidPicker fluidRule) : IAquifer {
-    public uint? ComputeSubstance(IFunctionContext context, double density) {
-        if (density > 0.0) {
-            return null;
-        }
-
-        return fluidRule.ComputeFluid(context.BlockX, context.BlockY, context.BlockZ).At(context.BlockY);
+    public uint? ComputeSubstance(int blockX, int blockY, int blockZ, double density) {
+        return density > 0.0 ? null : fluidRule.ComputeFluid(blockX, blockY, blockZ).At(blockY);
     }
 
     public bool ShouldScheduleFluidUpdate => false;
@@ -65,57 +69,41 @@ public sealed class DisabledAquifer(IFluidPicker fluidRule) : IAquifer {
 /// and the barriers of stone that keep them apart.
 /// </summary>
 /// <remarks>
-/// Scattered aquifer centres on a coarse grid, one per cell at a jittered position, each with its own
-/// water level. A position takes the level of the nearest centre. Where two centres of different
-/// levels are about equally close, a <b>pressure</b> term is added to the terrain density, which walls
-/// the two off with stone rather than letting one drain into the other. That barrier is the whole
-/// reason a cave under an underground lake stays dry.
+/// Jittered centres on a 16 by 12 by 16 grid offset from the chunk grid, each with its own level; a
+/// position takes the nearest centre's, and where two of different levels are about equally close a
+/// pressure term walls them off with stone.
 /// <p/>
-/// The grid is 16 by 12 by 16 blocks, and it is not aligned with the chunk: the offsets of minus five,
-/// plus one and minus five are what stop a chunk boundary and an aquifer boundary coinciding.
+/// The surface levels it reads are cached per quart column, and the constructor seeds that cache from
+/// one volume sample over the grid's footprint, so a later point lookup inside it reads the volume
+/// path's value and one outside it reads the point path's.
 /// </remarks>
 public sealed class NoiseBasedAquifer : IAquifer {
     private const int XRange = 10;
     private const int YRange = 9;
     private const int ZRange = 10;
-
     private const int YSpacing = 12;
-
     private const int SampleOffsetX = -5;
     private const int SampleOffsetY = 1;
     private const int SampleOffsetZ = -5;
 
-    /// <summary>
-    /// How close two centres have to be before their boundary is worth a fluid tick. Derived from the
-    /// grid spacing rather than picked, so it moves with it.
-    /// </summary>
     private static readonly double FlowingUpdateSimilarity = Similarity(10 * 10, 12 * 12);
 
-    /// <summary>
-    /// The chunks around a centre whose surface level is consulted, in chunk offsets. Deliberately not
-    /// symmetric: this is the list in the jar.
-    /// </summary>
+    /// <summary>The chunks around a centre whose surface level is consulted. Deliberately not symmetric.</summary>
     private static readonly int[][] SurfaceSamplingOffsetsInChunks = [
-        [0, 0], [-2, -1], [-1, -1], [0, -1], [1, -1], [-3, 0], [-2, 0],
-        [-1, 0], [1, 0], [-2, 1], [-1, 1], [0, 1], [1, 1]
+        [0, 0], [-2, -1], [-1, -1], [0, -1], [1, -1], [-3, 0], [-2, 0], [-1, 0], [1, 0], [-2, 1], [-1, 1], [0, 1], [1, 1]
     ];
 
-    private readonly INoiseChunkSurfaceView _noiseChunk;
-    private readonly IDensityFunction _barrierNoise;
-    private readonly IDensityFunction _fluidLevelFloodednessNoise;
-    private readonly IDensityFunction _fluidLevelSpreadNoise;
-    private readonly IDensityFunction _lavaNoise;
-    private readonly IDensityFunction _erosion;
-    private readonly IDensityFunction _depth;
-
+    private readonly BoundSampler _barrierNoise;
+    private readonly BoundSampler _fluidLevelFloodednessNoise;
+    private readonly BoundSampler _fluidLevelSpreadNoise;
+    private readonly BoundSampler _lavaNoise;
+    private readonly BoundSampler _exclusion;
+    private readonly BoundSampler _surfaceLevel;
     private readonly IPositionalRandomFactory _positionalRandomFactory;
-    private readonly IFluidPicker _globalFluidPicker;
-
     private readonly FluidStatus?[] _aquiferCache;
-
-    /// <summary>The jittered centre of each grid cell, null until the cell is first reached.</summary>
-    private readonly AquiferCentre?[] _aquiferCentreCache;
-
+    private readonly AquiferCentre?[] _aquiferLocationCache;
+    private readonly IFluidPicker _globalFluidPicker;
+    private readonly Dictionary<long, int> _surfaceLevelCache = new();
     private readonly int _skipSamplingAboveY;
     private readonly int _minGridX;
     private readonly int _minGridY;
@@ -123,63 +111,70 @@ public sealed class NoiseBasedAquifer : IAquifer {
     private readonly int _gridSizeX;
     private readonly int _gridSizeZ;
 
-    private readonly uint _water;
-    private readonly uint _lava;
+    public NoiseBasedAquifer(IDensitySamplerSet cachingSamplers, AquiferConfig config, IPositionalRandomFactory positionalRandomFactory,
+        DensityVolume volume, IFluidPicker globalFluidPicker) {
 
-    public NoiseBasedAquifer(INoiseChunkSurfaceView noiseChunk, int chunkX, int chunkZ, NoiseRouter router,
-        IPositionalRandomFactory positionalRandomFactory, int minBlockY, int yBlockSize,
-        IFluidPicker globalFluidPicker) {
-
-        _noiseChunk = noiseChunk;
-        _barrierNoise = router.Barrier;
-        _fluidLevelFloodednessNoise = router.FluidLevelFloodedness;
-        _fluidLevelSpreadNoise = router.FluidLevelSpread;
-        _lavaNoise = router.Lava;
-        _erosion = router.Erosion;
-        _depth = router.Depth;
+        _barrierNoise = cachingSamplers.Get(config.Barrier);
+        _fluidLevelFloodednessNoise = cachingSamplers.Get(config.FluidLevelFloodedness);
+        _fluidLevelSpreadNoise = cachingSamplers.Get(config.FluidLevelSpread);
+        _lavaNoise = cachingSamplers.Get(config.Lava);
+        _exclusion = cachingSamplers.Get(config.Exclusion);
+        _surfaceLevel = cachingSamplers.Get(config.SurfaceLevel);
         _positionalRandomFactory = positionalRandomFactory;
         _globalFluidPicker = globalFluidPicker;
 
-        _water = Block.Water.StateId;
-        _lava = Block.Lava.StateId;
-
-        int minBlockX = chunkX * 16;
-        int minBlockZ = chunkZ * 16;
-        int maxBlockX = minBlockX + 15;
-        int maxBlockZ = minBlockZ + 15;
-
-        _minGridX = GridX(minBlockX + SampleOffsetX);
-        int maxGridX = GridX(maxBlockX + SampleOffsetX) + 1;
+        _minGridX = GridX(volume.MinBlockX + SampleOffsetX);
+        int maxGridX = GridX(volume.MaxBlockX + SampleOffsetX) + 1;
         _gridSizeX = maxGridX - _minGridX + 1;
-
-        _minGridY = GridY(minBlockY + SampleOffsetY) - 1;
-        int maxGridY = GridY(minBlockY + yBlockSize + SampleOffsetY) + 1;
+        _minGridY = GridY(volume.MinBlockY + SampleOffsetY) - 1;
+        int maxGridY = GridY(volume.MaxBlockY + SampleOffsetY) + 1;
         int gridSizeY = maxGridY - _minGridY + 1;
-
-        _minGridZ = GridZ(minBlockZ + SampleOffsetZ);
-        int maxGridZ = GridZ(maxBlockZ + SampleOffsetZ) + 1;
+        _minGridZ = GridZ(volume.MinBlockZ + SampleOffsetZ);
+        int maxGridZ = GridZ(volume.MaxBlockZ + SampleOffsetZ) + 1;
         _gridSizeZ = maxGridZ - _minGridZ + 1;
 
         int totalGridSize = _gridSizeX * gridSizeY * _gridSizeZ;
         _aquiferCache = new FluidStatus?[totalGridSize];
-        _aquiferCentreCache = new AquiferCentre?[totalGridSize];
+        _aquiferLocationCache = new AquiferCentre?[totalGridSize];
 
-        // Above the highest terrain in range plus a margin nothing is ever underground, so the whole
-        // grid search is skipped and the global fluid answers.
-        int maxAdjustedSurfaceLevel = AdjustSurfaceLevel(MaxPreliminarySurfaceLevel(
-            FromGridX(_minGridX, 0), FromGridZ(_minGridZ, 0), FromGridX(maxGridX, YRange), FromGridZ(maxGridZ, YRange)));
+        int maxAdjustedSurfaceLevel = AdjustSurfaceLevel(MaxSurfaceLevel(FromGridX(_minGridX, 0), FromGridZ(_minGridZ, 0),
+            FromGridX(maxGridX, YRange), FromGridZ(maxGridZ, YRange)));
         int skipSamplingAboveGridY = GridY(maxAdjustedSurfaceLevel + YSpacing) + 1;
         _skipSamplingAboveY = FromGridY(skipSamplingAboveGridY, 11) - 1;
     }
 
     public bool ShouldScheduleFluidUpdate { get; private set; }
 
-    private int MaxPreliminarySurfaceLevel(int minBlockX, int minBlockZ, int maxBlockX, int maxBlockZ) {
-        int maxY = int.MinValue;
+    /// <summary><c>ChunkPos.pack</c>, the cache key.</summary>
+    private static long Pack(int x, int z) => ((long)x & 0xFFFFFFFFL) | (((long)z & 0xFFFFFFFFL) << 32);
 
-        for (int blockZ = minBlockZ; blockZ <= maxBlockZ; blockZ += 4) {
-            for (int blockX = minBlockX; blockX <= maxBlockX; blockX += 4) {
-                maxY = Math.Max(maxY, _noiseChunk.PreliminarySurfaceLevel(blockX, blockZ));
+    private int SurfaceLevel(int blockX, int blockZ) {
+        int quantizedX = (blockX >> 2) << 2;
+        int quantizedZ = (blockZ >> 2) << 2;
+        long key = Pack(quantizedX, quantizedZ);
+        if (!_surfaceLevelCache.TryGetValue(key, out int level)) {
+            level = Mth.Floor(_surfaceLevel.SampleValue(quantizedX, 0, quantizedZ));
+            _surfaceLevelCache[key] = level;
+        }
+
+        return level;
+    }
+
+    private int MaxSurfaceLevel(int minBlockX, int minBlockZ, int maxBlockX, int maxBlockZ) {
+        int minQuartX = minBlockX >> 2;
+        int maxQuartX = maxBlockX >> 2;
+        int minQuartZ = minBlockZ >> 2;
+        int maxQuartZ = maxBlockZ >> 2;
+        DensityVolume volume = new(maxQuartX - minQuartX + 1, 1, maxQuartZ - minQuartZ + 1, minQuartX << 2, 0, minQuartZ << 2, 4, 1, 4);
+        using ScopedDensityBuffer buffer = _surfaceLevel.SampleVolume(volume);
+        int maxY = int.MinValue;
+        for (int z = 0; z < volume.SizeZ; z++) {
+            for (int x = 0; x < volume.SizeX; x++) {
+                int surfaceLevel = Mth.Floor(buffer[volume.IndexUnchecked(x, 0, z)]);
+                _surfaceLevelCache[Pack(volume.BlockX(x), volume.BlockZ(z))] = surfaceLevel;
+                if (surfaceLevel > maxY) {
+                    maxY = surfaceLevel;
+                }
             }
         }
 
@@ -190,39 +185,34 @@ public sealed class NoiseBasedAquifer : IAquifer {
         return ((gridY - _minGridY) * _gridSizeZ + (gridZ - _minGridZ)) * _gridSizeX + (gridX - _minGridX);
     }
 
-    public uint? ComputeSubstance(IFunctionContext context, double density) {
+    public uint? ComputeSubstance(int blockX, int blockY, int blockZ, double density) {
         if (density > 0.0) {
             ShouldScheduleFluidUpdate = false;
             return null;
         }
 
-        int posX = context.BlockX;
-        int posY = context.BlockY;
-        int posZ = context.BlockZ;
-
-        FluidStatus globalFluid = _globalFluidPicker.ComputeFluid(posX, posY, posZ);
-
-        if (posY > _skipSamplingAboveY) {
+        FluidStatus globalFluid = _globalFluidPicker.ComputeFluid(blockX, blockY, blockZ);
+        if (blockY > _skipSamplingAboveY) {
             ShouldScheduleFluidUpdate = false;
-            return globalFluid.At(posY);
+            return globalFluid.At(blockY);
         }
 
-        if (globalFluid.At(posY) == _lava) {
-            // Nothing below the lava level ever becomes an aquifer, so the nether's lava sea is not
-            // eight thousand grid searches per chunk.
+        if (IsLava(globalFluid.At(blockY))) {
             ShouldScheduleFluidUpdate = false;
-            return _lava;
+            return Block.Lava.StateId;
         }
 
-        int xAnchor = GridX(posX + SampleOffsetX);
-        int yAnchor = GridY(posY + SampleOffsetY);
-        int zAnchor = GridZ(posZ + SampleOffsetZ);
-
-        // The four nearest centres, kept as an insertion sorted four element list. Four rather than
-        // two because the pressure terms compare three of them and the fluid tick check reads a fourth.
-        int distance1 = int.MaxValue, distance2 = int.MaxValue;
-        int distance3 = int.MaxValue, distance4 = int.MaxValue;
-        int closest1 = 0, closest2 = 0, closest3 = 0, closest4 = 0;
+        int xAnchor = GridX(blockX + SampleOffsetX);
+        int yAnchor = GridY(blockY + SampleOffsetY);
+        int zAnchor = GridZ(blockZ + SampleOffsetZ);
+        int distanceSqr1 = int.MaxValue;
+        int distanceSqr2 = int.MaxValue;
+        int distanceSqr3 = int.MaxValue;
+        int distanceSqr4 = int.MaxValue;
+        int closestIndex1 = 0;
+        int closestIndex2 = 0;
+        int closestIndex3 = 0;
+        int closestIndex4 = 0;
 
         for (int x1 = 0; x1 <= 1; x1++) {
             for (int y1 = -1; y1 <= 1; y1++) {
@@ -231,162 +221,154 @@ public sealed class NoiseBasedAquifer : IAquifer {
                     int spacedGridY = yAnchor + y1;
                     int spacedGridZ = zAnchor + z1;
                     int index = GetIndex(spacedGridX, spacedGridY, spacedGridZ);
-
-                    if (_aquiferCentreCache[index] is not { } centre) {
-                        // Drawn in x, y, z order: the three calls share one generator, so swapping
-                        // them moves every aquifer in the world.
+                    if (_aquiferLocationCache[index] is not { } location) {
                         RandomSource random = _positionalRandomFactory.At(spacedGridX, spacedGridY, spacedGridZ);
-                        centre = new AquiferCentre(
-                            FromGridX(spacedGridX, random.NextInt(XRange)),
-                            FromGridY(spacedGridY, random.NextInt(YRange)),
-                            FromGridZ(spacedGridZ, random.NextInt(ZRange)));
-                        _aquiferCentreCache[index] = centre;
+                        location = new AquiferCentre(FromGridX(spacedGridX, random.NextInt(XRange)),
+                            FromGridY(spacedGridY, random.NextInt(YRange)), FromGridZ(spacedGridZ, random.NextInt(ZRange)));
+                        _aquiferLocationCache[index] = location;
                     }
 
-                    int dx = centre.X - posX;
-                    int dy = centre.Y - posY;
-                    int dz = centre.Z - posZ;
+                    int dx = location.X - blockX;
+                    int dy = location.Y - blockY;
+                    int dz = location.Z - blockZ;
                     int newDistance = dx * dx + dy * dy + dz * dz;
-
-                    if (distance1 >= newDistance) {
-                        (closest4, closest3, closest2, closest1) = (closest3, closest2, closest1, index);
-                        (distance4, distance3, distance2, distance1) = (distance3, distance2, distance1, newDistance);
-                    } else if (distance2 >= newDistance) {
-                        (closest4, closest3, closest2) = (closest3, closest2, index);
-                        (distance4, distance3, distance2) = (distance3, distance2, newDistance);
-                    } else if (distance3 >= newDistance) {
-                        (closest4, closest3) = (closest3, index);
-                        (distance4, distance3) = (distance3, newDistance);
-                    } else if (distance4 >= newDistance) {
-                        closest4 = index;
-                        distance4 = newDistance;
+                    if (distanceSqr1 >= newDistance) {
+                        closestIndex4 = closestIndex3;
+                        closestIndex3 = closestIndex2;
+                        closestIndex2 = closestIndex1;
+                        closestIndex1 = index;
+                        distanceSqr4 = distanceSqr3;
+                        distanceSqr3 = distanceSqr2;
+                        distanceSqr2 = distanceSqr1;
+                        distanceSqr1 = newDistance;
+                    } else if (distanceSqr2 >= newDistance) {
+                        closestIndex4 = closestIndex3;
+                        closestIndex3 = closestIndex2;
+                        closestIndex2 = index;
+                        distanceSqr4 = distanceSqr3;
+                        distanceSqr3 = distanceSqr2;
+                        distanceSqr2 = newDistance;
+                    } else if (distanceSqr3 >= newDistance) {
+                        closestIndex4 = closestIndex3;
+                        closestIndex3 = index;
+                        distanceSqr4 = distanceSqr3;
+                        distanceSqr3 = newDistance;
+                    } else if (distanceSqr4 >= newDistance) {
+                        closestIndex4 = index;
+                        distanceSqr4 = newDistance;
                     }
                 }
             }
         }
 
-        FluidStatus status1 = GetAquiferStatus(closest1);
-        double similarity12 = Similarity(distance1, distance2);
-        uint fluidState = status1.At(posY);
-
+        FluidStatus closestStatus1 = GetAquiferStatus(closestIndex1);
+        double similarity12 = Similarity(distanceSqr1, distanceSqr2);
+        uint fluidState = closestStatus1.At(blockY);
         if (similarity12 <= 0.0) {
-            // Firmly inside one aquifer: no barrier to compute, only whether the boundary is close
-            // enough to be worth a fluid tick.
-            ShouldScheduleFluidUpdate = similarity12 >= FlowingUpdateSimilarity
-                && !status1.Equals(GetAquiferStatus(closest2));
+            if (similarity12 >= FlowingUpdateSimilarity) {
+                FluidStatus closestStatus2 = GetAquiferStatus(closestIndex2);
+                ShouldScheduleFluidUpdate = !closestStatus1.Equals(closestStatus2);
+            } else {
+                ShouldScheduleFluidUpdate = false;
+            }
+
             return fluidState;
         }
 
-        if (fluidState == _water
-            && _globalFluidPicker.ComputeFluid(posX, posY - 1, posZ).At(posY - 1) == _lava) {
+        if (IsWater(fluidState) && IsLava(_globalFluidPicker.ComputeFluid(blockX, blockY - 1, blockZ).At(blockY - 1))) {
             ShouldScheduleFluidUpdate = true;
             return fluidState;
         }
 
-        // NaN stands for "not sampled yet": the barrier noise is only worth computing once a pressure
-        // term actually needs it, and up to three of them share the one sample.
         double barrierNoiseValue = double.NaN;
-
-        FluidStatus status2 = GetAquiferStatus(closest2);
-        double barrier12 = similarity12 * CalculatePressure(context, ref barrierNoiseValue, status1, status2);
+        FluidStatus status2 = GetAquiferStatus(closestIndex2);
+        double barrier12 = similarity12 * CalculatePressure(blockX, blockY, blockZ, ref barrierNoiseValue, closestStatus1, status2);
         if (density + barrier12 > 0.0) {
             ShouldScheduleFluidUpdate = false;
             return null;
         }
 
-        FluidStatus status3 = GetAquiferStatus(closest3);
-        double similarity13 = Similarity(distance1, distance3);
+        FluidStatus status3 = GetAquiferStatus(closestIndex3);
+        double similarity13 = Similarity(distanceSqr1, distanceSqr3);
         if (similarity13 > 0.0) {
             double barrier13 = similarity12 * similarity13
-                * CalculatePressure(context, ref barrierNoiseValue, status1, status3);
+                * CalculatePressure(blockX, blockY, blockZ, ref barrierNoiseValue, closestStatus1, status3);
             if (density + barrier13 > 0.0) {
                 ShouldScheduleFluidUpdate = false;
                 return null;
             }
         }
 
-        double similarity23 = Similarity(distance2, distance3);
+        double similarity23 = Similarity(distanceSqr2, distanceSqr3);
         if (similarity23 > 0.0) {
             double barrier23 = similarity12 * similarity23
-                * CalculatePressure(context, ref barrierNoiseValue, status2, status3);
+                * CalculatePressure(blockX, blockY, blockZ, ref barrierNoiseValue, status2, status3);
             if (density + barrier23 > 0.0) {
                 ShouldScheduleFluidUpdate = false;
                 return null;
             }
         }
 
-        bool mayFlow12 = !status1.Equals(status2);
+        bool mayFlow12 = !closestStatus1.Equals(status2);
         bool mayFlow23 = similarity23 >= FlowingUpdateSimilarity && !status2.Equals(status3);
-        bool mayFlow13 = similarity13 >= FlowingUpdateSimilarity && !status1.Equals(status3);
-
-        if (mayFlow12 || mayFlow23 || mayFlow13) {
-            ShouldScheduleFluidUpdate = true;
-        } else {
+        bool mayFlow13 = similarity13 >= FlowingUpdateSimilarity && !closestStatus1.Equals(status3);
+        if (!mayFlow12 && !mayFlow23 && !mayFlow13) {
             ShouldScheduleFluidUpdate = similarity13 >= FlowingUpdateSimilarity
-                && Similarity(distance1, distance4) >= FlowingUpdateSimilarity
-                && !status1.Equals(GetAquiferStatus(closest4));
+                && Similarity(distanceSqr1, distanceSqr4) >= FlowingUpdateSimilarity
+                && !closestStatus1.Equals(GetAquiferStatus(closestIndex4));
+        } else {
+            ShouldScheduleFluidUpdate = true;
         }
 
         return fluidState;
     }
 
-    /// <summary>
-    /// How close two centres are to being equidistant: one when they are, falling to zero twenty five
-    /// squared units apart. Anything at or below zero means the first is clearly the nearer.
-    /// </summary>
+    /// <summary>Every fluid an aquifer produces is a default state, so <c>is(Blocks.LAVA)</c> is an equality here.</summary>
+    private static bool IsLava(uint state) => state == Block.Lava.StateId;
+
+    private static bool IsWater(uint state) => state == Block.Water.StateId;
+
     private static double Similarity(int distanceSqr1, int distanceSqr2) {
         return 1.0 - (distanceSqr2 - distanceSqr1) / 25.0;
     }
 
-    /// <summary>
-    /// How much stone to add between two aquifers, from the difference in their levels and how far the
-    /// position sits from the midpoint of that difference.
-    /// </summary>
-    /// <remarks>
-    /// The two branches are deliberately lopsided. Above the average level the barrier tapers over
-    /// 1.5 blocks where it is thickening and 2.5 where it is thinning; below it, over 3 and 10 with a
-    /// bias of 3 on top. That is what makes a barrier thick underneath an aquifer and thin above it,
-    /// so water does not pour down but a cave can open into it from the side.
-    /// <p/>
-    /// Water against lava always answers the maximum, which is what stops the two ever meeting.
-    /// </remarks>
-    private double CalculatePressure(IFunctionContext context, ref double barrierNoiseValue,
-        FluidStatus status1, FluidStatus status2) {
+    /// <summary>The barrier noise is sampled at most once per position, through <paramref name="barrierNoiseValue"/>.</summary>
+    private double CalculatePressure(int blockX, int blockY, int blockZ, ref double barrierNoiseValue, FluidStatus statusClosest1,
+        FluidStatus statusClosest2) {
 
-        int posY = context.BlockY;
-        uint type1 = status1.At(posY);
-        uint type2 = status2.At(posY);
-
-        if ((type1 == _lava && type2 == _water) || (type1 == _water && type2 == _lava)) {
+        uint type1 = statusClosest1.At(blockY);
+        uint type2 = statusClosest2.At(blockY);
+        if ((IsLava(type1) && IsWater(type2)) || (IsWater(type1) && IsLava(type2))) {
             return 2.0;
         }
 
-        int fluidYDiff = Math.Abs(status1.FluidLevel - status2.FluidLevel);
+        int fluidYDiff = Math.Abs(statusClosest1.FluidLevel - statusClosest2.FluidLevel);
         if (fluidYDiff == 0) {
             return 0.0;
         }
 
-        double averageFluidY = 0.5 * (status1.FluidLevel + status2.FluidLevel);
-        double howFarAboveAverageFluidPoint = posY + 0.5 - averageFluidY;
-        double distanceFromBarrierEdgeTowardsMiddle = fluidYDiff / 2.0 - Math.Abs(howFarAboveAverageFluidPoint);
-
+        double averageFluidY = 0.5 * (statusClosest1.FluidLevel + statusClosest2.FluidLevel);
+        double howFarAboveAverageFluidPoint = blockY + 0.5 - averageFluidY;
+        double baseValue = fluidYDiff / 2.0;
+        double distanceFromBarrierEdgeTowardsMiddle = baseValue - Math.Abs(howFarAboveAverageFluidPoint);
         double gradient;
         if (howFarAboveAverageFluidPoint > 0.0) {
-            double centrePoint = distanceFromBarrierEdgeTowardsMiddle;
-            gradient = centrePoint > 0.0 ? centrePoint / 1.5 : centrePoint / 2.5;
+            double centerPoint = 0.0 + distanceFromBarrierEdgeTowardsMiddle;
+            gradient = centerPoint > 0.0 ? centerPoint / 1.5 : centerPoint / 2.5;
         } else {
-            double centrePoint = 3.0 + distanceFromBarrierEdgeTowardsMiddle;
-            gradient = centrePoint > 0.0 ? centrePoint / 3.0 : centrePoint / 10.0;
+            double centerPoint = 3.0 + distanceFromBarrierEdgeTowardsMiddle;
+            gradient = centerPoint > 0.0 ? centerPoint / 3.0 : centerPoint / 10.0;
         }
 
-        // Well outside the barrier the noise cannot change the outcome, so it is not sampled at all.
-        double noiseValue = 0.0;
-        if (gradient is >= -2.0 and <= 2.0) {
+        double noiseValue;
+        if (!(gradient < -2.0) && !(gradient > 2.0)) {
             if (double.IsNaN(barrierNoiseValue)) {
-                barrierNoiseValue = _barrierNoise.Compute(context);
+                barrierNoiseValue = _barrierNoise.SampleValue(blockX, blockY, blockZ);
             }
 
             noiseValue = barrierNoiseValue;
+        } else {
+            noiseValue = 0.0;
         }
 
         return 2.0 * (noiseValue + gradient);
@@ -405,98 +387,72 @@ public sealed class NoiseBasedAquifer : IAquifer {
     private static int FromGridZ(int gridCoord, int blockOffset) => (gridCoord << 4) + blockOffset;
 
     private FluidStatus GetAquiferStatus(int index) {
-        if (_aquiferCache[index] is { } cached) {
-            return cached;
+        if (_aquiferCache[index] is { } oldStatus) {
+            return oldStatus;
         }
 
-        AquiferCentre centre = _aquiferCentreCache[index]!.Value;
-        FluidStatus status = ComputeFluid(centre.X, centre.Y, centre.Z);
+        AquiferCentre location = _aquiferLocationCache[index]!.Value;
+        FluidStatus status = ComputeFluid(location.X, location.Y, location.Z);
         _aquiferCache[index] = status;
         return status;
     }
 
-    /// <summary>
-    /// Where one grid cell's aquifer sits. Vanilla packs this into a <c>BlockPos</c> long with a
-    /// sentinel for "not chosen yet"; three fields and a nullable say the same thing without a
-    /// coordinate range to get wrong.
-    /// </summary>
-    private readonly record struct AquiferCentre(int X, int Y, int Z);
-
-    /// <summary>
-    /// The level and fluid of one aquifer centre.
-    /// </summary>
-    /// <remarks>
-    /// The thirteen surrounding chunks are consulted rather than only this one, because an aquifer
-    /// whose cell reaches the surface anywhere nearby has to take the global fluid level: otherwise a
-    /// pocket of water would be exposed on a hillside with nothing holding it in.
-    /// </remarks>
     private FluidStatus ComputeFluid(int x, int y, int z) {
         FluidStatus globalFluid = _globalFluidPicker.ComputeFluid(x, y, z);
-
         int lowestPreliminarySurface = int.MaxValue;
         int topOfAquiferCell = y + YSpacing;
         int bottomOfAquiferCell = y - YSpacing;
-        bool surfaceAtCentreIsUnderGlobalFluidLevel = false;
+        bool surfaceAtCenterIsUnderGlobalFluidLevel = false;
 
         foreach (int[] offset in SurfaceSamplingOffsetsInChunks) {
             int sampleX = x + (offset[0] << 4);
             int sampleZ = z + (offset[1] << 4);
-            int preliminarySurfaceLevel = _noiseChunk.PreliminarySurfaceLevel(sampleX, sampleZ);
-            int adjustedSurfaceLevel = AdjustSurfaceLevel(preliminarySurfaceLevel);
+            int surfaceLevel = SurfaceLevel(sampleX, sampleZ);
+            int adjustedSurfaceLevel = AdjustSurfaceLevel(surfaceLevel);
             bool start = offset[0] == 0 && offset[1] == 0;
-
             if (start && bottomOfAquiferCell > adjustedSurfaceLevel) {
                 return globalFluid;
             }
 
-            bool pokesAboveSurface = topOfAquiferCell > adjustedSurfaceLevel;
-            if (pokesAboveSurface || start) {
+            bool topOfAquiferCellPokesAboveSurface = topOfAquiferCell > adjustedSurfaceLevel;
+            if (topOfAquiferCellPokesAboveSurface || start) {
                 FluidStatus globalFluidAtSurface = _globalFluidPicker.ComputeFluid(sampleX, adjustedSurfaceLevel, sampleZ);
                 if (globalFluidAtSurface.At(adjustedSurfaceLevel) != Block.Air.StateId) {
                     if (start) {
-                        surfaceAtCentreIsUnderGlobalFluidLevel = true;
+                        surfaceAtCenterIsUnderGlobalFluidLevel = true;
                     }
 
-                    if (pokesAboveSurface) {
+                    if (topOfAquiferCellPokesAboveSurface) {
                         return globalFluidAtSurface;
                     }
                 }
             }
 
-            lowestPreliminarySurface = Math.Min(lowestPreliminarySurface, preliminarySurfaceLevel);
+            lowestPreliminarySurface = Math.Min(lowestPreliminarySurface, surfaceLevel);
         }
 
-        int fluidSurfaceLevel = ComputeSurfaceLevel(x, y, z, globalFluid, lowestPreliminarySurface,
-            surfaceAtCentreIsUnderGlobalFluidLevel);
-
+        int fluidSurfaceLevel = ComputeSurfaceLevel(x, y, z, globalFluid, lowestPreliminarySurface, surfaceAtCenterIsUnderGlobalFluidLevel);
         return new FluidStatus(fluidSurfaceLevel, ComputeFluidType(x, y, z, globalFluid, fluidSurfaceLevel));
     }
 
     private static int AdjustSurfaceLevel(int preliminarySurfaceLevel) => preliminarySurfaceLevel + 8;
 
-    private int ComputeSurfaceLevel(int x, int y, int z, FluidStatus globalFluid, int lowestPreliminarySurface,
-        bool surfaceAtCentreIsUnderGlobalFluidLevel) {
-
-        SinglePointContext context = new(x, y, z);
+    private int ComputeSurfaceLevel(int x, int y, int z, FluidStatus globalFluid, int lowestSurfaceLevel,
+        bool surfaceAtCenterIsUnderGlobalFluidLevel) {
 
         double partiallyFloodedness;
         double fullyFloodedness;
-
-        if (IsDeepDarkRegion(context)) {
-            // The deep dark is dry by rule rather than by noise, which is what makes an ancient city
-            // buildable.
+        if (_exclusion.SampleValue(x, y, z) > 0.0) {
             partiallyFloodedness = -1.0;
             fullyFloodedness = -1.0;
         } else {
-            int distanceBelowSurface = lowestPreliminarySurface + 8 - y;
-            double floodednessFactor = surfaceAtCentreIsUnderGlobalFluidLevel
+            int distanceBelowSurface = AdjustSurfaceLevel(lowestSurfaceLevel) - y;
+            double floodednessFactor = surfaceAtCenterIsUnderGlobalFluidLevel
                 ? Mth.ClampedMap(distanceBelowSurface, 0.0, 64.0, 1.0, 0.0)
                 : 0.0;
-
-            double floodednessNoiseValue = Mth.Clamp(_fluidLevelFloodednessNoise.Compute(context), -1.0, 1.0);
+            double floodednessNoiseValue = Mth.Clamp((double)_fluidLevelFloodednessNoise.SampleValue(x, y, z), -1.0, 1.0);
             double fullyFloodedThreshold = Mth.Map(floodednessFactor, 1.0, 0.0, -0.3, 0.8);
             double partiallyFloodedThreshold = Mth.Map(floodednessFactor, 1.0, 0.0, -0.8, 0.4);
-
             partiallyFloodedness = floodednessNoiseValue - partiallyFloodedThreshold;
             fullyFloodedness = floodednessNoiseValue - fullyFloodedThreshold;
         }
@@ -505,45 +461,37 @@ public sealed class NoiseBasedAquifer : IAquifer {
             return globalFluid.FluidLevel;
         }
 
-        if (partiallyFloodedness > 0.0) {
-            return ComputeRandomizedFluidSurfaceLevel(x, y, z, lowestPreliminarySurface);
-        }
-
-        return AquiferConstants.WayBelowMinY;
+        return partiallyFloodedness > 0.0
+            ? ComputeRandomizedFluidSurfaceLevel(x, y, z, lowestSurfaceLevel)
+            : AquiferConstants.WayBelowMinY;
     }
 
-    /// <summary><c>OverworldBiomeBuilder.isDeepDarkRegion</c>: heavily eroded and far underground.</summary>
-    private bool IsDeepDarkRegion(IFunctionContext context) {
-        return _erosion.Compute(context) < -0.225f && _depth.Compute(context) > 0.9f;
-    }
-
-    /// <summary>
-    /// A level near the middle of a 40 block tall cell, jittered by a noise quantised to three blocks
-    /// and never above the terrain.
-    /// </summary>
-    private int ComputeRandomizedFluidSurfaceLevel(int x, int y, int z, int lowestPreliminarySurface) {
+    /// <summary>The spread is a float multiplied by a float, then widened.</summary>
+    private int ComputeRandomizedFluidSurfaceLevel(int x, int y, int z, int lowestSurfaceLevel) {
         int fluidLevelCellX = Mth.FloorDiv(x, 16);
         int fluidLevelCellY = Mth.FloorDiv(y, 40);
         int fluidLevelCellZ = Mth.FloorDiv(z, 16);
         int fluidCellMiddleY = fluidLevelCellY * 40 + 20;
-
-        // Sampled at the cell index, not at the block position, so a whole cell shares one level.
-        double fluidLevelSpread = _fluidLevelSpreadNoise.Compute(
-            new SinglePointContext(fluidLevelCellX, fluidLevelCellY, fluidLevelCellZ)) * 10.0;
-
-        return Math.Min(lowestPreliminarySurface, fluidCellMiddleY + Mth.Quantize(fluidLevelSpread, 3));
+        double fluidLevelSpread = _fluidLevelSpreadNoise.SampleValue(fluidLevelCellX, fluidLevelCellY, fluidLevelCellZ) * 10.0F;
+        int fluidLevelSpreadQuantized = Mth.Quantize(fluidLevelSpread, 3);
+        int targetFluidSurfaceLevel = fluidCellMiddleY + fluidLevelSpreadQuantized;
+        return Math.Min(lowestSurfaceLevel, targetFluidSurfaceLevel);
     }
 
-    /// <summary>Deep enough aquifers become lava, on a noise sampled per 64 by 40 by 64 cell.</summary>
     private uint ComputeFluidType(int x, int y, int z, FluidStatus globalFluid, int fluidSurfaceLevel) {
-        if (fluidSurfaceLevel > -10 || fluidSurfaceLevel == AquiferConstants.WayBelowMinY
-            || globalFluid.FluidType == _lava) {
-            return globalFluid.FluidType;
+        uint fluidType = globalFluid.FluidType;
+        if (fluidSurfaceLevel <= -10 && fluidSurfaceLevel != AquiferConstants.WayBelowMinY && globalFluid.FluidType != Block.Lava.StateId) {
+            int fluidTypeCellX = Mth.FloorDiv(x, 64);
+            int fluidTypeCellY = Mth.FloorDiv(y, 40);
+            int fluidTypeCellZ = Mth.FloorDiv(z, 64);
+            double lavaNoiseValue = _lavaNoise.SampleValue(fluidTypeCellX, fluidTypeCellY, fluidTypeCellZ);
+            if (Math.Abs(lavaNoiseValue) > 0.3) {
+                fluidType = Block.Lava.StateId;
+            }
         }
 
-        double lavaNoiseValue = _lavaNoise.Compute(new SinglePointContext(
-            Mth.FloorDiv(x, 64), Mth.FloorDiv(y, 40), Mth.FloorDiv(z, 64)));
-
-        return Math.Abs(lavaNoiseValue) > 0.3 ? _lava : globalFluid.FluidType;
+        return fluidType;
     }
+
+    private readonly record struct AquiferCentre(int X, int Y, int Z);
 }

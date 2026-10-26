@@ -14,10 +14,11 @@ namespace ManagedServer.Terrain.Structures.Templates;
 /// at the state already in the world where it is about to go. That is what lets a village path replace
 /// grass with a path block and leave the water alone.
 /// <p/>
-/// Some of them draw, so the order they are asked in is part of the world.
+/// Some of them draw, so the order they are asked in is part of the world. The position is the one
+/// the block is going to, for the input predicate as much as for the location one.
 /// </remarks>
 public interface IRuleTest {
-    bool Test(uint stateId, RandomSource random, IFeatureLevel level);
+    bool Test(uint stateId, Vec3<int> pos, RandomSource random, IFeatureLevel level);
 
     /// <summary>
     /// The same test against what is already at a position.
@@ -27,31 +28,31 @@ public interface IRuleTest {
     /// game does not read a block to ignore it.
     /// </remarks>
     bool TestAgainstWorld(IFeatureLevel level, Vec3<int> pos, RandomSource random) {
-        return Test(level.GetState(pos.X, pos.Y, pos.Z), random, level);
+        return Test(level.GetState(pos.X, pos.Y, pos.Z), pos, random, level);
     }
 
     public sealed class AlwaysTrue : IRuleTest {
         public static readonly AlwaysTrue Instance = new();
 
-        public bool Test(uint stateId, RandomSource random, IFeatureLevel level) => true;
+        public bool Test(uint stateId, Vec3<int> pos, RandomSource random, IFeatureLevel level) => true;
 
         public bool TestAgainstWorld(IFeatureLevel level, Vec3<int> pos, RandomSource random) => true;
     }
 
     /// <summary>Matches any state of one block.</summary>
     public sealed class BlockMatch(Identifier block) : IRuleTest {
-        public bool Test(uint stateId, RandomSource random, IFeatureLevel level) {
+        public bool Test(uint stateId, Vec3<int> pos, RandomSource random, IFeatureLevel level) {
             return level.Registry.Blocks.GetByStateId(stateId).Identifier.Equals(block);
         }
     }
 
     /// <summary>Matches one exact state, properties included.</summary>
     public sealed class BlockStateMatch(uint stateId) : IRuleTest {
-        public bool Test(uint state, RandomSource random, IFeatureLevel level) => state == stateId;
+        public bool Test(uint state, Vec3<int> pos, RandomSource random, IFeatureLevel level) => state == stateId;
     }
 
     public sealed class TagMatch(Identifier tag) : IRuleTest {
-        public bool Test(uint stateId, RandomSource random, IFeatureLevel level) {
+        public bool Test(uint stateId, Vec3<int> pos, RandomSource random, IFeatureLevel level) {
             return level.Blocks.IsIn(tag, stateId);
         }
     }
@@ -65,15 +66,54 @@ public interface IRuleTest {
     /// rather than per position that could match, and move everything the rule places afterwards.
     /// </remarks>
     public sealed class RandomBlockMatch(Identifier block, float probability) : IRuleTest {
-        public bool Test(uint stateId, RandomSource random, IFeatureLevel level) {
+        public bool Test(uint stateId, Vec3<int> pos, RandomSource random, IFeatureLevel level) {
             return level.Registry.Blocks.GetByStateId(stateId).Identifier.Equals(block)
                 && random.NextFloat() < probability;
         }
     }
 
     public sealed class RandomBlockStateMatch(uint stateId, float probability) : IRuleTest {
-        public bool Test(uint state, RandomSource random, IFeatureLevel level) {
+        public bool Test(uint state, Vec3<int> pos, RandomSource random, IFeatureLevel level) {
             return state == stateId && random.NextFloat() < probability;
+        }
+    }
+
+    /// <summary>Every rule in order, stopping at the first that fails, so a later one's draw may not happen.</summary>
+    public sealed class AllOf(IReadOnlyList<IRuleTest> rules) : IRuleTest {
+        public bool Test(uint stateId, Vec3<int> pos, RandomSource random, IFeatureLevel level) {
+            foreach (IRuleTest rule in rules) {
+                if (!rule.Test(stateId, pos, random, level)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    /// <summary>Every rule in order, stopping at the first that holds.</summary>
+    public sealed class AnyOf(IReadOnlyList<IRuleTest> rules) : IRuleTest {
+        public bool Test(uint stateId, Vec3<int> pos, RandomSource random, IFeatureLevel level) {
+            foreach (IRuleTest rule in rules) {
+                if (rule.Test(stateId, pos, random, level)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public sealed class Not(IRuleTest rule) : IRuleTest {
+        public bool Test(uint stateId, Vec3<int> pos, RandomSource random, IFeatureLevel level) {
+            return !rule.Test(stateId, pos, random, level);
+        }
+    }
+
+    /// <summary>The position's y, both bounds inclusive; the state is not read.</summary>
+    public sealed class HeightMatch(int minInclusive, int maxInclusive) : IRuleTest {
+        public bool Test(uint stateId, Vec3<int> pos, RandomSource random, IFeatureLevel level) {
+            return minInclusive <= pos.Y && pos.Y <= maxInclusive;
         }
     }
 }

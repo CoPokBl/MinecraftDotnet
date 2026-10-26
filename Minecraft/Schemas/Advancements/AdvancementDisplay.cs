@@ -23,9 +23,12 @@ public class AdvancementDisplay {
     /// <summary>Whether it stays hidden until completed.</summary>
     public bool Hidden { get; init; }
 
-    /// <summary>Position in the tab, in advancement box widths from the root.</summary>
-    public required float X { get; init; }
-    public required float Y { get; init; }
+    /// <summary>
+    /// Position in the tab, in advancement box widths from the root. It travels beside the advancement
+    /// in <c>update_advancements</c> rather than in the display, which is why it can be set after a read.
+    /// </summary>
+    public required float X { get; set; }
+    public required float Y { get; set; }
 
     public void Write(DataWriter w, MinecraftRegistry reg) {
         w.WriteNbt(Title)
@@ -48,8 +51,6 @@ public class AdvancementDisplay {
         if (Background != null) {
             w.Write(Background.Value);
         }
-
-        w.WriteFloat(X).WriteFloat(Y);
     }
 
     public static AdvancementDisplay Read(DataReader r, MinecraftRegistry reg) {
@@ -67,8 +68,8 @@ public class AdvancementDisplay {
             Background = (flags & 0x1) != 0 ? (Identifier?)(Identifier)r.ReadString() : null,
             ShowToast = (flags & 0x2) != 0,
             Hidden = (flags & 0x4) != 0,
-            X = r.ReadFloat(),
-            Y = r.ReadFloat()
+            X = 0,
+            Y = 0
         };
     }
 }

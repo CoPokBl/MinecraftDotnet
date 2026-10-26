@@ -28,10 +28,7 @@ public static class EntityKinds {
         entity.Uuid = uuid;
         entity.Type = type;
         entity.SpawnData = spawnData;
-        // Display's InterpolationHandler takes no steps until its teleport duration says otherwise.
-        if (Is(EntityClass.Display)) {
-            entity.InterpolationSteps = 0;
-        }
+        entity.Interpolation = InterpolationHandlers.For(client, entity);
         return entity;
     }
 
@@ -40,4 +37,36 @@ public static class EntityKinds {
         type.Identifier == EntityType.Arrow.Identifier || type.Identifier == EntityType.SpectralArrow.Identifier || type.Identifier == EntityType.Trident.Identifier || type.Identifier == EntityType.Snowball.Identifier
         || type.Identifier == EntityType.Egg.Identifier || type.Identifier == EntityType.EnderPearl.Identifier || type.Identifier == EntityType.ExperienceBottle.Identifier
         || type.Identifier == EntityType.SplashPotion.Identifier || type.Identifier == EntityType.LingeringPotion.Identifier || type.Identifier == EntityType.FishingBobber.Identifier;
+}
+
+/// <summary>Each entity class's <c>createInterpolationHandler</c> on the client.</summary>
+public static class InterpolationHandlers {
+    public static IInterpolationHandler For(MinecraftClient client, ClientEntity entity) {
+        if (entity.Is(EntityClass.Shulker)) {
+            return NoOpInterpolationHandler.Instance;
+        }
+        if (entity.Is(EntityClass.LivingEntity)) {
+            return new SteppedInterpolationHandler(client, entity, UpdateInterval(entity.Type));
+        }
+        // AbstractMinecart's is NO_OP under the minecart_improvements experiment, whose minecarts follow
+        // move_minecart_along_track instead. Neither is modelled, so every minecart interpolates as without it.
+        if (entity.Is(EntityClass.ExperienceOrb) || entity.Is(EntityClass.FishingHook) || entity.Is(EntityClass.AbstractBoat)
+            || entity.Is(EntityClass.AbstractMinecart)) {
+            return new LinearInterpolationHandler(client, entity);
+        }
+        // Display's takes no steps until its teleport duration says otherwise.
+        if (entity.Is(EntityClass.Display)) {
+            return new LinearInterpolationHandler(client, entity, 0);
+        }
+        return NoOpInterpolationHandler.Instance;
+    }
+
+    /// <summary>
+    /// <c>EntityType.updateInterval</c> for the living types, the only ones whose handler reads it. The
+    /// generator does not dump it, so a version that changes a living type's interval has to change it here.
+    /// </summary>
+    public static int UpdateInterval(IEntityType type) =>
+        type.Identifier == EntityType.Player.Identifier || type.Identifier == EntityType.Allay.Identifier || type.Identifier == EntityType.Mannequin.Identifier
+            ? 2
+            : 3;
 }

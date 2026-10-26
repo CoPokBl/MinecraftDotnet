@@ -43,7 +43,7 @@ public sealed partial class EntityParticles {
             return EmitterKind.NoBaseTick;
         }
         return Is(EntityClass.Blaze) ? EmitterKind.Blaze
-            : Is(EntityClass.EnderMan) ? EmitterKind.EnderMan
+            : Is(EntityClass.Enderman) ? EmitterKind.EnderMan
             : Is(EntityClass.Endermite) ? EmitterKind.Endermite
             : Is(EntityClass.Guardian) ? EmitterKind.Guardian
             : Is(EntityClass.Phantom) ? EmitterKind.Phantom

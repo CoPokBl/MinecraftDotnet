@@ -39,6 +39,7 @@ public abstract record EnvironmentAttributeValue {
                 new Music(EnvironmentAttributes.BackgroundMusic.FromNbt(tag, reg)),
             EnvironmentAttributeValueKind.BedRule =>
                 new Bed(EnvironmentAttributes.BedRule.FromNbt(tag)),
+            EnvironmentAttributeValueKind.MobSpawnSettings => new MobSpawns(tag),
             _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
         };
     }
@@ -111,6 +112,11 @@ public abstract record EnvironmentAttributeValue {
     public record Bed(BedRule Value) : EnvironmentAttributeValue {
         public override EnvironmentAttributeValueKind Kind => EnvironmentAttributeValueKind.BedRule;
         public override INbtTag ToNbt() => Value.ToNbt();
+    }
+
+    public record MobSpawns(INbtTag Value) : EnvironmentAttributeValue {
+        public override EnvironmentAttributeValueKind Kind => EnvironmentAttributeValueKind.MobSpawnSettings;
+        public override INbtTag ToNbt() => Value;
     }
 }
 

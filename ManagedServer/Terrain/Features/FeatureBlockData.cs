@@ -23,7 +23,7 @@ public sealed class FeatureBlockData {
     private const byte Air = 1;
     private const byte Solid = 2;
     private const byte Replaceable = 4;
-    private const byte BlocksMotion = 8;
+    private const byte BlocksMotionInHeightmap = 8;
     private const byte HasFluid = 16;
     private const byte Resolved = 32;
     private const byte Liquid = 64;
@@ -53,7 +53,11 @@ public sealed class FeatureBlockData {
     /// <summary><c>BlockState.canBeReplaced</c>, which is what a feature is allowed to overwrite.</summary>
     public bool IsReplaceable(uint stateId) => (FlagsOf(stateId) & Replaceable) != 0;
 
-    public bool BlocksMotionAt(uint stateId) => (FlagsOf(stateId) & BlocksMotion) != 0;
+    /// <summary>
+    /// <c>Heightmap.MATERIAL_MOTION_BLOCKING</c>, the <c>OCEAN_FLOOR</c> pair's predicate: the
+    /// <c>blocks_motion_in_heightmap</c> tag.
+    /// </summary>
+    public bool BlocksMotionInHeightmapAt(uint stateId) => (FlagsOf(stateId) & BlocksMotionInHeightmap) != 0;
 
     /// <summary>Whether the state carries a fluid, source or flowing, waterlogged or not.</summary>
     public bool HasFluidAt(uint stateId) => (FlagsOf(stateId) & HasFluid) != 0;
@@ -75,6 +79,8 @@ public sealed class FeatureBlockData {
         bool[] membership = _tags.GetOrAdd(tag, BuildTag);
         return stateId < (uint)membership.Length && membership[stateId];
     }
+
+    private static readonly Identifier BlocksMotionInHeightmapTag = "minecraft:blocks_motion_in_heightmap";
 
     private byte FlagsOf(uint stateId) {
         if (stateId >= (uint)_flags.Length) {
@@ -103,8 +109,8 @@ public sealed class FeatureBlockData {
             flags |= Replaceable;
         }
 
-        if (block.BlocksMotion) {
-            flags |= BlocksMotion;
+        if (IsIn(BlocksMotionInHeightmapTag, stateId)) {
+            flags |= BlocksMotionInHeightmap;
         }
 
         if (block.Fluid is not null) {

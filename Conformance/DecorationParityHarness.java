@@ -38,7 +38,9 @@ import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.placement.FeaturePlacer;
+import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
@@ -437,8 +439,8 @@ public class DecorationParityHarness {
                         System.out.printf("TRACE chunk=%d,%d step=%d index=%d%n", scene.chunkX,
                             scene.chunkZ, step, index);
                         trace(data.features().get(index), level, generator, random, origin);
-                    } else if (data.features().get(index)
-                        .placeWithBiomeCheck(level, generator, random, origin)) {
+                    } else if (new FeaturePlacer(level, generator)
+                        .placeWithBiomeCheck(data.features().get(index), random, origin)) {
 
                         // What the feature says it did, not what came through setBlock: an ore writes
                         // into a LevelChunkSection and the level never sees it.
@@ -484,7 +486,7 @@ public class DecorationParityHarness {
 
         for (PlacementModifier modifier : filtered ? chain.subList(0, chain.size() - 1) : chain) {
             Stream<BlockPos> sofar = positions;
-            positions = sofar.flatMap(at -> modifier.getPositions(context, random, at))
+            positions = sofar.flatMap(at -> { List<BlockPos> outs = new ArrayList<>(); modifier.modify(context, random, at, outs::add); return outs.stream(); })
                 .peek(at -> System.out.printf("STAGE %s %d %d %d%n",
                     modifier.getClass().getSimpleName(), at.getX(), at.getY(), at.getZ()));
         }
@@ -492,7 +494,7 @@ public class DecorationParityHarness {
         if (filtered) {
             PlacementFilter last = (PlacementFilter) chain.get(chain.size() - 1);
             positions = positions.filter(at -> {
-                boolean keep = last.getPositions(context, random, at).findAny().isPresent();
+                boolean keep = last.shouldPlace(context, random, at);
 
                 System.out.printf("FILTER %d %d %d %s %s keep=%s%n", at.getX(), at.getY(), at.getZ(),
                     name(level.describe(level.getBlockState(at))),
@@ -502,7 +504,7 @@ public class DecorationParityHarness {
             });
         }
 
-        ConfiguredFeature<?, ?> configured = feature.feature().value();
+        Feature configured = feature.feature().value();
 
         positions.forEach(at -> {
             int before = random.getCount();
@@ -586,7 +588,7 @@ public class DecorationParityHarness {
             Holder<Structure> structure = registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(key);
 
             StructureStart start = structure.value().generate(structure, Level.OVERWORLD, registries,
-                generator, generator.getBiomeSource(), randomState, templates, scene.seed,
+                generator, generator.getBiomeSource(), randomState.createClimateSampler(SamplerContext.builder().enableCaches().build()), randomState, templates, scene.seed,
                 new ChunkPos(placement.sourceChunkX(), placement.sourceChunkZ()), 0, structureBounds,
                 structure.value().biomes()::contains);
 
@@ -664,7 +666,7 @@ public class DecorationParityHarness {
         }
 
         MultiPackResourceManager resources = new MultiPackResourceManager(
-            PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource()));
+            PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource().fullResources()));
 
         Path scratch = Files.createTempDirectory("mcdotnet-structure-parity");
 
@@ -674,10 +676,9 @@ public class DecorationParityHarness {
 
         structureManager = new NoStructures();
 
-        randomState = RandomState.create(
+        randomState = RandomState.create(registries.lookupOrThrow(Registries.NOISE), scene.seed,
             registries.lookupOrThrow(Registries.NOISE_SETTINGS)
-                .getOrThrow(NoiseGeneratorSettings.OVERWORLD).value(),
-            registries.lookupOrThrow(Registries.NOISE), scene.seed);
+                .getOrThrow(NoiseGeneratorSettings.OVERWORLD).value());
 
         int minY = scene.minY;
         int height = scene.height;
@@ -700,7 +701,7 @@ public class DecorationParityHarness {
         }
 
         @Override
-        public List<StructureStart> startsForStructure(ChunkPos chunk,
+        public List<StructureStart> startsForStructure(int chunkX, int chunkZ,
             java.util.function.Predicate<Structure> wanted) {
 
             return List.of();
@@ -743,7 +744,7 @@ public class DecorationParityHarness {
      */
     private static RegistryAccess.Frozen datapackRegistries() {
         MultiPackResourceManager resources = new MultiPackResourceManager(
-            PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource()));
+            PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource().fullResources()));
 
         RegistryAccess.Frozen statik = RegistryLayer.createRegistryAccess().compositeAccess();
 
@@ -752,7 +753,7 @@ public class DecorationParityHarness {
             lookups.add((HolderLookup.RegistryLookup<?>) entry.value()));
 
         RegistryAccess.Frozen worldgen = RegistryDataLoader
-            .load(resources, lookups, RegistryDataLoader.WORLDGEN_REGISTRIES, Runnable::run)
+            .load(resources, lookups, RegistryDataLoader.WORLD_REGISTRIES, Runnable::run)
             .join();
 
         List<Registry<?>> all = new ArrayList<>();
@@ -772,7 +773,7 @@ public class DecorationParityHarness {
 
     private static void bindTags() {
         MultiPackResourceManager resources = new MultiPackResourceManager(
-            PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource()));
+            PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource().fullResources()));
 
         TagLoader.loadTagsForExistingRegistries(resources,
                 RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY))

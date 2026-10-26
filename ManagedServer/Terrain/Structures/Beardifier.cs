@@ -9,9 +9,10 @@ namespace ManagedServer.Terrain.Structures;
 /// standing on it.
 /// </summary>
 /// <remarks>
-/// It is a <b>density function</b> rather than a pass over blocks, which is why it has to exist before
+/// It is a <b>density sampler</b> rather than a pass over blocks, which is why it has to exist before
 /// the noise runs and why a structure's position must not depend on it. The generator asks for the
-/// starts reaching a chunk, builds one of these, and the noise pass adds it to the final density.
+/// starts reaching a chunk, builds one of these and hands it to the chunk's sampler context, where the
+/// data's <c>beardifier</c> node reads it. All of it is float.
 /// <p/>
 /// <b>The kernel is what makes a beard a beard.</b> A 24 cubed table of a Gaussian, sampled at the
 /// offset from a piece, so ground is pulled up towards a piece that is hanging over a drop and the
@@ -23,7 +24,7 @@ namespace ManagedServer.Terrain.Structures;
 /// between pieces contribute their own smaller term: without those a village path meeting a house
 /// leaves a step where the two boxes stop.
 /// </remarks>
-public sealed class Beardifier : ISimpleDensityFunction {
+public sealed class Beardifier : IDensitySampler {
     private const int KernelRadius = 12;
     private const int KernelSize = 24;
 
@@ -39,8 +40,7 @@ public sealed class Beardifier : ISimpleDensityFunction {
             for (int x = 0; x < KernelSize; x++) {
                 for (int y = 0; y < KernelSize; y++) {
                     kernel[z * KernelSize * KernelSize + x * KernelSize + y] =
-                        (float)Contribution(x - KernelRadius, y - KernelRadius + 0.5,
-                            z - KernelRadius);
+                        (float)Contribution(x - KernelRadius, y - KernelRadius + 0.5, z - KernelRadius);
                 }
             }
         }
@@ -141,105 +141,94 @@ public sealed class Beardifier : ISimpleDensityFunction {
             : union.Encapsulate(box);
     }
 
-    public double Compute(IFunctionContext context) {
-        if (_affectedBox is null) {
-            return 0.0;
+    public void SampleVolume(SamplerContext context, DensityBuffer output, DensityVolume volume) {
+        output.Fill(0.0F);
+        if (_affectedBox is not { } box
+            || !volume.Intersects(box.MinX, box.MinY, box.MinZ, box.MaxX, box.MaxY, box.MaxZ)) {
+            return;
         }
 
-        int blockX = context.BlockX;
-        int blockY = context.BlockY;
-        int blockZ = context.BlockZ;
+        int minX = Mth.FloorDiv(Math.Max(0, box.MinX - volume.MinBlockX), volume.StepBlockX);
+        int minY = Mth.FloorDiv(Math.Max(0, box.MinY - volume.MinBlockY), volume.StepBlockY);
+        int minZ = Mth.FloorDiv(Math.Max(0, box.MinZ - volume.MinBlockZ), volume.StepBlockZ);
+        int maxX = Math.Min(volume.SizeX - 1, Mth.FloorDiv(box.MaxX - volume.MinBlockX, volume.StepBlockX));
+        int maxY = Math.Min(volume.SizeY - 1, Mth.FloorDiv(box.MaxY - volume.MinBlockY, volume.StepBlockY));
+        int maxZ = Math.Min(volume.SizeZ - 1, Mth.FloorDiv(box.MaxZ - volume.MinBlockZ, volume.StepBlockZ));
 
-        if (!_affectedBox.IsInside(blockX, blockY, blockZ)) {
-            return 0.0;
+        for (int z = minZ; z <= maxZ; z++) {
+            int blockZ = volume.BlockZ(z);
+            for (int x = minX; x <= maxX; x++) {
+                int blockX = volume.BlockX(x);
+                for (int y = minY; y <= maxY; y++) {
+                    output[volume.IndexUnchecked(x, y, z)] = SampleValueUnchecked(blockX, volume.BlockY(y), blockZ);
+                }
+            }
         }
+    }
 
-        double density = 0.0;
+    public float SampleValue(SamplerContext context, int blockX, int blockY, int blockZ) {
+        return _affectedBox is { } box && box.IsInside(blockX, blockY, blockZ) ? SampleValueUnchecked(blockX, blockY, blockZ) : 0.0F;
+    }
+
+    private float SampleValueUnchecked(int blockX, int blockY, int blockZ) {
+        float noiseValue = 0.0F;
 
         foreach (Rigid rigid in _pieces) {
             BoundingBox box = rigid.Box;
-
-            // The horizontal distance to the box, zero inside it.
             int dx = Math.Max(0, Math.Max(box.MinX - blockX, blockX - box.MaxX));
             int dz = Math.Max(0, Math.Max(box.MinZ - blockZ, blockZ - box.MaxZ));
-
             int groundY = box.MinY + rigid.GroundLevelDelta;
-            int toGround = blockY - groundY;
+            int dyToGround = blockY - groundY;
 
             int dy = rigid.Adjustment switch {
-                TerrainAdjustment.Bury or TerrainAdjustment.BeardThin => toGround,
-                TerrainAdjustment.BeardBox =>
-                    Math.Max(0, Math.Max(groundY - blockY, blockY - box.MaxY)),
-                TerrainAdjustment.Encapsulate =>
-                    Math.Max(0, Math.Max(box.MinY - blockY, blockY - box.MaxY)),
+                TerrainAdjustment.Bury or TerrainAdjustment.BeardThin => dyToGround,
+                TerrainAdjustment.BeardBox => Math.Max(0, Math.Max(groundY - blockY, blockY - box.MaxY)),
+                TerrainAdjustment.Encapsulate => Math.Max(0, Math.Max(box.MinY - blockY, blockY - box.MaxY)),
                 _ => 0
             };
 
-            density += rigid.Adjustment switch {
-                TerrainAdjustment.Bury => Bury(dx, dy / 2.0, dz),
-                TerrainAdjustment.BeardThin or TerrainAdjustment.BeardBox =>
-                    Beard(dx, dy, dz, toGround) * 0.8,
-                TerrainAdjustment.Encapsulate => Bury(dx / 2.0, dy / 2.0, dz / 2.0) * 0.8,
-                _ => 0.0
+            noiseValue += rigid.Adjustment switch {
+                TerrainAdjustment.Bury => BuryContribution(dx, dy / 2.0F, dz),
+                TerrainAdjustment.BeardThin or TerrainAdjustment.BeardBox => BeardContribution(dx, dy, dz, dyToGround) * 0.8F,
+                TerrainAdjustment.Encapsulate => BuryContribution(dx / 2.0F, dy / 2.0F, dz / 2.0F) * 0.8F,
+                _ => 0.0F
             };
         }
 
-        // A join contributes half as much as a piece does, and always as a beard whatever the
-        // structure's own adjustment is: what it is smoothing is the step between two pieces rather
-        // than the ground under either.
+        // A join always contributes as a beard whatever the structure's own adjustment is: what it
+        // smooths is the step between two pieces rather than the ground under either.
         foreach (JigsawJunction junction in _junctions) {
             int dx = blockX - junction.SourceX;
             int dy = blockY - junction.SourceGroundY;
             int dz = blockZ - junction.SourceZ;
-
-            density += Beard(dx, dy, dz, dy) * 0.4;
+            noiseValue += BeardContribution(dx, dy, dz, dy) * 0.4F;
         }
 
-        return density;
+        return noiseValue;
     }
-
-    public void FillArray(double[] output, IContextProvider provider) {
-        if (_affectedBox is null) {
-            Array.Fill(output, 0.0);
-            return;
-        }
-
-        provider.FillAllDirectly(output, this);
-    }
-
-    // Unbounded, because a beard can push the density either way by any amount. A finite range here
-    // would let the rewrite collapse a branch of the tree that the beard is the whole point of.
-    public double MinValue => double.NegativeInfinity;
-    public double MaxValue => double.PositiveInfinity;
 
     /// <summary>Fills terrain in around a piece, falling from one to zero over six blocks.</summary>
-    private static double Bury(double dx, double dy, double dz) {
-        double distance = Math.Sqrt(dx * dx + dy * dy + dz * dz);
-        return Mth.ClampedMap(distance, 0.0, 6.0, 1.0, 0.0);
+    private static float BuryContribution(float dx, float dy, float dz) {
+        float distanceSq = Mth.LengthSquared(dx, dy, dz);
+        return distanceSq >= 36.0F ? 0.0F : 1.0F - Mth.Sqrt(distanceSq) / 6.0F;
     }
 
     /// <summary>
-    /// Grows a skirt of ground under a piece, weighted by the kernel.
+    /// Grows a skirt of ground under a piece, weighted by the kernel. The sign comes from
+    /// <paramref name="yToGround"/>, so ground is pushed up below the piece and cut away above.
+    /// <c>FastInvSqrt</c> rather than a real one is vanilla's, and it is not accurate.
     /// </summary>
-    /// <remarks>
-    /// The sign comes from <paramref name="toGround"/>, so the term pushes ground <b>up</b> below the
-    /// piece and cuts it away above. <c>FastInvSqrt</c> rather than a real one is vanilla's, and it is
-    /// not accurate: swapping it for an exact reciprocal square root moves the terrain under every
-    /// structure by a small amount.
-    /// </remarks>
-    private static double Beard(int dx, int dy, int dz, int toGround) {
+    private static float BeardContribution(int dx, int dy, int dz, int yToGround) {
         int kernelX = dx + KernelRadius;
         int kernelY = dy + KernelRadius;
         int kernelZ = dz + KernelRadius;
-
         if (!InKernel(kernelX) || !InKernel(kernelY) || !InKernel(kernelZ)) {
-            return 0.0;
+            return 0.0F;
         }
 
-        double offsetY = toGround + 0.5;
-        double distanceSquared = dx * dx + offsetY * offsetY + dz * dz;
-        double value = -offsetY * Mth.FastInvSqrt(distanceSquared / 2.0) / 2.0;
-
+        float dyWithOffset = yToGround + 0.5F;
+        float distanceSqr = Mth.LengthSquared(dx, dyWithOffset, dz);
+        float value = -dyWithOffset * (float)Mth.FastInvSqrt(distanceSqr / 2.0F) / 2.0F;
         return value * Kernel[kernelZ * KernelSize * KernelSize + kernelX * KernelSize + kernelY];
     }
 

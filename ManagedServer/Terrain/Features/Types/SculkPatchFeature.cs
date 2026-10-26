@@ -22,8 +22,7 @@ namespace ManagedServer.Terrain.Features.Types;
 /// than approximated: there is no shape to get roughly right.
 /// </remarks>
 public sealed record SculkPatchFeature(int ChargeCount, int AmountPerCharge, int SpreadAttempts,
-    int SpreadRounds, int GrowthRounds, float CatalystChance, IIntProvider ExtraRareGrowths)
-    : ConfiguredFeature {
+    int SpreadRounds, int GrowthRounds) : ConfiguredFeature {
 
     public override bool Place(FeaturePlaceContext context) {
         IFeatureLevel level = context.Level;
@@ -49,24 +48,6 @@ public sealed record SculkPatchFeature(int ChargeCount, int AmountPerCharge, int
             }
 
             spreader.Clear();
-        }
-
-        Vec3<int> below = origin.WithY(origin.Y - 1);
-        if (random.NextFloat() <= CatalystChance && IsFullBlock(level, below)) {
-            level.SetState(origin.X, origin.Y, origin.Z, Block.SculkCatalyst.StateId);
-        }
-
-        int extra = ExtraRareGrowths.Sample(random);
-
-        for (int i = 0; i < extra; i++) {
-            Vec3<int> candidate = origin + new Vec3<int>(random.NextInt(5) - 2, 0, random.NextInt(5) - 2);
-            Vec3<int> under = candidate.WithY(candidate.Y - 1);
-
-            if (level.Blocks.IsAir(level.GetState(candidate.X, candidate.Y, candidate.Z))
-                && IsFaceSturdy(level, under, BlockFace.PosY)) {
-
-                level.SetState(candidate.X, candidate.Y, candidate.Z, Shrieker(true));
-            }
         }
 
         return true;
@@ -358,21 +339,17 @@ internal sealed class SculkSpreader {
                 return;
             }
 
-            Vec3<int>? moved = ValidMovementPosition(level, Position, random);
-
-            if (moved is { } next) {
+            // A world generation cursor with nowhere to move discharges where it stands; one that
+            // could only move outside the twelve block cylinder around its origin has nowhere to move.
+            if (ValidMovementPosition(level, Position, random, origin) is not { } next) {
                 OnDischarged(level, state, Position, behaviour);
-                Position = next;
-
-                // The charge is confined to a cylinder around where it started. Without this a walk
-                // that found a long corridor would trail sculk right across the chunk.
-                if (!CloserThan(Position, new Vec3<int>(origin.X, Position.Y, origin.Z), 15.0)) {
-                    Charge = 0;
-                    return;
-                }
-
-                state = level.GetState(next.X, next.Y, next.Z);
+                Charge = 0;
+                return;
             }
+
+            OnDischarged(level, state, Position, behaviour);
+            Position = next;
+            state = level.GetState(next.X, next.Y, next.Z);
 
             if (BehaviourOf(level, state) != SculkBehaviourKind.None) {
                 _facings = AvailableFaces(level, state);
@@ -659,12 +636,20 @@ internal sealed class SculkSpreader {
         /// put last, which is what makes the patch wander.
         /// </remarks>
         private static Vec3<int>? ValidMovementPosition(IFeatureLevel level, Vec3<int> pos,
-            RandomSource random) {
+            RandomSource random, Vec3<int> origin) {
 
             Vec3<int> chosen = pos;
 
             foreach (Vec3<int> offset in FeatureUtil.Shuffled(NonCornerNeighbours, random)) {
                 Vec3<int> neighbour = pos + offset;
+
+                // canMoveToPos, which only world generation applies.
+                int dx = origin.X - neighbour.X;
+                int dz = origin.Z - neighbour.Z;
+                if (dx * dx + dz * dz > 144) {
+                    continue;
+                }
+
                 uint state = level.GetState(neighbour.X, neighbour.Y, neighbour.Z);
 
                 if (BehaviourOf(level, state) == SculkBehaviourKind.None

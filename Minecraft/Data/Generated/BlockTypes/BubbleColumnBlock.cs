@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:bubble_column", "block.minecraft.bubble_column", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, null, BlockInfo.VanillaOnly, null);
-    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 12, "empty", NoteBlockInstrument.Harp, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.bubble_column", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, null, BlockInfo.VanillaOnly, null);
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Popped, 12, "empty", NoteBlockInstrument.Harp, false, false, false, false, false, true, true, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -67,16 +67,16 @@ public record BubbleColumnBlock(Identifier Identifier, bool Drag) : IBlock {
     public uint StateId {
         get {
             return Drag switch {
-                true => 15294,
-                false => 15295,
+                true => 18651,
+                false => 18652,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            15294 => new BubbleColumnBlock(Identifier, true),
-            15295 => new BubbleColumnBlock(Identifier, false),
+            18651 => new BubbleColumnBlock(Identifier, true),
+            18652 => new BubbleColumnBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

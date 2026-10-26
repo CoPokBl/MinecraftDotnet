@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DamagedAnvilBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:anvil", "block.minecraft.damaged_anvil", 1200f, 0.6f, 1f, 1f, 0f, true, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:damaged_anvil", BlockInfo.VanillaOnly, "minecraft:blocks/damaged_anvil");
-    private static readonly BlockStateInfo I0 = new(5f, 0, 0, PushReaction.Block, 6, "anvil", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S323, BlockShapes.S323, BlockShapes.S1, BlockShapes.S323, BlockShapes.S323, BlockShapes.S323);
+    private static readonly BlockInfo Data = new("block.minecraft.damaged_anvil", 1200f, 0.6f, 1f, 1f, 0f, 0f, true, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:damaged_anvil", BlockInfo.VanillaOnly, "minecraft:blocks/damaged_anvil");
+    private static readonly BlockStateInfo I0 = new(5f, 0, 0, PushReaction.Immoveable, 6, "anvil", NoteBlockInstrument.Harp, false, true, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S323, BlockShapes.S323, BlockShapes.S1, BlockShapes.S323, BlockShapes.S323, BlockShapes.S323);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S324, CollisionShape = BlockShapes.S324, OcclusionShape = BlockShapes.S324, VisualShape = BlockShapes.S324, SupportShape = BlockShapes.S324 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I1, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 11203];
+    public BlockStateInfo StateInfo => States[StateId - 12970];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record DamagedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record DamagedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -73,10 +73,10 @@ public record DamagedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 11203,
-                Direction.South => 11204,
-                Direction.West => 11205,
-                Direction.East => 11206,
+                Direction.North => 12970,
+                Direction.South => 12971,
+                Direction.West => 12972,
+                Direction.East => 12973,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -84,10 +84,10 @@ public record DamagedAnvilBlock(Identifier Identifier, Direction Facing) : IBloc
     
     public IBlock WithState(uint state) {
         return state switch {
-            11203 => new DamagedAnvilBlock(Identifier, Direction.North),
-            11204 => new DamagedAnvilBlock(Identifier, Direction.South),
-            11205 => new DamagedAnvilBlock(Identifier, Direction.West),
-            11206 => new DamagedAnvilBlock(Identifier, Direction.East),
+            12970 => new DamagedAnvilBlock(Identifier, Direction.North),
+            12971 => new DamagedAnvilBlock(Identifier, Direction.South),
+            12972 => new DamagedAnvilBlock(Identifier, Direction.West),
+            12973 => new DamagedAnvilBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

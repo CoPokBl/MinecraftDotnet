@@ -5,35 +5,8 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 
-/// <summary>Vanilla's block to block conversion tables, keyed by the block a tool is used on.</summary>
+/// <summary>Vanilla's block to block conversion tables, keyed by the block being converted.</summary>
 public static class BlockConversions {
-    /// <summary><c>AxeItem.STRIPPABLES</c>: what an axe strips a block to.</summary>
-    public static readonly IReadOnlyDictionary<Identifier, IBlock> Strippables = new Dictionary<Identifier, IBlock> {
-        { "minecraft:oak_wood", Block.StrippedOakWood },
-        { "minecraft:oak_log", Block.StrippedOakLog },
-        { "minecraft:dark_oak_wood", Block.StrippedDarkOakWood },
-        { "minecraft:dark_oak_log", Block.StrippedDarkOakLog },
-        { "minecraft:pale_oak_wood", Block.StrippedPaleOakWood },
-        { "minecraft:pale_oak_log", Block.StrippedPaleOakLog },
-        { "minecraft:acacia_wood", Block.StrippedAcaciaWood },
-        { "minecraft:acacia_log", Block.StrippedAcaciaLog },
-        { "minecraft:cherry_wood", Block.StrippedCherryWood },
-        { "minecraft:cherry_log", Block.StrippedCherryLog },
-        { "minecraft:birch_wood", Block.StrippedBirchWood },
-        { "minecraft:birch_log", Block.StrippedBirchLog },
-        { "minecraft:jungle_wood", Block.StrippedJungleWood },
-        { "minecraft:jungle_log", Block.StrippedJungleLog },
-        { "minecraft:spruce_wood", Block.StrippedSpruceWood },
-        { "minecraft:spruce_log", Block.StrippedSpruceLog },
-        { "minecraft:warped_stem", Block.StrippedWarpedStem },
-        { "minecraft:warped_hyphae", Block.StrippedWarpedHyphae },
-        { "minecraft:crimson_stem", Block.StrippedCrimsonStem },
-        { "minecraft:crimson_hyphae", Block.StrippedCrimsonHyphae },
-        { "minecraft:mangrove_wood", Block.StrippedMangroveWood },
-        { "minecraft:mangrove_log", Block.StrippedMangroveLog },
-        { "minecraft:bamboo_block", Block.StrippedBambooBlock },
-    };
-
     /// <summary><c>WeatheringCopper.NEXT_BY_BLOCK</c>: the stage a block weathers to.</summary>
     public static readonly IReadOnlyDictionary<Identifier, IBlock> WeatheringNext = new Dictionary<Identifier, IBlock> {
         { "minecraft:copper_block", Block.ExposedCopper },
@@ -83,7 +56,7 @@ public static class BlockConversions {
         { "minecraft:weathered_copper_chain", Block.OxidizedCopperChain },
     };
 
-    /// <summary><c>WeatheringCopper.PREVIOUS_BY_BLOCK</c>: the stage an axe scrapes a block back to.</summary>
+    /// <summary><c>WeatheringCopper.PREVIOUS_BY_BLOCK</c>: the stage before a block's.</summary>
     public static readonly IReadOnlyDictionary<Identifier, IBlock> WeatheringPrevious = new Dictionary<Identifier, IBlock> {
         { "minecraft:exposed_copper", Block.CopperBlock },
         { "minecraft:weathered_copper", Block.ExposedCopper },
@@ -196,7 +169,7 @@ public static class BlockConversions {
         { "minecraft:oxidized_copper_chain", Block.WaxedOxidizedCopperChain },
     };
 
-    /// <summary><c>HoneycombItem.WAX_OFF_BY_BLOCK</c>: what an axe takes the wax off a block to.</summary>
+    /// <summary><c>HoneycombItem.WAX_OFF_BY_BLOCK</c>: a waxed block without its wax.</summary>
     public static readonly IReadOnlyDictionary<Identifier, IBlock> WaxOff = new Dictionary<Identifier, IBlock> {
         { "minecraft:waxed_copper_block", Block.CopperBlock },
         { "minecraft:waxed_exposed_copper", Block.ExposedCopper },

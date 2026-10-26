@@ -44,14 +44,10 @@ public abstract class PhysicsEntity(MinecraftClient client) : ClientEntity, ICol
     /// <summary><c>Entity.getDimensions(getPose())</c>.</summary>
     public override (float Width, float Height) Dimensions => ((float)Width, (float)Height);
 
-    /// <summary><c>EntityDimensions.makeBoundingBox</c>: the half width is a float before it is widened.</summary>
-    public Box MakeBoundingBox(Vec3d position) {
-        (float width, float height) = Dimensions;
-        float w = width / 2.0F;
-        return new Box(position.X - w, position.Y, position.Z - w, position.X + w, position.Y + height, position.Z + w);
-    }
+    /// <summary><c>Entity.getMoveSimulationType</c> is <c>SERVER_AND_CLIENT</c>: the client's own moves are predictions.</summary>
+    protected virtual bool SimulatedOnBothSides => false;
 
-    public override Box BoundingBox => MakeBoundingBox(Position);
+    public override bool CanSimulateMovement => SimulatedOnBothSides || IsLocalInstanceAuthoritative;
 
     protected virtual double DefaultGravity => Type.Acceleration;
 
@@ -170,6 +166,7 @@ public abstract class PhysicsEntity(MinecraftClient client) : ClientEntity, ICol
             }
             _movements.Add(new EntityMovement(Position, Position + movement, delta));
             Position += movement;
+            RecordMovement(moverType, movement);
         }
 
         bool xCollision = !MthEqual(delta.X, movement.X);
@@ -194,6 +191,13 @@ public abstract class PhysicsEntity(MinecraftClient client) : ClientEntity, ICol
 
         float blockSpeedFactor = BlockSpeedFactor();
         DeltaMovement = DeltaMovement.Multiply(blockSpeedFactor, 1.0, blockSpeedFactor);
+    }
+
+    /// <summary><c>Entity.recordMovement</c>: a push from a block or a shulker is predicted whoever simulates the entity.</summary>
+    private void RecordMovement(MoverType moverType, Vec3d movement) {
+        if (moverType != MoverType.Self || SimulatedOnBothSides) {
+            Interpolation.ApplyPredictedMovement(movement);
+        }
     }
 
     private static bool MthEqual(double a, double b) => Math.Abs(b - a) < 1.0E-5F;

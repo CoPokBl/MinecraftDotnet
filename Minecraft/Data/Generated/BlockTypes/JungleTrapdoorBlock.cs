@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record JungleTrapdoorBlock(Identifier Identifier, Direction Facing, TopBottom Half, bool Open, bool Powered, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IOpenable, IPowered, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:trapdoor", "block.minecraft.jungle_trapdoor", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jungle_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_trapdoor");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 10, "wood", NoteBlockInstrument.Bass, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockInfo Data = new("block.minecraft.jungle_trapdoor", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jungle_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_trapdoor");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 10, "wood", NoteBlockInstrument.Bass, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
@@ -28,15 +28,15 @@ public record JungleTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
         I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I4, I5, I4, I5, I6, I7, I6, I7, I2, I3, I2, I3, I6, I7, I6, I7, I4, I5, I4, I5, I8, I9, I8, I9, I2, I3, I2, I3, I8, I9, I8, I9, I4, I5, I4, I5, I10, I11, I10, I11, I2, I3, I2, I3, I10, I11, I10, I11, I4, I5, I4, I5
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 7306];
+    public BlockStateInfo StateInfo => States[StateId - 8976];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -50,7 +50,6 @@ public record JungleTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -70,6 +69,7 @@ public record JungleTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -95,44 +95,44 @@ public record JungleTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7306,
-                                false => 7307,
+                                true => 8976,
+                                false => 8977,
                             },
                             false => Waterlogged switch {
-                                true => 7308,
-                                false => 7309,
+                                true => 8978,
+                                false => 8979,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7310,
-                                false => 7311,
+                                true => 8980,
+                                false => 8981,
                             },
                             false => Waterlogged switch {
-                                true => 7312,
-                                false => 7313,
+                                true => 8982,
+                                false => 8983,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7314,
-                                false => 7315,
+                                true => 8984,
+                                false => 8985,
                             },
                             false => Waterlogged switch {
-                                true => 7316,
-                                false => 7317,
+                                true => 8986,
+                                false => 8987,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7318,
-                                false => 7319,
+                                true => 8988,
+                                false => 8989,
                             },
                             false => Waterlogged switch {
-                                true => 7320,
-                                false => 7321,
+                                true => 8990,
+                                false => 8991,
                             },
                         },
                     },
@@ -142,44 +142,44 @@ public record JungleTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7322,
-                                false => 7323,
+                                true => 8992,
+                                false => 8993,
                             },
                             false => Waterlogged switch {
-                                true => 7324,
-                                false => 7325,
+                                true => 8994,
+                                false => 8995,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7326,
-                                false => 7327,
+                                true => 8996,
+                                false => 8997,
                             },
                             false => Waterlogged switch {
-                                true => 7328,
-                                false => 7329,
+                                true => 8998,
+                                false => 8999,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7330,
-                                false => 7331,
+                                true => 9000,
+                                false => 9001,
                             },
                             false => Waterlogged switch {
-                                true => 7332,
-                                false => 7333,
+                                true => 9002,
+                                false => 9003,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7334,
-                                false => 7335,
+                                true => 9004,
+                                false => 9005,
                             },
                             false => Waterlogged switch {
-                                true => 7336,
-                                false => 7337,
+                                true => 9006,
+                                false => 9007,
                             },
                         },
                     },
@@ -189,44 +189,44 @@ public record JungleTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7338,
-                                false => 7339,
+                                true => 9008,
+                                false => 9009,
                             },
                             false => Waterlogged switch {
-                                true => 7340,
-                                false => 7341,
+                                true => 9010,
+                                false => 9011,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7342,
-                                false => 7343,
+                                true => 9012,
+                                false => 9013,
                             },
                             false => Waterlogged switch {
-                                true => 7344,
-                                false => 7345,
+                                true => 9014,
+                                false => 9015,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7346,
-                                false => 7347,
+                                true => 9016,
+                                false => 9017,
                             },
                             false => Waterlogged switch {
-                                true => 7348,
-                                false => 7349,
+                                true => 9018,
+                                false => 9019,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7350,
-                                false => 7351,
+                                true => 9020,
+                                false => 9021,
                             },
                             false => Waterlogged switch {
-                                true => 7352,
-                                false => 7353,
+                                true => 9022,
+                                false => 9023,
                             },
                         },
                     },
@@ -236,44 +236,44 @@ public record JungleTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7354,
-                                false => 7355,
+                                true => 9024,
+                                false => 9025,
                             },
                             false => Waterlogged switch {
-                                true => 7356,
-                                false => 7357,
+                                true => 9026,
+                                false => 9027,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7358,
-                                false => 7359,
+                                true => 9028,
+                                false => 9029,
                             },
                             false => Waterlogged switch {
-                                true => 7360,
-                                false => 7361,
+                                true => 9030,
+                                false => 9031,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7362,
-                                false => 7363,
+                                true => 9032,
+                                false => 9033,
                             },
                             false => Waterlogged switch {
-                                true => 7364,
-                                false => 7365,
+                                true => 9034,
+                                false => 9035,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7366,
-                                false => 7367,
+                                true => 9036,
+                                false => 9037,
                             },
                             false => Waterlogged switch {
-                                true => 7368,
-                                false => 7369,
+                                true => 9038,
+                                false => 9039,
                             },
                         },
                     },
@@ -286,70 +286,70 @@ public record JungleTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     
     public IBlock WithState(uint state) {
         return state switch {
-            7306 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
-            7307 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
-            7308 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
-            7309 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
-            7310 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
-            7311 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
-            7312 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
-            7313 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
-            7314 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
-            7315 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
-            7316 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
-            7317 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
-            7318 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
-            7319 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
-            7320 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
-            7321 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
-            7322 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
-            7323 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
-            7324 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
-            7325 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
-            7326 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
-            7327 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
-            7328 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
-            7329 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
-            7330 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
-            7331 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
-            7332 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
-            7333 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
-            7334 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
-            7335 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
-            7336 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
-            7337 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
-            7338 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
-            7339 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
-            7340 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
-            7341 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
-            7342 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
-            7343 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
-            7344 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
-            7345 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
-            7346 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
-            7347 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
-            7348 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
-            7349 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
-            7350 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
-            7351 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
-            7352 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
-            7353 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
-            7354 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
-            7355 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
-            7356 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
-            7357 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
-            7358 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
-            7359 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
-            7360 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
-            7361 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
-            7362 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
-            7363 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
-            7364 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
-            7365 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
-            7366 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
-            7367 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
-            7368 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
-            7369 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
+            8976 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
+            8977 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
+            8978 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
+            8979 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
+            8980 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
+            8981 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
+            8982 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
+            8983 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
+            8984 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
+            8985 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
+            8986 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
+            8987 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
+            8988 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
+            8989 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
+            8990 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
+            8991 => new JungleTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
+            8992 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
+            8993 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
+            8994 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
+            8995 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
+            8996 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
+            8997 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
+            8998 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
+            8999 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
+            9000 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
+            9001 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
+            9002 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
+            9003 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
+            9004 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
+            9005 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
+            9006 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
+            9007 => new JungleTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
+            9008 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
+            9009 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
+            9010 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
+            9011 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
+            9012 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
+            9013 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
+            9014 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
+            9015 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
+            9016 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
+            9017 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
+            9018 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
+            9019 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
+            9020 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
+            9021 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
+            9022 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
+            9023 => new JungleTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
+            9024 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
+            9025 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
+            9026 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
+            9027 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
+            9028 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
+            9029 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
+            9030 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
+            9031 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
+            9032 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
+            9033 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
+            9034 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
+            9035 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
+            9036 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
+            9037 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
+            9038 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
+            9039 => new JungleTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

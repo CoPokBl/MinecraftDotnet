@@ -31,7 +31,7 @@ public sealed class FishingHookRenderer : EntityRenderer<FishingHookRenderState>
             state.LineOriginOffset = Vec3d.Zero;
             return;
         }
-        float swing = owner.GetAttackAnim(partialTick);
+        float swing = owner.GetSwingAnimation(partialTick);
         float swing2 = Mth.Sin(Mth.Sqrt(swing) * (float)Math.PI);
         Vec3d playerPos = GetPlayerHandPos(owner, swing2, partialTick, context);
         Vec3d hookPos = Leashes.Position(entity, partialTick) + new Vec3d(0.0, 0.25, 0.0);

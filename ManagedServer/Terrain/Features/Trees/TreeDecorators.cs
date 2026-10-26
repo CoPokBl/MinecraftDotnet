@@ -4,6 +4,7 @@ using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Generated.BlockTypes;
+using Minecraft.Placement;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Vec;
@@ -39,6 +40,21 @@ public sealed class TreeDecoratorContext(PlacementContext placement, ITreeWriter
     public bool IsAir(Vec3<int> pos) => level.Blocks.IsAir(level.GetState(pos.X, pos.Y, pos.Z));
 
     public IBlock BlockAt(Vec3<int> pos) => level.Registry.Blocks.GetByStateId(level.GetState(pos.X, pos.Y, pos.Z));
+
+    /// <summary><c>canBeReplaced</c> at the position.</summary>
+    public bool IsReplaceable(Vec3<int> pos) => level.Blocks.IsReplaceable(level.GetState(pos.X, pos.Y, pos.Z));
+
+    /// <summary>
+    /// The water block at the position or at one of its four horizontal neighbours, asked east, west,
+    /// north, south. The block, not the fluid: a waterlogged log does not count.
+    /// </summary>
+    public bool IsWaterOrWaterNearby(Vec3<int> pos) {
+        return IsWaterBlock(pos) || IsWaterBlock(pos + new Vec3<int>(1, 0, 0))
+            || IsWaterBlock(pos + new Vec3<int>(-1, 0, 0)) || IsWaterBlock(pos + new Vec3<int>(0, 0, -1))
+            || IsWaterBlock(pos + new Vec3<int>(0, 0, 1));
+    }
+
+    private bool IsWaterBlock(Vec3<int> pos) => BlockAt(pos).Identifier.Equals(Block.Water.Identifier);
 
     /// <summary>A vine attached on one side, which is how both vine decorators place theirs.</summary>
     /// <remarks>
@@ -610,6 +626,119 @@ public abstract record TreeDecorator {
         private static IBlock WithTip(bool tip) {
             IBlock moss = Block.PaleHangingMoss;
             return moss is ITipped tipped ? tipped.WithTip(tip) : moss;
+        }
+    }
+
+    /// <summary>
+    /// <c>ShelfMushroomDecorator</c>: shelf mushrooms on the side of a trunk or along a fallen log.
+    /// </summary>
+    /// <remarks>
+    /// A log list whose first and last entries share a y is a fallen log, which is how the decorator
+    /// tells the two apart; the lists arrive sorted by y. A standing tree picks one compass direction
+    /// and its clockwise neighbour once, then for each log one to four above the base tries the two in
+    /// that order at one in four each, stopping at the first that places. A fallen log tries both
+    /// sides across its axis for every log. The age draw happens only when a mushroom is placed.
+    /// </remarks>
+    public sealed record ShelfMushroom(float Probability) : TreeDecorator {
+        public override void Place(TreeDecoratorContext context) {
+            RandomSource random = context.Random;
+            if (random.NextFloat() >= Probability) {
+                return;
+            }
+
+            IReadOnlyList<Vec3<int>> logs = context.Logs;
+            if (logs.Count == 0) {
+                return;
+            }
+
+            if (logs[0].Y == logs[^1].Y) {
+                PlaceOnFallenLog(context, logs, random);
+            } else {
+                PlaceOnStandingTree(context, logs, random);
+            }
+        }
+
+        private static void PlaceOnStandingTree(TreeDecoratorContext context, IReadOnlyList<Vec3<int>> logs,
+            RandomSource random) {
+
+            BlockFace first = Minecraft.Placement.Directions.Horizontal[random.NextInt(4)];
+            BlockFace[] directions = [first, first.ToDirection().ClockWise().ToFace()];
+            int treeBaseY = logs[0].Y;
+
+            foreach (Vec3<int> logPos in logs) {
+                int dy = logPos.Y - treeBaseY;
+                if (dy < 1 || dy > 4) {
+                    continue;
+                }
+
+                foreach (BlockFace facing in directions) {
+                    if (!(random.NextFloat() > 0.25f) && TryPlaceOnStandingTree(context, logPos, facing, random)) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        private static void PlaceOnFallenLog(TreeDecoratorContext context, IReadOnlyList<Vec3<int>> logs,
+            RandomSource random) {
+
+            BlockFace[] directions = logs[0].X != logs[^1].X
+                ? [BlockFace.NegZ, BlockFace.PosZ]
+                : [BlockFace.PosX, BlockFace.NegX];
+
+            foreach (Vec3<int> logPos in logs) {
+                foreach (BlockFace facing in directions) {
+                    if (random.NextFloat() > 0.25f) {
+                        continue;
+                    }
+
+                    Vec3<int> mushroomPos = logPos + Placement.PlacementParser.Step(facing);
+                    if (IsReplaceableWithShelfMushroom(context, mushroomPos)
+                        && !HasHorizontallyAdjacentShelfMushroom(context, mushroomPos)
+                        && !HasHorizontallyAdjacentShelfMushroom(context, logPos)) {
+
+                        PlaceMushroom(context, mushroomPos, facing, random);
+                    }
+                }
+            }
+        }
+
+        private static bool TryPlaceOnStandingTree(TreeDecoratorContext context, Vec3<int> logPos, BlockFace facing,
+            RandomSource random) {
+
+            Vec3<int> mushroomPos = logPos + Placement.PlacementParser.Step(facing);
+            if (!IsReplaceableWithShelfMushroom(context, mushroomPos)
+                || IsShelfMushroom(context, mushroomPos.WithY(mushroomPos.Y - 1))) {
+                return false;
+            }
+
+            PlaceMushroom(context, mushroomPos, facing, random);
+            return true;
+        }
+
+        private static void PlaceMushroom(TreeDecoratorContext context, Vec3<int> pos, BlockFace facing,
+            RandomSource random) {
+
+            ShelfMushroomBlock mushroom = (ShelfMushroomBlock)Block.ShelfMushroom;
+            context.SetBlock(pos, mushroom with { Age = random.NextInt(2), Facing = facing.ToDirection() });
+        }
+
+        private static bool IsShelfMushroom(TreeDecoratorContext context, Vec3<int> pos) {
+            return context.BlockAt(pos).Identifier.Equals(Block.ShelfMushroom.Identifier);
+        }
+
+        private static bool HasHorizontallyAdjacentShelfMushroom(TreeDecoratorContext context, Vec3<int> pos) {
+            foreach (BlockFace face in Minecraft.Placement.Directions.Horizontal) {
+                if (IsShelfMushroom(context, pos + Placement.PlacementParser.Step(face))) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsReplaceableWithShelfMushroom(TreeDecoratorContext context, Vec3<int> pos) {
+            return context.IsReplaceable(pos) && !context.IsWaterOrWaterNearby(pos);
         }
     }
 }

@@ -195,12 +195,12 @@ public sealed class EntityEventSounds(ClientSounds sounds, MinecraftClient clien
 
     /// <summary>
     /// <c>FireworkRocketEntity.handleEntityEvent</c> into <c>ClientLevel.createFireworks</c>. With no
-    /// explosions it is only poof particles.
+    /// explosions it is only poof particles, and a silent rocket's starter plays nothing.
     /// </summary>
     private void CreateFireworks(ClientEntity rocket) {
         ItemStack item = rocket.Get(EntityDataFields.FireworkRocketEntity.IdFireworksItem) ?? ItemStack.Air;
         FireworkExplosionComponent.Data[] explosions = ItemComponents.Get(item, DataComponent.Fireworks)?.Explosions ?? [];
-        if (explosions.Length > 0) {
+        if (explosions.Length > 0 && !rocket.Get(EntityDataFields.Entity.Silent)) {
             _fireworks.Add(new FireworkStarter(sounds, camera, rocket.Position.X, rocket.Position.Y, rocket.Position.Z, explosions));
         }
     }

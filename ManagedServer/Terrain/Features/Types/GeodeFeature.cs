@@ -51,6 +51,8 @@ public sealed record GeodeFeature(BlockStateProvider FillingProvider, BlockState
     double UseAlternateLayer0Chance, bool PlacementsRequireLayer0Alternate, IIntProvider OuterWallDistance,
     IIntProvider DistributionPoints, IIntProvider PointOffset, int MinGenOffset, int MaxGenOffset,
     double NoiseMultiplier, int InvalidBlocksThreshold) : ConfiguredFeature {
+    private static readonly NormalNoise GeodeNoise = NormalNoise.CreateParity(-4, [1.0]);
+
 
     public override bool Place(FeaturePlaceContext context) {
         IFeatureLevel level = context.Level;
@@ -59,8 +61,7 @@ public sealed record GeodeFeature(BlockStateProvider FillingProvider, BlockState
 
         int pointCount = DistributionPoints.Sample(random);
 
-        NormalNoise noise = NormalNoise.Create(new LegacyRandomSource(level.Seed),
-            new NoiseParameters(-4, [1.0]));
+        INoise noise = GeodeNoise.Create(new LegacyRandomSource(level.Seed));
 
         // More points inside the same wall distance means a bigger blob, so the shells are thinned to
         // compensate and a busy geode does not come out solid.
@@ -129,7 +130,7 @@ public sealed record GeodeFeature(BlockStateProvider FillingProvider, BlockState
                     int y = origin.Y + dy;
                     int z = origin.Z + dz;
 
-                    double noiseOffset = noise.GetValue(x, y, z) * NoiseMultiplier;
+                    double noiseOffset = noise.Get(x, y, z) * NoiseMultiplier;
 
                     double shell = 0.0;
                     foreach ((Vec3<int> point, int pointOffset) in points) {

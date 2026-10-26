@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ResinBrickStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.resin_brick_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:resin_brick_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/resin_brick_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 37, "resin_bricks", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.resin_brick_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:resin_brick_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/resin_brick_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 37, "resin_bricks", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record ResinBrickStairsBlock(Identifier Identifier, Direction Facing, Top
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 8923];
+    public BlockStateInfo StateInfo => States[StateId - 10657];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record ResinBrickStairsBlock(Identifier Identifier, Direction Facing, Top
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record ResinBrickStairsBlock(Identifier Identifier, Direction Facing, Top
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record ResinBrickStairsBlock(Identifier Identifier, Direction Facing, Top
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 8923,
-                            false => 8924,
+                            true => 10657,
+                            false => 10658,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 8925,
-                            false => 8926,
+                            true => 10659,
+                            false => 10660,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 8927,
-                            false => 8928,
+                            true => 10661,
+                            false => 10662,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 8929,
-                            false => 8930,
+                            true => 10663,
+                            false => 10664,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 8931,
-                            false => 8932,
+                            true => 10665,
+                            false => 10666,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 8933,
-                            false => 8934,
+                            true => 10667,
+                            false => 10668,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 8935,
-                            false => 8936,
+                            true => 10669,
+                            false => 10670,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 8937,
-                            false => 8938,
+                            true => 10671,
+                            false => 10672,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 8939,
-                            false => 8940,
+                            true => 10673,
+                            false => 10674,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 8941,
-                            false => 8942,
+                            true => 10675,
+                            false => 10676,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record ResinBrickStairsBlock(Identifier Identifier, Direction Facing, Top
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 8943,
-                            false => 8944,
+                            true => 10677,
+                            false => 10678,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 8945,
-                            false => 8946,
+                            true => 10679,
+                            false => 10680,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 8947,
-                            false => 8948,
+                            true => 10681,
+                            false => 10682,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 8949,
-                            false => 8950,
+                            true => 10683,
+                            false => 10684,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 8951,
-                            false => 8952,
+                            true => 10685,
+                            false => 10686,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 8953,
-                            false => 8954,
+                            true => 10687,
+                            false => 10688,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 8955,
-                            false => 8956,
+                            true => 10689,
+                            false => 10690,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 8957,
-                            false => 8958,
+                            true => 10691,
+                            false => 10692,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 8959,
-                            false => 8960,
+                            true => 10693,
+                            false => 10694,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 8961,
-                            false => 8962,
+                            true => 10695,
+                            false => 10696,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record ResinBrickStairsBlock(Identifier Identifier, Direction Facing, Top
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 8963,
-                            false => 8964,
+                            true => 10697,
+                            false => 10698,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 8965,
-                            false => 8966,
+                            true => 10699,
+                            false => 10700,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 8967,
-                            false => 8968,
+                            true => 10701,
+                            false => 10702,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 8969,
-                            false => 8970,
+                            true => 10703,
+                            false => 10704,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 8971,
-                            false => 8972,
+                            true => 10705,
+                            false => 10706,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 8973,
-                            false => 8974,
+                            true => 10707,
+                            false => 10708,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 8975,
-                            false => 8976,
+                            true => 10709,
+                            false => 10710,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 8977,
-                            false => 8978,
+                            true => 10711,
+                            false => 10712,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 8979,
-                            false => 8980,
+                            true => 10713,
+                            false => 10714,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 8981,
-                            false => 8982,
+                            true => 10715,
+                            false => 10716,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record ResinBrickStairsBlock(Identifier Identifier, Direction Facing, Top
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 8983,
-                            false => 8984,
+                            true => 10717,
+                            false => 10718,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 8985,
-                            false => 8986,
+                            true => 10719,
+                            false => 10720,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 8987,
-                            false => 8988,
+                            true => 10721,
+                            false => 10722,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 8989,
-                            false => 8990,
+                            true => 10723,
+                            false => 10724,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 8991,
-                            false => 8992,
+                            true => 10725,
+                            false => 10726,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 8993,
-                            false => 8994,
+                            true => 10727,
+                            false => 10728,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 8995,
-                            false => 8996,
+                            true => 10729,
+                            false => 10730,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 8997,
-                            false => 8998,
+                            true => 10731,
+                            false => 10732,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 8999,
-                            false => 9000,
+                            true => 10733,
+                            false => 10734,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9001,
-                            false => 9002,
+                            true => 10735,
+                            false => 10736,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record ResinBrickStairsBlock(Identifier Identifier, Direction Facing, Top
     
     public IBlock WithState(uint state) {
         return state switch {
-            8923 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            8924 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            8925 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            8926 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            8927 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            8928 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            8929 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            8930 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            8931 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            8932 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            8933 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            8934 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            8935 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            8936 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            8937 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            8938 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            8939 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            8940 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            8941 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            8942 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            8943 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            8944 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            8945 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            8946 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            8947 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            8948 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            8949 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            8950 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            8951 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            8952 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            8953 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            8954 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            8955 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            8956 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            8957 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            8958 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            8959 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            8960 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            8961 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            8962 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            8963 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            8964 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            8965 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            8966 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            8967 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            8968 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            8969 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            8970 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            8971 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            8972 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            8973 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            8974 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            8975 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            8976 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            8977 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            8978 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            8979 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            8980 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            8981 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            8982 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            8983 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            8984 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            8985 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            8986 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            8987 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            8988 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            8989 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            8990 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            8991 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            8992 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            8993 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            8994 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            8995 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            8996 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            8997 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            8998 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            8999 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            9000 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            9001 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            9002 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            10657 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            10658 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            10659 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            10660 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            10661 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            10662 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            10663 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            10664 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            10665 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            10666 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            10667 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            10668 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            10669 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            10670 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            10671 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            10672 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            10673 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            10674 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            10675 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            10676 => new ResinBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            10677 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            10678 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            10679 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            10680 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            10681 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            10682 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            10683 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            10684 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            10685 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            10686 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            10687 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            10688 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            10689 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            10690 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            10691 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            10692 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            10693 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            10694 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            10695 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            10696 => new ResinBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            10697 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            10698 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            10699 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            10700 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            10701 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            10702 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            10703 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            10704 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            10705 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            10706 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            10707 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            10708 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            10709 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            10710 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            10711 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            10712 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            10713 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            10714 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            10715 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            10716 => new ResinBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            10717 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            10718 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            10719 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            10720 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            10721 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            10722 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            10723 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            10724 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            10725 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            10726 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            10727 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            10728 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            10729 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            10730 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            10731 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            10732 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            10733 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            10734 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            10735 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            10736 => new ResinBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

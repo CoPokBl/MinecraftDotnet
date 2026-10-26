@@ -13,7 +13,7 @@
 # real Level, and that is out of reach for a harness. These two hooks take interfaces.
 set -euo pipefail
 
-version="${1:-26.2}"
+version="${1:-26.3}"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 jars="$repo/CodeGen/bin/Debug/net10.0"
 work="${TMPDIR:-/tmp}/mcdotnet-conformance"

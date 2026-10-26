@@ -8,8 +8,12 @@ namespace ManagedServer.Terrain.Features.Values;
 /// <remarks>
 /// Upstream this is the smaller of the level's range and the generator's, which is what stops a
 /// datapack aimed at a 384 tall overworld writing outside a shallower world.
+/// <p/>
+/// <see cref="SeaLevel"/> is the generator's, and only a <c>relative_to_sea_level</c> anchor reads
+/// it. It is optional so a caller with no sea level to hand still compiles, and such an anchor then
+/// throws rather than resolving against a guess.
 /// </remarks>
-public readonly record struct GenerationHeightContext(int MinGenY, int GenDepth) {
+public readonly record struct GenerationHeightContext(int MinGenY, int GenDepth, int? SeaLevel = null) {
     /// <summary>One past the highest block, which is what a half open range wants.</summary>
     public int MaxGenY => MinGenY + GenDepth;
 }
@@ -38,6 +42,18 @@ public abstract record VerticalAnchor {
     public sealed record BelowTop(int Offset) : VerticalAnchor {
         public override int ResolveY(GenerationHeightContext context) {
             return context.GenDepth - 1 + context.MinGenY - Offset;
+        }
+    }
+
+    /// <summary><c>VerticalAnchor.RelativeToSeaLevel</c>.</summary>
+    public sealed record RelativeToSeaLevel(int Offset) : VerticalAnchor {
+        public override int ResolveY(GenerationHeightContext context) {
+            if (context.SeaLevel is not { } seaLevel) {
+                throw new InvalidOperationException(
+                    "A relative_to_sea_level anchor was resolved where no sea level was given.");
+            }
+
+            return seaLevel + Offset;
         }
     }
 }

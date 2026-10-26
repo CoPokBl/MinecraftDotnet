@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:jukebox", "block.minecraft.jukebox", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:jukebox", "minecraft:jukebox", BlockInfo.VanillaOnly, "minecraft:blocks/jukebox");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.Normal, 10, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, true, true, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.jukebox", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:jukebox", "minecraft:jukebox", BlockInfo.VanillaOnly, "minecraft:blocks/jukebox");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.PushPull, 10, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, true, true, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -67,16 +67,16 @@ public record JukeboxBlock(Identifier Identifier, bool HasRecord) : IBlock {
     public uint StateId {
         get {
             return HasRecord switch {
-                true => 6963,
-                false => 6964,
+                true => 8633,
+                false => 8634,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6963 => new JukeboxBlock(Identifier, true),
-            6964 => new JukeboxBlock(Identifier, false),
+            8633 => new JukeboxBlock(Identifier, true),
+            8634 => new JukeboxBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

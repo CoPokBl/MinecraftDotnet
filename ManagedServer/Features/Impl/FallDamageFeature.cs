@@ -45,7 +45,6 @@ public class FallDamageFeature : ScopedFeature {
             FallDamageImmuneTag, entity.Type.Identifier);
 
     private static readonly Identifier FallDamageImmuneTag = "minecraft:fall_damage_immune";
-    private static readonly Identifier BedsTag = "minecraft:beds";
 
     public override void Register() {
         AddEventHandler<EntityLandEvent>(e => Land(e.World, e.Entity, e.FallDistance, e.LandedOn));
@@ -56,9 +55,8 @@ public class FallDamageFeature : ScopedFeature {
             return;
         }
 
-        MinecraftRegistry registry = world.Server.Registry;
         (double distance, float modifier, IDamageType source) =
-            FallOn(registry, world.GetBlockOr(landedOn, Block.Air), fallDistance);
+            FallOn(world.GetBlockOr(landedOn, Block.Air), fallDistance);
 
         int damage = CalculateFallDamage(living, distance, modifier);
         if (damage <= 0) {
@@ -91,8 +89,8 @@ public class FallDamageFeature : ScopedFeature {
     /// here. Both are what the landing does to the block rather than to the entity, so they belong to
     /// whatever feature owns those blocks and are not done here.
     /// </summary>
-    private static (double Distance, float Modifier, IDamageType Source) FallOn(MinecraftRegistry registry,
-        IBlock block, double fallDistance) {
+    private static (double Distance, float Modifier, IDamageType Source) FallOn(IBlock block,
+        double fallDistance) {
         Identifier id = block.Identifier;
 
         // Hay and honey take a fifth; slime takes none, and the crouching case vanilla handles by not
@@ -114,11 +112,8 @@ public class FallDamageFeature : ScopedFeature {
             return (fallDistance + 2.5, 2.0f, DamageType.Stalagmite);
         }
 
-        if (InTag(registry, registry.Blocks.Tags, BedsTag, id)) {
-            return (fallDistance * 0.5, 1.0f, DamageType.Fall);
-        }
-
-        return (fallDistance, 1.0f, DamageType.Fall);
+        // Block.fallOn itself. The overrides above do not call it, so the reduction is theirs to skip.
+        return (fallDistance * (1.0f - block.FallDistanceReduction), 1.0f, DamageType.Fall);
     }
 
     private static bool InTag(MinecraftRegistry registry, RegistryTagContainer tags, Identifier tag, Identifier value) {

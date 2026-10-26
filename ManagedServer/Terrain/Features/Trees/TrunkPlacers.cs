@@ -1,6 +1,7 @@
 using ManagedServer.Terrain.Features.Values;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
+using Minecraft.Placement;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Vec;
@@ -693,6 +694,49 @@ public static class TrunkPlacers {
             }
 
             return distance * 0.5f;
+        }
+    }
+
+    /// <summary>
+    /// <c>PoplarTrunkPlacer</c>: a straight column with a ring of sideways logs some way below the top,
+    /// and the foliage attached at that ring rather than at the top.
+    /// </summary>
+    /// <remarks>
+    /// <b>Every level draws a full shuffle of <c>Direction.values()</c></b>, five <c>nextInt</c>s, even
+    /// though only the branch level reads it, and the branch amount is drawn after that level's
+    /// shuffle. The branches take the shuffle's horizontal entries in shuffled order.
+    /// </remarks>
+    public sealed record Poplar(int BaseHeight, int HeightRandA, int HeightRandB,
+        IIntProvider TrunkHeightAboveBranches, IIntProvider BranchAmount)
+        : TrunkPlacer(BaseHeight, HeightRandA, HeightRandB) {
+
+        public override IReadOnlyList<FoliageAttachment> PlaceTrunk(IFeatureLevel level, ITreeWriter writer,
+            RandomSource random, int treeHeight, Vec3<int> origin, TreeConfiguration config) {
+
+            PlaceBelowTrunkBlock(level, writer, random, origin.WithY(origin.Y - 1), config);
+            int trunkHeightUpToFoliageBranches = treeHeight - TrunkHeightAboveBranches.Sample(random);
+
+            for (int y = 0; y < treeHeight; y++) {
+                Vec3<int> pos = origin.WithY(origin.Y + y);
+                PlaceLog(level, writer, random, pos, config);
+
+                List<BlockFace> directions = FeatureUtil.Shuffled(FeatureUtil.AllDirections, random)
+                    .Where(Directions.IsHorizontal).ToList();
+
+                if (trunkHeightUpToFoliageBranches - 1 != y) {
+                    continue;
+                }
+
+                int branches = BranchAmount.Sample(random);
+
+                for (int x = 0; x < branches; x++) {
+                    Vec3<int> step = Placement.PlacementParser.Step(directions[x]);
+                    Axis axis = AxisOf(step);
+                    PlaceLog(level, writer, random, pos + step, config, state => WithAxis(state, axis));
+                }
+            }
+
+            return [new FoliageAttachment(origin.WithY(origin.Y + trunkHeightUpToFoliageBranches), 0, false)];
         }
     }
 }

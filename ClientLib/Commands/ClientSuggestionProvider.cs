@@ -36,6 +36,9 @@ public sealed class ClientSuggestionProvider(MinecraftClient client, IPermission
     /// <summary>Vanilla lists the sound manager's events, which a pack's sounds.json adds to; a pack only sound is not suggested here.</summary>
     public IEnumerable<Identifier> AvailableSounds => client.Registry.SoundTypes.All.Select(s => s.Identifier);
 
+    /// <summary>Vanilla lists its shader manager's loaded chains; here whatever the renderer says it can run.</summary>
+    public IEnumerable<Identifier> AvailablePostEffects => client.AvailablePostEffects;
+
     public Task<Suggestions> SuggestRegistryElements<TSource>(Identifier key, SharedSuggestionProvider.ElementSuggestionType elements,
         SuggestionsBuilder builder, CommandContext<TSource> context) {
         IRegistryLookup? registry = BuildContext().Lookup(key);

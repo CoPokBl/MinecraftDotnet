@@ -74,6 +74,42 @@ public class LivingEntity(IEntityType type, LivingEntityMeta? meta = null)
     /// </summary>
     public EntityEffects Effects => field ??= new EntityEffects(this);
 
+    /// <summary>The arm swing in progress, <c>LivingEntity.swingState</c>.</summary>
+    public SwingState SwingState { get; } = new();
+
+    /// <summary>
+    /// <c>LivingEntity.swing</c>: start a swing and show it to the viewers, and to this entity's own
+    /// client when <paramref name="sendToSelf"/>. Refused, sending nothing, while the current swing is
+    /// in its first half.
+    /// </summary>
+    public bool Swing(Hand hand, SwingAnimation animation, bool sendToSelf) {
+        int duration = SwingState.ModifiedDuration(animation, Effects.AmplifierOf(PotionEffectType.Haste),
+            Effects.AmplifierOf(PotionEffectType.ConduitPower), Effects.AmplifierOf(PotionEffectType.MiningFatigue));
+        if (!SwingState.StartIfAble(hand, animation, duration)) {
+            return false;
+        }
+
+        ClientBoundSwingAnimationPacket packet = new() {
+            EntityId = NetId,
+            Hand = hand,
+            Animation = animation
+        };
+        if (sendToSelf) {
+            SendToSelfAndViewers(packet);
+        }
+        else {
+            SendToViewers(packet);
+        }
+
+        return true;
+    }
+
+    /// <summary><c>LivingEntity.baseTick</c> ticks the swing first.</summary>
+    protected override void Tick() {
+        base.Tick();
+        SwingState.Tick();
+    }
+
     /// <summary>
     /// The absorption hearts a hit eats before it reaches <see cref="Health"/>, vanilla's
     /// <c>getAbsorptionAmount</c>. Nothing grants any on its own; it is here because the
@@ -85,11 +121,11 @@ public class LivingEntity(IEntityType type, LivingEntityMeta? meta = null)
     }
 
     /// <summary>
-    /// How long a hit stops the next one from landing, vanilla's <c>invulnerableTime</c>. Set to zero
+    /// How long a hit stops the next one from landing, vanilla's <c>damageCooldownTime</c>. Set to zero
     /// to turn the window off, which is what a minigame wanting every hit to count does.
     /// <p/>
     /// Ten rather than twenty because that is what vanilla's is worth: <c>LivingEntity.hurtServer</c>
-    /// sets <c>invulnerableTime</c> to twenty but only throws a hit away while it is <b>above ten</b>,
+    /// sets <c>damageCooldownTime</c> to twenty but only throws a hit away while it is <b>above ten</b>,
     /// and it drops by one a tick.
     /// </summary>
     public int InvulnerableTicks { get; set; } = 10;

@@ -30,7 +30,7 @@ public static class UsePrediction {
         BlockClass.BellBlock, BlockClass.RespawnAnchorBlock, BlockClass.JukeboxBlock, BlockClass.FlowerPotBlock,
         BlockClass.CampfireBlock, BlockClass.CrafterBlock, BlockClass.ChiseledBookShelfBlock, BlockClass.ComposterBlock,
         BlockClass.CakeBlock, BlockClass.CandleCakeBlock, BlockClass.CauldronBlock, BlockClass.LayeredCauldronBlock,
-        BlockClass.LavaCauldronBlock, BlockClass.RedStoneWireBlock, BlockClass.DecoratedPotBlock, BlockClass.ShelfBlock, BlockClass.CopperChestBlock,
+        BlockClass.LavaCauldronBlock, BlockClass.RedstoneWireBlock, BlockClass.DecoratedPotBlock, BlockClass.ShelfBlock, BlockClass.CopperChestBlock,
         BlockClass.WeatheringCopperChestBlock, BlockClass.CopperGolemStatueBlock, BlockClass.WeatheringCopperGolemStatueBlock,
         BlockClass.CopperBulbBlock, BlockClass.WeatheringCopperBulbBlock, BlockClass.VaultBlock, BlockClass.TrialSpawnerBlock,
         BlockClass.StandingSignBlock, BlockClass.WallSignBlock, BlockClass.CeilingHangingSignBlock,
@@ -61,19 +61,7 @@ public static class UsePrediction {
     /// <summary><c>ItemTags.LECTERN_BOOKS</c>.</summary>
     private static readonly HashSet<Identifier> LecternBooks = Ids(Item.WritableBook, Item.WrittenBook);
 
-    private static readonly HashSet<Identifier> Hoes = Ids(
-        Item.WoodenHoe, Item.StoneHoe, Item.CopperHoe, Item.IronHoe, Item.GoldenHoe, Item.DiamondHoe, Item.NetheriteHoe);
-    private static readonly HashSet<Identifier> Shovels = Ids(
-        Item.WoodenShovel, Item.StoneShovel, Item.CopperShovel, Item.IronShovel, Item.GoldenShovel, Item.DiamondShovel, Item.NetheriteShovel);
-    internal static readonly HashSet<Identifier> Axes = Ids(
-        Item.WoodenAxe, Item.StoneAxe, Item.CopperAxe, Item.IronAxe, Item.GoldenAxe, Item.DiamondAxe, Item.NetheriteAxe);
-
-    /// <summary><c>HoeItem.TILLABLES</c>.</summary>
-    private static readonly HashSet<Identifier> Tillables = Ids(Block.GrassBlock, Block.Dirt, Block.DirtPath, Block.CoarseDirt, Block.RootedDirt);
-
-    /// <summary><c>ShovelItem.FLATTENABLES</c>.</summary>
-    private static readonly HashSet<Identifier> Flattenables = Ids(Block.GrassBlock, Block.Dirt, Block.Podzol, Block.Mycelium, Block.CoarseDirt, Block.RootedDirt);
-
+    /// <remarks>An item with a <c>block_transformer</c> is judged by <see cref="BlockTransforms"/> instead.</remarks>
     public static bool ItemUseOnConsumes(ItemStack held, IBlock target) {
         Identifier item = held.Type.Identifier, block = target.Identifier;
         // Only SpawnEggItem carries entity_data by default.
@@ -84,16 +72,6 @@ public static class UsePrediction {
         // else the click falls through to use, which opens it.
         if (LecternBooks.Contains(item)) {
             return BlockClasses.Of(block) is [var lectern, ..] && lectern == BlockClass.LecternBlock;
-        }
-        if (Hoes.Contains(item)) {
-            return Tillables.Contains(block);
-        }
-        if (Shovels.Contains(item)) {
-            return Flattenables.Contains(block) || BlockClasses.Of(block) is [var nearest, ..] && nearest == BlockClass.CampfireBlock;
-        }
-        if (Axes.Contains(item)) {
-            return BlockConversions.Strippables.ContainsKey(block) || BlockConversions.WeatheringPrevious.ContainsKey(block)
-                   || BlockConversions.WaxOff.ContainsKey(block);
         }
         if (item == Item.Honeycomb.Identifier) {
             return BlockConversions.Waxables.ContainsKey(block);

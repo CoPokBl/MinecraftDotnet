@@ -2,6 +2,7 @@ using ClientLib.Entities;
 using ClientLib.Player;
 using ClientLib.World;
 using Minecraft.Data.DimensionType;
+using Minecraft.Data.Generated;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
@@ -128,8 +129,16 @@ public sealed partial class MinecraftClient {
                 or ClientBoundOpenBookPacket:
                 HandleContainerPacket(packet);
                 break;
-            case ClientBoundCommandsPacket or ClientBoundCommandSuggestionsResponsePacket or ClientBoundChatSuggestionsPacket
-                or ClientBoundEntityEventPacket:
+            case ClientBoundCommandsPacket or ClientBoundCommandSuggestionsResponsePacket or ClientBoundChatSuggestionsPacket:
+                HandleCommandPacket(packet);
+                break;
+            case ClientBoundEntityEventPacket entityEvent:
+                if (Entities.TryGetValue(entityEvent.EntityId, out ClientEntity? target)) {
+                    target.HandleEntityEvent(entityEvent.Status);
+                    if (entityEvent.Status == ClientBoundEntityEventPacket.EntityEventType.FishingHookPull && target.Is(EntityClass.FishingHook)) {
+                        PullHookedEntity(target);
+                    }
+                }
                 HandleCommandPacket(packet);
                 break;
         }

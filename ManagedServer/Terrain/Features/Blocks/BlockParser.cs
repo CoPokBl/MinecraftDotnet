@@ -1,7 +1,7 @@
 using System.Text.Json;
+using ManagedServer.Terrain.Data;
 using ManagedServer.Terrain.Features.Values;
 using ManagedServer.Terrain.Noise;
-using ManagedServer.Terrain.Surface;
 using Minecraft.Data.Blocks;
 using Minecraft.Registry;
 using Minecraft.Schemas;
@@ -14,20 +14,20 @@ namespace ManagedServer.Terrain.Features.Blocks;
 /// forms the two of them share.
 /// </summary>
 /// <remarks>
-/// A block state goes through <c>SurfaceRuleParser</c>, which is the same <c>BlockState</c> codec the
-/// surface rules read, so a property name is resolved once and in one place.
+/// <b>A bare string means two different things depending on where it sits.</b> Where a block state is
+/// read (<c>BlockState.CODEC</c>) it is a block's default state; where a provider is read it is a
+/// <c>Holder</c> reference into the <c>worldgen/block_state_provider</c> registry, because the
+/// provider codec's direct form only accepts a state as a full <c>{id, properties}</c> object.
+/// Treating the second as the first turns every tree's <c>soil_beneath_tree</c> into a block that
+/// does not exist, so the two entry points are kept apart.
 /// </remarks>
-public sealed class BlockParser(MinecraftRegistry registry) {
-    private readonly SurfaceRuleParser _states = new(registry);
-
+public sealed class BlockParser(MinecraftRegistry registry, Func<Identifier, BlockStateProvider>? providers = null) {
     public MinecraftRegistry Registry => registry;
 
     /// <summary>A block state, as an <see cref="IBlock"/> rather than an id.</summary>
-    public IBlock ParseState(JsonElement element) {
-        return registry.Blocks.GetByStateId(_states.ParseBlockState(element));
-    }
+    public IBlock ParseState(JsonElement element) => StateParser.ReadJson(registry, element);
 
-    public uint ParseStateId(JsonElement element) => _states.ParseBlockState(element);
+    public uint ParseStateId(JsonElement element) => ParseState(element).StateId;
 
     // --- block predicates ---------------------------------------------------
 
@@ -79,6 +79,22 @@ public sealed class BlockParser(MinecraftRegistry registry) {
                 return new BlockPredicate.WouldSurvive(ParseOffset(element),
                     ParseState(element.GetProperty("state")));
 
+            case "height_range":
+                return new BlockPredicate.HeightRange(
+                    ValueParser.ParseAnchor(element.GetProperty("min_inclusive")),
+                    ValueParser.ParseAnchor(element.GetProperty("max_inclusive")));
+
+            case "volume_match": {
+                Vec3<int> min = ParseVector(element.GetProperty("min"));
+                Vec3<int> max = ParseVector(element.GetProperty("max"));
+
+                if (min.X > max.X || min.Y > max.Y || min.Z > max.Z) {
+                    throw new FormatException("volume_match has a min bound larger than its max bound.");
+                }
+
+                return new BlockPredicate.VolumeMatch(min, max, ParsePredicate(element.GetProperty("match")));
+            }
+
             default:
                 throw new FormatException($"Unknown block predicate type \"{type}\".");
         }
@@ -95,35 +111,49 @@ public sealed class BlockParser(MinecraftRegistry registry) {
 
     // --- block state providers ----------------------------------------------
 
+    /// <summary>
+    /// <c>BlockStateProvider.CODEC</c>: a registry reference, a full block state for a simple provider,
+    /// or a typed provider.
+    /// </summary>
     public BlockStateProvider ParseProvider(JsonElement element) {
+        if (element.ValueKind == JsonValueKind.String) {
+            Identifier id = Identifier.Parse(element.GetString()!);
+            if (providers is null) {
+                throw new FormatException(
+                    $"The block state provider \"{id}\" is a registry reference, and this parser has no registry.");
+            }
+
+            return providers(id);
+        }
+
+        // STATE_OR_PROVIDER_CODEC is an xor of a full state and a typed provider, so an object with no
+        // type is the state.
+        if (!element.TryGetProperty("type", out _)) {
+            return new BlockStateProvider.Simple(ParseState(element));
+        }
+
         string type = ValueParser.TypeOf(element);
 
         switch (type) {
-            case "simple_state_provider":
+            case "simple":
                 return new BlockStateProvider.Simple(ParseState(element.GetProperty("state")));
 
-            case "weighted_state_provider":
+            case "weighted":
                 return new BlockStateProvider.Weighted(
                     ValueParser.ParseWeightedList(element.GetProperty("entries"), ParseState));
 
-            case "rotated_block_provider":
-                return new BlockStateProvider.Rotated(ParseState(element.GetProperty("state")));
+            case "rotated":
+                return new BlockStateProvider.Rotated(ParseProvider(element.GetProperty("state")),
+                    element.TryGetProperty("direction", out JsonElement direction)
+                        ? ParseDirection(direction.GetString()!)
+                        : null);
 
-            case "randomized_int_state_provider": {
-                string property = element.GetProperty("property").GetString()!;
-                if (property != "age") {
-                    // Every use in the vanilla data is "age", which resolves through the generated
-                    // IAged interface. Going through WithState(CompoundTag) instead would silently
-                    // ignore a name the block does not have, so a new one upstream fails here.
-                    throw new FormatException(
-                        $"randomized_int_state_provider can only redraw \"age\", not \"{property}\".");
-                }
-
-                return new BlockStateProvider.RandomizedAge(ParseProvider(element.GetProperty("source")),
+            case "randomized_int":
+                return new BlockStateProvider.RandomizedInt(ParseProvider(element.GetProperty("source")),
+                    element.GetProperty("property").GetString()!,
                     ValueParser.ParseInt(element.GetProperty("values")));
-            }
 
-            case "rule_based_state_provider": {
+            case "rule_based": {
                 List<(BlockPredicate, BlockStateProvider)> rules = [];
                 foreach (JsonElement rule in element.GetProperty("rules").EnumerateArray()) {
                     rules.Add((ParsePredicate(rule.GetProperty("if_true")),
@@ -137,7 +167,14 @@ public sealed class BlockParser(MinecraftRegistry registry) {
                 return new BlockStateProvider.RuleBased(fallback, rules);
             }
 
-            case "noise_threshold_provider":
+            case "copy_properties":
+                return new BlockStateProvider.CopyProperties(ParseProvider(element.GetProperty("source")));
+
+            case "random_block":
+                return new BlockStateProvider.RandomBlock(ParseIdentifierList(element.GetProperty("blocks"))
+                    .Select(id => registry.Blocks[id]).ToList());
+
+            case "noise_threshold":
                 return new BlockStateProvider.NoiseThreshold(
                     element.GetProperty("seed").GetInt64(),
                     ParseNoiseParameters(element.GetProperty("noise")),
@@ -148,14 +185,14 @@ public sealed class BlockParser(MinecraftRegistry registry) {
                     ParseStates(element.GetProperty("low_states")),
                     ParseStates(element.GetProperty("high_states")));
 
-            case "noise_provider":
+            case "noise":
                 return new BlockStateProvider.Noise(
                     element.GetProperty("seed").GetInt64(),
                     ParseNoiseParameters(element.GetProperty("noise")),
                     element.GetProperty("scale").GetSingle(),
                     ParseStates(element.GetProperty("states")));
 
-            case "dual_noise_provider": {
+            case "dual_noise": {
                 // An InclusiveRange, which is a two element array rather than the named pair every
                 // other range in this format uses.
                 JsonElement variety = element.GetProperty("variety");
@@ -189,11 +226,14 @@ public sealed class BlockParser(MinecraftRegistry registry) {
     /// The <c>offset</c> a state testing predicate carries, absent for the common "here" case.
     /// </summary>
     public static Vec3<int> ParseOffset(JsonElement element) {
-        if (!element.TryGetProperty("offset", out JsonElement offset)) {
-            return new Vec3<int>(0, 0, 0);
-        }
+        return element.TryGetProperty("offset", out JsonElement offset)
+            ? ParseVector(offset)
+            : new Vec3<int>(0, 0, 0);
+    }
 
-        return new Vec3<int>(offset[0].GetInt32(), offset[1].GetInt32(), offset[2].GetInt32());
+    /// <summary>A <c>Vec3i</c>, which is written as a three element array.</summary>
+    public static Vec3<int> ParseVector(JsonElement element) {
+        return new Vec3<int>(element[0].GetInt32(), element[1].GetInt32(), element[2].GetInt32());
     }
 
     /// <summary>
@@ -204,23 +244,40 @@ public sealed class BlockParser(MinecraftRegistry registry) {
     /// block tag registry here so a tag of fluids would fail rather than silently matching nothing.
     /// </remarks>
     public IReadOnlySet<Identifier> ParseIdentifierSet(JsonElement element) {
-        HashSet<Identifier> ids = [];
+        return ParseIdentifierList(element).ToHashSet();
+    }
+
+    /// <summary>
+    /// The same holder set in its own order, for a caller that draws from it by index.
+    /// </summary>
+    /// <remarks>
+    /// A tag keeps the order its file lists its entries in, a nested tag expanded where it is named,
+    /// and a value already present is not added twice: vanilla's tag builder collects into an
+    /// insertion ordered set. <c>random_block</c> indexes into it, so the order is the draw.
+    /// </remarks>
+    public IReadOnlyList<Identifier> ParseIdentifierList(JsonElement element) {
+        List<Identifier> ids = [];
+        HashSet<Identifier> seen = [];
 
         if (element.ValueKind == JsonValueKind.String) {
-            AddIdentifier(ids, element.GetString()!);
+            AddIdentifier(ids, seen, element.GetString()!);
             return ids;
         }
 
         foreach (JsonElement entry in element.EnumerateArray()) {
-            AddIdentifier(ids, entry.GetString()!);
+            AddIdentifier(ids, seen, entry.GetString()!);
         }
 
         return ids;
     }
 
-    private void AddIdentifier(HashSet<Identifier> ids, string value) {
+    private void AddIdentifier(List<Identifier> ids, HashSet<Identifier> seen, string value) {
         if (!value.StartsWith('#')) {
-            ids.Add(Identifier.Parse(value));
+            Identifier id = Identifier.Parse(value);
+            if (seen.Add(id)) {
+                ids.Add(id);
+            }
+
             return;
         }
 
@@ -230,7 +287,9 @@ public sealed class BlockParser(MinecraftRegistry registry) {
         }
 
         foreach (Identifier member in registry.Blocks.Tags[tag].GetValueIds(registry)) {
-            ids.Add(member);
+            if (seen.Add(member)) {
+                ids.Add(member);
+            }
         }
     }
 
@@ -247,13 +306,8 @@ public sealed class BlockParser(MinecraftRegistry registry) {
         };
     }
 
-    /// <summary>Inline noise parameters, the same shape the noise registry files use.</summary>
+    /// <summary>Inline noise parameters, the <c>NormalNoise.Parameters</c> codec the noise registry files use.</summary>
     public static NoiseParameters ParseNoiseParameters(JsonElement element) {
-        List<double> amplitudes = [];
-        foreach (JsonElement amplitude in element.GetProperty("amplitudes").EnumerateArray()) {
-            amplitudes.Add(amplitude.GetDouble());
-        }
-
-        return new NoiseParameters(element.GetProperty("firstOctave").GetInt32(), amplitudes);
+        return Density.DensityFunctionParser.ParseNoiseParameters(element);
     }
 }

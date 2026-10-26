@@ -20,6 +20,10 @@ public sealed class ResourceOrIdArgument : ArgumentType<ResourceOrIdArgument.IRe
     private static readonly Identifier LootTableRegistry = "minecraft:loot_table";
     private static readonly Identifier PredicateRegistry = "minecraft:predicate";
     private static readonly Identifier ItemModifierRegistry = "minecraft:item_modifier";
+    private static readonly Identifier ContextFloatProviderRegistry = "minecraft:context_float_provider";
+    private static readonly Identifier ContextIntProviderRegistry = "minecraft:context_int_provider";
+    private static readonly Identifier FeatureRegistry = "minecraft:worldgen/feature";
+    internal static readonly Identifier SlotSourceRegistry = "minecraft:slot_source";
 
     private readonly IRegistryLookup? _elementLookup;
     private readonly Grammar<IResult> _grammar;
@@ -38,6 +42,14 @@ public sealed class ResourceOrIdArgument : ArgumentType<ResourceOrIdArgument.IRe
     public static ResourceOrIdArgument LootPredicate(CommandBuildContext context) => new(context, PredicateRegistry);
 
     public static ResourceOrIdArgument Dialog(CommandBuildContext context) => new(context, context.Registry.Dialogs.RegistryId);
+
+    public static ResourceOrIdArgument FloatProvider(CommandBuildContext context) => new(context, ContextFloatProviderRegistry);
+
+    public static ResourceOrIdArgument IntProvider(CommandBuildContext context) => new(context, ContextIntProviderRegistry);
+
+    public static ResourceOrIdArgument Feature(CommandBuildContext context) => new(context, FeatureRegistry);
+
+    internal static ResourceOrIdArgument SlotSource(CommandBuildContext context) => new(context, SlotSourceRegistry);
 
     /// <summary><c>ResourceOrIdArgument.createGrammar</c>.</summary>
     public static Grammar<IResult> CreateGrammar(Identifier registryKey) {

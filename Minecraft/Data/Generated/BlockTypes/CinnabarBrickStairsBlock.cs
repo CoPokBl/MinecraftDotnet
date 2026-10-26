@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CinnabarBrickStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.cinnabar_brick_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cinnabar_brick_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/cinnabar_brick_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 28, "cinnabar", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.cinnabar_brick_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cinnabar_brick_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/cinnabar_brick_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 28, "cinnabar", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record CinnabarBrickStairsBlock(Identifier Identifier, Direction Facing, 
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 26755];
+    public BlockStateInfo StateInfo => States[StateId - 30112];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record CinnabarBrickStairsBlock(Identifier Identifier, Direction Facing, 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record CinnabarBrickStairsBlock(Identifier Identifier, Direction Facing, 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record CinnabarBrickStairsBlock(Identifier Identifier, Direction Facing, 
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26755,
-                            false => 26756,
+                            true => 30112,
+                            false => 30113,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26757,
-                            false => 26758,
+                            true => 30114,
+                            false => 30115,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26759,
-                            false => 26760,
+                            true => 30116,
+                            false => 30117,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26761,
-                            false => 26762,
+                            true => 30118,
+                            false => 30119,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26763,
-                            false => 26764,
+                            true => 30120,
+                            false => 30121,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26765,
-                            false => 26766,
+                            true => 30122,
+                            false => 30123,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26767,
-                            false => 26768,
+                            true => 30124,
+                            false => 30125,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26769,
-                            false => 26770,
+                            true => 30126,
+                            false => 30127,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26771,
-                            false => 26772,
+                            true => 30128,
+                            false => 30129,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26773,
-                            false => 26774,
+                            true => 30130,
+                            false => 30131,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record CinnabarBrickStairsBlock(Identifier Identifier, Direction Facing, 
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26775,
-                            false => 26776,
+                            true => 30132,
+                            false => 30133,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26777,
-                            false => 26778,
+                            true => 30134,
+                            false => 30135,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26779,
-                            false => 26780,
+                            true => 30136,
+                            false => 30137,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26781,
-                            false => 26782,
+                            true => 30138,
+                            false => 30139,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26783,
-                            false => 26784,
+                            true => 30140,
+                            false => 30141,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26785,
-                            false => 26786,
+                            true => 30142,
+                            false => 30143,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26787,
-                            false => 26788,
+                            true => 30144,
+                            false => 30145,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26789,
-                            false => 26790,
+                            true => 30146,
+                            false => 30147,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26791,
-                            false => 26792,
+                            true => 30148,
+                            false => 30149,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26793,
-                            false => 26794,
+                            true => 30150,
+                            false => 30151,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record CinnabarBrickStairsBlock(Identifier Identifier, Direction Facing, 
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26795,
-                            false => 26796,
+                            true => 30152,
+                            false => 30153,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26797,
-                            false => 26798,
+                            true => 30154,
+                            false => 30155,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26799,
-                            false => 26800,
+                            true => 30156,
+                            false => 30157,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26801,
-                            false => 26802,
+                            true => 30158,
+                            false => 30159,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26803,
-                            false => 26804,
+                            true => 30160,
+                            false => 30161,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26805,
-                            false => 26806,
+                            true => 30162,
+                            false => 30163,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26807,
-                            false => 26808,
+                            true => 30164,
+                            false => 30165,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26809,
-                            false => 26810,
+                            true => 30166,
+                            false => 30167,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26811,
-                            false => 26812,
+                            true => 30168,
+                            false => 30169,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26813,
-                            false => 26814,
+                            true => 30170,
+                            false => 30171,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record CinnabarBrickStairsBlock(Identifier Identifier, Direction Facing, 
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26815,
-                            false => 26816,
+                            true => 30172,
+                            false => 30173,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26817,
-                            false => 26818,
+                            true => 30174,
+                            false => 30175,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26819,
-                            false => 26820,
+                            true => 30176,
+                            false => 30177,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26821,
-                            false => 26822,
+                            true => 30178,
+                            false => 30179,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26823,
-                            false => 26824,
+                            true => 30180,
+                            false => 30181,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26825,
-                            false => 26826,
+                            true => 30182,
+                            false => 30183,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26827,
-                            false => 26828,
+                            true => 30184,
+                            false => 30185,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26829,
-                            false => 26830,
+                            true => 30186,
+                            false => 30187,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26831,
-                            false => 26832,
+                            true => 30188,
+                            false => 30189,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26833,
-                            false => 26834,
+                            true => 30190,
+                            false => 30191,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record CinnabarBrickStairsBlock(Identifier Identifier, Direction Facing, 
     
     public IBlock WithState(uint state) {
         return state switch {
-            26755 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            26756 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            26757 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            26758 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            26759 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            26760 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            26761 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            26762 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            26763 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            26764 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            26765 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            26766 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            26767 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            26768 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            26769 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            26770 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            26771 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            26772 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            26773 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            26774 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            26775 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            26776 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            26777 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            26778 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            26779 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            26780 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            26781 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            26782 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            26783 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            26784 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            26785 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            26786 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            26787 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            26788 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            26789 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            26790 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            26791 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            26792 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            26793 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            26794 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            26795 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            26796 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            26797 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            26798 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            26799 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            26800 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            26801 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            26802 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            26803 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            26804 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            26805 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            26806 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            26807 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            26808 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            26809 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            26810 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            26811 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            26812 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            26813 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            26814 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            26815 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            26816 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            26817 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            26818 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            26819 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            26820 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            26821 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            26822 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            26823 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            26824 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            26825 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            26826 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            26827 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            26828 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            26829 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            26830 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            26831 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            26832 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            26833 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            26834 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            30112 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            30113 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            30114 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            30115 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            30116 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            30117 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            30118 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            30119 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            30120 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            30121 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            30122 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            30123 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            30124 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            30125 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            30126 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            30127 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            30128 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            30129 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            30130 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            30131 => new CinnabarBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            30132 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            30133 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            30134 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            30135 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            30136 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            30137 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            30138 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            30139 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            30140 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            30141 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            30142 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            30143 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            30144 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            30145 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            30146 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            30147 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            30148 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            30149 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            30150 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            30151 => new CinnabarBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            30152 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            30153 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            30154 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            30155 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            30156 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            30157 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            30158 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            30159 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            30160 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            30161 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            30162 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            30163 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            30164 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            30165 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            30166 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            30167 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            30168 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            30169 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            30170 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            30171 => new CinnabarBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            30172 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            30173 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            30174 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            30175 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            30176 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            30177 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            30178 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            30179 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            30180 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            30181 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            30182 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            30183 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            30184 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            30185 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            30186 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            30187 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            30188 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            30189 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            30190 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            30191 => new CinnabarBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

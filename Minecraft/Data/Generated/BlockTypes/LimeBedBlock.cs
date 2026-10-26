@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LimeBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock, IHorizontalFacing, IOccupied, IBedParted {
-    private static readonly BlockInfo Data = new("minecraft:bed", "block.minecraft.lime_bed", 0.2f, 0.6f, 1f, 1f, 0.75f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:lime_bed", BlockInfo.VanillaOnly, "minecraft:blocks/lime_bed");
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Destroy, 3, "wood", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S362, BlockShapes.S362, BlockShapes.S1, BlockShapes.S1, BlockShapes.S362, BlockShapes.S362);
+    private static readonly BlockInfo Data = new("block.minecraft.lime_bed", 0.2f, 0.6f, 1f, 1f, 0.75f, 0.5f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:lime_bed", BlockInfo.VanillaOnly, "minecraft:blocks/lime_bed");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Popped, 3, "wood", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S362, BlockShapes.S362, BlockShapes.S1, BlockShapes.S1, BlockShapes.S362, BlockShapes.S362);
     private static readonly BlockStateInfo I1 = I0 with { MapColorId = 19, BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363, SupportShape = BlockShapes.S363 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363, SupportShape = BlockShapes.S363 };
     private static readonly BlockStateInfo I3 = I0 with { MapColorId = 19 };
@@ -24,15 +24,15 @@ public record LimeBedBlock(Identifier Identifier, Direction Facing, bool Occupie
         I0, I1, I0, I1, I2, I3, I2, I3, I4, I5, I4, I5, I6, I7, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 2011];
+    public BlockStateInfo StateInfo => States[StateId - 2110];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record LimeBedBlock(Identifier Identifier, Direction Facing, bool Occupie
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record LimeBedBlock(Identifier Identifier, Direction Facing, bool Occupie
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -85,49 +85,49 @@ public record LimeBedBlock(Identifier Identifier, Direction Facing, bool Occupie
             return Facing switch {
                 Direction.North => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 2011,
-                        BedPart.Foot => 2012,
+                        BedPart.Head => 2110,
+                        BedPart.Foot => 2111,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 2013,
-                        BedPart.Foot => 2014,
+                        BedPart.Head => 2112,
+                        BedPart.Foot => 2113,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
                 Direction.South => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 2015,
-                        BedPart.Foot => 2016,
+                        BedPart.Head => 2114,
+                        BedPart.Foot => 2115,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 2017,
-                        BedPart.Foot => 2018,
+                        BedPart.Head => 2116,
+                        BedPart.Foot => 2117,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
                 Direction.West => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 2019,
-                        BedPart.Foot => 2020,
+                        BedPart.Head => 2118,
+                        BedPart.Foot => 2119,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 2021,
-                        BedPart.Foot => 2022,
+                        BedPart.Head => 2120,
+                        BedPart.Foot => 2121,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
                 Direction.East => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 2023,
-                        BedPart.Foot => 2024,
+                        BedPart.Head => 2122,
+                        BedPart.Foot => 2123,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 2025,
-                        BedPart.Foot => 2026,
+                        BedPart.Head => 2124,
+                        BedPart.Foot => 2125,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
@@ -138,22 +138,22 @@ public record LimeBedBlock(Identifier Identifier, Direction Facing, bool Occupie
     
     public IBlock WithState(uint state) {
         return state switch {
-            2011 => new LimeBedBlock(Identifier, Direction.North, true, BedPart.Head),
-            2012 => new LimeBedBlock(Identifier, Direction.North, true, BedPart.Foot),
-            2013 => new LimeBedBlock(Identifier, Direction.North, false, BedPart.Head),
-            2014 => new LimeBedBlock(Identifier, Direction.North, false, BedPart.Foot),
-            2015 => new LimeBedBlock(Identifier, Direction.South, true, BedPart.Head),
-            2016 => new LimeBedBlock(Identifier, Direction.South, true, BedPart.Foot),
-            2017 => new LimeBedBlock(Identifier, Direction.South, false, BedPart.Head),
-            2018 => new LimeBedBlock(Identifier, Direction.South, false, BedPart.Foot),
-            2019 => new LimeBedBlock(Identifier, Direction.West, true, BedPart.Head),
-            2020 => new LimeBedBlock(Identifier, Direction.West, true, BedPart.Foot),
-            2021 => new LimeBedBlock(Identifier, Direction.West, false, BedPart.Head),
-            2022 => new LimeBedBlock(Identifier, Direction.West, false, BedPart.Foot),
-            2023 => new LimeBedBlock(Identifier, Direction.East, true, BedPart.Head),
-            2024 => new LimeBedBlock(Identifier, Direction.East, true, BedPart.Foot),
-            2025 => new LimeBedBlock(Identifier, Direction.East, false, BedPart.Head),
-            2026 => new LimeBedBlock(Identifier, Direction.East, false, BedPart.Foot),
+            2110 => new LimeBedBlock(Identifier, Direction.North, true, BedPart.Head),
+            2111 => new LimeBedBlock(Identifier, Direction.North, true, BedPart.Foot),
+            2112 => new LimeBedBlock(Identifier, Direction.North, false, BedPart.Head),
+            2113 => new LimeBedBlock(Identifier, Direction.North, false, BedPart.Foot),
+            2114 => new LimeBedBlock(Identifier, Direction.South, true, BedPart.Head),
+            2115 => new LimeBedBlock(Identifier, Direction.South, true, BedPart.Foot),
+            2116 => new LimeBedBlock(Identifier, Direction.South, false, BedPart.Head),
+            2117 => new LimeBedBlock(Identifier, Direction.South, false, BedPart.Foot),
+            2118 => new LimeBedBlock(Identifier, Direction.West, true, BedPart.Head),
+            2119 => new LimeBedBlock(Identifier, Direction.West, true, BedPart.Foot),
+            2120 => new LimeBedBlock(Identifier, Direction.West, false, BedPart.Head),
+            2121 => new LimeBedBlock(Identifier, Direction.West, false, BedPart.Foot),
+            2122 => new LimeBedBlock(Identifier, Direction.East, true, BedPart.Head),
+            2123 => new LimeBedBlock(Identifier, Direction.East, true, BedPart.Foot),
+            2124 => new LimeBedBlock(Identifier, Direction.East, false, BedPart.Head),
+            2125 => new LimeBedBlock(Identifier, Direction.East, false, BedPart.Foot),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

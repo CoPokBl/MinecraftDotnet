@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CactusBlock(Identifier Identifier, int Age) : IBlock, IAged {
-    private static readonly BlockInfo Data = new("minecraft:cactus", "block.minecraft.cactus", 0.4f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cactus", BlockInfo.VanillaOnly, "minecraft:blocks/cactus");
-    private static readonly BlockStateInfo I0 = new(0.4f, 0, 0, PushReaction.Destroy, 7, "wool", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, [], null, BlockShapes.S401, BlockShapes.S402, BlockShapes.S1, BlockShapes.S401, BlockShapes.S402, BlockShapes.S402);
+    private static readonly BlockInfo Data = new("block.minecraft.cactus", 0.4f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cactus", BlockInfo.VanillaOnly, "minecraft:blocks/cactus");
+    private static readonly BlockStateInfo I0 = new(0.4f, 0, 0, PushReaction.Popped, 7, "wool", NoteBlockInstrument.Harp, false, true, false, false, false, false, false, true, false, false, true, false, false, false, true, false, false, false, [], null, BlockShapes.S401, BlockShapes.S402, BlockShapes.S1, BlockShapes.S401, BlockShapes.S402, BlockShapes.S402);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record CactusBlock(Identifier Identifier, int Age) : IBlock, IAged {
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record CactusBlock(Identifier Identifier, int Age) : IBlock, IAged {
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,22 +69,22 @@ public record CactusBlock(Identifier Identifier, int Age) : IBlock, IAged {
     public uint StateId {
         get {
             return Age switch {
-                0 => 6929,
-                1 => 6930,
-                2 => 6931,
-                3 => 6932,
-                4 => 6933,
-                5 => 6934,
-                6 => 6935,
-                7 => 6936,
-                8 => 6937,
-                9 => 6938,
-                10 => 6939,
-                11 => 6940,
-                12 => 6941,
-                13 => 6942,
-                14 => 6943,
-                15 => 6944,
+                0 => 8599,
+                1 => 8600,
+                2 => 8601,
+                3 => 8602,
+                4 => 8603,
+                5 => 8604,
+                6 => 8605,
+                7 => 8606,
+                8 => 8607,
+                9 => 8608,
+                10 => 8609,
+                11 => 8610,
+                12 => 8611,
+                13 => 8612,
+                14 => 8613,
+                15 => 8614,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -92,22 +92,22 @@ public record CactusBlock(Identifier Identifier, int Age) : IBlock, IAged {
     
     public IBlock WithState(uint state) {
         return state switch {
-            6929 => new CactusBlock(Identifier, 0),
-            6930 => new CactusBlock(Identifier, 1),
-            6931 => new CactusBlock(Identifier, 2),
-            6932 => new CactusBlock(Identifier, 3),
-            6933 => new CactusBlock(Identifier, 4),
-            6934 => new CactusBlock(Identifier, 5),
-            6935 => new CactusBlock(Identifier, 6),
-            6936 => new CactusBlock(Identifier, 7),
-            6937 => new CactusBlock(Identifier, 8),
-            6938 => new CactusBlock(Identifier, 9),
-            6939 => new CactusBlock(Identifier, 10),
-            6940 => new CactusBlock(Identifier, 11),
-            6941 => new CactusBlock(Identifier, 12),
-            6942 => new CactusBlock(Identifier, 13),
-            6943 => new CactusBlock(Identifier, 14),
-            6944 => new CactusBlock(Identifier, 15),
+            8599 => new CactusBlock(Identifier, 0),
+            8600 => new CactusBlock(Identifier, 1),
+            8601 => new CactusBlock(Identifier, 2),
+            8602 => new CactusBlock(Identifier, 3),
+            8603 => new CactusBlock(Identifier, 4),
+            8604 => new CactusBlock(Identifier, 5),
+            8605 => new CactusBlock(Identifier, 6),
+            8606 => new CactusBlock(Identifier, 7),
+            8607 => new CactusBlock(Identifier, 8),
+            8608 => new CactusBlock(Identifier, 9),
+            8609 => new CactusBlock(Identifier, 10),
+            8610 => new CactusBlock(Identifier, 11),
+            8611 => new CactusBlock(Identifier, 12),
+            8612 => new CactusBlock(Identifier, 13),
+            8613 => new CactusBlock(Identifier, 14),
+            8614 => new CactusBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

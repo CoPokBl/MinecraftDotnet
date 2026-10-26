@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PaleOakSaplingBlock(Identifier Identifier, int Stage) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:sapling", "block.minecraft.pale_oak_sapling", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pale_oak_sapling", BlockInfo.VanillaOnly, "minecraft:blocks/pale_oak_sapling");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 6, "grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, true, false, true, [], null, BlockShapes.S82, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.pale_oak_sapling", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pale_oak_sapling", BlockInfo.VanillaOnly, "minecraft:blocks/pale_oak_sapling");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Popped, 6, "grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S82, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record PaleOakSaplingBlock(Identifier Identifier, int Stage) : IBlock {
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record PaleOakSaplingBlock(Identifier Identifier, int Stage) : IBlock {
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -67,8 +67,8 @@ public record PaleOakSaplingBlock(Identifier Identifier, int Stage) : IBlock {
     public uint StateId {
         get {
             return Stage switch {
-                0 => 43,
-                1 => 44,
+                0 => 44,
+                1 => 45,
                 _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
             };
         }
@@ -76,8 +76,8 @@ public record PaleOakSaplingBlock(Identifier Identifier, int Stage) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            43 => new PaleOakSaplingBlock(Identifier, 0),
-            44 => new PaleOakSaplingBlock(Identifier, 1),
+            44 => new PaleOakSaplingBlock(Identifier, 0),
+            45 => new PaleOakSaplingBlock(Identifier, 1),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

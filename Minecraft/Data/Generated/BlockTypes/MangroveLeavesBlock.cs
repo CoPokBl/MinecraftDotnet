@@ -11,24 +11,24 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MangroveLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock, IDistanced, IPersistent, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:mangrove_leaves", "block.minecraft.mangrove_leaves", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_leaves");
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Destroy, 7, "grass", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { Flammable = true, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_leaves", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_leaves");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Popped, 7, "grass", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { Flammable = true, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true };
-    private static readonly BlockStateInfo I3 = I0 with { Flammable = true, RandomlyTicking = true, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { Flammable = true, RandomlyTicking = true, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 476];
+    public BlockStateInfo StateInfo => States[StateId - 491];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record MangroveLeavesBlock(Identifier Identifier, int Distance, bool Pers
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record MangroveLeavesBlock(Identifier Identifier, int Distance, bool Pers
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -81,72 +81,72 @@ public record MangroveLeavesBlock(Identifier Identifier, int Distance, bool Pers
             return Distance switch {
                 1 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 476,
-                        false => 477,
+                        true => 491,
+                        false => 492,
                     },
                     false => Waterlogged switch {
-                        true => 478,
-                        false => 479,
+                        true => 493,
+                        false => 494,
                     },
                 },
                 2 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 480,
-                        false => 481,
+                        true => 495,
+                        false => 496,
                     },
                     false => Waterlogged switch {
-                        true => 482,
-                        false => 483,
+                        true => 497,
+                        false => 498,
                     },
                 },
                 3 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 484,
-                        false => 485,
+                        true => 499,
+                        false => 500,
                     },
                     false => Waterlogged switch {
-                        true => 486,
-                        false => 487,
+                        true => 501,
+                        false => 502,
                     },
                 },
                 4 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 488,
-                        false => 489,
+                        true => 503,
+                        false => 504,
                     },
                     false => Waterlogged switch {
-                        true => 490,
-                        false => 491,
+                        true => 505,
+                        false => 506,
                     },
                 },
                 5 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 492,
-                        false => 493,
+                        true => 507,
+                        false => 508,
                     },
                     false => Waterlogged switch {
-                        true => 494,
-                        false => 495,
+                        true => 509,
+                        false => 510,
                     },
                 },
                 6 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 496,
-                        false => 497,
+                        true => 511,
+                        false => 512,
                     },
                     false => Waterlogged switch {
-                        true => 498,
-                        false => 499,
+                        true => 513,
+                        false => 514,
                     },
                 },
                 7 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 500,
-                        false => 501,
+                        true => 515,
+                        false => 516,
                     },
                     false => Waterlogged switch {
-                        true => 502,
-                        false => 503,
+                        true => 517,
+                        false => 518,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
@@ -156,34 +156,34 @@ public record MangroveLeavesBlock(Identifier Identifier, int Distance, bool Pers
     
     public IBlock WithState(uint state) {
         return state switch {
-            476 => new MangroveLeavesBlock(Identifier, 1, true, true),
-            477 => new MangroveLeavesBlock(Identifier, 1, true, false),
-            478 => new MangroveLeavesBlock(Identifier, 1, false, true),
-            479 => new MangroveLeavesBlock(Identifier, 1, false, false),
-            480 => new MangroveLeavesBlock(Identifier, 2, true, true),
-            481 => new MangroveLeavesBlock(Identifier, 2, true, false),
-            482 => new MangroveLeavesBlock(Identifier, 2, false, true),
-            483 => new MangroveLeavesBlock(Identifier, 2, false, false),
-            484 => new MangroveLeavesBlock(Identifier, 3, true, true),
-            485 => new MangroveLeavesBlock(Identifier, 3, true, false),
-            486 => new MangroveLeavesBlock(Identifier, 3, false, true),
-            487 => new MangroveLeavesBlock(Identifier, 3, false, false),
-            488 => new MangroveLeavesBlock(Identifier, 4, true, true),
-            489 => new MangroveLeavesBlock(Identifier, 4, true, false),
-            490 => new MangroveLeavesBlock(Identifier, 4, false, true),
-            491 => new MangroveLeavesBlock(Identifier, 4, false, false),
-            492 => new MangroveLeavesBlock(Identifier, 5, true, true),
-            493 => new MangroveLeavesBlock(Identifier, 5, true, false),
-            494 => new MangroveLeavesBlock(Identifier, 5, false, true),
-            495 => new MangroveLeavesBlock(Identifier, 5, false, false),
-            496 => new MangroveLeavesBlock(Identifier, 6, true, true),
-            497 => new MangroveLeavesBlock(Identifier, 6, true, false),
-            498 => new MangroveLeavesBlock(Identifier, 6, false, true),
-            499 => new MangroveLeavesBlock(Identifier, 6, false, false),
-            500 => new MangroveLeavesBlock(Identifier, 7, true, true),
-            501 => new MangroveLeavesBlock(Identifier, 7, true, false),
-            502 => new MangroveLeavesBlock(Identifier, 7, false, true),
-            503 => new MangroveLeavesBlock(Identifier, 7, false, false),
+            491 => new MangroveLeavesBlock(Identifier, 1, true, true),
+            492 => new MangroveLeavesBlock(Identifier, 1, true, false),
+            493 => new MangroveLeavesBlock(Identifier, 1, false, true),
+            494 => new MangroveLeavesBlock(Identifier, 1, false, false),
+            495 => new MangroveLeavesBlock(Identifier, 2, true, true),
+            496 => new MangroveLeavesBlock(Identifier, 2, true, false),
+            497 => new MangroveLeavesBlock(Identifier, 2, false, true),
+            498 => new MangroveLeavesBlock(Identifier, 2, false, false),
+            499 => new MangroveLeavesBlock(Identifier, 3, true, true),
+            500 => new MangroveLeavesBlock(Identifier, 3, true, false),
+            501 => new MangroveLeavesBlock(Identifier, 3, false, true),
+            502 => new MangroveLeavesBlock(Identifier, 3, false, false),
+            503 => new MangroveLeavesBlock(Identifier, 4, true, true),
+            504 => new MangroveLeavesBlock(Identifier, 4, true, false),
+            505 => new MangroveLeavesBlock(Identifier, 4, false, true),
+            506 => new MangroveLeavesBlock(Identifier, 4, false, false),
+            507 => new MangroveLeavesBlock(Identifier, 5, true, true),
+            508 => new MangroveLeavesBlock(Identifier, 5, true, false),
+            509 => new MangroveLeavesBlock(Identifier, 5, false, true),
+            510 => new MangroveLeavesBlock(Identifier, 5, false, false),
+            511 => new MangroveLeavesBlock(Identifier, 6, true, true),
+            512 => new MangroveLeavesBlock(Identifier, 6, true, false),
+            513 => new MangroveLeavesBlock(Identifier, 6, false, true),
+            514 => new MangroveLeavesBlock(Identifier, 6, false, false),
+            515 => new MangroveLeavesBlock(Identifier, 7, true, true),
+            516 => new MangroveLeavesBlock(Identifier, 7, true, false),
+            517 => new MangroveLeavesBlock(Identifier, 7, false, true),
+            518 => new MangroveLeavesBlock(Identifier, 7, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AcaciaFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock, IHorizontalFacing, IInWall, IOpenable, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:fence_gate", "block.minecraft.acacia_fence_gate", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_fence_gate", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_fence_gate");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.Normal, 15, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S68, BlockShapes.S1, BlockShapes.S1, BlockShapes.S69, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_fence_gate", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_fence_gate", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_fence_gate");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.PushPull, 15, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S68, BlockShapes.S1, BlockShapes.S1, BlockShapes.S69, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { PathfindableLand = false, PathfindableAir = false, CollisionShape = BlockShapes.S40, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S39, OcclusionShape = BlockShapes.S71 };
     private static readonly BlockStateInfo I3 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S71, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
@@ -24,15 +24,15 @@ public record AcaciaFenceGateBlock(Identifier Identifier, Direction Facing, bool
         I0, I0, I1, I1, I2, I2, I3, I3, I0, I0, I1, I1, I2, I2, I3, I3, I4, I4, I5, I5, I6, I6, I7, I7, I4, I4, I5, I5, I6, I6, I7, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 13580];
+    public BlockStateInfo StateInfo => States[StateId - 15427];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record AcaciaFenceGateBlock(Identifier Identifier, Direction Facing, bool
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record AcaciaFenceGateBlock(Identifier Identifier, Direction Facing, bool
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -88,88 +88,88 @@ public record AcaciaFenceGateBlock(Identifier Identifier, Direction Facing, bool
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13580,
-                            false => 13581,
+                            true => 15427,
+                            false => 15428,
                         },
                         false => Powered switch {
-                            true => 13582,
-                            false => 13583,
+                            true => 15429,
+                            false => 15430,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13584,
-                            false => 13585,
+                            true => 15431,
+                            false => 15432,
                         },
                         false => Powered switch {
-                            true => 13586,
-                            false => 13587,
+                            true => 15433,
+                            false => 15434,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13588,
-                            false => 13589,
+                            true => 15435,
+                            false => 15436,
                         },
                         false => Powered switch {
-                            true => 13590,
-                            false => 13591,
+                            true => 15437,
+                            false => 15438,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13592,
-                            false => 13593,
+                            true => 15439,
+                            false => 15440,
                         },
                         false => Powered switch {
-                            true => 13594,
-                            false => 13595,
+                            true => 15441,
+                            false => 15442,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13596,
-                            false => 13597,
+                            true => 15443,
+                            false => 15444,
                         },
                         false => Powered switch {
-                            true => 13598,
-                            false => 13599,
+                            true => 15445,
+                            false => 15446,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13600,
-                            false => 13601,
+                            true => 15447,
+                            false => 15448,
                         },
                         false => Powered switch {
-                            true => 13602,
-                            false => 13603,
+                            true => 15449,
+                            false => 15450,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13604,
-                            false => 13605,
+                            true => 15451,
+                            false => 15452,
                         },
                         false => Powered switch {
-                            true => 13606,
-                            false => 13607,
+                            true => 15453,
+                            false => 15454,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13608,
-                            false => 13609,
+                            true => 15455,
+                            false => 15456,
                         },
                         false => Powered switch {
-                            true => 13610,
-                            false => 13611,
+                            true => 15457,
+                            false => 15458,
                         },
                     },
                 },
@@ -180,38 +180,38 @@ public record AcaciaFenceGateBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            13580 => new AcaciaFenceGateBlock(Identifier, Direction.North, true, true, true),
-            13581 => new AcaciaFenceGateBlock(Identifier, Direction.North, true, true, false),
-            13582 => new AcaciaFenceGateBlock(Identifier, Direction.North, true, false, true),
-            13583 => new AcaciaFenceGateBlock(Identifier, Direction.North, true, false, false),
-            13584 => new AcaciaFenceGateBlock(Identifier, Direction.North, false, true, true),
-            13585 => new AcaciaFenceGateBlock(Identifier, Direction.North, false, true, false),
-            13586 => new AcaciaFenceGateBlock(Identifier, Direction.North, false, false, true),
-            13587 => new AcaciaFenceGateBlock(Identifier, Direction.North, false, false, false),
-            13588 => new AcaciaFenceGateBlock(Identifier, Direction.South, true, true, true),
-            13589 => new AcaciaFenceGateBlock(Identifier, Direction.South, true, true, false),
-            13590 => new AcaciaFenceGateBlock(Identifier, Direction.South, true, false, true),
-            13591 => new AcaciaFenceGateBlock(Identifier, Direction.South, true, false, false),
-            13592 => new AcaciaFenceGateBlock(Identifier, Direction.South, false, true, true),
-            13593 => new AcaciaFenceGateBlock(Identifier, Direction.South, false, true, false),
-            13594 => new AcaciaFenceGateBlock(Identifier, Direction.South, false, false, true),
-            13595 => new AcaciaFenceGateBlock(Identifier, Direction.South, false, false, false),
-            13596 => new AcaciaFenceGateBlock(Identifier, Direction.West, true, true, true),
-            13597 => new AcaciaFenceGateBlock(Identifier, Direction.West, true, true, false),
-            13598 => new AcaciaFenceGateBlock(Identifier, Direction.West, true, false, true),
-            13599 => new AcaciaFenceGateBlock(Identifier, Direction.West, true, false, false),
-            13600 => new AcaciaFenceGateBlock(Identifier, Direction.West, false, true, true),
-            13601 => new AcaciaFenceGateBlock(Identifier, Direction.West, false, true, false),
-            13602 => new AcaciaFenceGateBlock(Identifier, Direction.West, false, false, true),
-            13603 => new AcaciaFenceGateBlock(Identifier, Direction.West, false, false, false),
-            13604 => new AcaciaFenceGateBlock(Identifier, Direction.East, true, true, true),
-            13605 => new AcaciaFenceGateBlock(Identifier, Direction.East, true, true, false),
-            13606 => new AcaciaFenceGateBlock(Identifier, Direction.East, true, false, true),
-            13607 => new AcaciaFenceGateBlock(Identifier, Direction.East, true, false, false),
-            13608 => new AcaciaFenceGateBlock(Identifier, Direction.East, false, true, true),
-            13609 => new AcaciaFenceGateBlock(Identifier, Direction.East, false, true, false),
-            13610 => new AcaciaFenceGateBlock(Identifier, Direction.East, false, false, true),
-            13611 => new AcaciaFenceGateBlock(Identifier, Direction.East, false, false, false),
+            15427 => new AcaciaFenceGateBlock(Identifier, Direction.North, true, true, true),
+            15428 => new AcaciaFenceGateBlock(Identifier, Direction.North, true, true, false),
+            15429 => new AcaciaFenceGateBlock(Identifier, Direction.North, true, false, true),
+            15430 => new AcaciaFenceGateBlock(Identifier, Direction.North, true, false, false),
+            15431 => new AcaciaFenceGateBlock(Identifier, Direction.North, false, true, true),
+            15432 => new AcaciaFenceGateBlock(Identifier, Direction.North, false, true, false),
+            15433 => new AcaciaFenceGateBlock(Identifier, Direction.North, false, false, true),
+            15434 => new AcaciaFenceGateBlock(Identifier, Direction.North, false, false, false),
+            15435 => new AcaciaFenceGateBlock(Identifier, Direction.South, true, true, true),
+            15436 => new AcaciaFenceGateBlock(Identifier, Direction.South, true, true, false),
+            15437 => new AcaciaFenceGateBlock(Identifier, Direction.South, true, false, true),
+            15438 => new AcaciaFenceGateBlock(Identifier, Direction.South, true, false, false),
+            15439 => new AcaciaFenceGateBlock(Identifier, Direction.South, false, true, true),
+            15440 => new AcaciaFenceGateBlock(Identifier, Direction.South, false, true, false),
+            15441 => new AcaciaFenceGateBlock(Identifier, Direction.South, false, false, true),
+            15442 => new AcaciaFenceGateBlock(Identifier, Direction.South, false, false, false),
+            15443 => new AcaciaFenceGateBlock(Identifier, Direction.West, true, true, true),
+            15444 => new AcaciaFenceGateBlock(Identifier, Direction.West, true, true, false),
+            15445 => new AcaciaFenceGateBlock(Identifier, Direction.West, true, false, true),
+            15446 => new AcaciaFenceGateBlock(Identifier, Direction.West, true, false, false),
+            15447 => new AcaciaFenceGateBlock(Identifier, Direction.West, false, true, true),
+            15448 => new AcaciaFenceGateBlock(Identifier, Direction.West, false, true, false),
+            15449 => new AcaciaFenceGateBlock(Identifier, Direction.West, false, false, true),
+            15450 => new AcaciaFenceGateBlock(Identifier, Direction.West, false, false, false),
+            15451 => new AcaciaFenceGateBlock(Identifier, Direction.East, true, true, true),
+            15452 => new AcaciaFenceGateBlock(Identifier, Direction.East, true, true, false),
+            15453 => new AcaciaFenceGateBlock(Identifier, Direction.East, true, false, true),
+            15454 => new AcaciaFenceGateBlock(Identifier, Direction.East, true, false, false),
+            15455 => new AcaciaFenceGateBlock(Identifier, Direction.East, false, true, true),
+            15456 => new AcaciaFenceGateBlock(Identifier, Direction.East, false, true, false),
+            15457 => new AcaciaFenceGateBlock(Identifier, Direction.East, false, false, true),
+            15458 => new AcaciaFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

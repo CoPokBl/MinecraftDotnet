@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WaxedWeatheredCopperLanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged) : IBlock, IHanging, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:lantern", "block.minecraft.waxed_weathered_copper_lantern", 3.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_weathered_copper_lantern", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_weathered_copper_lantern");
-    private static readonly BlockStateInfo I0 = new(3.5f, 15, 1, PushReaction.Destroy, 6, "lantern", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S508, BlockShapes.S508, BlockShapes.S1, BlockShapes.S1, BlockShapes.S508, BlockShapes.S508);
+    private static readonly BlockInfo Data = new("block.minecraft.waxed_weathered_copper_lantern", 3.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_weathered_copper_lantern", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_weathered_copper_lantern");
+    private static readonly BlockStateInfo I0 = new(3.5f, 15, 1, PushReaction.Popped, 6, "lantern", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S508, BlockShapes.S508, BlockShapes.S1, BlockShapes.S1, BlockShapes.S508, BlockShapes.S508);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S509, CollisionShape = BlockShapes.S509, VisualShape = BlockShapes.S509, SupportShape = BlockShapes.S509 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S509, CollisionShape = BlockShapes.S509, VisualShape = BlockShapes.S509, SupportShape = BlockShapes.S509 };
@@ -20,15 +20,15 @@ public record WaxedWeatheredCopperLanternBlock(Identifier Identifier, bool Hangi
         I0, I1, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 20869];
+    public BlockStateInfo StateInfo => States[StateId - 24226];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record WaxedWeatheredCopperLanternBlock(Identifier Identifier, bool Hangi
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record WaxedWeatheredCopperLanternBlock(Identifier Identifier, bool Hangi
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,12 +78,12 @@ public record WaxedWeatheredCopperLanternBlock(Identifier Identifier, bool Hangi
         get {
             return Hanging switch {
                 true => Waterlogged switch {
-                    true => 20869,
-                    false => 20870,
+                    true => 24226,
+                    false => 24227,
                 },
                 false => Waterlogged switch {
-                    true => 20871,
-                    false => 20872,
+                    true => 24228,
+                    false => 24229,
                 },
             };
         }
@@ -91,10 +91,10 @@ public record WaxedWeatheredCopperLanternBlock(Identifier Identifier, bool Hangi
     
     public IBlock WithState(uint state) {
         return state switch {
-            20869 => new WaxedWeatheredCopperLanternBlock(Identifier, true, true),
-            20870 => new WaxedWeatheredCopperLanternBlock(Identifier, true, false),
-            20871 => new WaxedWeatheredCopperLanternBlock(Identifier, false, true),
-            20872 => new WaxedWeatheredCopperLanternBlock(Identifier, false, false),
+            24226 => new WaxedWeatheredCopperLanternBlock(Identifier, true, true),
+            24227 => new WaxedWeatheredCopperLanternBlock(Identifier, true, false),
+            24228 => new WaxedWeatheredCopperLanternBlock(Identifier, false, true),
+            24229 => new WaxedWeatheredCopperLanternBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

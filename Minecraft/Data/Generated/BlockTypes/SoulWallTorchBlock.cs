@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SoulWallTorchBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:wall_torch", "block.minecraft.soul_torch", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:soul_torch", BlockInfo.VanillaOnly, "minecraft:blocks/soul_torch");
-    private static readonly BlockStateInfo I0 = new(0f, 10, 0, PushReaction.Destroy, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S511, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.soul_torch", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:soul_torch", BlockInfo.VanillaOnly, "minecraft:blocks/soul_torch");
+    private static readonly BlockStateInfo I0 = new(0f, 10, 0, PushReaction.Popped, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S511, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S512 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S513 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S514 };
@@ -20,15 +20,15 @@ public record SoulWallTorchBlock(Identifier Identifier, Direction Facing) : IBlo
         I0, I1, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 7007];
+    public BlockStateInfo StateInfo => States[StateId - 8677];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record SoulWallTorchBlock(Identifier Identifier, Direction Facing) : IBlo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record SoulWallTorchBlock(Identifier Identifier, Direction Facing) : IBlo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -75,10 +75,10 @@ public record SoulWallTorchBlock(Identifier Identifier, Direction Facing) : IBlo
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 7007,
-                Direction.South => 7008,
-                Direction.West => 7009,
-                Direction.East => 7010,
+                Direction.North => 8677,
+                Direction.South => 8678,
+                Direction.West => 8679,
+                Direction.East => 8680,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -86,10 +86,10 @@ public record SoulWallTorchBlock(Identifier Identifier, Direction Facing) : IBlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            7007 => new SoulWallTorchBlock(Identifier, Direction.North),
-            7008 => new SoulWallTorchBlock(Identifier, Direction.South),
-            7009 => new SoulWallTorchBlock(Identifier, Direction.West),
-            7010 => new SoulWallTorchBlock(Identifier, Direction.East),
+            8677 => new SoulWallTorchBlock(Identifier, Direction.North),
+            8678 => new SoulWallTorchBlock(Identifier, Direction.South),
+            8679 => new SoulWallTorchBlock(Identifier, Direction.West),
+            8680 => new SoulWallTorchBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

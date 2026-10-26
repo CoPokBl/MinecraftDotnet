@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.pale_oak_stairs", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pale_oak_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/pale_oak_stairs");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 14, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.pale_oak_stairs", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pale_oak_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/pale_oak_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 14, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 12212];
+    public BlockStateInfo StateInfo => States[StateId - 13979];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12212,
-                            false => 12213,
+                            true => 13979,
+                            false => 13980,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12214,
-                            false => 12215,
+                            true => 13981,
+                            false => 13982,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12216,
-                            false => 12217,
+                            true => 13983,
+                            false => 13984,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12218,
-                            false => 12219,
+                            true => 13985,
+                            false => 13986,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12220,
-                            false => 12221,
+                            true => 13987,
+                            false => 13988,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12222,
-                            false => 12223,
+                            true => 13989,
+                            false => 13990,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12224,
-                            false => 12225,
+                            true => 13991,
+                            false => 13992,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12226,
-                            false => 12227,
+                            true => 13993,
+                            false => 13994,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12228,
-                            false => 12229,
+                            true => 13995,
+                            false => 13996,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12230,
-                            false => 12231,
+                            true => 13997,
+                            false => 13998,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12232,
-                            false => 12233,
+                            true => 13999,
+                            false => 14000,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12234,
-                            false => 12235,
+                            true => 14001,
+                            false => 14002,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12236,
-                            false => 12237,
+                            true => 14003,
+                            false => 14004,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12238,
-                            false => 12239,
+                            true => 14005,
+                            false => 14006,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12240,
-                            false => 12241,
+                            true => 14007,
+                            false => 14008,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12242,
-                            false => 12243,
+                            true => 14009,
+                            false => 14010,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12244,
-                            false => 12245,
+                            true => 14011,
+                            false => 14012,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12246,
-                            false => 12247,
+                            true => 14013,
+                            false => 14014,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12248,
-                            false => 12249,
+                            true => 14015,
+                            false => 14016,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12250,
-                            false => 12251,
+                            true => 14017,
+                            false => 14018,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12252,
-                            false => 12253,
+                            true => 14019,
+                            false => 14020,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12254,
-                            false => 12255,
+                            true => 14021,
+                            false => 14022,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12256,
-                            false => 12257,
+                            true => 14023,
+                            false => 14024,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12258,
-                            false => 12259,
+                            true => 14025,
+                            false => 14026,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12260,
-                            false => 12261,
+                            true => 14027,
+                            false => 14028,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12262,
-                            false => 12263,
+                            true => 14029,
+                            false => 14030,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12264,
-                            false => 12265,
+                            true => 14031,
+                            false => 14032,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12266,
-                            false => 12267,
+                            true => 14033,
+                            false => 14034,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12268,
-                            false => 12269,
+                            true => 14035,
+                            false => 14036,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12270,
-                            false => 12271,
+                            true => 14037,
+                            false => 14038,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12272,
-                            false => 12273,
+                            true => 14039,
+                            false => 14040,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12274,
-                            false => 12275,
+                            true => 14041,
+                            false => 14042,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12276,
-                            false => 12277,
+                            true => 14043,
+                            false => 14044,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12278,
-                            false => 12279,
+                            true => 14045,
+                            false => 14046,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12280,
-                            false => 12281,
+                            true => 14047,
+                            false => 14048,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12282,
-                            false => 12283,
+                            true => 14049,
+                            false => 14050,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12284,
-                            false => 12285,
+                            true => 14051,
+                            false => 14052,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12286,
-                            false => 12287,
+                            true => 14053,
+                            false => 14054,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12288,
-                            false => 12289,
+                            true => 14055,
+                            false => 14056,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12290,
-                            false => 12291,
+                            true => 14057,
+                            false => 14058,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record PaleOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
     
     public IBlock WithState(uint state) {
         return state switch {
-            12212 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            12213 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            12214 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            12215 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            12216 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            12217 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            12218 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            12219 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            12220 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            12221 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            12222 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            12223 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            12224 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12225 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12226 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            12227 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            12228 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12229 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12230 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            12231 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            12232 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            12233 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            12234 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            12235 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            12236 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            12237 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            12238 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            12239 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            12240 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            12241 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            12242 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            12243 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            12244 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12245 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12246 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            12247 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            12248 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12249 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12250 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            12251 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            12252 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            12253 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            12254 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            12255 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            12256 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            12257 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            12258 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            12259 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            12260 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            12261 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            12262 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            12263 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            12264 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12265 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12266 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            12267 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            12268 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12269 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12270 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            12271 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            12272 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            12273 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            12274 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            12275 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            12276 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            12277 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            12278 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            12279 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            12280 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            12281 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            12282 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            12283 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            12284 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12285 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12286 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            12287 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            12288 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12289 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12290 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            12291 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            13979 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            13980 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            13981 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            13982 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            13983 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            13984 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            13985 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            13986 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            13987 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            13988 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            13989 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            13990 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            13991 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13992 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13993 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            13994 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            13995 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13996 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13997 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            13998 => new PaleOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            13999 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            14000 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            14001 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            14002 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            14003 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            14004 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            14005 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            14006 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            14007 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            14008 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            14009 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            14010 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            14011 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14012 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14013 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            14014 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            14015 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14016 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14017 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            14018 => new PaleOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            14019 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            14020 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            14021 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            14022 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            14023 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            14024 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            14025 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            14026 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            14027 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            14028 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            14029 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            14030 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            14031 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14032 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14033 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            14034 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            14035 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14036 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14037 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            14038 => new PaleOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            14039 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            14040 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            14041 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            14042 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            14043 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            14044 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            14045 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            14046 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            14047 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            14048 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            14049 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            14050 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            14051 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14052 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14053 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            14054 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            14055 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14056 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14057 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            14058 => new PaleOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

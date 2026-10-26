@@ -109,16 +109,8 @@ server.Events.AddListener<PlayerPacketEvent>(e => {
             e.Connection.Player.SendSystemMessage("Pong!");
             break;
         
-        case "swingm":
-            e.Connection.Server!.SendPacket(new ServerBoundSwingArmPacket {
-                UsedHand = Hand.MainHand
-            });
-            break;
-        
-        case "swingo":
-            e.Connection.Server!.SendPacket(new ServerBoundSwingArmPacket {
-                UsedHand = Hand.OffHand
-            });
+        case "punch":
+            e.Connection.Server!.SendPacket(new ServerBoundPunchPacket());
             break;
 
         case "join": {

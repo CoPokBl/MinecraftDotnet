@@ -1,3 +1,4 @@
+using ManagedServer.Terrain.Features.Values;
 using Minecraft.Placement.Helpers;
 using Minecraft.Data.Blocks;
 using Minecraft.Schemas;
@@ -62,6 +63,16 @@ public abstract record BlockPredicate {
         public override bool Test(IFeatureLevel level, int x, int y, int z) {
             return level.Blocks.IsIn(Tag, level.GetState(x + Offset.X, y + Offset.Y, z + Offset.Z));
         }
+    }
+
+    /// <summary><c>BlockStateMatchTest</c>, a rule test: exactly this state, properties included.</summary>
+    public sealed record MatchingState(uint StateId) : BlockPredicate {
+        public override bool Test(IFeatureLevel level, int x, int y, int z) => level.GetState(x, y, z) == StateId;
+    }
+
+    /// <summary><c>HeightMatchTest</c>, a rule test: the position's own y, both bounds inclusive.</summary>
+    public sealed record HeightMatch(int MinInclusive, int MaxInclusive) : BlockPredicate {
+        public override bool Test(IFeatureLevel level, int x, int y, int z) => MinInclusive <= y && y <= MaxInclusive;
     }
 
     /// <summary>
@@ -133,6 +144,46 @@ public abstract record BlockPredicate {
     public sealed record WouldSurvive(Vec3<int> Offset, IBlock State) : BlockPredicate {
         public override bool Test(IFeatureLevel level, int x, int y, int z) {
             return FeatureSurvival.CanSurvive(State, level, x + Offset.X, y + Offset.Y, z + Offset.Z);
+        }
+    }
+
+    /// <summary>
+    /// <c>HeightRangePredicate</c>: the position's y inside two anchors, both ends included.
+    /// </summary>
+    /// <remarks>
+    /// The anchors resolve against <c>WorldGenerationContext.of(level)</c>, which for a world generation
+    /// level is the generator's range and sea level; the level's own are the same numbers here.
+    /// </remarks>
+    public sealed record HeightRange(VerticalAnchor MinInclusive, VerticalAnchor MaxInclusive) : BlockPredicate {
+        public override bool Test(IFeatureLevel level, int x, int y, int z) {
+            GenerationHeightContext context = new(level.MinY, level.MaxY - level.MinY, level.SeaLevel);
+            int min = MinInclusive.ResolveY(context);
+            int max = MaxInclusive.ResolveY(context);
+            return y >= min && y <= max;
+        }
+    }
+
+    /// <summary>
+    /// <c>VolumeMatchPredicate</c>: <see cref="Match"/> holds at every offset in the box.
+    /// </summary>
+    /// <remarks>
+    /// Walked x, then z, then y innermost, and stops at the first failure. The order only shows when
+    /// the inner predicate draws or reads something order dependent, which none in the vanilla data
+    /// does, but it is vanilla's.
+    /// </remarks>
+    public sealed record VolumeMatch(Vec3<int> Min, Vec3<int> Max, BlockPredicate Match) : BlockPredicate {
+        public override bool Test(IFeatureLevel level, int x, int y, int z) {
+            for (int ox = Min.X; ox <= Max.X; ox++) {
+                for (int oz = Min.Z; oz <= Max.Z; oz++) {
+                    for (int oy = Min.Y; oy <= Max.Y; oy++) {
+                        if (!Match.Test(level, x + ox, y + oy, z + oz)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
     }
 

@@ -8,7 +8,8 @@ using Minecraft.Schemas;
 namespace ManagedServer.Loot;
 
 /// <summary>
-/// Every block loot table a <see cref="IDatapackSource"/> carries.
+/// Every block loot table a <see cref="IDatapackSource"/> carries, with the <c>predicate</c>,
+/// <c>item_modifier</c> and number provider registries of the same source to resolve the ids they name.
 /// </summary>
 /// <remarks>
 /// <b>Read rather than generated, because a loot table is content and not a measured fact.</b> Which
@@ -31,13 +32,15 @@ public sealed class DatapackBlockLoot : IBlockLootSource {
     private readonly Dictionary<Identifier, LootTable> _byId = [];
 
     private DatapackBlockLoot(IDatapackSource source) {
+        LootReferences references = LootReferences.Load(source);
+
         foreach (DatapackEntry entry in source.Entries("loot_table/blocks")) {
             using Stream stream = source.Open(entry.Path);
             using JsonDocument document = JsonDocument.Parse(stream);
 
             // The registry id carries the folder, since that is how a block names its table.
             Identifier id = new(entry.Id.Namespace, "blocks/" + entry.Id.Key);
-            _byId[id] = LootTableParser.Parse(document.RootElement, id.ToString());
+            _byId[id] = LootTableParser.Parse(document.RootElement, id.ToString(), references);
         }
 
         if (_byId.Count == 0) {

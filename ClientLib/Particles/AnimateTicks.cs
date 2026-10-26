@@ -41,7 +41,7 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
     };
     private static readonly TintedLeavesParticle AzaleaLeaf = Particle.TintedLeaves with { Argb = -9399763 };
 
-    /// <summary><c>RedStoneWireBlock.COLORS</c>, as dust of each power.</summary>
+    /// <summary><c>RedstoneWireBlock.COLORS</c>, as dust of each power.</summary>
     private static readonly DustParticle[] WireDust = Enumerable.Range(0, 16).Select(i => {
         float power = i / 15.0F;
         float red = power * 0.6F + (power > 0.0F ? 0.4F : 0.3F);
@@ -139,6 +139,9 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
         /// <summary>Leaves' <c>leafParticleChance</c>; whether their leaf is tinted where they stand.</summary>
         public float Chance;
         public bool Tinted;
+
+        /// <summary>Leaves that are a <c>FallingParticlesLeavesBlock</c>; poplar leaves, whose sound player plays one.</summary>
+        public bool FallingLeaves, PoplarAmbience;
 
         public bool Air, CanOcclude, SolidRender, CollisionFullBlock, TopFaceFull, Replaceable, Liquid, Flammable;
         public byte SturdyFaces;
@@ -726,7 +729,7 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
 
     private void LargeSmoke(double x, double y, double z) => Engine.AddParticle(Particle.LargeSmoke, x, y, z, 0.0, 0.0, 0.0);
 
-    /// <summary><c>RedStoneWireBlock.animateTick</c> and <c>spawnParticlesAlongLine</c>.</summary>
+    /// <summary><c>RedstoneWireBlock.animateTick</c> and <c>spawnParticlesAlongLine</c>.</summary>
     private void RedstoneWire(RedstoneWireBlock wire, int x, int y, int z) {
         DustParticle dust = WireDust[Math.Clamp(wire.Power, 0, 15)];
         foreach (int horizontal in Horizontal) {
@@ -820,7 +823,10 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
         }
     }
 
-    /// <summary><c>LeavesBlock.animateTick</c>: rain dripping through, and the falling leaf.</summary>
+    /// <summary>
+    /// <c>LeavesBlock.animateTick</c>: rain dripping through and the ambient sound, then
+    /// <c>FallingParticlesLeavesBlock</c>'s falling leaf.
+    /// </summary>
     private void Leaves(ClientLevel level, ref Facts facts, ushort state, int x, int y, int z) {
         ParticleRandom random = _random;
         ref Facts below = ref FactsAt(level, x, y - 1, z);
@@ -829,8 +835,11 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
             && (!below.CanOcclude || (below.SturdyFaces & 1 << (int)BlockFace.PosY) == 0)) {
             Engine.AddParticle(Particle.DrippingWater, x + random.NextDouble(), y - 0.05, z + random.NextDouble(), 0.0, 0.0, 0.0);
         }
+        if (facts.PoplarAmbience) {
+            AmbientPoplarLeaves(level, state, x, y, z);
+        }
         // makeFallingLeavesParticles.
-        if (random.NextFloat() >= facts.Chance || below.TopFaceFull) {
+        if (!facts.FallingLeaves || random.NextFloat() >= facts.Chance || below.TopFaceFull) {
             return;
         }
         IParticle leaf = facts.Particle!;
@@ -1124,7 +1133,7 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
         else if (Is(BlockClass.CandleBlock)) {
             facts.Kind = Kind.Candle;
         }
-        else if (Is(BlockClass.RedStoneWireBlock)) {
+        else if (Is(BlockClass.RedstoneWireBlock)) {
             facts.Kind = Kind.RedstoneWire;
         }
         else if (Is(BlockClass.RepeaterBlock)) {
@@ -1241,7 +1250,14 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
     /// <summary>The <c>Blocks</c> registrations' leaf particle and chance, which the class chain does not carry.</summary>
     private static void Leaf(Identifier id, ref Facts facts) {
         facts.Chance = 0.01F;
-        if (id == Block.CherryLeaves.Identifier) {
+        facts.FallingLeaves = BlockClasses.Is(id, BlockClass.FallingParticlesLeavesBlock);
+        if (id == Block.RedPoplarLeaves.Identifier || id == Block.OrangePoplarLeaves.Identifier || id == Block.YellowPoplarLeaves.Identifier) {
+            facts.Particle = id == Block.RedPoplarLeaves.Identifier ? Particle.RedPoplarLeaves
+                : id == Block.OrangePoplarLeaves.Identifier ? Particle.OrangePoplarLeaves
+                : Particle.YellowPoplarLeaves;
+            facts.PoplarAmbience = true;
+        }
+        else if (id == Block.CherryLeaves.Identifier) {
             facts.Particle = Particle.CherryLeaves;
             facts.Chance = 0.1F;
         }

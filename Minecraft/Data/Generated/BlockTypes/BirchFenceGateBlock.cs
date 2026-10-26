@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BirchFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock, IHorizontalFacing, IInWall, IOpenable, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:fence_gate", "block.minecraft.birch_fence_gate", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:birch_fence_gate", BlockInfo.VanillaOnly, "minecraft:blocks/birch_fence_gate");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.Normal, 2, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S68, BlockShapes.S1, BlockShapes.S1, BlockShapes.S69, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.birch_fence_gate", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:birch_fence_gate", BlockInfo.VanillaOnly, "minecraft:blocks/birch_fence_gate");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.PushPull, 2, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S68, BlockShapes.S1, BlockShapes.S1, BlockShapes.S69, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { PathfindableLand = false, PathfindableAir = false, CollisionShape = BlockShapes.S40, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S39, OcclusionShape = BlockShapes.S71 };
     private static readonly BlockStateInfo I3 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S71, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
@@ -24,15 +24,15 @@ public record BirchFenceGateBlock(Identifier Identifier, Direction Facing, bool 
         I0, I0, I1, I1, I2, I2, I3, I3, I0, I0, I1, I1, I2, I2, I3, I3, I4, I4, I5, I5, I6, I6, I7, I7, I4, I4, I5, I5, I6, I6, I7, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 13516];
+    public BlockStateInfo StateInfo => States[StateId - 15363];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record BirchFenceGateBlock(Identifier Identifier, Direction Facing, bool 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record BirchFenceGateBlock(Identifier Identifier, Direction Facing, bool 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -88,88 +88,88 @@ public record BirchFenceGateBlock(Identifier Identifier, Direction Facing, bool 
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13516,
-                            false => 13517,
+                            true => 15363,
+                            false => 15364,
                         },
                         false => Powered switch {
-                            true => 13518,
-                            false => 13519,
+                            true => 15365,
+                            false => 15366,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13520,
-                            false => 13521,
+                            true => 15367,
+                            false => 15368,
                         },
                         false => Powered switch {
-                            true => 13522,
-                            false => 13523,
+                            true => 15369,
+                            false => 15370,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13524,
-                            false => 13525,
+                            true => 15371,
+                            false => 15372,
                         },
                         false => Powered switch {
-                            true => 13526,
-                            false => 13527,
+                            true => 15373,
+                            false => 15374,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13528,
-                            false => 13529,
+                            true => 15375,
+                            false => 15376,
                         },
                         false => Powered switch {
-                            true => 13530,
-                            false => 13531,
+                            true => 15377,
+                            false => 15378,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13532,
-                            false => 13533,
+                            true => 15379,
+                            false => 15380,
                         },
                         false => Powered switch {
-                            true => 13534,
-                            false => 13535,
+                            true => 15381,
+                            false => 15382,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13536,
-                            false => 13537,
+                            true => 15383,
+                            false => 15384,
                         },
                         false => Powered switch {
-                            true => 13538,
-                            false => 13539,
+                            true => 15385,
+                            false => 15386,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13540,
-                            false => 13541,
+                            true => 15387,
+                            false => 15388,
                         },
                         false => Powered switch {
-                            true => 13542,
-                            false => 13543,
+                            true => 15389,
+                            false => 15390,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13544,
-                            false => 13545,
+                            true => 15391,
+                            false => 15392,
                         },
                         false => Powered switch {
-                            true => 13546,
-                            false => 13547,
+                            true => 15393,
+                            false => 15394,
                         },
                     },
                 },
@@ -180,38 +180,38 @@ public record BirchFenceGateBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            13516 => new BirchFenceGateBlock(Identifier, Direction.North, true, true, true),
-            13517 => new BirchFenceGateBlock(Identifier, Direction.North, true, true, false),
-            13518 => new BirchFenceGateBlock(Identifier, Direction.North, true, false, true),
-            13519 => new BirchFenceGateBlock(Identifier, Direction.North, true, false, false),
-            13520 => new BirchFenceGateBlock(Identifier, Direction.North, false, true, true),
-            13521 => new BirchFenceGateBlock(Identifier, Direction.North, false, true, false),
-            13522 => new BirchFenceGateBlock(Identifier, Direction.North, false, false, true),
-            13523 => new BirchFenceGateBlock(Identifier, Direction.North, false, false, false),
-            13524 => new BirchFenceGateBlock(Identifier, Direction.South, true, true, true),
-            13525 => new BirchFenceGateBlock(Identifier, Direction.South, true, true, false),
-            13526 => new BirchFenceGateBlock(Identifier, Direction.South, true, false, true),
-            13527 => new BirchFenceGateBlock(Identifier, Direction.South, true, false, false),
-            13528 => new BirchFenceGateBlock(Identifier, Direction.South, false, true, true),
-            13529 => new BirchFenceGateBlock(Identifier, Direction.South, false, true, false),
-            13530 => new BirchFenceGateBlock(Identifier, Direction.South, false, false, true),
-            13531 => new BirchFenceGateBlock(Identifier, Direction.South, false, false, false),
-            13532 => new BirchFenceGateBlock(Identifier, Direction.West, true, true, true),
-            13533 => new BirchFenceGateBlock(Identifier, Direction.West, true, true, false),
-            13534 => new BirchFenceGateBlock(Identifier, Direction.West, true, false, true),
-            13535 => new BirchFenceGateBlock(Identifier, Direction.West, true, false, false),
-            13536 => new BirchFenceGateBlock(Identifier, Direction.West, false, true, true),
-            13537 => new BirchFenceGateBlock(Identifier, Direction.West, false, true, false),
-            13538 => new BirchFenceGateBlock(Identifier, Direction.West, false, false, true),
-            13539 => new BirchFenceGateBlock(Identifier, Direction.West, false, false, false),
-            13540 => new BirchFenceGateBlock(Identifier, Direction.East, true, true, true),
-            13541 => new BirchFenceGateBlock(Identifier, Direction.East, true, true, false),
-            13542 => new BirchFenceGateBlock(Identifier, Direction.East, true, false, true),
-            13543 => new BirchFenceGateBlock(Identifier, Direction.East, true, false, false),
-            13544 => new BirchFenceGateBlock(Identifier, Direction.East, false, true, true),
-            13545 => new BirchFenceGateBlock(Identifier, Direction.East, false, true, false),
-            13546 => new BirchFenceGateBlock(Identifier, Direction.East, false, false, true),
-            13547 => new BirchFenceGateBlock(Identifier, Direction.East, false, false, false),
+            15363 => new BirchFenceGateBlock(Identifier, Direction.North, true, true, true),
+            15364 => new BirchFenceGateBlock(Identifier, Direction.North, true, true, false),
+            15365 => new BirchFenceGateBlock(Identifier, Direction.North, true, false, true),
+            15366 => new BirchFenceGateBlock(Identifier, Direction.North, true, false, false),
+            15367 => new BirchFenceGateBlock(Identifier, Direction.North, false, true, true),
+            15368 => new BirchFenceGateBlock(Identifier, Direction.North, false, true, false),
+            15369 => new BirchFenceGateBlock(Identifier, Direction.North, false, false, true),
+            15370 => new BirchFenceGateBlock(Identifier, Direction.North, false, false, false),
+            15371 => new BirchFenceGateBlock(Identifier, Direction.South, true, true, true),
+            15372 => new BirchFenceGateBlock(Identifier, Direction.South, true, true, false),
+            15373 => new BirchFenceGateBlock(Identifier, Direction.South, true, false, true),
+            15374 => new BirchFenceGateBlock(Identifier, Direction.South, true, false, false),
+            15375 => new BirchFenceGateBlock(Identifier, Direction.South, false, true, true),
+            15376 => new BirchFenceGateBlock(Identifier, Direction.South, false, true, false),
+            15377 => new BirchFenceGateBlock(Identifier, Direction.South, false, false, true),
+            15378 => new BirchFenceGateBlock(Identifier, Direction.South, false, false, false),
+            15379 => new BirchFenceGateBlock(Identifier, Direction.West, true, true, true),
+            15380 => new BirchFenceGateBlock(Identifier, Direction.West, true, true, false),
+            15381 => new BirchFenceGateBlock(Identifier, Direction.West, true, false, true),
+            15382 => new BirchFenceGateBlock(Identifier, Direction.West, true, false, false),
+            15383 => new BirchFenceGateBlock(Identifier, Direction.West, false, true, true),
+            15384 => new BirchFenceGateBlock(Identifier, Direction.West, false, true, false),
+            15385 => new BirchFenceGateBlock(Identifier, Direction.West, false, false, true),
+            15386 => new BirchFenceGateBlock(Identifier, Direction.West, false, false, false),
+            15387 => new BirchFenceGateBlock(Identifier, Direction.East, true, true, true),
+            15388 => new BirchFenceGateBlock(Identifier, Direction.East, true, true, false),
+            15389 => new BirchFenceGateBlock(Identifier, Direction.East, true, false, true),
+            15390 => new BirchFenceGateBlock(Identifier, Direction.East, true, false, false),
+            15391 => new BirchFenceGateBlock(Identifier, Direction.East, false, true, true),
+            15392 => new BirchFenceGateBlock(Identifier, Direction.East, false, true, false),
+            15393 => new BirchFenceGateBlock(Identifier, Direction.East, false, false, true),
+            15394 => new BirchFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

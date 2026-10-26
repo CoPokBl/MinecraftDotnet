@@ -7,36 +7,25 @@ using Minecraft.Data.Blocks;
 namespace ManagedServer.Testing.Terrain;
 
 /// <summary>
-/// Replays every block the real vanilla noise, surface and carver passes left in a chunk, from the
+/// Replays every block the real vanilla fill, surface and carver passes left in a chunk, from the
 /// fixture <c>Conformance/terrainstage.sh</c> produced.
 /// </summary>
 /// <remarks>
-/// <b>This is the step <see cref="TerrainConformanceTest"/> stops short of.</b> That one pins all
-/// fifteen entries of the noise router, the climate sample and the biome the parameter list picks, at
-/// exact zero tolerance, and says nothing about what those numbers become. The aquifer turning
-/// <c>barrier</c> and the two <c>fluid_level</c> noises into water, lava or stone; <c>OreVeinifier</c>
-/// turning the three <c>vein</c> noises into ore; the interpolation walk over the cells; and the whole
-/// surface rule tree with the badlands spires and the frozen ocean icebergs around it, were visible
-/// only through <see cref="WorldParityConformanceTest"/>, whose error bar is about a third of its own
-/// value and which therefore cannot settle any of them.
+/// <b>This is the step <see cref="TerrainConformanceTest"/> stops short of.</b> That one pins the
+/// density functions' values; this pins what they become: the aquifer deciding water, lava or stone,
+/// the material rules with the ore veins and the badlands and iceberg extensions, and the carvers'
+/// mask and its application. The harness runs vanilla's own private passes, so nothing of the loop
+/// around them is transcribed on that side.
 /// <p/>
-/// <b>It is a pass rather than a baseline, and it can be because of what these passes are.</b> All
-/// three are pure functions of the world seed and the chunk position: none reads a neighbour's blocks,
-/// none draws from a random shared with another chunk, and none depends on the order chunks were asked
-/// for. So the order dependence that stops whole-world parity ever reaching zero does not exist here,
-/// and a single differing block is the port being wrong.
+/// A chunk's blocks are a function of the seed and the position, with one exception that both sides
+/// share: the climate search starts from the answer it last gave, so an exact tie between two regions
+/// goes to whichever the query order reached first. The harness and this test generate the same
+/// chunks in the same order, which is what makes a single differing block the port being wrong.
 /// <p/>
 /// The carver pass replaying every chunk within eight looks like a dependence on those chunks and is
 /// not: a source chunk's carvers are seeded from the world seed, the carver's index in that chunk's
-/// biome's list and the source chunk position, and from nothing about what has been generated there.
-/// <c>CarverPassTest</c> is that as a property, and this is the values.
-/// <p/>
-/// <b>The carve is the one stage the harness reaches by transcribing vanilla's loop rather than by
-/// calling it.</b> <c>ChunkGenerator.applyCarvers</c> takes a <c>WorldGenRegion</c>, which is concrete
-/// and needs a <c>ServerLevel</c>, while everything under it takes a <c>ChunkAccess</c>. So what is
-/// measured is the whole of the carve: the walk, the ellipsoid, the block decisions, the aquifer's
-/// answer and the surface fix-up. What is not is which chunks the loop replays and how it seeds them,
-/// which stays pinned by <c>CarverPassTest</c> alone.
+/// biome's list and the source chunk position. <c>CarverPassTest</c> is that as a property, and this is
+/// the values.
 /// </remarks>
 [TestFixture]
 public class TerrainStageConformanceTest {
@@ -44,7 +33,7 @@ public class TerrainStageConformanceTest {
     private const int MinY = -64;
     private const int Height = 384;
 
-    /// <summary>An iceberg's own block, which no surface rule writes.</summary>
+    /// <summary>An iceberg's own block, which no material rule writes.</summary>
     private static uint PackedIce => Minecraft.Data.Generated.Block.PackedIce.StateId;
 
     /// <summary>The badlands banding, which the spires pass moves the heightmap for.</summary>
@@ -114,10 +103,10 @@ public class TerrainStageConformanceTest {
         List<string> failures = [];
 
         // A fixture that decoded to nothing would compare clean against a port that also generates
-        // nothing, so the sample is checked for content before it is trusted. Fifty six chunks: one
-        // per biome the overworld climate table can name, which is what the surface rule tree branches
-        // on before anything else, plus one picked for the iceberg on it.
-        Assert.That(fixture.Scenes, Has.Count.EqualTo(56));
+        // nothing, so the sample is checked for content before it is trusted. Fifty seven chunks: one
+        // per biome the overworld climate table can name, which is what the material rules branch on
+        // before anything else, plus one picked for the iceberg on it.
+        Assert.That(fixture.Scenes, Has.Count.EqualTo(57));
 
         foreach (Scene scene in fixture.Scenes) {
             // Per chunk the noise pass is a short list, since all it writes is the default block, the
@@ -131,20 +120,19 @@ public class TerrainStageConformanceTest {
         }
 
         // The carve is the one pass that can legitimately do nothing to a given chunk, since whether a
-        // tunnel reaches here is what it decides, and 51 of the 56 have one. A fixture whose third
+        // tunnel reaches here is what it decides, and most of the sample has one. A fixture whose third
         // array were a copy of its second would compare clean against a build with no carvers at all.
         Assert.That(fixture.Scenes.Count(scene => !scene.Surface.SequenceEqual(scene.Carved)),
             Is.GreaterThan(40), "the sample holds almost no carving, so it is not measuring the pass");
 
-        // Across the sample it has to be rich, or 56 chunks are 56 of the same place. It holds 34
-        // distinct blocks, and which 34 is what the sample is worth: raw_copper_block and copper_ore
-        // say OreVeinifier ran, water and lava say the aquifer did, the four terracottas are the
-        // badlands banding, and mycelium, podzol, snow_block, sand, sandstone and gravel are six more
-        // surface rules.
+        // Across the sample it has to be rich, or the chunks are all the same place. Which blocks is
+        // what the sample is worth: raw_copper_block and copper_ore say the ore vein rules ran, water
+        // and lava say the aquifer did, the terracottas are the badlands banding, and mycelium,
+        // podzol, snow_block, sand, sandstone and gravel are more material rules.
         Assert.That(fixture.Scenes.SelectMany(scene => scene.Surface).Distinct().Count(),
             Is.GreaterThan(30), "the sample holds too few distinct blocks to be measuring much");
 
-        // Both of the passes SurfaceSystem runs around the rule pass, since neither is a rule and
+        // Both of the passes MaterialSystem runs around the rule pass, since neither is a rule and
         // neither would be missed by the count above. The badlands spires move the heightmap the rules
         // then re-read, and the icebergs write over water the rules never see.
         Assert.That(fixture.Scenes.Any(scene => scene.Surface.Contains(PackedIce)), Is.True,

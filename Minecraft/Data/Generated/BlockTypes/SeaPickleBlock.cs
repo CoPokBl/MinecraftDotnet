@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogged) : IBlock, IStackable, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:sea_pickle", "block.minecraft.sea_pickle", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sea_pickle", BlockInfo.VanillaOnly, "minecraft:blocks/sea_pickle");
-    private static readonly BlockStateInfo I0 = new(0f, 6, 1, PushReaction.Destroy, 27, "slime_block", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S911, BlockShapes.S911, BlockShapes.S1, BlockShapes.S1, BlockShapes.S911, BlockShapes.S911);
+    private static readonly BlockInfo Data = new("block.minecraft.sea_pickle", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sea_pickle", BlockInfo.VanillaOnly, "minecraft:blocks/sea_pickle");
+    private static readonly BlockStateInfo I0 = new(0f, 6, 1, PushReaction.Popped, 27, "slime_block", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S912, BlockShapes.S912, BlockShapes.S1, BlockShapes.S1, BlockShapes.S912, BlockShapes.S912);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null };
-    private static readonly BlockStateInfo I2 = I0 with { LightEmission = 9, BlockShape = BlockShapes.S912, CollisionShape = BlockShapes.S912, VisualShape = BlockShapes.S912, SupportShape = BlockShapes.S912 };
-    private static readonly BlockStateInfo I3 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S912, CollisionShape = BlockShapes.S912, VisualShape = BlockShapes.S912, SupportShape = BlockShapes.S912 };
-    private static readonly BlockStateInfo I4 = I0 with { LightEmission = 12, BlockShape = BlockShapes.S913, CollisionShape = BlockShapes.S913, VisualShape = BlockShapes.S913, SupportShape = BlockShapes.S913 };
-    private static readonly BlockStateInfo I5 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S913, CollisionShape = BlockShapes.S913, VisualShape = BlockShapes.S913, SupportShape = BlockShapes.S913 };
-    private static readonly BlockStateInfo I6 = I0 with { LightEmission = 15, BlockShape = BlockShapes.S914, CollisionShape = BlockShapes.S914, VisualShape = BlockShapes.S914, SupportShape = BlockShapes.S914 };
-    private static readonly BlockStateInfo I7 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S914, CollisionShape = BlockShapes.S914, VisualShape = BlockShapes.S914, SupportShape = BlockShapes.S914 };
+    private static readonly BlockStateInfo I2 = I0 with { LightEmission = 9, BlockShape = BlockShapes.S913, CollisionShape = BlockShapes.S913, VisualShape = BlockShapes.S913, SupportShape = BlockShapes.S913 };
+    private static readonly BlockStateInfo I3 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S913, CollisionShape = BlockShapes.S913, VisualShape = BlockShapes.S913, SupportShape = BlockShapes.S913 };
+    private static readonly BlockStateInfo I4 = I0 with { LightEmission = 12, BlockShape = BlockShapes.S914, CollisionShape = BlockShapes.S914, VisualShape = BlockShapes.S914, SupportShape = BlockShapes.S914 };
+    private static readonly BlockStateInfo I5 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S914, CollisionShape = BlockShapes.S914, VisualShape = BlockShapes.S914, SupportShape = BlockShapes.S914 };
+    private static readonly BlockStateInfo I6 = I0 with { LightEmission = 15, BlockShape = BlockShapes.S915, CollisionShape = BlockShapes.S915, VisualShape = BlockShapes.S915, SupportShape = BlockShapes.S915 };
+    private static readonly BlockStateInfo I7 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S915, CollisionShape = BlockShapes.S915, VisualShape = BlockShapes.S915, SupportShape = BlockShapes.S915 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 15267];
+    public BlockStateInfo StateInfo => States[StateId - 18624];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -86,20 +86,20 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
         get {
             return Pickles switch {
                 1 => Waterlogged switch {
-                    true => 15267,
-                    false => 15268,
+                    true => 18624,
+                    false => 18625,
                 },
                 2 => Waterlogged switch {
-                    true => 15269,
-                    false => 15270,
+                    true => 18626,
+                    false => 18627,
                 },
                 3 => Waterlogged switch {
-                    true => 15271,
-                    false => 15272,
+                    true => 18628,
+                    false => 18629,
                 },
                 4 => Waterlogged switch {
-                    true => 15273,
-                    false => 15274,
+                    true => 18630,
+                    false => 18631,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Pickles), Pickles, "Unknown value for property pickles.")
             };
@@ -108,14 +108,14 @@ public record SeaPickleBlock(Identifier Identifier, int Pickles, bool Waterlogge
     
     public IBlock WithState(uint state) {
         return state switch {
-            15267 => new SeaPickleBlock(Identifier, 1, true),
-            15268 => new SeaPickleBlock(Identifier, 1, false),
-            15269 => new SeaPickleBlock(Identifier, 2, true),
-            15270 => new SeaPickleBlock(Identifier, 2, false),
-            15271 => new SeaPickleBlock(Identifier, 3, true),
-            15272 => new SeaPickleBlock(Identifier, 3, false),
-            15273 => new SeaPickleBlock(Identifier, 4, true),
-            15274 => new SeaPickleBlock(Identifier, 4, false),
+            18624 => new SeaPickleBlock(Identifier, 1, true),
+            18625 => new SeaPickleBlock(Identifier, 1, false),
+            18626 => new SeaPickleBlock(Identifier, 2, true),
+            18627 => new SeaPickleBlock(Identifier, 2, false),
+            18628 => new SeaPickleBlock(Identifier, 3, true),
+            18629 => new SeaPickleBlock(Identifier, 3, false),
+            18630 => new SeaPickleBlock(Identifier, 4, true),
+            18631 => new SeaPickleBlock(Identifier, 4, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

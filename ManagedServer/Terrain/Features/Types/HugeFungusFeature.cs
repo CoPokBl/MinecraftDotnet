@@ -1,5 +1,6 @@
 using ManagedServer.Terrain.Features.Blocks;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Vec;
@@ -207,9 +208,30 @@ public sealed record HugeFungusFeature(uint ValidBaseState, uint StemState, uint
             height *= 2;
         }
 
-        // Aged 23 to 25 rather than the 17 to 25 a wild vine gets, so one hanging off a fungus is
-        // nearly done growing.
-        WeepingVinesFeature.PlaceColumn(level, random, x, y - 1, z, height, 23, 25);
+        PlaceWeepingVinesColumn(level, random, x, y - 1, z, height, 23, 25);
+    }
+
+    /// <summary>
+    /// Body blocks downwards with a head at the bottom. The loop counts from zero, so a height of one
+    /// is two blocks.
+    /// </summary>
+    private static void PlaceWeepingVinesColumn(IFeatureLevel level, RandomSource random, int x, int y, int z,
+        int totalHeight, int minAge, int maxAge) {
+
+        for (int grown = 0; grown <= totalHeight; grown++) {
+            if (level.IsEmptyBlock(x, y, z)) {
+                if (grown == totalHeight || !level.IsEmptyBlock(x, y - 1, z)) {
+                    IBlock head = Block.WeepingVines;
+                    level.SetState(x, y, z,
+                        (head is IAged aged ? aged.WithAge(Mth.NextInt(random, minAge, maxAge)) : head).StateId);
+                    return;
+                }
+
+                level.SetState(x, y, z, Block.WeepingVinesPlant.StateId);
+            }
+
+            y--;
+        }
     }
 
     /// <summary>

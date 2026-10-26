@@ -11,26 +11,26 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AcaciaHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock, IAttached, IRotated, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:ceiling_hanging_sign", "block.minecraft.acacia_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:acacia_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_hanging_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 15, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:acacia_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 15, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6099];
+    public BlockStateInfo StateInfo => States[StateId - 7695];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -44,7 +44,6 @@ public record AcaciaHangingSignBlock(Identifier Identifier, bool Attached, int R
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -64,6 +63,7 @@ public record AcaciaHangingSignBlock(Identifier Identifier, bool Attached, int R
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -83,135 +83,135 @@ public record AcaciaHangingSignBlock(Identifier Identifier, bool Attached, int R
             return Attached switch {
                 true => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 6099,
-                        false => 6100,
+                        true => 7695,
+                        false => 7696,
                     },
                     1 => Waterlogged switch {
-                        true => 6101,
-                        false => 6102,
+                        true => 7697,
+                        false => 7698,
                     },
                     2 => Waterlogged switch {
-                        true => 6103,
-                        false => 6104,
+                        true => 7699,
+                        false => 7700,
                     },
                     3 => Waterlogged switch {
-                        true => 6105,
-                        false => 6106,
+                        true => 7701,
+                        false => 7702,
                     },
                     4 => Waterlogged switch {
-                        true => 6107,
-                        false => 6108,
+                        true => 7703,
+                        false => 7704,
                     },
                     5 => Waterlogged switch {
-                        true => 6109,
-                        false => 6110,
+                        true => 7705,
+                        false => 7706,
                     },
                     6 => Waterlogged switch {
-                        true => 6111,
-                        false => 6112,
+                        true => 7707,
+                        false => 7708,
                     },
                     7 => Waterlogged switch {
-                        true => 6113,
-                        false => 6114,
+                        true => 7709,
+                        false => 7710,
                     },
                     8 => Waterlogged switch {
-                        true => 6115,
-                        false => 6116,
+                        true => 7711,
+                        false => 7712,
                     },
                     9 => Waterlogged switch {
-                        true => 6117,
-                        false => 6118,
+                        true => 7713,
+                        false => 7714,
                     },
                     10 => Waterlogged switch {
-                        true => 6119,
-                        false => 6120,
+                        true => 7715,
+                        false => 7716,
                     },
                     11 => Waterlogged switch {
-                        true => 6121,
-                        false => 6122,
+                        true => 7717,
+                        false => 7718,
                     },
                     12 => Waterlogged switch {
-                        true => 6123,
-                        false => 6124,
+                        true => 7719,
+                        false => 7720,
                     },
                     13 => Waterlogged switch {
-                        true => 6125,
-                        false => 6126,
+                        true => 7721,
+                        false => 7722,
                     },
                     14 => Waterlogged switch {
-                        true => 6127,
-                        false => 6128,
+                        true => 7723,
+                        false => 7724,
                     },
                     15 => Waterlogged switch {
-                        true => 6129,
-                        false => 6130,
+                        true => 7725,
+                        false => 7726,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 6131,
-                        false => 6132,
+                        true => 7727,
+                        false => 7728,
                     },
                     1 => Waterlogged switch {
-                        true => 6133,
-                        false => 6134,
+                        true => 7729,
+                        false => 7730,
                     },
                     2 => Waterlogged switch {
-                        true => 6135,
-                        false => 6136,
+                        true => 7731,
+                        false => 7732,
                     },
                     3 => Waterlogged switch {
-                        true => 6137,
-                        false => 6138,
+                        true => 7733,
+                        false => 7734,
                     },
                     4 => Waterlogged switch {
-                        true => 6139,
-                        false => 6140,
+                        true => 7735,
+                        false => 7736,
                     },
                     5 => Waterlogged switch {
-                        true => 6141,
-                        false => 6142,
+                        true => 7737,
+                        false => 7738,
                     },
                     6 => Waterlogged switch {
-                        true => 6143,
-                        false => 6144,
+                        true => 7739,
+                        false => 7740,
                     },
                     7 => Waterlogged switch {
-                        true => 6145,
-                        false => 6146,
+                        true => 7741,
+                        false => 7742,
                     },
                     8 => Waterlogged switch {
-                        true => 6147,
-                        false => 6148,
+                        true => 7743,
+                        false => 7744,
                     },
                     9 => Waterlogged switch {
-                        true => 6149,
-                        false => 6150,
+                        true => 7745,
+                        false => 7746,
                     },
                     10 => Waterlogged switch {
-                        true => 6151,
-                        false => 6152,
+                        true => 7747,
+                        false => 7748,
                     },
                     11 => Waterlogged switch {
-                        true => 6153,
-                        false => 6154,
+                        true => 7749,
+                        false => 7750,
                     },
                     12 => Waterlogged switch {
-                        true => 6155,
-                        false => 6156,
+                        true => 7751,
+                        false => 7752,
                     },
                     13 => Waterlogged switch {
-                        true => 6157,
-                        false => 6158,
+                        true => 7753,
+                        false => 7754,
                     },
                     14 => Waterlogged switch {
-                        true => 6159,
-                        false => 6160,
+                        true => 7755,
+                        false => 7756,
                     },
                     15 => Waterlogged switch {
-                        true => 6161,
-                        false => 6162,
+                        true => 7757,
+                        false => 7758,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
@@ -221,70 +221,70 @@ public record AcaciaHangingSignBlock(Identifier Identifier, bool Attached, int R
     
     public IBlock WithState(uint state) {
         return state switch {
-            6099 => new AcaciaHangingSignBlock(Identifier, true, 0, true),
-            6100 => new AcaciaHangingSignBlock(Identifier, true, 0, false),
-            6101 => new AcaciaHangingSignBlock(Identifier, true, 1, true),
-            6102 => new AcaciaHangingSignBlock(Identifier, true, 1, false),
-            6103 => new AcaciaHangingSignBlock(Identifier, true, 2, true),
-            6104 => new AcaciaHangingSignBlock(Identifier, true, 2, false),
-            6105 => new AcaciaHangingSignBlock(Identifier, true, 3, true),
-            6106 => new AcaciaHangingSignBlock(Identifier, true, 3, false),
-            6107 => new AcaciaHangingSignBlock(Identifier, true, 4, true),
-            6108 => new AcaciaHangingSignBlock(Identifier, true, 4, false),
-            6109 => new AcaciaHangingSignBlock(Identifier, true, 5, true),
-            6110 => new AcaciaHangingSignBlock(Identifier, true, 5, false),
-            6111 => new AcaciaHangingSignBlock(Identifier, true, 6, true),
-            6112 => new AcaciaHangingSignBlock(Identifier, true, 6, false),
-            6113 => new AcaciaHangingSignBlock(Identifier, true, 7, true),
-            6114 => new AcaciaHangingSignBlock(Identifier, true, 7, false),
-            6115 => new AcaciaHangingSignBlock(Identifier, true, 8, true),
-            6116 => new AcaciaHangingSignBlock(Identifier, true, 8, false),
-            6117 => new AcaciaHangingSignBlock(Identifier, true, 9, true),
-            6118 => new AcaciaHangingSignBlock(Identifier, true, 9, false),
-            6119 => new AcaciaHangingSignBlock(Identifier, true, 10, true),
-            6120 => new AcaciaHangingSignBlock(Identifier, true, 10, false),
-            6121 => new AcaciaHangingSignBlock(Identifier, true, 11, true),
-            6122 => new AcaciaHangingSignBlock(Identifier, true, 11, false),
-            6123 => new AcaciaHangingSignBlock(Identifier, true, 12, true),
-            6124 => new AcaciaHangingSignBlock(Identifier, true, 12, false),
-            6125 => new AcaciaHangingSignBlock(Identifier, true, 13, true),
-            6126 => new AcaciaHangingSignBlock(Identifier, true, 13, false),
-            6127 => new AcaciaHangingSignBlock(Identifier, true, 14, true),
-            6128 => new AcaciaHangingSignBlock(Identifier, true, 14, false),
-            6129 => new AcaciaHangingSignBlock(Identifier, true, 15, true),
-            6130 => new AcaciaHangingSignBlock(Identifier, true, 15, false),
-            6131 => new AcaciaHangingSignBlock(Identifier, false, 0, true),
-            6132 => new AcaciaHangingSignBlock(Identifier, false, 0, false),
-            6133 => new AcaciaHangingSignBlock(Identifier, false, 1, true),
-            6134 => new AcaciaHangingSignBlock(Identifier, false, 1, false),
-            6135 => new AcaciaHangingSignBlock(Identifier, false, 2, true),
-            6136 => new AcaciaHangingSignBlock(Identifier, false, 2, false),
-            6137 => new AcaciaHangingSignBlock(Identifier, false, 3, true),
-            6138 => new AcaciaHangingSignBlock(Identifier, false, 3, false),
-            6139 => new AcaciaHangingSignBlock(Identifier, false, 4, true),
-            6140 => new AcaciaHangingSignBlock(Identifier, false, 4, false),
-            6141 => new AcaciaHangingSignBlock(Identifier, false, 5, true),
-            6142 => new AcaciaHangingSignBlock(Identifier, false, 5, false),
-            6143 => new AcaciaHangingSignBlock(Identifier, false, 6, true),
-            6144 => new AcaciaHangingSignBlock(Identifier, false, 6, false),
-            6145 => new AcaciaHangingSignBlock(Identifier, false, 7, true),
-            6146 => new AcaciaHangingSignBlock(Identifier, false, 7, false),
-            6147 => new AcaciaHangingSignBlock(Identifier, false, 8, true),
-            6148 => new AcaciaHangingSignBlock(Identifier, false, 8, false),
-            6149 => new AcaciaHangingSignBlock(Identifier, false, 9, true),
-            6150 => new AcaciaHangingSignBlock(Identifier, false, 9, false),
-            6151 => new AcaciaHangingSignBlock(Identifier, false, 10, true),
-            6152 => new AcaciaHangingSignBlock(Identifier, false, 10, false),
-            6153 => new AcaciaHangingSignBlock(Identifier, false, 11, true),
-            6154 => new AcaciaHangingSignBlock(Identifier, false, 11, false),
-            6155 => new AcaciaHangingSignBlock(Identifier, false, 12, true),
-            6156 => new AcaciaHangingSignBlock(Identifier, false, 12, false),
-            6157 => new AcaciaHangingSignBlock(Identifier, false, 13, true),
-            6158 => new AcaciaHangingSignBlock(Identifier, false, 13, false),
-            6159 => new AcaciaHangingSignBlock(Identifier, false, 14, true),
-            6160 => new AcaciaHangingSignBlock(Identifier, false, 14, false),
-            6161 => new AcaciaHangingSignBlock(Identifier, false, 15, true),
-            6162 => new AcaciaHangingSignBlock(Identifier, false, 15, false),
+            7695 => new AcaciaHangingSignBlock(Identifier, true, 0, true),
+            7696 => new AcaciaHangingSignBlock(Identifier, true, 0, false),
+            7697 => new AcaciaHangingSignBlock(Identifier, true, 1, true),
+            7698 => new AcaciaHangingSignBlock(Identifier, true, 1, false),
+            7699 => new AcaciaHangingSignBlock(Identifier, true, 2, true),
+            7700 => new AcaciaHangingSignBlock(Identifier, true, 2, false),
+            7701 => new AcaciaHangingSignBlock(Identifier, true, 3, true),
+            7702 => new AcaciaHangingSignBlock(Identifier, true, 3, false),
+            7703 => new AcaciaHangingSignBlock(Identifier, true, 4, true),
+            7704 => new AcaciaHangingSignBlock(Identifier, true, 4, false),
+            7705 => new AcaciaHangingSignBlock(Identifier, true, 5, true),
+            7706 => new AcaciaHangingSignBlock(Identifier, true, 5, false),
+            7707 => new AcaciaHangingSignBlock(Identifier, true, 6, true),
+            7708 => new AcaciaHangingSignBlock(Identifier, true, 6, false),
+            7709 => new AcaciaHangingSignBlock(Identifier, true, 7, true),
+            7710 => new AcaciaHangingSignBlock(Identifier, true, 7, false),
+            7711 => new AcaciaHangingSignBlock(Identifier, true, 8, true),
+            7712 => new AcaciaHangingSignBlock(Identifier, true, 8, false),
+            7713 => new AcaciaHangingSignBlock(Identifier, true, 9, true),
+            7714 => new AcaciaHangingSignBlock(Identifier, true, 9, false),
+            7715 => new AcaciaHangingSignBlock(Identifier, true, 10, true),
+            7716 => new AcaciaHangingSignBlock(Identifier, true, 10, false),
+            7717 => new AcaciaHangingSignBlock(Identifier, true, 11, true),
+            7718 => new AcaciaHangingSignBlock(Identifier, true, 11, false),
+            7719 => new AcaciaHangingSignBlock(Identifier, true, 12, true),
+            7720 => new AcaciaHangingSignBlock(Identifier, true, 12, false),
+            7721 => new AcaciaHangingSignBlock(Identifier, true, 13, true),
+            7722 => new AcaciaHangingSignBlock(Identifier, true, 13, false),
+            7723 => new AcaciaHangingSignBlock(Identifier, true, 14, true),
+            7724 => new AcaciaHangingSignBlock(Identifier, true, 14, false),
+            7725 => new AcaciaHangingSignBlock(Identifier, true, 15, true),
+            7726 => new AcaciaHangingSignBlock(Identifier, true, 15, false),
+            7727 => new AcaciaHangingSignBlock(Identifier, false, 0, true),
+            7728 => new AcaciaHangingSignBlock(Identifier, false, 0, false),
+            7729 => new AcaciaHangingSignBlock(Identifier, false, 1, true),
+            7730 => new AcaciaHangingSignBlock(Identifier, false, 1, false),
+            7731 => new AcaciaHangingSignBlock(Identifier, false, 2, true),
+            7732 => new AcaciaHangingSignBlock(Identifier, false, 2, false),
+            7733 => new AcaciaHangingSignBlock(Identifier, false, 3, true),
+            7734 => new AcaciaHangingSignBlock(Identifier, false, 3, false),
+            7735 => new AcaciaHangingSignBlock(Identifier, false, 4, true),
+            7736 => new AcaciaHangingSignBlock(Identifier, false, 4, false),
+            7737 => new AcaciaHangingSignBlock(Identifier, false, 5, true),
+            7738 => new AcaciaHangingSignBlock(Identifier, false, 5, false),
+            7739 => new AcaciaHangingSignBlock(Identifier, false, 6, true),
+            7740 => new AcaciaHangingSignBlock(Identifier, false, 6, false),
+            7741 => new AcaciaHangingSignBlock(Identifier, false, 7, true),
+            7742 => new AcaciaHangingSignBlock(Identifier, false, 7, false),
+            7743 => new AcaciaHangingSignBlock(Identifier, false, 8, true),
+            7744 => new AcaciaHangingSignBlock(Identifier, false, 8, false),
+            7745 => new AcaciaHangingSignBlock(Identifier, false, 9, true),
+            7746 => new AcaciaHangingSignBlock(Identifier, false, 9, false),
+            7747 => new AcaciaHangingSignBlock(Identifier, false, 10, true),
+            7748 => new AcaciaHangingSignBlock(Identifier, false, 10, false),
+            7749 => new AcaciaHangingSignBlock(Identifier, false, 11, true),
+            7750 => new AcaciaHangingSignBlock(Identifier, false, 11, false),
+            7751 => new AcaciaHangingSignBlock(Identifier, false, 12, true),
+            7752 => new AcaciaHangingSignBlock(Identifier, false, 12, false),
+            7753 => new AcaciaHangingSignBlock(Identifier, false, 13, true),
+            7754 => new AcaciaHangingSignBlock(Identifier, false, 13, false),
+            7755 => new AcaciaHangingSignBlock(Identifier, false, 14, true),
+            7756 => new AcaciaHangingSignBlock(Identifier, false, 14, false),
+            7757 => new AcaciaHangingSignBlock(Identifier, false, 15, true),
+            7758 => new AcaciaHangingSignBlock(Identifier, false, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

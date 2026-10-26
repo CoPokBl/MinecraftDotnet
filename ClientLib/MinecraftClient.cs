@@ -430,6 +430,12 @@ public sealed partial class MinecraftClient {
         }
     }
 
+    /// <summary>
+    /// The post chains the renderer can run, which the <c>post_effects</c> suggestions list. Empty until a
+    /// renderer that runs them says otherwise.
+    /// </summary>
+    public IReadOnlyCollection<Identifier> AvailablePostEffects { get; set; } = [];
+
     /// <summary>The packets every phase after login shares, <c>ClientCommonPacketListenerImpl</c>.</summary>
     private bool HandleCommon(MinecraftPacket packet) {
         switch (packet) {
@@ -465,6 +471,16 @@ public sealed partial class MinecraftClient {
                     Key = cookie.Key,
                     Data = Cookies.GetValueOrDefault(cookie.Key)
                 });
+                return true;
+
+            case ClientBoundPostEffectsPacket postEffects:
+                // ClientCommonPacketListenerImpl.handlePostEffects throws without a player, which drops the connection.
+                if (Player == null) {
+                    Disconnect("Cannot set player post effects before the player is created.");
+                }
+                else {
+                    Player.ActivePostEffects = postEffects.PostEffects;
+                }
                 return true;
 
             case ClientBoundStoreCookiePacket store:

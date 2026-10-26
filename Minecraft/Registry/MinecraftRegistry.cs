@@ -30,6 +30,9 @@ public class MinecraftRegistry {
     public PaintingVariantRegistry PaintingVariants { get; set; } = new();
     public BannerPatternRegistry BannerPatterns { get; set; } = new();
     public TrimPatternRegistry TrimPatterns { get; set; } = new();
+    public DecoratedPotPatternRegistry DecoratedPotPatterns { get; set; } = new();
+    public BlockTransformerRegistry BlockTransformers { get; set; } = new();
+    public BlockStateProviderRegistry BlockStateProviders { get; set; } = new();
     public JukeboxSongRegistry JukeboxSongs { get; set; } = new();
     public InstrumentRegistry Instruments { get; set; } = new();
     public CowSoundVariantRegistry CowSoundVariants { get; set; } = new();
@@ -96,6 +99,9 @@ public class MinecraftRegistry {
         PaintingVariants,
         BannerPatterns,
         TrimPatterns,
+        DecoratedPotPatterns,
+        BlockTransformers,
+        BlockStateProviders,
         JukeboxSongs,
         Instruments,
         CowSoundVariants,
@@ -152,6 +158,9 @@ public class MinecraftRegistry {
             PaintingVariants = PaintingVariants.Clone(),
             BannerPatterns = BannerPatterns.Clone(),
             TrimPatterns = TrimPatterns.Clone(),
+            DecoratedPotPatterns = DecoratedPotPatterns.Clone(),
+            BlockTransformers = BlockTransformers.Clone(),
+            BlockStateProviders = BlockStateProviders.Clone(),
             JukeboxSongs = JukeboxSongs.Clone(),
             Instruments = Instruments.Clone(),
             CowSoundVariants = CowSoundVariants.Clone(),

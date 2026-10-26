@@ -8,56 +8,27 @@ namespace Minecraft.Data.TrimMaterial;
 
 public interface ITrimMaterial : IProtocolType, INetworkType<ITrimMaterial> {
     /// <summary>
-    /// The suffix the client sticks on a trim pattern's texture name to find this material's
-    /// version of it.
+    /// The colour palette the client recolours a trim pattern's texture with, which also decides the
+    /// darker variant armour of the same material gets.
     /// </summary>
-    public string AssetName { get; }
+    public Identifier PaletteId { get; }
 
     /// <summary>Name shown on a trimmed item's tooltip, coloured to match the material.</summary>
     public TextComponent Description { get; }
 
-    /// <summary>
-    /// Asset names to use instead of <see cref="AssetName"/> on particular armour, keyed by
-    /// equipment asset id. Armour made of the same material as the trim would be invisible
-    /// otherwise, so those combinations get a darker variant.
-    /// </summary>
-    public IReadOnlyDictionary<Identifier, string> OverrideArmorAssets { get; }
-
     public INbtTag ToNbt() {
-        List<(string, INbtTag)> children = [
-            ("asset_name", new StringTag(AssetName)),
-            ("description", Description.SerialiseToTag())
-        ];
-
-        if (OverrideArmorAssets.Count > 0) {
-            children.Add(("override_armor_assets", new CompoundTag(OverrideArmorAssets
-                .Select(o => (o.Key.ToString(), (INbtTag)new StringTag(o.Value)))
-                .ToArray())));
-        }
-
-        return new CompoundTag(children.ToArray());
+        return new CompoundTag(
+            ("palette_id", new StringTag(PaletteId.ToString())),
+            ("description", Description.SerialiseToTag()));
     }
 
     public static ITrimMaterial FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
-        Dictionary<Identifier, string> overrides = [];
-        if (tag.Contains("override_armor_assets")) {
-            foreach ((string key, INbtTag value) in ((CompoundTag)tag["override_armor_assets"]!).Children) {
-                overrides[key] = value.GetString();
-            }
-        }
-
-        return new SimpleTrimMaterial(
-            ident,
-            tag["asset_name"]!.GetString(),
-            TextComponent.FromTag(tag["description"]!),
-            overrides);
+        return new SimpleTrimMaterial(ident, tag["palette_id"]!.GetString(), TextComponent.FromTag(tag["description"]!));
     }
 
     DataWriter INetworkType<ITrimMaterial>.WriteData(DataWriter writer, MinecraftRegistry registry) {
         return writer
-            .WriteString(AssetName)
-            .WriteVarInt(OverrideArmorAssets.Count)
-            .WriteArray(OverrideArmorAssets, (o, w) => w.Write(o.Key).WriteString(o.Value))
+            .Write(PaletteId)
             .WriteNbt(Description);
     }
 
@@ -66,14 +37,10 @@ public interface ITrimMaterial : IProtocolType, INetworkType<ITrimMaterial> {
     }
 
     /// <remarks>
-    /// An inline material has no registry name, so the asset suffix it names stands in as its
-    /// identifier.
+    /// An inline material has no registry name, so the palette it names stands in as its identifier.
     /// </remarks>
     public new static ITrimMaterial ReadData(DataReader reader, MinecraftRegistry registry) {
-        string assetName = reader.ReadString();
-        Dictionary<Identifier, string> overrides = reader
-            .ReadPrefixedArray(r => new KeyValuePair<Identifier, string>(r.ReadString(), r.ReadString()))
-            .ToDictionary();
-        return new SimpleTrimMaterial(assetName, assetName, reader.ReadText(), overrides);
+        Identifier palette = reader.ReadString();
+        return new SimpleTrimMaterial(palette, palette, reader.ReadText());
     }
 }

@@ -7,6 +7,7 @@ using Minecraft.Registry;
 using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
+using Minecraft.Schemas.Items;
 
 namespace ClientLib.Commands.Arguments;
 
@@ -449,6 +450,62 @@ public sealed class SlotsArgument : ArgumentType<SlotRange> {
 
     public override Task<Suggestions> ListSuggestions<TSource>(CommandContext<TSource> context, SuggestionsBuilder builder) {
         return SharedSuggestionProvider.Suggest(SlotRanges.AllNames(), builder);
+    }
+
+    public override IReadOnlyCollection<string> Examples => ExampleValues;
+}
+
+/// <summary>
+/// Vanilla's <c>SlotSourceArgument</c>: a slot range by name, or failing that a <c>slot_source</c> by id or
+/// inline.
+/// </summary>
+public sealed class SlotSourceArgument(CommandBuildContext context) : ArgumentType<object?> {
+    private static readonly string[] ExampleValues = ["foo", "foo:bar", "012", "{}", "true", "container.*", "container.5", "weapon"];
+
+    private readonly ResourceOrIdArgument _holder = ResourceOrIdArgument.SlotSource(context);
+
+    /// <returns>The <see cref="SlotRange"/> named, or what the holder argument read.</returns>
+    public override object? Parse(StringReader reader) {
+        int start = reader.Cursor;
+        if (SlotRanges.NameToIds(ParserUtils.ReadWhile(reader, c => c != ' ')) is { } range) {
+            return range;
+        }
+        reader.Cursor = start;
+        return _holder.Parse(reader);
+    }
+
+    public override Task<Suggestions> ListSuggestions<TSource>(CommandContext<TSource> context, SuggestionsBuilder builder) {
+        SuggestionsBuilder sub = builder.CreateOffset(builder.Start);
+        SharedSuggestionProvider.Suggest(SlotRanges.AllNames(), sub);
+        builder.Add(sub);
+        return _holder.ListSuggestions(context, builder);
+    }
+
+    public override IReadOnlyCollection<string> Examples => ExampleValues;
+}
+
+/// <summary>Vanilla's <c>SwingAnimationArgument</c>.</summary>
+public sealed class SwingAnimationArgument : ArgumentType<SwingAnimationType> {
+    private static readonly (SwingAnimationType Value, string Name)[] Values =
+        [(SwingAnimationType.None, "none"), (SwingAnimationType.Whack, "whack"), (SwingAnimationType.Stab, "stab")];
+    private static readonly string[] ExampleValues = ["whack", "stab"];
+
+    private static readonly DynamicCommandExceptionType ErrorInvalid = new(value => Component.TranslatableEscape("argument.swing_animation.invalid", value));
+
+    public override SwingAnimationType Parse(StringReader reader) {
+        string name = reader.ReadUnquotedString();
+        foreach ((SwingAnimationType value, string valueName) in Values) {
+            if (valueName == name) {
+                return value;
+            }
+        }
+        throw ErrorInvalid.CreateWithContext(reader, name);
+    }
+
+    public override Task<Suggestions> ListSuggestions<TSource>(CommandContext<TSource> context, SuggestionsBuilder builder) {
+        return context.Source is ISharedSuggestionProvider
+            ? SharedSuggestionProvider.Suggest(Values.Select(v => v.Name), builder)
+            : Suggestions.Empty();
     }
 
     public override IReadOnlyCollection<string> Examples => ExampleValues;

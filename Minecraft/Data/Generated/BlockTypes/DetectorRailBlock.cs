@@ -11,24 +11,24 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock, IPowered, IRailDirected, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:detector_rail", "block.minecraft.detector_rail", 0.7f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:detector_rail", BlockInfo.VanillaOnly, "minecraft:blocks/detector_rail");
-    private static readonly BlockStateInfo I0 = new(0.7f, 0, 1, PushReaction.Normal, 0, "metal", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S124, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.detector_rail", 0.7f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:detector_rail", BlockInfo.VanillaOnly, "minecraft:blocks/detector_rail");
+    private static readonly BlockStateInfo I0 = new(0.7f, 0, 1, PushReaction.PushPull, 0, "metal", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S124, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S89 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S89 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S89 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 2211];
+    public BlockStateInfo StateInfo => States[StateId - 2326];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -81,55 +81,55 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
             return Powered switch {
                 true => Shape switch {
                     RailDirection.NorthSouth => Waterlogged switch {
-                        true => 2211,
-                        false => 2212,
+                        true => 2326,
+                        false => 2327,
                     },
                     RailDirection.EastWest => Waterlogged switch {
-                        true => 2213,
-                        false => 2214,
+                        true => 2328,
+                        false => 2329,
                     },
                     RailDirection.AscendingEast => Waterlogged switch {
-                        true => 2215,
-                        false => 2216,
+                        true => 2330,
+                        false => 2331,
                     },
                     RailDirection.AscendingWest => Waterlogged switch {
-                        true => 2217,
-                        false => 2218,
+                        true => 2332,
+                        false => 2333,
                     },
                     RailDirection.AscendingNorth => Waterlogged switch {
-                        true => 2219,
-                        false => 2220,
+                        true => 2334,
+                        false => 2335,
                     },
                     RailDirection.AscendingSouth => Waterlogged switch {
-                        true => 2221,
-                        false => 2222,
+                        true => 2336,
+                        false => 2337,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                 },
                 false => Shape switch {
                     RailDirection.NorthSouth => Waterlogged switch {
-                        true => 2223,
-                        false => 2224,
+                        true => 2338,
+                        false => 2339,
                     },
                     RailDirection.EastWest => Waterlogged switch {
-                        true => 2225,
-                        false => 2226,
+                        true => 2340,
+                        false => 2341,
                     },
                     RailDirection.AscendingEast => Waterlogged switch {
-                        true => 2227,
-                        false => 2228,
+                        true => 2342,
+                        false => 2343,
                     },
                     RailDirection.AscendingWest => Waterlogged switch {
-                        true => 2229,
-                        false => 2230,
+                        true => 2344,
+                        false => 2345,
                     },
                     RailDirection.AscendingNorth => Waterlogged switch {
-                        true => 2231,
-                        false => 2232,
+                        true => 2346,
+                        false => 2347,
                     },
                     RailDirection.AscendingSouth => Waterlogged switch {
-                        true => 2233,
-                        false => 2234,
+                        true => 2348,
+                        false => 2349,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                 },
@@ -139,30 +139,30 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
     
     public IBlock WithState(uint state) {
         return state switch {
-            2211 => new DetectorRailBlock(Identifier, true, RailDirection.NorthSouth, true),
-            2212 => new DetectorRailBlock(Identifier, true, RailDirection.NorthSouth, false),
-            2213 => new DetectorRailBlock(Identifier, true, RailDirection.EastWest, true),
-            2214 => new DetectorRailBlock(Identifier, true, RailDirection.EastWest, false),
-            2215 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingEast, true),
-            2216 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingEast, false),
-            2217 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingWest, true),
-            2218 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingWest, false),
-            2219 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingNorth, true),
-            2220 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingNorth, false),
-            2221 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingSouth, true),
-            2222 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingSouth, false),
-            2223 => new DetectorRailBlock(Identifier, false, RailDirection.NorthSouth, true),
-            2224 => new DetectorRailBlock(Identifier, false, RailDirection.NorthSouth, false),
-            2225 => new DetectorRailBlock(Identifier, false, RailDirection.EastWest, true),
-            2226 => new DetectorRailBlock(Identifier, false, RailDirection.EastWest, false),
-            2227 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingEast, true),
-            2228 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingEast, false),
-            2229 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingWest, true),
-            2230 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingWest, false),
-            2231 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingNorth, true),
-            2232 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingNorth, false),
-            2233 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingSouth, true),
-            2234 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingSouth, false),
+            2326 => new DetectorRailBlock(Identifier, true, RailDirection.NorthSouth, true),
+            2327 => new DetectorRailBlock(Identifier, true, RailDirection.NorthSouth, false),
+            2328 => new DetectorRailBlock(Identifier, true, RailDirection.EastWest, true),
+            2329 => new DetectorRailBlock(Identifier, true, RailDirection.EastWest, false),
+            2330 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingEast, true),
+            2331 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingEast, false),
+            2332 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingWest, true),
+            2333 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingWest, false),
+            2334 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingNorth, true),
+            2335 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingNorth, false),
+            2336 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingSouth, true),
+            2337 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingSouth, false),
+            2338 => new DetectorRailBlock(Identifier, false, RailDirection.NorthSouth, true),
+            2339 => new DetectorRailBlock(Identifier, false, RailDirection.NorthSouth, false),
+            2340 => new DetectorRailBlock(Identifier, false, RailDirection.EastWest, true),
+            2341 => new DetectorRailBlock(Identifier, false, RailDirection.EastWest, false),
+            2342 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingEast, true),
+            2343 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingEast, false),
+            2344 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingWest, true),
+            2345 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingWest, false),
+            2346 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingNorth, true),
+            2347 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingNorth, false),
+            2348 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingSouth, true),
+            2349 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingSouth, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

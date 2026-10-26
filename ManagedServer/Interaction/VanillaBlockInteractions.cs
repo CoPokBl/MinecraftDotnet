@@ -48,18 +48,19 @@ namespace ManagedServer.Interaction;
 /// <item><b>Needs redstone or a block tick scheduler</b>: <c>RepeaterBlock</c> and
 /// <c>ComparatorBlock</c> (both cycle a state and then schedule the tick that is the actual
 /// behaviour; their <c>delay</c> and <c>mode</c> properties also have no generated interface yet),
-/// <c>DaylightDetectorBlock</c>, <c>RedStoneWireBlock</c>, <c>RedStoneOreBlock</c>.</item>
+/// <c>DaylightDetectorBlock</c>, <c>RedstoneWireBlock</c>, <c>RedStoneOreBlock</c>.</item>
 /// <item><b>Needs a loot table outside <c>blocks/</c></b>: <c>SweetBerryBushBlock</c>,
 /// <c>PumpkinBlock</c>, <c>CaveVinesBlock</c> and <c>CaveVinesPlantBlock</c> all harvest through
 /// <c>dropFromBlockInteractLootTable</c> against <c>BuiltInLootTables.HARVEST_SWEET_BERRY_BUSH</c> or
-/// <c>CARVE_PUMPKIN</c>. <c>LootTableCodeGen</c> only generates
-/// <c>data/minecraft/loot_table/blocks/</c>, so those tables do not exist here. The rules are a small
-/// generator change away rather than a subsystem away.</item>
+/// <c>CARVE_PUMPKIN</c>. <c>DatapackBlockLoot</c> only reads <c>loot_table/blocks/</c>, so those
+/// tables are never loaded. The rules are a small loader change away rather than a subsystem away.</item>
+/// <item><b>Needs the <c>compostable</c> component's providers</b>: <c>ComposterBlock</c>, whose
+/// chance is a <c>context_int_provider</c> dispatcher that the loot providers do not port.</item>
 /// <item><b>Needs another table that is a constructor argument or bootstrap data</b>:
-/// <c>ComposterBlock</c> (the <c>COMPOSTABLES</c> map), <c>FlowerPotBlock</c> (which pot holds which
+/// <c>FlowerPotBlock</c> (which pot holds which
 /// plant), <c>NoteBlock</c> (instrument resolution), <c>AbstractCauldronBlock</c> (the item to fluid
 /// interaction matrix).</item>
-/// <item><b>Needs another missing subsystem</b>, one each: <c>BedBlock</c> (sleeping),
+/// <item><b>Needs another missing subsystem</b>, one each: <c>AbstractBedBlock</c> (sleeping),
 /// <c>FenceBlock</c> (leads), <c>TntBlock</c> (a primed TNT entity), <c>CakeBlock</c> and
 /// <c>CandleCakeBlock</c> (eating, through <c>CakeBlock.eat</c>), <c>RespawnAnchorBlock</c> (spawn
 /// points), <c>LightBlock</c> (a creative only screen).</item>

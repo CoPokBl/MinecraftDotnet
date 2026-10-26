@@ -1,6 +1,12 @@
 using ManagedServer.Entities.Types;
 using Minecraft.Data.Generated;
+using Minecraft.Data.Components.Types;
+using Minecraft.Data.Entities;
+using Minecraft.Registry;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Entities;
+using Minecraft.Schemas.Items;
+using Minecraft.Schemas.Tags;
 
 namespace ManagedServer.Ai.Targeting;
 
@@ -10,9 +16,8 @@ namespace ManagedServer.Ai.Targeting;
 /// and narrow it per call without anyone else seeing the change.
 /// <p/>
 /// Two vanilla checks have nothing to test here and are left out rather than faked: peaceful
-/// difficulty (there is no difficulty setting) and team alliance (there are no teams). Invisibility is
-/// modelled as a plain on or off rather than vanilla's <c>getVisibilityPercent</c>, which also weighs
-/// armour and sneaking; that is noted at the check.
+/// difficulty (there is no difficulty setting) and team alliance (there are no teams).
+/// <c>getVisibilityPercent</c> is only partly ported; that is noted where it is.
 /// </summary>
 public sealed record TargetingConditions {
     /// <summary>
@@ -95,11 +100,7 @@ public sealed record TargetingConditions {
         }
 
         if (Range > 0.0) {
-            // Vanilla scales the range by getVisibilityPercent, which weighs invisibility against worn
-            // armour and whether the target is sneaking. Only the effect is modelled here, as a flat
-            // half: the armour term needs equipment weights nothing else reads, and being wrong makes
-            // an invisible target noticed from the wrong distance rather than noticed at all.
-            double visibility = TestInvisible && IsInvisible(target) ? 0.5 : 1.0;
+            double visibility = TestInvisible ? VisibilityPercent(target, looker) : 1.0;
             double effective = Math.Max(Range * visibility, 2.0);
 
             if (SquaredDistance(looker, target) > effective * effective) {
@@ -117,6 +118,54 @@ public sealed record TargetingConditions {
     /// <summary><c>LivingEntity.canBeSeenAsEnemy</c>, which <see cref="Player"/> narrows.</summary>
     private static bool CanBeSeenAsEnemy(LivingEntity target) {
         return target.CanBeSeenAsEnemy;
+    }
+
+    /// <summary>
+    /// <c>LivingEntity.getVisibilityPercent</c>, in part. The worn <c>mob_visibility</c> term and the
+    /// clamp are vanilla's. Invisibility is a flat half where vanilla weighs it against how much armour
+    /// is worn (<c>0.7 * max(cover, 0.1)</c>), and sneaking's 0.8 is left out: the armour term needs
+    /// equipment weights nothing else reads, and being wrong makes an invisible target noticed from the
+    /// wrong distance rather than noticed at all.
+    /// </summary>
+    private static double VisibilityPercent(LivingEntity target, LivingEntity looker) {
+        double visibility = IsInvisible(target) ? 0.5 : 1.0;
+        MinecraftRegistry registry = target.Server.Registry;
+
+        foreach (EquipmentSlot slot in Enum.GetValues<EquipmentSlot>()) {
+            ItemStack item = target.GetEquipmentItem(slot);
+
+            // Only while worn where the item is worn: a head carried in the hand hides nobody.
+            if (item.GetOrNull(DataComponent.MobVisibility) is { } mobVisibility
+                && item.GetOrNull(DataComponent.Equippable) is { } equippable
+                && WornIn(equippable.Slot) == slot
+                && Contains(registry, mobVisibility.TargetingEntityTypes, looker.Type)) {
+
+                visibility *= mobVisibility.Visibility;
+            }
+        }
+
+        return Math.Clamp(visibility, 0.0, 10.0);
+    }
+
+    private static EquipmentSlot WornIn(EquippableComponent.Slot slot) {
+        return slot switch {
+            EquippableComponent.Slot.MainHand => EquipmentSlot.MainHand,
+            EquippableComponent.Slot.OffHand => EquipmentSlot.OffHand,
+            EquippableComponent.Slot.Feet => EquipmentSlot.Boots,
+            EquippableComponent.Slot.Legs => EquipmentSlot.Leggings,
+            EquippableComponent.Slot.Chest => EquipmentSlot.Chestplate,
+            EquippableComponent.Slot.Head => EquipmentSlot.Helmet,
+            EquippableComponent.Slot.Body => EquipmentSlot.Body,
+            _ => EquipmentSlot.Saddle
+        };
+    }
+
+    private static bool Contains(MinecraftRegistry registry, IdSet set, IEntityType type) {
+        return set switch {
+            IdSet.Tag tag => registry.EntityTypes.Tags.Contains(registry, tag.TagName, type.Identifier),
+            IdSet.Ids ids => ids.Values.Contains(registry.EntityTypes.GetProtocolId(type)),
+            _ => false
+        };
     }
 
     private static bool IsInvisible(LivingEntity target) {

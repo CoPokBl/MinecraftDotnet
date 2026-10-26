@@ -27,7 +27,7 @@ public static class RingPositions {
     /// <param name="seed">
     /// <c>concentricRingsSeed</c>, which <c>createForNormal</c> passes the world seed for.
     /// </param>
-    /// <param name="biomes">The flattened climate lookup, at quart positions.</param>
+    /// <param name="biomes">The uncached climate lookup, at quart positions.</param>
     public static IReadOnlyList<Vec2<int>> Generate(ConcentricRingsStructurePlacement placement,
         long seed, BiomeAtQuart biomes) {
 

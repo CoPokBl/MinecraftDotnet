@@ -48,7 +48,15 @@ public enum DecorationStep {
 /// <summary>The terrain height at a column, before anything is decorated onto it.</summary>
 public delegate int BaseHeightAt(int blockX, int blockZ, HeightmapType type);
 
-/// <summary>The biome at a quart position, through the flattened sampler.</summary>
+/// <summary>The biome at a quart position, as an uncached point sample of the climate.</summary>
+/// <remarks>
+/// Divergence: vanilla samples a structure's biome checks through one caching context per chunk, and
+/// 26.3 adds column pre-checks (<c>couldStructureExistInColumn</c>, <c>couldValidBiomeExistInTerrainColumn</c>)
+/// that sample the column as a volume through that same context. Both only differ from an uncached
+/// point sample where the volume path rounds a climate value across a region boundary differently
+/// from the point path, so a structure there may start on one side and not the other.
+/// <c>Conformance/structurelayout.sh</c> against a real save is what would show it.
+/// </remarks>
 public delegate Identifier BiomeAtQuart(int quartX, int quartY, int quartZ);
 
 /// <summary>

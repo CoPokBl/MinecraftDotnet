@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DarkOakFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:fence", "block.minecraft.dark_oak_fence", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:dark_oak_fence", BlockInfo.VanillaOnly, "minecraft:blocks/dark_oak_fence");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 26, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockInfo Data = new("block.minecraft.dark_oak_fence", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:dark_oak_fence", BlockInfo.VanillaOnly, "minecraft:blocks/dark_oak_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 26, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
     private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
@@ -48,15 +48,15 @@ public record DarkOakFenceBlock(Identifier Identifier, bool East, bool North, bo
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 13932];
+    public BlockStateInfo StateInfo => States[StateId - 15811];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -70,7 +70,6 @@ public record DarkOakFenceBlock(Identifier Identifier, bool East, bool North, bo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -90,6 +89,7 @@ public record DarkOakFenceBlock(Identifier Identifier, bool East, bool North, bo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -125,44 +125,44 @@ public record DarkOakFenceBlock(Identifier Identifier, bool East, bool North, bo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13932,
-                                false => 13933,
+                                true => 15811,
+                                false => 15812,
                             },
                             false => West switch {
-                                true => 13934,
-                                false => 13935,
+                                true => 15813,
+                                false => 15814,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13936,
-                                false => 13937,
+                                true => 15815,
+                                false => 15816,
                             },
                             false => West switch {
-                                true => 13938,
-                                false => 13939,
+                                true => 15817,
+                                false => 15818,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13940,
-                                false => 13941,
+                                true => 15819,
+                                false => 15820,
                             },
                             false => West switch {
-                                true => 13942,
-                                false => 13943,
+                                true => 15821,
+                                false => 15822,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13944,
-                                false => 13945,
+                                true => 15823,
+                                false => 15824,
                             },
                             false => West switch {
-                                true => 13946,
-                                false => 13947,
+                                true => 15825,
+                                false => 15826,
                             },
                         },
                     },
@@ -171,44 +171,44 @@ public record DarkOakFenceBlock(Identifier Identifier, bool East, bool North, bo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13948,
-                                false => 13949,
+                                true => 15827,
+                                false => 15828,
                             },
                             false => West switch {
-                                true => 13950,
-                                false => 13951,
+                                true => 15829,
+                                false => 15830,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13952,
-                                false => 13953,
+                                true => 15831,
+                                false => 15832,
                             },
                             false => West switch {
-                                true => 13954,
-                                false => 13955,
+                                true => 15833,
+                                false => 15834,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13956,
-                                false => 13957,
+                                true => 15835,
+                                false => 15836,
                             },
                             false => West switch {
-                                true => 13958,
-                                false => 13959,
+                                true => 15837,
+                                false => 15838,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13960,
-                                false => 13961,
+                                true => 15839,
+                                false => 15840,
                             },
                             false => West switch {
-                                true => 13962,
-                                false => 13963,
+                                true => 15841,
+                                false => 15842,
                             },
                         },
                     },
@@ -219,38 +219,38 @@ public record DarkOakFenceBlock(Identifier Identifier, bool East, bool North, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            13932 => new DarkOakFenceBlock(Identifier, true, true, true, true, true),
-            13933 => new DarkOakFenceBlock(Identifier, true, true, true, true, false),
-            13934 => new DarkOakFenceBlock(Identifier, true, true, true, false, true),
-            13935 => new DarkOakFenceBlock(Identifier, true, true, true, false, false),
-            13936 => new DarkOakFenceBlock(Identifier, true, true, false, true, true),
-            13937 => new DarkOakFenceBlock(Identifier, true, true, false, true, false),
-            13938 => new DarkOakFenceBlock(Identifier, true, true, false, false, true),
-            13939 => new DarkOakFenceBlock(Identifier, true, true, false, false, false),
-            13940 => new DarkOakFenceBlock(Identifier, true, false, true, true, true),
-            13941 => new DarkOakFenceBlock(Identifier, true, false, true, true, false),
-            13942 => new DarkOakFenceBlock(Identifier, true, false, true, false, true),
-            13943 => new DarkOakFenceBlock(Identifier, true, false, true, false, false),
-            13944 => new DarkOakFenceBlock(Identifier, true, false, false, true, true),
-            13945 => new DarkOakFenceBlock(Identifier, true, false, false, true, false),
-            13946 => new DarkOakFenceBlock(Identifier, true, false, false, false, true),
-            13947 => new DarkOakFenceBlock(Identifier, true, false, false, false, false),
-            13948 => new DarkOakFenceBlock(Identifier, false, true, true, true, true),
-            13949 => new DarkOakFenceBlock(Identifier, false, true, true, true, false),
-            13950 => new DarkOakFenceBlock(Identifier, false, true, true, false, true),
-            13951 => new DarkOakFenceBlock(Identifier, false, true, true, false, false),
-            13952 => new DarkOakFenceBlock(Identifier, false, true, false, true, true),
-            13953 => new DarkOakFenceBlock(Identifier, false, true, false, true, false),
-            13954 => new DarkOakFenceBlock(Identifier, false, true, false, false, true),
-            13955 => new DarkOakFenceBlock(Identifier, false, true, false, false, false),
-            13956 => new DarkOakFenceBlock(Identifier, false, false, true, true, true),
-            13957 => new DarkOakFenceBlock(Identifier, false, false, true, true, false),
-            13958 => new DarkOakFenceBlock(Identifier, false, false, true, false, true),
-            13959 => new DarkOakFenceBlock(Identifier, false, false, true, false, false),
-            13960 => new DarkOakFenceBlock(Identifier, false, false, false, true, true),
-            13961 => new DarkOakFenceBlock(Identifier, false, false, false, true, false),
-            13962 => new DarkOakFenceBlock(Identifier, false, false, false, false, true),
-            13963 => new DarkOakFenceBlock(Identifier, false, false, false, false, false),
+            15811 => new DarkOakFenceBlock(Identifier, true, true, true, true, true),
+            15812 => new DarkOakFenceBlock(Identifier, true, true, true, true, false),
+            15813 => new DarkOakFenceBlock(Identifier, true, true, true, false, true),
+            15814 => new DarkOakFenceBlock(Identifier, true, true, true, false, false),
+            15815 => new DarkOakFenceBlock(Identifier, true, true, false, true, true),
+            15816 => new DarkOakFenceBlock(Identifier, true, true, false, true, false),
+            15817 => new DarkOakFenceBlock(Identifier, true, true, false, false, true),
+            15818 => new DarkOakFenceBlock(Identifier, true, true, false, false, false),
+            15819 => new DarkOakFenceBlock(Identifier, true, false, true, true, true),
+            15820 => new DarkOakFenceBlock(Identifier, true, false, true, true, false),
+            15821 => new DarkOakFenceBlock(Identifier, true, false, true, false, true),
+            15822 => new DarkOakFenceBlock(Identifier, true, false, true, false, false),
+            15823 => new DarkOakFenceBlock(Identifier, true, false, false, true, true),
+            15824 => new DarkOakFenceBlock(Identifier, true, false, false, true, false),
+            15825 => new DarkOakFenceBlock(Identifier, true, false, false, false, true),
+            15826 => new DarkOakFenceBlock(Identifier, true, false, false, false, false),
+            15827 => new DarkOakFenceBlock(Identifier, false, true, true, true, true),
+            15828 => new DarkOakFenceBlock(Identifier, false, true, true, true, false),
+            15829 => new DarkOakFenceBlock(Identifier, false, true, true, false, true),
+            15830 => new DarkOakFenceBlock(Identifier, false, true, true, false, false),
+            15831 => new DarkOakFenceBlock(Identifier, false, true, false, true, true),
+            15832 => new DarkOakFenceBlock(Identifier, false, true, false, true, false),
+            15833 => new DarkOakFenceBlock(Identifier, false, true, false, false, true),
+            15834 => new DarkOakFenceBlock(Identifier, false, true, false, false, false),
+            15835 => new DarkOakFenceBlock(Identifier, false, false, true, true, true),
+            15836 => new DarkOakFenceBlock(Identifier, false, false, true, true, false),
+            15837 => new DarkOakFenceBlock(Identifier, false, false, true, false, true),
+            15838 => new DarkOakFenceBlock(Identifier, false, false, true, false, false),
+            15839 => new DarkOakFenceBlock(Identifier, false, false, false, true, true),
+            15840 => new DarkOakFenceBlock(Identifier, false, false, false, true, false),
+            15841 => new DarkOakFenceBlock(Identifier, false, false, false, false, true),
+            15842 => new DarkOakFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

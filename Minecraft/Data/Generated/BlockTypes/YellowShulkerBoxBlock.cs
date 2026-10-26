@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record YellowShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock, IDirectional {
-    private static readonly BlockInfo Data = new("minecraft:shulker_box", "block.minecraft.yellow_shulker_box", 2f, 0.6f, 1f, 1f, 0f, false, true, BlockOffsetType.None, 0f, 0f, "minecraft:shulker_box", "minecraft:yellow_shulker_box", BlockInfo.VanillaOnly, "minecraft:blocks/yellow_shulker_box");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Destroy, 18, "stone", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.yellow_shulker_box", 2f, 0.6f, 1f, 1f, 0f, 0f, false, true, BlockOffsetType.None, 0f, 0f, "minecraft:shulker_box", "minecraft:yellow_shulker_box", BlockInfo.VanillaOnly, "minecraft:blocks/yellow_shulker_box");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Popped, 18, "stone", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record YellowShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IB
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record YellowShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IB
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,12 +69,12 @@ public record YellowShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IB
     public uint StateId {
         get {
             return Facing switch {
-                Cardinal.North => 14894,
-                Cardinal.East => 14895,
-                Cardinal.South => 14896,
-                Cardinal.West => 14897,
-                Cardinal.Up => 14898,
-                Cardinal.Down => 14899,
+                Cardinal.North => 16875,
+                Cardinal.East => 16876,
+                Cardinal.South => 16877,
+                Cardinal.West => 16878,
+                Cardinal.Up => 16879,
+                Cardinal.Down => 16880,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -82,12 +82,12 @@ public record YellowShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IB
     
     public IBlock WithState(uint state) {
         return state switch {
-            14894 => new YellowShulkerBoxBlock(Identifier, Cardinal.North),
-            14895 => new YellowShulkerBoxBlock(Identifier, Cardinal.East),
-            14896 => new YellowShulkerBoxBlock(Identifier, Cardinal.South),
-            14897 => new YellowShulkerBoxBlock(Identifier, Cardinal.West),
-            14898 => new YellowShulkerBoxBlock(Identifier, Cardinal.Up),
-            14899 => new YellowShulkerBoxBlock(Identifier, Cardinal.Down),
+            16875 => new YellowShulkerBoxBlock(Identifier, Cardinal.North),
+            16876 => new YellowShulkerBoxBlock(Identifier, Cardinal.East),
+            16877 => new YellowShulkerBoxBlock(Identifier, Cardinal.South),
+            16878 => new YellowShulkerBoxBlock(Identifier, Cardinal.West),
+            16879 => new YellowShulkerBoxBlock(Identifier, Cardinal.Up),
+            16880 => new YellowShulkerBoxBlock(Identifier, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

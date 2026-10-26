@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record OakWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:wall_sign", "block.minecraft.oak_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:oak_sign", BlockInfo.VanillaOnly, "minecraft:blocks/oak_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S120, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.oak_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:oak_sign", BlockInfo.VanillaOnly, "minecraft:blocks/oak_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S120, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S121 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S121 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S121 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S122 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S122 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S122 };
     private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S123 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S123 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S123 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 5827];
+    public BlockStateInfo StateInfo => States[StateId - 7415];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record OakWallSignBlock(Identifier Identifier, Direction Facing, bool Wat
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record OakWallSignBlock(Identifier Identifier, Direction Facing, bool Wat
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -82,20 +82,20 @@ public record OakWallSignBlock(Identifier Identifier, Direction Facing, bool Wat
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5827,
-                    false => 5828,
+                    true => 7415,
+                    false => 7416,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5829,
-                    false => 5830,
+                    true => 7417,
+                    false => 7418,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5831,
-                    false => 5832,
+                    true => 7419,
+                    false => 7420,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5833,
-                    false => 5834,
+                    true => 7421,
+                    false => 7422,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -104,14 +104,14 @@ public record OakWallSignBlock(Identifier Identifier, Direction Facing, bool Wat
     
     public IBlock WithState(uint state) {
         return state switch {
-            5827 => new OakWallSignBlock(Identifier, Direction.North, true),
-            5828 => new OakWallSignBlock(Identifier, Direction.North, false),
-            5829 => new OakWallSignBlock(Identifier, Direction.South, true),
-            5830 => new OakWallSignBlock(Identifier, Direction.South, false),
-            5831 => new OakWallSignBlock(Identifier, Direction.West, true),
-            5832 => new OakWallSignBlock(Identifier, Direction.West, false),
-            5833 => new OakWallSignBlock(Identifier, Direction.East, true),
-            5834 => new OakWallSignBlock(Identifier, Direction.East, false),
+            7415 => new OakWallSignBlock(Identifier, Direction.North, true),
+            7416 => new OakWallSignBlock(Identifier, Direction.North, false),
+            7417 => new OakWallSignBlock(Identifier, Direction.South, true),
+            7418 => new OakWallSignBlock(Identifier, Direction.South, false),
+            7419 => new OakWallSignBlock(Identifier, Direction.West, true),
+            7420 => new OakWallSignBlock(Identifier, Direction.West, false),
+            7421 => new OakWallSignBlock(Identifier, Direction.East, true),
+            7422 => new OakWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

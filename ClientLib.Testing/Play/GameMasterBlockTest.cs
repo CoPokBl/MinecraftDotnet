@@ -143,7 +143,7 @@ public class GameMasterBlockTest {
         List<ClientBlockEntity> opened = UseCommandBlock(client, player, true, EntityEvent.PlayerPermissionLevel2);
         Assert.That(opened, Is.EqualTo(new[] { level.GetBlockEntity(2, 15, 0) }));
         Assert.That(sent.OfType<ServerBoundUseItemOnPacket>().Single().Position, Is.EqualTo(new Vec3<int>(2, 15, 0)));
-        Assert.That(sent.OfType<ServerBoundSwingArmPacket>().Count(), Is.EqualTo(1));
+        Assert.That(player.IsSwinging, Is.True);
     }
 
     [Test]
@@ -153,7 +153,7 @@ public class GameMasterBlockTest {
         Assert.That(opened, Is.Empty);
         // A pass goes on to the off hand, so each hand sends a use_item_on, and neither swings.
         Assert.That(sent.OfType<ServerBoundUseItemOnPacket>().Select(use => use.ActiveHand), Is.EqualTo(new[] { Hand.MainHand, Hand.OffHand }));
-        Assert.That(sent.OfType<ServerBoundSwingArmPacket>(), Is.Empty);
+        Assert.That(player.IsSwinging, Is.False);
     }
 
     [Test]

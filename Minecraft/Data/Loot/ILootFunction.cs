@@ -6,16 +6,14 @@ namespace Minecraft.Data.Loot;
 
 /// <summary>
 /// Vanilla's <c>LootItemFunction</c>. Every function upstream is a
-/// <c>LootItemConditionalFunction</c>, so the conditions live on the base and a function whose
-/// conditions fail returns the stack untouched.
+/// <c>LootItemConditionalFunction</c>, so the condition lives on the base and a function whose
+/// condition fails returns the stack untouched.
 /// </summary>
-public abstract record LootFunction(ILootCondition[] Conditions) {
-    /// <summary><c>LootItemConditionalFunction.apply</c>: run only when every condition holds.</summary>
+public abstract record LootFunction(ILootCondition? Condition) {
+    /// <summary><c>LootItemConditionalFunction.apply</c>: run unless the condition says no.</summary>
     public ItemStack Apply(ItemStack stack, LootContext context) {
-        foreach (ILootCondition condition in Conditions) {
-            if (!condition.Test(context)) {
-                return stack;
-            }
+        if (Condition != null && !Condition.Test(context)) {
+            return stack;
         }
 
         return Run(stack, context);
@@ -24,11 +22,26 @@ public abstract record LootFunction(ILootCondition[] Conditions) {
     protected abstract ItemStack Run(ItemStack stack, LootContext context);
 }
 
+/// <summary>
+/// <c>SequenceFunction</c>: every function in order, each on what the last returned. A list where a
+/// single modifier is expected is this with no condition, which is how a 26.3 table writes what used
+/// to be a <c>functions</c> list.
+/// </summary>
+public sealed record SequenceFunction(ILootCondition? Condition, LootFunction[] Functions) : LootFunction(Condition) {
+    protected override ItemStack Run(ItemStack stack, LootContext context) {
+        foreach (LootFunction function in Functions) {
+            stack = function.Apply(stack, context);
+        }
+
+        return stack;
+    }
+}
+
 /// <summary><c>SetItemCountFunction</c>. <paramref name="Add"/> makes it relative to what is there.</summary>
 public sealed record SetCountFunction(
-    ILootCondition[] Conditions,
-    INumberProvider Count,
-    bool Add) : LootFunction(Conditions) {
+    ILootCondition? Condition,
+    IContextIntProvider Count,
+    bool Add) : LootFunction(Condition) {
 
     protected override ItemStack Run(ItemStack stack, LootContext context) {
         int baseCount = Add ? stack.Count : 0;
@@ -40,7 +53,7 @@ public sealed record SetCountFunction(
 /// <c>ApplyExplosionDecay</c>: each item of the stack survives with probability <c>1 / radius</c>.
 /// With no explosion radius in the context this is a no-op, which is every use of it today.
 /// </summary>
-public sealed record ExplosionDecayFunction(ILootCondition[] Conditions) : LootFunction(Conditions) {
+public sealed record ExplosionDecayFunction(ILootCondition? Condition) : LootFunction(Condition) {
     protected override ItemStack Run(ItemStack stack, LootContext context) {
         if (context.ExplosionRadius is not { } radius) {
             return stack;
@@ -64,9 +77,9 @@ public sealed record ExplosionDecayFunction(ILootCondition[] Conditions) : LootF
 /// count instead of going through the formula with a level of zero.
 /// </summary>
 public sealed record ApplyBonusFunction(
-    ILootCondition[] Conditions,
+    ILootCondition? Condition,
     Identifier Enchantment,
-    IBonusFormula Formula) : LootFunction(Conditions) {
+    IBonusFormula Formula) : LootFunction(Condition) {
 
     protected override ItemStack Run(ItemStack stack, LootContext context) {
         if (context.Tool is not { } tool) {
@@ -128,7 +141,7 @@ public sealed record BinomialWithBonusCountFormula(int ExtraRounds, float Probab
 }
 
 /// <summary><c>LimitCount</c>: clamp the count into a range, either end of which may be absent.</summary>
-public sealed record LimitCountFunction(ILootCondition[] Conditions, IntRange Limit) : LootFunction(Conditions) {
+public sealed record LimitCountFunction(ILootCondition? Condition, IntLimit Limit) : LootFunction(Condition) {
     protected override ItemStack Run(ItemStack stack, LootContext context) {
         return stack.WithCount(Limit.Clamp(context, stack.Count));
     }
@@ -144,8 +157,8 @@ public sealed record LimitCountFunction(ILootCondition[] Conditions, IntRange Li
 /// so the table stays a faithful reading of the datapack and the gap is one method, named here.
 /// </summary>
 public sealed record CopyComponentsFunction(
-    ILootCondition[] Conditions,
-    Identifier[] Include) : LootFunction(Conditions) {
+    ILootCondition? Condition,
+    Identifier[] Include) : LootFunction(Condition) {
 
     protected override ItemStack Run(ItemStack stack, LootContext context) {
         return stack;
@@ -163,9 +176,9 @@ public sealed record CopyComponentsFunction(
 /// affected and all ten still drop the right item.
 /// </summary>
 public sealed record CopyStateFunction(
-    ILootCondition[] Conditions,
+    ILootCondition? Condition,
     Identifier Block,
-    string[] Properties) : LootFunction(Conditions) {
+    string[] Properties) : LootFunction(Condition) {
 
     protected override ItemStack Run(ItemStack stack, LootContext context) {
         return stack;

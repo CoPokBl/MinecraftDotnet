@@ -101,18 +101,73 @@ public abstract record PlacementModifier {
         }
     }
 
-    /// <summary>
-    /// <c>RandomOffsetPlacement</c>. The horizontal provider is sampled <b>twice</b>, once for x and
-    /// once for z, and the y draw sits between them.
-    /// </summary>
-    public sealed record RandomOffset(IIntProvider XzSpread, IIntProvider YSpread) : PlacementModifier {
+    /// <summary><c>OffsetPlacement</c>: move the position by three amounts, drawn x, then y, then z.</summary>
+    public sealed record Offset(IIntProvider X, IIntProvider Y, IIntProvider Z) : PlacementModifier {
         public override IReadOnlyList<Vec3<int>> GetPositions(PlacementContext context, RandomSource random,
             Vec3<int> origin) {
 
-            int x = origin.X + XzSpread.Sample(random);
-            int y = origin.Y + YSpread.Sample(random);
-            int z = origin.Z + XzSpread.Sample(random);
-            return [new Vec3<int>(x, y, z)];
+            int x = X.Sample(random);
+            int y = Y.Sample(random);
+            int z = Z.Sample(random);
+            return [origin + new Vec3<int>(x, y, z)];
+        }
+    }
+
+    /// <summary><c>RandomChancePlacement</c>: keep the position with a float probability.</summary>
+    public sealed record RandomChance(float Chance) : Filter {
+        protected override bool ShouldPlace(PlacementContext context, RandomSource random, Vec3<int> origin) {
+            return random.NextFloat() < Chance;
+        }
+    }
+
+    /// <summary>
+    /// <c>RandomlySelectedPlacement</c>: one of several modifiers, drawn as <c>nextInt(count)</c>,
+    /// and then that one's own draws.
+    /// </summary>
+    public sealed record RandomlySelected(IReadOnlyList<PlacementModifier> Placements) : PlacementModifier {
+        public override IReadOnlyList<Vec3<int>> GetPositions(PlacementContext context, RandomSource random,
+            Vec3<int> origin) {
+
+            return Placements[random.NextInt(Placements.Count)].GetPositions(context, random, origin);
+        }
+    }
+
+    /// <summary>
+    /// <c>CuboidPlacement</c>: every position of a box grown from the origin, optionally only its
+    /// shell or only its faces.
+    /// </summary>
+    /// <remarks>
+    /// The sizes are drawn height first, then width and length, and are inclusive, so a size of three
+    /// spans four positions.
+    /// </remarks>
+    public sealed record Cuboid(IIntProvider XzSize, IIntProvider YSize, bool IncludeEdges, bool IncludeInterior)
+        : PlacementModifier {
+
+        public override IReadOnlyList<Vec3<int>> GetPositions(PlacementContext context, RandomSource random,
+            Vec3<int> origin) {
+
+            int height = YSize.Sample(random);
+            int width = XzSize.Sample(random);
+            int length = XzSize.Sample(random);
+
+            List<Vec3<int>> positions = [];
+
+            for (int x = 0; x <= width; x++) {
+                for (int y = 0; y <= height; y++) {
+                    for (int z = 0; z <= length; z++) {
+                        if ((IncludeEdges || x != 0 && x != width || y != 0 && y != height)
+                            && (IncludeEdges || z != 0 && z != length || y != 0 && y != height)
+                            && (IncludeEdges || x != 0 && x != width || z != 0 && z != length)
+                            && (IncludeInterior || x == 0 || x == width || y == 0 || y == height || z == 0
+                                || z == length)) {
+
+                            positions.Add(origin + new Vec3<int>(x, y, z));
+                        }
+                    }
+                }
+            }
+
+            return positions;
         }
     }
 
@@ -186,7 +241,7 @@ public abstract record PlacementModifier {
     /// </remarks>
     public sealed record NoiseThresholdCount(double NoiseLevel, int BelowNoise, int AboveNoise) : Repeating {
         protected override int Count(RandomSource random, Vec3<int> origin) {
-            double value = FeatureNoise.BiomeInfo.GetValue(origin.X / 200.0, origin.Z / 200.0, false);
+            double value = FeatureNoise.BiomeInfo.Get(origin.X / 200.0, origin.Z / 200.0);
             return value < NoiseLevel ? BelowNoise : AboveNoise;
         }
     }
@@ -196,7 +251,7 @@ public abstract record PlacementModifier {
         : Repeating {
 
         protected override int Count(RandomSource random, Vec3<int> origin) {
-            double value = FeatureNoise.BiomeInfo.GetValue(origin.X / NoiseFactor, origin.Z / NoiseFactor, false);
+            double value = FeatureNoise.BiomeInfo.Get(origin.X / NoiseFactor, origin.Z / NoiseFactor);
             return (int)Math.Ceiling((value + NoiseOffset) * NoiseToCountRatio);
         }
     }
@@ -349,5 +404,5 @@ public abstract record PlacementModifier {
 /// grass and flowers a property of the coordinates alone.
 /// </remarks>
 public static class FeatureNoise {
-    public static readonly PerlinSimplexNoise BiomeInfo = new(new LegacyRandomSource(2345L), [0]);
+    public static SimplexNoise BiomeInfo => Surface.BiomeClimate.BiomeInfoNoise;
 }

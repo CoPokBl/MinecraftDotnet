@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:layered_cauldron", "block.minecraft.water_cauldron", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cauldron", BlockInfo.VanillaOnly, "minecraft:blocks/water_cauldron");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S414, BlockShapes.S414, BlockShapes.S415, BlockShapes.S1, BlockShapes.S414, BlockShapes.S414);
+    private static readonly BlockInfo Data = new("block.minecraft.water_cauldron", 2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cauldron", BlockInfo.VanillaOnly, "minecraft:blocks/water_cauldron");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S414, BlockShapes.S414, BlockShapes.S415, BlockShapes.S1, BlockShapes.S414, BlockShapes.S414);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -67,9 +67,9 @@ public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
     public uint StateId {
         get {
             return Level switch {
-                1 => 9461,
-                2 => 9462,
-                3 => 9463,
+                1 => 11195,
+                2 => 11196,
+                3 => 11197,
                 _ => throw new ArgumentOutOfRangeException(nameof(Level), Level, "Unknown value for property level.")
             };
         }
@@ -77,9 +77,9 @@ public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            9461 => new WaterCauldronBlock(Identifier, 1),
-            9462 => new WaterCauldronBlock(Identifier, 2),
-            9463 => new WaterCauldronBlock(Identifier, 3),
+            11195 => new WaterCauldronBlock(Identifier, 1),
+            11196 => new WaterCauldronBlock(Identifier, 2),
+            11197 => new WaterCauldronBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

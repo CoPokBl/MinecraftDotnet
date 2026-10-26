@@ -94,6 +94,10 @@ public static class SampleBuilder {
             if (definition == typeof(List<>) || definition == typeof(Dictionary<,>)) {
                 return Activator.CreateInstance(type);
             }
+
+            if (definition == typeof(IReadOnlyList<>)) {
+                return Array.CreateInstance(type.GetGenericArguments()[0], 0);
+            }
         }
 
         if (typeof(INbtTag).IsAssignableFrom(type)) {

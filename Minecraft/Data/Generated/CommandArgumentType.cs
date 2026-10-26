@@ -16,10 +16,13 @@ public static class CommandArgumentType {
     public static readonly BlockStateArgumentType BlockState = new();
     public static readonly ChunkPosArgumentType ColumnPos = new();
     public static readonly ComponentArgumentType Component = new();
+    public static readonly ContextFloatProviderArgumentType ContextFloatProvider = new();
+    public static readonly ContextIntProviderArgumentType ContextIntProvider = new();
     public static readonly DialogArgumentType Dialog = new();
     public static readonly DimensionArgumentType Dimension = new();
     public static readonly EntityArgumentType Entity = new();
     public static readonly EntityAnchorArgumentType EntityAnchor = new();
+    public static readonly FeatureArgumentType Feature = new();
     public static readonly FloatRangeArgumentType FloatRange = new();
     public static readonly FunctionArgumentType Function = new();
     public static readonly GameProfileArgumentType GameProfile = new();
@@ -51,7 +54,9 @@ public static class CommandArgumentType {
     public static readonly RotationArgumentType Rotation = new();
     public static readonly ScoreHolderArgumentType ScoreHolder = new();
     public static readonly ScoreboardSlotArgumentType ScoreboardSlot = new();
+    public static readonly SlotSourceArgumentType SlotSource = new();
     public static readonly StyleArgumentType Style = new();
+    public static readonly SwingAnimationArgumentType SwingAnimation = new();
     public static readonly SwizzleArgumentType Swizzle = new();
     public static readonly TeamArgumentType Team = new();
     public static readonly TeamColorArgumentType TeamColor = new();

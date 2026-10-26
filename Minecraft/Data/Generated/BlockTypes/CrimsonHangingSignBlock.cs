@@ -11,26 +11,26 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CrimsonHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock, IAttached, IRotated, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:ceiling_hanging_sign", "block.minecraft.crimson_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:crimson_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_hanging_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 53, "nether_wood_hanging_sign", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.crimson_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:crimson_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 53, "nether_wood_hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6419];
+    public BlockStateInfo StateInfo => States[StateId - 8015];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -44,7 +44,6 @@ public record CrimsonHangingSignBlock(Identifier Identifier, bool Attached, int 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -64,6 +63,7 @@ public record CrimsonHangingSignBlock(Identifier Identifier, bool Attached, int 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -83,135 +83,135 @@ public record CrimsonHangingSignBlock(Identifier Identifier, bool Attached, int 
             return Attached switch {
                 true => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 6419,
-                        false => 6420,
+                        true => 8015,
+                        false => 8016,
                     },
                     1 => Waterlogged switch {
-                        true => 6421,
-                        false => 6422,
+                        true => 8017,
+                        false => 8018,
                     },
                     2 => Waterlogged switch {
-                        true => 6423,
-                        false => 6424,
+                        true => 8019,
+                        false => 8020,
                     },
                     3 => Waterlogged switch {
-                        true => 6425,
-                        false => 6426,
+                        true => 8021,
+                        false => 8022,
                     },
                     4 => Waterlogged switch {
-                        true => 6427,
-                        false => 6428,
+                        true => 8023,
+                        false => 8024,
                     },
                     5 => Waterlogged switch {
-                        true => 6429,
-                        false => 6430,
+                        true => 8025,
+                        false => 8026,
                     },
                     6 => Waterlogged switch {
-                        true => 6431,
-                        false => 6432,
+                        true => 8027,
+                        false => 8028,
                     },
                     7 => Waterlogged switch {
-                        true => 6433,
-                        false => 6434,
+                        true => 8029,
+                        false => 8030,
                     },
                     8 => Waterlogged switch {
-                        true => 6435,
-                        false => 6436,
+                        true => 8031,
+                        false => 8032,
                     },
                     9 => Waterlogged switch {
-                        true => 6437,
-                        false => 6438,
+                        true => 8033,
+                        false => 8034,
                     },
                     10 => Waterlogged switch {
-                        true => 6439,
-                        false => 6440,
+                        true => 8035,
+                        false => 8036,
                     },
                     11 => Waterlogged switch {
-                        true => 6441,
-                        false => 6442,
+                        true => 8037,
+                        false => 8038,
                     },
                     12 => Waterlogged switch {
-                        true => 6443,
-                        false => 6444,
+                        true => 8039,
+                        false => 8040,
                     },
                     13 => Waterlogged switch {
-                        true => 6445,
-                        false => 6446,
+                        true => 8041,
+                        false => 8042,
                     },
                     14 => Waterlogged switch {
-                        true => 6447,
-                        false => 6448,
+                        true => 8043,
+                        false => 8044,
                     },
                     15 => Waterlogged switch {
-                        true => 6449,
-                        false => 6450,
+                        true => 8045,
+                        false => 8046,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 6451,
-                        false => 6452,
+                        true => 8047,
+                        false => 8048,
                     },
                     1 => Waterlogged switch {
-                        true => 6453,
-                        false => 6454,
+                        true => 8049,
+                        false => 8050,
                     },
                     2 => Waterlogged switch {
-                        true => 6455,
-                        false => 6456,
+                        true => 8051,
+                        false => 8052,
                     },
                     3 => Waterlogged switch {
-                        true => 6457,
-                        false => 6458,
+                        true => 8053,
+                        false => 8054,
                     },
                     4 => Waterlogged switch {
-                        true => 6459,
-                        false => 6460,
+                        true => 8055,
+                        false => 8056,
                     },
                     5 => Waterlogged switch {
-                        true => 6461,
-                        false => 6462,
+                        true => 8057,
+                        false => 8058,
                     },
                     6 => Waterlogged switch {
-                        true => 6463,
-                        false => 6464,
+                        true => 8059,
+                        false => 8060,
                     },
                     7 => Waterlogged switch {
-                        true => 6465,
-                        false => 6466,
+                        true => 8061,
+                        false => 8062,
                     },
                     8 => Waterlogged switch {
-                        true => 6467,
-                        false => 6468,
+                        true => 8063,
+                        false => 8064,
                     },
                     9 => Waterlogged switch {
-                        true => 6469,
-                        false => 6470,
+                        true => 8065,
+                        false => 8066,
                     },
                     10 => Waterlogged switch {
-                        true => 6471,
-                        false => 6472,
+                        true => 8067,
+                        false => 8068,
                     },
                     11 => Waterlogged switch {
-                        true => 6473,
-                        false => 6474,
+                        true => 8069,
+                        false => 8070,
                     },
                     12 => Waterlogged switch {
-                        true => 6475,
-                        false => 6476,
+                        true => 8071,
+                        false => 8072,
                     },
                     13 => Waterlogged switch {
-                        true => 6477,
-                        false => 6478,
+                        true => 8073,
+                        false => 8074,
                     },
                     14 => Waterlogged switch {
-                        true => 6479,
-                        false => 6480,
+                        true => 8075,
+                        false => 8076,
                     },
                     15 => Waterlogged switch {
-                        true => 6481,
-                        false => 6482,
+                        true => 8077,
+                        false => 8078,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
@@ -221,70 +221,70 @@ public record CrimsonHangingSignBlock(Identifier Identifier, bool Attached, int 
     
     public IBlock WithState(uint state) {
         return state switch {
-            6419 => new CrimsonHangingSignBlock(Identifier, true, 0, true),
-            6420 => new CrimsonHangingSignBlock(Identifier, true, 0, false),
-            6421 => new CrimsonHangingSignBlock(Identifier, true, 1, true),
-            6422 => new CrimsonHangingSignBlock(Identifier, true, 1, false),
-            6423 => new CrimsonHangingSignBlock(Identifier, true, 2, true),
-            6424 => new CrimsonHangingSignBlock(Identifier, true, 2, false),
-            6425 => new CrimsonHangingSignBlock(Identifier, true, 3, true),
-            6426 => new CrimsonHangingSignBlock(Identifier, true, 3, false),
-            6427 => new CrimsonHangingSignBlock(Identifier, true, 4, true),
-            6428 => new CrimsonHangingSignBlock(Identifier, true, 4, false),
-            6429 => new CrimsonHangingSignBlock(Identifier, true, 5, true),
-            6430 => new CrimsonHangingSignBlock(Identifier, true, 5, false),
-            6431 => new CrimsonHangingSignBlock(Identifier, true, 6, true),
-            6432 => new CrimsonHangingSignBlock(Identifier, true, 6, false),
-            6433 => new CrimsonHangingSignBlock(Identifier, true, 7, true),
-            6434 => new CrimsonHangingSignBlock(Identifier, true, 7, false),
-            6435 => new CrimsonHangingSignBlock(Identifier, true, 8, true),
-            6436 => new CrimsonHangingSignBlock(Identifier, true, 8, false),
-            6437 => new CrimsonHangingSignBlock(Identifier, true, 9, true),
-            6438 => new CrimsonHangingSignBlock(Identifier, true, 9, false),
-            6439 => new CrimsonHangingSignBlock(Identifier, true, 10, true),
-            6440 => new CrimsonHangingSignBlock(Identifier, true, 10, false),
-            6441 => new CrimsonHangingSignBlock(Identifier, true, 11, true),
-            6442 => new CrimsonHangingSignBlock(Identifier, true, 11, false),
-            6443 => new CrimsonHangingSignBlock(Identifier, true, 12, true),
-            6444 => new CrimsonHangingSignBlock(Identifier, true, 12, false),
-            6445 => new CrimsonHangingSignBlock(Identifier, true, 13, true),
-            6446 => new CrimsonHangingSignBlock(Identifier, true, 13, false),
-            6447 => new CrimsonHangingSignBlock(Identifier, true, 14, true),
-            6448 => new CrimsonHangingSignBlock(Identifier, true, 14, false),
-            6449 => new CrimsonHangingSignBlock(Identifier, true, 15, true),
-            6450 => new CrimsonHangingSignBlock(Identifier, true, 15, false),
-            6451 => new CrimsonHangingSignBlock(Identifier, false, 0, true),
-            6452 => new CrimsonHangingSignBlock(Identifier, false, 0, false),
-            6453 => new CrimsonHangingSignBlock(Identifier, false, 1, true),
-            6454 => new CrimsonHangingSignBlock(Identifier, false, 1, false),
-            6455 => new CrimsonHangingSignBlock(Identifier, false, 2, true),
-            6456 => new CrimsonHangingSignBlock(Identifier, false, 2, false),
-            6457 => new CrimsonHangingSignBlock(Identifier, false, 3, true),
-            6458 => new CrimsonHangingSignBlock(Identifier, false, 3, false),
-            6459 => new CrimsonHangingSignBlock(Identifier, false, 4, true),
-            6460 => new CrimsonHangingSignBlock(Identifier, false, 4, false),
-            6461 => new CrimsonHangingSignBlock(Identifier, false, 5, true),
-            6462 => new CrimsonHangingSignBlock(Identifier, false, 5, false),
-            6463 => new CrimsonHangingSignBlock(Identifier, false, 6, true),
-            6464 => new CrimsonHangingSignBlock(Identifier, false, 6, false),
-            6465 => new CrimsonHangingSignBlock(Identifier, false, 7, true),
-            6466 => new CrimsonHangingSignBlock(Identifier, false, 7, false),
-            6467 => new CrimsonHangingSignBlock(Identifier, false, 8, true),
-            6468 => new CrimsonHangingSignBlock(Identifier, false, 8, false),
-            6469 => new CrimsonHangingSignBlock(Identifier, false, 9, true),
-            6470 => new CrimsonHangingSignBlock(Identifier, false, 9, false),
-            6471 => new CrimsonHangingSignBlock(Identifier, false, 10, true),
-            6472 => new CrimsonHangingSignBlock(Identifier, false, 10, false),
-            6473 => new CrimsonHangingSignBlock(Identifier, false, 11, true),
-            6474 => new CrimsonHangingSignBlock(Identifier, false, 11, false),
-            6475 => new CrimsonHangingSignBlock(Identifier, false, 12, true),
-            6476 => new CrimsonHangingSignBlock(Identifier, false, 12, false),
-            6477 => new CrimsonHangingSignBlock(Identifier, false, 13, true),
-            6478 => new CrimsonHangingSignBlock(Identifier, false, 13, false),
-            6479 => new CrimsonHangingSignBlock(Identifier, false, 14, true),
-            6480 => new CrimsonHangingSignBlock(Identifier, false, 14, false),
-            6481 => new CrimsonHangingSignBlock(Identifier, false, 15, true),
-            6482 => new CrimsonHangingSignBlock(Identifier, false, 15, false),
+            8015 => new CrimsonHangingSignBlock(Identifier, true, 0, true),
+            8016 => new CrimsonHangingSignBlock(Identifier, true, 0, false),
+            8017 => new CrimsonHangingSignBlock(Identifier, true, 1, true),
+            8018 => new CrimsonHangingSignBlock(Identifier, true, 1, false),
+            8019 => new CrimsonHangingSignBlock(Identifier, true, 2, true),
+            8020 => new CrimsonHangingSignBlock(Identifier, true, 2, false),
+            8021 => new CrimsonHangingSignBlock(Identifier, true, 3, true),
+            8022 => new CrimsonHangingSignBlock(Identifier, true, 3, false),
+            8023 => new CrimsonHangingSignBlock(Identifier, true, 4, true),
+            8024 => new CrimsonHangingSignBlock(Identifier, true, 4, false),
+            8025 => new CrimsonHangingSignBlock(Identifier, true, 5, true),
+            8026 => new CrimsonHangingSignBlock(Identifier, true, 5, false),
+            8027 => new CrimsonHangingSignBlock(Identifier, true, 6, true),
+            8028 => new CrimsonHangingSignBlock(Identifier, true, 6, false),
+            8029 => new CrimsonHangingSignBlock(Identifier, true, 7, true),
+            8030 => new CrimsonHangingSignBlock(Identifier, true, 7, false),
+            8031 => new CrimsonHangingSignBlock(Identifier, true, 8, true),
+            8032 => new CrimsonHangingSignBlock(Identifier, true, 8, false),
+            8033 => new CrimsonHangingSignBlock(Identifier, true, 9, true),
+            8034 => new CrimsonHangingSignBlock(Identifier, true, 9, false),
+            8035 => new CrimsonHangingSignBlock(Identifier, true, 10, true),
+            8036 => new CrimsonHangingSignBlock(Identifier, true, 10, false),
+            8037 => new CrimsonHangingSignBlock(Identifier, true, 11, true),
+            8038 => new CrimsonHangingSignBlock(Identifier, true, 11, false),
+            8039 => new CrimsonHangingSignBlock(Identifier, true, 12, true),
+            8040 => new CrimsonHangingSignBlock(Identifier, true, 12, false),
+            8041 => new CrimsonHangingSignBlock(Identifier, true, 13, true),
+            8042 => new CrimsonHangingSignBlock(Identifier, true, 13, false),
+            8043 => new CrimsonHangingSignBlock(Identifier, true, 14, true),
+            8044 => new CrimsonHangingSignBlock(Identifier, true, 14, false),
+            8045 => new CrimsonHangingSignBlock(Identifier, true, 15, true),
+            8046 => new CrimsonHangingSignBlock(Identifier, true, 15, false),
+            8047 => new CrimsonHangingSignBlock(Identifier, false, 0, true),
+            8048 => new CrimsonHangingSignBlock(Identifier, false, 0, false),
+            8049 => new CrimsonHangingSignBlock(Identifier, false, 1, true),
+            8050 => new CrimsonHangingSignBlock(Identifier, false, 1, false),
+            8051 => new CrimsonHangingSignBlock(Identifier, false, 2, true),
+            8052 => new CrimsonHangingSignBlock(Identifier, false, 2, false),
+            8053 => new CrimsonHangingSignBlock(Identifier, false, 3, true),
+            8054 => new CrimsonHangingSignBlock(Identifier, false, 3, false),
+            8055 => new CrimsonHangingSignBlock(Identifier, false, 4, true),
+            8056 => new CrimsonHangingSignBlock(Identifier, false, 4, false),
+            8057 => new CrimsonHangingSignBlock(Identifier, false, 5, true),
+            8058 => new CrimsonHangingSignBlock(Identifier, false, 5, false),
+            8059 => new CrimsonHangingSignBlock(Identifier, false, 6, true),
+            8060 => new CrimsonHangingSignBlock(Identifier, false, 6, false),
+            8061 => new CrimsonHangingSignBlock(Identifier, false, 7, true),
+            8062 => new CrimsonHangingSignBlock(Identifier, false, 7, false),
+            8063 => new CrimsonHangingSignBlock(Identifier, false, 8, true),
+            8064 => new CrimsonHangingSignBlock(Identifier, false, 8, false),
+            8065 => new CrimsonHangingSignBlock(Identifier, false, 9, true),
+            8066 => new CrimsonHangingSignBlock(Identifier, false, 9, false),
+            8067 => new CrimsonHangingSignBlock(Identifier, false, 10, true),
+            8068 => new CrimsonHangingSignBlock(Identifier, false, 10, false),
+            8069 => new CrimsonHangingSignBlock(Identifier, false, 11, true),
+            8070 => new CrimsonHangingSignBlock(Identifier, false, 11, false),
+            8071 => new CrimsonHangingSignBlock(Identifier, false, 12, true),
+            8072 => new CrimsonHangingSignBlock(Identifier, false, 12, false),
+            8073 => new CrimsonHangingSignBlock(Identifier, false, 13, true),
+            8074 => new CrimsonHangingSignBlock(Identifier, false, 13, false),
+            8075 => new CrimsonHangingSignBlock(Identifier, false, 14, true),
+            8076 => new CrimsonHangingSignBlock(Identifier, false, 14, false),
+            8077 => new CrimsonHangingSignBlock(Identifier, false, 15, true),
+            8078 => new CrimsonHangingSignBlock(Identifier, false, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

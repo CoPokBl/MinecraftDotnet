@@ -8,7 +8,8 @@ namespace GraphicalClient.Assets.ResourcePacks;
 /// (<c>assets/minecraft/atlases/&lt;atlas&gt;.json</c>): each listed texture recoloured once per palette,
 /// as the sprite <c>&lt;texture&gt;&lt;separator&gt;&lt;suffix&gt;</c>. The definitions of every pack are read
 /// lowest first, and a later source naming the same sprite replaces an earlier one, as vanilla's
-/// <c>SpriteSourceList</c> collects them. Other source types are not read.
+/// <c>SpriteSourceList</c> collects them. Other source types are not read. It also recolours single textures
+/// by their own palette metadata, as <c>PalettedTextureManager</c> does for armour trims.
 /// </summary>
 public sealed class PalettedPermutations(PackFiles files, Func<string, TextureImage?> load) {
     private readonly record struct Permutation(Identifier Texture, Identifier PaletteKey, Identifier Palette);
@@ -34,6 +35,47 @@ public sealed class PalettedPermutations(PackFiles files, Func<string, TextureIm
             rgba[i + 3] = (byte)(pixel >> 24);
         }
         return new TextureImage(image.Width, image.Height, rgba);
+    }
+
+    /// <summary>
+    /// <c>PalettedTextureManager.prepareSlot</c>: a texture recoloured from the palette its <c>.mcmeta</c> names
+    /// as <c>base_palette</c> to <paramref name="paletteId"/>, palettes living under <c>textures/palettes</c>. Null
+    /// when the texture is missing; a palette that is missing or of another size leaves the texture as it is.
+    /// </summary>
+    public TextureImage? PalettedTexture(Identifier baseTexture, Identifier paletteId) {
+        string file = FileOf(baseTexture);
+        if (load(file) is not { } image) {
+            return null;
+        }
+        if (BasePalette(files.Read(file + ".mcmeta")) is not { } basePalette
+            || Mapping(PaletteTexture(basePalette), PaletteTexture(paletteId)) is not { } palette) {
+            return image;
+        }
+        byte[] rgba = new byte[image.Rgba.Length];
+        for (int i = 0; i < rgba.Length; i += 4) {
+            uint pixel = Apply(palette, Argb(image.Rgba, i));
+            rgba[i] = (byte)(pixel >> 16);
+            rgba[i + 1] = (byte)(pixel >> 8);
+            rgba[i + 2] = (byte)pixel;
+            rgba[i + 3] = (byte)(pixel >> 24);
+        }
+        return new TextureImage(image.Width, image.Height, rgba);
+    }
+
+    /// <summary><c>Palette.ID_CONVERTER</c>: a palette id names a texture under <c>textures/palettes</c>.</summary>
+    private static Identifier PaletteTexture(Identifier palette) => new(palette.Namespace, "palettes/" + palette.Key);
+
+    /// <summary><c>PaletteMetadataSection</c>: the <c>palette</c> section's <c>base_palette</c>, or null.</summary>
+    private static Identifier? BasePalette(byte[]? meta) {
+        if (meta == null) {
+            return null;
+        }
+        try {
+            return JObject.Parse(System.Text.Encoding.UTF8.GetString(meta))["palette"]?["base_palette"]?.Value<string>() is { } id ? (Identifier?)Identifier.Parse(id) : null;
+        }
+        catch (Exception e) when (e is Newtonsoft.Json.JsonException or FormatException or InvalidCastException or ArgumentException) {
+            return null;
+        }
     }
 
     private Dictionary<Identifier, Permutation> Sources(string atlas) {

@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool West) : IBlock, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:chorus_plant", "block.minecraft.chorus_plant", 0.4f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:chorus_plant", BlockInfo.VanillaOnly, "minecraft:blocks/chorus_plant");
-    private static readonly BlockStateInfo I0 = new(0.4f, 0, 1, PushReaction.Destroy, 24, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S421, BlockShapes.S421, BlockShapes.S1, BlockShapes.S1, BlockShapes.S421, BlockShapes.S421);
+    private static readonly BlockInfo Data = new("block.minecraft.chorus_plant", 0.4f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:chorus_plant", BlockInfo.VanillaOnly, "minecraft:blocks/chorus_plant");
+    private static readonly BlockStateInfo I0 = new(0.4f, 0, 1, PushReaction.Popped, 24, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S421, BlockShapes.S421, BlockShapes.S1, BlockShapes.S1, BlockShapes.S421, BlockShapes.S421);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S422, CollisionShape = BlockShapes.S422, VisualShape = BlockShapes.S422, SupportShape = BlockShapes.S422 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S423, CollisionShape = BlockShapes.S423, VisualShape = BlockShapes.S423, SupportShape = BlockShapes.S423 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S424, CollisionShape = BlockShapes.S424, VisualShape = BlockShapes.S424, SupportShape = BlockShapes.S424 };
@@ -80,15 +80,15 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I42, I43, I44, I45, I46, I47, I48, I49, I50, I51, I52, I53, I54, I55, I56, I57, I58, I59, I60, I61, I62, I63
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 14642];
+    public BlockStateInfo StateInfo => States[StateId - 16617];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -102,7 +102,6 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -122,6 +121,7 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -160,44 +160,44 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 14642,
-                                    false => 14643,
+                                    true => 16617,
+                                    false => 16618,
                                 },
                                 false => West switch {
-                                    true => 14644,
-                                    false => 14645,
+                                    true => 16619,
+                                    false => 16620,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 14646,
-                                    false => 14647,
+                                    true => 16621,
+                                    false => 16622,
                                 },
                                 false => West switch {
-                                    true => 14648,
-                                    false => 14649,
+                                    true => 16623,
+                                    false => 16624,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 14650,
-                                    false => 14651,
+                                    true => 16625,
+                                    false => 16626,
                                 },
                                 false => West switch {
-                                    true => 14652,
-                                    false => 14653,
+                                    true => 16627,
+                                    false => 16628,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 14654,
-                                    false => 14655,
+                                    true => 16629,
+                                    false => 16630,
                                 },
                                 false => West switch {
-                                    true => 14656,
-                                    false => 14657,
+                                    true => 16631,
+                                    false => 16632,
                                 },
                             },
                         },
@@ -206,44 +206,44 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 14658,
-                                    false => 14659,
+                                    true => 16633,
+                                    false => 16634,
                                 },
                                 false => West switch {
-                                    true => 14660,
-                                    false => 14661,
+                                    true => 16635,
+                                    false => 16636,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 14662,
-                                    false => 14663,
+                                    true => 16637,
+                                    false => 16638,
                                 },
                                 false => West switch {
-                                    true => 14664,
-                                    false => 14665,
+                                    true => 16639,
+                                    false => 16640,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 14666,
-                                    false => 14667,
+                                    true => 16641,
+                                    false => 16642,
                                 },
                                 false => West switch {
-                                    true => 14668,
-                                    false => 14669,
+                                    true => 16643,
+                                    false => 16644,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 14670,
-                                    false => 14671,
+                                    true => 16645,
+                                    false => 16646,
                                 },
                                 false => West switch {
-                                    true => 14672,
-                                    false => 14673,
+                                    true => 16647,
+                                    false => 16648,
                                 },
                             },
                         },
@@ -254,44 +254,44 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 14674,
-                                    false => 14675,
+                                    true => 16649,
+                                    false => 16650,
                                 },
                                 false => West switch {
-                                    true => 14676,
-                                    false => 14677,
+                                    true => 16651,
+                                    false => 16652,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 14678,
-                                    false => 14679,
+                                    true => 16653,
+                                    false => 16654,
                                 },
                                 false => West switch {
-                                    true => 14680,
-                                    false => 14681,
+                                    true => 16655,
+                                    false => 16656,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 14682,
-                                    false => 14683,
+                                    true => 16657,
+                                    false => 16658,
                                 },
                                 false => West switch {
-                                    true => 14684,
-                                    false => 14685,
+                                    true => 16659,
+                                    false => 16660,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 14686,
-                                    false => 14687,
+                                    true => 16661,
+                                    false => 16662,
                                 },
                                 false => West switch {
-                                    true => 14688,
-                                    false => 14689,
+                                    true => 16663,
+                                    false => 16664,
                                 },
                             },
                         },
@@ -300,44 +300,44 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 14690,
-                                    false => 14691,
+                                    true => 16665,
+                                    false => 16666,
                                 },
                                 false => West switch {
-                                    true => 14692,
-                                    false => 14693,
+                                    true => 16667,
+                                    false => 16668,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 14694,
-                                    false => 14695,
+                                    true => 16669,
+                                    false => 16670,
                                 },
                                 false => West switch {
-                                    true => 14696,
-                                    false => 14697,
+                                    true => 16671,
+                                    false => 16672,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 14698,
-                                    false => 14699,
+                                    true => 16673,
+                                    false => 16674,
                                 },
                                 false => West switch {
-                                    true => 14700,
-                                    false => 14701,
+                                    true => 16675,
+                                    false => 16676,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 14702,
-                                    false => 14703,
+                                    true => 16677,
+                                    false => 16678,
                                 },
                                 false => West switch {
-                                    true => 14704,
-                                    false => 14705,
+                                    true => 16679,
+                                    false => 16680,
                                 },
                             },
                         },
@@ -349,70 +349,70 @@ public record ChorusPlantBlock(Identifier Identifier, bool Down, bool East, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            14642 => new ChorusPlantBlock(Identifier, true, true, true, true, true, true),
-            14643 => new ChorusPlantBlock(Identifier, true, true, true, true, true, false),
-            14644 => new ChorusPlantBlock(Identifier, true, true, true, true, false, true),
-            14645 => new ChorusPlantBlock(Identifier, true, true, true, true, false, false),
-            14646 => new ChorusPlantBlock(Identifier, true, true, true, false, true, true),
-            14647 => new ChorusPlantBlock(Identifier, true, true, true, false, true, false),
-            14648 => new ChorusPlantBlock(Identifier, true, true, true, false, false, true),
-            14649 => new ChorusPlantBlock(Identifier, true, true, true, false, false, false),
-            14650 => new ChorusPlantBlock(Identifier, true, true, false, true, true, true),
-            14651 => new ChorusPlantBlock(Identifier, true, true, false, true, true, false),
-            14652 => new ChorusPlantBlock(Identifier, true, true, false, true, false, true),
-            14653 => new ChorusPlantBlock(Identifier, true, true, false, true, false, false),
-            14654 => new ChorusPlantBlock(Identifier, true, true, false, false, true, true),
-            14655 => new ChorusPlantBlock(Identifier, true, true, false, false, true, false),
-            14656 => new ChorusPlantBlock(Identifier, true, true, false, false, false, true),
-            14657 => new ChorusPlantBlock(Identifier, true, true, false, false, false, false),
-            14658 => new ChorusPlantBlock(Identifier, true, false, true, true, true, true),
-            14659 => new ChorusPlantBlock(Identifier, true, false, true, true, true, false),
-            14660 => new ChorusPlantBlock(Identifier, true, false, true, true, false, true),
-            14661 => new ChorusPlantBlock(Identifier, true, false, true, true, false, false),
-            14662 => new ChorusPlantBlock(Identifier, true, false, true, false, true, true),
-            14663 => new ChorusPlantBlock(Identifier, true, false, true, false, true, false),
-            14664 => new ChorusPlantBlock(Identifier, true, false, true, false, false, true),
-            14665 => new ChorusPlantBlock(Identifier, true, false, true, false, false, false),
-            14666 => new ChorusPlantBlock(Identifier, true, false, false, true, true, true),
-            14667 => new ChorusPlantBlock(Identifier, true, false, false, true, true, false),
-            14668 => new ChorusPlantBlock(Identifier, true, false, false, true, false, true),
-            14669 => new ChorusPlantBlock(Identifier, true, false, false, true, false, false),
-            14670 => new ChorusPlantBlock(Identifier, true, false, false, false, true, true),
-            14671 => new ChorusPlantBlock(Identifier, true, false, false, false, true, false),
-            14672 => new ChorusPlantBlock(Identifier, true, false, false, false, false, true),
-            14673 => new ChorusPlantBlock(Identifier, true, false, false, false, false, false),
-            14674 => new ChorusPlantBlock(Identifier, false, true, true, true, true, true),
-            14675 => new ChorusPlantBlock(Identifier, false, true, true, true, true, false),
-            14676 => new ChorusPlantBlock(Identifier, false, true, true, true, false, true),
-            14677 => new ChorusPlantBlock(Identifier, false, true, true, true, false, false),
-            14678 => new ChorusPlantBlock(Identifier, false, true, true, false, true, true),
-            14679 => new ChorusPlantBlock(Identifier, false, true, true, false, true, false),
-            14680 => new ChorusPlantBlock(Identifier, false, true, true, false, false, true),
-            14681 => new ChorusPlantBlock(Identifier, false, true, true, false, false, false),
-            14682 => new ChorusPlantBlock(Identifier, false, true, false, true, true, true),
-            14683 => new ChorusPlantBlock(Identifier, false, true, false, true, true, false),
-            14684 => new ChorusPlantBlock(Identifier, false, true, false, true, false, true),
-            14685 => new ChorusPlantBlock(Identifier, false, true, false, true, false, false),
-            14686 => new ChorusPlantBlock(Identifier, false, true, false, false, true, true),
-            14687 => new ChorusPlantBlock(Identifier, false, true, false, false, true, false),
-            14688 => new ChorusPlantBlock(Identifier, false, true, false, false, false, true),
-            14689 => new ChorusPlantBlock(Identifier, false, true, false, false, false, false),
-            14690 => new ChorusPlantBlock(Identifier, false, false, true, true, true, true),
-            14691 => new ChorusPlantBlock(Identifier, false, false, true, true, true, false),
-            14692 => new ChorusPlantBlock(Identifier, false, false, true, true, false, true),
-            14693 => new ChorusPlantBlock(Identifier, false, false, true, true, false, false),
-            14694 => new ChorusPlantBlock(Identifier, false, false, true, false, true, true),
-            14695 => new ChorusPlantBlock(Identifier, false, false, true, false, true, false),
-            14696 => new ChorusPlantBlock(Identifier, false, false, true, false, false, true),
-            14697 => new ChorusPlantBlock(Identifier, false, false, true, false, false, false),
-            14698 => new ChorusPlantBlock(Identifier, false, false, false, true, true, true),
-            14699 => new ChorusPlantBlock(Identifier, false, false, false, true, true, false),
-            14700 => new ChorusPlantBlock(Identifier, false, false, false, true, false, true),
-            14701 => new ChorusPlantBlock(Identifier, false, false, false, true, false, false),
-            14702 => new ChorusPlantBlock(Identifier, false, false, false, false, true, true),
-            14703 => new ChorusPlantBlock(Identifier, false, false, false, false, true, false),
-            14704 => new ChorusPlantBlock(Identifier, false, false, false, false, false, true),
-            14705 => new ChorusPlantBlock(Identifier, false, false, false, false, false, false),
+            16617 => new ChorusPlantBlock(Identifier, true, true, true, true, true, true),
+            16618 => new ChorusPlantBlock(Identifier, true, true, true, true, true, false),
+            16619 => new ChorusPlantBlock(Identifier, true, true, true, true, false, true),
+            16620 => new ChorusPlantBlock(Identifier, true, true, true, true, false, false),
+            16621 => new ChorusPlantBlock(Identifier, true, true, true, false, true, true),
+            16622 => new ChorusPlantBlock(Identifier, true, true, true, false, true, false),
+            16623 => new ChorusPlantBlock(Identifier, true, true, true, false, false, true),
+            16624 => new ChorusPlantBlock(Identifier, true, true, true, false, false, false),
+            16625 => new ChorusPlantBlock(Identifier, true, true, false, true, true, true),
+            16626 => new ChorusPlantBlock(Identifier, true, true, false, true, true, false),
+            16627 => new ChorusPlantBlock(Identifier, true, true, false, true, false, true),
+            16628 => new ChorusPlantBlock(Identifier, true, true, false, true, false, false),
+            16629 => new ChorusPlantBlock(Identifier, true, true, false, false, true, true),
+            16630 => new ChorusPlantBlock(Identifier, true, true, false, false, true, false),
+            16631 => new ChorusPlantBlock(Identifier, true, true, false, false, false, true),
+            16632 => new ChorusPlantBlock(Identifier, true, true, false, false, false, false),
+            16633 => new ChorusPlantBlock(Identifier, true, false, true, true, true, true),
+            16634 => new ChorusPlantBlock(Identifier, true, false, true, true, true, false),
+            16635 => new ChorusPlantBlock(Identifier, true, false, true, true, false, true),
+            16636 => new ChorusPlantBlock(Identifier, true, false, true, true, false, false),
+            16637 => new ChorusPlantBlock(Identifier, true, false, true, false, true, true),
+            16638 => new ChorusPlantBlock(Identifier, true, false, true, false, true, false),
+            16639 => new ChorusPlantBlock(Identifier, true, false, true, false, false, true),
+            16640 => new ChorusPlantBlock(Identifier, true, false, true, false, false, false),
+            16641 => new ChorusPlantBlock(Identifier, true, false, false, true, true, true),
+            16642 => new ChorusPlantBlock(Identifier, true, false, false, true, true, false),
+            16643 => new ChorusPlantBlock(Identifier, true, false, false, true, false, true),
+            16644 => new ChorusPlantBlock(Identifier, true, false, false, true, false, false),
+            16645 => new ChorusPlantBlock(Identifier, true, false, false, false, true, true),
+            16646 => new ChorusPlantBlock(Identifier, true, false, false, false, true, false),
+            16647 => new ChorusPlantBlock(Identifier, true, false, false, false, false, true),
+            16648 => new ChorusPlantBlock(Identifier, true, false, false, false, false, false),
+            16649 => new ChorusPlantBlock(Identifier, false, true, true, true, true, true),
+            16650 => new ChorusPlantBlock(Identifier, false, true, true, true, true, false),
+            16651 => new ChorusPlantBlock(Identifier, false, true, true, true, false, true),
+            16652 => new ChorusPlantBlock(Identifier, false, true, true, true, false, false),
+            16653 => new ChorusPlantBlock(Identifier, false, true, true, false, true, true),
+            16654 => new ChorusPlantBlock(Identifier, false, true, true, false, true, false),
+            16655 => new ChorusPlantBlock(Identifier, false, true, true, false, false, true),
+            16656 => new ChorusPlantBlock(Identifier, false, true, true, false, false, false),
+            16657 => new ChorusPlantBlock(Identifier, false, true, false, true, true, true),
+            16658 => new ChorusPlantBlock(Identifier, false, true, false, true, true, false),
+            16659 => new ChorusPlantBlock(Identifier, false, true, false, true, false, true),
+            16660 => new ChorusPlantBlock(Identifier, false, true, false, true, false, false),
+            16661 => new ChorusPlantBlock(Identifier, false, true, false, false, true, true),
+            16662 => new ChorusPlantBlock(Identifier, false, true, false, false, true, false),
+            16663 => new ChorusPlantBlock(Identifier, false, true, false, false, false, true),
+            16664 => new ChorusPlantBlock(Identifier, false, true, false, false, false, false),
+            16665 => new ChorusPlantBlock(Identifier, false, false, true, true, true, true),
+            16666 => new ChorusPlantBlock(Identifier, false, false, true, true, true, false),
+            16667 => new ChorusPlantBlock(Identifier, false, false, true, true, false, true),
+            16668 => new ChorusPlantBlock(Identifier, false, false, true, true, false, false),
+            16669 => new ChorusPlantBlock(Identifier, false, false, true, false, true, true),
+            16670 => new ChorusPlantBlock(Identifier, false, false, true, false, true, false),
+            16671 => new ChorusPlantBlock(Identifier, false, false, true, false, false, true),
+            16672 => new ChorusPlantBlock(Identifier, false, false, true, false, false, false),
+            16673 => new ChorusPlantBlock(Identifier, false, false, false, true, true, true),
+            16674 => new ChorusPlantBlock(Identifier, false, false, false, true, true, false),
+            16675 => new ChorusPlantBlock(Identifier, false, false, false, true, false, true),
+            16676 => new ChorusPlantBlock(Identifier, false, false, false, true, false, false),
+            16677 => new ChorusPlantBlock(Identifier, false, false, false, false, true, true),
+            16678 => new ChorusPlantBlock(Identifier, false, false, false, false, true, false),
+            16679 => new ChorusPlantBlock(Identifier, false, false, false, false, false, true),
+            16680 => new ChorusPlantBlock(Identifier, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

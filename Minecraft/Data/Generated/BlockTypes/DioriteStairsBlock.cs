@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DioriteStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.diorite_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:diorite_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/diorite_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 14, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.diorite_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:diorite_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/diorite_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 14, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record DioriteStairsBlock(Identifier Identifier, Direction Facing, TopBot
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 16336];
+    public BlockStateInfo StateInfo => States[StateId - 19693];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record DioriteStairsBlock(Identifier Identifier, Direction Facing, TopBot
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record DioriteStairsBlock(Identifier Identifier, Direction Facing, TopBot
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record DioriteStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16336,
-                            false => 16337,
+                            true => 19693,
+                            false => 19694,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16338,
-                            false => 16339,
+                            true => 19695,
+                            false => 19696,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16340,
-                            false => 16341,
+                            true => 19697,
+                            false => 19698,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16342,
-                            false => 16343,
+                            true => 19699,
+                            false => 19700,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16344,
-                            false => 16345,
+                            true => 19701,
+                            false => 19702,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16346,
-                            false => 16347,
+                            true => 19703,
+                            false => 19704,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16348,
-                            false => 16349,
+                            true => 19705,
+                            false => 19706,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16350,
-                            false => 16351,
+                            true => 19707,
+                            false => 19708,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16352,
-                            false => 16353,
+                            true => 19709,
+                            false => 19710,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16354,
-                            false => 16355,
+                            true => 19711,
+                            false => 19712,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record DioriteStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16356,
-                            false => 16357,
+                            true => 19713,
+                            false => 19714,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16358,
-                            false => 16359,
+                            true => 19715,
+                            false => 19716,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16360,
-                            false => 16361,
+                            true => 19717,
+                            false => 19718,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16362,
-                            false => 16363,
+                            true => 19719,
+                            false => 19720,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16364,
-                            false => 16365,
+                            true => 19721,
+                            false => 19722,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16366,
-                            false => 16367,
+                            true => 19723,
+                            false => 19724,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16368,
-                            false => 16369,
+                            true => 19725,
+                            false => 19726,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16370,
-                            false => 16371,
+                            true => 19727,
+                            false => 19728,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16372,
-                            false => 16373,
+                            true => 19729,
+                            false => 19730,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16374,
-                            false => 16375,
+                            true => 19731,
+                            false => 19732,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record DioriteStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16376,
-                            false => 16377,
+                            true => 19733,
+                            false => 19734,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16378,
-                            false => 16379,
+                            true => 19735,
+                            false => 19736,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16380,
-                            false => 16381,
+                            true => 19737,
+                            false => 19738,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16382,
-                            false => 16383,
+                            true => 19739,
+                            false => 19740,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16384,
-                            false => 16385,
+                            true => 19741,
+                            false => 19742,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16386,
-                            false => 16387,
+                            true => 19743,
+                            false => 19744,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16388,
-                            false => 16389,
+                            true => 19745,
+                            false => 19746,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16390,
-                            false => 16391,
+                            true => 19747,
+                            false => 19748,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16392,
-                            false => 16393,
+                            true => 19749,
+                            false => 19750,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16394,
-                            false => 16395,
+                            true => 19751,
+                            false => 19752,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record DioriteStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16396,
-                            false => 16397,
+                            true => 19753,
+                            false => 19754,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16398,
-                            false => 16399,
+                            true => 19755,
+                            false => 19756,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16400,
-                            false => 16401,
+                            true => 19757,
+                            false => 19758,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16402,
-                            false => 16403,
+                            true => 19759,
+                            false => 19760,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16404,
-                            false => 16405,
+                            true => 19761,
+                            false => 19762,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16406,
-                            false => 16407,
+                            true => 19763,
+                            false => 19764,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16408,
-                            false => 16409,
+                            true => 19765,
+                            false => 19766,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16410,
-                            false => 16411,
+                            true => 19767,
+                            false => 19768,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16412,
-                            false => 16413,
+                            true => 19769,
+                            false => 19770,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16414,
-                            false => 16415,
+                            true => 19771,
+                            false => 19772,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record DioriteStairsBlock(Identifier Identifier, Direction Facing, TopBot
     
     public IBlock WithState(uint state) {
         return state switch {
-            16336 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            16337 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            16338 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            16339 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            16340 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            16341 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            16342 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            16343 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            16344 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            16345 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            16346 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            16347 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            16348 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16349 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16350 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            16351 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            16352 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16353 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16354 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            16355 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            16356 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            16357 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            16358 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            16359 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            16360 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            16361 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            16362 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            16363 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            16364 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            16365 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            16366 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            16367 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            16368 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16369 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16370 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            16371 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            16372 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16373 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16374 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            16375 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            16376 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            16377 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            16378 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            16379 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            16380 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            16381 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            16382 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            16383 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            16384 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            16385 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            16386 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            16387 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            16388 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16389 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16390 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            16391 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            16392 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16393 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16394 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            16395 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            16396 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            16397 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            16398 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            16399 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            16400 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            16401 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            16402 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            16403 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            16404 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            16405 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            16406 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            16407 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            16408 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16409 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16410 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            16411 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            16412 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16413 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16414 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            16415 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            19693 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            19694 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            19695 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            19696 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            19697 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            19698 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            19699 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            19700 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            19701 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            19702 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            19703 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            19704 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            19705 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19706 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19707 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            19708 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            19709 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19710 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19711 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            19712 => new DioriteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            19713 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            19714 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            19715 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            19716 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            19717 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            19718 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            19719 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            19720 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            19721 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            19722 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            19723 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            19724 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            19725 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19726 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19727 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            19728 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            19729 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19730 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19731 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            19732 => new DioriteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            19733 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            19734 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            19735 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            19736 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            19737 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            19738 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            19739 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            19740 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            19741 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            19742 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            19743 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            19744 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            19745 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19746 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19747 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            19748 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            19749 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19750 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19751 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            19752 => new DioriteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            19753 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            19754 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            19755 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            19756 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            19757 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            19758 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            19759 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            19760 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            19761 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            19762 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            19763 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            19764 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            19765 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19766 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19767 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            19768 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            19769 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19770 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19771 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            19772 => new DioriteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

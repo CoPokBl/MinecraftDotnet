@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PolishedCinnabarStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.polished_cinnabar_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:polished_cinnabar_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/polished_cinnabar_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 28, "cinnabar", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.polished_cinnabar_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:polished_cinnabar_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/polished_cinnabar_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 28, "cinnabar", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record PolishedCinnabarStairsBlock(Identifier Identifier, Direction Facin
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 26344];
+    public BlockStateInfo StateInfo => States[StateId - 29701];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record PolishedCinnabarStairsBlock(Identifier Identifier, Direction Facin
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record PolishedCinnabarStairsBlock(Identifier Identifier, Direction Facin
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record PolishedCinnabarStairsBlock(Identifier Identifier, Direction Facin
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26344,
-                            false => 26345,
+                            true => 29701,
+                            false => 29702,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26346,
-                            false => 26347,
+                            true => 29703,
+                            false => 29704,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26348,
-                            false => 26349,
+                            true => 29705,
+                            false => 29706,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26350,
-                            false => 26351,
+                            true => 29707,
+                            false => 29708,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26352,
-                            false => 26353,
+                            true => 29709,
+                            false => 29710,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26354,
-                            false => 26355,
+                            true => 29711,
+                            false => 29712,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26356,
-                            false => 26357,
+                            true => 29713,
+                            false => 29714,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26358,
-                            false => 26359,
+                            true => 29715,
+                            false => 29716,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26360,
-                            false => 26361,
+                            true => 29717,
+                            false => 29718,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26362,
-                            false => 26363,
+                            true => 29719,
+                            false => 29720,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record PolishedCinnabarStairsBlock(Identifier Identifier, Direction Facin
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26364,
-                            false => 26365,
+                            true => 29721,
+                            false => 29722,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26366,
-                            false => 26367,
+                            true => 29723,
+                            false => 29724,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26368,
-                            false => 26369,
+                            true => 29725,
+                            false => 29726,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26370,
-                            false => 26371,
+                            true => 29727,
+                            false => 29728,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26372,
-                            false => 26373,
+                            true => 29729,
+                            false => 29730,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26374,
-                            false => 26375,
+                            true => 29731,
+                            false => 29732,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26376,
-                            false => 26377,
+                            true => 29733,
+                            false => 29734,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26378,
-                            false => 26379,
+                            true => 29735,
+                            false => 29736,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26380,
-                            false => 26381,
+                            true => 29737,
+                            false => 29738,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26382,
-                            false => 26383,
+                            true => 29739,
+                            false => 29740,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record PolishedCinnabarStairsBlock(Identifier Identifier, Direction Facin
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26384,
-                            false => 26385,
+                            true => 29741,
+                            false => 29742,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26386,
-                            false => 26387,
+                            true => 29743,
+                            false => 29744,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26388,
-                            false => 26389,
+                            true => 29745,
+                            false => 29746,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26390,
-                            false => 26391,
+                            true => 29747,
+                            false => 29748,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26392,
-                            false => 26393,
+                            true => 29749,
+                            false => 29750,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26394,
-                            false => 26395,
+                            true => 29751,
+                            false => 29752,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26396,
-                            false => 26397,
+                            true => 29753,
+                            false => 29754,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26398,
-                            false => 26399,
+                            true => 29755,
+                            false => 29756,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26400,
-                            false => 26401,
+                            true => 29757,
+                            false => 29758,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26402,
-                            false => 26403,
+                            true => 29759,
+                            false => 29760,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record PolishedCinnabarStairsBlock(Identifier Identifier, Direction Facin
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26404,
-                            false => 26405,
+                            true => 29761,
+                            false => 29762,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26406,
-                            false => 26407,
+                            true => 29763,
+                            false => 29764,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26408,
-                            false => 26409,
+                            true => 29765,
+                            false => 29766,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26410,
-                            false => 26411,
+                            true => 29767,
+                            false => 29768,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26412,
-                            false => 26413,
+                            true => 29769,
+                            false => 29770,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 26414,
-                            false => 26415,
+                            true => 29771,
+                            false => 29772,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 26416,
-                            false => 26417,
+                            true => 29773,
+                            false => 29774,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 26418,
-                            false => 26419,
+                            true => 29775,
+                            false => 29776,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 26420,
-                            false => 26421,
+                            true => 29777,
+                            false => 29778,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 26422,
-                            false => 26423,
+                            true => 29779,
+                            false => 29780,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record PolishedCinnabarStairsBlock(Identifier Identifier, Direction Facin
     
     public IBlock WithState(uint state) {
         return state switch {
-            26344 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            26345 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            26346 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            26347 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            26348 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            26349 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            26350 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            26351 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            26352 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            26353 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            26354 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            26355 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            26356 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            26357 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            26358 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            26359 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            26360 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            26361 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            26362 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            26363 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            26364 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            26365 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            26366 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            26367 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            26368 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            26369 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            26370 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            26371 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            26372 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            26373 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            26374 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            26375 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            26376 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            26377 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            26378 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            26379 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            26380 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            26381 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            26382 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            26383 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            26384 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            26385 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            26386 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            26387 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            26388 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            26389 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            26390 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            26391 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            26392 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            26393 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            26394 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            26395 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            26396 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            26397 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            26398 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            26399 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            26400 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            26401 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            26402 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            26403 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            26404 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            26405 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            26406 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            26407 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            26408 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            26409 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            26410 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            26411 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            26412 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            26413 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            26414 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            26415 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            26416 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            26417 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            26418 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            26419 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            26420 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            26421 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            26422 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            26423 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            29701 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            29702 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            29703 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            29704 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            29705 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            29706 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            29707 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            29708 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            29709 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            29710 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            29711 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            29712 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            29713 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            29714 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            29715 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            29716 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            29717 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            29718 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            29719 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            29720 => new PolishedCinnabarStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            29721 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            29722 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            29723 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            29724 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            29725 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            29726 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            29727 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            29728 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            29729 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            29730 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            29731 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            29732 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            29733 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            29734 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            29735 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            29736 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            29737 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            29738 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            29739 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            29740 => new PolishedCinnabarStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            29741 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            29742 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            29743 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            29744 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            29745 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            29746 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            29747 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            29748 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            29749 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            29750 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            29751 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            29752 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            29753 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            29754 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            29755 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            29756 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            29757 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            29758 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            29759 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            29760 => new PolishedCinnabarStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            29761 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            29762 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            29763 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            29764 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            29765 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            29766 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            29767 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            29768 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            29769 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            29770 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            29771 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            29772 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            29773 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            29774 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            29775 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            29776 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            29777 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            29778 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            29779 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            29780 => new PolishedCinnabarStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

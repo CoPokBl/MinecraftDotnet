@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LightBlueGlazedTerracottaBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:glazed_terracotta", "block.minecraft.light_blue_glazed_terracotta", 1.4f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:light_blue_glazed_terracotta", BlockInfo.VanillaOnly, "minecraft:blocks/light_blue_glazed_terracotta");
-    private static readonly BlockStateInfo I0 = new(1.4f, 0, 15, PushReaction.PushOnly, 17, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.light_blue_glazed_terracotta", 1.4f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:light_blue_glazed_terracotta", BlockInfo.VanillaOnly, "minecraft:blocks/light_blue_glazed_terracotta");
+    private static readonly BlockStateInfo I0 = new(1.4f, 0, 15, PushReaction.Push, 17, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record LightBlueGlazedTerracottaBlock(Identifier Identifier, Direction Fa
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record LightBlueGlazedTerracottaBlock(Identifier Identifier, Direction Fa
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,10 +69,10 @@ public record LightBlueGlazedTerracottaBlock(Identifier Identifier, Direction Fa
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 14978,
-                Direction.South => 14979,
-                Direction.West => 14980,
-                Direction.East => 14981,
+                Direction.North => 16959,
+                Direction.South => 16960,
+                Direction.West => 16961,
+                Direction.East => 16962,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -80,10 +80,10 @@ public record LightBlueGlazedTerracottaBlock(Identifier Identifier, Direction Fa
     
     public IBlock WithState(uint state) {
         return state switch {
-            14978 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.North),
-            14979 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.South),
-            14980 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.West),
-            14981 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.East),
+            16959 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.North),
+            16960 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.South),
+            16961 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.West),
+            16962 => new LightBlueGlazedTerracottaBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -40,37 +40,36 @@ import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.WorldGenerationContext;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.level.levelgen.blending.Blender;
-import net.minecraft.world.level.levelgen.carver.CarvingContext;
-import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import java.lang.reflect.Method;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.NoiseSettings;
+import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 /**
- * Writes down every block the vanilla noise pass and the vanilla surface pass leave in a chunk, into
+ * Writes down every block the vanilla fill, surface and carver passes leave in a chunk, into
  * the fixture {@code TerrainStageConformanceTest} replays.
  *
  * <p>Usage: {@code java TerrainStageHarness <fixture> <seed> <chunkX>:<chunkZ>...}. See
  * Conformance/terrainstage.sh.
  *
- * <p><b>This is what stands between two things that were already exact and measured nothing.</b>
- * {@code terrain.sh} pins all fifteen entries of the {@code NoiseRouter}, the climate sample and the
- * biome the parameter list picks, at zero tolerance. Nothing pinned the step from those numbers to a
- * block: the aquifer deciding water, lava or stone from {@code barrier} and the two
- * {@code fluid_level} noises, {@code OreVeinifier} turning the three {@code vein} noises into ore, the
- * interpolation walk over the cells, and the whole surface rule tree on top. All of it was visible
- * only through {@code worldparity.sh}, whose error bar is about a third of its own value.
+ * <p>{@code terrain.sh} pins the density functions, the climate sample and the biome the parameter
+ * list picks. This pins the step from those numbers to blocks: the aquifer deciding water, lava or
+ * stone, the material rules with the ore veins in them, and the carvers' mask and its application.
  *
  * <p><b>It is a pass rather than a baseline, and that is the point.</b> Both passes are pure functions
  * of the world seed and the chunk position: no neighbour is read, no shared random is drawn across
  * chunks, and nothing depends on what order chunks were asked for. So the order dependence that stops
  * whole-world parity ever reaching zero does not exist here, and any difference at all is the port.
  *
- * <p>Vanilla's own entry points are used unchanged for the first two passes, and both have an overload
- * that takes no level: {@code createBiomes}, {@code fillFromNoise} and the {@code buildSurface} that
- * takes a {@code BiomeManager} rather than a {@code WorldGenRegion}. Only the structure manager has to
- * be stubbed, and it answers <b>no starts</b>, which is what makes the beardifier zero and matches
- * {@code VanillaTerrainGenerator.Overworld(seed)} without {@code WithStructures}. The carver pass is
- * the exception and is reached through a transcription of {@code applyCarvers}; see {@link #carve}.
+ * <p>Vanilla's own code runs every pass: {@code createBiomes}, then {@code createNoiseChunk},
+ * {@code doFill}, {@code buildSurface} and {@code generateCarvers} over one noise chunk as
+ * {@code buildTerrain} does, reached by reflection because they are private and {@code buildTerrain}
+ * itself takes a {@code WorldGenRegion}. The carvers get no region, so their source biomes come from
+ * the uncached resolver, which is also what a region falls back to. Only the structure manager is
+ * stubbed, and it answers <b>no starts</b>, which makes the beardifier zero and matches
+ * {@code VanillaTerrainGenerator.Overworld(seed)} without {@code WithStructures}.
  *
  * <p>Fixture format, all big endian and gzipped: a long seed, an int chunk count, then per chunk the
  * chunk x, chunk z, minimum y and height, followed by three arrays of {@code height * 256} ints, the
@@ -101,8 +100,7 @@ public class TerrainStageHarness {
 
         NoiseGeneratorSettings settings = registries.lookupOrThrow(Registries.NOISE_SETTINGS)
             .getOrThrow(NoiseGeneratorSettings.OVERWORLD).value();
-        RandomState randomState = RandomState.create(settings,
-            registries.lookupOrThrow(Registries.NOISE), seed);
+        RandomState randomState = RandomState.create(registries.lookupOrThrow(Registries.NOISE), seed, settings);
 
         List<ChunkPos> positions = new ArrayList<>();
         for (int i = 2; i < args.length; i++) {
@@ -154,103 +152,36 @@ public class TerrainStageHarness {
                 }
 
                 ProtoChunk chunk = around[4];
-                generator.fillFromNoise(Blender.empty(), randomState, structures, chunk).join();
-
-                data.writeInt(position.x());
-                data.writeInt(position.z());
-                data.writeInt(MIN_Y);
-                data.writeInt(HEIGHT);
-                write(data, chunk);
-
-                // The biome manager a WorldGenRegion would hand it, over the grid createBiomes just
-                // filled. Its zoom is what stops a beach having visible steps on a four block grid.
                 BiomeManager biomes = new BiomeManager(
                     (x, y, z) -> noiseBiome(around, position, x, y, z),
                     BiomeManager.obfuscateSeed(seed));
-
-                generator.buildSurface(chunk, new WorldGenerationContext(generator, bounds),
-                    randomState, structures, biomes, Blender.empty(), possible);
-
-                write(data, chunk);
-
-                carve(generator, registries, settings, randomState, seed, chunk, biomes, position);
-
-                write(data, chunk);
+                MaterialRule rule = settings.materialRule().value();
+                Method create = NoiseBasedChunkGenerator.class.getDeclaredMethod("createNoiseChunk", ChunkAccess.class,
+                    StructureManager.class, Blender.class, RandomState.class, NoiseSettings.class);
+                Method fill = NoiseBasedChunkGenerator.class.getDeclaredMethod("doFill", NoiseChunk.class, ChunkAccess.class);
+                Method surface = NoiseBasedChunkGenerator.class.getDeclaredMethod("buildSurface", ChunkAccess.class, NoiseChunk.class,
+                    RandomState.class, BiomeManager.class, Set.class, MaterialRule.class);
+                Method carvers = NoiseBasedChunkGenerator.class.getDeclaredMethod("generateCarvers", ChunkAccess.class, Blender.class,
+                    NoiseChunk.class, RandomState.class, BiomeManager.class, net.minecraft.server.level.WorldGenRegion.class, MaterialRule.class);
+                for (Method m : new Method[] {create, fill, surface, carvers}) m.setAccessible(true);
+                NoiseSettings noise = settings.noiseSettings().clampToHeightAccessor(chunk.getHeightAccessorForGeneration());
+                try (NoiseChunk noiseChunk = (NoiseChunk) create.invoke(generator, chunk, structures, Blender.empty(), randomState, noise)) {
+                    fill.invoke(generator, noiseChunk, chunk);
+                    data.writeInt(position.x());
+                    data.writeInt(position.z());
+                    data.writeInt(MIN_Y);
+                    data.writeInt(HEIGHT);
+                    write(data, chunk);
+                    surface.invoke(generator, chunk, noiseChunk, randomState, biomes, possible, rule);
+                    write(data, chunk);
+                    carvers.invoke(generator, chunk, Blender.empty(), noiseChunk, randomState, biomes, null, rule);
+                    write(data, chunk);
+                }
                 System.out.println("chunk " + position.x() + " " + position.z() + " done");
             }
         }
 
         System.out.println("Wrote " + positions.size() + " chunks to " + out);
-    }
-
-    /**
-     * The carver pass, over the chunk the surface pass just finished.
-     *
-     * <p><b>This is the one stage here that is not vanilla's own entry point.</b>
-     * {@code ChunkGenerator.applyCarvers} takes a {@code WorldGenRegion}, which is a concrete class
-     * over a {@code ServerLevel} and cannot be stubbed, while everything under it takes a
-     * {@code ChunkAccess}: {@code ConfiguredWorldCarver.carve}, {@code CarvingContext} and the
-     * aquifer are all level free. So the loop is transcribed here and the carving is vanilla's.
-     *
-     * <p>What that leaves unmeasured is the loop itself: which chunks are replayed, and how each
-     * carver in each of them is seeded. What it measures is everything the carve does, which is the
-     * walk, the ellipsoid, the block decisions, the aquifer's answer and the surface fix-up.
-     *
-     * <p>Two details of the loop are load bearing and are why it is transcribed rather than
-     * approximated. The biome that decides which carvers start in a source chunk goes through
-     * {@code randomState.sampler()}, the <b>flattened</b> sampler, because a source chunk is up to
-     * eight away and a {@code NoiseChunk}'s caches only cover its own chunk; and the biome handed to
-     * the carve itself is a {@code BiomeManager} whose source has been swapped for that same flat
-     * sampler by {@code withDifferentSource}, rather than the zoomed one the surface pass used.
-     */
-    private static void carve(NoiseBasedChunkGenerator generator, RegistryAccess registries,
-        NoiseGeneratorSettings settings, RandomState randomState, long seed, ProtoChunk chunk,
-        BiomeManager biomes, ChunkPos position) {
-
-        BiomeManager carverBiomes = biomes.withDifferentSource(
-            (x, y, z) -> generator.getBiomeSource().getNoiseBiome(x, y, z, randomState.sampler()));
-
-        // Reseeded from setLargeFeatureSeed before every carver, so what it starts as never reaches
-        // anything. Upstream that is RandomSupport.generateUniqueSeed().
-        WorldgenRandom random = new WorldgenRandom(new LegacyRandomSource(0L));
-
-        NoiseChunk noiseChunk = chunk.getOrCreateNoiseChunk(unused -> {
-            throw new IllegalStateException("fillFromNoise did not leave a noise chunk to carve with");
-        });
-
-        CarvingContext context = new CarvingContext(generator, registries,
-            chunk.getHeightAccessorForGeneration(), noiseChunk, randomState, settings.surfaceRule());
-
-        CarvingMask mask = chunk.getOrCreateCarvingMask();
-
-        // Every chunk within eight, because a walk that started there may reach this one. That is
-        // vanilla's own shape rather than an approximation of something cheaper.
-        for (int dx = -8; dx <= 8; dx++) {
-            for (int dz = -8; dz <= 8; dz++) {
-                ChunkPos source = new ChunkPos(position.x() + dx, position.z() + dz);
-
-                BiomeGenerationSettings biomeSettings = generator.getBiomeGenerationSettings(
-                    generator.getBiomeSource().getNoiseBiome(QuartPos.fromSection(source.x()), 0,
-                        QuartPos.fromSection(source.z()), randomState.sampler()));
-
-                int index = 0;
-
-                for (Holder<ConfiguredWorldCarver<?>> holder : biomeSettings.getCarvers()) {
-                    ConfiguredWorldCarver<?> carver = holder.value();
-
-                    // The index is the biome's own, so two biomes listing one carver in different
-                    // positions genuinely give it different seeds.
-                    random.setLargeFeatureSeed(seed + index, source.x(), source.z());
-
-                    if (carver.isStartChunk(random)) {
-                        carver.carve(context, chunk, carverBiomes::getBiome, random,
-                            noiseChunk.aquifer(), source, mask);
-                    }
-
-                    index++;
-                }
-            }
-        }
     }
 
     /**
@@ -310,7 +241,7 @@ public class TerrainStageHarness {
         }
 
         @Override
-        public List<StructureStart> startsForStructure(ChunkPos chunk, Predicate<Structure> wanted) {
+        public List<StructureStart> startsForStructure(int chunkX, int chunkZ, Predicate<Structure> wanted) {
             return List.of();
         }
     }

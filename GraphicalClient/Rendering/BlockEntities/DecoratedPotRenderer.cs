@@ -13,21 +13,12 @@ namespace GraphicalClient.Rendering.BlockEntities;
 public sealed class DecoratedPotRenderState : BlockEntityRenderState {
     public DecoratedPotBlockEntity.WobbleStyle? WobbleStyle;
     public float WobbleProgress;
-    public IItem?[] Decorations = new IItem?[4];
+    public Identifier?[] Patterns = new Identifier?[4];
     public Direction Direction = Direction.North;
 }
 
 /// <summary><c>DecoratedPotRenderer</c>.</summary>
 public sealed class DecoratedPotRenderer : BlockEntityRenderer<DecoratedPotBlockEntity, DecoratedPotRenderState> {
-    /// <summary><c>DECORATED_POT_SPRITES</c>: <c>DecoratedPotPatterns.itemToPatternMappings</c> with each pattern's asset id.</summary>
-    private static readonly Dictionary<Identifier, SpriteId> DecoratedPotSprites = new IItem[] {
-        Item.AnglerPotterySherd, Item.ArcherPotterySherd, Item.ArmsUpPotterySherd, Item.BladePotterySherd, Item.BrewerPotterySherd,
-        Item.BurnPotterySherd, Item.DangerPotterySherd, Item.ExplorerPotterySherd, Item.FlowPotterySherd, Item.FriendPotterySherd,
-        Item.GusterPotterySherd, Item.HeartPotterySherd, Item.HeartbreakPotterySherd, Item.HowlPotterySherd, Item.MinerPotterySherd,
-        Item.MournerPotterySherd, Item.PlentyPotterySherd, Item.PrizePotterySherd, Item.ScrapePotterySherd, Item.SheafPotterySherd,
-        Item.ShelterPotterySherd, Item.SkullPotterySherd, Item.SnortPotterySherd
-    }.ToDictionary(item => item.Identifier, item => Sheets.DecoratedPotSprite(new Identifier("minecraft", item.Identifier.Key.Replace("_sherd", "_pattern"))));
-
     private readonly ISpriteGetter _sprites;
     private readonly ModelPart _neck, _frontSide, _backSide, _leftSide, _rightSide, _top, _bottom;
 
@@ -71,12 +62,12 @@ public sealed class DecoratedPotRenderer : BlockEntityRenderer<DecoratedPotBlock
         return LayerDefinition.Create(mesh, 16, 16);
     }
 
-    private static SpriteId GetSideSprite(IItem? item) =>
-        item != null && DecoratedPotSprites.TryGetValue(item.Identifier, out SpriteId sprite) ? sprite : Sheets.DecoratedPotSide;
+    private static SpriteId GetSideSprite(Identifier? pattern) =>
+        pattern is { } asset ? Sheets.DecoratedPotSprite(asset) : Sheets.DecoratedPotSide;
 
     public override void ExtractRenderState(DecoratedPotBlockEntity blockEntity, DecoratedPotRenderState state, float partialTick, EntityRenderContext render) {
         base.ExtractRenderState(blockEntity, state, partialTick, render);
-        state.Decorations = blockEntity.Sherds;
+        state.Patterns = blockEntity.Patterns;
         state.Direction = blockEntity.Direction;
         // Vanilla never copies the wobble's style into the state, so every wobble draws as the negative
         // one's turn; the progress still runs over the style that started it.
@@ -102,7 +93,7 @@ public sealed class DecoratedPotRenderer : BlockEntityRenderer<DecoratedPotBlock
                 pose.MulPose(BlockEntityTransforms.RotationAround(Matrix4x4.CreateRotationY(turnAngle * linearDecayFactor), 0.5F, 0.0F, 0.5F));
             }
         }
-        Submit(pose, render.Batch, state.SkyLight, state.BlockLight, state.Decorations);
+        Submit(pose, render.Batch, state.SkyLight, state.BlockLight, state.Patterns);
         pose.Pop();
     }
 
@@ -111,7 +102,7 @@ public sealed class DecoratedPotRenderer : BlockEntityRenderer<DecoratedPotBlock
         BlockEntityTransforms.RotationAround(BlockEntityTransforms.RotationYDegrees(180.0F - DirectionUtil.ToYRot(facing)), 0.5F, 0.5F, 0.5F);
 
     /// <summary>The pot in back, left, right, front order of <paramref name="decorations"/>.</summary>
-    public void Submit(PoseStack pose, IModelSink sink, float skyLight, float blockLight, IItem?[] decorations) {
+    public void Submit(PoseStack pose, IModelSink sink, float skyLight, float blockLight, Identifier?[] decorations) {
         ModelDrawState Draw(SpriteId sprite) => new(_sprites.Get(sprite), 0xFFFFFFFF, skyLight, blockLight, 0);
         ModelDrawState baseState = Draw(Sheets.DecoratedPotBase);
         _neck.Render(pose, sink, baseState);

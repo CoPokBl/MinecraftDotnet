@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CrimsonStemBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
-    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.crimson_stem", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:crimson_stem", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_stem");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.Normal, 53, "stem", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.crimson_stem", 2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:crimson_stem", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_stem");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.PushPull, 53, "stem", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record CrimsonStemBlock(Identifier Identifier, Axis Axis) : IBlock, IAxis
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record CrimsonStemBlock(Identifier Identifier, Axis Axis) : IBlock, IAxis
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,9 +69,9 @@ public record CrimsonStemBlock(Identifier Identifier, Axis Axis) : IBlock, IAxis
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 20962,
-                Axis.Y => 20963,
-                Axis.Z => 20964,
+                Axis.X => 24319,
+                Axis.Y => 24320,
+                Axis.Z => 24321,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -79,9 +79,9 @@ public record CrimsonStemBlock(Identifier Identifier, Axis Axis) : IBlock, IAxis
     
     public IBlock WithState(uint state) {
         return state switch {
-            20962 => new CrimsonStemBlock(Identifier, Axis.X),
-            20963 => new CrimsonStemBlock(Identifier, Axis.Y),
-            20964 => new CrimsonStemBlock(Identifier, Axis.Z),
+            24319 => new CrimsonStemBlock(Identifier, Axis.X),
+            24320 => new CrimsonStemBlock(Identifier, Axis.Y),
+            24321 => new CrimsonStemBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

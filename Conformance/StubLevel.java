@@ -134,7 +134,7 @@ public final class StubLevel implements WorldGenLevel {
                 ProtoChunk chunk = new ProtoChunk(new ChunkPos(scene.chunkX + dx, scene.chunkZ + dz),
                     UpgradeData.EMPTY, bounds, PalettedContainerFactory.create(registries), null);
 
-                chunk.setPersistedStatus(ChunkStatus.CARVERS);
+                chunk.setPersistedStatus(ChunkStatus.TERRAIN);
                 chunks[slot] = chunk;
 
                 for (int y = 0; y < scene.height; y++) {

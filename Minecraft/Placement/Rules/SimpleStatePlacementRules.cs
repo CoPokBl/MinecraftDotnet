@@ -361,11 +361,11 @@ public sealed class LeavesPlacementRule : IBlockPlacementRule {
 }
 
 /// <summary>
-/// <c>DirtPathBlock</c>. Refuses to be a path where a path could not survive and lays dirt instead,
+/// <c>PathBlock</c>. Refuses to be a path where a path could not survive and lays dirt instead,
 /// which is why a grass path placed under a wall comes out as dirt rather than as nothing.
 /// </summary>
-public sealed class DirtPathPlacementRule : IBlockPlacementRule {
-    public BlockClass VanillaClass => BlockClass.DirtPathBlock;
+public sealed class PathPlacementRule : IBlockPlacementRule {
+    public BlockClass VanillaClass => BlockClass.PathBlock;
 
     public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
         return CanSurvive(block, context.World, context.PlacePos) ? block : Block.Dirt;

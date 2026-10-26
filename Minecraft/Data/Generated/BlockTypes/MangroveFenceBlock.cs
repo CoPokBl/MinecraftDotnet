@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MangroveFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:fence", "block.minecraft.mangrove_fence", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_fence", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_fence");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 28, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_fence", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_fence", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 28, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
     private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
@@ -48,15 +48,15 @@ public record MangroveFenceBlock(Identifier Identifier, bool East, bool North, b
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 13996];
+    public BlockStateInfo StateInfo => States[StateId - 15875];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -70,7 +70,6 @@ public record MangroveFenceBlock(Identifier Identifier, bool East, bool North, b
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -90,6 +89,7 @@ public record MangroveFenceBlock(Identifier Identifier, bool East, bool North, b
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -125,44 +125,44 @@ public record MangroveFenceBlock(Identifier Identifier, bool East, bool North, b
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13996,
-                                false => 13997,
+                                true => 15875,
+                                false => 15876,
                             },
                             false => West switch {
-                                true => 13998,
-                                false => 13999,
+                                true => 15877,
+                                false => 15878,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 14000,
-                                false => 14001,
+                                true => 15879,
+                                false => 15880,
                             },
                             false => West switch {
-                                true => 14002,
-                                false => 14003,
+                                true => 15881,
+                                false => 15882,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 14004,
-                                false => 14005,
+                                true => 15883,
+                                false => 15884,
                             },
                             false => West switch {
-                                true => 14006,
-                                false => 14007,
+                                true => 15885,
+                                false => 15886,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 14008,
-                                false => 14009,
+                                true => 15887,
+                                false => 15888,
                             },
                             false => West switch {
-                                true => 14010,
-                                false => 14011,
+                                true => 15889,
+                                false => 15890,
                             },
                         },
                     },
@@ -171,44 +171,44 @@ public record MangroveFenceBlock(Identifier Identifier, bool East, bool North, b
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 14012,
-                                false => 14013,
+                                true => 15891,
+                                false => 15892,
                             },
                             false => West switch {
-                                true => 14014,
-                                false => 14015,
+                                true => 15893,
+                                false => 15894,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 14016,
-                                false => 14017,
+                                true => 15895,
+                                false => 15896,
                             },
                             false => West switch {
-                                true => 14018,
-                                false => 14019,
+                                true => 15897,
+                                false => 15898,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 14020,
-                                false => 14021,
+                                true => 15899,
+                                false => 15900,
                             },
                             false => West switch {
-                                true => 14022,
-                                false => 14023,
+                                true => 15901,
+                                false => 15902,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 14024,
-                                false => 14025,
+                                true => 15903,
+                                false => 15904,
                             },
                             false => West switch {
-                                true => 14026,
-                                false => 14027,
+                                true => 15905,
+                                false => 15906,
                             },
                         },
                     },
@@ -219,38 +219,38 @@ public record MangroveFenceBlock(Identifier Identifier, bool East, bool North, b
     
     public IBlock WithState(uint state) {
         return state switch {
-            13996 => new MangroveFenceBlock(Identifier, true, true, true, true, true),
-            13997 => new MangroveFenceBlock(Identifier, true, true, true, true, false),
-            13998 => new MangroveFenceBlock(Identifier, true, true, true, false, true),
-            13999 => new MangroveFenceBlock(Identifier, true, true, true, false, false),
-            14000 => new MangroveFenceBlock(Identifier, true, true, false, true, true),
-            14001 => new MangroveFenceBlock(Identifier, true, true, false, true, false),
-            14002 => new MangroveFenceBlock(Identifier, true, true, false, false, true),
-            14003 => new MangroveFenceBlock(Identifier, true, true, false, false, false),
-            14004 => new MangroveFenceBlock(Identifier, true, false, true, true, true),
-            14005 => new MangroveFenceBlock(Identifier, true, false, true, true, false),
-            14006 => new MangroveFenceBlock(Identifier, true, false, true, false, true),
-            14007 => new MangroveFenceBlock(Identifier, true, false, true, false, false),
-            14008 => new MangroveFenceBlock(Identifier, true, false, false, true, true),
-            14009 => new MangroveFenceBlock(Identifier, true, false, false, true, false),
-            14010 => new MangroveFenceBlock(Identifier, true, false, false, false, true),
-            14011 => new MangroveFenceBlock(Identifier, true, false, false, false, false),
-            14012 => new MangroveFenceBlock(Identifier, false, true, true, true, true),
-            14013 => new MangroveFenceBlock(Identifier, false, true, true, true, false),
-            14014 => new MangroveFenceBlock(Identifier, false, true, true, false, true),
-            14015 => new MangroveFenceBlock(Identifier, false, true, true, false, false),
-            14016 => new MangroveFenceBlock(Identifier, false, true, false, true, true),
-            14017 => new MangroveFenceBlock(Identifier, false, true, false, true, false),
-            14018 => new MangroveFenceBlock(Identifier, false, true, false, false, true),
-            14019 => new MangroveFenceBlock(Identifier, false, true, false, false, false),
-            14020 => new MangroveFenceBlock(Identifier, false, false, true, true, true),
-            14021 => new MangroveFenceBlock(Identifier, false, false, true, true, false),
-            14022 => new MangroveFenceBlock(Identifier, false, false, true, false, true),
-            14023 => new MangroveFenceBlock(Identifier, false, false, true, false, false),
-            14024 => new MangroveFenceBlock(Identifier, false, false, false, true, true),
-            14025 => new MangroveFenceBlock(Identifier, false, false, false, true, false),
-            14026 => new MangroveFenceBlock(Identifier, false, false, false, false, true),
-            14027 => new MangroveFenceBlock(Identifier, false, false, false, false, false),
+            15875 => new MangroveFenceBlock(Identifier, true, true, true, true, true),
+            15876 => new MangroveFenceBlock(Identifier, true, true, true, true, false),
+            15877 => new MangroveFenceBlock(Identifier, true, true, true, false, true),
+            15878 => new MangroveFenceBlock(Identifier, true, true, true, false, false),
+            15879 => new MangroveFenceBlock(Identifier, true, true, false, true, true),
+            15880 => new MangroveFenceBlock(Identifier, true, true, false, true, false),
+            15881 => new MangroveFenceBlock(Identifier, true, true, false, false, true),
+            15882 => new MangroveFenceBlock(Identifier, true, true, false, false, false),
+            15883 => new MangroveFenceBlock(Identifier, true, false, true, true, true),
+            15884 => new MangroveFenceBlock(Identifier, true, false, true, true, false),
+            15885 => new MangroveFenceBlock(Identifier, true, false, true, false, true),
+            15886 => new MangroveFenceBlock(Identifier, true, false, true, false, false),
+            15887 => new MangroveFenceBlock(Identifier, true, false, false, true, true),
+            15888 => new MangroveFenceBlock(Identifier, true, false, false, true, false),
+            15889 => new MangroveFenceBlock(Identifier, true, false, false, false, true),
+            15890 => new MangroveFenceBlock(Identifier, true, false, false, false, false),
+            15891 => new MangroveFenceBlock(Identifier, false, true, true, true, true),
+            15892 => new MangroveFenceBlock(Identifier, false, true, true, true, false),
+            15893 => new MangroveFenceBlock(Identifier, false, true, true, false, true),
+            15894 => new MangroveFenceBlock(Identifier, false, true, true, false, false),
+            15895 => new MangroveFenceBlock(Identifier, false, true, false, true, true),
+            15896 => new MangroveFenceBlock(Identifier, false, true, false, true, false),
+            15897 => new MangroveFenceBlock(Identifier, false, true, false, false, true),
+            15898 => new MangroveFenceBlock(Identifier, false, true, false, false, false),
+            15899 => new MangroveFenceBlock(Identifier, false, false, true, true, true),
+            15900 => new MangroveFenceBlock(Identifier, false, false, true, true, false),
+            15901 => new MangroveFenceBlock(Identifier, false, false, true, false, true),
+            15902 => new MangroveFenceBlock(Identifier, false, false, true, false, false),
+            15903 => new MangroveFenceBlock(Identifier, false, false, false, true, true),
+            15904 => new MangroveFenceBlock(Identifier, false, false, false, true, false),
+            15905 => new MangroveFenceBlock(Identifier, false, false, false, false, true),
+            15906 => new MangroveFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

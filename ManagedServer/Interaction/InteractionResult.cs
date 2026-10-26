@@ -1,3 +1,5 @@
+using Minecraft.Schemas.Items;
+
 namespace ManagedServer.Interaction;
 
 /// <summary>
@@ -24,11 +26,11 @@ public enum InteractionResultKind {
 public enum SwingSource {
     None,
 
-    /// <summary>The client swings on its own; the server sends nothing.</summary>
-    Client,
+    /// <summary>The client swung on its own, so only the onlookers are sent the swing.</summary>
+    Predicted,
 
-    /// <summary>The server has to send the animation.</summary>
-    Server
+    /// <summary>The client did not swing, so the player is sent the swing as well.</summary>
+    ServerOnly
 }
 
 /// <summary>
@@ -42,17 +44,19 @@ public enum SwingSource {
 /// the player holds a block, which is the whole reason this type exists.
 /// <p/>
 /// Upstream this is a sealed interface with six singletons rather than an enum, so it is a record
-/// struct here: vanilla's <c>ItemContext</c> (<c>wasItemInteraction</c> and
-/// <c>heldItemTransformedTo</c>) is a second component of <c>Success</c> and can be added as a third
-/// field without touching a call site. It is <b>deliberately omitted</b> for now, because the only
-/// things that read it are item durability and advancement triggers, neither of which is ported.
+/// struct here, carrying <c>ItemContext.heldItemTransformedTo</c> as <see cref="HeldItemTransformedTo"/>.
+/// <c>ItemContext.wasItemInteraction</c> is not carried: only entity interactions clear it
+/// (<c>withoutItem</c>), and none of them answer with this type.
 /// </summary>
-public readonly record struct InteractionResult(InteractionResultKind Kind, SwingSource Swing) {
-    /// <summary><c>InteractionResult.SUCCESS</c>: handled, and the client swings by itself.</summary>
-    public static readonly InteractionResult Success = new(InteractionResultKind.Success, SwingSource.Client);
+public readonly record struct InteractionResult(
+    InteractionResultKind Kind,
+    SwingSource Swing,
+    ItemStack? HeldItemTransformedTo = null) {
+    /// <summary><c>InteractionResult.SUCCESS</c>: handled, and the client predicted the swing, so only onlookers are sent it.</summary>
+    public static readonly InteractionResult Success = new(InteractionResultKind.Success, SwingSource.Predicted);
 
-    /// <summary><c>InteractionResult.SUCCESS_SERVER</c>: handled, and the server sends the swing.</summary>
-    public static readonly InteractionResult SuccessServer = new(InteractionResultKind.Success, SwingSource.Server);
+    /// <summary><c>InteractionResult.SUCCESS_SERVER</c>: handled, and the swing is sent to the player as well.</summary>
+    public static readonly InteractionResult SuccessServer = new(InteractionResultKind.Success, SwingSource.ServerOnly);
 
     /// <summary><c>InteractionResult.CONSUME</c>: handled, with no animation at all.</summary>
     public static readonly InteractionResult Consume = new(InteractionResultKind.Success, SwingSource.None);
@@ -75,4 +79,12 @@ public readonly record struct InteractionResult(InteractionResultKind Kind, Swin
     /// is not "anything but Pass".
     /// </summary>
     public bool ConsumesAction => Kind == InteractionResultKind.Success;
+
+    /// <summary>
+    /// <c>Success.heldItemTransformedTo</c>: the same success, saying the hand should end up holding
+    /// <paramref name="stack"/>.
+    /// </summary>
+    public InteractionResult WithHeldItemTransformedTo(ItemStack stack) {
+        return this with { HeldItemTransformedTo = stack };
+    }
 }

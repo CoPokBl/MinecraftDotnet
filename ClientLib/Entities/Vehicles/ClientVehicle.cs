@@ -26,6 +26,8 @@ public abstract class ClientVehicle(MinecraftClient client) : PhysicsEntity(clie
         YRotO = YRot;
         XRotO = XRot;
         YHeadRotO = YHeadRot;
+        // Entity.commonTick, which interpolates whoever steers.
+        Interpolation.Interpolate();
         if (!level.HasChunk(BlockX >> 4, BlockZ >> 4)) {
             return;
         }

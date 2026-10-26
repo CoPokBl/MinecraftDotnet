@@ -165,7 +165,7 @@ public class Harness {
             return "expected a level_chunk_with_light packet, got " + packet.getClass().getSimpleName();
         }
 
-        FriendlyByteBuf buf = chunk.getChunkData().getReadBuffer();
+        FriendlyByteBuf buf = chunk.chunkData().getReadBuffer();
         int size = buf.readableBytes();
         PalettedContainerFactory factory = PalettedContainerFactory.create(registries);
 
@@ -281,7 +281,7 @@ public class Harness {
         // holds 0.5, and every cherry tree a server grows uses the 0.25. A harness built on the
         // bootstrap objects measures against a configuration no world is generated with.
         MultiPackResourceManager resources = new MultiPackResourceManager(
-            PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource()));
+            PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource().fullResources()));
 
         // Half the pack's own elements name a tag: a dimension type holds #infiniburn_overworld, and
         // decoding one with tags unbound fails the whole registry rather than reading as empty.
@@ -293,7 +293,7 @@ public class Harness {
         all.forEach(registry -> lookups.add((HolderLookup.RegistryLookup<?>) registry));
 
         RegistryAccess.Frozen worldgen = RegistryDataLoader
-            .load(resources, lookups, RegistryDataLoader.WORLDGEN_REGISTRIES, Runnable::run)
+            .load(resources, lookups, RegistryDataLoader.WORLD_REGISTRIES, Runnable::run)
             .join();
 
         worldgen.registries().filter(entry -> !seen.contains(entry.key()))

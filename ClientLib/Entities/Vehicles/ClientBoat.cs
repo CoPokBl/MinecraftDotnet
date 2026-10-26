@@ -1,6 +1,7 @@
 using ClientLib.Maths;
 using ClientLib.Physics;
 using Minecraft.Data.Generated;
+using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Physics;
 using Minecraft.Schemas;
@@ -35,8 +36,8 @@ public sealed class ClientBoat(MinecraftClient client) : ClientVehicle(client) {
     private bool IsRaft => Is(EntityClass.Raft) || Is(EntityClass.ChestRaft);
     private bool IsChestBoat => Is(EntityClass.AbstractChestBoat);
 
-    /// <summary><c>AbstractBoat.getControllingPassenger</c>: whoever sits first, if alive.</summary>
-    public override ClientEntity? ControllingPassenger => FirstPassenger is { IsLiving: true } passenger ? passenger : null;
+    /// <summary><c>AbstractBoat.getControllingPassenger</c>: whoever sits first, if a player.</summary>
+    public override ClientEntity? ControllingPassenger => FirstPassenger is { } passenger && passenger.Is(EntityClass.Player) ? passenger : null;
 
     private int MaxPassengers => IsChestBoat ? 1 : 2;
 
@@ -77,7 +78,6 @@ public sealed class ClientBoat(MinecraftClient client) : ClientVehicle(client) {
         }
 
         BaseTick();
-        StepInterpolation();
         if (FirstPassenger is not { } first || !first.Is(EntityClass.Player)) {
             SetPaddleState(false, false);
         }
@@ -308,11 +308,29 @@ public sealed class ClientBoat(MinecraftClient client) : ClientVehicle(client) {
 
     /// <summary>
     /// <c>AbstractBoat.onAboveBubbleColumn</c>: on a client only the odd splash. The bubble time it starts is
-    /// the server's, whose launch arrives as a motion packet.
+    /// the server's, whose end arrives as entity event 71 or 72.
     /// </summary>
     protected override void OnAboveBubbleColumn(bool dragDown) {
         if (!IsUnderWater) {
             Client.Particles.Entities.BoatAboveBubbleColumn(this);
+        }
+    }
+
+    /// <summary><c>AbstractBoat.handleEntityEvent</c>.</summary>
+    public override void HandleEntityEvent(ClientBoundEntityEventPacket.EntityEventType status) {
+        if (status == ClientBoundEntityEventPacket.EntityEventType.BoatBubbleColumnDown) {
+            HandleBubbleColumnEffect(true);
+        }
+        else if (status == ClientBoundEntityEventPacket.EntityEventType.BoatBubbleColumnUp) {
+            HandleBubbleColumnEffect(false);
+        }
+    }
+
+    /// <summary><c>AbstractBoat.handleBubbleColumnEffect</c>: only whoever simulates the boat moves it.</summary>
+    private void HandleBubbleColumnEffect(bool dragDown) {
+        if (IsLocalInstanceAuthoritative) {
+            Vec3d movement = DeltaMovement;
+            DeltaMovement = dragDown ? movement.Add(0.0, -0.7, 0.0) : new Vec3d(movement.X, 0.6, movement.Z);
         }
     }
 

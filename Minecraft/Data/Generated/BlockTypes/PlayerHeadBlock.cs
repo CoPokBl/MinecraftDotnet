@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PlayerHeadBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock, IPowered, IRotated {
-    private static readonly BlockInfo Data = new("minecraft:player_head", "block.minecraft.player_head", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:player_head", BlockInfo.VanillaOnly, "minecraft:blocks/player_head");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.CustomHead, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S515, BlockShapes.S515, BlockShapes.S1, BlockShapes.S1, BlockShapes.S515, BlockShapes.S515);
+    private static readonly BlockInfo Data = new("block.minecraft.player_head", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:player_head", BlockInfo.VanillaOnly, "minecraft:blocks/player_head");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Popped, 0, "stone", NoteBlockInstrument.CustomHead, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S515, BlockShapes.S515, BlockShapes.S1, BlockShapes.S1, BlockShapes.S515, BlockShapes.S515);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record PlayerHeadBlock(Identifier Identifier, bool Powered, int Rotation)
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record PlayerHeadBlock(Identifier Identifier, bool Powered, int Rotation)
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -72,41 +72,41 @@ public record PlayerHeadBlock(Identifier Identifier, bool Powered, int Rotation)
         get {
             return Powered switch {
                 true => Rotation switch {
-                    0 => 11035,
-                    1 => 11036,
-                    2 => 11037,
-                    3 => 11038,
-                    4 => 11039,
-                    5 => 11040,
-                    6 => 11041,
-                    7 => 11042,
-                    8 => 11043,
-                    9 => 11044,
-                    10 => 11045,
-                    11 => 11046,
-                    12 => 11047,
-                    13 => 11048,
-                    14 => 11049,
-                    15 => 11050,
+                    0 => 12802,
+                    1 => 12803,
+                    2 => 12804,
+                    3 => 12805,
+                    4 => 12806,
+                    5 => 12807,
+                    6 => 12808,
+                    7 => 12809,
+                    8 => 12810,
+                    9 => 12811,
+                    10 => 12812,
+                    11 => 12813,
+                    12 => 12814,
+                    13 => 12815,
+                    14 => 12816,
+                    15 => 12817,
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
-                    0 => 11051,
-                    1 => 11052,
-                    2 => 11053,
-                    3 => 11054,
-                    4 => 11055,
-                    5 => 11056,
-                    6 => 11057,
-                    7 => 11058,
-                    8 => 11059,
-                    9 => 11060,
-                    10 => 11061,
-                    11 => 11062,
-                    12 => 11063,
-                    13 => 11064,
-                    14 => 11065,
-                    15 => 11066,
+                    0 => 12818,
+                    1 => 12819,
+                    2 => 12820,
+                    3 => 12821,
+                    4 => 12822,
+                    5 => 12823,
+                    6 => 12824,
+                    7 => 12825,
+                    8 => 12826,
+                    9 => 12827,
+                    10 => 12828,
+                    11 => 12829,
+                    12 => 12830,
+                    13 => 12831,
+                    14 => 12832,
+                    15 => 12833,
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
             };
@@ -115,38 +115,38 @@ public record PlayerHeadBlock(Identifier Identifier, bool Powered, int Rotation)
     
     public IBlock WithState(uint state) {
         return state switch {
-            11035 => new PlayerHeadBlock(Identifier, true, 0),
-            11036 => new PlayerHeadBlock(Identifier, true, 1),
-            11037 => new PlayerHeadBlock(Identifier, true, 2),
-            11038 => new PlayerHeadBlock(Identifier, true, 3),
-            11039 => new PlayerHeadBlock(Identifier, true, 4),
-            11040 => new PlayerHeadBlock(Identifier, true, 5),
-            11041 => new PlayerHeadBlock(Identifier, true, 6),
-            11042 => new PlayerHeadBlock(Identifier, true, 7),
-            11043 => new PlayerHeadBlock(Identifier, true, 8),
-            11044 => new PlayerHeadBlock(Identifier, true, 9),
-            11045 => new PlayerHeadBlock(Identifier, true, 10),
-            11046 => new PlayerHeadBlock(Identifier, true, 11),
-            11047 => new PlayerHeadBlock(Identifier, true, 12),
-            11048 => new PlayerHeadBlock(Identifier, true, 13),
-            11049 => new PlayerHeadBlock(Identifier, true, 14),
-            11050 => new PlayerHeadBlock(Identifier, true, 15),
-            11051 => new PlayerHeadBlock(Identifier, false, 0),
-            11052 => new PlayerHeadBlock(Identifier, false, 1),
-            11053 => new PlayerHeadBlock(Identifier, false, 2),
-            11054 => new PlayerHeadBlock(Identifier, false, 3),
-            11055 => new PlayerHeadBlock(Identifier, false, 4),
-            11056 => new PlayerHeadBlock(Identifier, false, 5),
-            11057 => new PlayerHeadBlock(Identifier, false, 6),
-            11058 => new PlayerHeadBlock(Identifier, false, 7),
-            11059 => new PlayerHeadBlock(Identifier, false, 8),
-            11060 => new PlayerHeadBlock(Identifier, false, 9),
-            11061 => new PlayerHeadBlock(Identifier, false, 10),
-            11062 => new PlayerHeadBlock(Identifier, false, 11),
-            11063 => new PlayerHeadBlock(Identifier, false, 12),
-            11064 => new PlayerHeadBlock(Identifier, false, 13),
-            11065 => new PlayerHeadBlock(Identifier, false, 14),
-            11066 => new PlayerHeadBlock(Identifier, false, 15),
+            12802 => new PlayerHeadBlock(Identifier, true, 0),
+            12803 => new PlayerHeadBlock(Identifier, true, 1),
+            12804 => new PlayerHeadBlock(Identifier, true, 2),
+            12805 => new PlayerHeadBlock(Identifier, true, 3),
+            12806 => new PlayerHeadBlock(Identifier, true, 4),
+            12807 => new PlayerHeadBlock(Identifier, true, 5),
+            12808 => new PlayerHeadBlock(Identifier, true, 6),
+            12809 => new PlayerHeadBlock(Identifier, true, 7),
+            12810 => new PlayerHeadBlock(Identifier, true, 8),
+            12811 => new PlayerHeadBlock(Identifier, true, 9),
+            12812 => new PlayerHeadBlock(Identifier, true, 10),
+            12813 => new PlayerHeadBlock(Identifier, true, 11),
+            12814 => new PlayerHeadBlock(Identifier, true, 12),
+            12815 => new PlayerHeadBlock(Identifier, true, 13),
+            12816 => new PlayerHeadBlock(Identifier, true, 14),
+            12817 => new PlayerHeadBlock(Identifier, true, 15),
+            12818 => new PlayerHeadBlock(Identifier, false, 0),
+            12819 => new PlayerHeadBlock(Identifier, false, 1),
+            12820 => new PlayerHeadBlock(Identifier, false, 2),
+            12821 => new PlayerHeadBlock(Identifier, false, 3),
+            12822 => new PlayerHeadBlock(Identifier, false, 4),
+            12823 => new PlayerHeadBlock(Identifier, false, 5),
+            12824 => new PlayerHeadBlock(Identifier, false, 6),
+            12825 => new PlayerHeadBlock(Identifier, false, 7),
+            12826 => new PlayerHeadBlock(Identifier, false, 8),
+            12827 => new PlayerHeadBlock(Identifier, false, 9),
+            12828 => new PlayerHeadBlock(Identifier, false, 10),
+            12829 => new PlayerHeadBlock(Identifier, false, 11),
+            12830 => new PlayerHeadBlock(Identifier, false, 12),
+            12831 => new PlayerHeadBlock(Identifier, false, 13),
+            12832 => new PlayerHeadBlock(Identifier, false, 14),
+            12833 => new PlayerHeadBlock(Identifier, false, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -65,6 +65,7 @@ public static class CustomStatistic {
     public static readonly SimpleCustomStatistic RaidTrigger = new("minecraft:raid_trigger");
     public static readonly SimpleCustomStatistic RaidWin = new("minecraft:raid_win");
     public static readonly SimpleCustomStatistic SleepInBed = new("minecraft:sleep_in_bed");
+    public static readonly SimpleCustomStatistic SleepInStrawBed = new("minecraft:sleep_in_straw_bed");
     public static readonly SimpleCustomStatistic SneakTime = new("minecraft:sneak_time");
     public static readonly SimpleCustomStatistic SprintOneCm = new("minecraft:sprint_one_cm");
     public static readonly SimpleCustomStatistic StriderOneCm = new("minecraft:strider_one_cm");

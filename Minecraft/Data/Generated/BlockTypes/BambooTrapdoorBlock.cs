@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BambooTrapdoorBlock(Identifier Identifier, Direction Facing, TopBottom Half, bool Open, bool Powered, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IOpenable, IPowered, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:trapdoor", "block.minecraft.bamboo_trapdoor", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:bamboo_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/bamboo_trapdoor");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 18, "bamboo_wood", NoteBlockInstrument.Bass, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockInfo Data = new("block.minecraft.bamboo_trapdoor", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:bamboo_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/bamboo_trapdoor");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 18, "bamboo_wood", NoteBlockInstrument.Bass, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
@@ -28,15 +28,15 @@ public record BambooTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
         I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I4, I5, I4, I5, I6, I7, I6, I7, I2, I3, I2, I3, I6, I7, I6, I7, I4, I5, I4, I5, I8, I9, I8, I9, I2, I3, I2, I3, I8, I9, I8, I9, I4, I5, I4, I5, I10, I11, I10, I11, I2, I3, I2, I3, I10, I11, I10, I11, I4, I5, I4, I5
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 7690];
+    public BlockStateInfo StateInfo => States[StateId - 9424];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -50,7 +50,6 @@ public record BambooTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -70,6 +69,7 @@ public record BambooTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -95,44 +95,44 @@ public record BambooTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7690,
-                                false => 7691,
+                                true => 9424,
+                                false => 9425,
                             },
                             false => Waterlogged switch {
-                                true => 7692,
-                                false => 7693,
+                                true => 9426,
+                                false => 9427,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7694,
-                                false => 7695,
+                                true => 9428,
+                                false => 9429,
                             },
                             false => Waterlogged switch {
-                                true => 7696,
-                                false => 7697,
+                                true => 9430,
+                                false => 9431,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7698,
-                                false => 7699,
+                                true => 9432,
+                                false => 9433,
                             },
                             false => Waterlogged switch {
-                                true => 7700,
-                                false => 7701,
+                                true => 9434,
+                                false => 9435,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7702,
-                                false => 7703,
+                                true => 9436,
+                                false => 9437,
                             },
                             false => Waterlogged switch {
-                                true => 7704,
-                                false => 7705,
+                                true => 9438,
+                                false => 9439,
                             },
                         },
                     },
@@ -142,44 +142,44 @@ public record BambooTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7706,
-                                false => 7707,
+                                true => 9440,
+                                false => 9441,
                             },
                             false => Waterlogged switch {
-                                true => 7708,
-                                false => 7709,
+                                true => 9442,
+                                false => 9443,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7710,
-                                false => 7711,
+                                true => 9444,
+                                false => 9445,
                             },
                             false => Waterlogged switch {
-                                true => 7712,
-                                false => 7713,
+                                true => 9446,
+                                false => 9447,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7714,
-                                false => 7715,
+                                true => 9448,
+                                false => 9449,
                             },
                             false => Waterlogged switch {
-                                true => 7716,
-                                false => 7717,
+                                true => 9450,
+                                false => 9451,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7718,
-                                false => 7719,
+                                true => 9452,
+                                false => 9453,
                             },
                             false => Waterlogged switch {
-                                true => 7720,
-                                false => 7721,
+                                true => 9454,
+                                false => 9455,
                             },
                         },
                     },
@@ -189,44 +189,44 @@ public record BambooTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7722,
-                                false => 7723,
+                                true => 9456,
+                                false => 9457,
                             },
                             false => Waterlogged switch {
-                                true => 7724,
-                                false => 7725,
+                                true => 9458,
+                                false => 9459,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7726,
-                                false => 7727,
+                                true => 9460,
+                                false => 9461,
                             },
                             false => Waterlogged switch {
-                                true => 7728,
-                                false => 7729,
+                                true => 9462,
+                                false => 9463,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7730,
-                                false => 7731,
+                                true => 9464,
+                                false => 9465,
                             },
                             false => Waterlogged switch {
-                                true => 7732,
-                                false => 7733,
+                                true => 9466,
+                                false => 9467,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7734,
-                                false => 7735,
+                                true => 9468,
+                                false => 9469,
                             },
                             false => Waterlogged switch {
-                                true => 7736,
-                                false => 7737,
+                                true => 9470,
+                                false => 9471,
                             },
                         },
                     },
@@ -236,44 +236,44 @@ public record BambooTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7738,
-                                false => 7739,
+                                true => 9472,
+                                false => 9473,
                             },
                             false => Waterlogged switch {
-                                true => 7740,
-                                false => 7741,
+                                true => 9474,
+                                false => 9475,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7742,
-                                false => 7743,
+                                true => 9476,
+                                false => 9477,
                             },
                             false => Waterlogged switch {
-                                true => 7744,
-                                false => 7745,
+                                true => 9478,
+                                false => 9479,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7746,
-                                false => 7747,
+                                true => 9480,
+                                false => 9481,
                             },
                             false => Waterlogged switch {
-                                true => 7748,
-                                false => 7749,
+                                true => 9482,
+                                false => 9483,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7750,
-                                false => 7751,
+                                true => 9484,
+                                false => 9485,
                             },
                             false => Waterlogged switch {
-                                true => 7752,
-                                false => 7753,
+                                true => 9486,
+                                false => 9487,
                             },
                         },
                     },
@@ -286,70 +286,70 @@ public record BambooTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     
     public IBlock WithState(uint state) {
         return state switch {
-            7690 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
-            7691 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
-            7692 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
-            7693 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
-            7694 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
-            7695 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
-            7696 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
-            7697 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
-            7698 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
-            7699 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
-            7700 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
-            7701 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
-            7702 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
-            7703 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
-            7704 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
-            7705 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
-            7706 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
-            7707 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
-            7708 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
-            7709 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
-            7710 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
-            7711 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
-            7712 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
-            7713 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
-            7714 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
-            7715 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
-            7716 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
-            7717 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
-            7718 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
-            7719 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
-            7720 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
-            7721 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
-            7722 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
-            7723 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
-            7724 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
-            7725 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
-            7726 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
-            7727 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
-            7728 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
-            7729 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
-            7730 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
-            7731 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
-            7732 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
-            7733 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
-            7734 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
-            7735 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
-            7736 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
-            7737 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
-            7738 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
-            7739 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
-            7740 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
-            7741 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
-            7742 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
-            7743 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
-            7744 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
-            7745 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
-            7746 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
-            7747 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
-            7748 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
-            7749 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
-            7750 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
-            7751 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
-            7752 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
-            7753 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
+            9424 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
+            9425 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
+            9426 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
+            9427 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
+            9428 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
+            9429 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
+            9430 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
+            9431 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
+            9432 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
+            9433 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
+            9434 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
+            9435 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
+            9436 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
+            9437 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
+            9438 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
+            9439 => new BambooTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
+            9440 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
+            9441 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
+            9442 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
+            9443 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
+            9444 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
+            9445 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
+            9446 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
+            9447 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
+            9448 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
+            9449 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
+            9450 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
+            9451 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
+            9452 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
+            9453 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
+            9454 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
+            9455 => new BambooTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
+            9456 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
+            9457 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
+            9458 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
+            9459 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
+            9460 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
+            9461 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
+            9462 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
+            9463 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
+            9464 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
+            9465 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
+            9466 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
+            9467 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
+            9468 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
+            9469 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
+            9470 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
+            9471 => new BambooTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
+            9472 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
+            9473 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
+            9474 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
+            9475 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
+            9476 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
+            9477 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
+            9478 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
+            9479 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
+            9480 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
+            9481 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
+            9482 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
+            9483 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
+            9484 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
+            9485 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
+            9486 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
+            9487 => new BambooTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

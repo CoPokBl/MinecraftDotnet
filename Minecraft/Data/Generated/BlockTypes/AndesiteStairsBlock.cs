@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AndesiteStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.andesite_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:andesite_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/andesite_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.andesite_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:andesite_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/andesite_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record AndesiteStairsBlock(Identifier Identifier, Direction Facing, TopBo
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 16096];
+    public BlockStateInfo StateInfo => States[StateId - 19453];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record AndesiteStairsBlock(Identifier Identifier, Direction Facing, TopBo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record AndesiteStairsBlock(Identifier Identifier, Direction Facing, TopBo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record AndesiteStairsBlock(Identifier Identifier, Direction Facing, TopBo
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16096,
-                            false => 16097,
+                            true => 19453,
+                            false => 19454,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16098,
-                            false => 16099,
+                            true => 19455,
+                            false => 19456,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16100,
-                            false => 16101,
+                            true => 19457,
+                            false => 19458,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16102,
-                            false => 16103,
+                            true => 19459,
+                            false => 19460,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16104,
-                            false => 16105,
+                            true => 19461,
+                            false => 19462,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16106,
-                            false => 16107,
+                            true => 19463,
+                            false => 19464,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16108,
-                            false => 16109,
+                            true => 19465,
+                            false => 19466,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16110,
-                            false => 16111,
+                            true => 19467,
+                            false => 19468,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16112,
-                            false => 16113,
+                            true => 19469,
+                            false => 19470,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16114,
-                            false => 16115,
+                            true => 19471,
+                            false => 19472,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record AndesiteStairsBlock(Identifier Identifier, Direction Facing, TopBo
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16116,
-                            false => 16117,
+                            true => 19473,
+                            false => 19474,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16118,
-                            false => 16119,
+                            true => 19475,
+                            false => 19476,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16120,
-                            false => 16121,
+                            true => 19477,
+                            false => 19478,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16122,
-                            false => 16123,
+                            true => 19479,
+                            false => 19480,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16124,
-                            false => 16125,
+                            true => 19481,
+                            false => 19482,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16126,
-                            false => 16127,
+                            true => 19483,
+                            false => 19484,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16128,
-                            false => 16129,
+                            true => 19485,
+                            false => 19486,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16130,
-                            false => 16131,
+                            true => 19487,
+                            false => 19488,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16132,
-                            false => 16133,
+                            true => 19489,
+                            false => 19490,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16134,
-                            false => 16135,
+                            true => 19491,
+                            false => 19492,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record AndesiteStairsBlock(Identifier Identifier, Direction Facing, TopBo
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16136,
-                            false => 16137,
+                            true => 19493,
+                            false => 19494,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16138,
-                            false => 16139,
+                            true => 19495,
+                            false => 19496,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16140,
-                            false => 16141,
+                            true => 19497,
+                            false => 19498,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16142,
-                            false => 16143,
+                            true => 19499,
+                            false => 19500,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16144,
-                            false => 16145,
+                            true => 19501,
+                            false => 19502,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16146,
-                            false => 16147,
+                            true => 19503,
+                            false => 19504,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16148,
-                            false => 16149,
+                            true => 19505,
+                            false => 19506,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16150,
-                            false => 16151,
+                            true => 19507,
+                            false => 19508,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16152,
-                            false => 16153,
+                            true => 19509,
+                            false => 19510,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16154,
-                            false => 16155,
+                            true => 19511,
+                            false => 19512,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record AndesiteStairsBlock(Identifier Identifier, Direction Facing, TopBo
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16156,
-                            false => 16157,
+                            true => 19513,
+                            false => 19514,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16158,
-                            false => 16159,
+                            true => 19515,
+                            false => 19516,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16160,
-                            false => 16161,
+                            true => 19517,
+                            false => 19518,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16162,
-                            false => 16163,
+                            true => 19519,
+                            false => 19520,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16164,
-                            false => 16165,
+                            true => 19521,
+                            false => 19522,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 16166,
-                            false => 16167,
+                            true => 19523,
+                            false => 19524,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 16168,
-                            false => 16169,
+                            true => 19525,
+                            false => 19526,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 16170,
-                            false => 16171,
+                            true => 19527,
+                            false => 19528,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 16172,
-                            false => 16173,
+                            true => 19529,
+                            false => 19530,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 16174,
-                            false => 16175,
+                            true => 19531,
+                            false => 19532,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record AndesiteStairsBlock(Identifier Identifier, Direction Facing, TopBo
     
     public IBlock WithState(uint state) {
         return state switch {
-            16096 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            16097 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            16098 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            16099 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            16100 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            16101 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            16102 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            16103 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            16104 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            16105 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            16106 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            16107 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            16108 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16109 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16110 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            16111 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            16112 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16113 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16114 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            16115 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            16116 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            16117 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            16118 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            16119 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            16120 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            16121 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            16122 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            16123 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            16124 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            16125 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            16126 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            16127 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            16128 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16129 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16130 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            16131 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            16132 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16133 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16134 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            16135 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            16136 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            16137 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            16138 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            16139 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            16140 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            16141 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            16142 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            16143 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            16144 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            16145 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            16146 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            16147 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            16148 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16149 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16150 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            16151 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            16152 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16153 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16154 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            16155 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            16156 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            16157 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            16158 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            16159 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            16160 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            16161 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            16162 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            16163 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            16164 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            16165 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            16166 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            16167 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            16168 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            16169 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            16170 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            16171 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            16172 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            16173 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            16174 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            16175 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            19453 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            19454 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            19455 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            19456 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            19457 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            19458 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            19459 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            19460 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            19461 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            19462 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            19463 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            19464 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            19465 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19466 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19467 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            19468 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            19469 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19470 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19471 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            19472 => new AndesiteStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            19473 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            19474 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            19475 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            19476 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            19477 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            19478 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            19479 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            19480 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            19481 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            19482 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            19483 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            19484 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            19485 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19486 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19487 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            19488 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            19489 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19490 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19491 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            19492 => new AndesiteStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            19493 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            19494 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            19495 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            19496 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            19497 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            19498 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            19499 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            19500 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            19501 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            19502 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            19503 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            19504 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            19505 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19506 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19507 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            19508 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            19509 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19510 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19511 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            19512 => new AndesiteStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            19513 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            19514 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            19515 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            19516 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            19517 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            19518 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            19519 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            19520 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            19521 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            19522 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            19523 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            19524 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            19525 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            19526 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            19527 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            19528 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            19529 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            19530 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            19531 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            19532 => new AndesiteStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

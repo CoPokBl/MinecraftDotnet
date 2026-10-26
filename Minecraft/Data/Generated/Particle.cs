@@ -87,12 +87,14 @@ public static class Particle {
     public static readonly SimpleParticle NoxiousGas = new("minecraft:noxious_gas");
     public static readonly SimpleParticle NoxiousGasCloud = new("minecraft:noxious_gas_cloud");
     public static readonly SimpleParticle OminousSpawning = new("minecraft:ominous_spawning");
+    public static readonly SimpleParticle OrangePoplarLeaves = new("minecraft:orange_poplar_leaves");
     public static readonly SimpleParticle PaleOakLeaves = new("minecraft:pale_oak_leaves");
     public static readonly SimpleParticle PauseMobGrowth = new("minecraft:pause_mob_growth");
     public static readonly SimpleParticle Poof = new("minecraft:poof");
     public static readonly SimpleParticle Portal = new("minecraft:portal");
     public static readonly SimpleParticle RaidOmen = new("minecraft:raid_omen");
     public static readonly SimpleParticle Rain = new("minecraft:rain");
+    public static readonly SimpleParticle RedPoplarLeaves = new("minecraft:red_poplar_leaves");
     public static readonly SimpleParticle ResetMobGrowth = new("minecraft:reset_mob_growth");
     public static readonly SimpleParticle ReversePortal = new("minecraft:reverse_portal");
     public static readonly SimpleParticle Scrape = new("minecraft:scrape");
@@ -130,4 +132,5 @@ public static class Particle {
     public static readonly SimpleParticle WhiteAsh = new("minecraft:white_ash");
     public static readonly SimpleParticle WhiteSmoke = new("minecraft:white_smoke");
     public static readonly SimpleParticle Witch = new("minecraft:witch");
+    public static readonly SimpleParticle YellowPoplarLeaves = new("minecraft:yellow_poplar_leaves");
 }

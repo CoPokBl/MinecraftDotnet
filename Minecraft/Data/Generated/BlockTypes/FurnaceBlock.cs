@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record FurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : IBlock, IHorizontalFacing, ILit {
-    private static readonly BlockInfo Data = new("minecraft:furnace", "block.minecraft.furnace", 3.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:furnace", "minecraft:furnace", BlockInfo.VanillaOnly, "minecraft:blocks/furnace");
-    private static readonly BlockStateInfo I0 = new(3.5f, 13, 15, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.furnace", 3.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:furnace", "minecraft:furnace", BlockInfo.VanillaOnly, "minecraft:blocks/furnace");
+    private static readonly BlockStateInfo I0 = new(3.5f, 13, 15, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 5327];
+    public BlockStateInfo StateInfo => States[StateId - 6883];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record FurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record FurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -76,20 +76,20 @@ public record FurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : 
         get {
             return Facing switch {
                 Direction.North => Lit switch {
-                    true => 5327,
-                    false => 5328,
+                    true => 6883,
+                    false => 6884,
                 },
                 Direction.South => Lit switch {
-                    true => 5329,
-                    false => 5330,
+                    true => 6885,
+                    false => 6886,
                 },
                 Direction.West => Lit switch {
-                    true => 5331,
-                    false => 5332,
+                    true => 6887,
+                    false => 6888,
                 },
                 Direction.East => Lit switch {
-                    true => 5333,
-                    false => 5334,
+                    true => 6889,
+                    false => 6890,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -98,14 +98,14 @@ public record FurnaceBlock(Identifier Identifier, Direction Facing, bool Lit) : 
     
     public IBlock WithState(uint state) {
         return state switch {
-            5327 => new FurnaceBlock(Identifier, Direction.North, true),
-            5328 => new FurnaceBlock(Identifier, Direction.North, false),
-            5329 => new FurnaceBlock(Identifier, Direction.South, true),
-            5330 => new FurnaceBlock(Identifier, Direction.South, false),
-            5331 => new FurnaceBlock(Identifier, Direction.West, true),
-            5332 => new FurnaceBlock(Identifier, Direction.West, false),
-            5333 => new FurnaceBlock(Identifier, Direction.East, true),
-            5334 => new FurnaceBlock(Identifier, Direction.East, false),
+            6883 => new FurnaceBlock(Identifier, Direction.North, true),
+            6884 => new FurnaceBlock(Identifier, Direction.North, false),
+            6885 => new FurnaceBlock(Identifier, Direction.South, true),
+            6886 => new FurnaceBlock(Identifier, Direction.South, false),
+            6887 => new FurnaceBlock(Identifier, Direction.West, true),
+            6888 => new FurnaceBlock(Identifier, Direction.West, false),
+            6889 => new FurnaceBlock(Identifier, Direction.East, true),
+            6890 => new FurnaceBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

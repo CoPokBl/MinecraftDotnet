@@ -152,8 +152,8 @@ public sealed class DevArtEntities {
 
         float shoulder = u * 3;
         float armSwing = -swing;
-        if (entity.AttackAnim > 0) {
-            armSwing -= MathF.Sin(entity.AttackAnim * MathF.PI) * 1.2F;
+        if (entity.SwingState.Animation > 0) {
+            armSwing -= MathF.Sin(entity.SwingState.Animation * MathF.PI) * 1.2F;
         }
         Limb(overlay, torso, new Vector3(-halfBody - limb, shoulder, 0), -swing, new Vector3(-limb, -u * 3, -limb), new Vector3(limb, 0, limb), skin, sky, block);
         Limb(overlay, torso, new Vector3(halfBody + limb, shoulder, 0), armSwing, new Vector3(-limb, -u * 3, -limb), new Vector3(limb, 0, limb), skin, sky, block);

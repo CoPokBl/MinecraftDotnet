@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBlock, IStackable {
-    private static readonly BlockInfo Data = new("minecraft:turtle_egg", "block.minecraft.turtle_egg", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:turtle_egg", BlockInfo.VanillaOnly, "minecraft:blocks/turtle_egg");
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 2, "metal", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, true, false, false, true, true, false, true, [], null, BlockShapes.S930, BlockShapes.S930, BlockShapes.S1, BlockShapes.S1, BlockShapes.S930, BlockShapes.S930);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S931, CollisionShape = BlockShapes.S931, VisualShape = BlockShapes.S931, SupportShape = BlockShapes.S931 };
+    private static readonly BlockInfo Data = new("block.minecraft.turtle_egg", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:turtle_egg", BlockInfo.VanillaOnly, "minecraft:blocks/turtle_egg");
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Popped, 2, "metal", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S943, BlockShapes.S943, BlockShapes.S1, BlockShapes.S1, BlockShapes.S943, BlockShapes.S943);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S944, CollisionShape = BlockShapes.S944, VisualShape = BlockShapes.S944, SupportShape = BlockShapes.S944 };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I0, I1, I1, I1, I1, I1, I1, I1, I1, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 15090];
+    public BlockStateInfo StateInfo => States[StateId - 18447];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,27 +78,27 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
         get {
             return Eggs switch {
                 1 => Hatch switch {
-                    0 => 15090,
-                    1 => 15091,
-                    2 => 15092,
+                    0 => 18447,
+                    1 => 18448,
+                    2 => 18449,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 2 => Hatch switch {
-                    0 => 15093,
-                    1 => 15094,
-                    2 => 15095,
+                    0 => 18450,
+                    1 => 18451,
+                    2 => 18452,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 3 => Hatch switch {
-                    0 => 15096,
-                    1 => 15097,
-                    2 => 15098,
+                    0 => 18453,
+                    1 => 18454,
+                    2 => 18455,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 4 => Hatch switch {
-                    0 => 15099,
-                    1 => 15100,
-                    2 => 15101,
+                    0 => 18456,
+                    1 => 18457,
+                    2 => 18458,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Eggs), Eggs, "Unknown value for property eggs.")
@@ -108,18 +108,18 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
     
     public IBlock WithState(uint state) {
         return state switch {
-            15090 => new TurtleEggBlock(Identifier, 1, 0),
-            15091 => new TurtleEggBlock(Identifier, 1, 1),
-            15092 => new TurtleEggBlock(Identifier, 1, 2),
-            15093 => new TurtleEggBlock(Identifier, 2, 0),
-            15094 => new TurtleEggBlock(Identifier, 2, 1),
-            15095 => new TurtleEggBlock(Identifier, 2, 2),
-            15096 => new TurtleEggBlock(Identifier, 3, 0),
-            15097 => new TurtleEggBlock(Identifier, 3, 1),
-            15098 => new TurtleEggBlock(Identifier, 3, 2),
-            15099 => new TurtleEggBlock(Identifier, 4, 0),
-            15100 => new TurtleEggBlock(Identifier, 4, 1),
-            15101 => new TurtleEggBlock(Identifier, 4, 2),
+            18447 => new TurtleEggBlock(Identifier, 1, 0),
+            18448 => new TurtleEggBlock(Identifier, 1, 1),
+            18449 => new TurtleEggBlock(Identifier, 1, 2),
+            18450 => new TurtleEggBlock(Identifier, 2, 0),
+            18451 => new TurtleEggBlock(Identifier, 2, 1),
+            18452 => new TurtleEggBlock(Identifier, 2, 2),
+            18453 => new TurtleEggBlock(Identifier, 3, 0),
+            18454 => new TurtleEggBlock(Identifier, 3, 1),
+            18455 => new TurtleEggBlock(Identifier, 3, 2),
+            18456 => new TurtleEggBlock(Identifier, 4, 0),
+            18457 => new TurtleEggBlock(Identifier, 4, 1),
+            18458 => new TurtleEggBlock(Identifier, 4, 2),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

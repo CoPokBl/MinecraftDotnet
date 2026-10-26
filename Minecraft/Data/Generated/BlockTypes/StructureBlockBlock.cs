@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mode ModeValue) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:structure", "block.minecraft.structure_block", 3600000f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:structure_block", "minecraft:structure_block", BlockInfo.VanillaOnly, null);
-    private static readonly BlockStateInfo I0 = new(-1f, 0, 15, PushReaction.Normal, 22, "stone", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.structure_block", 3600000f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:structure_block", "minecraft:structure_block", BlockInfo.VanillaOnly, null);
+    private static readonly BlockStateInfo I0 = new(-1f, 0, 15, PushReaction.PushPull, 22, "stone", NoteBlockInstrument.Harp, false, true, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -67,10 +67,10 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
     public uint StateId {
         get {
             return ModeValue switch {
-                Mode.Save => 21722,
-                Mode.Load => 21723,
-                Mode.Corner => 21724,
-                Mode.Data => 21725,
+                Mode.Save => 25079,
+                Mode.Load => 25080,
+                Mode.Corner => 25081,
+                Mode.Data => 25082,
                 _ => throw new ArgumentOutOfRangeException(nameof(ModeValue), ModeValue, "Unknown value for property mode.")
             };
         }
@@ -78,10 +78,10 @@ public record StructureBlockBlock(Identifier Identifier, StructureBlockBlock.Mod
     
     public IBlock WithState(uint state) {
         return state switch {
-            21722 => new StructureBlockBlock(Identifier, Mode.Save),
-            21723 => new StructureBlockBlock(Identifier, Mode.Load),
-            21724 => new StructureBlockBlock(Identifier, Mode.Corner),
-            21725 => new StructureBlockBlock(Identifier, Mode.Data),
+            25079 => new StructureBlockBlock(Identifier, Mode.Save),
+            25080 => new StructureBlockBlock(Identifier, Mode.Load),
+            25081 => new StructureBlockBlock(Identifier, Mode.Corner),
+            25082 => new StructureBlockBlock(Identifier, Mode.Data),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

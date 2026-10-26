@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AcaciaWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:wall_hanging_sign", "block.minecraft.acacia_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:acacia_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_hanging_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 15, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:acacia_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 15, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
@@ -20,15 +20,15 @@ public record AcaciaWallHangingSignBlock(Identifier Identifier, Direction Facing
         I0, I1, I0, I1, I2, I3, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6699];
+    public BlockStateInfo StateInfo => States[StateId - 8359];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record AcaciaWallHangingSignBlock(Identifier Identifier, Direction Facing
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record AcaciaWallHangingSignBlock(Identifier Identifier, Direction Facing
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,20 +78,20 @@ public record AcaciaWallHangingSignBlock(Identifier Identifier, Direction Facing
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6699,
-                    false => 6700,
+                    true => 8359,
+                    false => 8360,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6701,
-                    false => 6702,
+                    true => 8361,
+                    false => 8362,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6703,
-                    false => 6704,
+                    true => 8363,
+                    false => 8364,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6705,
-                    false => 6706,
+                    true => 8365,
+                    false => 8366,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -100,14 +100,14 @@ public record AcaciaWallHangingSignBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            6699 => new AcaciaWallHangingSignBlock(Identifier, Direction.North, true),
-            6700 => new AcaciaWallHangingSignBlock(Identifier, Direction.North, false),
-            6701 => new AcaciaWallHangingSignBlock(Identifier, Direction.South, true),
-            6702 => new AcaciaWallHangingSignBlock(Identifier, Direction.South, false),
-            6703 => new AcaciaWallHangingSignBlock(Identifier, Direction.West, true),
-            6704 => new AcaciaWallHangingSignBlock(Identifier, Direction.West, false),
-            6705 => new AcaciaWallHangingSignBlock(Identifier, Direction.East, true),
-            6706 => new AcaciaWallHangingSignBlock(Identifier, Direction.East, false),
+            8359 => new AcaciaWallHangingSignBlock(Identifier, Direction.North, true),
+            8360 => new AcaciaWallHangingSignBlock(Identifier, Direction.North, false),
+            8361 => new AcaciaWallHangingSignBlock(Identifier, Direction.South, true),
+            8362 => new AcaciaWallHangingSignBlock(Identifier, Direction.South, false),
+            8363 => new AcaciaWallHangingSignBlock(Identifier, Direction.West, true),
+            8364 => new AcaciaWallHangingSignBlock(Identifier, Direction.West, false),
+            8365 => new AcaciaWallHangingSignBlock(Identifier, Direction.East, true),
+            8366 => new AcaciaWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

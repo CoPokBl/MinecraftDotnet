@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WarpedStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.warped_stairs", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:warped_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/warped_stairs");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 56, "nether_wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.warped_stairs", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:warped_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/warped_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 56, "nether_wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record WarpedStairsBlock(Identifier Identifier, Direction Facing, TopBott
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 21386];
+    public BlockStateInfo StateInfo => States[StateId - 24743];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record WarpedStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record WarpedStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record WarpedStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21386,
-                            false => 21387,
+                            true => 24743,
+                            false => 24744,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21388,
-                            false => 21389,
+                            true => 24745,
+                            false => 24746,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21390,
-                            false => 21391,
+                            true => 24747,
+                            false => 24748,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21392,
-                            false => 21393,
+                            true => 24749,
+                            false => 24750,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21394,
-                            false => 21395,
+                            true => 24751,
+                            false => 24752,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21396,
-                            false => 21397,
+                            true => 24753,
+                            false => 24754,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21398,
-                            false => 21399,
+                            true => 24755,
+                            false => 24756,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21400,
-                            false => 21401,
+                            true => 24757,
+                            false => 24758,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21402,
-                            false => 21403,
+                            true => 24759,
+                            false => 24760,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21404,
-                            false => 21405,
+                            true => 24761,
+                            false => 24762,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record WarpedStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21406,
-                            false => 21407,
+                            true => 24763,
+                            false => 24764,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21408,
-                            false => 21409,
+                            true => 24765,
+                            false => 24766,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21410,
-                            false => 21411,
+                            true => 24767,
+                            false => 24768,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21412,
-                            false => 21413,
+                            true => 24769,
+                            false => 24770,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21414,
-                            false => 21415,
+                            true => 24771,
+                            false => 24772,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21416,
-                            false => 21417,
+                            true => 24773,
+                            false => 24774,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21418,
-                            false => 21419,
+                            true => 24775,
+                            false => 24776,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21420,
-                            false => 21421,
+                            true => 24777,
+                            false => 24778,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21422,
-                            false => 21423,
+                            true => 24779,
+                            false => 24780,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21424,
-                            false => 21425,
+                            true => 24781,
+                            false => 24782,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record WarpedStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21426,
-                            false => 21427,
+                            true => 24783,
+                            false => 24784,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21428,
-                            false => 21429,
+                            true => 24785,
+                            false => 24786,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21430,
-                            false => 21431,
+                            true => 24787,
+                            false => 24788,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21432,
-                            false => 21433,
+                            true => 24789,
+                            false => 24790,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21434,
-                            false => 21435,
+                            true => 24791,
+                            false => 24792,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21436,
-                            false => 21437,
+                            true => 24793,
+                            false => 24794,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21438,
-                            false => 21439,
+                            true => 24795,
+                            false => 24796,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21440,
-                            false => 21441,
+                            true => 24797,
+                            false => 24798,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21442,
-                            false => 21443,
+                            true => 24799,
+                            false => 24800,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21444,
-                            false => 21445,
+                            true => 24801,
+                            false => 24802,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record WarpedStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21446,
-                            false => 21447,
+                            true => 24803,
+                            false => 24804,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21448,
-                            false => 21449,
+                            true => 24805,
+                            false => 24806,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21450,
-                            false => 21451,
+                            true => 24807,
+                            false => 24808,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21452,
-                            false => 21453,
+                            true => 24809,
+                            false => 24810,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21454,
-                            false => 21455,
+                            true => 24811,
+                            false => 24812,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21456,
-                            false => 21457,
+                            true => 24813,
+                            false => 24814,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21458,
-                            false => 21459,
+                            true => 24815,
+                            false => 24816,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21460,
-                            false => 21461,
+                            true => 24817,
+                            false => 24818,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21462,
-                            false => 21463,
+                            true => 24819,
+                            false => 24820,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21464,
-                            false => 21465,
+                            true => 24821,
+                            false => 24822,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record WarpedStairsBlock(Identifier Identifier, Direction Facing, TopBott
     
     public IBlock WithState(uint state) {
         return state switch {
-            21386 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            21387 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            21388 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            21389 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            21390 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            21391 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            21392 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            21393 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            21394 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            21395 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            21396 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            21397 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            21398 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            21399 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            21400 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            21401 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            21402 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            21403 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            21404 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            21405 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            21406 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            21407 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            21408 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            21409 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            21410 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            21411 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            21412 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            21413 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            21414 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            21415 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            21416 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            21417 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            21418 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            21419 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            21420 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            21421 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            21422 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            21423 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            21424 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            21425 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            21426 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            21427 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            21428 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            21429 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            21430 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            21431 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            21432 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            21433 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            21434 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            21435 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            21436 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            21437 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            21438 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            21439 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            21440 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            21441 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            21442 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            21443 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            21444 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            21445 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            21446 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            21447 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            21448 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            21449 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            21450 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            21451 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            21452 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            21453 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            21454 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            21455 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            21456 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            21457 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            21458 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            21459 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            21460 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            21461 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            21462 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            21463 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            21464 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            21465 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            24743 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            24744 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            24745 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            24746 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            24747 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            24748 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            24749 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            24750 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            24751 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            24752 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            24753 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            24754 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            24755 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            24756 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            24757 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            24758 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            24759 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            24760 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            24761 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            24762 => new WarpedStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            24763 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            24764 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            24765 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            24766 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            24767 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            24768 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            24769 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            24770 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            24771 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            24772 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            24773 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            24774 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            24775 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            24776 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            24777 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            24778 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            24779 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            24780 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            24781 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            24782 => new WarpedStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            24783 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            24784 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            24785 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            24786 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            24787 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            24788 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            24789 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            24790 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            24791 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            24792 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            24793 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            24794 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            24795 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            24796 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            24797 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            24798 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            24799 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            24800 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            24801 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            24802 => new WarpedStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            24803 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            24804 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            24805 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            24806 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            24807 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            24808 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            24809 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            24810 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            24811 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            24812 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            24813 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            24814 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            24815 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            24816 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            24817 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            24818 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            24819 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            24820 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            24821 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            24822 => new WarpedStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

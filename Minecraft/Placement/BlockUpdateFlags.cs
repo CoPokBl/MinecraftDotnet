@@ -4,9 +4,9 @@ namespace Minecraft.Placement;
 /// Vanilla's <c>Block.UpdateFlags</c>, the bit set every <c>Level.setBlock</c> takes.
 /// <p/>
 /// Transcribed whole rather than trimmed to the bits that currently do something, because the callers
-/// are transcriptions too: <c>BlockItem.placeBlock</c> passes 11, <c>BedItem</c> 26 and
-/// <c>DoubleHighBlockItem</c> 27, and those numbers only mean anything against the full set. The bits
-/// with nothing behind them yet are marked as such.
+/// are transcriptions too: <c>BlockItem.placeBlock</c> passes 11 and <c>DoubleHighBlockItem</c> 27,
+/// and those numbers only mean anything against the full set. The bits with nothing behind them yet
+/// are marked as such.
 /// </summary>
 public static class BlockUpdateFlags {
     /// <summary>Run the neighbour <b>change</b> pass, which is redstone. No engine yet, so inert.</summary>
@@ -43,7 +43,7 @@ public static class BlockUpdateFlags {
     public const int SkipOnPlace = 512;
 
     /// <summary>
-    /// <c>Level.setBlockAndUpdate</c>'s flags, and the default for <see cref="IPlacementLevel.SetBlock"/>:
+    /// <c>LevelWriter.setBlockAndUpdate</c>'s flags, and the default for <see cref="IPlacementLevel.SetBlock"/>:
     /// tell the clients and run both neighbour passes. What a caller that just wants a block put
     /// somewhere means.
     /// </summary>

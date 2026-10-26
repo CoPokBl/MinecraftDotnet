@@ -15,14 +15,14 @@ namespace Minecraft.Placement;
 /// block is correct rather than merely unimplemented.
 /// <p/>
 /// Coverage is measured against the jar, over all four hooks rather than
-/// <c>getStateForPlacement</c> alone: 113 classes declare that one, 63 override <c>canSurvive</c>
-/// and 109 override <c>updateShape</c>, for 148 classes with a hook between them. Every one of them
+/// <c>getStateForPlacement</c> alone: 114 classes declare that one, 64 override <c>canSurvive</c>
+/// and 110 override <c>updateShape</c>, for 149 classes with a hook between them. Every one of them
 /// is either in this list or in the list below.
 /// <p/>
 /// <b>Deliberately not transcribed</b>, with the reason each time:
 /// <list type="bullet">
 /// <item><c>Block</c> and <c>BlockBehaviour</c>: the defaults every unlisted block already gets.</item>
-/// <item><c>RedStoneWireBlock</c>: needs the redstone engine. It is the only class that overrides
+/// <item><c>RedstoneWireBlock</c>: needs the redstone engine. It is the only class that overrides
 /// <c>updateIndirectNeighbourShapes</c>, which is not ported for the same reason.</item>
 /// <item><c>BaseFireBlock</c>, <c>FireBlock</c>, <c>SoulFireBlock</c>, <c>PistonHeadBlock</c>,
 /// <c>BubbleColumnBlock</c>, <c>LiquidBlock</c>: no item places any of them, so no placement path
@@ -87,6 +87,7 @@ public static class VanillaPlacementRules {
         new WallSkullPlacementRule(),
         new LanternPlacementRule(),
         new CocoaPlacementRule(),
+        new ShelfMushroomPlacementRule(),
 
         // Wall mounted signs, and the rest of the common blocks.
         new WallSignPlacementRule(),
@@ -141,7 +142,7 @@ public static class VanillaPlacementRules {
         new CreakingHeartPlacementRule(),
         new PotentSulfurPlacementRule(),
         new LeavesPlacementRule(),
-        new DirtPathPlacementRule(),
+        new PathPlacementRule(),
         new FarmlandPlacementRule(),
         new ConcretePowderPlacementRule(),
 

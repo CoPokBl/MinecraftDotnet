@@ -11,24 +11,24 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SpruceLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock, IDistanced, IPersistent, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:tinted_particle_leaves", "block.minecraft.spruce_leaves", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:spruce_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/spruce_leaves");
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Destroy, 7, "grass", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { Flammable = true, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.spruce_leaves", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:spruce_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/spruce_leaves");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Popped, 7, "grass", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { Flammable = true, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true };
-    private static readonly BlockStateInfo I3 = I0 with { Flammable = true, RandomlyTicking = true, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { Flammable = true, RandomlyTicking = true, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 280];
+    public BlockStateInfo StateInfo => States[StateId - 295];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record SpruceLeavesBlock(Identifier Identifier, int Distance, bool Persis
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record SpruceLeavesBlock(Identifier Identifier, int Distance, bool Persis
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -81,72 +81,72 @@ public record SpruceLeavesBlock(Identifier Identifier, int Distance, bool Persis
             return Distance switch {
                 1 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 280,
-                        false => 281,
+                        true => 295,
+                        false => 296,
                     },
                     false => Waterlogged switch {
-                        true => 282,
-                        false => 283,
+                        true => 297,
+                        false => 298,
                     },
                 },
                 2 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 284,
-                        false => 285,
+                        true => 299,
+                        false => 300,
                     },
                     false => Waterlogged switch {
-                        true => 286,
-                        false => 287,
+                        true => 301,
+                        false => 302,
                     },
                 },
                 3 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 288,
-                        false => 289,
+                        true => 303,
+                        false => 304,
                     },
                     false => Waterlogged switch {
-                        true => 290,
-                        false => 291,
+                        true => 305,
+                        false => 306,
                     },
                 },
                 4 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 292,
-                        false => 293,
+                        true => 307,
+                        false => 308,
                     },
                     false => Waterlogged switch {
-                        true => 294,
-                        false => 295,
+                        true => 309,
+                        false => 310,
                     },
                 },
                 5 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 296,
-                        false => 297,
+                        true => 311,
+                        false => 312,
                     },
                     false => Waterlogged switch {
-                        true => 298,
-                        false => 299,
+                        true => 313,
+                        false => 314,
                     },
                 },
                 6 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 300,
-                        false => 301,
+                        true => 315,
+                        false => 316,
                     },
                     false => Waterlogged switch {
-                        true => 302,
-                        false => 303,
+                        true => 317,
+                        false => 318,
                     },
                 },
                 7 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 304,
-                        false => 305,
+                        true => 319,
+                        false => 320,
                     },
                     false => Waterlogged switch {
-                        true => 306,
-                        false => 307,
+                        true => 321,
+                        false => 322,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
@@ -156,34 +156,34 @@ public record SpruceLeavesBlock(Identifier Identifier, int Distance, bool Persis
     
     public IBlock WithState(uint state) {
         return state switch {
-            280 => new SpruceLeavesBlock(Identifier, 1, true, true),
-            281 => new SpruceLeavesBlock(Identifier, 1, true, false),
-            282 => new SpruceLeavesBlock(Identifier, 1, false, true),
-            283 => new SpruceLeavesBlock(Identifier, 1, false, false),
-            284 => new SpruceLeavesBlock(Identifier, 2, true, true),
-            285 => new SpruceLeavesBlock(Identifier, 2, true, false),
-            286 => new SpruceLeavesBlock(Identifier, 2, false, true),
-            287 => new SpruceLeavesBlock(Identifier, 2, false, false),
-            288 => new SpruceLeavesBlock(Identifier, 3, true, true),
-            289 => new SpruceLeavesBlock(Identifier, 3, true, false),
-            290 => new SpruceLeavesBlock(Identifier, 3, false, true),
-            291 => new SpruceLeavesBlock(Identifier, 3, false, false),
-            292 => new SpruceLeavesBlock(Identifier, 4, true, true),
-            293 => new SpruceLeavesBlock(Identifier, 4, true, false),
-            294 => new SpruceLeavesBlock(Identifier, 4, false, true),
-            295 => new SpruceLeavesBlock(Identifier, 4, false, false),
-            296 => new SpruceLeavesBlock(Identifier, 5, true, true),
-            297 => new SpruceLeavesBlock(Identifier, 5, true, false),
-            298 => new SpruceLeavesBlock(Identifier, 5, false, true),
-            299 => new SpruceLeavesBlock(Identifier, 5, false, false),
-            300 => new SpruceLeavesBlock(Identifier, 6, true, true),
-            301 => new SpruceLeavesBlock(Identifier, 6, true, false),
-            302 => new SpruceLeavesBlock(Identifier, 6, false, true),
-            303 => new SpruceLeavesBlock(Identifier, 6, false, false),
-            304 => new SpruceLeavesBlock(Identifier, 7, true, true),
-            305 => new SpruceLeavesBlock(Identifier, 7, true, false),
-            306 => new SpruceLeavesBlock(Identifier, 7, false, true),
-            307 => new SpruceLeavesBlock(Identifier, 7, false, false),
+            295 => new SpruceLeavesBlock(Identifier, 1, true, true),
+            296 => new SpruceLeavesBlock(Identifier, 1, true, false),
+            297 => new SpruceLeavesBlock(Identifier, 1, false, true),
+            298 => new SpruceLeavesBlock(Identifier, 1, false, false),
+            299 => new SpruceLeavesBlock(Identifier, 2, true, true),
+            300 => new SpruceLeavesBlock(Identifier, 2, true, false),
+            301 => new SpruceLeavesBlock(Identifier, 2, false, true),
+            302 => new SpruceLeavesBlock(Identifier, 2, false, false),
+            303 => new SpruceLeavesBlock(Identifier, 3, true, true),
+            304 => new SpruceLeavesBlock(Identifier, 3, true, false),
+            305 => new SpruceLeavesBlock(Identifier, 3, false, true),
+            306 => new SpruceLeavesBlock(Identifier, 3, false, false),
+            307 => new SpruceLeavesBlock(Identifier, 4, true, true),
+            308 => new SpruceLeavesBlock(Identifier, 4, true, false),
+            309 => new SpruceLeavesBlock(Identifier, 4, false, true),
+            310 => new SpruceLeavesBlock(Identifier, 4, false, false),
+            311 => new SpruceLeavesBlock(Identifier, 5, true, true),
+            312 => new SpruceLeavesBlock(Identifier, 5, true, false),
+            313 => new SpruceLeavesBlock(Identifier, 5, false, true),
+            314 => new SpruceLeavesBlock(Identifier, 5, false, false),
+            315 => new SpruceLeavesBlock(Identifier, 6, true, true),
+            316 => new SpruceLeavesBlock(Identifier, 6, true, false),
+            317 => new SpruceLeavesBlock(Identifier, 6, false, true),
+            318 => new SpruceLeavesBlock(Identifier, 6, false, false),
+            319 => new SpruceLeavesBlock(Identifier, 7, true, true),
+            320 => new SpruceLeavesBlock(Identifier, 7, true, false),
+            321 => new SpruceLeavesBlock(Identifier, 7, false, true),
+            322 => new SpruceLeavesBlock(Identifier, 7, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

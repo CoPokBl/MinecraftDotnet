@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record JungleWallSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:wall_sign", "block.minecraft.jungle_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:jungle_sign", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 10, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S120, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.jungle_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:jungle_sign", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 10, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S120, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S121 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S121 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S121 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S122 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S122 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S122 };
     private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S123 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S123 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S123 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 5867];
+    public BlockStateInfo StateInfo => States[StateId - 7455];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record JungleWallSignBlock(Identifier Identifier, Direction Facing, bool 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record JungleWallSignBlock(Identifier Identifier, Direction Facing, bool 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -82,20 +82,20 @@ public record JungleWallSignBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5867,
-                    false => 5868,
+                    true => 7455,
+                    false => 7456,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5869,
-                    false => 5870,
+                    true => 7457,
+                    false => 7458,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5871,
-                    false => 5872,
+                    true => 7459,
+                    false => 7460,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5873,
-                    false => 5874,
+                    true => 7461,
+                    false => 7462,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -104,14 +104,14 @@ public record JungleWallSignBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            5867 => new JungleWallSignBlock(Identifier, Direction.North, true),
-            5868 => new JungleWallSignBlock(Identifier, Direction.North, false),
-            5869 => new JungleWallSignBlock(Identifier, Direction.South, true),
-            5870 => new JungleWallSignBlock(Identifier, Direction.South, false),
-            5871 => new JungleWallSignBlock(Identifier, Direction.West, true),
-            5872 => new JungleWallSignBlock(Identifier, Direction.West, false),
-            5873 => new JungleWallSignBlock(Identifier, Direction.East, true),
-            5874 => new JungleWallSignBlock(Identifier, Direction.East, false),
+            7455 => new JungleWallSignBlock(Identifier, Direction.North, true),
+            7456 => new JungleWallSignBlock(Identifier, Direction.North, false),
+            7457 => new JungleWallSignBlock(Identifier, Direction.South, true),
+            7458 => new JungleWallSignBlock(Identifier, Direction.South, false),
+            7459 => new JungleWallSignBlock(Identifier, Direction.West, true),
+            7460 => new JungleWallSignBlock(Identifier, Direction.West, false),
+            7461 => new JungleWallSignBlock(Identifier, Direction.East, true),
+            7462 => new JungleWallSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

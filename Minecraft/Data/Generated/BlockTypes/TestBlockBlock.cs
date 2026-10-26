@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValue) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:test", "block.minecraft.test_block", 3600000f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:test_block", "minecraft:test_block", BlockInfo.VanillaOnly, null);
-    private static readonly BlockStateInfo I0 = new(-1f, 0, 15, PushReaction.Normal, 22, "stone", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.test_block", 3600000f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:test_block", "minecraft:test_block", BlockInfo.VanillaOnly, null);
+    private static readonly BlockStateInfo I0 = new(-1f, 0, 15, PushReaction.PushPull, 22, "stone", NoteBlockInstrument.Harp, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -67,10 +67,10 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
     public uint StateId {
         get {
             return ModeValue switch {
-                Mode.Start => 21738,
-                Mode.Log => 21739,
-                Mode.Fail => 21740,
-                Mode.Accept => 21741,
+                Mode.Start => 25095,
+                Mode.Log => 25096,
+                Mode.Fail => 25097,
+                Mode.Accept => 25098,
                 _ => throw new ArgumentOutOfRangeException(nameof(ModeValue), ModeValue, "Unknown value for property mode.")
             };
         }
@@ -78,10 +78,10 @@ public record TestBlockBlock(Identifier Identifier, TestBlockBlock.Mode ModeValu
     
     public IBlock WithState(uint state) {
         return state switch {
-            21738 => new TestBlockBlock(Identifier, Mode.Start),
-            21739 => new TestBlockBlock(Identifier, Mode.Log),
-            21740 => new TestBlockBlock(Identifier, Mode.Fail),
-            21741 => new TestBlockBlock(Identifier, Mode.Accept),
+            25095 => new TestBlockBlock(Identifier, Mode.Start),
+            25096 => new TestBlockBlock(Identifier, Mode.Log),
+            25097 => new TestBlockBlock(Identifier, Mode.Fail),
+            25098 => new TestBlockBlock(Identifier, Mode.Accept),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

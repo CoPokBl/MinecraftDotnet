@@ -53,7 +53,10 @@ public class SynchronisedRegistryVerification {
         "minecraft:test_instance",
         "minecraft:dialog",
         "minecraft:world_clock",
-        "minecraft:timeline"
+        "minecraft:timeline",
+        "minecraft:decorated_pot_pattern",
+        "minecraft:block_transformer",
+        "minecraft:worldgen/block_state_provider"
     ];
 
     [Test]

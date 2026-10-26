@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CrimsonStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.crimson_stairs", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:crimson_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_stairs");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 53, "nether_wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.crimson_stairs", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:crimson_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 53, "nether_wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record CrimsonStairsBlock(Identifier Identifier, Direction Facing, TopBot
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 21306];
+    public BlockStateInfo StateInfo => States[StateId - 24663];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record CrimsonStairsBlock(Identifier Identifier, Direction Facing, TopBot
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record CrimsonStairsBlock(Identifier Identifier, Direction Facing, TopBot
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record CrimsonStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21306,
-                            false => 21307,
+                            true => 24663,
+                            false => 24664,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21308,
-                            false => 21309,
+                            true => 24665,
+                            false => 24666,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21310,
-                            false => 21311,
+                            true => 24667,
+                            false => 24668,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21312,
-                            false => 21313,
+                            true => 24669,
+                            false => 24670,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21314,
-                            false => 21315,
+                            true => 24671,
+                            false => 24672,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21316,
-                            false => 21317,
+                            true => 24673,
+                            false => 24674,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21318,
-                            false => 21319,
+                            true => 24675,
+                            false => 24676,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21320,
-                            false => 21321,
+                            true => 24677,
+                            false => 24678,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21322,
-                            false => 21323,
+                            true => 24679,
+                            false => 24680,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21324,
-                            false => 21325,
+                            true => 24681,
+                            false => 24682,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record CrimsonStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21326,
-                            false => 21327,
+                            true => 24683,
+                            false => 24684,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21328,
-                            false => 21329,
+                            true => 24685,
+                            false => 24686,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21330,
-                            false => 21331,
+                            true => 24687,
+                            false => 24688,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21332,
-                            false => 21333,
+                            true => 24689,
+                            false => 24690,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21334,
-                            false => 21335,
+                            true => 24691,
+                            false => 24692,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21336,
-                            false => 21337,
+                            true => 24693,
+                            false => 24694,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21338,
-                            false => 21339,
+                            true => 24695,
+                            false => 24696,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21340,
-                            false => 21341,
+                            true => 24697,
+                            false => 24698,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21342,
-                            false => 21343,
+                            true => 24699,
+                            false => 24700,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21344,
-                            false => 21345,
+                            true => 24701,
+                            false => 24702,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record CrimsonStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21346,
-                            false => 21347,
+                            true => 24703,
+                            false => 24704,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21348,
-                            false => 21349,
+                            true => 24705,
+                            false => 24706,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21350,
-                            false => 21351,
+                            true => 24707,
+                            false => 24708,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21352,
-                            false => 21353,
+                            true => 24709,
+                            false => 24710,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21354,
-                            false => 21355,
+                            true => 24711,
+                            false => 24712,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21356,
-                            false => 21357,
+                            true => 24713,
+                            false => 24714,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21358,
-                            false => 21359,
+                            true => 24715,
+                            false => 24716,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21360,
-                            false => 21361,
+                            true => 24717,
+                            false => 24718,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21362,
-                            false => 21363,
+                            true => 24719,
+                            false => 24720,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21364,
-                            false => 21365,
+                            true => 24721,
+                            false => 24722,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record CrimsonStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21366,
-                            false => 21367,
+                            true => 24723,
+                            false => 24724,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21368,
-                            false => 21369,
+                            true => 24725,
+                            false => 24726,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21370,
-                            false => 21371,
+                            true => 24727,
+                            false => 24728,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21372,
-                            false => 21373,
+                            true => 24729,
+                            false => 24730,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21374,
-                            false => 21375,
+                            true => 24731,
+                            false => 24732,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 21376,
-                            false => 21377,
+                            true => 24733,
+                            false => 24734,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 21378,
-                            false => 21379,
+                            true => 24735,
+                            false => 24736,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 21380,
-                            false => 21381,
+                            true => 24737,
+                            false => 24738,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 21382,
-                            false => 21383,
+                            true => 24739,
+                            false => 24740,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 21384,
-                            false => 21385,
+                            true => 24741,
+                            false => 24742,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record CrimsonStairsBlock(Identifier Identifier, Direction Facing, TopBot
     
     public IBlock WithState(uint state) {
         return state switch {
-            21306 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            21307 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            21308 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            21309 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            21310 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            21311 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            21312 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            21313 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            21314 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            21315 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            21316 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            21317 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            21318 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            21319 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            21320 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            21321 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            21322 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            21323 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            21324 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            21325 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            21326 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            21327 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            21328 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            21329 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            21330 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            21331 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            21332 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            21333 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            21334 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            21335 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            21336 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            21337 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            21338 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            21339 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            21340 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            21341 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            21342 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            21343 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            21344 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            21345 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            21346 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            21347 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            21348 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            21349 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            21350 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            21351 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            21352 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            21353 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            21354 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            21355 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            21356 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            21357 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            21358 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            21359 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            21360 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            21361 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            21362 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            21363 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            21364 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            21365 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            21366 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            21367 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            21368 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            21369 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            21370 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            21371 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            21372 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            21373 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            21374 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            21375 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            21376 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            21377 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            21378 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            21379 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            21380 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            21381 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            21382 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            21383 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            21384 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            21385 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            24663 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            24664 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            24665 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            24666 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            24667 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            24668 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            24669 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            24670 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            24671 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            24672 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            24673 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            24674 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            24675 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            24676 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            24677 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            24678 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            24679 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            24680 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            24681 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            24682 => new CrimsonStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            24683 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            24684 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            24685 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            24686 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            24687 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            24688 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            24689 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            24690 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            24691 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            24692 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            24693 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            24694 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            24695 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            24696 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            24697 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            24698 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            24699 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            24700 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            24701 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            24702 => new CrimsonStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            24703 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            24704 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            24705 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            24706 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            24707 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            24708 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            24709 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            24710 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            24711 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            24712 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            24713 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            24714 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            24715 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            24716 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            24717 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            24718 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            24719 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            24720 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            24721 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            24722 => new CrimsonStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            24723 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            24724 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            24725 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            24726 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            24727 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            24728 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            24729 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            24730 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            24731 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            24732 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            24733 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            24734 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            24735 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            24736 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            24737 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            24738 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            24739 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            24740 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            24741 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            24742 => new CrimsonStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -251,11 +251,14 @@ public sealed class StructureTemplateManager {
         uint[] states = new uint[palette.Tags.Length];
 
         for (int i = 0; i < states.Length; i++) {
+            // A template saved before data version 5006 spells these Name and Properties, and
+            // BlockStateFieldNamesFix renames them on load.
             CompoundTag entry = palette.Tags[i].GetCompound();
+            INbtTag? properties = entry["properties"] ?? entry["Properties"];
 
             states[i] = StateParser.Read(_registry,
-                Identifier.Parse(entry["Name"].GetString()),
-                entry.Contains("Properties") ? entry["Properties"].GetCompound() : null).StateId;
+                Identifier.Parse((entry["id"] ?? entry["Name"]).GetString()),
+                properties?.GetCompound()).StateId;
         }
 
         List<TemplateBlockInfo> fullBlocks = [];

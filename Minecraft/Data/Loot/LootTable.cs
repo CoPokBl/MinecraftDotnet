@@ -11,26 +11,24 @@ namespace Minecraft.Data.Loot;
 /// and luck is zero for a block break, so it never adds a roll here.
 /// </summary>
 public sealed record LootPool(
-    INumberProvider Rolls,
+    IContextIntProvider Rolls,
     LootEntryContainer[] Entries,
-    ILootCondition[] Conditions,
-    LootFunction[] Functions,
-    INumberProvider? BonusRolls = null) {
+    ILootCondition? Condition,
+    LootFunction? Modifier,
+    IContextFloatProvider? BonusRolls = null) {
 
     public void AddRandomItems(Action<ItemStack> output, LootContext context) {
-        foreach (ILootCondition condition in Conditions) {
-            if (!condition.Test(context)) {
-                return;
-            }
+        if (Condition != null && !Condition.Test(context)) {
+            return;
         }
 
-        void Decorated(ItemStack stack) => output(LootTable.ApplyAll(Functions, stack, context));
+        Action<ItemStack> decorated = LootTable.Decorate(Modifier, output, context);
 
         int count = Rolls.GetInt(context)
             + Mth.Floor((BonusRolls?.GetFloat(context) ?? 0f) * context.Luck);
 
         for (int i = 0; i < count; i++) {
-            AddRandomItem(Decorated, context);
+            AddRandomItem(decorated, context);
         }
     }
 
@@ -81,10 +79,10 @@ public sealed record LootPool(
 /// between every server in the process, so nothing on this type or anything it holds may gain
 /// mutable state.
 /// </summary>
-public sealed record LootTable(LootPool[] Pools, LootFunction[] Functions) {
-    public static readonly LootTable Empty = new([], []);
+public sealed record LootTable(LootPool[] Pools, LootFunction? Modifier) {
+    public static readonly LootTable Empty = new([], null);
 
-    public LootTable(LootPool[] pools) : this(pools, []) { }
+    public LootTable(LootPool[] pools) : this(pools, null) { }
 
     /// <summary>
     /// <c>LootTable.getRandomItems</c>, splitter included. The split is not a detail: a table asking
@@ -97,12 +95,12 @@ public sealed record LootTable(LootPool[] Pools, LootFunction[] Functions) {
         return result.ToArray();
     }
 
-    /// <summary><c>LootTable.getRandomItemsRaw</c>: the table's own functions wrap every pool.</summary>
+    /// <summary><c>LootTable.getRandomItemsRaw</c>: the table's own modifier wraps every pool.</summary>
     public void GetRandomItemsRaw(Action<ItemStack> output, LootContext context) {
-        void Decorated(ItemStack stack) => output(ApplyAll(Functions, stack, context));
+        Action<ItemStack> decorated = Decorate(Modifier, output, context);
 
         foreach (LootPool pool in Pools) {
-            pool.AddRandomItems(Decorated, context);
+            pool.AddRandomItems(decorated, context);
         }
     }
 
@@ -126,12 +124,9 @@ public sealed record LootTable(LootPool[] Pools, LootFunction[] Functions) {
         }
     }
 
-    /// <summary><c>LootItemFunctions.compose</c>, in written order.</summary>
-    internal static ItemStack ApplyAll(LootFunction[] functions, ItemStack stack, LootContext context) {
-        foreach (LootFunction function in functions) {
-            stack = function.Apply(stack, context);
-        }
-
-        return stack;
+    /// <summary><c>LootItemFunction.decorate</c>.</summary>
+    internal static Action<ItemStack> Decorate(LootFunction? modifier, Action<ItemStack> output,
+        LootContext context) {
+        return modifier == null ? output : stack => output(modifier.Apply(stack, context));
     }
 }

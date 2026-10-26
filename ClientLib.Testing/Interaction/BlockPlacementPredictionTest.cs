@@ -79,8 +79,9 @@ public class BlockPlacementPredictionTest {
         Assert.That(use.Position, Is.EqualTo(new Vec3<int>(2, 15, 0)));
         Assert.That(use.Face, Is.EqualTo(BlockFace.PosY));
         Assert.That(use.Sequence, Is.EqualTo(client.Interactions.Predictions.Sequence));
-        // A placement swings and sends no use_item after it.
-        Assert.That(sent.OfType<ServerBoundSwingArmPacket>().Count(), Is.EqualTo(1));
+        // A placement swings here, tells the server nothing of it, and sends no use_item after it.
+        Assert.That(player.IsSwinging, Is.True);
+        Assert.That(sent.OfType<ServerBoundPunchPacket>(), Is.Empty);
         Assert.That(sent.OfType<ServerBoundUseItemPacket>(), Is.Empty);
 
         // The server agrees: its update is held until the acknowledgement, which then changes nothing.
@@ -150,7 +151,7 @@ public class BlockPlacementPredictionTest {
         Assert.That(client.Inventory.MainHand.Count, Is.EqualTo(5));
         Assert.That(sent.OfType<ServerBoundUseItemOnPacket>().Count(), Is.EqualTo(1));
         Assert.That(sent.OfType<ServerBoundUseItemPacket>(), Is.Empty);
-        Assert.That(sent.OfType<ServerBoundSwingArmPacket>(), Is.Empty);
+        Assert.That(player.IsSwinging, Is.False);
     }
 
     /// <summary>Under <c>CollisionContext.placementContext</c> scaffolding has no shape, so it goes where the player stands.</summary>

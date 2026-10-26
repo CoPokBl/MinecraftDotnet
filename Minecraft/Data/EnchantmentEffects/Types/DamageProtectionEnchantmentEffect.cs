@@ -56,7 +56,7 @@ public record DamageProtectionEnchantmentEffect(DamageProtectionEnchantmentEffec
     }
 
     private static void ParseCondition(CompoundTag condition, List<Requirement> into) {
-        Identifier type = condition["condition"].GetString();
+        Identifier type = condition["type"].GetString();
         switch (type.Key) {
             case "all_of":
                 foreach (INbtTag term in condition["terms"].AsList()) {
@@ -68,7 +68,14 @@ public record DamageProtectionEnchantmentEffect(DamageProtectionEnchantmentEffec
             case "damage_source_properties":
                 foreach (INbtTag entry in condition["predicate"].GetCompound()["tags"].AsList()) {
                     CompoundTag tag = entry.GetCompound();
-                    into.Add(new Requirement(tag["id"].GetString(), tag["expected"].AsBool()));
+                    // TagPredicate's id is a holder set. Every vanilla one is a tag, and a set of
+                    // named damage types would be a different test from a tag's.
+                    string id = tag["id"].GetString();
+                    if (!id.StartsWith('#')) {
+                        throw new ArgumentException("Unsupported damage_protection requirement on named damage types: " + id);
+                    }
+
+                    into.Add(new Requirement(id[1..], tag["expected"].AsBool()));
                 }
 
                 return;
@@ -93,10 +100,10 @@ public record DamageProtectionEnchantmentEffect(DamageProtectionEnchantmentEffec
 
             if (entry.Requirements.Length > 0) {
                 children.Add(("requirements", new CompoundTag(
-                    ("condition", new StringTag("minecraft:damage_source_properties")),
+                    ("type", new StringTag("minecraft:damage_source_properties")),
                     ("predicate", new CompoundTag(
                         ("tags", new ListTag(entry.Requirements.Select(INbtTag (r) => new CompoundTag(
-                            ("id", new StringTag(r.Tag)),
+                            ("id", new StringTag("#" + r.Tag)),
                             ("expected", new BooleanTag(r.Expected)))).ToArray())))))));
             }
 

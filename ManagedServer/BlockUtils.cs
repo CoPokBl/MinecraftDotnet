@@ -71,13 +71,8 @@ public static class BlockUtils {
         }
 
         if (miningFatigueAmplifier >= 0) {
-            // Vanilla's table, note that level 3 is a tenth of 0.3^3.
-            speed *= miningFatigueAmplifier switch {
-                0 => 0.3f,
-                1 => 0.09f,
-                2 => 0.0027f,
-                _ => 0.00081f
-            };
+            // Computed in double and narrowed, as Math.pow is.
+            speed *= (float)Math.Pow(0.3, miningFatigueAmplifier + 1);
         }
 
         speed *= blockBreakSpeed;

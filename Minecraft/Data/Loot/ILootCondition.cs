@@ -10,7 +10,7 @@ namespace Minecraft.Data.Loot;
 
 /// <summary>
 /// Vanilla's <c>LootItemCondition</c>. Only the nine the block tables use exist; anything else fails
-/// the generator rather than being dropped, because a condition that silently reads as true turns a
+/// the parser rather than being dropped, because a condition that silently reads as true turns a
 /// silk touch check into an unconditional drop.
 /// </summary>
 public interface ILootCondition {
@@ -34,33 +34,12 @@ public sealed record SurvivesExplosionCondition : ILootCondition {
 }
 
 /// <summary>
-/// <c>LootItemBlockStatePropertyCondition</c>: the state is this block and its properties match.
-/// <p/>
-/// Compared over <see cref="IBlock.ToStateNbt"/>, which is every property as the string vanilla
-/// writes it, because that is the form the datapack states them in. Going through the generated
-/// property interfaces instead would need one rule per block.
+/// <c>MatchBlock</c>: the looted state matches a <see cref="BlockPredicate"/>. False without a state
+/// in the context, which a block table always has.
 /// </summary>
-public sealed record BlockStatePropertyCondition(
-    Identifier Block,
-    (string Key, string Value)[] Properties) : ILootCondition {
-
+public sealed record MatchBlockCondition(BlockPredicate Predicate) : ILootCondition {
     public bool Test(LootContext context) {
-        if (context.State.Identifier != Block) {
-            return false;
-        }
-
-        if (Properties.Length == 0) {
-            return true;
-        }
-
-        CompoundTag state = context.State.ToStateNbt();
-        foreach ((string key, string value) in Properties) {
-            if (!state.Contains(key) || state[key].GetString() != value) {
-                return false;
-            }
-        }
-
-        return true;
+        return Predicate.MatchesState(context.State, context.Registry);
     }
 }
 
@@ -120,38 +99,64 @@ public sealed record TableBonusCondition(Identifier Enchantment, float[] Chances
     }
 }
 
-/// <summary><c>LootItemRandomChanceCondition</c>.</summary>
-public sealed record RandomChanceCondition(INumberProvider Chance) : ILootCondition {
+/// <summary>
+/// <c>LootItemRandomChanceCondition</c>. The chance is asked before the draw, which matters for a
+/// chance that draws itself.
+/// </summary>
+public sealed record RandomChanceCondition(IContextFloatProvider Chance) : ILootCondition {
     public bool Test(LootContext context) {
-        return context.Random.NextFloat() < Chance.GetFloat(context);
+        float probability = Chance.GetFloat(context);
+        return context.Random.NextFloat() < probability;
     }
 }
 
 /// <summary>
 /// <c>LocationCheck</c>, cut down to the one thing the block tables ask it: whether the block at an
-/// offset from the looted position is a given block in a given state. Both uses are the two halves of
-/// a tall plant checking that the other half is still there.
+/// offset from the looted position matches a block predicate. Both uses are the two halves of a tall
+/// plant checking that the other half is still there.
 /// <p/>
 /// A context with no <see cref="LootContext.BlockAt"/> answers false, which loses those two drops
 /// rather than inventing them.
 /// </summary>
-public sealed record LocationCheckCondition(
-    Vec3<int> Offset,
-    Identifier Block,
-    (string Key, string Value)[] Properties) : ILootCondition {
-
+public sealed record LocationCheckCondition(Vec3<int> Offset, BlockPredicate Predicate) : ILootCondition {
     public bool Test(LootContext context) {
         if (context.BlockAt == null) {
             return false;
         }
 
-        IBlock block = context.BlockAt(context.Position + Offset);
-        if (block.Identifier != Block) {
+        return Predicate.MatchesState(context.BlockAt(context.Position + Offset), context.Registry);
+    }
+}
+
+/// <summary>
+/// <c>BlockPredicate</c> cut to the block set and the state properties, the only parts a block table
+/// uses; <c>nbt</c> and component matches are refused by the parser. <paramref name="Blocks"/> and
+/// <paramref name="Tag"/> are both null when the predicate names no block, which matches any.
+/// <p/>
+/// The state is compared over <see cref="IBlock.ToStateNbt"/>, every property as the string vanilla
+/// writes it, because that is the form the datapack states them in.
+/// </summary>
+public sealed record BlockPredicate(
+    Identifier[]? Blocks,
+    Identifier? Tag,
+    (string Key, string Value)[] State) {
+
+    /// <summary><c>BlockPredicate.matchesState</c>.</summary>
+    public bool MatchesState(IBlock block, Registry.MinecraftRegistry registry) {
+        if (Blocks != null && !Blocks.Contains(block.Identifier)) {
             return false;
         }
 
+        if (Tag is { } tag && !registry.Blocks.Tags.Contains(registry, tag, block.Identifier)) {
+            return false;
+        }
+
+        if (State.Length == 0) {
+            return true;
+        }
+
         CompoundTag state = block.ToStateNbt();
-        foreach ((string key, string value) in Properties) {
+        foreach ((string key, string value) in State) {
             if (!state.Contains(key) || state[key].GetString() != value) {
                 return false;
             }
@@ -166,7 +171,7 @@ public sealed record LocationCheckCondition(
 /// the only form the block tables use: it asks whether anything did the breaking at all, not what.
 /// <c>chorus_flower</c> and <c>snow</c> use it so that a block broken by the world drops nothing.
 /// <p/>
-/// The generator rejects a non-empty predicate rather than ignoring it, since a predicate read as
+/// The parser rejects a non-empty predicate rather than ignoring it, since a predicate read as
 /// empty is a condition that passes when it should not.
 /// </summary>
 public sealed record EntityPresentCondition : ILootCondition {
@@ -179,7 +184,7 @@ public sealed record EntityPresentCondition : ILootCondition {
 
 /// <summary>
 /// Vanilla's <c>ItemPredicate</c>, cut to the two shapes <c>match_tool</c> uses in block tables: an
-/// item or item tag, and a minimum enchantment level. Anything else fails the generator.
+/// item or item tag, and a minimum enchantment level. Anything else fails the parser.
 /// <p/>
 /// <paramref name="Item"/> and <paramref name="ItemTag"/> are separate rather than one field with a
 /// <c>#</c> prefix: an <see cref="Identifier"/> splits on the colon, so <c>#minecraft:shears</c>

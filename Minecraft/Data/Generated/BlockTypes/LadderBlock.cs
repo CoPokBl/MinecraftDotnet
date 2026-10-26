@@ -11,28 +11,28 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LadderBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:ladder", "block.minecraft.ladder", 0.4f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:ladder", BlockInfo.VanillaOnly, "minecraft:blocks/ladder");
-    private static readonly BlockStateInfo I0 = new(0.4f, 0, 1, PushReaction.Destroy, 0, "ladder", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.ladder", 0.4f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:ladder", BlockInfo.VanillaOnly, "minecraft:blocks/ladder");
+    private static readonly BlockStateInfo I0 = new(0.4f, 0, 1, PushReaction.Popped, 0, "ladder", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S20, CollisionShape = BlockShapes.S20, VisualShape = BlockShapes.S20, SupportShape = BlockShapes.S20 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S20, CollisionShape = BlockShapes.S20, VisualShape = BlockShapes.S20, SupportShape = BlockShapes.S20 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S20, CollisionShape = BlockShapes.S20, VisualShape = BlockShapes.S20, SupportShape = BlockShapes.S20 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S19, CollisionShape = BlockShapes.S19, VisualShape = BlockShapes.S19, SupportShape = BlockShapes.S19 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S19, CollisionShape = BlockShapes.S19, VisualShape = BlockShapes.S19, SupportShape = BlockShapes.S19 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S19, CollisionShape = BlockShapes.S19, VisualShape = BlockShapes.S19, SupportShape = BlockShapes.S19 };
     private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S17, CollisionShape = BlockShapes.S17, VisualShape = BlockShapes.S17, SupportShape = BlockShapes.S17 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S17, CollisionShape = BlockShapes.S17, VisualShape = BlockShapes.S17, SupportShape = BlockShapes.S17 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S17, CollisionShape = BlockShapes.S17, VisualShape = BlockShapes.S17, SupportShape = BlockShapes.S17 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 5719];
+    public BlockStateInfo StateInfo => States[StateId - 7307];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record LadderBlock(Identifier Identifier, Direction Facing, bool Waterlog
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record LadderBlock(Identifier Identifier, Direction Facing, bool Waterlog
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -82,20 +82,20 @@ public record LadderBlock(Identifier Identifier, Direction Facing, bool Waterlog
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 5719,
-                    false => 5720,
+                    true => 7307,
+                    false => 7308,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 5721,
-                    false => 5722,
+                    true => 7309,
+                    false => 7310,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 5723,
-                    false => 5724,
+                    true => 7311,
+                    false => 7312,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 5725,
-                    false => 5726,
+                    true => 7313,
+                    false => 7314,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -104,14 +104,14 @@ public record LadderBlock(Identifier Identifier, Direction Facing, bool Waterlog
     
     public IBlock WithState(uint state) {
         return state switch {
-            5719 => new LadderBlock(Identifier, Direction.North, true),
-            5720 => new LadderBlock(Identifier, Direction.North, false),
-            5721 => new LadderBlock(Identifier, Direction.South, true),
-            5722 => new LadderBlock(Identifier, Direction.South, false),
-            5723 => new LadderBlock(Identifier, Direction.West, true),
-            5724 => new LadderBlock(Identifier, Direction.West, false),
-            5725 => new LadderBlock(Identifier, Direction.East, true),
-            5726 => new LadderBlock(Identifier, Direction.East, false),
+            7307 => new LadderBlock(Identifier, Direction.North, true),
+            7308 => new LadderBlock(Identifier, Direction.North, false),
+            7309 => new LadderBlock(Identifier, Direction.South, true),
+            7310 => new LadderBlock(Identifier, Direction.South, false),
+            7311 => new LadderBlock(Identifier, Direction.West, true),
+            7312 => new LadderBlock(Identifier, Direction.West, false),
+            7313 => new LadderBlock(Identifier, Direction.East, true),
+            7314 => new LadderBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

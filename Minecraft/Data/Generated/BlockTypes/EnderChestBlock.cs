@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:ender_chest", "block.minecraft.ender_chest", 600f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:ender_chest", "minecraft:ender_chest", BlockInfo.VanillaOnly, "minecraft:blocks/ender_chest");
-    private static readonly BlockStateInfo I0 = new(22.5f, 7, 1, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Basedrum, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
+    private static readonly BlockInfo Data = new("block.minecraft.ender_chest", 600f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:ender_chest", "minecraft:ender_chest", BlockInfo.VanillaOnly, "minecraft:blocks/ender_chest");
+    private static readonly BlockStateInfo I0 = new(22.5f, 7, 1, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Basedrum, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 9575];
+    public BlockStateInfo StateInfo => States[StateId - 11317];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Wate
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Wate
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -76,20 +76,20 @@ public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Wate
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 9575,
-                    false => 9576,
+                    true => 11317,
+                    false => 11318,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 9577,
-                    false => 9578,
+                    true => 11319,
+                    false => 11320,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 9579,
-                    false => 9580,
+                    true => 11321,
+                    false => 11322,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 9581,
-                    false => 9582,
+                    true => 11323,
+                    false => 11324,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -98,14 +98,14 @@ public record EnderChestBlock(Identifier Identifier, Direction Facing, bool Wate
     
     public IBlock WithState(uint state) {
         return state switch {
-            9575 => new EnderChestBlock(Identifier, Direction.North, true),
-            9576 => new EnderChestBlock(Identifier, Direction.North, false),
-            9577 => new EnderChestBlock(Identifier, Direction.South, true),
-            9578 => new EnderChestBlock(Identifier, Direction.South, false),
-            9579 => new EnderChestBlock(Identifier, Direction.West, true),
-            9580 => new EnderChestBlock(Identifier, Direction.West, false),
-            9581 => new EnderChestBlock(Identifier, Direction.East, true),
-            9582 => new EnderChestBlock(Identifier, Direction.East, false),
+            11317 => new EnderChestBlock(Identifier, Direction.North, true),
+            11318 => new EnderChestBlock(Identifier, Direction.North, false),
+            11319 => new EnderChestBlock(Identifier, Direction.South, true),
+            11320 => new EnderChestBlock(Identifier, Direction.South, false),
+            11321 => new EnderChestBlock(Identifier, Direction.West, true),
+            11322 => new EnderChestBlock(Identifier, Direction.West, false),
+            11323 => new EnderChestBlock(Identifier, Direction.East, true),
+            11324 => new EnderChestBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

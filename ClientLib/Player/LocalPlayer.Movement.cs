@@ -124,7 +124,7 @@ public sealed partial class LocalPlayer {
 
     /// <summary>
     /// <c>ClientLevel.tickNonPassenger</c> and <c>LocalPlayer.tick</c>: the old position is kept for
-    /// interpolation, then nothing moves until the level has loaded, as vanilla's
+    /// rendering between ticks, then nothing moves until the level has loaded, as vanilla's
     /// <c>hasClientLoaded</c> check.
     /// </summary>
     public void ClientTick() {
@@ -133,14 +133,14 @@ public sealed partial class LocalPlayer {
         XRotO = XRot;
         YHeadRotO = YHeadRot;
         WalkDistO = WalkDist;
+        // Entity.commonTick: only a teleport_entity naming the player starts one.
+        Interpolation.Interpolate();
         if (!_client.ClientLoaded || _client.Level == null) {
             return;
         }
 
         PlayerTick();
         UpdateWalkAnimation();
-        AttackAnimO = AttackAnim;
-        UpdateSwingTime();
         TickBodyRotation();
         SendInputIfChanged(KeyPresses.ToPacketFlags());
         if (IsPassenger) {

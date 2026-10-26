@@ -37,6 +37,16 @@ public static class ValueParser {
                 return new IntProviders.BiasedToBottom(element.GetProperty("min_inclusive").GetInt32(),
                     element.GetProperty("max_inclusive").GetInt32());
 
+            case "very_biased_to_bottom": {
+                int min = element.GetProperty("min_inclusive").GetInt32();
+                int max = element.GetProperty("max_inclusive").GetInt32();
+                if (max < min) {
+                    throw new FormatException($"very_biased_to_bottom has max {max} below min {min}.");
+                }
+
+                return new IntProviders.VeryBiasedToBottom(min, max);
+            }
+
             case "clamped":
                 return new IntProviders.Clamped(ParseInt(element.GetProperty("source")),
                     element.GetProperty("min_inclusive").GetInt32(),
@@ -145,7 +155,12 @@ public static class ValueParser {
             return new VerticalAnchor.BelowTop(belowTop.GetInt32());
         }
 
-        throw new FormatException($"A vertical anchor needs one of absolute, above_bottom or below_top: {element}");
+        if (element.TryGetProperty("relative_to_sea_level", out JsonElement seaLevel)) {
+            return new VerticalAnchor.RelativeToSeaLevel(seaLevel.GetInt32());
+        }
+
+        throw new FormatException("A vertical anchor needs one of absolute, above_bottom, below_top or "
+            + $"relative_to_sea_level: {element}");
     }
 
     /// <summary>

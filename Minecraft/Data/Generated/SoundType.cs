@@ -578,6 +578,12 @@ public static class SoundType {
     public static readonly SimpleSoundType PolishedTuffHit = new("minecraft:block.polished_tuff.hit");
     public static readonly SimpleSoundType PolishedTuffPlace = new("minecraft:block.polished_tuff.place");
     public static readonly SimpleSoundType PolishedTuffStep = new("minecraft:block.polished_tuff.step");
+    public static readonly SimpleSoundType PoplarLeavesAmbient = new("minecraft:block.poplar_leaves.ambient");
+    public static readonly SimpleSoundType PoplarLeavesBreak = new("minecraft:block.poplar_leaves.break");
+    public static readonly SimpleSoundType PoplarLeavesFall = new("minecraft:block.poplar_leaves.fall");
+    public static readonly SimpleSoundType PoplarLeavesHit = new("minecraft:block.poplar_leaves.hit");
+    public static readonly SimpleSoundType PoplarLeavesPlace = new("minecraft:block.poplar_leaves.place");
+    public static readonly SimpleSoundType PoplarLeavesStep = new("minecraft:block.poplar_leaves.step");
     public static readonly SimpleSoundType PortalAmbient = new("minecraft:block.portal.ambient");
     public static readonly SimpleSoundType PortalTravel = new("minecraft:block.portal.travel");
     public static readonly SimpleSoundType PortalTrigger = new("minecraft:block.portal.trigger");
@@ -597,6 +603,8 @@ public static class SoundType {
     public static readonly SimpleSoundType PowderSnowPlace = new("minecraft:block.powder_snow.place");
     public static readonly SimpleSoundType PowderSnowStep = new("minecraft:block.powder_snow.step");
     public static readonly SimpleSoundType PumpkinCarve = new("minecraft:block.pumpkin.carve");
+    public static readonly SimpleSoundType RedShrubBreak = new("minecraft:block.red_shrub.break");
+    public static readonly SimpleSoundType RedShrubPlace = new("minecraft:block.red_shrub.place");
     public static readonly SimpleSoundType RedstoneTorchBurnout = new("minecraft:block.redstone_torch.burnout");
     public static readonly SimpleSoundType ResinBreak = new("minecraft:block.resin.break");
     public static readonly SimpleSoundType ResinFall = new("minecraft:block.resin.fall");
@@ -674,6 +682,11 @@ public static class SoundType {
     public static readonly SimpleSoundType ShelfSingleSwap = new("minecraft:block.shelf.single_swap");
     public static readonly SimpleSoundType ShelfStep = new("minecraft:block.shelf.step");
     public static readonly SimpleSoundType ShelfTakeItem = new("minecraft:block.shelf.take_item");
+    public static readonly SimpleSoundType ShelfMushroomBounce = new("minecraft:block.shelf_mushroom.bounce");
+    public static readonly SimpleSoundType ShelfMushroomBreak = new("minecraft:block.shelf_mushroom.break");
+    public static readonly SimpleSoundType ShelfMushroomFall = new("minecraft:block.shelf_mushroom.fall");
+    public static readonly SimpleSoundType ShelfMushroomPlace = new("minecraft:block.shelf_mushroom.place");
+    public static readonly SimpleSoundType ShelfMushroomStep = new("minecraft:block.shelf_mushroom.step");
     public static readonly SimpleSoundType ShroomlightBreak = new("minecraft:block.shroomlight.break");
     public static readonly SimpleSoundType ShroomlightFall = new("minecraft:block.shroomlight.fall");
     public static readonly SimpleSoundType ShroomlightHit = new("minecraft:block.shroomlight.hit");
@@ -744,6 +757,12 @@ public static class SoundType {
     public static readonly SimpleSoundType StoneButtonClickOn = new("minecraft:block.stone_button.click_on");
     public static readonly SimpleSoundType StonePressurePlateClickOff = new("minecraft:block.stone_pressure_plate.click_off");
     public static readonly SimpleSoundType StonePressurePlateClickOn = new("minecraft:block.stone_pressure_plate.click_on");
+    public static readonly SimpleSoundType StrawBedBreak = new("minecraft:block.straw_bed.break");
+    public static readonly SimpleSoundType StrawBedBreakLeave = new("minecraft:block.straw_bed.break_leave");
+    public static readonly SimpleSoundType StrawBedFall = new("minecraft:block.straw_bed.fall");
+    public static readonly SimpleSoundType StrawBedHit = new("minecraft:block.straw_bed.hit");
+    public static readonly SimpleSoundType StrawBedPlace = new("minecraft:block.straw_bed.place");
+    public static readonly SimpleSoundType StrawBedStep = new("minecraft:block.straw_bed.step");
     public static readonly SimpleSoundType SulfurBreak = new("minecraft:block.sulfur.break");
     public static readonly SimpleSoundType SulfurFall = new("minecraft:block.sulfur.fall");
     public static readonly SimpleSoundType SulfurHit = new("minecraft:block.sulfur.hit");
@@ -1063,6 +1082,10 @@ public static class SoundType {
     public static readonly SimpleSoundType CreeperDeath = new("minecraft:entity.creeper.death");
     public static readonly SimpleSoundType CreeperHurt = new("minecraft:entity.creeper.hurt");
     public static readonly SimpleSoundType CreeperPrimed = new("minecraft:entity.creeper.primed");
+    public static readonly SimpleSoundType CushionBreak = new("minecraft:entity.cushion.break");
+    public static readonly SimpleSoundType CushionGetUp = new("minecraft:entity.cushion.get_up");
+    public static readonly SimpleSoundType CushionPlace = new("minecraft:entity.cushion.place");
+    public static readonly SimpleSoundType CushionSit = new("minecraft:entity.cushion.sit");
     public static readonly SimpleSoundType DolphinAmbient = new("minecraft:entity.dolphin.ambient");
     public static readonly SimpleSoundType DolphinAmbientWater = new("minecraft:entity.dolphin.ambient_water");
     public static readonly SimpleSoundType DolphinAttack = new("minecraft:entity.dolphin.attack");

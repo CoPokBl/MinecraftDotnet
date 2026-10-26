@@ -9,15 +9,16 @@ using Minecraft.Schemas.Vec;
 namespace Minecraft.Placement.Rules;
 
 /// <summary>
-/// <c>BedBlock</c>. A two cell block laid sideways: the foot goes where you clicked and the head one
-/// block further along the way you were facing, so it refuses unless that cell can be replaced.
+/// <c>AbstractBedBlock</c>, which the dyed beds and the straw bed share. A two cell block laid
+/// sideways: the foot goes where you clicked and the head one block further along the way you were
+/// facing, so it refuses unless that cell can be replaced.
 /// <p/>
 /// Vanilla also checks the head is inside the world border. There is no world border here, so the
 /// bounds check stands in for it; that is a narrower test, and the case it misses is a bed placed
 /// with its head across a border, which cannot happen without one.
 /// </summary>
 public sealed class BedPlacementRule : IBlockPlacementRule {
-    public BlockClass VanillaClass => BlockClass.BedBlock;
+    public BlockClass VanillaClass => BlockClass.AbstractBedBlock;
 
     public IBlock? GetStateForPlacement(IBlock block, IBlockPlaceContext context) {
         if (block is not IHorizontalFacing bed) {
@@ -69,8 +70,8 @@ public sealed class BedPlacementRule : IBlockPlacementRule {
 
 
     /// <summary>
-    /// <c>BedBlock.getNeighbourDirection</c>: the head lies along the facing from the foot, so each
-    /// end looks for the other in the opposite direction.
+    /// <c>AbstractBedBlock.getNeighbourDirection</c>: the head lies along the facing from the foot, so
+    /// each end looks for the other in the opposite direction.
     /// </summary>
     private static BlockFace NeighbourDirection(BedPart part, Direction facing) {
         return part == BedPart.Head ? facing.Opposite().ToFace() : facing.ToFace();

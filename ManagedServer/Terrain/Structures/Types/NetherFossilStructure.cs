@@ -37,7 +37,7 @@ public sealed class NetherFossilStructure(Structure.StructureSettings settings,
         int blockX = (context.ChunkX << 4) + random.NextInt(16);
         int blockZ = (context.ChunkZ << 4) + random.NextInt(16);
 
-        int y = height.Sample(random, new GenerationHeightContext(context.MinY, context.Height));
+        int y = height.Sample(random, new GenerationHeightContext(context.MinY, context.Height, context.SeaLevel));
 
         uint[] column = context.Columns(blockX, blockZ);
 

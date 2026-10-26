@@ -92,7 +92,7 @@ public static class OverworldBiomeBuilder {
 
     private static readonly Identifier?[][] MiddleBiomesVariant = [
         [Id(Biome.IceSpikes), null, Id(Biome.SnowyTaiga), null, null],
-        [null, null, null, null, Id(Biome.OldGrowthPineTaiga)],
+        [Id(Biome.DappledForest), null, null, null, Id(Biome.OldGrowthPineTaiga)],
         [Id(Biome.SunflowerPlains), null, null, Id(Biome.OldGrowthBirchForest), null],
         [null, null, Id(Biome.Plains), Id(Biome.SparseJungle), Id(Biome.BambooJungle)],
         [null, null, null, null, null]

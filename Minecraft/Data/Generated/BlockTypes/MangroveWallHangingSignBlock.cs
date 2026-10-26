@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:wall_hanging_sign", "block.minecraft.mangrove_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:mangrove_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_hanging_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 28, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:mangrove_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 28, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
@@ -20,15 +20,15 @@ public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Faci
         I0, I1, I0, I1, I2, I3, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6739];
+    public BlockStateInfo StateInfo => States[StateId - 8399];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Faci
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Faci
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,20 +78,20 @@ public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Faci
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6739,
-                    false => 6740,
+                    true => 8399,
+                    false => 8400,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6741,
-                    false => 6742,
+                    true => 8401,
+                    false => 8402,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6743,
-                    false => 6744,
+                    true => 8403,
+                    false => 8404,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6745,
-                    false => 6746,
+                    true => 8405,
+                    false => 8406,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -100,14 +100,14 @@ public record MangroveWallHangingSignBlock(Identifier Identifier, Direction Faci
     
     public IBlock WithState(uint state) {
         return state switch {
-            6739 => new MangroveWallHangingSignBlock(Identifier, Direction.North, true),
-            6740 => new MangroveWallHangingSignBlock(Identifier, Direction.North, false),
-            6741 => new MangroveWallHangingSignBlock(Identifier, Direction.South, true),
-            6742 => new MangroveWallHangingSignBlock(Identifier, Direction.South, false),
-            6743 => new MangroveWallHangingSignBlock(Identifier, Direction.West, true),
-            6744 => new MangroveWallHangingSignBlock(Identifier, Direction.West, false),
-            6745 => new MangroveWallHangingSignBlock(Identifier, Direction.East, true),
-            6746 => new MangroveWallHangingSignBlock(Identifier, Direction.East, false),
+            8399 => new MangroveWallHangingSignBlock(Identifier, Direction.North, true),
+            8400 => new MangroveWallHangingSignBlock(Identifier, Direction.North, false),
+            8401 => new MangroveWallHangingSignBlock(Identifier, Direction.South, true),
+            8402 => new MangroveWallHangingSignBlock(Identifier, Direction.South, false),
+            8403 => new MangroveWallHangingSignBlock(Identifier, Direction.West, true),
+            8404 => new MangroveWallHangingSignBlock(Identifier, Direction.West, false),
+            8405 => new MangroveWallHangingSignBlock(Identifier, Direction.East, true),
+            8406 => new MangroveWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

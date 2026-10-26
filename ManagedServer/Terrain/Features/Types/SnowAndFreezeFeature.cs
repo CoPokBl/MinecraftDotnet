@@ -71,52 +71,12 @@ public sealed record SnowAndFreezeFeature : ConfiguredFeature {
 /// everywhere a feature can ask, lava and glowstone included.
 /// </remarks>
 public static class BiomeClimate {
-    /// <summary>Vanilla's <c>Biome.TEMPERATURE_NOISE</c>, seeded from a literal like the others.</summary>
-    private static readonly PerlinSimplexNoise TemperatureNoise = new(new LegacyRandomSource(1234L), [0]);
-
-    /// <summary><c>Biome.FROZEN_TEMPERATURE_NOISE</c>, three octaves rather than one.</summary>
-    private static readonly PerlinSimplexNoise FrozenTemperatureNoise =
-        new(new LegacyRandomSource(3456L), [-2, -1, 0]);
-
     /// <summary>
     /// <c>Biome.getHeightAdjustedTemperature</c>: the biome's temperature, made colder with height
     /// above seventeen blocks over the sea.
     /// </summary>
     public static float TemperatureAt(IBiome biome, int x, int y, int z, int seaLevel) {
-        float temperature = ModifyTemperature(biome, x, z, biome.Temperature);
-
-        int snowLevel = seaLevel + 17;
-        if (y <= snowLevel) {
-            return temperature;
-        }
-
-        float noise = (float)(TemperatureNoise.GetValue(x / 8.0f, z / 8.0f, false) * 8.0);
-        return temperature - (noise + y - snowLevel) * 0.05f / 40.0f;
-    }
-
-    /// <summary>
-    /// <c>TemperatureModifier.FROZEN</c>: the patches of unfrozen water in a frozen ocean.
-    /// </summary>
-    /// <remarks>
-    /// Two noises at three scales, and the early return is what makes the patches hard edged rather
-    /// than a gradient.
-    /// </remarks>
-    private static float ModifyTemperature(IBiome biome, int x, int z, float baseTemperature) {
-        if (biome.TemperatureModifier != TemperatureModifier.Frozen) {
-            return baseTemperature;
-        }
-
-        double largeVariation = FrozenTemperatureNoise.GetValue(x * 0.05, z * 0.05, false) * 7.0;
-        double edgeVariation = FeatureNoise.BiomeInfo.GetValue(x * 0.2, z * 0.2, false);
-
-        if (largeVariation + edgeVariation < 0.3) {
-            double smallVariation = FeatureNoise.BiomeInfo.GetValue(x * 0.09, z * 0.09, false);
-            if (smallVariation < 0.8) {
-                return 0.2f;
-            }
-        }
-
-        return baseTemperature;
+        return Surface.BiomeClimate.GetTemperature(biome, x, y, z, seaLevel);
     }
 
     /// <summary><c>Biome.warmEnoughToRain</c>.</summary>

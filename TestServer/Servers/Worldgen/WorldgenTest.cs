@@ -503,7 +503,7 @@ public static class WorldgenTest {
         Tell(player, "&e What to look at");
         Tell(player, "&7  The shape of the land is the density function tree: continents, erosion and");
         Tell(player, "&7  ridges through a stack of splines. Fly out and watch the coastlines.");
-        Tell(player, "&7  What is on top of it is the surface rules. Grass on soil, sand at the water");
+        Tell(player, "&7  What is on top of it is the material rules. Grass on soil, sand at the water");
         Tell(player, "&7  line, gravel under deep water, snow above the snow line and stone on a cliff.");
         Tell(player, "&7  Dig down: dirt for a few blocks, then stone, then deepslate below zero,");
         Tell(player, "&7  then a ragged floor of bedrock. Each of those is a separate rule.");

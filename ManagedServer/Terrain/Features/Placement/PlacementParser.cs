@@ -36,10 +36,33 @@ public sealed class PlacementParser(BlockParser blocks) {
                 return new PlacementModifier.HeightRange(
                     ValueParser.ParseHeight(element.GetProperty("height")));
 
-            case "random_offset":
-                return new PlacementModifier.RandomOffset(
-                    ValueParser.ParseInt(element.GetProperty("xz_spread")),
-                    ValueParser.ParseInt(element.GetProperty("y_spread")));
+            case "offset":
+                return new PlacementModifier.Offset(ParseBounded(element, "x", -16, 16),
+                    ParseBounded(element, "y", -16, 16), ParseBounded(element, "z", -16, 16));
+
+            case "random_chance": {
+                float chance = element.GetProperty("chance").GetSingle();
+                if (chance is < 0 or > 1) {
+                    throw new FormatException($"A random_chance of {chance} is outside 0..1.");
+                }
+
+                return new PlacementModifier.RandomChance(chance);
+            }
+
+            case "randomly_selected": {
+                List<PlacementModifier> placements = ParseAll(element.GetProperty("placements"));
+                if (placements.Count == 0) {
+                    throw new FormatException("randomly_selected needs at least one placement.");
+                }
+
+                return new PlacementModifier.RandomlySelected(placements);
+            }
+
+            case "cuboid":
+                return new PlacementModifier.Cuboid(ParseBounded(element, "xz_size", 1, 16),
+                    ParseBounded(element, "y_size", 1, 16),
+                    ValueParser.OptionalBool(element, "include_edges", true),
+                    ValueParser.OptionalBool(element, "include_interior", true));
 
             case "rarity_filter":
                 return new PlacementModifier.RarityFilter(element.GetProperty("chance").GetInt32());
@@ -99,6 +122,16 @@ public sealed class PlacementParser(BlockParser blocks) {
             default:
                 throw new FormatException($"Unknown placement modifier type \"{type}\".");
         }
+    }
+
+    /// <summary>An int provider field held to <c>IntProviders.codec(min, max)</c>.</summary>
+    private static IIntProvider ParseBounded(JsonElement element, string name, int min, int max) {
+        IIntProvider provider = ValueParser.ParseInt(element.GetProperty(name));
+        if (provider.MinInclusive < min || provider.MaxInclusive > max) {
+            throw new FormatException($"{name} reaches outside {min}..{max}.");
+        }
+
+        return provider;
     }
 
     /// <summary>

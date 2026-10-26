@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhase SculkSensorPhase, bool Waterlogged) : IBlock, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:sculk_sensor", "block.minecraft.sculk_sensor", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sculk_sensor", "minecraft:sculk_sensor", BlockInfo.VanillaOnly, "minecraft:blocks/sculk_sensor");
-    private static readonly BlockStateInfo I0 = new(1.5f, 1, 1, PushReaction.Normal, 23, "sculk_sensor", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, true, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S89, BlockShapes.S89, BlockShapes.S1, BlockShapes.S89, BlockShapes.S89, BlockShapes.S89);
+    private static readonly BlockInfo Data = new("block.minecraft.sculk_sensor", 1.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sculk_sensor", "minecraft:sculk_sensor", BlockInfo.VanillaOnly, "minecraft:blocks/sculk_sensor");
+    private static readonly BlockStateInfo I0 = new(1.5f, 1, 1, PushReaction.PushPull, 23, "sculk_sensor", NoteBlockInstrument.Harp, false, true, false, false, false, false, false, true, false, true, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S89, BlockShapes.S89, BlockShapes.S1, BlockShapes.S89, BlockShapes.S89, BlockShapes.S89);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 27163];
+    public BlockStateInfo StateInfo => States[StateId - 30520];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhas
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhas
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -75,241 +75,241 @@ public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhas
             return Power switch {
                 0 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27163,
-                        false => 27164,
+                        true => 30520,
+                        false => 30521,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27165,
-                        false => 27166,
+                        true => 30522,
+                        false => 30523,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27167,
-                        false => 27168,
+                        true => 30524,
+                        false => 30525,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 1 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27169,
-                        false => 27170,
+                        true => 30526,
+                        false => 30527,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27171,
-                        false => 27172,
+                        true => 30528,
+                        false => 30529,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27173,
-                        false => 27174,
+                        true => 30530,
+                        false => 30531,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 2 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27175,
-                        false => 27176,
+                        true => 30532,
+                        false => 30533,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27177,
-                        false => 27178,
+                        true => 30534,
+                        false => 30535,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27179,
-                        false => 27180,
+                        true => 30536,
+                        false => 30537,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 3 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27181,
-                        false => 27182,
+                        true => 30538,
+                        false => 30539,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27183,
-                        false => 27184,
+                        true => 30540,
+                        false => 30541,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27185,
-                        false => 27186,
+                        true => 30542,
+                        false => 30543,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 4 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27187,
-                        false => 27188,
+                        true => 30544,
+                        false => 30545,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27189,
-                        false => 27190,
+                        true => 30546,
+                        false => 30547,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27191,
-                        false => 27192,
+                        true => 30548,
+                        false => 30549,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 5 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27193,
-                        false => 27194,
+                        true => 30550,
+                        false => 30551,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27195,
-                        false => 27196,
+                        true => 30552,
+                        false => 30553,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27197,
-                        false => 27198,
+                        true => 30554,
+                        false => 30555,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 6 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27199,
-                        false => 27200,
+                        true => 30556,
+                        false => 30557,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27201,
-                        false => 27202,
+                        true => 30558,
+                        false => 30559,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27203,
-                        false => 27204,
+                        true => 30560,
+                        false => 30561,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 7 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27205,
-                        false => 27206,
+                        true => 30562,
+                        false => 30563,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27207,
-                        false => 27208,
+                        true => 30564,
+                        false => 30565,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27209,
-                        false => 27210,
+                        true => 30566,
+                        false => 30567,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 8 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27211,
-                        false => 27212,
+                        true => 30568,
+                        false => 30569,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27213,
-                        false => 27214,
+                        true => 30570,
+                        false => 30571,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27215,
-                        false => 27216,
+                        true => 30572,
+                        false => 30573,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 9 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27217,
-                        false => 27218,
+                        true => 30574,
+                        false => 30575,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27219,
-                        false => 27220,
+                        true => 30576,
+                        false => 30577,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27221,
-                        false => 27222,
+                        true => 30578,
+                        false => 30579,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 10 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27223,
-                        false => 27224,
+                        true => 30580,
+                        false => 30581,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27225,
-                        false => 27226,
+                        true => 30582,
+                        false => 30583,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27227,
-                        false => 27228,
+                        true => 30584,
+                        false => 30585,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 11 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27229,
-                        false => 27230,
+                        true => 30586,
+                        false => 30587,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27231,
-                        false => 27232,
+                        true => 30588,
+                        false => 30589,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27233,
-                        false => 27234,
+                        true => 30590,
+                        false => 30591,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 12 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27235,
-                        false => 27236,
+                        true => 30592,
+                        false => 30593,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27237,
-                        false => 27238,
+                        true => 30594,
+                        false => 30595,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27239,
-                        false => 27240,
+                        true => 30596,
+                        false => 30597,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 13 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27241,
-                        false => 27242,
+                        true => 30598,
+                        false => 30599,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27243,
-                        false => 27244,
+                        true => 30600,
+                        false => 30601,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27245,
-                        false => 27246,
+                        true => 30602,
+                        false => 30603,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 14 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27247,
-                        false => 27248,
+                        true => 30604,
+                        false => 30605,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27249,
-                        false => 27250,
+                        true => 30606,
+                        false => 30607,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27251,
-                        false => 27252,
+                        true => 30608,
+                        false => 30609,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
                 15 => SculkSensorPhase switch {
                     SculkSensorPhase.Inactive => Waterlogged switch {
-                        true => 27253,
-                        false => 27254,
+                        true => 30610,
+                        false => 30611,
                     },
                     SculkSensorPhase.Active => Waterlogged switch {
-                        true => 27255,
-                        false => 27256,
+                        true => 30612,
+                        false => 30613,
                     },
                     SculkSensorPhase.Cooldown => Waterlogged switch {
-                        true => 27257,
-                        false => 27258,
+                        true => 30614,
+                        false => 30615,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(SculkSensorPhase), SculkSensorPhase, "Unknown value for property sculk_sensor_phase.")
                 },
@@ -320,102 +320,102 @@ public record SculkSensorBlock(Identifier Identifier, int Power, SculkSensorPhas
     
     public IBlock WithState(uint state) {
         return state switch {
-            27163 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Inactive, true),
-            27164 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Inactive, false),
-            27165 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Active, true),
-            27166 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Active, false),
-            27167 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Cooldown, true),
-            27168 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Cooldown, false),
-            27169 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Inactive, true),
-            27170 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Inactive, false),
-            27171 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Active, true),
-            27172 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Active, false),
-            27173 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Cooldown, true),
-            27174 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Cooldown, false),
-            27175 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Inactive, true),
-            27176 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Inactive, false),
-            27177 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Active, true),
-            27178 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Active, false),
-            27179 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Cooldown, true),
-            27180 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Cooldown, false),
-            27181 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Inactive, true),
-            27182 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Inactive, false),
-            27183 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Active, true),
-            27184 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Active, false),
-            27185 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Cooldown, true),
-            27186 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Cooldown, false),
-            27187 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Inactive, true),
-            27188 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Inactive, false),
-            27189 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Active, true),
-            27190 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Active, false),
-            27191 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Cooldown, true),
-            27192 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Cooldown, false),
-            27193 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Inactive, true),
-            27194 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Inactive, false),
-            27195 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Active, true),
-            27196 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Active, false),
-            27197 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Cooldown, true),
-            27198 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Cooldown, false),
-            27199 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Inactive, true),
-            27200 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Inactive, false),
-            27201 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Active, true),
-            27202 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Active, false),
-            27203 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Cooldown, true),
-            27204 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Cooldown, false),
-            27205 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Inactive, true),
-            27206 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Inactive, false),
-            27207 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Active, true),
-            27208 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Active, false),
-            27209 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Cooldown, true),
-            27210 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Cooldown, false),
-            27211 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Inactive, true),
-            27212 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Inactive, false),
-            27213 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Active, true),
-            27214 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Active, false),
-            27215 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Cooldown, true),
-            27216 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Cooldown, false),
-            27217 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Inactive, true),
-            27218 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Inactive, false),
-            27219 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Active, true),
-            27220 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Active, false),
-            27221 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Cooldown, true),
-            27222 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Cooldown, false),
-            27223 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Inactive, true),
-            27224 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Inactive, false),
-            27225 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Active, true),
-            27226 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Active, false),
-            27227 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Cooldown, true),
-            27228 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Cooldown, false),
-            27229 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Inactive, true),
-            27230 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Inactive, false),
-            27231 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Active, true),
-            27232 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Active, false),
-            27233 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Cooldown, true),
-            27234 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Cooldown, false),
-            27235 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Inactive, true),
-            27236 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Inactive, false),
-            27237 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Active, true),
-            27238 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Active, false),
-            27239 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Cooldown, true),
-            27240 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Cooldown, false),
-            27241 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Inactive, true),
-            27242 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Inactive, false),
-            27243 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Active, true),
-            27244 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Active, false),
-            27245 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Cooldown, true),
-            27246 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Cooldown, false),
-            27247 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Inactive, true),
-            27248 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Inactive, false),
-            27249 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Active, true),
-            27250 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Active, false),
-            27251 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Cooldown, true),
-            27252 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Cooldown, false),
-            27253 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Inactive, true),
-            27254 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Inactive, false),
-            27255 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Active, true),
-            27256 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Active, false),
-            27257 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Cooldown, true),
-            27258 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Cooldown, false),
+            30520 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Inactive, true),
+            30521 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Inactive, false),
+            30522 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Active, true),
+            30523 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Active, false),
+            30524 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Cooldown, true),
+            30525 => new SculkSensorBlock(Identifier, 0, SculkSensorPhase.Cooldown, false),
+            30526 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Inactive, true),
+            30527 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Inactive, false),
+            30528 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Active, true),
+            30529 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Active, false),
+            30530 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Cooldown, true),
+            30531 => new SculkSensorBlock(Identifier, 1, SculkSensorPhase.Cooldown, false),
+            30532 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Inactive, true),
+            30533 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Inactive, false),
+            30534 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Active, true),
+            30535 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Active, false),
+            30536 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Cooldown, true),
+            30537 => new SculkSensorBlock(Identifier, 2, SculkSensorPhase.Cooldown, false),
+            30538 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Inactive, true),
+            30539 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Inactive, false),
+            30540 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Active, true),
+            30541 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Active, false),
+            30542 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Cooldown, true),
+            30543 => new SculkSensorBlock(Identifier, 3, SculkSensorPhase.Cooldown, false),
+            30544 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Inactive, true),
+            30545 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Inactive, false),
+            30546 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Active, true),
+            30547 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Active, false),
+            30548 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Cooldown, true),
+            30549 => new SculkSensorBlock(Identifier, 4, SculkSensorPhase.Cooldown, false),
+            30550 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Inactive, true),
+            30551 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Inactive, false),
+            30552 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Active, true),
+            30553 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Active, false),
+            30554 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Cooldown, true),
+            30555 => new SculkSensorBlock(Identifier, 5, SculkSensorPhase.Cooldown, false),
+            30556 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Inactive, true),
+            30557 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Inactive, false),
+            30558 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Active, true),
+            30559 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Active, false),
+            30560 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Cooldown, true),
+            30561 => new SculkSensorBlock(Identifier, 6, SculkSensorPhase.Cooldown, false),
+            30562 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Inactive, true),
+            30563 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Inactive, false),
+            30564 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Active, true),
+            30565 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Active, false),
+            30566 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Cooldown, true),
+            30567 => new SculkSensorBlock(Identifier, 7, SculkSensorPhase.Cooldown, false),
+            30568 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Inactive, true),
+            30569 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Inactive, false),
+            30570 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Active, true),
+            30571 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Active, false),
+            30572 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Cooldown, true),
+            30573 => new SculkSensorBlock(Identifier, 8, SculkSensorPhase.Cooldown, false),
+            30574 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Inactive, true),
+            30575 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Inactive, false),
+            30576 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Active, true),
+            30577 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Active, false),
+            30578 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Cooldown, true),
+            30579 => new SculkSensorBlock(Identifier, 9, SculkSensorPhase.Cooldown, false),
+            30580 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Inactive, true),
+            30581 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Inactive, false),
+            30582 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Active, true),
+            30583 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Active, false),
+            30584 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Cooldown, true),
+            30585 => new SculkSensorBlock(Identifier, 10, SculkSensorPhase.Cooldown, false),
+            30586 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Inactive, true),
+            30587 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Inactive, false),
+            30588 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Active, true),
+            30589 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Active, false),
+            30590 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Cooldown, true),
+            30591 => new SculkSensorBlock(Identifier, 11, SculkSensorPhase.Cooldown, false),
+            30592 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Inactive, true),
+            30593 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Inactive, false),
+            30594 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Active, true),
+            30595 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Active, false),
+            30596 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Cooldown, true),
+            30597 => new SculkSensorBlock(Identifier, 12, SculkSensorPhase.Cooldown, false),
+            30598 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Inactive, true),
+            30599 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Inactive, false),
+            30600 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Active, true),
+            30601 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Active, false),
+            30602 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Cooldown, true),
+            30603 => new SculkSensorBlock(Identifier, 13, SculkSensorPhase.Cooldown, false),
+            30604 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Inactive, true),
+            30605 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Inactive, false),
+            30606 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Active, true),
+            30607 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Active, false),
+            30608 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Cooldown, true),
+            30609 => new SculkSensorBlock(Identifier, 14, SculkSensorPhase.Cooldown, false),
+            30610 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Inactive, true),
+            30611 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Inactive, false),
+            30612 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Active, true),
+            30613 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Active, false),
+            30614 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Cooldown, true),
+            30615 => new SculkSensorBlock(Identifier, 15, SculkSensorPhase.Cooldown, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

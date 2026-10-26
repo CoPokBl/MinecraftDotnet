@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record YellowBannerBlock(Identifier Identifier, int Rotation) : IBlock, IRotated {
-    private static readonly BlockInfo Data = new("minecraft:banner", "block.minecraft.yellow_banner", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:banner", "minecraft:yellow_banner", BlockInfo.VanillaOnly, "minecraft:blocks/yellow_banner");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.yellow_banner", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:banner", "minecraft:yellow_banner", BlockInfo.VanillaOnly, "minecraft:blocks/yellow_banner");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record YellowBannerBlock(Identifier Identifier, int Rotation) : IBlock, I
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record YellowBannerBlock(Identifier Identifier, int Rotation) : IBlock, I
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,22 +69,22 @@ public record YellowBannerBlock(Identifier Identifier, int Rotation) : IBlock, I
     public uint StateId {
         get {
             return Rotation switch {
-                0 => 12991,
-                1 => 12992,
-                2 => 12993,
-                3 => 12994,
-                4 => 12995,
-                5 => 12996,
-                6 => 12997,
-                7 => 12998,
-                8 => 12999,
-                9 => 13000,
-                10 => 13001,
-                11 => 13002,
-                12 => 13003,
-                13 => 13004,
-                14 => 13005,
-                15 => 13006,
+                0 => 14838,
+                1 => 14839,
+                2 => 14840,
+                3 => 14841,
+                4 => 14842,
+                5 => 14843,
+                6 => 14844,
+                7 => 14845,
+                8 => 14846,
+                9 => 14847,
+                10 => 14848,
+                11 => 14849,
+                12 => 14850,
+                13 => 14851,
+                14 => 14852,
+                15 => 14853,
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
         }
@@ -92,22 +92,22 @@ public record YellowBannerBlock(Identifier Identifier, int Rotation) : IBlock, I
     
     public IBlock WithState(uint state) {
         return state switch {
-            12991 => new YellowBannerBlock(Identifier, 0),
-            12992 => new YellowBannerBlock(Identifier, 1),
-            12993 => new YellowBannerBlock(Identifier, 2),
-            12994 => new YellowBannerBlock(Identifier, 3),
-            12995 => new YellowBannerBlock(Identifier, 4),
-            12996 => new YellowBannerBlock(Identifier, 5),
-            12997 => new YellowBannerBlock(Identifier, 6),
-            12998 => new YellowBannerBlock(Identifier, 7),
-            12999 => new YellowBannerBlock(Identifier, 8),
-            13000 => new YellowBannerBlock(Identifier, 9),
-            13001 => new YellowBannerBlock(Identifier, 10),
-            13002 => new YellowBannerBlock(Identifier, 11),
-            13003 => new YellowBannerBlock(Identifier, 12),
-            13004 => new YellowBannerBlock(Identifier, 13),
-            13005 => new YellowBannerBlock(Identifier, 14),
-            13006 => new YellowBannerBlock(Identifier, 15),
+            14838 => new YellowBannerBlock(Identifier, 0),
+            14839 => new YellowBannerBlock(Identifier, 1),
+            14840 => new YellowBannerBlock(Identifier, 2),
+            14841 => new YellowBannerBlock(Identifier, 3),
+            14842 => new YellowBannerBlock(Identifier, 4),
+            14843 => new YellowBannerBlock(Identifier, 5),
+            14844 => new YellowBannerBlock(Identifier, 6),
+            14845 => new YellowBannerBlock(Identifier, 7),
+            14846 => new YellowBannerBlock(Identifier, 8),
+            14847 => new YellowBannerBlock(Identifier, 9),
+            14848 => new YellowBannerBlock(Identifier, 10),
+            14849 => new YellowBannerBlock(Identifier, 11),
+            14850 => new YellowBannerBlock(Identifier, 12),
+            14851 => new YellowBannerBlock(Identifier, 13),
+            14852 => new YellowBannerBlock(Identifier, 14),
+            14853 => new YellowBannerBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

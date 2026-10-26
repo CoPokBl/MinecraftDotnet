@@ -15,7 +15,8 @@ namespace GraphicalClient.Assets.ResourcePacks;
 public static class VanillaClientJar {
     /// <summary>The client jars this build knows, by version. Only the one it speaks the protocol of is useful.</summary>
     private static readonly IReadOnlyDictionary<string, string> JarUrls = new Dictionary<string, string> {
-        ["26.2"] = "https://piston-data.mojang.com/v1/objects/2dc72797acbc1b63fc16a11c4ac393605f453754/client.jar"
+        ["26.2"] = "https://piston-data.mojang.com/v1/objects/2dc72797acbc1b63fc16a11c4ac393605f453754/client.jar",
+        ["26.3"] = "https://piston-data.mojang.com/v1/objects/e877b6a07acd633fb3bb475002175cec036e7b87/client.jar"
     };
 
     /// <summary>Where the framework caches what it fetches from Mojang, under a folder per kind.</summary>

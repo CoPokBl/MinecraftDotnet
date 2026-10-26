@@ -15,12 +15,12 @@ public interface IBlock : IProtocolType {
     /// <summary>What this particular state is, which is where the shapes live.</summary>
     public BlockStateInfo StateInfo { get; }
 
-    public Identifier Category { get; }
     public float ExplosionResistance { get; }
     public float Friction { get; }
     public float SpeedFactor { get; }
     public float JumpFactor { get; }
     public float BounceRestitution { get; }
+    public float FallDistanceReduction { get; }
     public bool Gravity { get; }
     public string TranslationKey { get; }
     public Identifier? BlockEntity { get; }
@@ -38,7 +38,6 @@ public interface IBlock : IProtocolType {
     public bool Air { get; }
     public bool Occludes { get; }
     public bool RequiresTool { get; }
-    public bool BlocksMotion { get; }
     public int LightEmission { get; }
     public int LightDampening { get; }
     public bool Replaceable { get; }
@@ -58,6 +57,7 @@ public interface IBlock : IProtocolType {
     public bool RandomlyTicking { get; }
     public bool Suffocating { get; }
     public bool ViewBlocking { get; }
+    public bool ViewBlockingNearPlane { get; }
     public bool SpawnTerrainParticles { get; }
     public bool PathfindableLand { get; }
     public bool PathfindableWater { get; }

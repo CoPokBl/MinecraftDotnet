@@ -14,6 +14,7 @@ using Block = Minecraft.Data.Generated.Block;
 using BlockClass = Minecraft.Data.Generated.BlockClass;
 using BlockClasses = Minecraft.Data.Generated.BlockClasses;
 using Item = Minecraft.Data.Generated.Item;
+using EntityType = Minecraft.Data.Generated.EntityType;
 using Particle = Minecraft.Data.Generated.Particle;
 
 namespace ClientLib.Particles;
@@ -140,6 +141,27 @@ public sealed partial class ParticleEngine {
                 break;
             case 2013:
                 SmashAttack(x, y, z, data);
+                break;
+            case 2014:
+                if ((uint)data < _level!.Registry.Blocks.StatesCount) {
+                    Destroy(x, y, z, (uint)data);
+                }
+                break;
+            case 2015:
+                SingleBlockTeleportationParticles(x, y, z, UnpackDifferenceInPosition(x, y, z, data, 16, 8, 16));
+                break;
+            case 2016:
+                SingleBlockTeleportationParticles(x, y, z, UnpackDifferenceInPosition(x, y, z, data, 8, 8, 8));
+                break;
+            case 2017:
+                SingleBlockTeleportationParticles(x, y, z, UnpackDifferenceInPosition(x, y, z, data, 127, 127, 127));
+                break;
+            case 2018:
+                EndermanTeleportationParticles(x, y, z, UnpackDifferenceInPosition(x, y, z, data, 127, 127, 127));
+                break;
+            case 2019:
+            case 2020:
+                Crack(x, y, z, (BlockFace)Math.Clamp(data, 0, 5));
                 break;
             case 3000:
                 AddAlwaysVisibleParticle(Particle.ExplosionEmitter, true, x + 0.5, y + 0.5, z + 0.5, 0.0, 0.0, 0.0);
@@ -405,6 +427,42 @@ public sealed partial class ParticleEngine {
     private static int Channel(float value) => (int)Math.Floor(value * 255.0F);
 
     /// <summary>The ender eye of 2003 shattering: its pieces, and portal particles drawn in from a ring five blocks out.</summary>
+    /// <summary><c>BlockUtil.unpackDifferenceInPosition</c>: a byte an axis, each offset by its radius.</summary>
+    private static (int X, int Y, int Z) UnpackDifferenceInPosition(int x, int y, int z, int packedDiff, int xRadius, int yRadius, int zRadius) =>
+        (x + (packedDiff >> 16 & 0xFF) - xRadius, y + (packedDiff >> 8 & 0xFF) - yRadius, z + (packedDiff & 0xFF) - zRadius);
+
+    /// <summary><c>LevelEventHandler.singleBlockTeleportationParticles</c>: portal particles along the line from where it went to where it was.</summary>
+    private void SingleBlockTeleportationParticles(int x, int y, int z, (int X, int Y, int Z) to) {
+        ParticleRandom random = Random;
+        for (int i = 0; i < 128; i++) {
+            double randomDistance = random.NextDouble();
+            float velocityX = (random.NextFloat() - 0.5F) * 0.2F;
+            float velocityY = (random.NextFloat() - 0.5F) * 0.2F;
+            float velocityZ = (random.NextFloat() - 0.5F) * 0.2F;
+            double px = Mth.Lerp(randomDistance, to.X, x) + (random.NextDouble() - 0.5) + 0.5;
+            double py = Mth.Lerp(randomDistance, to.Y, y) + random.NextDouble() - 0.5;
+            double pz = Mth.Lerp(randomDistance, to.Z, z) + (random.NextDouble() - 0.5) + 0.5;
+            AddParticle(Particle.Portal, px, py, pz, velocityX, velocityY, velocityZ);
+        }
+    }
+
+    /// <summary>The enderman's case of the same, spread over an enderman's box.</summary>
+    private void EndermanTeleportationParticles(int x, int y, int z, (int X, int Y, int Z) to) {
+        ParticleRandom random = Random;
+        float bbWidth = (float)EntityType.Enderman.Width;
+        float bbHeight = (float)EntityType.Enderman.Height;
+        for (int i = 0; i < 128; i++) {
+            double randomDistance = random.NextDouble();
+            float velocityX = (random.NextFloat() - 0.5F) * 0.2F;
+            float velocityY = (random.NextFloat() - 0.5F) * 0.2F;
+            float velocityZ = (random.NextFloat() - 0.5F) * 0.2F;
+            double px = Mth.Lerp(randomDistance, to.X, x) + (random.NextDouble() - 0.5) * bbWidth * 2.0;
+            double py = Mth.Lerp(randomDistance, to.Y, y) + random.NextDouble() * bbHeight;
+            double pz = Mth.Lerp(randomDistance, to.Z, z) + (random.NextDouble() - 0.5) * bbWidth * 2.0;
+            AddParticle(Particle.Portal, px, py, pz, velocityX, velocityY, velocityZ);
+        }
+    }
+
     private void EyeOfEnderBreak(int x, int y, int z) {
         double cx = x + 0.5, cz = z + 0.5;
         for (int i = 0; i < 8; i++) {

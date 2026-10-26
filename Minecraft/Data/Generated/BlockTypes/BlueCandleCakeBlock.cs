@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BlueCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock, ILit {
-    private static readonly BlockInfo Data = new("minecraft:candle_cake", "block.minecraft.blue_candle_cake", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, null, BlockInfo.VanillaOnly, "minecraft:blocks/blue_candle_cake");
-    private static readonly BlockStateInfo I0 = new(0.5f, 3, 0, PushReaction.Destroy, 0, "wool", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S370, BlockShapes.S370, BlockShapes.S1, BlockShapes.S370, BlockShapes.S370, BlockShapes.S370);
+    private static readonly BlockInfo Data = new("block.minecraft.blue_candle_cake", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, null, BlockInfo.VanillaOnly, "minecraft:blocks/blue_candle_cake");
+    private static readonly BlockStateInfo I0 = new(0.5f, 3, 0, PushReaction.Popped, 0, "wool", NoteBlockInstrument.Harp, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S370, BlockShapes.S370, BlockShapes.S1, BlockShapes.S370, BlockShapes.S370, BlockShapes.S370);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0 };
     private static readonly BlockStateInfo[] States = [
         I0, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 23392];
+    public BlockStateInfo StateInfo => States[StateId - 26749];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record BlueCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock, ILi
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record BlueCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock, ILi
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -73,16 +73,16 @@ public record BlueCandleCakeBlock(Identifier Identifier, bool Lit) : IBlock, ILi
     public uint StateId {
         get {
             return Lit switch {
-                true => 23392,
-                false => 23393,
+                true => 26749,
+                false => 26750,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            23392 => new BlueCandleCakeBlock(Identifier, true),
-            23393 => new BlueCandleCakeBlock(Identifier, false),
+            26749 => new BlueCandleCakeBlock(Identifier, true),
+            26750 => new BlueCandleCakeBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PurpleBannerBlock(Identifier Identifier, int Rotation) : IBlock, IRotated {
-    private static readonly BlockInfo Data = new("minecraft:banner", "block.minecraft.purple_banner", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:banner", "minecraft:purple_banner", BlockInfo.VanillaOnly, "minecraft:blocks/purple_banner");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.purple_banner", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:banner", "minecraft:purple_banner", BlockInfo.VanillaOnly, "minecraft:blocks/purple_banner");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record PurpleBannerBlock(Identifier Identifier, int Rotation) : IBlock, I
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record PurpleBannerBlock(Identifier Identifier, int Rotation) : IBlock, I
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,22 +69,22 @@ public record PurpleBannerBlock(Identifier Identifier, int Rotation) : IBlock, I
     public uint StateId {
         get {
             return Rotation switch {
-                0 => 13087,
-                1 => 13088,
-                2 => 13089,
-                3 => 13090,
-                4 => 13091,
-                5 => 13092,
-                6 => 13093,
-                7 => 13094,
-                8 => 13095,
-                9 => 13096,
-                10 => 13097,
-                11 => 13098,
-                12 => 13099,
-                13 => 13100,
-                14 => 13101,
-                15 => 13102,
+                0 => 14934,
+                1 => 14935,
+                2 => 14936,
+                3 => 14937,
+                4 => 14938,
+                5 => 14939,
+                6 => 14940,
+                7 => 14941,
+                8 => 14942,
+                9 => 14943,
+                10 => 14944,
+                11 => 14945,
+                12 => 14946,
+                13 => 14947,
+                14 => 14948,
+                15 => 14949,
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
         }
@@ -92,22 +92,22 @@ public record PurpleBannerBlock(Identifier Identifier, int Rotation) : IBlock, I
     
     public IBlock WithState(uint state) {
         return state switch {
-            13087 => new PurpleBannerBlock(Identifier, 0),
-            13088 => new PurpleBannerBlock(Identifier, 1),
-            13089 => new PurpleBannerBlock(Identifier, 2),
-            13090 => new PurpleBannerBlock(Identifier, 3),
-            13091 => new PurpleBannerBlock(Identifier, 4),
-            13092 => new PurpleBannerBlock(Identifier, 5),
-            13093 => new PurpleBannerBlock(Identifier, 6),
-            13094 => new PurpleBannerBlock(Identifier, 7),
-            13095 => new PurpleBannerBlock(Identifier, 8),
-            13096 => new PurpleBannerBlock(Identifier, 9),
-            13097 => new PurpleBannerBlock(Identifier, 10),
-            13098 => new PurpleBannerBlock(Identifier, 11),
-            13099 => new PurpleBannerBlock(Identifier, 12),
-            13100 => new PurpleBannerBlock(Identifier, 13),
-            13101 => new PurpleBannerBlock(Identifier, 14),
-            13102 => new PurpleBannerBlock(Identifier, 15),
+            14934 => new PurpleBannerBlock(Identifier, 0),
+            14935 => new PurpleBannerBlock(Identifier, 1),
+            14936 => new PurpleBannerBlock(Identifier, 2),
+            14937 => new PurpleBannerBlock(Identifier, 3),
+            14938 => new PurpleBannerBlock(Identifier, 4),
+            14939 => new PurpleBannerBlock(Identifier, 5),
+            14940 => new PurpleBannerBlock(Identifier, 6),
+            14941 => new PurpleBannerBlock(Identifier, 7),
+            14942 => new PurpleBannerBlock(Identifier, 8),
+            14943 => new PurpleBannerBlock(Identifier, 9),
+            14944 => new PurpleBannerBlock(Identifier, 10),
+            14945 => new PurpleBannerBlock(Identifier, 11),
+            14946 => new PurpleBannerBlock(Identifier, 12),
+            14947 => new PurpleBannerBlock(Identifier, 13),
+            14948 => new PurpleBannerBlock(Identifier, 14),
+            14949 => new PurpleBannerBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

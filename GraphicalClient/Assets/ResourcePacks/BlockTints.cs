@@ -32,7 +32,7 @@ public static class BlockTints {
         _ => []
     };
 
-    /// <summary><c>RedStoneWireBlock.COLORS</c>.</summary>
+    /// <summary><c>RedstoneWireBlock.COLORS</c>.</summary>
     private static uint RedstoneColour(int power) {
         float p = power / 15.0F;
         float red = p * 0.6F + (p > 0.0F ? 0.4F : 0.3F);

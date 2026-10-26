@@ -30,7 +30,7 @@ public sealed class JigsawStructure(Structure.StructureSettings settings,
 
     protected override GenerationStub? FindGenerationPoint(StructureGenerationContext context) {
         int height = startHeight.Sample(context.Random,
-            new GenerationHeightContext(context.MinY, context.Height));
+            new GenerationHeightContext(context.MinY, context.Height, context.SeaLevel));
 
         Vec3<int> start = new(context.ChunkX << 4, height, context.ChunkZ << 4);
 

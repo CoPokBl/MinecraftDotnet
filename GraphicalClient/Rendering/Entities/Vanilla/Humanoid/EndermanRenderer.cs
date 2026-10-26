@@ -48,8 +48,8 @@ public sealed class EndermanRenderer : MobRenderer<EndermanRenderState, Enderman
     public override void ExtractRenderState(ClientEntity entity, EndermanRenderState state, float partialTick, EntityRenderContext context) {
         base.ExtractRenderState(entity, state, partialTick, context);
         HumanoidMobRenderer.ExtractHumanoidRenderState(entity, state, partialTick, _items, context);
-        state.IsCreepy = entity.Get(EntityDataFields.EnderMan.Creepy);
-        state.CarriedBlock = entity.Get(EntityDataFields.EnderMan.CarryState) is { Present: true, Value.Air: false } carried ? carried.Value : null;
+        state.IsCreepy = entity.Get(EntityDataFields.Enderman.Creepy);
+        state.CarriedBlock = entity.Get(EntityDataFields.Enderman.CarryState) is { Present: true, Value.Air: false } carried ? carried.Value : null;
     }
 }
 

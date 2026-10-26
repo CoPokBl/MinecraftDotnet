@@ -505,13 +505,13 @@ public class StructurePassTest {
     /// </summary>
     /// <remarks>
     /// The whole pass is arranged so a chunk no adjusted structure reaches gets the empty beardifier
-    /// and the noise runs exactly as it did before the structure pass existed. That half is what
+    /// and the noise runs exactly as it does with no structures at all. That half is what
     /// <c>TerrainConformanceTest</c> is really checking, since every position it samples is one no
     /// structure reaches; this is the other half, which nothing else would notice the absence of.
     /// </remarks>
     [Test]
     public void TheBeardifierAdjustsTerrainOnlyAroundAnAdjustedStructure() {
-        Assert.That(Beardifier.Empty.Compute(new StructurePassContext(0, 60, 0)), Is.Zero);
+        Assert.That(Beardifier.Empty.SampleValue(SamplerContext.EmptyUncached, 0, 60, 0), Is.Zero);
 
         VanillaStructureData data = VanillaStructureData.Load(VanillaPack.Source,
             VanillaFeatureData.Load(VanillaPack.Source, VanillaRegistry.Data), VanillaRegistry.Data);
@@ -535,17 +535,13 @@ public class StructurePassTest {
             "a chunk the stronghold is standing in got the empty beardifier");
 
         // Inside a burying piece the term is positive, which is what fills the terrain in around it.
-        Assert.That(beardifier.Compute(new StructurePassContext(box.MinX + 1, box.MinY + 1,
-            box.MinZ + 1)), Is.GreaterThan(0.0));
+        Assert.That(beardifier.SampleValue(SamplerContext.EmptyUncached, box.MinX + 1, box.MinY + 1, box.MinZ + 1),
+            Is.GreaterThan(0.0F));
 
         // Far enough away and it is exactly zero rather than merely small, because the affected box
         // short circuits it.
-        Assert.That(beardifier.Compute(new StructurePassContext(box.MinX + 4096, box.MinY,
-            box.MinZ)), Is.Zero);
+        Assert.That(beardifier.SampleValue(SamplerContext.EmptyUncached, box.MinX + 4096, box.MinY, box.MinZ), Is.Zero);
     }
-
-    /// <summary>A position, for asking a density function about one place.</summary>
-    private sealed record StructurePassContext(int BlockX, int BlockY, int BlockZ) : IFunctionContext;
 
     /// <summary>
     /// A biome lookup for a system driven without a generator behind it.
@@ -904,5 +900,7 @@ public class StructurePassTest {
         public IReadOnlyList<Vec2<int>> RingPositionsFor(ConcentricRingsStructurePlacement placement) {
             return [];
         }
+
+        public Vec2<int> DimensionOrigin => new(0, 0);
     }
 }

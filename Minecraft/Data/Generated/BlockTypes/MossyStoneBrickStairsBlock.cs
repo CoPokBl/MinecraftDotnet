@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MossyStoneBrickStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.mossy_stone_brick_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mossy_stone_brick_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/mossy_stone_brick_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.mossy_stone_brick_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mossy_stone_brick_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/mossy_stone_brick_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record MossyStoneBrickStairsBlock(Identifier Identifier, Direction Facing
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 15456];
+    public BlockStateInfo StateInfo => States[StateId - 18813];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record MossyStoneBrickStairsBlock(Identifier Identifier, Direction Facing
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record MossyStoneBrickStairsBlock(Identifier Identifier, Direction Facing
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record MossyStoneBrickStairsBlock(Identifier Identifier, Direction Facing
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 15456,
-                            false => 15457,
+                            true => 18813,
+                            false => 18814,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 15458,
-                            false => 15459,
+                            true => 18815,
+                            false => 18816,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 15460,
-                            false => 15461,
+                            true => 18817,
+                            false => 18818,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 15462,
-                            false => 15463,
+                            true => 18819,
+                            false => 18820,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 15464,
-                            false => 15465,
+                            true => 18821,
+                            false => 18822,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 15466,
-                            false => 15467,
+                            true => 18823,
+                            false => 18824,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 15468,
-                            false => 15469,
+                            true => 18825,
+                            false => 18826,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 15470,
-                            false => 15471,
+                            true => 18827,
+                            false => 18828,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 15472,
-                            false => 15473,
+                            true => 18829,
+                            false => 18830,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 15474,
-                            false => 15475,
+                            true => 18831,
+                            false => 18832,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record MossyStoneBrickStairsBlock(Identifier Identifier, Direction Facing
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 15476,
-                            false => 15477,
+                            true => 18833,
+                            false => 18834,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 15478,
-                            false => 15479,
+                            true => 18835,
+                            false => 18836,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 15480,
-                            false => 15481,
+                            true => 18837,
+                            false => 18838,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 15482,
-                            false => 15483,
+                            true => 18839,
+                            false => 18840,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 15484,
-                            false => 15485,
+                            true => 18841,
+                            false => 18842,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 15486,
-                            false => 15487,
+                            true => 18843,
+                            false => 18844,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 15488,
-                            false => 15489,
+                            true => 18845,
+                            false => 18846,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 15490,
-                            false => 15491,
+                            true => 18847,
+                            false => 18848,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 15492,
-                            false => 15493,
+                            true => 18849,
+                            false => 18850,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 15494,
-                            false => 15495,
+                            true => 18851,
+                            false => 18852,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record MossyStoneBrickStairsBlock(Identifier Identifier, Direction Facing
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 15496,
-                            false => 15497,
+                            true => 18853,
+                            false => 18854,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 15498,
-                            false => 15499,
+                            true => 18855,
+                            false => 18856,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 15500,
-                            false => 15501,
+                            true => 18857,
+                            false => 18858,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 15502,
-                            false => 15503,
+                            true => 18859,
+                            false => 18860,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 15504,
-                            false => 15505,
+                            true => 18861,
+                            false => 18862,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 15506,
-                            false => 15507,
+                            true => 18863,
+                            false => 18864,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 15508,
-                            false => 15509,
+                            true => 18865,
+                            false => 18866,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 15510,
-                            false => 15511,
+                            true => 18867,
+                            false => 18868,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 15512,
-                            false => 15513,
+                            true => 18869,
+                            false => 18870,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 15514,
-                            false => 15515,
+                            true => 18871,
+                            false => 18872,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record MossyStoneBrickStairsBlock(Identifier Identifier, Direction Facing
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 15516,
-                            false => 15517,
+                            true => 18873,
+                            false => 18874,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 15518,
-                            false => 15519,
+                            true => 18875,
+                            false => 18876,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 15520,
-                            false => 15521,
+                            true => 18877,
+                            false => 18878,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 15522,
-                            false => 15523,
+                            true => 18879,
+                            false => 18880,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 15524,
-                            false => 15525,
+                            true => 18881,
+                            false => 18882,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 15526,
-                            false => 15527,
+                            true => 18883,
+                            false => 18884,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 15528,
-                            false => 15529,
+                            true => 18885,
+                            false => 18886,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 15530,
-                            false => 15531,
+                            true => 18887,
+                            false => 18888,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 15532,
-                            false => 15533,
+                            true => 18889,
+                            false => 18890,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 15534,
-                            false => 15535,
+                            true => 18891,
+                            false => 18892,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record MossyStoneBrickStairsBlock(Identifier Identifier, Direction Facing
     
     public IBlock WithState(uint state) {
         return state switch {
-            15456 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            15457 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            15458 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            15459 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            15460 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            15461 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            15462 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            15463 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            15464 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            15465 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            15466 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            15467 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            15468 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            15469 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            15470 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            15471 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            15472 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            15473 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            15474 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            15475 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            15476 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            15477 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            15478 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            15479 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            15480 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            15481 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            15482 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            15483 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            15484 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            15485 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            15486 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            15487 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            15488 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            15489 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            15490 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            15491 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            15492 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            15493 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            15494 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            15495 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            15496 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            15497 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            15498 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            15499 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            15500 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            15501 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            15502 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            15503 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            15504 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            15505 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            15506 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            15507 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            15508 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            15509 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            15510 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            15511 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            15512 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            15513 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            15514 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            15515 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            15516 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            15517 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            15518 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            15519 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            15520 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            15521 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            15522 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            15523 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            15524 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            15525 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            15526 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            15527 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            15528 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            15529 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            15530 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            15531 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            15532 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            15533 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            15534 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            15535 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            18813 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            18814 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            18815 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            18816 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            18817 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            18818 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            18819 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            18820 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            18821 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            18822 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            18823 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            18824 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            18825 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            18826 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            18827 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            18828 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            18829 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            18830 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            18831 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            18832 => new MossyStoneBrickStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            18833 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            18834 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            18835 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            18836 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            18837 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            18838 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            18839 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            18840 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            18841 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            18842 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            18843 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            18844 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            18845 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            18846 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            18847 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            18848 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            18849 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            18850 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            18851 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            18852 => new MossyStoneBrickStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            18853 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            18854 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            18855 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            18856 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            18857 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            18858 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            18859 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            18860 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            18861 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            18862 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            18863 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            18864 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            18865 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            18866 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            18867 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            18868 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            18869 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            18870 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            18871 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            18872 => new MossyStoneBrickStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            18873 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            18874 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            18875 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            18876 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            18877 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            18878 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            18879 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            18880 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            18881 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            18882 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            18883 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            18884 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            18885 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            18886 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            18887 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            18888 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            18889 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            18890 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            18891 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            18892 => new MossyStoneBrickStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

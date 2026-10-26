@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock, ILit {
-    private static readonly BlockInfo Data = new("minecraft:redstone_ore", "block.minecraft.redstone_ore", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:redstone_ore", BlockInfo.VanillaOnly, "minecraft:blocks/redstone_ore");
-    private static readonly BlockStateInfo I0 = new(3f, 9, 15, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, true, false, true, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.redstone_ore", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:redstone_ore", BlockInfo.VanillaOnly, "minecraft:blocks/redstone_ore");
+    private static readonly BlockStateInfo I0 = new(3f, 9, 15, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, true, false, true, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0, RandomlyTicking = false };
     private static readonly BlockStateInfo[] States = [
         I0, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6881];
+    public BlockStateInfo StateInfo => States[StateId - 8551];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record RedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock, ILit {
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record RedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock, ILit {
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -73,16 +73,16 @@ public record RedstoneOreBlock(Identifier Identifier, bool Lit) : IBlock, ILit {
     public uint StateId {
         get {
             return Lit switch {
-                true => 6881,
-                false => 6882,
+                true => 8551,
+                false => 8552,
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            6881 => new RedstoneOreBlock(Identifier, true),
-            6882 => new RedstoneOreBlock(Identifier, false),
+            8551 => new RedstoneOreBlock(Identifier, true),
+            8552 => new RedstoneOreBlock(Identifier, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

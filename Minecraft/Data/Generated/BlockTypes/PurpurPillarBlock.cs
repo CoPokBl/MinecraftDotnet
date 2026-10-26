@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PurpurPillarBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
-    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.purpur_pillar", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:purpur_pillar", BlockInfo.VanillaOnly, "minecraft:blocks/purpur_pillar");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 15, PushReaction.Normal, 16, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.purpur_pillar", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:purpur_pillar", BlockInfo.VanillaOnly, "minecraft:blocks/purpur_pillar");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 15, PushReaction.PushPull, 16, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record PurpurPillarBlock(Identifier Identifier, Axis Axis) : IBlock, IAxi
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record PurpurPillarBlock(Identifier Identifier, Axis Axis) : IBlock, IAxi
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,9 +69,9 @@ public record PurpurPillarBlock(Identifier Identifier, Axis Axis) : IBlock, IAxi
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 14713,
-                Axis.Y => 14714,
-                Axis.Z => 14715,
+                Axis.X => 16694,
+                Axis.Y => 16695,
+                Axis.Z => 16696,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -79,9 +79,9 @@ public record PurpurPillarBlock(Identifier Identifier, Axis Axis) : IBlock, IAxi
     
     public IBlock WithState(uint state) {
         return state switch {
-            14713 => new PurpurPillarBlock(Identifier, Axis.X),
-            14714 => new PurpurPillarBlock(Identifier, Axis.Y),
-            14715 => new PurpurPillarBlock(Identifier, Axis.Z),
+            16694 => new PurpurPillarBlock(Identifier, Axis.X),
+            16695 => new PurpurPillarBlock(Identifier, Axis.Y),
+            16696 => new PurpurPillarBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

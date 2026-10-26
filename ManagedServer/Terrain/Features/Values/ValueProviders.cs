@@ -53,6 +53,17 @@ public static class IntProviders {
         }
     }
 
+    /// <summary>
+    /// <c>VeryBiasedToBottomInt</c>: three nested draws, so the bottom of the range dominates even more
+    /// than <see cref="BiasedToBottom"/>'s two. A cave carver's tunnel count is this.
+    /// </summary>
+    public sealed record VeryBiasedToBottom(int MinInclusive, int MaxInclusive) : IIntProvider {
+        public int Sample(RandomSource random) {
+            return MinInclusive
+                + random.NextInt(random.NextInt(random.NextInt(MaxInclusive - MinInclusive + 1) + 1) + 1);
+        }
+    }
+
     /// <summary><c>ClampedInt</c>.</summary>
     public sealed record Clamped(IIntProvider Source, int Low, int High) : IIntProvider {
         public int Sample(RandomSource random) => Mth.Clamp(Source.Sample(random), Low, High);

@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BirchFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:fence", "block.minecraft.birch_fence", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:birch_fence", BlockInfo.VanillaOnly, "minecraft:blocks/birch_fence");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 2, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockInfo Data = new("block.minecraft.birch_fence", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:birch_fence", BlockInfo.VanillaOnly, "minecraft:blocks/birch_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 2, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
     private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
@@ -48,15 +48,15 @@ public record BirchFenceBlock(Identifier Identifier, bool East, bool North, bool
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 13804];
+    public BlockStateInfo StateInfo => States[StateId - 15683];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -70,7 +70,6 @@ public record BirchFenceBlock(Identifier Identifier, bool East, bool North, bool
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -90,6 +89,7 @@ public record BirchFenceBlock(Identifier Identifier, bool East, bool North, bool
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -125,44 +125,44 @@ public record BirchFenceBlock(Identifier Identifier, bool East, bool North, bool
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13804,
-                                false => 13805,
+                                true => 15683,
+                                false => 15684,
                             },
                             false => West switch {
-                                true => 13806,
-                                false => 13807,
+                                true => 15685,
+                                false => 15686,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13808,
-                                false => 13809,
+                                true => 15687,
+                                false => 15688,
                             },
                             false => West switch {
-                                true => 13810,
-                                false => 13811,
+                                true => 15689,
+                                false => 15690,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13812,
-                                false => 13813,
+                                true => 15691,
+                                false => 15692,
                             },
                             false => West switch {
-                                true => 13814,
-                                false => 13815,
+                                true => 15693,
+                                false => 15694,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13816,
-                                false => 13817,
+                                true => 15695,
+                                false => 15696,
                             },
                             false => West switch {
-                                true => 13818,
-                                false => 13819,
+                                true => 15697,
+                                false => 15698,
                             },
                         },
                     },
@@ -171,44 +171,44 @@ public record BirchFenceBlock(Identifier Identifier, bool East, bool North, bool
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13820,
-                                false => 13821,
+                                true => 15699,
+                                false => 15700,
                             },
                             false => West switch {
-                                true => 13822,
-                                false => 13823,
+                                true => 15701,
+                                false => 15702,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13824,
-                                false => 13825,
+                                true => 15703,
+                                false => 15704,
                             },
                             false => West switch {
-                                true => 13826,
-                                false => 13827,
+                                true => 15705,
+                                false => 15706,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13828,
-                                false => 13829,
+                                true => 15707,
+                                false => 15708,
                             },
                             false => West switch {
-                                true => 13830,
-                                false => 13831,
+                                true => 15709,
+                                false => 15710,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13832,
-                                false => 13833,
+                                true => 15711,
+                                false => 15712,
                             },
                             false => West switch {
-                                true => 13834,
-                                false => 13835,
+                                true => 15713,
+                                false => 15714,
                             },
                         },
                     },
@@ -219,38 +219,38 @@ public record BirchFenceBlock(Identifier Identifier, bool East, bool North, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            13804 => new BirchFenceBlock(Identifier, true, true, true, true, true),
-            13805 => new BirchFenceBlock(Identifier, true, true, true, true, false),
-            13806 => new BirchFenceBlock(Identifier, true, true, true, false, true),
-            13807 => new BirchFenceBlock(Identifier, true, true, true, false, false),
-            13808 => new BirchFenceBlock(Identifier, true, true, false, true, true),
-            13809 => new BirchFenceBlock(Identifier, true, true, false, true, false),
-            13810 => new BirchFenceBlock(Identifier, true, true, false, false, true),
-            13811 => new BirchFenceBlock(Identifier, true, true, false, false, false),
-            13812 => new BirchFenceBlock(Identifier, true, false, true, true, true),
-            13813 => new BirchFenceBlock(Identifier, true, false, true, true, false),
-            13814 => new BirchFenceBlock(Identifier, true, false, true, false, true),
-            13815 => new BirchFenceBlock(Identifier, true, false, true, false, false),
-            13816 => new BirchFenceBlock(Identifier, true, false, false, true, true),
-            13817 => new BirchFenceBlock(Identifier, true, false, false, true, false),
-            13818 => new BirchFenceBlock(Identifier, true, false, false, false, true),
-            13819 => new BirchFenceBlock(Identifier, true, false, false, false, false),
-            13820 => new BirchFenceBlock(Identifier, false, true, true, true, true),
-            13821 => new BirchFenceBlock(Identifier, false, true, true, true, false),
-            13822 => new BirchFenceBlock(Identifier, false, true, true, false, true),
-            13823 => new BirchFenceBlock(Identifier, false, true, true, false, false),
-            13824 => new BirchFenceBlock(Identifier, false, true, false, true, true),
-            13825 => new BirchFenceBlock(Identifier, false, true, false, true, false),
-            13826 => new BirchFenceBlock(Identifier, false, true, false, false, true),
-            13827 => new BirchFenceBlock(Identifier, false, true, false, false, false),
-            13828 => new BirchFenceBlock(Identifier, false, false, true, true, true),
-            13829 => new BirchFenceBlock(Identifier, false, false, true, true, false),
-            13830 => new BirchFenceBlock(Identifier, false, false, true, false, true),
-            13831 => new BirchFenceBlock(Identifier, false, false, true, false, false),
-            13832 => new BirchFenceBlock(Identifier, false, false, false, true, true),
-            13833 => new BirchFenceBlock(Identifier, false, false, false, true, false),
-            13834 => new BirchFenceBlock(Identifier, false, false, false, false, true),
-            13835 => new BirchFenceBlock(Identifier, false, false, false, false, false),
+            15683 => new BirchFenceBlock(Identifier, true, true, true, true, true),
+            15684 => new BirchFenceBlock(Identifier, true, true, true, true, false),
+            15685 => new BirchFenceBlock(Identifier, true, true, true, false, true),
+            15686 => new BirchFenceBlock(Identifier, true, true, true, false, false),
+            15687 => new BirchFenceBlock(Identifier, true, true, false, true, true),
+            15688 => new BirchFenceBlock(Identifier, true, true, false, true, false),
+            15689 => new BirchFenceBlock(Identifier, true, true, false, false, true),
+            15690 => new BirchFenceBlock(Identifier, true, true, false, false, false),
+            15691 => new BirchFenceBlock(Identifier, true, false, true, true, true),
+            15692 => new BirchFenceBlock(Identifier, true, false, true, true, false),
+            15693 => new BirchFenceBlock(Identifier, true, false, true, false, true),
+            15694 => new BirchFenceBlock(Identifier, true, false, true, false, false),
+            15695 => new BirchFenceBlock(Identifier, true, false, false, true, true),
+            15696 => new BirchFenceBlock(Identifier, true, false, false, true, false),
+            15697 => new BirchFenceBlock(Identifier, true, false, false, false, true),
+            15698 => new BirchFenceBlock(Identifier, true, false, false, false, false),
+            15699 => new BirchFenceBlock(Identifier, false, true, true, true, true),
+            15700 => new BirchFenceBlock(Identifier, false, true, true, true, false),
+            15701 => new BirchFenceBlock(Identifier, false, true, true, false, true),
+            15702 => new BirchFenceBlock(Identifier, false, true, true, false, false),
+            15703 => new BirchFenceBlock(Identifier, false, true, false, true, true),
+            15704 => new BirchFenceBlock(Identifier, false, true, false, true, false),
+            15705 => new BirchFenceBlock(Identifier, false, true, false, false, true),
+            15706 => new BirchFenceBlock(Identifier, false, true, false, false, false),
+            15707 => new BirchFenceBlock(Identifier, false, false, true, true, true),
+            15708 => new BirchFenceBlock(Identifier, false, false, true, true, false),
+            15709 => new BirchFenceBlock(Identifier, false, false, true, false, true),
+            15710 => new BirchFenceBlock(Identifier, false, false, true, false, false),
+            15711 => new BirchFenceBlock(Identifier, false, false, false, true, true),
+            15712 => new BirchFenceBlock(Identifier, false, false, false, true, false),
+            15713 => new BirchFenceBlock(Identifier, false, false, false, false, true),
+            15714 => new BirchFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

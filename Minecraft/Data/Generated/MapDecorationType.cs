@@ -4,6 +4,8 @@ namespace Minecraft.Data.Generated;
 
 // Generated using the CodeGen project. Do not edit manually.
 public static class MapDecorationType {
+    public static readonly SimpleMapDecorationType AbandonedCamp = new("minecraft:abandoned_camp");
+    public static readonly SimpleMapDecorationType AncientCity = new("minecraft:ancient_city");
     public static readonly SimpleMapDecorationType BannerBlack = new("minecraft:banner_black");
     public static readonly SimpleMapDecorationType BannerBlue = new("minecraft:banner_blue");
     public static readonly SimpleMapDecorationType BannerBrown = new("minecraft:banner_brown");
@@ -21,10 +23,13 @@ public static class MapDecorationType {
     public static readonly SimpleMapDecorationType BannerWhite = new("minecraft:banner_white");
     public static readonly SimpleMapDecorationType BannerYellow = new("minecraft:banner_yellow");
     public static readonly SimpleMapDecorationType BlueMarker = new("minecraft:blue_marker");
+    public static readonly SimpleMapDecorationType DesertPyramid = new("minecraft:desert_pyramid");
     public static readonly SimpleMapDecorationType Frame = new("minecraft:frame");
     public static readonly SimpleMapDecorationType JungleTemple = new("minecraft:jungle_temple");
     public static readonly SimpleMapDecorationType Mansion = new("minecraft:mansion");
+    public static readonly SimpleMapDecorationType Mineshaft = new("minecraft:mineshaft");
     public static readonly SimpleMapDecorationType Monument = new("minecraft:monument");
+    public static readonly SimpleMapDecorationType OceanRuinWarm = new("minecraft:ocean_ruin_warm");
     public static readonly SimpleMapDecorationType Player = new("minecraft:player");
     public static readonly SimpleMapDecorationType PlayerOffLimits = new("minecraft:player_off_limits");
     public static readonly SimpleMapDecorationType PlayerOffMap = new("minecraft:player_off_map");

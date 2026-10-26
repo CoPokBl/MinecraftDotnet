@@ -69,7 +69,6 @@ public class SimulatedEntityTest {
         client.HandleEntityTeleport(new ClientBoundTeleportEntityPacket {
             EntityId = ItemId,
             Position = new Vec3<double>(position.X, position.Y, position.Z),
-            Velocity = new Vec3<double>(velocity.X, velocity.Y, velocity.Z),
             Yaw = Angle.FromDegrees(0),
             Pitch = Angle.FromDegrees(0),
             OnGround = onGround
@@ -146,7 +145,7 @@ public class SimulatedEntityTest {
         Assert.That(item.DeltaMovement, Is.EqualTo(velocity));
 
         // move_entity_pos is relative to the last position sent, in 1/4096ths.
-        client.HandleMove(ItemId, new Vec3<float>(0.5F, -1.0F, 0.0F), null, null, false);
+        client.HandleMove(ItemId, (new Vec3<float>(0.5F, -1.0F, 0.0F), null), null, null, false);
         Assert.That(item.Position, Is.EqualTo(new Vec3d(3.75, 19.0, 1.5)));
 
         // The next tick falls from there: -0.04 - 0.04 of gravity, then the drag.
@@ -193,7 +192,7 @@ public class SimulatedEntityTest {
         Tick(client, 5);
         Assert.That(orb.Position, Is.EqualTo(new Vec3d(0.5, Floor, 0.5)));
 
-        client.HandleMove(ItemId, new Vec3<float>(0.3F, 0.0F, 0.0F), null, null, true);
+        client.HandleMove(ItemId, (new Vec3<float>(0.3F, 0.0F, 0.0F), null), null, null, true);
         Assert.That(orb.Position.X, Is.EqualTo(0.5));
         double target = Math.Round(0.3F * 4096.0) / 4096.0 + 0.5;
         Tick(client, 1);

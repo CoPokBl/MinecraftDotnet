@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Power) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:daylight_detector", "block.minecraft.daylight_detector", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:daylight_detector", "minecraft:daylight_detector", BlockInfo.VanillaOnly, "minecraft:blocks/daylight_detector");
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S334, BlockShapes.S334, BlockShapes.S1, BlockShapes.S334, BlockShapes.S334, BlockShapes.S334);
+    private static readonly BlockInfo Data = new("block.minecraft.daylight_detector", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:daylight_detector", "minecraft:daylight_detector", BlockInfo.VanillaOnly, "minecraft:blocks/daylight_detector");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, true, false, false, false, false, true, true, false, true, [], null, BlockShapes.S334, BlockShapes.S334, BlockShapes.S1, BlockShapes.S334, BlockShapes.S334, BlockShapes.S334);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Po
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Po
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -68,41 +68,41 @@ public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Po
         get {
             return Inverted switch {
                 true => Power switch {
-                    0 => 11279,
-                    1 => 11280,
-                    2 => 11281,
-                    3 => 11282,
-                    4 => 11283,
-                    5 => 11284,
-                    6 => 11285,
-                    7 => 11286,
-                    8 => 11287,
-                    9 => 11288,
-                    10 => 11289,
-                    11 => 11290,
-                    12 => 11291,
-                    13 => 11292,
-                    14 => 11293,
-                    15 => 11294,
+                    0 => 13046,
+                    1 => 13047,
+                    2 => 13048,
+                    3 => 13049,
+                    4 => 13050,
+                    5 => 13051,
+                    6 => 13052,
+                    7 => 13053,
+                    8 => 13054,
+                    9 => 13055,
+                    10 => 13056,
+                    11 => 13057,
+                    12 => 13058,
+                    13 => 13059,
+                    14 => 13060,
+                    15 => 13061,
                     _ => throw new ArgumentOutOfRangeException(nameof(Power), Power, "Unknown value for property power.")
                 },
                 false => Power switch {
-                    0 => 11295,
-                    1 => 11296,
-                    2 => 11297,
-                    3 => 11298,
-                    4 => 11299,
-                    5 => 11300,
-                    6 => 11301,
-                    7 => 11302,
-                    8 => 11303,
-                    9 => 11304,
-                    10 => 11305,
-                    11 => 11306,
-                    12 => 11307,
-                    13 => 11308,
-                    14 => 11309,
-                    15 => 11310,
+                    0 => 13062,
+                    1 => 13063,
+                    2 => 13064,
+                    3 => 13065,
+                    4 => 13066,
+                    5 => 13067,
+                    6 => 13068,
+                    7 => 13069,
+                    8 => 13070,
+                    9 => 13071,
+                    10 => 13072,
+                    11 => 13073,
+                    12 => 13074,
+                    13 => 13075,
+                    14 => 13076,
+                    15 => 13077,
                     _ => throw new ArgumentOutOfRangeException(nameof(Power), Power, "Unknown value for property power.")
                 },
             };
@@ -111,38 +111,38 @@ public record DaylightDetectorBlock(Identifier Identifier, bool Inverted, int Po
     
     public IBlock WithState(uint state) {
         return state switch {
-            11279 => new DaylightDetectorBlock(Identifier, true, 0),
-            11280 => new DaylightDetectorBlock(Identifier, true, 1),
-            11281 => new DaylightDetectorBlock(Identifier, true, 2),
-            11282 => new DaylightDetectorBlock(Identifier, true, 3),
-            11283 => new DaylightDetectorBlock(Identifier, true, 4),
-            11284 => new DaylightDetectorBlock(Identifier, true, 5),
-            11285 => new DaylightDetectorBlock(Identifier, true, 6),
-            11286 => new DaylightDetectorBlock(Identifier, true, 7),
-            11287 => new DaylightDetectorBlock(Identifier, true, 8),
-            11288 => new DaylightDetectorBlock(Identifier, true, 9),
-            11289 => new DaylightDetectorBlock(Identifier, true, 10),
-            11290 => new DaylightDetectorBlock(Identifier, true, 11),
-            11291 => new DaylightDetectorBlock(Identifier, true, 12),
-            11292 => new DaylightDetectorBlock(Identifier, true, 13),
-            11293 => new DaylightDetectorBlock(Identifier, true, 14),
-            11294 => new DaylightDetectorBlock(Identifier, true, 15),
-            11295 => new DaylightDetectorBlock(Identifier, false, 0),
-            11296 => new DaylightDetectorBlock(Identifier, false, 1),
-            11297 => new DaylightDetectorBlock(Identifier, false, 2),
-            11298 => new DaylightDetectorBlock(Identifier, false, 3),
-            11299 => new DaylightDetectorBlock(Identifier, false, 4),
-            11300 => new DaylightDetectorBlock(Identifier, false, 5),
-            11301 => new DaylightDetectorBlock(Identifier, false, 6),
-            11302 => new DaylightDetectorBlock(Identifier, false, 7),
-            11303 => new DaylightDetectorBlock(Identifier, false, 8),
-            11304 => new DaylightDetectorBlock(Identifier, false, 9),
-            11305 => new DaylightDetectorBlock(Identifier, false, 10),
-            11306 => new DaylightDetectorBlock(Identifier, false, 11),
-            11307 => new DaylightDetectorBlock(Identifier, false, 12),
-            11308 => new DaylightDetectorBlock(Identifier, false, 13),
-            11309 => new DaylightDetectorBlock(Identifier, false, 14),
-            11310 => new DaylightDetectorBlock(Identifier, false, 15),
+            13046 => new DaylightDetectorBlock(Identifier, true, 0),
+            13047 => new DaylightDetectorBlock(Identifier, true, 1),
+            13048 => new DaylightDetectorBlock(Identifier, true, 2),
+            13049 => new DaylightDetectorBlock(Identifier, true, 3),
+            13050 => new DaylightDetectorBlock(Identifier, true, 4),
+            13051 => new DaylightDetectorBlock(Identifier, true, 5),
+            13052 => new DaylightDetectorBlock(Identifier, true, 6),
+            13053 => new DaylightDetectorBlock(Identifier, true, 7),
+            13054 => new DaylightDetectorBlock(Identifier, true, 8),
+            13055 => new DaylightDetectorBlock(Identifier, true, 9),
+            13056 => new DaylightDetectorBlock(Identifier, true, 10),
+            13057 => new DaylightDetectorBlock(Identifier, true, 11),
+            13058 => new DaylightDetectorBlock(Identifier, true, 12),
+            13059 => new DaylightDetectorBlock(Identifier, true, 13),
+            13060 => new DaylightDetectorBlock(Identifier, true, 14),
+            13061 => new DaylightDetectorBlock(Identifier, true, 15),
+            13062 => new DaylightDetectorBlock(Identifier, false, 0),
+            13063 => new DaylightDetectorBlock(Identifier, false, 1),
+            13064 => new DaylightDetectorBlock(Identifier, false, 2),
+            13065 => new DaylightDetectorBlock(Identifier, false, 3),
+            13066 => new DaylightDetectorBlock(Identifier, false, 4),
+            13067 => new DaylightDetectorBlock(Identifier, false, 5),
+            13068 => new DaylightDetectorBlock(Identifier, false, 6),
+            13069 => new DaylightDetectorBlock(Identifier, false, 7),
+            13070 => new DaylightDetectorBlock(Identifier, false, 8),
+            13071 => new DaylightDetectorBlock(Identifier, false, 9),
+            13072 => new DaylightDetectorBlock(Identifier, false, 10),
+            13073 => new DaylightDetectorBlock(Identifier, false, 11),
+            13074 => new DaylightDetectorBlock(Identifier, false, 12),
+            13075 => new DaylightDetectorBlock(Identifier, false, 13),
+            13076 => new DaylightDetectorBlock(Identifier, false, 14),
+            13077 => new DaylightDetectorBlock(Identifier, false, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

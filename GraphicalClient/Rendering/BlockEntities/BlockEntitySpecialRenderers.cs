@@ -109,17 +109,22 @@ public static class BlockEntitySpecialRenderers {
 
         public ISpecialModelRenderer Bake(SpecialModelBakingContext context) => new Renderer(new DecoratedPotRenderer(context.Sprites));
 
-        private sealed class Renderer(DecoratedPotRenderer renderer) : SpecialModelRenderer<IItem?[]> {
-            public override IItem?[]? ExtractArgument(ItemStack stack) =>
-                stack.GetOrNull(DataComponent.PotDecorations) is { } items ? ClientLib.World.BlockEntities.DecoratedPotBlockEntity.Decorations(items) : null;
+        private sealed class Renderer(DecoratedPotRenderer renderer) : SpecialModelRenderer<Identifier?[]> {
+            // Divergence: the patterns are looked up in the built in registry rather than the one the server
+            // synchronised, since an item's special model is extracted with no level to hand. Only a server
+            // that redefines a pattern's asset draws differently.
+            public override Identifier?[]? ExtractArgument(ItemStack stack) =>
+                stack.GetOrNull(DataComponent.PotDecorations) is { } decorations
+                    ? ClientLib.World.BlockEntities.DecoratedPotBlockEntity.PatternsOf(decorations, VanillaRegistry.Data)
+                    : null;
 
-            public override void Submit(IItem?[]? decorations, PoseStack pose, IModelSink sink, float skyLight, float blockLight) =>
-                renderer.Submit(pose, sink, skyLight, blockLight, decorations ?? new IItem?[4]);
+            public override void Submit(Identifier?[]? patterns, PoseStack pose, IModelSink sink, float skyLight, float blockLight) =>
+                renderer.Submit(pose, sink, skyLight, blockLight, patterns ?? new Identifier?[4]);
 
             public override void GetExtents(Action<Vector3> output) => renderer.GetExtents(output);
 
-            public override string? IdentityOf(IItem?[]? decorations) =>
-                decorations == null || decorations.All(d => d == null) ? null : "pot:" + string.Join("|", decorations.Select(d => d?.Identifier.ToString() ?? ""));
+            public override string? IdentityOf(Identifier?[]? patterns) =>
+                patterns == null || patterns.All(p => p == null) ? null : "pot:" + string.Join("|", patterns.Select(p => p?.ToString() ?? ""));
         }
     }
 

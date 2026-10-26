@@ -41,7 +41,10 @@ public enum BlockOffsetType {
 /// </summary>
 /// <param name="BounceRestitution">
 /// How much of the velocity a landing keeps, see <c>Entity.restituteMovementAfterCollisions</c>.
-/// Zero for everything but slime blocks and beds.
+/// Zero for everything but slime blocks, beds and shelf mushrooms.
+/// </param>
+/// <param name="FallDistanceReduction">
+/// The share of the fall distance <c>Block.fallOn</c> takes off before the damage is worked out.
 /// </param>
 /// <param name="Gravity">Whether the block falls when the one under it goes, as sand does.</param>
 /// <param name="DynamicShape">
@@ -50,7 +53,7 @@ public enum BlockOffsetType {
 /// the one an empty world gives back, which for these blocks is only the starting point.
 /// </param>
 /// <param name="RequiredFeatures">
-/// The feature flags a world has to have on for the block to exist at all. Everything in 26.2 is
+/// The feature flags a world has to have on for the block to exist at all. Everything in 26.3 is
 /// plain <c>minecraft:vanilla</c>; an experiment gated block would carry its flag here.
 /// </param>
 /// <param name="LootTable">
@@ -63,13 +66,13 @@ public enum BlockOffsetType {
 /// keeps those apart.
 /// </param>
 public sealed record BlockInfo(
-    Identifier Category,
     string TranslationKey,
     float ExplosionResistance,
     float Friction,
     float SpeedFactor,
     float JumpFactor,
     float BounceRestitution,
+    float FallDistanceReduction,
     bool Gravity,
     bool DynamicShape,
     BlockOffsetType OffsetType,

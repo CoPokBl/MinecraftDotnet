@@ -18,18 +18,17 @@ public record ChatFilterMask(ChatFilterMask.FilterType Type, BitArray? Mask = nu
     public void Write(DataWriter w) {
         w.WriteVarInt((int)Type);
         if (Type == FilterType.PartiallyFiltered) {
-            w.WritePrefixedArray(Mask.ThrowIfNull().ToLongArray(), (l, writer) => writer.WriteLong(l));
+            w.WritePrefixedArray((ReadOnlySpan<byte>)Mask.ThrowIfNull().ToJavaByteArray());
         }
     }
 
+    /// <remarks>A type this does not know reads as passed through, as vanilla's id mapper falls back.</remarks>
     public static ChatFilterMask Read(DataReader r) {
         FilterType type = (FilterType)r.ReadVarInt();
         return type switch {
-            FilterType.PassThrough => PassThrough,
             FilterType.FullyFiltered => FullyFiltered,
-            FilterType.PartiallyFiltered => PartiallyFiltered(
-                r.ReadPrefixedArray(reader => reader.ReadLong()).ToBitArray()),
-            _ => throw new ArgumentOutOfRangeException(nameof(r), type, "Unknown chat filter type")
+            FilterType.PartiallyFiltered => PartiallyFiltered(r.Read(r.ReadVarInt()).FromJavaByteArray()),
+            _ => PassThrough
         };
     }
 

@@ -20,7 +20,7 @@ public readonly record struct ReportedComponent(string Item, Identifier Componen
 /// them, and any component no item has a default for.
 /// </remarks>
 public static class VanillaComponentReport {
-    private const string Version = "26.2";
+    private const string Version = "26.3";
 
     private static readonly Lazy<ReportedComponent[]?> Cache = new(Load);
 

@@ -11,11 +11,9 @@ namespace ClientLib.Entities;
 /// and it chases the nearest player on the client as well.
 /// </summary>
 public sealed class ClientExperienceOrb : SimulatedEntity {
-    private readonly InterpolationHandler _interpolation;
     private ClientEntity? _followingPlayer;
 
     public ClientExperienceOrb(MinecraftClient client) : base(client) {
-        _interpolation = new InterpolationHandler(this);
     }
 
     protected override float BelowThatAffectsMovementOffset => 0.999999F;
@@ -23,15 +21,8 @@ public sealed class ClientExperienceOrb : SimulatedEntity {
     /// <summary><c>ExperienceOrb.age</c>, which is never sent: the client counts its own from the spawn.</summary>
     public int Age { get; private set; }
 
-    public override void InterpolateTo(Vec3d position, float yRot, float xRot) => _interpolation.InterpolateTo(position, yRot, xRot);
-
-    public override void InterpolateTo(Vec3d position) => _interpolation.InterpolateTo(position, _interpolation.YRot, _interpolation.XRot);
-
-    public override void InterpolateRotation(float yRot, float xRot) => _interpolation.InterpolateTo(_interpolation.Position, yRot, xRot);
-
     /// <summary><c>ExperienceOrb.tick</c>, client side.</summary>
     protected override void EntityTick() {
-        _interpolation.Interpolate();
         if (FirstTick) {
             FirstTick = false;
             return;

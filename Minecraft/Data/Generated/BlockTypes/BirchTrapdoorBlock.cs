@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BirchTrapdoorBlock(Identifier Identifier, Direction Facing, TopBottom Half, bool Open, bool Powered, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IOpenable, IPowered, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:trapdoor", "block.minecraft.birch_trapdoor", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:birch_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/birch_trapdoor");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 2, "wood", NoteBlockInstrument.Bass, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockInfo Data = new("block.minecraft.birch_trapdoor", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:birch_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/birch_trapdoor");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 2, "wood", NoteBlockInstrument.Bass, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
@@ -28,15 +28,15 @@ public record BirchTrapdoorBlock(Identifier Identifier, Direction Facing, TopBot
         I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I4, I5, I4, I5, I6, I7, I6, I7, I2, I3, I2, I3, I6, I7, I6, I7, I4, I5, I4, I5, I8, I9, I8, I9, I2, I3, I2, I3, I8, I9, I8, I9, I4, I5, I4, I5, I10, I11, I10, I11, I2, I3, I2, I3, I10, I11, I10, I11, I4, I5, I4, I5
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 7242];
+    public BlockStateInfo StateInfo => States[StateId - 8912];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -50,7 +50,6 @@ public record BirchTrapdoorBlock(Identifier Identifier, Direction Facing, TopBot
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -70,6 +69,7 @@ public record BirchTrapdoorBlock(Identifier Identifier, Direction Facing, TopBot
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -95,44 +95,44 @@ public record BirchTrapdoorBlock(Identifier Identifier, Direction Facing, TopBot
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7242,
-                                false => 7243,
+                                true => 8912,
+                                false => 8913,
                             },
                             false => Waterlogged switch {
-                                true => 7244,
-                                false => 7245,
+                                true => 8914,
+                                false => 8915,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7246,
-                                false => 7247,
+                                true => 8916,
+                                false => 8917,
                             },
                             false => Waterlogged switch {
-                                true => 7248,
-                                false => 7249,
+                                true => 8918,
+                                false => 8919,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7250,
-                                false => 7251,
+                                true => 8920,
+                                false => 8921,
                             },
                             false => Waterlogged switch {
-                                true => 7252,
-                                false => 7253,
+                                true => 8922,
+                                false => 8923,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7254,
-                                false => 7255,
+                                true => 8924,
+                                false => 8925,
                             },
                             false => Waterlogged switch {
-                                true => 7256,
-                                false => 7257,
+                                true => 8926,
+                                false => 8927,
                             },
                         },
                     },
@@ -142,44 +142,44 @@ public record BirchTrapdoorBlock(Identifier Identifier, Direction Facing, TopBot
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7258,
-                                false => 7259,
+                                true => 8928,
+                                false => 8929,
                             },
                             false => Waterlogged switch {
-                                true => 7260,
-                                false => 7261,
+                                true => 8930,
+                                false => 8931,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7262,
-                                false => 7263,
+                                true => 8932,
+                                false => 8933,
                             },
                             false => Waterlogged switch {
-                                true => 7264,
-                                false => 7265,
+                                true => 8934,
+                                false => 8935,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7266,
-                                false => 7267,
+                                true => 8936,
+                                false => 8937,
                             },
                             false => Waterlogged switch {
-                                true => 7268,
-                                false => 7269,
+                                true => 8938,
+                                false => 8939,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7270,
-                                false => 7271,
+                                true => 8940,
+                                false => 8941,
                             },
                             false => Waterlogged switch {
-                                true => 7272,
-                                false => 7273,
+                                true => 8942,
+                                false => 8943,
                             },
                         },
                     },
@@ -189,44 +189,44 @@ public record BirchTrapdoorBlock(Identifier Identifier, Direction Facing, TopBot
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7274,
-                                false => 7275,
+                                true => 8944,
+                                false => 8945,
                             },
                             false => Waterlogged switch {
-                                true => 7276,
-                                false => 7277,
+                                true => 8946,
+                                false => 8947,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7278,
-                                false => 7279,
+                                true => 8948,
+                                false => 8949,
                             },
                             false => Waterlogged switch {
-                                true => 7280,
-                                false => 7281,
+                                true => 8950,
+                                false => 8951,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7282,
-                                false => 7283,
+                                true => 8952,
+                                false => 8953,
                             },
                             false => Waterlogged switch {
-                                true => 7284,
-                                false => 7285,
+                                true => 8954,
+                                false => 8955,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7286,
-                                false => 7287,
+                                true => 8956,
+                                false => 8957,
                             },
                             false => Waterlogged switch {
-                                true => 7288,
-                                false => 7289,
+                                true => 8958,
+                                false => 8959,
                             },
                         },
                     },
@@ -236,44 +236,44 @@ public record BirchTrapdoorBlock(Identifier Identifier, Direction Facing, TopBot
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7290,
-                                false => 7291,
+                                true => 8960,
+                                false => 8961,
                             },
                             false => Waterlogged switch {
-                                true => 7292,
-                                false => 7293,
+                                true => 8962,
+                                false => 8963,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7294,
-                                false => 7295,
+                                true => 8964,
+                                false => 8965,
                             },
                             false => Waterlogged switch {
-                                true => 7296,
-                                false => 7297,
+                                true => 8966,
+                                false => 8967,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7298,
-                                false => 7299,
+                                true => 8968,
+                                false => 8969,
                             },
                             false => Waterlogged switch {
-                                true => 7300,
-                                false => 7301,
+                                true => 8970,
+                                false => 8971,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7302,
-                                false => 7303,
+                                true => 8972,
+                                false => 8973,
                             },
                             false => Waterlogged switch {
-                                true => 7304,
-                                false => 7305,
+                                true => 8974,
+                                false => 8975,
                             },
                         },
                     },
@@ -286,70 +286,70 @@ public record BirchTrapdoorBlock(Identifier Identifier, Direction Facing, TopBot
     
     public IBlock WithState(uint state) {
         return state switch {
-            7242 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
-            7243 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
-            7244 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
-            7245 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
-            7246 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
-            7247 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
-            7248 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
-            7249 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
-            7250 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
-            7251 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
-            7252 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
-            7253 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
-            7254 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
-            7255 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
-            7256 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
-            7257 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
-            7258 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
-            7259 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
-            7260 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
-            7261 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
-            7262 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
-            7263 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
-            7264 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
-            7265 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
-            7266 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
-            7267 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
-            7268 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
-            7269 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
-            7270 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
-            7271 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
-            7272 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
-            7273 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
-            7274 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
-            7275 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
-            7276 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
-            7277 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
-            7278 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
-            7279 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
-            7280 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
-            7281 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
-            7282 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
-            7283 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
-            7284 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
-            7285 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
-            7286 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
-            7287 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
-            7288 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
-            7289 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
-            7290 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
-            7291 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
-            7292 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
-            7293 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
-            7294 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
-            7295 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
-            7296 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
-            7297 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
-            7298 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
-            7299 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
-            7300 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
-            7301 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
-            7302 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
-            7303 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
-            7304 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
-            7305 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
+            8912 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
+            8913 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
+            8914 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
+            8915 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
+            8916 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
+            8917 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
+            8918 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
+            8919 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
+            8920 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
+            8921 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
+            8922 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
+            8923 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
+            8924 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
+            8925 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
+            8926 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
+            8927 => new BirchTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
+            8928 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
+            8929 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
+            8930 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
+            8931 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
+            8932 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
+            8933 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
+            8934 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
+            8935 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
+            8936 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
+            8937 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
+            8938 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
+            8939 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
+            8940 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
+            8941 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
+            8942 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
+            8943 => new BirchTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
+            8944 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
+            8945 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
+            8946 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
+            8947 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
+            8948 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
+            8949 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
+            8950 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
+            8951 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
+            8952 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
+            8953 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
+            8954 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
+            8955 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
+            8956 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
+            8957 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
+            8958 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
+            8959 => new BirchTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
+            8960 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
+            8961 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
+            8962 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
+            8963 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
+            8964 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
+            8965 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
+            8966 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
+            8967 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
+            8968 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
+            8969 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
+            8970 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
+            8971 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
+            8972 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
+            8973 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
+            8974 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
+            8975 => new BirchTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

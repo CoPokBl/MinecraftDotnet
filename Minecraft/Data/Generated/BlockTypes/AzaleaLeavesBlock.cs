@@ -11,24 +11,24 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AzaleaLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock, IDistanced, IPersistent, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:untinted_particle_leaves", "block.minecraft.azalea_leaves", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:azalea_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/azalea_leaves");
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Destroy, 7, "azalea_leaves", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { Flammable = true, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.azalea_leaves", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:azalea_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/azalea_leaves");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Popped, 7, "azalea_leaves", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { Flammable = true, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true };
-    private static readonly BlockStateInfo I3 = I0 with { Flammable = true, RandomlyTicking = true, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { Flammable = true, RandomlyTicking = true, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 504];
+    public BlockStateInfo StateInfo => States[StateId - 603];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record AzaleaLeavesBlock(Identifier Identifier, int Distance, bool Persis
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record AzaleaLeavesBlock(Identifier Identifier, int Distance, bool Persis
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -81,72 +81,72 @@ public record AzaleaLeavesBlock(Identifier Identifier, int Distance, bool Persis
             return Distance switch {
                 1 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 504,
-                        false => 505,
+                        true => 603,
+                        false => 604,
                     },
                     false => Waterlogged switch {
-                        true => 506,
-                        false => 507,
+                        true => 605,
+                        false => 606,
                     },
                 },
                 2 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 508,
-                        false => 509,
+                        true => 607,
+                        false => 608,
                     },
                     false => Waterlogged switch {
-                        true => 510,
-                        false => 511,
+                        true => 609,
+                        false => 610,
                     },
                 },
                 3 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 512,
-                        false => 513,
+                        true => 611,
+                        false => 612,
                     },
                     false => Waterlogged switch {
-                        true => 514,
-                        false => 515,
+                        true => 613,
+                        false => 614,
                     },
                 },
                 4 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 516,
-                        false => 517,
+                        true => 615,
+                        false => 616,
                     },
                     false => Waterlogged switch {
-                        true => 518,
-                        false => 519,
+                        true => 617,
+                        false => 618,
                     },
                 },
                 5 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 520,
-                        false => 521,
+                        true => 619,
+                        false => 620,
                     },
                     false => Waterlogged switch {
-                        true => 522,
-                        false => 523,
+                        true => 621,
+                        false => 622,
                     },
                 },
                 6 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 524,
-                        false => 525,
+                        true => 623,
+                        false => 624,
                     },
                     false => Waterlogged switch {
-                        true => 526,
-                        false => 527,
+                        true => 625,
+                        false => 626,
                     },
                 },
                 7 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 528,
-                        false => 529,
+                        true => 627,
+                        false => 628,
                     },
                     false => Waterlogged switch {
-                        true => 530,
-                        false => 531,
+                        true => 629,
+                        false => 630,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
@@ -156,34 +156,34 @@ public record AzaleaLeavesBlock(Identifier Identifier, int Distance, bool Persis
     
     public IBlock WithState(uint state) {
         return state switch {
-            504 => new AzaleaLeavesBlock(Identifier, 1, true, true),
-            505 => new AzaleaLeavesBlock(Identifier, 1, true, false),
-            506 => new AzaleaLeavesBlock(Identifier, 1, false, true),
-            507 => new AzaleaLeavesBlock(Identifier, 1, false, false),
-            508 => new AzaleaLeavesBlock(Identifier, 2, true, true),
-            509 => new AzaleaLeavesBlock(Identifier, 2, true, false),
-            510 => new AzaleaLeavesBlock(Identifier, 2, false, true),
-            511 => new AzaleaLeavesBlock(Identifier, 2, false, false),
-            512 => new AzaleaLeavesBlock(Identifier, 3, true, true),
-            513 => new AzaleaLeavesBlock(Identifier, 3, true, false),
-            514 => new AzaleaLeavesBlock(Identifier, 3, false, true),
-            515 => new AzaleaLeavesBlock(Identifier, 3, false, false),
-            516 => new AzaleaLeavesBlock(Identifier, 4, true, true),
-            517 => new AzaleaLeavesBlock(Identifier, 4, true, false),
-            518 => new AzaleaLeavesBlock(Identifier, 4, false, true),
-            519 => new AzaleaLeavesBlock(Identifier, 4, false, false),
-            520 => new AzaleaLeavesBlock(Identifier, 5, true, true),
-            521 => new AzaleaLeavesBlock(Identifier, 5, true, false),
-            522 => new AzaleaLeavesBlock(Identifier, 5, false, true),
-            523 => new AzaleaLeavesBlock(Identifier, 5, false, false),
-            524 => new AzaleaLeavesBlock(Identifier, 6, true, true),
-            525 => new AzaleaLeavesBlock(Identifier, 6, true, false),
-            526 => new AzaleaLeavesBlock(Identifier, 6, false, true),
-            527 => new AzaleaLeavesBlock(Identifier, 6, false, false),
-            528 => new AzaleaLeavesBlock(Identifier, 7, true, true),
-            529 => new AzaleaLeavesBlock(Identifier, 7, true, false),
-            530 => new AzaleaLeavesBlock(Identifier, 7, false, true),
-            531 => new AzaleaLeavesBlock(Identifier, 7, false, false),
+            603 => new AzaleaLeavesBlock(Identifier, 1, true, true),
+            604 => new AzaleaLeavesBlock(Identifier, 1, true, false),
+            605 => new AzaleaLeavesBlock(Identifier, 1, false, true),
+            606 => new AzaleaLeavesBlock(Identifier, 1, false, false),
+            607 => new AzaleaLeavesBlock(Identifier, 2, true, true),
+            608 => new AzaleaLeavesBlock(Identifier, 2, true, false),
+            609 => new AzaleaLeavesBlock(Identifier, 2, false, true),
+            610 => new AzaleaLeavesBlock(Identifier, 2, false, false),
+            611 => new AzaleaLeavesBlock(Identifier, 3, true, true),
+            612 => new AzaleaLeavesBlock(Identifier, 3, true, false),
+            613 => new AzaleaLeavesBlock(Identifier, 3, false, true),
+            614 => new AzaleaLeavesBlock(Identifier, 3, false, false),
+            615 => new AzaleaLeavesBlock(Identifier, 4, true, true),
+            616 => new AzaleaLeavesBlock(Identifier, 4, true, false),
+            617 => new AzaleaLeavesBlock(Identifier, 4, false, true),
+            618 => new AzaleaLeavesBlock(Identifier, 4, false, false),
+            619 => new AzaleaLeavesBlock(Identifier, 5, true, true),
+            620 => new AzaleaLeavesBlock(Identifier, 5, true, false),
+            621 => new AzaleaLeavesBlock(Identifier, 5, false, true),
+            622 => new AzaleaLeavesBlock(Identifier, 5, false, false),
+            623 => new AzaleaLeavesBlock(Identifier, 6, true, true),
+            624 => new AzaleaLeavesBlock(Identifier, 6, true, false),
+            625 => new AzaleaLeavesBlock(Identifier, 6, false, true),
+            626 => new AzaleaLeavesBlock(Identifier, 6, false, false),
+            627 => new AzaleaLeavesBlock(Identifier, 7, true, true),
+            628 => new AzaleaLeavesBlock(Identifier, 7, true, false),
+            629 => new AzaleaLeavesBlock(Identifier, 7, false, true),
+            630 => new AzaleaLeavesBlock(Identifier, 7, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -73,7 +73,7 @@ public sealed class WorldSounds {
             case ClientBoundWorldEventPacket levelEvent:
                 _levelEvents?.LevelEvent(levelEvent.Event, levelEvent.Location.X, levelEvent.Location.Y, levelEvent.Location.Z, levelEvent.Data);
                 break;
-            case ClientBoundExplosionPacket explosion:
+            case ClientBoundExplosionPacket { PlaySound: true } explosion:
                 // ClientPacketListener.handleExplosion.
                 _sounds.Play(ClientSounds.TypeOf(explosion.SoundEvent, explosion.SoundType), SoundCategory.Blocks, 4.0F,
                     (1.0F + (_random.NextFloat() - _random.NextFloat()) * 0.2F) * 0.7F, explosion.Center.X, explosion.Center.Y, explosion.Center.Z);

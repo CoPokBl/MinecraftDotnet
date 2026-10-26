@@ -100,7 +100,10 @@ public class FallDamageTest {
         server.Stop();
     }
 
-    /// <summary><c>BedBlock.fallOn</c> halves the distance rather than the damage, so five less three.</summary>
+    /// <summary>
+    /// A bed's <c>fallDistanceReduction</c> of a half comes off the distance rather than the damage, so
+    /// five less three.
+    /// </summary>
     [Test]
     public void TestBedHalvesTheDistance() {
         (World world, ManagedMinecraftServer server) = CreateWorld(Block.RedBed.StateId);

@@ -173,9 +173,11 @@ public class AdvancementsTest {
             .WriteBoolean(true).WriteString("minecraft:story/root")
             .WriteBoolean(true).WriteNbt(TextComponent.Text("Stone Age")).WriteNbt(TextComponent.Text("Mine Stone"))
             .WriteVarInt(VanillaRegistry.Data.Items.GetProtocolId(Item.WoodenPickaxe)).WriteVarInt(1).WriteVarInt(0).WriteVarInt(0)
-            .WriteVarInt(2).WriteInteger(0x1 | 0x2).WriteString("minecraft:gui/advancements/backgrounds/stone").WriteFloat(1.0F).WriteFloat(-0.5F)
+            .WriteVarInt(2).WriteInteger(0x1 | 0x2).WriteString("minecraft:gui/advancements/backgrounds/stone")
             .WriteVarInt(2).WriteVarInt(1).WriteString("a").WriteVarInt(2).WriteString("b").WriteString("c")
             .WriteBoolean(true)
+            // PositionedAdvancement's position, after the advancement.
+            .WriteFloat(1.0F).WriteFloat(-0.5F)
             .WriteVarInt(1).WriteString("minecraft:old")
             .WriteVarInt(1).WriteString("minecraft:story/mine_stone").WriteVarInt(2)
             .WriteString("a").WriteBoolean(true).WriteLong(1234567L)

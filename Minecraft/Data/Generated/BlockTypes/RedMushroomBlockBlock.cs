@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RedMushroomBlockBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool West) : IBlock, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:huge_mushroom", "block.minecraft.red_mushroom_block", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:red_mushroom_block", BlockInfo.VanillaOnly, "minecraft:blocks/red_mushroom_block");
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 15, PushReaction.Normal, 28, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.red_mushroom_block", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:red_mushroom_block", BlockInfo.VanillaOnly, "minecraft:blocks/red_mushroom_block");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 15, PushReaction.PushPull, 28, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record RedMushroomBlockBlock(Identifier Identifier, bool Down, bool East,
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record RedMushroomBlockBlock(Identifier Identifier, bool Down, bool East,
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -94,44 +94,44 @@ public record RedMushroomBlockBlock(Identifier Identifier, bool Down, bool East,
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7830,
-                                    false => 7831,
+                                    true => 9564,
+                                    false => 9565,
                                 },
                                 false => West switch {
-                                    true => 7832,
-                                    false => 7833,
+                                    true => 9566,
+                                    false => 9567,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7834,
-                                    false => 7835,
+                                    true => 9568,
+                                    false => 9569,
                                 },
                                 false => West switch {
-                                    true => 7836,
-                                    false => 7837,
+                                    true => 9570,
+                                    false => 9571,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7838,
-                                    false => 7839,
+                                    true => 9572,
+                                    false => 9573,
                                 },
                                 false => West switch {
-                                    true => 7840,
-                                    false => 7841,
+                                    true => 9574,
+                                    false => 9575,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7842,
-                                    false => 7843,
+                                    true => 9576,
+                                    false => 9577,
                                 },
                                 false => West switch {
-                                    true => 7844,
-                                    false => 7845,
+                                    true => 9578,
+                                    false => 9579,
                                 },
                             },
                         },
@@ -140,44 +140,44 @@ public record RedMushroomBlockBlock(Identifier Identifier, bool Down, bool East,
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7846,
-                                    false => 7847,
+                                    true => 9580,
+                                    false => 9581,
                                 },
                                 false => West switch {
-                                    true => 7848,
-                                    false => 7849,
+                                    true => 9582,
+                                    false => 9583,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7850,
-                                    false => 7851,
+                                    true => 9584,
+                                    false => 9585,
                                 },
                                 false => West switch {
-                                    true => 7852,
-                                    false => 7853,
+                                    true => 9586,
+                                    false => 9587,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7854,
-                                    false => 7855,
+                                    true => 9588,
+                                    false => 9589,
                                 },
                                 false => West switch {
-                                    true => 7856,
-                                    false => 7857,
+                                    true => 9590,
+                                    false => 9591,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7858,
-                                    false => 7859,
+                                    true => 9592,
+                                    false => 9593,
                                 },
                                 false => West switch {
-                                    true => 7860,
-                                    false => 7861,
+                                    true => 9594,
+                                    false => 9595,
                                 },
                             },
                         },
@@ -188,44 +188,44 @@ public record RedMushroomBlockBlock(Identifier Identifier, bool Down, bool East,
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7862,
-                                    false => 7863,
+                                    true => 9596,
+                                    false => 9597,
                                 },
                                 false => West switch {
-                                    true => 7864,
-                                    false => 7865,
+                                    true => 9598,
+                                    false => 9599,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7866,
-                                    false => 7867,
+                                    true => 9600,
+                                    false => 9601,
                                 },
                                 false => West switch {
-                                    true => 7868,
-                                    false => 7869,
+                                    true => 9602,
+                                    false => 9603,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7870,
-                                    false => 7871,
+                                    true => 9604,
+                                    false => 9605,
                                 },
                                 false => West switch {
-                                    true => 7872,
-                                    false => 7873,
+                                    true => 9606,
+                                    false => 9607,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7874,
-                                    false => 7875,
+                                    true => 9608,
+                                    false => 9609,
                                 },
                                 false => West switch {
-                                    true => 7876,
-                                    false => 7877,
+                                    true => 9610,
+                                    false => 9611,
                                 },
                             },
                         },
@@ -234,44 +234,44 @@ public record RedMushroomBlockBlock(Identifier Identifier, bool Down, bool East,
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7878,
-                                    false => 7879,
+                                    true => 9612,
+                                    false => 9613,
                                 },
                                 false => West switch {
-                                    true => 7880,
-                                    false => 7881,
+                                    true => 9614,
+                                    false => 9615,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7882,
-                                    false => 7883,
+                                    true => 9616,
+                                    false => 9617,
                                 },
                                 false => West switch {
-                                    true => 7884,
-                                    false => 7885,
+                                    true => 9618,
+                                    false => 9619,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7886,
-                                    false => 7887,
+                                    true => 9620,
+                                    false => 9621,
                                 },
                                 false => West switch {
-                                    true => 7888,
-                                    false => 7889,
+                                    true => 9622,
+                                    false => 9623,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7890,
-                                    false => 7891,
+                                    true => 9624,
+                                    false => 9625,
                                 },
                                 false => West switch {
-                                    true => 7892,
-                                    false => 7893,
+                                    true => 9626,
+                                    false => 9627,
                                 },
                             },
                         },
@@ -283,70 +283,70 @@ public record RedMushroomBlockBlock(Identifier Identifier, bool Down, bool East,
     
     public IBlock WithState(uint state) {
         return state switch {
-            7830 => new RedMushroomBlockBlock(Identifier, true, true, true, true, true, true),
-            7831 => new RedMushroomBlockBlock(Identifier, true, true, true, true, true, false),
-            7832 => new RedMushroomBlockBlock(Identifier, true, true, true, true, false, true),
-            7833 => new RedMushroomBlockBlock(Identifier, true, true, true, true, false, false),
-            7834 => new RedMushroomBlockBlock(Identifier, true, true, true, false, true, true),
-            7835 => new RedMushroomBlockBlock(Identifier, true, true, true, false, true, false),
-            7836 => new RedMushroomBlockBlock(Identifier, true, true, true, false, false, true),
-            7837 => new RedMushroomBlockBlock(Identifier, true, true, true, false, false, false),
-            7838 => new RedMushroomBlockBlock(Identifier, true, true, false, true, true, true),
-            7839 => new RedMushroomBlockBlock(Identifier, true, true, false, true, true, false),
-            7840 => new RedMushroomBlockBlock(Identifier, true, true, false, true, false, true),
-            7841 => new RedMushroomBlockBlock(Identifier, true, true, false, true, false, false),
-            7842 => new RedMushroomBlockBlock(Identifier, true, true, false, false, true, true),
-            7843 => new RedMushroomBlockBlock(Identifier, true, true, false, false, true, false),
-            7844 => new RedMushroomBlockBlock(Identifier, true, true, false, false, false, true),
-            7845 => new RedMushroomBlockBlock(Identifier, true, true, false, false, false, false),
-            7846 => new RedMushroomBlockBlock(Identifier, true, false, true, true, true, true),
-            7847 => new RedMushroomBlockBlock(Identifier, true, false, true, true, true, false),
-            7848 => new RedMushroomBlockBlock(Identifier, true, false, true, true, false, true),
-            7849 => new RedMushroomBlockBlock(Identifier, true, false, true, true, false, false),
-            7850 => new RedMushroomBlockBlock(Identifier, true, false, true, false, true, true),
-            7851 => new RedMushroomBlockBlock(Identifier, true, false, true, false, true, false),
-            7852 => new RedMushroomBlockBlock(Identifier, true, false, true, false, false, true),
-            7853 => new RedMushroomBlockBlock(Identifier, true, false, true, false, false, false),
-            7854 => new RedMushroomBlockBlock(Identifier, true, false, false, true, true, true),
-            7855 => new RedMushroomBlockBlock(Identifier, true, false, false, true, true, false),
-            7856 => new RedMushroomBlockBlock(Identifier, true, false, false, true, false, true),
-            7857 => new RedMushroomBlockBlock(Identifier, true, false, false, true, false, false),
-            7858 => new RedMushroomBlockBlock(Identifier, true, false, false, false, true, true),
-            7859 => new RedMushroomBlockBlock(Identifier, true, false, false, false, true, false),
-            7860 => new RedMushroomBlockBlock(Identifier, true, false, false, false, false, true),
-            7861 => new RedMushroomBlockBlock(Identifier, true, false, false, false, false, false),
-            7862 => new RedMushroomBlockBlock(Identifier, false, true, true, true, true, true),
-            7863 => new RedMushroomBlockBlock(Identifier, false, true, true, true, true, false),
-            7864 => new RedMushroomBlockBlock(Identifier, false, true, true, true, false, true),
-            7865 => new RedMushroomBlockBlock(Identifier, false, true, true, true, false, false),
-            7866 => new RedMushroomBlockBlock(Identifier, false, true, true, false, true, true),
-            7867 => new RedMushroomBlockBlock(Identifier, false, true, true, false, true, false),
-            7868 => new RedMushroomBlockBlock(Identifier, false, true, true, false, false, true),
-            7869 => new RedMushroomBlockBlock(Identifier, false, true, true, false, false, false),
-            7870 => new RedMushroomBlockBlock(Identifier, false, true, false, true, true, true),
-            7871 => new RedMushroomBlockBlock(Identifier, false, true, false, true, true, false),
-            7872 => new RedMushroomBlockBlock(Identifier, false, true, false, true, false, true),
-            7873 => new RedMushroomBlockBlock(Identifier, false, true, false, true, false, false),
-            7874 => new RedMushroomBlockBlock(Identifier, false, true, false, false, true, true),
-            7875 => new RedMushroomBlockBlock(Identifier, false, true, false, false, true, false),
-            7876 => new RedMushroomBlockBlock(Identifier, false, true, false, false, false, true),
-            7877 => new RedMushroomBlockBlock(Identifier, false, true, false, false, false, false),
-            7878 => new RedMushroomBlockBlock(Identifier, false, false, true, true, true, true),
-            7879 => new RedMushroomBlockBlock(Identifier, false, false, true, true, true, false),
-            7880 => new RedMushroomBlockBlock(Identifier, false, false, true, true, false, true),
-            7881 => new RedMushroomBlockBlock(Identifier, false, false, true, true, false, false),
-            7882 => new RedMushroomBlockBlock(Identifier, false, false, true, false, true, true),
-            7883 => new RedMushroomBlockBlock(Identifier, false, false, true, false, true, false),
-            7884 => new RedMushroomBlockBlock(Identifier, false, false, true, false, false, true),
-            7885 => new RedMushroomBlockBlock(Identifier, false, false, true, false, false, false),
-            7886 => new RedMushroomBlockBlock(Identifier, false, false, false, true, true, true),
-            7887 => new RedMushroomBlockBlock(Identifier, false, false, false, true, true, false),
-            7888 => new RedMushroomBlockBlock(Identifier, false, false, false, true, false, true),
-            7889 => new RedMushroomBlockBlock(Identifier, false, false, false, true, false, false),
-            7890 => new RedMushroomBlockBlock(Identifier, false, false, false, false, true, true),
-            7891 => new RedMushroomBlockBlock(Identifier, false, false, false, false, true, false),
-            7892 => new RedMushroomBlockBlock(Identifier, false, false, false, false, false, true),
-            7893 => new RedMushroomBlockBlock(Identifier, false, false, false, false, false, false),
+            9564 => new RedMushroomBlockBlock(Identifier, true, true, true, true, true, true),
+            9565 => new RedMushroomBlockBlock(Identifier, true, true, true, true, true, false),
+            9566 => new RedMushroomBlockBlock(Identifier, true, true, true, true, false, true),
+            9567 => new RedMushroomBlockBlock(Identifier, true, true, true, true, false, false),
+            9568 => new RedMushroomBlockBlock(Identifier, true, true, true, false, true, true),
+            9569 => new RedMushroomBlockBlock(Identifier, true, true, true, false, true, false),
+            9570 => new RedMushroomBlockBlock(Identifier, true, true, true, false, false, true),
+            9571 => new RedMushroomBlockBlock(Identifier, true, true, true, false, false, false),
+            9572 => new RedMushroomBlockBlock(Identifier, true, true, false, true, true, true),
+            9573 => new RedMushroomBlockBlock(Identifier, true, true, false, true, true, false),
+            9574 => new RedMushroomBlockBlock(Identifier, true, true, false, true, false, true),
+            9575 => new RedMushroomBlockBlock(Identifier, true, true, false, true, false, false),
+            9576 => new RedMushroomBlockBlock(Identifier, true, true, false, false, true, true),
+            9577 => new RedMushroomBlockBlock(Identifier, true, true, false, false, true, false),
+            9578 => new RedMushroomBlockBlock(Identifier, true, true, false, false, false, true),
+            9579 => new RedMushroomBlockBlock(Identifier, true, true, false, false, false, false),
+            9580 => new RedMushroomBlockBlock(Identifier, true, false, true, true, true, true),
+            9581 => new RedMushroomBlockBlock(Identifier, true, false, true, true, true, false),
+            9582 => new RedMushroomBlockBlock(Identifier, true, false, true, true, false, true),
+            9583 => new RedMushroomBlockBlock(Identifier, true, false, true, true, false, false),
+            9584 => new RedMushroomBlockBlock(Identifier, true, false, true, false, true, true),
+            9585 => new RedMushroomBlockBlock(Identifier, true, false, true, false, true, false),
+            9586 => new RedMushroomBlockBlock(Identifier, true, false, true, false, false, true),
+            9587 => new RedMushroomBlockBlock(Identifier, true, false, true, false, false, false),
+            9588 => new RedMushroomBlockBlock(Identifier, true, false, false, true, true, true),
+            9589 => new RedMushroomBlockBlock(Identifier, true, false, false, true, true, false),
+            9590 => new RedMushroomBlockBlock(Identifier, true, false, false, true, false, true),
+            9591 => new RedMushroomBlockBlock(Identifier, true, false, false, true, false, false),
+            9592 => new RedMushroomBlockBlock(Identifier, true, false, false, false, true, true),
+            9593 => new RedMushroomBlockBlock(Identifier, true, false, false, false, true, false),
+            9594 => new RedMushroomBlockBlock(Identifier, true, false, false, false, false, true),
+            9595 => new RedMushroomBlockBlock(Identifier, true, false, false, false, false, false),
+            9596 => new RedMushroomBlockBlock(Identifier, false, true, true, true, true, true),
+            9597 => new RedMushroomBlockBlock(Identifier, false, true, true, true, true, false),
+            9598 => new RedMushroomBlockBlock(Identifier, false, true, true, true, false, true),
+            9599 => new RedMushroomBlockBlock(Identifier, false, true, true, true, false, false),
+            9600 => new RedMushroomBlockBlock(Identifier, false, true, true, false, true, true),
+            9601 => new RedMushroomBlockBlock(Identifier, false, true, true, false, true, false),
+            9602 => new RedMushroomBlockBlock(Identifier, false, true, true, false, false, true),
+            9603 => new RedMushroomBlockBlock(Identifier, false, true, true, false, false, false),
+            9604 => new RedMushroomBlockBlock(Identifier, false, true, false, true, true, true),
+            9605 => new RedMushroomBlockBlock(Identifier, false, true, false, true, true, false),
+            9606 => new RedMushroomBlockBlock(Identifier, false, true, false, true, false, true),
+            9607 => new RedMushroomBlockBlock(Identifier, false, true, false, true, false, false),
+            9608 => new RedMushroomBlockBlock(Identifier, false, true, false, false, true, true),
+            9609 => new RedMushroomBlockBlock(Identifier, false, true, false, false, true, false),
+            9610 => new RedMushroomBlockBlock(Identifier, false, true, false, false, false, true),
+            9611 => new RedMushroomBlockBlock(Identifier, false, true, false, false, false, false),
+            9612 => new RedMushroomBlockBlock(Identifier, false, false, true, true, true, true),
+            9613 => new RedMushroomBlockBlock(Identifier, false, false, true, true, true, false),
+            9614 => new RedMushroomBlockBlock(Identifier, false, false, true, true, false, true),
+            9615 => new RedMushroomBlockBlock(Identifier, false, false, true, true, false, false),
+            9616 => new RedMushroomBlockBlock(Identifier, false, false, true, false, true, true),
+            9617 => new RedMushroomBlockBlock(Identifier, false, false, true, false, true, false),
+            9618 => new RedMushroomBlockBlock(Identifier, false, false, true, false, false, true),
+            9619 => new RedMushroomBlockBlock(Identifier, false, false, true, false, false, false),
+            9620 => new RedMushroomBlockBlock(Identifier, false, false, false, true, true, true),
+            9621 => new RedMushroomBlockBlock(Identifier, false, false, false, true, true, false),
+            9622 => new RedMushroomBlockBlock(Identifier, false, false, false, true, false, true),
+            9623 => new RedMushroomBlockBlock(Identifier, false, false, false, true, false, false),
+            9624 => new RedMushroomBlockBlock(Identifier, false, false, false, false, true, true),
+            9625 => new RedMushroomBlockBlock(Identifier, false, false, false, false, true, false),
+            9626 => new RedMushroomBlockBlock(Identifier, false, false, false, false, false, true),
+            9627 => new RedMushroomBlockBlock(Identifier, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

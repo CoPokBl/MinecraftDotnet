@@ -59,7 +59,7 @@ public interface IStairShaped : IBlock {
 }
 
 /// <summary>
-/// Which end of a bed a state is, vanilla's <c>BedBlock.PART</c>. 16 blocks. The foot is placed and
+/// Which end of a bed a state is, vanilla's <c>AbstractBedBlock.PART</c>. 17 blocks. The foot is placed and
 /// the head is written by <c>setPlacedBy</c>, like the two cell plants but sideways.
 /// </summary>
 public interface IBedParted : IBlock {

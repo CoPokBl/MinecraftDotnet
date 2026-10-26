@@ -9,8 +9,8 @@ using Minecraft.Schemas;
 namespace ManagedServer.Terrain.Features;
 
 /// <summary>
-/// The vanilla configured features, placed features and per biome feature lists, embedded and parsed
-/// on demand.
+/// The vanilla features, placed features, block state providers and per biome feature lists, read from
+/// the datapack and parsed on demand.
 /// </summary>
 /// <remarks>
 /// Same bargain as <see cref="ManagedServer.Terrain.VanillaWorldgenData"/>: the datapack is copied
@@ -34,9 +34,11 @@ public sealed class VanillaFeatureData {
     private readonly Dictionary<Identifier, JsonDocument> _configuredJson = [];
     private readonly Dictionary<Identifier, JsonDocument> _placedJson = [];
     private readonly Dictionary<Identifier, JsonDocument> _biomeJson = [];
+    private readonly Dictionary<Identifier, JsonDocument> _providerJson = [];
 
     private readonly Dictionary<Identifier, ConfiguredFeature?> _configured = [];
     private readonly Dictionary<Identifier, PlacedFeature?> _placed = [];
+    private readonly Dictionary<Identifier, BlockStateProvider> _providers = [];
     /// <summary>
     /// One per registry, not one shared. The two registries have overlapping names on purpose:
     /// <c>amethyst_geode</c> is a placed feature whose configured feature is also called
@@ -44,23 +46,26 @@ public sealed class VanillaFeatureData {
     /// </summary>
     private readonly HashSet<Identifier> _resolvingPlaced = [];
     private readonly HashSet<Identifier> _resolvingConfigured = [];
+    private readonly HashSet<Identifier> _resolvingProviders = [];
 
     private readonly Dictionary<string, List<Identifier>> _skipped = [];
 
     private readonly FeatureParser _parser;
     private readonly PlacementParser _placement;
+    private readonly BlockParser _blocks;
 
     private readonly Dictionary<string, BiomeFeatureTable> _tables = [];
 
     private VanillaFeatureData(MinecraftRegistry registry, IDatapackSource source) {
-        BlockParser blocks = new(registry);
-        _placement = new PlacementParser(blocks);
-        _parser = new FeatureParser(blocks, _placement, ResolvePlaced, ResolveConfigured,
+        _blocks = new BlockParser(registry, ResolveProvider);
+        _placement = new PlacementParser(_blocks);
+        _parser = new FeatureParser(_blocks, _placement, ResolvePlaced, ResolveConfigured,
             StructureTemplateManager.Load(source, registry), ProcessorLists.Load(source, registry));
 
-        Read(source, "worldgen/configured_feature", _configuredJson);
+        Read(source, "worldgen/feature", _configuredJson);
         Read(source, "worldgen/placed_feature", _placedJson);
         Read(source, "worldgen/biome", _biomeJson);
+        Read(source, "worldgen/block_state_provider", _providerJson);
     }
 
     private static void Read(IDatapackSource source, string registryPath,
@@ -108,6 +113,18 @@ public sealed class VanillaFeatureData {
     public IReadOnlyList<Identifier> Biomes =>
         _biomeJson.Keys.OrderBy(id => id.ToString(), StringComparer.Ordinal).ToList();
 
+    /// <summary>Every feature the pack registers, sorted.</summary>
+    public IReadOnlyList<Identifier> Features =>
+        _configuredJson.Keys.OrderBy(id => id.ToString(), StringComparer.Ordinal).ToList();
+
+    /// <summary>Every placed feature the pack registers, sorted.</summary>
+    public IReadOnlyList<Identifier> PlacedFeatures =>
+        _placedJson.Keys.OrderBy(id => id.ToString(), StringComparer.Ordinal).ToList();
+
+    /// <summary>Every block state provider the pack registers, sorted.</summary>
+    public IReadOnlyList<Identifier> BlockStateProviders =>
+        _providerJson.Keys.OrderBy(id => id.ToString(), StringComparer.Ordinal).ToList();
+
     /// <summary>
     /// The per biome, per step feature lists in vanilla's own global order, for a dimension whose
     /// biome source can produce <paramref name="biomes"/>.
@@ -149,6 +166,20 @@ public sealed class VanillaFeatureData {
         }
     }
 
+    /// <summary>One feature by id, or null when its type is not transcribed.</summary>
+    public ConfiguredFeature? Feature(Identifier id) {
+        lock (CacheLock) {
+            return ResolveConfigured(id);
+        }
+    }
+
+    /// <summary>One entry of <c>worldgen/block_state_provider</c> by id.</summary>
+    public BlockStateProvider Provider(Identifier id) {
+        lock (CacheLock) {
+            return ResolveProvider(id);
+        }
+    }
+
     /// <summary>
     /// A placed feature by id, or null when the feature behind it is not transcribed.
     /// </summary>
@@ -174,8 +205,10 @@ public sealed class VanillaFeatureData {
 
         try {
             JsonElement root = document.RootElement;
-            ConfiguredFeature? feature = ResolveConfigured(
-                Identifier.Parse(root.GetProperty("feature").GetString()!));
+            JsonElement holder = root.GetProperty("feature");
+            ConfiguredFeature? feature = holder.ValueKind == JsonValueKind.String
+                ? ResolveConfigured(Identifier.Parse(holder.GetString()!))
+                : ParseCharged(holder, id);
 
             PlacedFeature? placed = feature is null
                 ? null
@@ -195,7 +228,7 @@ public sealed class VanillaFeatureData {
         }
 
         if (!_configuredJson.TryGetValue(id, out JsonDocument? document)) {
-            throw new InvalidOperationException($"No configured feature registered as \"{id}\".");
+            throw new InvalidOperationException($"No feature registered as \"{id}\".");
         }
 
         if (!_resolvingConfigured.Add(id)) {
@@ -203,27 +236,61 @@ public sealed class VanillaFeatureData {
         }
 
         try {
-            ConfiguredFeature? feature;
-
-            try {
-                feature = _parser.Parse(document.RootElement);
-            } catch (FeatureNotPortedException notPorted) {
-                RecordSkipped(notPorted.FeatureType, id);
-                feature = null;
-            }
-
-            // A nested entry this feature dropped is charged to it, since the parser has no idea whose
-            // list it was in.
-            foreach (string dropped in _parser.DroppedNested) {
-                RecordSkipped(dropped, id);
-            }
-
-            _parser.DroppedNested.Clear();
-
+            ConfiguredFeature? feature = ParseCharged(document.RootElement, id);
             _configured[id] = feature;
             return feature;
         } finally {
             _resolvingConfigured.Remove(id);
+        }
+    }
+
+    /// <summary>
+    /// A feature's JSON, with anything untranscribed in it recorded against <paramref name="owner"/>,
+    /// which is the registry entry it was reached through.
+    /// </summary>
+    private ConfiguredFeature? ParseCharged(JsonElement element, Identifier owner) {
+        ConfiguredFeature? feature;
+
+        try {
+            feature = _parser.Parse(element);
+        } catch (FeatureNotPortedException notPorted) {
+            RecordSkipped(notPorted.FeatureType, owner);
+            feature = null;
+        }
+
+        // A nested entry this feature dropped is charged to it, since the parser has no idea whose
+        // list it was in.
+        foreach (string dropped in _parser.DroppedNested) {
+            RecordSkipped(dropped, owner);
+        }
+
+        _parser.DroppedNested.Clear();
+        return feature;
+    }
+
+    /// <summary>
+    /// A reference into <c>worldgen/block_state_provider</c>, which is where a provider written as a
+    /// bare string points.
+    /// </summary>
+    private BlockStateProvider ResolveProvider(Identifier id) {
+        if (_providers.TryGetValue(id, out BlockStateProvider? existing)) {
+            return existing;
+        }
+
+        if (!_providerJson.TryGetValue(id, out JsonDocument? document)) {
+            throw new FormatException($"No block state provider registered as \"{id}\".");
+        }
+
+        if (!_resolvingProviders.Add(id)) {
+            throw new InvalidOperationException($"Block state provider \"{id}\" refers to itself.");
+        }
+
+        try {
+            BlockStateProvider provider = _blocks.ParseProvider(document.RootElement);
+            _providers[id] = provider;
+            return provider;
+        } finally {
+            _resolvingProviders.Remove(id);
         }
     }
 

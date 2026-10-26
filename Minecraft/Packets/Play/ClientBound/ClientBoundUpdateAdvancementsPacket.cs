@@ -25,7 +25,10 @@ public class ClientBoundUpdateAdvancementsPacket : ClientBoundPacket {
         w.WriteBoolean(Reset)
             .WriteVarInt(Added.Count);
         foreach ((Identifier id, Advancement advancement) in Added) {
-            w.Write(id).Write(advancement, reg);
+            // PositionedAdvancement: every advancement carries a position, a hidden one included.
+            w.Write(id).Write(advancement, reg)
+                .WriteFloat(advancement.Display?.X ?? 0)
+                .WriteFloat(advancement.Display?.Y ?? 0);
         }
 
         w.WritePrefixedArray(Removed, (id, writer) => writer.Write(id))
@@ -48,7 +51,13 @@ public class ClientBoundUpdateAdvancementsPacket : ClientBoundPacket {
         Dictionary<Identifier, Advancement> added = new(addedCount);
         for (int i = 0; i < addedCount; i++) {
             Identifier id = r.ReadString();
-            added.Add(id, r.Read<Advancement>(reg));
+            Advancement advancement = r.Read<Advancement>(reg);
+            float x = r.ReadFloat(), y = r.ReadFloat();
+            if (advancement.Display is { } display) {
+                display.X = x;
+                display.Y = y;
+            }
+            added.Add(id, advancement);
         }
 
         Identifier[] removed = r.ReadPrefixedArray<Identifier>(reader => reader.ReadString());

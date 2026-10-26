@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BeehiveBlock(Identifier Identifier, Direction Facing, int HoneyLevel) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:beehive", "block.minecraft.beehive", 0.6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:beehive", "minecraft:beehive", BlockInfo.VanillaOnly, "minecraft:blocks/beehive");
-    private static readonly BlockStateInfo I0 = new(0.6f, 0, 15, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.beehive", 0.6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:beehive", "minecraft:beehive", BlockInfo.VanillaOnly, "minecraft:blocks/beehive");
+    private static readonly BlockStateInfo I0 = new(0.6f, 0, 15, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record BeehiveBlock(Identifier Identifier, Direction Facing, int HoneyLev
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record BeehiveBlock(Identifier Identifier, Direction Facing, int HoneyLev
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -70,39 +70,39 @@ public record BeehiveBlock(Identifier Identifier, Direction Facing, int HoneyLev
         get {
             return Facing switch {
                 Direction.North => HoneyLevel switch {
-                    0 => 21792,
-                    1 => 21793,
-                    2 => 21794,
-                    3 => 21795,
-                    4 => 21796,
-                    5 => 21797,
+                    0 => 25149,
+                    1 => 25150,
+                    2 => 25151,
+                    3 => 25152,
+                    4 => 25153,
+                    5 => 25154,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 Direction.South => HoneyLevel switch {
-                    0 => 21798,
-                    1 => 21799,
-                    2 => 21800,
-                    3 => 21801,
-                    4 => 21802,
-                    5 => 21803,
+                    0 => 25155,
+                    1 => 25156,
+                    2 => 25157,
+                    3 => 25158,
+                    4 => 25159,
+                    5 => 25160,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 Direction.West => HoneyLevel switch {
-                    0 => 21804,
-                    1 => 21805,
-                    2 => 21806,
-                    3 => 21807,
-                    4 => 21808,
-                    5 => 21809,
+                    0 => 25161,
+                    1 => 25162,
+                    2 => 25163,
+                    3 => 25164,
+                    4 => 25165,
+                    5 => 25166,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 Direction.East => HoneyLevel switch {
-                    0 => 21810,
-                    1 => 21811,
-                    2 => 21812,
-                    3 => 21813,
-                    4 => 21814,
-                    5 => 21815,
+                    0 => 25167,
+                    1 => 25168,
+                    2 => 25169,
+                    3 => 25170,
+                    4 => 25171,
+                    5 => 25172,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -112,30 +112,30 @@ public record BeehiveBlock(Identifier Identifier, Direction Facing, int HoneyLev
     
     public IBlock WithState(uint state) {
         return state switch {
-            21792 => new BeehiveBlock(Identifier, Direction.North, 0),
-            21793 => new BeehiveBlock(Identifier, Direction.North, 1),
-            21794 => new BeehiveBlock(Identifier, Direction.North, 2),
-            21795 => new BeehiveBlock(Identifier, Direction.North, 3),
-            21796 => new BeehiveBlock(Identifier, Direction.North, 4),
-            21797 => new BeehiveBlock(Identifier, Direction.North, 5),
-            21798 => new BeehiveBlock(Identifier, Direction.South, 0),
-            21799 => new BeehiveBlock(Identifier, Direction.South, 1),
-            21800 => new BeehiveBlock(Identifier, Direction.South, 2),
-            21801 => new BeehiveBlock(Identifier, Direction.South, 3),
-            21802 => new BeehiveBlock(Identifier, Direction.South, 4),
-            21803 => new BeehiveBlock(Identifier, Direction.South, 5),
-            21804 => new BeehiveBlock(Identifier, Direction.West, 0),
-            21805 => new BeehiveBlock(Identifier, Direction.West, 1),
-            21806 => new BeehiveBlock(Identifier, Direction.West, 2),
-            21807 => new BeehiveBlock(Identifier, Direction.West, 3),
-            21808 => new BeehiveBlock(Identifier, Direction.West, 4),
-            21809 => new BeehiveBlock(Identifier, Direction.West, 5),
-            21810 => new BeehiveBlock(Identifier, Direction.East, 0),
-            21811 => new BeehiveBlock(Identifier, Direction.East, 1),
-            21812 => new BeehiveBlock(Identifier, Direction.East, 2),
-            21813 => new BeehiveBlock(Identifier, Direction.East, 3),
-            21814 => new BeehiveBlock(Identifier, Direction.East, 4),
-            21815 => new BeehiveBlock(Identifier, Direction.East, 5),
+            25149 => new BeehiveBlock(Identifier, Direction.North, 0),
+            25150 => new BeehiveBlock(Identifier, Direction.North, 1),
+            25151 => new BeehiveBlock(Identifier, Direction.North, 2),
+            25152 => new BeehiveBlock(Identifier, Direction.North, 3),
+            25153 => new BeehiveBlock(Identifier, Direction.North, 4),
+            25154 => new BeehiveBlock(Identifier, Direction.North, 5),
+            25155 => new BeehiveBlock(Identifier, Direction.South, 0),
+            25156 => new BeehiveBlock(Identifier, Direction.South, 1),
+            25157 => new BeehiveBlock(Identifier, Direction.South, 2),
+            25158 => new BeehiveBlock(Identifier, Direction.South, 3),
+            25159 => new BeehiveBlock(Identifier, Direction.South, 4),
+            25160 => new BeehiveBlock(Identifier, Direction.South, 5),
+            25161 => new BeehiveBlock(Identifier, Direction.West, 0),
+            25162 => new BeehiveBlock(Identifier, Direction.West, 1),
+            25163 => new BeehiveBlock(Identifier, Direction.West, 2),
+            25164 => new BeehiveBlock(Identifier, Direction.West, 3),
+            25165 => new BeehiveBlock(Identifier, Direction.West, 4),
+            25166 => new BeehiveBlock(Identifier, Direction.West, 5),
+            25167 => new BeehiveBlock(Identifier, Direction.East, 0),
+            25168 => new BeehiveBlock(Identifier, Direction.East, 1),
+            25169 => new BeehiveBlock(Identifier, Direction.East, 2),
+            25170 => new BeehiveBlock(Identifier, Direction.East, 3),
+            25171 => new BeehiveBlock(Identifier, Direction.East, 4),
+            25172 => new BeehiveBlock(Identifier, Direction.East, 5),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

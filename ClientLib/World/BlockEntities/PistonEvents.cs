@@ -74,7 +74,7 @@ public static class PistonEvents {
                 }
                 if (!pistonPiece) {
                     if (b0 != 1 || movingState.Air || !IsPushable(movingState, level, twoPos, PistonMovingBlockEntity.Opposite(direction), false, direction)
-                        || movingState.PushReaction != PushReaction.Normal && !Is(movingState, Block.Piston) && !Is(movingState, Block.StickyPiston)) {
+                        || movingState.PushReaction != PushReaction.PushPull && !Is(movingState, Block.Piston) && !Is(movingState, Block.StickyPiston)) {
                         SetBlock(level, arm, Block.Air);
                     }
                     else {
@@ -111,11 +111,11 @@ public static class PistonEvents {
                 return false;
             }
             switch (state.PushReaction) {
-                case PushReaction.Block:
+                case PushReaction.Immoveable:
                     return false;
-                case PushReaction.Destroy:
+                case PushReaction.Popped:
                     return allowDestroyable;
-                case PushReaction.PushOnly:
+                case PushReaction.Push:
                     return direction == connectionDirection;
             }
         }
@@ -203,7 +203,7 @@ public static class PistonEvents {
             ToDestroy.Clear();
             IBlock nextState = At(_startPos);
             if (!IsPushable(nextState, _level, _startPos, _pushDirection, false, _pistonDirection)) {
-                if (_extending && nextState.PushReaction == PushReaction.Destroy) {
+                if (_extending && nextState.PushReaction == PushReaction.Popped) {
                     ToDestroy.Add(_startPos);
                     return true;
                 }
@@ -277,7 +277,7 @@ public static class PistonEvents {
                 if (!IsPushable(nextState, _level, pos, _pushDirection, true, _pushDirection) || pos == _pistonPos) {
                     return false;
                 }
-                if (nextState.PushReaction == PushReaction.Destroy) {
+                if (nextState.PushReaction == PushReaction.Popped) {
                     ToDestroy.Add(pos);
                     return true;
                 }

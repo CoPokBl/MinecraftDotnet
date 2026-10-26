@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BambooButtonBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock, IAttachFaced, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:button", "block.minecraft.bamboo_button", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:bamboo_button", BlockInfo.VanillaOnly, "minecraft:blocks/bamboo_button");
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 0, "bamboo_wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S0, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.bamboo_button", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:bamboo_button", BlockInfo.VanillaOnly, "minecraft:blocks/bamboo_button");
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Popped, 0, "bamboo_wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, true, false, true, [], null, BlockShapes.S0, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S2 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S3 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S4 };
@@ -32,15 +32,15 @@ public record BambooButtonBlock(Identifier Identifier, AttachDirection Face, Dir
         I0, I1, I0, I1, I2, I3, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I12, I13, I14, I15, I14, I15
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 10891];
+    public BlockStateInfo StateInfo => States[StateId - 12658];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -54,7 +54,6 @@ public record BambooButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -74,6 +73,7 @@ public record BambooButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -93,58 +93,58 @@ public record BambooButtonBlock(Identifier Identifier, AttachDirection Face, Dir
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10891,
-                        false => 10892,
+                        true => 12658,
+                        false => 12659,
                     },
                     Direction.South => Powered switch {
-                        true => 10893,
-                        false => 10894,
+                        true => 12660,
+                        false => 12661,
                     },
                     Direction.West => Powered switch {
-                        true => 10895,
-                        false => 10896,
+                        true => 12662,
+                        false => 12663,
                     },
                     Direction.East => Powered switch {
-                        true => 10897,
-                        false => 10898,
+                        true => 12664,
+                        false => 12665,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10899,
-                        false => 10900,
+                        true => 12666,
+                        false => 12667,
                     },
                     Direction.South => Powered switch {
-                        true => 10901,
-                        false => 10902,
+                        true => 12668,
+                        false => 12669,
                     },
                     Direction.West => Powered switch {
-                        true => 10903,
-                        false => 10904,
+                        true => 12670,
+                        false => 12671,
                     },
                     Direction.East => Powered switch {
-                        true => 10905,
-                        false => 10906,
+                        true => 12672,
+                        false => 12673,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10907,
-                        false => 10908,
+                        true => 12674,
+                        false => 12675,
                     },
                     Direction.South => Powered switch {
-                        true => 10909,
-                        false => 10910,
+                        true => 12676,
+                        false => 12677,
                     },
                     Direction.West => Powered switch {
-                        true => 10911,
-                        false => 10912,
+                        true => 12678,
+                        false => 12679,
                     },
                     Direction.East => Powered switch {
-                        true => 10913,
-                        false => 10914,
+                        true => 12680,
+                        false => 12681,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -155,30 +155,30 @@ public record BambooButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     
     public IBlock WithState(uint state) {
         return state switch {
-            10891 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            10892 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            10893 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            10894 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            10895 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            10896 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            10897 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            10898 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            10899 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            10900 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            10901 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            10902 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            10903 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            10904 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            10905 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            10906 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            10907 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            10908 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            10909 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            10910 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            10911 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            10912 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            10913 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            10914 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            12658 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            12659 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            12660 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            12661 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            12662 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            12663 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            12664 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            12665 => new BambooButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            12666 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            12667 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            12668 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            12669 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            12670 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            12671 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            12672 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            12673 => new BambooButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            12674 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            12675 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            12676 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            12677 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            12678 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            12679 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            12680 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            12681 => new BambooButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:fence", "block.minecraft.crimson_fence", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:crimson_fence", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_fence");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 53, "nether_wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockInfo Data = new("block.minecraft.crimson_fence", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:crimson_fence", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 53, "nether_wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
     private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
@@ -48,15 +48,15 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 21050];
+    public BlockStateInfo StateInfo => States[StateId - 24407];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -70,7 +70,6 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -90,6 +89,7 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -125,44 +125,44 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 21050,
-                                false => 21051,
+                                true => 24407,
+                                false => 24408,
                             },
                             false => West switch {
-                                true => 21052,
-                                false => 21053,
+                                true => 24409,
+                                false => 24410,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 21054,
-                                false => 21055,
+                                true => 24411,
+                                false => 24412,
                             },
                             false => West switch {
-                                true => 21056,
-                                false => 21057,
+                                true => 24413,
+                                false => 24414,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 21058,
-                                false => 21059,
+                                true => 24415,
+                                false => 24416,
                             },
                             false => West switch {
-                                true => 21060,
-                                false => 21061,
+                                true => 24417,
+                                false => 24418,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 21062,
-                                false => 21063,
+                                true => 24419,
+                                false => 24420,
                             },
                             false => West switch {
-                                true => 21064,
-                                false => 21065,
+                                true => 24421,
+                                false => 24422,
                             },
                         },
                     },
@@ -171,44 +171,44 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 21066,
-                                false => 21067,
+                                true => 24423,
+                                false => 24424,
                             },
                             false => West switch {
-                                true => 21068,
-                                false => 21069,
+                                true => 24425,
+                                false => 24426,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 21070,
-                                false => 21071,
+                                true => 24427,
+                                false => 24428,
                             },
                             false => West switch {
-                                true => 21072,
-                                false => 21073,
+                                true => 24429,
+                                false => 24430,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 21074,
-                                false => 21075,
+                                true => 24431,
+                                false => 24432,
                             },
                             false => West switch {
-                                true => 21076,
-                                false => 21077,
+                                true => 24433,
+                                false => 24434,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 21078,
-                                false => 21079,
+                                true => 24435,
+                                false => 24436,
                             },
                             false => West switch {
-                                true => 21080,
-                                false => 21081,
+                                true => 24437,
+                                false => 24438,
                             },
                         },
                     },
@@ -219,38 +219,38 @@ public record CrimsonFenceBlock(Identifier Identifier, bool East, bool North, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            21050 => new CrimsonFenceBlock(Identifier, true, true, true, true, true),
-            21051 => new CrimsonFenceBlock(Identifier, true, true, true, true, false),
-            21052 => new CrimsonFenceBlock(Identifier, true, true, true, false, true),
-            21053 => new CrimsonFenceBlock(Identifier, true, true, true, false, false),
-            21054 => new CrimsonFenceBlock(Identifier, true, true, false, true, true),
-            21055 => new CrimsonFenceBlock(Identifier, true, true, false, true, false),
-            21056 => new CrimsonFenceBlock(Identifier, true, true, false, false, true),
-            21057 => new CrimsonFenceBlock(Identifier, true, true, false, false, false),
-            21058 => new CrimsonFenceBlock(Identifier, true, false, true, true, true),
-            21059 => new CrimsonFenceBlock(Identifier, true, false, true, true, false),
-            21060 => new CrimsonFenceBlock(Identifier, true, false, true, false, true),
-            21061 => new CrimsonFenceBlock(Identifier, true, false, true, false, false),
-            21062 => new CrimsonFenceBlock(Identifier, true, false, false, true, true),
-            21063 => new CrimsonFenceBlock(Identifier, true, false, false, true, false),
-            21064 => new CrimsonFenceBlock(Identifier, true, false, false, false, true),
-            21065 => new CrimsonFenceBlock(Identifier, true, false, false, false, false),
-            21066 => new CrimsonFenceBlock(Identifier, false, true, true, true, true),
-            21067 => new CrimsonFenceBlock(Identifier, false, true, true, true, false),
-            21068 => new CrimsonFenceBlock(Identifier, false, true, true, false, true),
-            21069 => new CrimsonFenceBlock(Identifier, false, true, true, false, false),
-            21070 => new CrimsonFenceBlock(Identifier, false, true, false, true, true),
-            21071 => new CrimsonFenceBlock(Identifier, false, true, false, true, false),
-            21072 => new CrimsonFenceBlock(Identifier, false, true, false, false, true),
-            21073 => new CrimsonFenceBlock(Identifier, false, true, false, false, false),
-            21074 => new CrimsonFenceBlock(Identifier, false, false, true, true, true),
-            21075 => new CrimsonFenceBlock(Identifier, false, false, true, true, false),
-            21076 => new CrimsonFenceBlock(Identifier, false, false, true, false, true),
-            21077 => new CrimsonFenceBlock(Identifier, false, false, true, false, false),
-            21078 => new CrimsonFenceBlock(Identifier, false, false, false, true, true),
-            21079 => new CrimsonFenceBlock(Identifier, false, false, false, true, false),
-            21080 => new CrimsonFenceBlock(Identifier, false, false, false, false, true),
-            21081 => new CrimsonFenceBlock(Identifier, false, false, false, false, false),
+            24407 => new CrimsonFenceBlock(Identifier, true, true, true, true, true),
+            24408 => new CrimsonFenceBlock(Identifier, true, true, true, true, false),
+            24409 => new CrimsonFenceBlock(Identifier, true, true, true, false, true),
+            24410 => new CrimsonFenceBlock(Identifier, true, true, true, false, false),
+            24411 => new CrimsonFenceBlock(Identifier, true, true, false, true, true),
+            24412 => new CrimsonFenceBlock(Identifier, true, true, false, true, false),
+            24413 => new CrimsonFenceBlock(Identifier, true, true, false, false, true),
+            24414 => new CrimsonFenceBlock(Identifier, true, true, false, false, false),
+            24415 => new CrimsonFenceBlock(Identifier, true, false, true, true, true),
+            24416 => new CrimsonFenceBlock(Identifier, true, false, true, true, false),
+            24417 => new CrimsonFenceBlock(Identifier, true, false, true, false, true),
+            24418 => new CrimsonFenceBlock(Identifier, true, false, true, false, false),
+            24419 => new CrimsonFenceBlock(Identifier, true, false, false, true, true),
+            24420 => new CrimsonFenceBlock(Identifier, true, false, false, true, false),
+            24421 => new CrimsonFenceBlock(Identifier, true, false, false, false, true),
+            24422 => new CrimsonFenceBlock(Identifier, true, false, false, false, false),
+            24423 => new CrimsonFenceBlock(Identifier, false, true, true, true, true),
+            24424 => new CrimsonFenceBlock(Identifier, false, true, true, true, false),
+            24425 => new CrimsonFenceBlock(Identifier, false, true, true, false, true),
+            24426 => new CrimsonFenceBlock(Identifier, false, true, true, false, false),
+            24427 => new CrimsonFenceBlock(Identifier, false, true, false, true, true),
+            24428 => new CrimsonFenceBlock(Identifier, false, true, false, true, false),
+            24429 => new CrimsonFenceBlock(Identifier, false, true, false, false, true),
+            24430 => new CrimsonFenceBlock(Identifier, false, true, false, false, false),
+            24431 => new CrimsonFenceBlock(Identifier, false, false, true, true, true),
+            24432 => new CrimsonFenceBlock(Identifier, false, false, true, true, false),
+            24433 => new CrimsonFenceBlock(Identifier, false, false, true, false, true),
+            24434 => new CrimsonFenceBlock(Identifier, false, false, true, false, false),
+            24435 => new CrimsonFenceBlock(Identifier, false, false, false, true, true),
+            24436 => new CrimsonFenceBlock(Identifier, false, false, false, true, false),
+            24437 => new CrimsonFenceBlock(Identifier, false, false, false, false, true),
+            24438 => new CrimsonFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

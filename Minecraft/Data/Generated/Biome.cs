@@ -13,6 +13,7 @@ public static class Biome {
     public static readonly IBiome CherryGrove = VanillaRegistry.Data.Biomes["minecraft:cherry_grove"];
     public static readonly IBiome ColdOcean = VanillaRegistry.Data.Biomes["minecraft:cold_ocean"];
     public static readonly IBiome CrimsonForest = VanillaRegistry.Data.Biomes["minecraft:crimson_forest"];
+    public static readonly IBiome DappledForest = VanillaRegistry.Data.Biomes["minecraft:dappled_forest"];
     public static readonly IBiome DarkForest = VanillaRegistry.Data.Biomes["minecraft:dark_forest"];
     public static readonly IBiome DeepColdOcean = VanillaRegistry.Data.Biomes["minecraft:deep_cold_ocean"];
     public static readonly IBiome DeepDark = VanillaRegistry.Data.Biomes["minecraft:deep_dark"];

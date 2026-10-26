@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CherryFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:fence", "block.minecraft.cherry_fence", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cherry_fence", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_fence");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 36, "cherry_wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockInfo Data = new("block.minecraft.cherry_fence", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cherry_fence", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 36, "cherry_wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
     private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
@@ -48,15 +48,15 @@ public record CherryFenceBlock(Identifier Identifier, bool East, bool North, boo
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 13900];
+    public BlockStateInfo StateInfo => States[StateId - 15779];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -70,7 +70,6 @@ public record CherryFenceBlock(Identifier Identifier, bool East, bool North, boo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -90,6 +89,7 @@ public record CherryFenceBlock(Identifier Identifier, bool East, bool North, boo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -125,44 +125,44 @@ public record CherryFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13900,
-                                false => 13901,
+                                true => 15779,
+                                false => 15780,
                             },
                             false => West switch {
-                                true => 13902,
-                                false => 13903,
+                                true => 15781,
+                                false => 15782,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13904,
-                                false => 13905,
+                                true => 15783,
+                                false => 15784,
                             },
                             false => West switch {
-                                true => 13906,
-                                false => 13907,
+                                true => 15785,
+                                false => 15786,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13908,
-                                false => 13909,
+                                true => 15787,
+                                false => 15788,
                             },
                             false => West switch {
-                                true => 13910,
-                                false => 13911,
+                                true => 15789,
+                                false => 15790,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13912,
-                                false => 13913,
+                                true => 15791,
+                                false => 15792,
                             },
                             false => West switch {
-                                true => 13914,
-                                false => 13915,
+                                true => 15793,
+                                false => 15794,
                             },
                         },
                     },
@@ -171,44 +171,44 @@ public record CherryFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13916,
-                                false => 13917,
+                                true => 15795,
+                                false => 15796,
                             },
                             false => West switch {
-                                true => 13918,
-                                false => 13919,
+                                true => 15797,
+                                false => 15798,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13920,
-                                false => 13921,
+                                true => 15799,
+                                false => 15800,
                             },
                             false => West switch {
-                                true => 13922,
-                                false => 13923,
+                                true => 15801,
+                                false => 15802,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13924,
-                                false => 13925,
+                                true => 15803,
+                                false => 15804,
                             },
                             false => West switch {
-                                true => 13926,
-                                false => 13927,
+                                true => 15805,
+                                false => 15806,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13928,
-                                false => 13929,
+                                true => 15807,
+                                false => 15808,
                             },
                             false => West switch {
-                                true => 13930,
-                                false => 13931,
+                                true => 15809,
+                                false => 15810,
                             },
                         },
                     },
@@ -219,38 +219,38 @@ public record CherryFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            13900 => new CherryFenceBlock(Identifier, true, true, true, true, true),
-            13901 => new CherryFenceBlock(Identifier, true, true, true, true, false),
-            13902 => new CherryFenceBlock(Identifier, true, true, true, false, true),
-            13903 => new CherryFenceBlock(Identifier, true, true, true, false, false),
-            13904 => new CherryFenceBlock(Identifier, true, true, false, true, true),
-            13905 => new CherryFenceBlock(Identifier, true, true, false, true, false),
-            13906 => new CherryFenceBlock(Identifier, true, true, false, false, true),
-            13907 => new CherryFenceBlock(Identifier, true, true, false, false, false),
-            13908 => new CherryFenceBlock(Identifier, true, false, true, true, true),
-            13909 => new CherryFenceBlock(Identifier, true, false, true, true, false),
-            13910 => new CherryFenceBlock(Identifier, true, false, true, false, true),
-            13911 => new CherryFenceBlock(Identifier, true, false, true, false, false),
-            13912 => new CherryFenceBlock(Identifier, true, false, false, true, true),
-            13913 => new CherryFenceBlock(Identifier, true, false, false, true, false),
-            13914 => new CherryFenceBlock(Identifier, true, false, false, false, true),
-            13915 => new CherryFenceBlock(Identifier, true, false, false, false, false),
-            13916 => new CherryFenceBlock(Identifier, false, true, true, true, true),
-            13917 => new CherryFenceBlock(Identifier, false, true, true, true, false),
-            13918 => new CherryFenceBlock(Identifier, false, true, true, false, true),
-            13919 => new CherryFenceBlock(Identifier, false, true, true, false, false),
-            13920 => new CherryFenceBlock(Identifier, false, true, false, true, true),
-            13921 => new CherryFenceBlock(Identifier, false, true, false, true, false),
-            13922 => new CherryFenceBlock(Identifier, false, true, false, false, true),
-            13923 => new CherryFenceBlock(Identifier, false, true, false, false, false),
-            13924 => new CherryFenceBlock(Identifier, false, false, true, true, true),
-            13925 => new CherryFenceBlock(Identifier, false, false, true, true, false),
-            13926 => new CherryFenceBlock(Identifier, false, false, true, false, true),
-            13927 => new CherryFenceBlock(Identifier, false, false, true, false, false),
-            13928 => new CherryFenceBlock(Identifier, false, false, false, true, true),
-            13929 => new CherryFenceBlock(Identifier, false, false, false, true, false),
-            13930 => new CherryFenceBlock(Identifier, false, false, false, false, true),
-            13931 => new CherryFenceBlock(Identifier, false, false, false, false, false),
+            15779 => new CherryFenceBlock(Identifier, true, true, true, true, true),
+            15780 => new CherryFenceBlock(Identifier, true, true, true, true, false),
+            15781 => new CherryFenceBlock(Identifier, true, true, true, false, true),
+            15782 => new CherryFenceBlock(Identifier, true, true, true, false, false),
+            15783 => new CherryFenceBlock(Identifier, true, true, false, true, true),
+            15784 => new CherryFenceBlock(Identifier, true, true, false, true, false),
+            15785 => new CherryFenceBlock(Identifier, true, true, false, false, true),
+            15786 => new CherryFenceBlock(Identifier, true, true, false, false, false),
+            15787 => new CherryFenceBlock(Identifier, true, false, true, true, true),
+            15788 => new CherryFenceBlock(Identifier, true, false, true, true, false),
+            15789 => new CherryFenceBlock(Identifier, true, false, true, false, true),
+            15790 => new CherryFenceBlock(Identifier, true, false, true, false, false),
+            15791 => new CherryFenceBlock(Identifier, true, false, false, true, true),
+            15792 => new CherryFenceBlock(Identifier, true, false, false, true, false),
+            15793 => new CherryFenceBlock(Identifier, true, false, false, false, true),
+            15794 => new CherryFenceBlock(Identifier, true, false, false, false, false),
+            15795 => new CherryFenceBlock(Identifier, false, true, true, true, true),
+            15796 => new CherryFenceBlock(Identifier, false, true, true, true, false),
+            15797 => new CherryFenceBlock(Identifier, false, true, true, false, true),
+            15798 => new CherryFenceBlock(Identifier, false, true, true, false, false),
+            15799 => new CherryFenceBlock(Identifier, false, true, false, true, true),
+            15800 => new CherryFenceBlock(Identifier, false, true, false, true, false),
+            15801 => new CherryFenceBlock(Identifier, false, true, false, false, true),
+            15802 => new CherryFenceBlock(Identifier, false, true, false, false, false),
+            15803 => new CherryFenceBlock(Identifier, false, false, true, true, true),
+            15804 => new CherryFenceBlock(Identifier, false, false, true, true, false),
+            15805 => new CherryFenceBlock(Identifier, false, false, true, false, true),
+            15806 => new CherryFenceBlock(Identifier, false, false, true, false, false),
+            15807 => new CherryFenceBlock(Identifier, false, false, false, true, true),
+            15808 => new CherryFenceBlock(Identifier, false, false, false, true, false),
+            15809 => new CherryFenceBlock(Identifier, false, false, false, false, true),
+            15810 => new CherryFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

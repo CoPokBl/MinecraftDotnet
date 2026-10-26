@@ -3,19 +3,13 @@ using Minecraft.Schemas;
 namespace ManagedServer.Terrain.Density;
 
 /// <summary>
-/// A float valued function of some coordinate, along with the range it can produce. Vanilla's
-/// <c>ToFloatFunction</c> / <c>BoundedFloatFunction</c>.
+/// A float valued function of some input, along with the range it can produce. Vanilla's
+/// <c>BoundedFloatFunction</c>.
 /// </summary>
-/// <remarks>
-/// The bounds are what let a spline compute its own range without sampling, which is what the density
-/// function tree's range propagation is built on.
-/// </remarks>
 public interface IBoundedFloatFunction<in TPoint> {
     float Apply(TPoint point);
 
-    float MinValue { get; }
-
-    float MaxValue { get; }
+    Interval Range { get; }
 }
 
 /// <summary>
@@ -23,180 +17,172 @@ public interface IBoundedFloatFunction<in TPoint> {
 /// splines, so the whole thing nests.
 /// </summary>
 /// <remarks>
-/// This is how the overworld's shape is described. Continentalness picks a curve over erosion, which
-/// picks a curve over ridges, and the result is the terrain's offset, factor or jaggedness. Beyond the
-/// first and last knot the curve is <b>extended linearly</b> along the end derivative rather than
-/// clamped, which is what stops a plateau forming at the extremes of the climate noise.
-/// <p/>
-/// Everything here is <b>float</b>, as upstream. The values feed a double density function tree, and
-/// widening early changes where a slope crosses zero.
+/// Beyond the first and last knot the curve is extended linearly along the end derivative rather than
+/// clamped. Equality is structural, because a spline is part of a density function's identity.
 /// </remarks>
-public abstract class CubicSpline<TCoordinate, TPoint> where TCoordinate : IBoundedFloatFunction<TPoint> {
-    public abstract float MinValue { get; }
+public abstract class CubicSpline<TCoordinate> where TCoordinate : notnull {
+    public abstract Interval RangeOf(Func<TCoordinate, Interval> coordinateRange);
 
-    public abstract float MaxValue { get; }
+    public abstract void ForEachCoordinate(Action<TCoordinate> consumer);
 
-    public abstract float Sample(TPoint point);
+    public abstract CubicSpline<TResult> MapCoordinates<TResult>(Func<TCoordinate, TResult> mapper) where TResult : notnull;
 
-    /// <summary>Rebuilds the spline with every coordinate replaced, which is how a visitor reaches into one.</summary>
-    public abstract CubicSpline<TCoordinate, TPoint> MapCoordinates(Func<TCoordinate, TCoordinate> mapper);
+    /// <summary>Evaluates with each coordinate turned into a value by <paramref name="coordinateValue"/>.</summary>
+    public abstract float Apply(Func<TCoordinate, float> coordinateValue);
 
-    public static CubicSpline<TCoordinate, TPoint> Constant(float value) {
-        return new ConstantSpline(value);
+    public static CubicSpline<TCoordinate> Constant(float value) => new ConstantSpline(value);
+
+    public static CubicSpline<TCoordinate> Multipoint(TCoordinate coordinate, float[] locations,
+        IReadOnlyList<CubicSpline<TCoordinate>> values, float[] derivatives) {
+        return new MultipointSpline(coordinate, locations, values.ToArray(), derivatives);
     }
 
-    /// <summary>A knot: where it is on the coordinate, what it evaluates to, and the slope through it.</summary>
-    public readonly record struct Point(float Location, CubicSpline<TCoordinate, TPoint> Value, float Derivative);
+    private sealed class ConstantSpline(float value) : CubicSpline<TCoordinate> {
+        public override Interval RangeOf(Func<TCoordinate, Interval> coordinateRange) => Interval.OfExact(value);
 
-    private sealed class ConstantSpline(float value) : CubicSpline<TCoordinate, TPoint> {
-        public override float MinValue => value;
-        public override float MaxValue => value;
+        public override void ForEachCoordinate(Action<TCoordinate> consumer) { }
 
-        public override float Sample(TPoint point) => value;
-
-        public override CubicSpline<TCoordinate, TPoint> MapCoordinates(Func<TCoordinate, TCoordinate> mapper) {
-            return this;
+        public override CubicSpline<TResult> MapCoordinates<TResult>(Func<TCoordinate, TResult> mapper) {
+            return CubicSpline<TResult>.Constant(value);
         }
+
+        public override float Apply(Func<TCoordinate, float> coordinateValue) => value;
+
+        public override bool Equals(object? obj) => obj is ConstantSpline other && other.Value.Equals(value);
+
+        public override int GetHashCode() => value.GetHashCode();
+
+        private float Value => value;
     }
 
-    public static CubicSpline<TCoordinate, TPoint> Multipoint(TCoordinate coordinate, IReadOnlyList<Point> points) {
-        return new MultipointSpline(coordinate, points);
-    }
-
-    private sealed class MultipointSpline : CubicSpline<TCoordinate, TPoint> {
+    private sealed class MultipointSpline : CubicSpline<TCoordinate> {
         private readonly TCoordinate _coordinate;
         private readonly float[] _locations;
-        private readonly CubicSpline<TCoordinate, TPoint>[] _values;
+        private readonly CubicSpline<TCoordinate>[] _values;
         private readonly float[] _derivatives;
 
-        public MultipointSpline(TCoordinate coordinate, IReadOnlyList<Point> points) {
-            if (points.Count == 0) {
-                throw new ArgumentException("Cannot create a multipoint spline with no points", nameof(points));
+        public MultipointSpline(TCoordinate coordinate, float[] locations, CubicSpline<TCoordinate>[] values, float[] derivatives) {
+            if (locations.Length != values.Length || locations.Length != derivatives.Length) {
+                throw new ArgumentException("All lengths must be equal");
+            }
+
+            if (locations.Length == 0) {
+                throw new ArgumentException("Cannot create a multipoint spline with no points");
             }
 
             _coordinate = coordinate;
-            _locations = new float[points.Count];
-            _values = new CubicSpline<TCoordinate, TPoint>[points.Count];
-            _derivatives = new float[points.Count];
-
-            for (int i = 0; i < points.Count; i++) {
-                _locations[i] = points[i].Location;
-                _values[i] = points[i].Value;
-                _derivatives[i] = points[i].Derivative;
-            }
-
-            (MinValue, MaxValue) = ComputeRange();
+            _locations = locations;
+            _values = values;
+            _derivatives = derivatives;
         }
 
-        public override float MinValue { get; }
-
-        public override float MaxValue { get; }
-
         /// <summary>
-        /// The range over the coordinate's own range, without sampling. Three parts: the linear
-        /// extensions past each end, the knot values themselves, and a bound on the cubic overshoot
-        /// between each pair of knots.
+        /// The range over the coordinate's own range without sampling: the linear extensions past each
+        /// end, the knot values themselves, and a bound on the cubic overshoot between each pair.
         /// </summary>
-        private (float Min, float Max) ComputeRange() {
+        public override Interval RangeOf(Func<TCoordinate, Interval> coordinateRange) {
             int lastIndex = _locations.Length - 1;
             float minValue = float.PositiveInfinity;
             float maxValue = float.NegativeInfinity;
+            Interval inputRange = coordinateRange(_coordinate);
+            if (inputRange.IsNaI) {
+                return inputRange;
+            }
 
-            float minInput = _coordinate.MinValue;
-            float maxInput = _coordinate.MaxValue;
-
-            if (minInput < _locations[0]) {
-                float edge1 = LinearExtend(minInput, _locations, _values[0].MinValue, _derivatives, 0);
-                float edge2 = LinearExtend(minInput, _locations, _values[0].MaxValue, _derivatives, 0);
+            if (inputRange.Min < _locations[0]) {
+                Interval firstRange = _values[0].RangeOf(coordinateRange);
+                float edge1 = LinearExtend(inputRange.Min, _locations, firstRange.Min, _derivatives, 0);
+                float edge2 = LinearExtend(inputRange.Min, _locations, firstRange.Max, _derivatives, 0);
                 minValue = Math.Min(minValue, Math.Min(edge1, edge2));
                 maxValue = Math.Max(maxValue, Math.Max(edge1, edge2));
             }
 
-            if (maxInput > _locations[lastIndex]) {
-                float edge1 = LinearExtend(maxInput, _locations, _values[lastIndex].MinValue, _derivatives, lastIndex);
-                float edge2 = LinearExtend(maxInput, _locations, _values[lastIndex].MaxValue, _derivatives, lastIndex);
+            if (inputRange.Max > _locations[lastIndex]) {
+                Interval lastRange = _values[lastIndex].RangeOf(coordinateRange);
+                float edge1 = LinearExtend(inputRange.Max, _locations, lastRange.Min, _derivatives, lastIndex);
+                float edge2 = LinearExtend(inputRange.Max, _locations, lastRange.Max, _derivatives, lastIndex);
                 minValue = Math.Min(minValue, Math.Min(edge1, edge2));
                 maxValue = Math.Max(maxValue, Math.Max(edge1, edge2));
             }
 
-            foreach (CubicSpline<TCoordinate, TPoint> value in _values) {
-                minValue = Math.Min(minValue, value.MinValue);
-                maxValue = Math.Max(maxValue, value.MaxValue);
+            Interval[] valueRanges = _values.Select(value => value.RangeOf(coordinateRange)).ToArray();
+            foreach (Interval range in valueRanges) {
+                minValue = Math.Min(minValue, range.Min);
+                maxValue = Math.Max(maxValue, range.Max);
             }
 
             for (int i = 0; i < lastIndex; i++) {
                 float xDiff = _locations[i + 1] - _locations[i];
-                float min1 = _values[i].MinValue;
-                float max1 = _values[i].MaxValue;
-                float min2 = _values[i + 1].MinValue;
-                float max2 = _values[i + 1].MaxValue;
+                float min1 = valueRanges[i].Min;
+                float max1 = valueRanges[i].Max;
+                float min2 = valueRanges[i + 1].Min;
+                float max2 = valueRanges[i + 1].Max;
                 float d1 = _derivatives[i];
                 float d2 = _derivatives[i + 1];
-
-                if (d1 == 0.0f && d2 == 0.0f) {
-                    continue;
+                if (d1 != 0.0F || d2 != 0.0F) {
+                    float p1 = d1 * xDiff;
+                    float p2 = d2 * xDiff;
+                    float minLerp1 = Math.Min(min1, min2);
+                    float maxLerp1 = Math.Max(max1, max2);
+                    float minA = p1 - max2 + min1;
+                    float maxA = p1 - min2 + max1;
+                    float minB = -p2 + min2 - max1;
+                    float maxB = -p2 + max2 - min1;
+                    float minLerp2 = Math.Min(minA, minB);
+                    float maxLerp2 = Math.Max(maxA, maxB);
+                    minValue = Math.Min(minValue, minLerp1 + 0.25F * minLerp2);
+                    maxValue = Math.Max(maxValue, maxLerp1 + 0.25F * maxLerp2);
                 }
-
-                float p1 = d1 * xDiff;
-                float p2 = d2 * xDiff;
-                float minLerp1 = Math.Min(min1, min2);
-                float maxLerp1 = Math.Max(max1, max2);
-                float minA = p1 - max2 + min1;
-                float maxA = p1 - min2 + max1;
-                float minB = -p2 + min2 - max1;
-                float maxB = -p2 + max2 - min1;
-
-                minValue = Math.Min(minValue, minLerp1 + 0.25f * Math.Min(minA, minB));
-                maxValue = Math.Max(maxValue, maxLerp1 + 0.25f * Math.Max(maxA, maxB));
             }
 
-            return (minValue, maxValue);
+            return Interval.Of(minValue, maxValue);
         }
 
-        public override float Sample(TPoint point) {
-            float input = _coordinate.Apply(point);
+        public override void ForEachCoordinate(Action<TCoordinate> consumer) {
+            consumer(_coordinate);
+            foreach (CubicSpline<TCoordinate> value in _values) {
+                value.ForEachCoordinate(consumer);
+            }
+        }
+
+        public override CubicSpline<TResult> MapCoordinates<TResult>(Func<TCoordinate, TResult> mapper) {
+            return CubicSpline<TResult>.Multipoint(mapper(_coordinate), _locations,
+                _values.Select(value => value.MapCoordinates(mapper)).ToArray(), _derivatives);
+        }
+
+        public override float Apply(Func<TCoordinate, float> coordinateValue) {
+            float input = coordinateValue(_coordinate);
             int start = FindIntervalStart(_locations, input);
             int lastIndex = _locations.Length - 1;
-
             if (start < 0) {
-                return LinearExtend(input, _locations, _values[0].Sample(point), _derivatives, 0);
+                return LinearExtend(input, _locations, _values[0].Apply(coordinateValue), _derivatives, 0);
             }
 
             if (start == lastIndex) {
-                return LinearExtend(input, _locations, _values[lastIndex].Sample(point), _derivatives, lastIndex);
+                return LinearExtend(input, _locations, _values[lastIndex].Apply(coordinateValue), _derivatives, lastIndex);
             }
 
             float x1 = _locations[start];
             float x2 = _locations[start + 1];
             float t = (input - x1) / (x2 - x1);
-
-            float y1 = _values[start].Sample(point);
-            float y2 = _values[start + 1].Sample(point);
-
-            float a = _derivatives[start] * (x2 - x1) - (y2 - y1);
-            float b = -_derivatives[start + 1] * (x2 - x1) + (y2 - y1);
-            return Mth.Lerp(t, y1, y2) + t * (1.0f - t) * Mth.Lerp(t, a, b);
-        }
-
-        public override CubicSpline<TCoordinate, TPoint> MapCoordinates(Func<TCoordinate, TCoordinate> mapper) {
-            Point[] points = new Point[_locations.Length];
-            for (int i = 0; i < points.Length; i++) {
-                points[i] = new Point(_locations[i], _values[i].MapCoordinates(mapper), _derivatives[i]);
-            }
-
-            return new MultipointSpline(mapper(_coordinate), points);
+            float y1 = _values[start].Apply(coordinateValue);
+            float y2 = _values[start + 1].Apply(coordinateValue);
+            float d1 = _derivatives[start];
+            float d2 = _derivatives[start + 1];
+            float a = d1 * (x2 - x1) - (y2 - y1);
+            float b = -d2 * (x2 - x1) + (y2 - y1);
+            return Mth.Lerp(t, y1, y2) + t * (1.0F - t) * Mth.Lerp(t, a, b);
         }
 
         private static float LinearExtend(float input, float[] locations, float value, float[] derivatives, int index) {
             float derivative = derivatives[index];
-            return derivative == 0.0f ? value : value + derivative * (input - locations[index]);
+            return derivative == 0.0F ? value : value + derivative * (input - locations[index]);
         }
 
         /// <summary>The last knot at or below the input, or -1 when the input is below all of them.</summary>
         private static int FindIntervalStart(float[] locations, float input) {
             int from = 0;
             int len = locations.Length;
-
             while (len > 0) {
                 int half = len / 2;
                 int middle = from + half;
@@ -209,6 +195,28 @@ public abstract class CubicSpline<TCoordinate, TPoint> where TCoordinate : IBoun
             }
 
             return from - 1;
+        }
+
+        public override bool Equals(object? obj) {
+            return obj is MultipointSpline other
+                && EqualityComparer<TCoordinate>.Default.Equals(_coordinate, other._coordinate)
+                && _locations.AsSpan().SequenceEqual(other._locations)
+                && _derivatives.AsSpan().SequenceEqual(other._derivatives)
+                && _values.SequenceEqual(other._values);
+        }
+
+        public override int GetHashCode() {
+            HashCode hash = new();
+            hash.Add(_coordinate);
+            foreach (float location in _locations) {
+                hash.Add(location);
+            }
+
+            foreach (CubicSpline<TCoordinate> value in _values) {
+                hash.Add(value);
+            }
+
+            return hash.ToHashCode();
         }
     }
 }

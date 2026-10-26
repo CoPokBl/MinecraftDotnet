@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MangroveStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.mangrove_stairs", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_stairs");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 28, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_stairs", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 28, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record MangroveStairsBlock(Identifier Identifier, Direction Facing, TopBo
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 12292];
+    public BlockStateInfo StateInfo => States[StateId - 14059];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record MangroveStairsBlock(Identifier Identifier, Direction Facing, TopBo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record MangroveStairsBlock(Identifier Identifier, Direction Facing, TopBo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record MangroveStairsBlock(Identifier Identifier, Direction Facing, TopBo
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12292,
-                            false => 12293,
+                            true => 14059,
+                            false => 14060,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12294,
-                            false => 12295,
+                            true => 14061,
+                            false => 14062,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12296,
-                            false => 12297,
+                            true => 14063,
+                            false => 14064,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12298,
-                            false => 12299,
+                            true => 14065,
+                            false => 14066,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12300,
-                            false => 12301,
+                            true => 14067,
+                            false => 14068,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12302,
-                            false => 12303,
+                            true => 14069,
+                            false => 14070,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12304,
-                            false => 12305,
+                            true => 14071,
+                            false => 14072,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12306,
-                            false => 12307,
+                            true => 14073,
+                            false => 14074,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12308,
-                            false => 12309,
+                            true => 14075,
+                            false => 14076,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12310,
-                            false => 12311,
+                            true => 14077,
+                            false => 14078,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record MangroveStairsBlock(Identifier Identifier, Direction Facing, TopBo
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12312,
-                            false => 12313,
+                            true => 14079,
+                            false => 14080,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12314,
-                            false => 12315,
+                            true => 14081,
+                            false => 14082,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12316,
-                            false => 12317,
+                            true => 14083,
+                            false => 14084,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12318,
-                            false => 12319,
+                            true => 14085,
+                            false => 14086,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12320,
-                            false => 12321,
+                            true => 14087,
+                            false => 14088,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12322,
-                            false => 12323,
+                            true => 14089,
+                            false => 14090,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12324,
-                            false => 12325,
+                            true => 14091,
+                            false => 14092,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12326,
-                            false => 12327,
+                            true => 14093,
+                            false => 14094,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12328,
-                            false => 12329,
+                            true => 14095,
+                            false => 14096,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12330,
-                            false => 12331,
+                            true => 14097,
+                            false => 14098,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record MangroveStairsBlock(Identifier Identifier, Direction Facing, TopBo
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12332,
-                            false => 12333,
+                            true => 14099,
+                            false => 14100,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12334,
-                            false => 12335,
+                            true => 14101,
+                            false => 14102,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12336,
-                            false => 12337,
+                            true => 14103,
+                            false => 14104,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12338,
-                            false => 12339,
+                            true => 14105,
+                            false => 14106,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12340,
-                            false => 12341,
+                            true => 14107,
+                            false => 14108,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12342,
-                            false => 12343,
+                            true => 14109,
+                            false => 14110,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12344,
-                            false => 12345,
+                            true => 14111,
+                            false => 14112,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12346,
-                            false => 12347,
+                            true => 14113,
+                            false => 14114,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12348,
-                            false => 12349,
+                            true => 14115,
+                            false => 14116,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12350,
-                            false => 12351,
+                            true => 14117,
+                            false => 14118,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record MangroveStairsBlock(Identifier Identifier, Direction Facing, TopBo
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12352,
-                            false => 12353,
+                            true => 14119,
+                            false => 14120,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12354,
-                            false => 12355,
+                            true => 14121,
+                            false => 14122,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12356,
-                            false => 12357,
+                            true => 14123,
+                            false => 14124,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12358,
-                            false => 12359,
+                            true => 14125,
+                            false => 14126,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12360,
-                            false => 12361,
+                            true => 14127,
+                            false => 14128,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12362,
-                            false => 12363,
+                            true => 14129,
+                            false => 14130,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12364,
-                            false => 12365,
+                            true => 14131,
+                            false => 14132,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12366,
-                            false => 12367,
+                            true => 14133,
+                            false => 14134,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12368,
-                            false => 12369,
+                            true => 14135,
+                            false => 14136,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12370,
-                            false => 12371,
+                            true => 14137,
+                            false => 14138,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record MangroveStairsBlock(Identifier Identifier, Direction Facing, TopBo
     
     public IBlock WithState(uint state) {
         return state switch {
-            12292 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            12293 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            12294 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            12295 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            12296 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            12297 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            12298 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            12299 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            12300 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            12301 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            12302 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            12303 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            12304 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12305 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12306 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            12307 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            12308 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12309 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12310 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            12311 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            12312 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            12313 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            12314 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            12315 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            12316 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            12317 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            12318 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            12319 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            12320 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            12321 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            12322 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            12323 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            12324 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12325 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12326 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            12327 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            12328 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12329 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12330 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            12331 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            12332 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            12333 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            12334 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            12335 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            12336 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            12337 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            12338 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            12339 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            12340 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            12341 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            12342 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            12343 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            12344 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12345 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12346 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            12347 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            12348 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12349 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12350 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            12351 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            12352 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            12353 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            12354 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            12355 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            12356 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            12357 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            12358 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            12359 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            12360 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            12361 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            12362 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            12363 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            12364 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12365 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12366 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            12367 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            12368 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12369 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12370 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            12371 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            14059 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            14060 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            14061 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            14062 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            14063 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            14064 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            14065 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            14066 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            14067 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            14068 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            14069 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            14070 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            14071 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14072 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14073 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            14074 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            14075 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14076 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14077 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            14078 => new MangroveStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            14079 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            14080 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            14081 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            14082 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            14083 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            14084 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            14085 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            14086 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            14087 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            14088 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            14089 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            14090 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            14091 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14092 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14093 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            14094 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            14095 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14096 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14097 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            14098 => new MangroveStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            14099 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            14100 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            14101 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            14102 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            14103 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            14104 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            14105 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            14106 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            14107 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            14108 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            14109 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            14110 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            14111 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14112 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14113 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            14114 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            14115 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14116 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14117 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            14118 => new MangroveStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            14119 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            14120 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            14121 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            14122 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            14123 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            14124 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            14125 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            14126 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            14127 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            14128 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            14129 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            14130 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            14131 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            14132 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            14133 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            14134 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            14135 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            14136 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            14137 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            14138 => new MangroveStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

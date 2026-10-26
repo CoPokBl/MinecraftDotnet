@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record AcaciaTrapdoorBlock(Identifier Identifier, Direction Facing, TopBottom Half, bool Open, bool Powered, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IOpenable, IPowered, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:trapdoor", "block.minecraft.acacia_trapdoor", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_trapdoor");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 15, "wood", NoteBlockInstrument.Bass, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_trapdoor", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_trapdoor");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 15, "wood", NoteBlockInstrument.Bass, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
@@ -28,15 +28,15 @@ public record AcaciaTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
         I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I4, I5, I4, I5, I6, I7, I6, I7, I2, I3, I2, I3, I6, I7, I6, I7, I4, I5, I4, I5, I8, I9, I8, I9, I2, I3, I2, I3, I8, I9, I8, I9, I4, I5, I4, I5, I10, I11, I10, I11, I2, I3, I2, I3, I10, I11, I10, I11, I4, I5, I4, I5
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 7370];
+    public BlockStateInfo StateInfo => States[StateId - 9040];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -50,7 +50,6 @@ public record AcaciaTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -70,6 +69,7 @@ public record AcaciaTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -95,44 +95,44 @@ public record AcaciaTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7370,
-                                false => 7371,
+                                true => 9040,
+                                false => 9041,
                             },
                             false => Waterlogged switch {
-                                true => 7372,
-                                false => 7373,
+                                true => 9042,
+                                false => 9043,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7374,
-                                false => 7375,
+                                true => 9044,
+                                false => 9045,
                             },
                             false => Waterlogged switch {
-                                true => 7376,
-                                false => 7377,
+                                true => 9046,
+                                false => 9047,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7378,
-                                false => 7379,
+                                true => 9048,
+                                false => 9049,
                             },
                             false => Waterlogged switch {
-                                true => 7380,
-                                false => 7381,
+                                true => 9050,
+                                false => 9051,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7382,
-                                false => 7383,
+                                true => 9052,
+                                false => 9053,
                             },
                             false => Waterlogged switch {
-                                true => 7384,
-                                false => 7385,
+                                true => 9054,
+                                false => 9055,
                             },
                         },
                     },
@@ -142,44 +142,44 @@ public record AcaciaTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7386,
-                                false => 7387,
+                                true => 9056,
+                                false => 9057,
                             },
                             false => Waterlogged switch {
-                                true => 7388,
-                                false => 7389,
+                                true => 9058,
+                                false => 9059,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7390,
-                                false => 7391,
+                                true => 9060,
+                                false => 9061,
                             },
                             false => Waterlogged switch {
-                                true => 7392,
-                                false => 7393,
+                                true => 9062,
+                                false => 9063,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7394,
-                                false => 7395,
+                                true => 9064,
+                                false => 9065,
                             },
                             false => Waterlogged switch {
-                                true => 7396,
-                                false => 7397,
+                                true => 9066,
+                                false => 9067,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7398,
-                                false => 7399,
+                                true => 9068,
+                                false => 9069,
                             },
                             false => Waterlogged switch {
-                                true => 7400,
-                                false => 7401,
+                                true => 9070,
+                                false => 9071,
                             },
                         },
                     },
@@ -189,44 +189,44 @@ public record AcaciaTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7402,
-                                false => 7403,
+                                true => 9072,
+                                false => 9073,
                             },
                             false => Waterlogged switch {
-                                true => 7404,
-                                false => 7405,
+                                true => 9074,
+                                false => 9075,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7406,
-                                false => 7407,
+                                true => 9076,
+                                false => 9077,
                             },
                             false => Waterlogged switch {
-                                true => 7408,
-                                false => 7409,
+                                true => 9078,
+                                false => 9079,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7410,
-                                false => 7411,
+                                true => 9080,
+                                false => 9081,
                             },
                             false => Waterlogged switch {
-                                true => 7412,
-                                false => 7413,
+                                true => 9082,
+                                false => 9083,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7414,
-                                false => 7415,
+                                true => 9084,
+                                false => 9085,
                             },
                             false => Waterlogged switch {
-                                true => 7416,
-                                false => 7417,
+                                true => 9086,
+                                false => 9087,
                             },
                         },
                     },
@@ -236,44 +236,44 @@ public record AcaciaTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7418,
-                                false => 7419,
+                                true => 9088,
+                                false => 9089,
                             },
                             false => Waterlogged switch {
-                                true => 7420,
-                                false => 7421,
+                                true => 9090,
+                                false => 9091,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7422,
-                                false => 7423,
+                                true => 9092,
+                                false => 9093,
                             },
                             false => Waterlogged switch {
-                                true => 7424,
-                                false => 7425,
+                                true => 9094,
+                                false => 9095,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7426,
-                                false => 7427,
+                                true => 9096,
+                                false => 9097,
                             },
                             false => Waterlogged switch {
-                                true => 7428,
-                                false => 7429,
+                                true => 9098,
+                                false => 9099,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7430,
-                                false => 7431,
+                                true => 9100,
+                                false => 9101,
                             },
                             false => Waterlogged switch {
-                                true => 7432,
-                                false => 7433,
+                                true => 9102,
+                                false => 9103,
                             },
                         },
                     },
@@ -286,70 +286,70 @@ public record AcaciaTrapdoorBlock(Identifier Identifier, Direction Facing, TopBo
     
     public IBlock WithState(uint state) {
         return state switch {
-            7370 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
-            7371 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
-            7372 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
-            7373 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
-            7374 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
-            7375 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
-            7376 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
-            7377 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
-            7378 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
-            7379 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
-            7380 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
-            7381 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
-            7382 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
-            7383 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
-            7384 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
-            7385 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
-            7386 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
-            7387 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
-            7388 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
-            7389 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
-            7390 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
-            7391 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
-            7392 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
-            7393 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
-            7394 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
-            7395 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
-            7396 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
-            7397 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
-            7398 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
-            7399 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
-            7400 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
-            7401 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
-            7402 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
-            7403 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
-            7404 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
-            7405 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
-            7406 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
-            7407 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
-            7408 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
-            7409 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
-            7410 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
-            7411 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
-            7412 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
-            7413 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
-            7414 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
-            7415 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
-            7416 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
-            7417 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
-            7418 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
-            7419 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
-            7420 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
-            7421 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
-            7422 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
-            7423 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
-            7424 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
-            7425 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
-            7426 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
-            7427 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
-            7428 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
-            7429 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
-            7430 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
-            7431 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
-            7432 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
-            7433 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
+            9040 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
+            9041 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
+            9042 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
+            9043 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
+            9044 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
+            9045 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
+            9046 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
+            9047 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
+            9048 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
+            9049 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
+            9050 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
+            9051 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
+            9052 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
+            9053 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
+            9054 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
+            9055 => new AcaciaTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
+            9056 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
+            9057 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
+            9058 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
+            9059 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
+            9060 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
+            9061 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
+            9062 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
+            9063 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
+            9064 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
+            9065 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
+            9066 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
+            9067 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
+            9068 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
+            9069 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
+            9070 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
+            9071 => new AcaciaTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
+            9072 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
+            9073 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
+            9074 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
+            9075 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
+            9076 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
+            9077 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
+            9078 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
+            9079 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
+            9080 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
+            9081 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
+            9082 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
+            9083 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
+            9084 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
+            9085 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
+            9086 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
+            9087 => new AcaciaTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
+            9088 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
+            9089 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
+            9090 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
+            9091 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
+            9092 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
+            9093 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
+            9094 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
+            9095 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
+            9096 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
+            9097 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
+            9098 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
+            9099 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
+            9100 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
+            9101 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
+            9102 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
+            9103 => new AcaciaTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

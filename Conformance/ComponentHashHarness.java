@@ -28,7 +28,7 @@ public class ComponentHashHarness {
     public static void main(String[] args) {
         SharedConstants.tryDetectVersion();
         Bootstrap.bootStrap();
-        HolderLookup.Provider registries = VanillaRegistries.createLookup();
+        HolderLookup.Provider registries = VanillaRegistries.createReloadableLookup(VanillaRegistries.createWorldLookup());
         RegistryOps<HashCode> ops = registries.createSerializationContext(HashOps.CRC32C_INSTANCE);
 
         print(ops, "damage 5", DataComponents.DAMAGE, 5);

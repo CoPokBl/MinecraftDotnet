@@ -28,7 +28,14 @@ import net.minecraft.server.Bootstrap;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.ServerPacksSource;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.resources.FileToIdConverter;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.mojang.serialization.DynamicOps;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import net.minecraft.tags.TagLoader;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -80,14 +87,14 @@ public final class CraftingHarness {
         Bootstrap.bootStrap();
 
         MultiPackResourceManager resources = new MultiPackResourceManager(PackType.SERVER_DATA,
-                List.of(ServerPacksSource.createVanillaPackSource()));
+                List.of(ServerPacksSource.createVanillaPackSource().fullResources()));
 
         // Item tags, or every "#minecraft:planks" parses to an empty set. Item components, or
         // ItemStack's constructor throws.
         RegistryAccess registries = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
         TagLoader.loadTagsForExistingRegistries(resources, registries)
                 .forEach(Registry.PendingTags::apply);
-        BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(VanillaRegistries.createLookup())
+        BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(VanillaRegistries.createReloadableLookup(VanillaRegistries.createWorldLookup()))
                 .forEach(DataComponentInitializers.PendingComponents::apply);
 
         List<Loaded> recipes = load(resources, registries);
@@ -118,8 +125,17 @@ public final class CraftingHarness {
     @SuppressWarnings("unchecked")
     private static List<Loaded> load(MultiPackResourceManager resources, HolderLookup.Provider lookup) {
         SortedMap<Identifier, Recipe<?>> parsed = new TreeMap<>();
-        SimpleJsonResourceReloadListener.scanDirectory(resources, Registries.RECIPE,
-                lookup.createSerializationContext(JsonOps.INSTANCE), Recipe.CODEC, parsed);
+        // What SimpleJsonResourceReloadListener.prepare does for the recipe directory.
+        FileToIdConverter lister = FileToIdConverter.registry(Registries.RECIPE);
+        DynamicOps<JsonElement> ops = lookup.createSerializationContext(JsonOps.INSTANCE);
+        for (Map.Entry<Identifier, Resource> file : lister.listMatchingResources(resources).entrySet()) {
+            try (Reader reader = file.getValue().openAsReader()) {
+                Recipe.DIRECT_CODEC.parse(ops, JsonParser.parseReader(reader))
+                        .ifSuccess(recipe -> parsed.put(lister.fileToId(file.getKey()), recipe));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
 
         List<Loaded> result = new ArrayList<>();
         parsed.forEach((id, recipe) -> {

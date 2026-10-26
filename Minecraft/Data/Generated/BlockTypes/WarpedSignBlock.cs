@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WarpedSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock, IRotated, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:standing_sign", "block.minecraft.warped_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:warped_sign", BlockInfo.VanillaOnly, "minecraft:blocks/warped_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 56, "nether_wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.warped_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:warped_sign", BlockInfo.VanillaOnly, "minecraft:blocks/warped_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 56, "nether_wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 21674];
+    public BlockStateInfo StateInfo => States[StateId - 25031];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record WarpedSignBlock(Identifier Identifier, int Rotation, bool Waterlog
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record WarpedSignBlock(Identifier Identifier, int Rotation, bool Waterlog
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -76,68 +76,68 @@ public record WarpedSignBlock(Identifier Identifier, int Rotation, bool Waterlog
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 21674,
-                    false => 21675,
+                    true => 25031,
+                    false => 25032,
                 },
                 1 => Waterlogged switch {
-                    true => 21676,
-                    false => 21677,
+                    true => 25033,
+                    false => 25034,
                 },
                 2 => Waterlogged switch {
-                    true => 21678,
-                    false => 21679,
+                    true => 25035,
+                    false => 25036,
                 },
                 3 => Waterlogged switch {
-                    true => 21680,
-                    false => 21681,
+                    true => 25037,
+                    false => 25038,
                 },
                 4 => Waterlogged switch {
-                    true => 21682,
-                    false => 21683,
+                    true => 25039,
+                    false => 25040,
                 },
                 5 => Waterlogged switch {
-                    true => 21684,
-                    false => 21685,
+                    true => 25041,
+                    false => 25042,
                 },
                 6 => Waterlogged switch {
-                    true => 21686,
-                    false => 21687,
+                    true => 25043,
+                    false => 25044,
                 },
                 7 => Waterlogged switch {
-                    true => 21688,
-                    false => 21689,
+                    true => 25045,
+                    false => 25046,
                 },
                 8 => Waterlogged switch {
-                    true => 21690,
-                    false => 21691,
+                    true => 25047,
+                    false => 25048,
                 },
                 9 => Waterlogged switch {
-                    true => 21692,
-                    false => 21693,
+                    true => 25049,
+                    false => 25050,
                 },
                 10 => Waterlogged switch {
-                    true => 21694,
-                    false => 21695,
+                    true => 25051,
+                    false => 25052,
                 },
                 11 => Waterlogged switch {
-                    true => 21696,
-                    false => 21697,
+                    true => 25053,
+                    false => 25054,
                 },
                 12 => Waterlogged switch {
-                    true => 21698,
-                    false => 21699,
+                    true => 25055,
+                    false => 25056,
                 },
                 13 => Waterlogged switch {
-                    true => 21700,
-                    false => 21701,
+                    true => 25057,
+                    false => 25058,
                 },
                 14 => Waterlogged switch {
-                    true => 21702,
-                    false => 21703,
+                    true => 25059,
+                    false => 25060,
                 },
                 15 => Waterlogged switch {
-                    true => 21704,
-                    false => 21705,
+                    true => 25061,
+                    false => 25062,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -146,38 +146,38 @@ public record WarpedSignBlock(Identifier Identifier, int Rotation, bool Waterlog
     
     public IBlock WithState(uint state) {
         return state switch {
-            21674 => new WarpedSignBlock(Identifier, 0, true),
-            21675 => new WarpedSignBlock(Identifier, 0, false),
-            21676 => new WarpedSignBlock(Identifier, 1, true),
-            21677 => new WarpedSignBlock(Identifier, 1, false),
-            21678 => new WarpedSignBlock(Identifier, 2, true),
-            21679 => new WarpedSignBlock(Identifier, 2, false),
-            21680 => new WarpedSignBlock(Identifier, 3, true),
-            21681 => new WarpedSignBlock(Identifier, 3, false),
-            21682 => new WarpedSignBlock(Identifier, 4, true),
-            21683 => new WarpedSignBlock(Identifier, 4, false),
-            21684 => new WarpedSignBlock(Identifier, 5, true),
-            21685 => new WarpedSignBlock(Identifier, 5, false),
-            21686 => new WarpedSignBlock(Identifier, 6, true),
-            21687 => new WarpedSignBlock(Identifier, 6, false),
-            21688 => new WarpedSignBlock(Identifier, 7, true),
-            21689 => new WarpedSignBlock(Identifier, 7, false),
-            21690 => new WarpedSignBlock(Identifier, 8, true),
-            21691 => new WarpedSignBlock(Identifier, 8, false),
-            21692 => new WarpedSignBlock(Identifier, 9, true),
-            21693 => new WarpedSignBlock(Identifier, 9, false),
-            21694 => new WarpedSignBlock(Identifier, 10, true),
-            21695 => new WarpedSignBlock(Identifier, 10, false),
-            21696 => new WarpedSignBlock(Identifier, 11, true),
-            21697 => new WarpedSignBlock(Identifier, 11, false),
-            21698 => new WarpedSignBlock(Identifier, 12, true),
-            21699 => new WarpedSignBlock(Identifier, 12, false),
-            21700 => new WarpedSignBlock(Identifier, 13, true),
-            21701 => new WarpedSignBlock(Identifier, 13, false),
-            21702 => new WarpedSignBlock(Identifier, 14, true),
-            21703 => new WarpedSignBlock(Identifier, 14, false),
-            21704 => new WarpedSignBlock(Identifier, 15, true),
-            21705 => new WarpedSignBlock(Identifier, 15, false),
+            25031 => new WarpedSignBlock(Identifier, 0, true),
+            25032 => new WarpedSignBlock(Identifier, 0, false),
+            25033 => new WarpedSignBlock(Identifier, 1, true),
+            25034 => new WarpedSignBlock(Identifier, 1, false),
+            25035 => new WarpedSignBlock(Identifier, 2, true),
+            25036 => new WarpedSignBlock(Identifier, 2, false),
+            25037 => new WarpedSignBlock(Identifier, 3, true),
+            25038 => new WarpedSignBlock(Identifier, 3, false),
+            25039 => new WarpedSignBlock(Identifier, 4, true),
+            25040 => new WarpedSignBlock(Identifier, 4, false),
+            25041 => new WarpedSignBlock(Identifier, 5, true),
+            25042 => new WarpedSignBlock(Identifier, 5, false),
+            25043 => new WarpedSignBlock(Identifier, 6, true),
+            25044 => new WarpedSignBlock(Identifier, 6, false),
+            25045 => new WarpedSignBlock(Identifier, 7, true),
+            25046 => new WarpedSignBlock(Identifier, 7, false),
+            25047 => new WarpedSignBlock(Identifier, 8, true),
+            25048 => new WarpedSignBlock(Identifier, 8, false),
+            25049 => new WarpedSignBlock(Identifier, 9, true),
+            25050 => new WarpedSignBlock(Identifier, 9, false),
+            25051 => new WarpedSignBlock(Identifier, 10, true),
+            25052 => new WarpedSignBlock(Identifier, 10, false),
+            25053 => new WarpedSignBlock(Identifier, 11, true),
+            25054 => new WarpedSignBlock(Identifier, 11, false),
+            25055 => new WarpedSignBlock(Identifier, 12, true),
+            25056 => new WarpedSignBlock(Identifier, 12, false),
+            25057 => new WarpedSignBlock(Identifier, 13, true),
+            25058 => new WarpedSignBlock(Identifier, 13, false),
+            25059 => new WarpedSignBlock(Identifier, 14, true),
+            25060 => new WarpedSignBlock(Identifier, 14, false),
+            25061 => new WarpedSignBlock(Identifier, 15, true),
+            25062 => new WarpedSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

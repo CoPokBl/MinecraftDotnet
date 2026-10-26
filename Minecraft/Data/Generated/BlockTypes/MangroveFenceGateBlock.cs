@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock, IHorizontalFacing, IInWall, IOpenable, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:fence_gate", "block.minecraft.mangrove_fence_gate", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_fence_gate", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_fence_gate");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.Normal, 28, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S68, BlockShapes.S1, BlockShapes.S1, BlockShapes.S69, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_fence_gate", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_fence_gate", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_fence_gate");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.PushPull, 28, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S68, BlockShapes.S1, BlockShapes.S1, BlockShapes.S69, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { PathfindableLand = false, PathfindableAir = false, CollisionShape = BlockShapes.S40, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S39, OcclusionShape = BlockShapes.S71 };
     private static readonly BlockStateInfo I3 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S71, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
@@ -24,15 +24,15 @@ public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bo
         I0, I0, I1, I1, I2, I2, I3, I3, I0, I0, I1, I1, I2, I2, I3, I3, I4, I4, I5, I5, I6, I6, I7, I7, I4, I4, I5, I5, I6, I6, I7, I7
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 13708];
+    public BlockStateInfo StateInfo => States[StateId - 15555];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -46,7 +46,6 @@ public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -66,6 +65,7 @@ public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -88,88 +88,88 @@ public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bo
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13708,
-                            false => 13709,
+                            true => 15555,
+                            false => 15556,
                         },
                         false => Powered switch {
-                            true => 13710,
-                            false => 13711,
+                            true => 15557,
+                            false => 15558,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13712,
-                            false => 13713,
+                            true => 15559,
+                            false => 15560,
                         },
                         false => Powered switch {
-                            true => 13714,
-                            false => 13715,
+                            true => 15561,
+                            false => 15562,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13716,
-                            false => 13717,
+                            true => 15563,
+                            false => 15564,
                         },
                         false => Powered switch {
-                            true => 13718,
-                            false => 13719,
+                            true => 15565,
+                            false => 15566,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13720,
-                            false => 13721,
+                            true => 15567,
+                            false => 15568,
                         },
                         false => Powered switch {
-                            true => 13722,
-                            false => 13723,
+                            true => 15569,
+                            false => 15570,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13724,
-                            false => 13725,
+                            true => 15571,
+                            false => 15572,
                         },
                         false => Powered switch {
-                            true => 13726,
-                            false => 13727,
+                            true => 15573,
+                            false => 15574,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13728,
-                            false => 13729,
+                            true => 15575,
+                            false => 15576,
                         },
                         false => Powered switch {
-                            true => 13730,
-                            false => 13731,
+                            true => 15577,
+                            false => 15578,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13732,
-                            false => 13733,
+                            true => 15579,
+                            false => 15580,
                         },
                         false => Powered switch {
-                            true => 13734,
-                            false => 13735,
+                            true => 15581,
+                            false => 15582,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13736,
-                            false => 13737,
+                            true => 15583,
+                            false => 15584,
                         },
                         false => Powered switch {
-                            true => 13738,
-                            false => 13739,
+                            true => 15585,
+                            false => 15586,
                         },
                     },
                 },
@@ -180,38 +180,38 @@ public record MangroveFenceGateBlock(Identifier Identifier, Direction Facing, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            13708 => new MangroveFenceGateBlock(Identifier, Direction.North, true, true, true),
-            13709 => new MangroveFenceGateBlock(Identifier, Direction.North, true, true, false),
-            13710 => new MangroveFenceGateBlock(Identifier, Direction.North, true, false, true),
-            13711 => new MangroveFenceGateBlock(Identifier, Direction.North, true, false, false),
-            13712 => new MangroveFenceGateBlock(Identifier, Direction.North, false, true, true),
-            13713 => new MangroveFenceGateBlock(Identifier, Direction.North, false, true, false),
-            13714 => new MangroveFenceGateBlock(Identifier, Direction.North, false, false, true),
-            13715 => new MangroveFenceGateBlock(Identifier, Direction.North, false, false, false),
-            13716 => new MangroveFenceGateBlock(Identifier, Direction.South, true, true, true),
-            13717 => new MangroveFenceGateBlock(Identifier, Direction.South, true, true, false),
-            13718 => new MangroveFenceGateBlock(Identifier, Direction.South, true, false, true),
-            13719 => new MangroveFenceGateBlock(Identifier, Direction.South, true, false, false),
-            13720 => new MangroveFenceGateBlock(Identifier, Direction.South, false, true, true),
-            13721 => new MangroveFenceGateBlock(Identifier, Direction.South, false, true, false),
-            13722 => new MangroveFenceGateBlock(Identifier, Direction.South, false, false, true),
-            13723 => new MangroveFenceGateBlock(Identifier, Direction.South, false, false, false),
-            13724 => new MangroveFenceGateBlock(Identifier, Direction.West, true, true, true),
-            13725 => new MangroveFenceGateBlock(Identifier, Direction.West, true, true, false),
-            13726 => new MangroveFenceGateBlock(Identifier, Direction.West, true, false, true),
-            13727 => new MangroveFenceGateBlock(Identifier, Direction.West, true, false, false),
-            13728 => new MangroveFenceGateBlock(Identifier, Direction.West, false, true, true),
-            13729 => new MangroveFenceGateBlock(Identifier, Direction.West, false, true, false),
-            13730 => new MangroveFenceGateBlock(Identifier, Direction.West, false, false, true),
-            13731 => new MangroveFenceGateBlock(Identifier, Direction.West, false, false, false),
-            13732 => new MangroveFenceGateBlock(Identifier, Direction.East, true, true, true),
-            13733 => new MangroveFenceGateBlock(Identifier, Direction.East, true, true, false),
-            13734 => new MangroveFenceGateBlock(Identifier, Direction.East, true, false, true),
-            13735 => new MangroveFenceGateBlock(Identifier, Direction.East, true, false, false),
-            13736 => new MangroveFenceGateBlock(Identifier, Direction.East, false, true, true),
-            13737 => new MangroveFenceGateBlock(Identifier, Direction.East, false, true, false),
-            13738 => new MangroveFenceGateBlock(Identifier, Direction.East, false, false, true),
-            13739 => new MangroveFenceGateBlock(Identifier, Direction.East, false, false, false),
+            15555 => new MangroveFenceGateBlock(Identifier, Direction.North, true, true, true),
+            15556 => new MangroveFenceGateBlock(Identifier, Direction.North, true, true, false),
+            15557 => new MangroveFenceGateBlock(Identifier, Direction.North, true, false, true),
+            15558 => new MangroveFenceGateBlock(Identifier, Direction.North, true, false, false),
+            15559 => new MangroveFenceGateBlock(Identifier, Direction.North, false, true, true),
+            15560 => new MangroveFenceGateBlock(Identifier, Direction.North, false, true, false),
+            15561 => new MangroveFenceGateBlock(Identifier, Direction.North, false, false, true),
+            15562 => new MangroveFenceGateBlock(Identifier, Direction.North, false, false, false),
+            15563 => new MangroveFenceGateBlock(Identifier, Direction.South, true, true, true),
+            15564 => new MangroveFenceGateBlock(Identifier, Direction.South, true, true, false),
+            15565 => new MangroveFenceGateBlock(Identifier, Direction.South, true, false, true),
+            15566 => new MangroveFenceGateBlock(Identifier, Direction.South, true, false, false),
+            15567 => new MangroveFenceGateBlock(Identifier, Direction.South, false, true, true),
+            15568 => new MangroveFenceGateBlock(Identifier, Direction.South, false, true, false),
+            15569 => new MangroveFenceGateBlock(Identifier, Direction.South, false, false, true),
+            15570 => new MangroveFenceGateBlock(Identifier, Direction.South, false, false, false),
+            15571 => new MangroveFenceGateBlock(Identifier, Direction.West, true, true, true),
+            15572 => new MangroveFenceGateBlock(Identifier, Direction.West, true, true, false),
+            15573 => new MangroveFenceGateBlock(Identifier, Direction.West, true, false, true),
+            15574 => new MangroveFenceGateBlock(Identifier, Direction.West, true, false, false),
+            15575 => new MangroveFenceGateBlock(Identifier, Direction.West, false, true, true),
+            15576 => new MangroveFenceGateBlock(Identifier, Direction.West, false, true, false),
+            15577 => new MangroveFenceGateBlock(Identifier, Direction.West, false, false, true),
+            15578 => new MangroveFenceGateBlock(Identifier, Direction.West, false, false, false),
+            15579 => new MangroveFenceGateBlock(Identifier, Direction.East, true, true, true),
+            15580 => new MangroveFenceGateBlock(Identifier, Direction.East, true, true, false),
+            15581 => new MangroveFenceGateBlock(Identifier, Direction.East, true, false, true),
+            15582 => new MangroveFenceGateBlock(Identifier, Direction.East, true, false, false),
+            15583 => new MangroveFenceGateBlock(Identifier, Direction.East, false, true, true),
+            15584 => new MangroveFenceGateBlock(Identifier, Direction.East, false, true, false),
+            15585 => new MangroveFenceGateBlock(Identifier, Direction.East, false, false, true),
+            15586 => new MangroveFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

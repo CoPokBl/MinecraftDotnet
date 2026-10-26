@@ -26,5 +26,11 @@ public enum EnvironmentAttributeValueKind {
     AmbientParticles,
     AmbientSounds,
     BackgroundMusic,
-    BedRule
+    BedRule,
+
+    /// <summary>
+    /// <c>MobSpawnSettings</c>, kept as the tag it arrived as: the protocol layer does not spawn
+    /// anything, and the attribute is never sent to a client.
+    /// </summary>
+    MobSpawnSettings
 }

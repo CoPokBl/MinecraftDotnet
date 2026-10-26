@@ -85,6 +85,7 @@ public readonly record struct EntityClass {
     public static readonly EntityClass Cow = new("Cow");
     public static readonly EntityClass Creaking = new("Creaking");
     public static readonly EntityClass Creeper = new("Creeper");
+    public static readonly EntityClass Cushion = new("Cushion");
     public static readonly EntityClass Display = new("Display");
     public static readonly EntityClass Dolphin = new("Dolphin");
     public static readonly EntityClass Donkey = new("Donkey");
@@ -93,7 +94,7 @@ public readonly record struct EntityClass {
     public static readonly EntityClass ElderGuardian = new("ElderGuardian");
     public static readonly EntityClass EndCrystal = new("EndCrystal");
     public static readonly EntityClass EnderDragon = new("EnderDragon");
-    public static readonly EntityClass EnderMan = new("EnderMan");
+    public static readonly EntityClass Enderman = new("Enderman");
     public static readonly EntityClass Endermite = new("Endermite");
     public static readonly EntityClass Entity = new("Entity");
     public static readonly EntityClass Evoker = new("Evoker");

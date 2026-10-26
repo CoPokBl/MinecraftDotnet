@@ -1,7 +1,7 @@
 using System.Text.Json;
+using ManagedServer.Terrain.Data;
 using ManagedServer.Terrain.Features;
 using ManagedServer.Terrain.Features.Values;
-using ManagedServer.Terrain.Surface;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
@@ -19,8 +19,6 @@ namespace ManagedServer.Terrain.Structures.Templates;
 /// worlds that generate and are quietly wrong.
 /// </remarks>
 public sealed class ProcessorParser(MinecraftRegistry registry) {
-    private readonly SurfaceRuleParser _states = new(registry);
-
     /// <summary>The <c>processors</c> array of a processor list file.</summary>
     public List<IStructureProcessor> ParseList(JsonElement root) {
         List<IStructureProcessor> processors = [];
@@ -41,7 +39,7 @@ public sealed class ProcessorParser(MinecraftRegistry registry) {
 
             case "block_ignore":
                 return new BlockIgnoreProcessor(element.GetProperty("blocks").EnumerateArray()
-                    .Select(block => Identifier.Parse(block.GetProperty("Name").GetString()!))
+                    .Select(block => StateParser.ReadJson(registry, block).Identifier)
                     .ToArray());
 
             case "block_rot":
@@ -98,7 +96,7 @@ public sealed class ProcessorParser(MinecraftRegistry registry) {
             element.TryGetProperty("position_predicate", out JsonElement position)
                 ? ParsePosRuleTest(position)
                 : IPosRuleTest.AlwaysTrue.Instance,
-            _states.ParseBlockState(element.GetProperty("output_state")),
+            StateParser.ReadJson(registry, element.GetProperty("output_state")).StateId,
             element.TryGetProperty("block_entity_modifier", out JsonElement modifier)
                 ? ParseBlockEntityModifier(modifier)
                 : IRuleBlockEntityModifier.Passthrough.Instance);
@@ -114,7 +112,7 @@ public sealed class ProcessorParser(MinecraftRegistry registry) {
                 Identifier.Parse(element.GetProperty("block").GetString()!)),
 
             "blockstate_match" => new IRuleTest.BlockStateMatch(
-                _states.ParseBlockState(element.GetProperty("block_state"))),
+                StateParser.ReadJson(registry, element.GetProperty("block_state")).StateId),
 
             "tag_match" => new IRuleTest.TagMatch(
                 Identifier.Parse(element.GetProperty("tag").GetString()!)),
@@ -124,8 +122,19 @@ public sealed class ProcessorParser(MinecraftRegistry registry) {
                 element.GetProperty("probability").GetSingle()),
 
             "random_blockstate_match" => new IRuleTest.RandomBlockStateMatch(
-                _states.ParseBlockState(element.GetProperty("block_state")),
+                StateParser.ReadJson(registry, element.GetProperty("block_state")).StateId,
                 element.GetProperty("probability").GetSingle()),
+
+            "all_of" => new IRuleTest.AllOf(element.GetProperty("rules").EnumerateArray()
+                .Select(ParseRuleTest).ToList()),
+
+            "any_of" => new IRuleTest.AnyOf(element.GetProperty("rules").EnumerateArray()
+                .Select(ParseRuleTest).ToList()),
+
+            "not" => new IRuleTest.Not(ParseRuleTest(element.GetProperty("rule"))),
+
+            "height_match" => new IRuleTest.HeightMatch(element.GetProperty("min_inclusive").GetInt32(),
+                element.GetProperty("max_inclusive").GetInt32()),
 
             _ => throw new FormatException($"Unknown structure rule test type \"{type}\".")
         };

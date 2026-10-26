@@ -33,7 +33,7 @@ public sealed record ProcessorRule(
     public bool Test(IFeatureLevel level, uint inputState, Vec3<int> inTemplate, Vec3<int> world,
         Vec3<int> reference, RandomSource random) {
 
-        return InputPredicate.Test(inputState, random, level)
+        return InputPredicate.Test(inputState, world, random, level)
             && LocationPredicate.TestAgainstWorld(level, world, random)
             && PositionPredicate.Test(inTemplate, world, reference, random);
     }

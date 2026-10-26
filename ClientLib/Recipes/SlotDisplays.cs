@@ -1,3 +1,4 @@
+using Minecraft.Schemas.Tags;
 using ClientLib.World.BlockEntities;
 using Minecraft.Data.Components;
 using Minecraft.Data.Components.Types;
@@ -45,10 +46,13 @@ public static class SlotDisplays {
             case SlotDisplay.Stack stack:
                 into.Add(stack.Value);
                 break;
-            case SlotDisplay.Tag tag:
+            case SlotDisplay.Tag { Items: IdSet.Tag tag }:
                 if (context.ItemTag(tag.TagName) is { } ids) {
                     into.AddRange(ids.Select(id => new ItemStack(context.Registry.Items[id])));
                 }
+                break;
+            case SlotDisplay.Tag { Items: IdSet.Ids listed }:
+                into.AddRange(listed.Values.Select(id => new ItemStack(context.Registry.Items[id])));
                 break;
             case SlotDisplay.Composite composite:
                 foreach (SlotDisplay part in composite.Contents) {

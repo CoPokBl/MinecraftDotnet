@@ -47,8 +47,10 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
             .WriteVarInt(DimensionType)
             .WriteString(DimensionName)
             .WriteLong(HashedSeed)
-            .WriteUnsignedByte((byte)GameMode)
-            .WriteByte((int)PreviousGameMode)
+            .WriteVarInt((int)GameMode)
+            // GameType.OPTIONAL_STREAM_CODEC: none is 0 and a mode is its id plus one, which is what
+            // Undefined being -1 makes of it.
+            .WriteVarInt((int)PreviousGameMode + 1)
             .WriteBoolean(IsDebug)
             .WriteBoolean(IsFlat)
             .WritePrefixedOptional(Location,
@@ -74,8 +76,8 @@ public class ClientBoundLoginPacket : ClientBoundPacket {
         DimensionType = r.ReadVarInt(),
         DimensionName = r.ReadString(),
         HashedSeed = r.ReadLong(),
-        GameMode = (GameMode)r.Read(),
-        PreviousGameMode = (GameMode)r.ReadByte(),
+        GameMode = (GameMode)r.ReadVarInt(),
+        PreviousGameMode = (GameMode)(r.ReadVarInt() - 1),
         IsDebug = r.ReadBoolean(),
         IsFlat = r.ReadBoolean(),
         Location = r.ReadPrefixedOptional(re => 

@@ -186,6 +186,10 @@ public sealed partial class ParticleEngine {
         });
         Register(Particle.CherryLeaves, (e, o, x, y, z, xa, ya, za) => e.FallingLeaves(o, x, y, z, 0.25F, 2.0F, false, true, 1.0F, 0.0F));
         Register(Particle.PaleOakLeaves, (e, o, x, y, z, xa, ya, za) => e.FallingLeaves(o, x, y, z, 0.07F, 10.0F, true, false, 2.0F, 0.021F));
+        // PoplarProvider, the same fall as the pale oak's.
+        foreach (IParticle poplar in (IParticle[])[Particle.RedPoplarLeaves, Particle.OrangePoplarLeaves, Particle.YellowPoplarLeaves]) {
+            Register(poplar, (e, o, x, y, z, xa, ya, za) => e.FallingLeaves(o, x, y, z, 0.07F, 10.0F, true, false, 2.0F, 0.021F));
+        }
         Register(Particle.TintedLeaves, (e, o, x, y, z, xa, ya, za) => e.Tweak(e.FallingLeaves(o, x, y, z, 0.07F, 10.0F, true, false, 2.0F, 0.021F),
             (ref ParticleState p) => p.SetColour(((TintedLeavesParticle)o).Argb)));
         Register(Particle.Vibration, (e, o, x, y, z, xa, ya, za) => e.Vibration(o, (VibrationParticle)o, x, y, z));
@@ -1262,8 +1266,8 @@ public sealed partial class ParticleEngine {
     }
 
     /// <summary>
-    /// <c>ClientLevel.addBreakingBlockEffect</c>, each tick the player digs: one slow, small terrain particle just off
-    /// the face being hit, somewhere across it.
+    /// <c>ClientLevel.addBreakingParticles</c>, as digging starts and on the server's level events while it goes on:
+    /// one slow, small terrain particle just off the face being hit, somewhere across it.
     /// </summary>
     public void Crack(int x, int y, int z, BlockFace face) {
         if (!Ready()) {

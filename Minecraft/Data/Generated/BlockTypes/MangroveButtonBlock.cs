@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MangroveButtonBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock, IAttachFaced, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:button", "block.minecraft.mangrove_button", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_button", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_button");
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S0, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_button", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_button", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_button");
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Popped, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, true, false, true, [], null, BlockShapes.S0, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S2 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S3 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S4 };
@@ -32,15 +32,15 @@ public record MangroveButtonBlock(Identifier Identifier, AttachDirection Face, D
         I0, I1, I0, I1, I2, I3, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I12, I13, I14, I15, I14, I15
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 10867];
+    public BlockStateInfo StateInfo => States[StateId - 12610];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -54,7 +54,6 @@ public record MangroveButtonBlock(Identifier Identifier, AttachDirection Face, D
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -74,6 +73,7 @@ public record MangroveButtonBlock(Identifier Identifier, AttachDirection Face, D
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -93,58 +93,58 @@ public record MangroveButtonBlock(Identifier Identifier, AttachDirection Face, D
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10867,
-                        false => 10868,
+                        true => 12610,
+                        false => 12611,
                     },
                     Direction.South => Powered switch {
-                        true => 10869,
-                        false => 10870,
+                        true => 12612,
+                        false => 12613,
                     },
                     Direction.West => Powered switch {
-                        true => 10871,
-                        false => 10872,
+                        true => 12614,
+                        false => 12615,
                     },
                     Direction.East => Powered switch {
-                        true => 10873,
-                        false => 10874,
+                        true => 12616,
+                        false => 12617,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10875,
-                        false => 10876,
+                        true => 12618,
+                        false => 12619,
                     },
                     Direction.South => Powered switch {
-                        true => 10877,
-                        false => 10878,
+                        true => 12620,
+                        false => 12621,
                     },
                     Direction.West => Powered switch {
-                        true => 10879,
-                        false => 10880,
+                        true => 12622,
+                        false => 12623,
                     },
                     Direction.East => Powered switch {
-                        true => 10881,
-                        false => 10882,
+                        true => 12624,
+                        false => 12625,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10883,
-                        false => 10884,
+                        true => 12626,
+                        false => 12627,
                     },
                     Direction.South => Powered switch {
-                        true => 10885,
-                        false => 10886,
+                        true => 12628,
+                        false => 12629,
                     },
                     Direction.West => Powered switch {
-                        true => 10887,
-                        false => 10888,
+                        true => 12630,
+                        false => 12631,
                     },
                     Direction.East => Powered switch {
-                        true => 10889,
-                        false => 10890,
+                        true => 12632,
+                        false => 12633,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -155,30 +155,30 @@ public record MangroveButtonBlock(Identifier Identifier, AttachDirection Face, D
     
     public IBlock WithState(uint state) {
         return state switch {
-            10867 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            10868 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            10869 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            10870 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            10871 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            10872 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            10873 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            10874 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            10875 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            10876 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            10877 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            10878 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            10879 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            10880 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            10881 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            10882 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            10883 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            10884 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            10885 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            10886 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            10887 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            10888 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            10889 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            10890 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            12610 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            12611 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            12612 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            12613 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            12614 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            12615 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            12616 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            12617 => new MangroveButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            12618 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            12619 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            12620 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            12621 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            12622 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            12623 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            12624 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            12625 => new MangroveButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            12626 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            12627 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            12628 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            12629 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            12630 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            12631 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            12632 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            12633 => new MangroveButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

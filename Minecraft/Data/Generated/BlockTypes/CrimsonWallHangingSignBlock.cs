@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CrimsonWallHangingSignBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:wall_hanging_sign", "block.minecraft.crimson_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:crimson_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_hanging_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 53, "nether_wood_hanging_sign", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
+    private static readonly BlockInfo Data = new("block.minecraft.crimson_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:crimson_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 53, "nether_wood_hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S116, BlockShapes.S117, BlockShapes.S1, BlockShapes.S1, BlockShapes.S117, BlockShapes.S116);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S118, CollisionShape = BlockShapes.S119, VisualShape = BlockShapes.S119, SupportShape = BlockShapes.S118 };
@@ -20,15 +20,15 @@ public record CrimsonWallHangingSignBlock(Identifier Identifier, Direction Facin
         I0, I1, I0, I1, I2, I3, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6747];
+    public BlockStateInfo StateInfo => States[StateId - 8415];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record CrimsonWallHangingSignBlock(Identifier Identifier, Direction Facin
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record CrimsonWallHangingSignBlock(Identifier Identifier, Direction Facin
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,20 +78,20 @@ public record CrimsonWallHangingSignBlock(Identifier Identifier, Direction Facin
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 6747,
-                    false => 6748,
+                    true => 8415,
+                    false => 8416,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 6749,
-                    false => 6750,
+                    true => 8417,
+                    false => 8418,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 6751,
-                    false => 6752,
+                    true => 8419,
+                    false => 8420,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 6753,
-                    false => 6754,
+                    true => 8421,
+                    false => 8422,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -100,14 +100,14 @@ public record CrimsonWallHangingSignBlock(Identifier Identifier, Direction Facin
     
     public IBlock WithState(uint state) {
         return state switch {
-            6747 => new CrimsonWallHangingSignBlock(Identifier, Direction.North, true),
-            6748 => new CrimsonWallHangingSignBlock(Identifier, Direction.North, false),
-            6749 => new CrimsonWallHangingSignBlock(Identifier, Direction.South, true),
-            6750 => new CrimsonWallHangingSignBlock(Identifier, Direction.South, false),
-            6751 => new CrimsonWallHangingSignBlock(Identifier, Direction.West, true),
-            6752 => new CrimsonWallHangingSignBlock(Identifier, Direction.West, false),
-            6753 => new CrimsonWallHangingSignBlock(Identifier, Direction.East, true),
-            6754 => new CrimsonWallHangingSignBlock(Identifier, Direction.East, false),
+            8415 => new CrimsonWallHangingSignBlock(Identifier, Direction.North, true),
+            8416 => new CrimsonWallHangingSignBlock(Identifier, Direction.North, false),
+            8417 => new CrimsonWallHangingSignBlock(Identifier, Direction.South, true),
+            8418 => new CrimsonWallHangingSignBlock(Identifier, Direction.South, false),
+            8419 => new CrimsonWallHangingSignBlock(Identifier, Direction.West, true),
+            8420 => new CrimsonWallHangingSignBlock(Identifier, Direction.West, false),
+            8421 => new CrimsonWallHangingSignBlock(Identifier, Direction.East, true),
+            8422 => new CrimsonWallHangingSignBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

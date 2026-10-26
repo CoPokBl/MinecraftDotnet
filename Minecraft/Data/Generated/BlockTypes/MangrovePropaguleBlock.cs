@@ -11,30 +11,30 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hanging, int Stage, bool Waterlogged) : IBlock, IAged, IHanging, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:mangrove_propagule", "block.minecraft.mangrove_propagule", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:mangrove_propagule", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_propagule") { ShapeOffsets = BlockShapeOffsets.Block };
-    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Destroy, 7, "grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S639, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_propagule", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:mangrove_propagule", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_propagule") { ShapeOffsets = BlockShapeOffsets.Block };
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Popped, 7, "grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S640, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S387 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S387 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S640 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S640 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S641 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S641 };
-    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S642 };
-    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S642 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S387 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S641 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S641 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S642 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S642 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S643 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S643 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I2, I3, I2, I3, I4, I5, I4, I5, I2, I3, I2, I3, I6, I7, I6, I7, I2, I3, I2, I3, I8, I9, I8, I9, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 45];
+    public BlockStateInfo StateInfo => States[StateId - 46];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -48,7 +48,6 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -68,6 +67,7 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -88,23 +88,23 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
                 0 => Hanging switch {
                     true => Stage switch {
                         0 => Waterlogged switch {
-                            true => 45,
-                            false => 46,
+                            true => 46,
+                            false => 47,
                         },
                         1 => Waterlogged switch {
-                            true => 47,
-                            false => 48,
+                            true => 48,
+                            false => 49,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     false => Stage switch {
                         0 => Waterlogged switch {
-                            true => 49,
-                            false => 50,
+                            true => 50,
+                            false => 51,
                         },
                         1 => Waterlogged switch {
-                            true => 51,
-                            false => 52,
+                            true => 52,
+                            false => 53,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
@@ -112,23 +112,23 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
                 1 => Hanging switch {
                     true => Stage switch {
                         0 => Waterlogged switch {
-                            true => 53,
-                            false => 54,
+                            true => 54,
+                            false => 55,
                         },
                         1 => Waterlogged switch {
-                            true => 55,
-                            false => 56,
+                            true => 56,
+                            false => 57,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     false => Stage switch {
                         0 => Waterlogged switch {
-                            true => 57,
-                            false => 58,
+                            true => 58,
+                            false => 59,
                         },
                         1 => Waterlogged switch {
-                            true => 59,
-                            false => 60,
+                            true => 60,
+                            false => 61,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
@@ -136,23 +136,23 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
                 2 => Hanging switch {
                     true => Stage switch {
                         0 => Waterlogged switch {
-                            true => 61,
-                            false => 62,
+                            true => 62,
+                            false => 63,
                         },
                         1 => Waterlogged switch {
-                            true => 63,
-                            false => 64,
+                            true => 64,
+                            false => 65,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     false => Stage switch {
                         0 => Waterlogged switch {
-                            true => 65,
-                            false => 66,
+                            true => 66,
+                            false => 67,
                         },
                         1 => Waterlogged switch {
-                            true => 67,
-                            false => 68,
+                            true => 68,
+                            false => 69,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
@@ -160,23 +160,23 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
                 3 => Hanging switch {
                     true => Stage switch {
                         0 => Waterlogged switch {
-                            true => 69,
-                            false => 70,
+                            true => 70,
+                            false => 71,
                         },
                         1 => Waterlogged switch {
-                            true => 71,
-                            false => 72,
+                            true => 72,
+                            false => 73,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     false => Stage switch {
                         0 => Waterlogged switch {
-                            true => 73,
-                            false => 74,
+                            true => 74,
+                            false => 75,
                         },
                         1 => Waterlogged switch {
-                            true => 75,
-                            false => 76,
+                            true => 76,
+                            false => 77,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
@@ -184,23 +184,23 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
                 4 => Hanging switch {
                     true => Stage switch {
                         0 => Waterlogged switch {
-                            true => 77,
-                            false => 78,
+                            true => 78,
+                            false => 79,
                         },
                         1 => Waterlogged switch {
-                            true => 79,
-                            false => 80,
+                            true => 80,
+                            false => 81,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     false => Stage switch {
                         0 => Waterlogged switch {
-                            true => 81,
-                            false => 82,
+                            true => 82,
+                            false => 83,
                         },
                         1 => Waterlogged switch {
-                            true => 83,
-                            false => 84,
+                            true => 84,
+                            false => 85,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
@@ -212,46 +212,46 @@ public record MangrovePropaguleBlock(Identifier Identifier, int Age, bool Hangin
     
     public IBlock WithState(uint state) {
         return state switch {
-            45 => new MangrovePropaguleBlock(Identifier, 0, true, 0, true),
-            46 => new MangrovePropaguleBlock(Identifier, 0, true, 0, false),
-            47 => new MangrovePropaguleBlock(Identifier, 0, true, 1, true),
-            48 => new MangrovePropaguleBlock(Identifier, 0, true, 1, false),
-            49 => new MangrovePropaguleBlock(Identifier, 0, false, 0, true),
-            50 => new MangrovePropaguleBlock(Identifier, 0, false, 0, false),
-            51 => new MangrovePropaguleBlock(Identifier, 0, false, 1, true),
-            52 => new MangrovePropaguleBlock(Identifier, 0, false, 1, false),
-            53 => new MangrovePropaguleBlock(Identifier, 1, true, 0, true),
-            54 => new MangrovePropaguleBlock(Identifier, 1, true, 0, false),
-            55 => new MangrovePropaguleBlock(Identifier, 1, true, 1, true),
-            56 => new MangrovePropaguleBlock(Identifier, 1, true, 1, false),
-            57 => new MangrovePropaguleBlock(Identifier, 1, false, 0, true),
-            58 => new MangrovePropaguleBlock(Identifier, 1, false, 0, false),
-            59 => new MangrovePropaguleBlock(Identifier, 1, false, 1, true),
-            60 => new MangrovePropaguleBlock(Identifier, 1, false, 1, false),
-            61 => new MangrovePropaguleBlock(Identifier, 2, true, 0, true),
-            62 => new MangrovePropaguleBlock(Identifier, 2, true, 0, false),
-            63 => new MangrovePropaguleBlock(Identifier, 2, true, 1, true),
-            64 => new MangrovePropaguleBlock(Identifier, 2, true, 1, false),
-            65 => new MangrovePropaguleBlock(Identifier, 2, false, 0, true),
-            66 => new MangrovePropaguleBlock(Identifier, 2, false, 0, false),
-            67 => new MangrovePropaguleBlock(Identifier, 2, false, 1, true),
-            68 => new MangrovePropaguleBlock(Identifier, 2, false, 1, false),
-            69 => new MangrovePropaguleBlock(Identifier, 3, true, 0, true),
-            70 => new MangrovePropaguleBlock(Identifier, 3, true, 0, false),
-            71 => new MangrovePropaguleBlock(Identifier, 3, true, 1, true),
-            72 => new MangrovePropaguleBlock(Identifier, 3, true, 1, false),
-            73 => new MangrovePropaguleBlock(Identifier, 3, false, 0, true),
-            74 => new MangrovePropaguleBlock(Identifier, 3, false, 0, false),
-            75 => new MangrovePropaguleBlock(Identifier, 3, false, 1, true),
-            76 => new MangrovePropaguleBlock(Identifier, 3, false, 1, false),
-            77 => new MangrovePropaguleBlock(Identifier, 4, true, 0, true),
-            78 => new MangrovePropaguleBlock(Identifier, 4, true, 0, false),
-            79 => new MangrovePropaguleBlock(Identifier, 4, true, 1, true),
-            80 => new MangrovePropaguleBlock(Identifier, 4, true, 1, false),
-            81 => new MangrovePropaguleBlock(Identifier, 4, false, 0, true),
-            82 => new MangrovePropaguleBlock(Identifier, 4, false, 0, false),
-            83 => new MangrovePropaguleBlock(Identifier, 4, false, 1, true),
-            84 => new MangrovePropaguleBlock(Identifier, 4, false, 1, false),
+            46 => new MangrovePropaguleBlock(Identifier, 0, true, 0, true),
+            47 => new MangrovePropaguleBlock(Identifier, 0, true, 0, false),
+            48 => new MangrovePropaguleBlock(Identifier, 0, true, 1, true),
+            49 => new MangrovePropaguleBlock(Identifier, 0, true, 1, false),
+            50 => new MangrovePropaguleBlock(Identifier, 0, false, 0, true),
+            51 => new MangrovePropaguleBlock(Identifier, 0, false, 0, false),
+            52 => new MangrovePropaguleBlock(Identifier, 0, false, 1, true),
+            53 => new MangrovePropaguleBlock(Identifier, 0, false, 1, false),
+            54 => new MangrovePropaguleBlock(Identifier, 1, true, 0, true),
+            55 => new MangrovePropaguleBlock(Identifier, 1, true, 0, false),
+            56 => new MangrovePropaguleBlock(Identifier, 1, true, 1, true),
+            57 => new MangrovePropaguleBlock(Identifier, 1, true, 1, false),
+            58 => new MangrovePropaguleBlock(Identifier, 1, false, 0, true),
+            59 => new MangrovePropaguleBlock(Identifier, 1, false, 0, false),
+            60 => new MangrovePropaguleBlock(Identifier, 1, false, 1, true),
+            61 => new MangrovePropaguleBlock(Identifier, 1, false, 1, false),
+            62 => new MangrovePropaguleBlock(Identifier, 2, true, 0, true),
+            63 => new MangrovePropaguleBlock(Identifier, 2, true, 0, false),
+            64 => new MangrovePropaguleBlock(Identifier, 2, true, 1, true),
+            65 => new MangrovePropaguleBlock(Identifier, 2, true, 1, false),
+            66 => new MangrovePropaguleBlock(Identifier, 2, false, 0, true),
+            67 => new MangrovePropaguleBlock(Identifier, 2, false, 0, false),
+            68 => new MangrovePropaguleBlock(Identifier, 2, false, 1, true),
+            69 => new MangrovePropaguleBlock(Identifier, 2, false, 1, false),
+            70 => new MangrovePropaguleBlock(Identifier, 3, true, 0, true),
+            71 => new MangrovePropaguleBlock(Identifier, 3, true, 0, false),
+            72 => new MangrovePropaguleBlock(Identifier, 3, true, 1, true),
+            73 => new MangrovePropaguleBlock(Identifier, 3, true, 1, false),
+            74 => new MangrovePropaguleBlock(Identifier, 3, false, 0, true),
+            75 => new MangrovePropaguleBlock(Identifier, 3, false, 0, false),
+            76 => new MangrovePropaguleBlock(Identifier, 3, false, 1, true),
+            77 => new MangrovePropaguleBlock(Identifier, 3, false, 1, false),
+            78 => new MangrovePropaguleBlock(Identifier, 4, true, 0, true),
+            79 => new MangrovePropaguleBlock(Identifier, 4, true, 0, false),
+            80 => new MangrovePropaguleBlock(Identifier, 4, true, 1, true),
+            81 => new MangrovePropaguleBlock(Identifier, 4, true, 1, false),
+            82 => new MangrovePropaguleBlock(Identifier, 4, false, 0, true),
+            83 => new MangrovePropaguleBlock(Identifier, 4, false, 0, false),
+            84 => new MangrovePropaguleBlock(Identifier, 4, false, 1, true),
+            85 => new MangrovePropaguleBlock(Identifier, 4, false, 1, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

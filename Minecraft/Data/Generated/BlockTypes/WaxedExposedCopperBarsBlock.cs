@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WaxedExposedCopperBarsBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:iron_bars", "block.minecraft.waxed_exposed_copper_bars", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_exposed_copper_bars", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_exposed_copper_bars");
-    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.Normal, 0, "copper", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S372, BlockShapes.S372, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S372);
+    private static readonly BlockInfo Data = new("block.minecraft.waxed_exposed_copper_bars", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_exposed_copper_bars", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_exposed_copper_bars");
+    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.PushPull, 0, "copper", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S372, BlockShapes.S372, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S372);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S373, CollisionShape = BlockShapes.S373, SupportShape = BlockShapes.S373 };
     private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S373, CollisionShape = BlockShapes.S373, SupportShape = BlockShapes.S373 };
@@ -48,15 +48,15 @@ public record WaxedExposedCopperBarsBlock(Identifier Identifier, bool East, bool
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 8150];
+    public BlockStateInfo StateInfo => States[StateId - 9884];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -70,7 +70,6 @@ public record WaxedExposedCopperBarsBlock(Identifier Identifier, bool East, bool
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -90,6 +89,7 @@ public record WaxedExposedCopperBarsBlock(Identifier Identifier, bool East, bool
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -125,44 +125,44 @@ public record WaxedExposedCopperBarsBlock(Identifier Identifier, bool East, bool
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 8150,
-                                false => 8151,
+                                true => 9884,
+                                false => 9885,
                             },
                             false => West switch {
-                                true => 8152,
-                                false => 8153,
+                                true => 9886,
+                                false => 9887,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 8154,
-                                false => 8155,
+                                true => 9888,
+                                false => 9889,
                             },
                             false => West switch {
-                                true => 8156,
-                                false => 8157,
+                                true => 9890,
+                                false => 9891,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 8158,
-                                false => 8159,
+                                true => 9892,
+                                false => 9893,
                             },
                             false => West switch {
-                                true => 8160,
-                                false => 8161,
+                                true => 9894,
+                                false => 9895,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 8162,
-                                false => 8163,
+                                true => 9896,
+                                false => 9897,
                             },
                             false => West switch {
-                                true => 8164,
-                                false => 8165,
+                                true => 9898,
+                                false => 9899,
                             },
                         },
                     },
@@ -171,44 +171,44 @@ public record WaxedExposedCopperBarsBlock(Identifier Identifier, bool East, bool
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 8166,
-                                false => 8167,
+                                true => 9900,
+                                false => 9901,
                             },
                             false => West switch {
-                                true => 8168,
-                                false => 8169,
+                                true => 9902,
+                                false => 9903,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 8170,
-                                false => 8171,
+                                true => 9904,
+                                false => 9905,
                             },
                             false => West switch {
-                                true => 8172,
-                                false => 8173,
+                                true => 9906,
+                                false => 9907,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 8174,
-                                false => 8175,
+                                true => 9908,
+                                false => 9909,
                             },
                             false => West switch {
-                                true => 8176,
-                                false => 8177,
+                                true => 9910,
+                                false => 9911,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 8178,
-                                false => 8179,
+                                true => 9912,
+                                false => 9913,
                             },
                             false => West switch {
-                                true => 8180,
-                                false => 8181,
+                                true => 9914,
+                                false => 9915,
                             },
                         },
                     },
@@ -219,38 +219,38 @@ public record WaxedExposedCopperBarsBlock(Identifier Identifier, bool East, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            8150 => new WaxedExposedCopperBarsBlock(Identifier, true, true, true, true, true),
-            8151 => new WaxedExposedCopperBarsBlock(Identifier, true, true, true, true, false),
-            8152 => new WaxedExposedCopperBarsBlock(Identifier, true, true, true, false, true),
-            8153 => new WaxedExposedCopperBarsBlock(Identifier, true, true, true, false, false),
-            8154 => new WaxedExposedCopperBarsBlock(Identifier, true, true, false, true, true),
-            8155 => new WaxedExposedCopperBarsBlock(Identifier, true, true, false, true, false),
-            8156 => new WaxedExposedCopperBarsBlock(Identifier, true, true, false, false, true),
-            8157 => new WaxedExposedCopperBarsBlock(Identifier, true, true, false, false, false),
-            8158 => new WaxedExposedCopperBarsBlock(Identifier, true, false, true, true, true),
-            8159 => new WaxedExposedCopperBarsBlock(Identifier, true, false, true, true, false),
-            8160 => new WaxedExposedCopperBarsBlock(Identifier, true, false, true, false, true),
-            8161 => new WaxedExposedCopperBarsBlock(Identifier, true, false, true, false, false),
-            8162 => new WaxedExposedCopperBarsBlock(Identifier, true, false, false, true, true),
-            8163 => new WaxedExposedCopperBarsBlock(Identifier, true, false, false, true, false),
-            8164 => new WaxedExposedCopperBarsBlock(Identifier, true, false, false, false, true),
-            8165 => new WaxedExposedCopperBarsBlock(Identifier, true, false, false, false, false),
-            8166 => new WaxedExposedCopperBarsBlock(Identifier, false, true, true, true, true),
-            8167 => new WaxedExposedCopperBarsBlock(Identifier, false, true, true, true, false),
-            8168 => new WaxedExposedCopperBarsBlock(Identifier, false, true, true, false, true),
-            8169 => new WaxedExposedCopperBarsBlock(Identifier, false, true, true, false, false),
-            8170 => new WaxedExposedCopperBarsBlock(Identifier, false, true, false, true, true),
-            8171 => new WaxedExposedCopperBarsBlock(Identifier, false, true, false, true, false),
-            8172 => new WaxedExposedCopperBarsBlock(Identifier, false, true, false, false, true),
-            8173 => new WaxedExposedCopperBarsBlock(Identifier, false, true, false, false, false),
-            8174 => new WaxedExposedCopperBarsBlock(Identifier, false, false, true, true, true),
-            8175 => new WaxedExposedCopperBarsBlock(Identifier, false, false, true, true, false),
-            8176 => new WaxedExposedCopperBarsBlock(Identifier, false, false, true, false, true),
-            8177 => new WaxedExposedCopperBarsBlock(Identifier, false, false, true, false, false),
-            8178 => new WaxedExposedCopperBarsBlock(Identifier, false, false, false, true, true),
-            8179 => new WaxedExposedCopperBarsBlock(Identifier, false, false, false, true, false),
-            8180 => new WaxedExposedCopperBarsBlock(Identifier, false, false, false, false, true),
-            8181 => new WaxedExposedCopperBarsBlock(Identifier, false, false, false, false, false),
+            9884 => new WaxedExposedCopperBarsBlock(Identifier, true, true, true, true, true),
+            9885 => new WaxedExposedCopperBarsBlock(Identifier, true, true, true, true, false),
+            9886 => new WaxedExposedCopperBarsBlock(Identifier, true, true, true, false, true),
+            9887 => new WaxedExposedCopperBarsBlock(Identifier, true, true, true, false, false),
+            9888 => new WaxedExposedCopperBarsBlock(Identifier, true, true, false, true, true),
+            9889 => new WaxedExposedCopperBarsBlock(Identifier, true, true, false, true, false),
+            9890 => new WaxedExposedCopperBarsBlock(Identifier, true, true, false, false, true),
+            9891 => new WaxedExposedCopperBarsBlock(Identifier, true, true, false, false, false),
+            9892 => new WaxedExposedCopperBarsBlock(Identifier, true, false, true, true, true),
+            9893 => new WaxedExposedCopperBarsBlock(Identifier, true, false, true, true, false),
+            9894 => new WaxedExposedCopperBarsBlock(Identifier, true, false, true, false, true),
+            9895 => new WaxedExposedCopperBarsBlock(Identifier, true, false, true, false, false),
+            9896 => new WaxedExposedCopperBarsBlock(Identifier, true, false, false, true, true),
+            9897 => new WaxedExposedCopperBarsBlock(Identifier, true, false, false, true, false),
+            9898 => new WaxedExposedCopperBarsBlock(Identifier, true, false, false, false, true),
+            9899 => new WaxedExposedCopperBarsBlock(Identifier, true, false, false, false, false),
+            9900 => new WaxedExposedCopperBarsBlock(Identifier, false, true, true, true, true),
+            9901 => new WaxedExposedCopperBarsBlock(Identifier, false, true, true, true, false),
+            9902 => new WaxedExposedCopperBarsBlock(Identifier, false, true, true, false, true),
+            9903 => new WaxedExposedCopperBarsBlock(Identifier, false, true, true, false, false),
+            9904 => new WaxedExposedCopperBarsBlock(Identifier, false, true, false, true, true),
+            9905 => new WaxedExposedCopperBarsBlock(Identifier, false, true, false, true, false),
+            9906 => new WaxedExposedCopperBarsBlock(Identifier, false, true, false, false, true),
+            9907 => new WaxedExposedCopperBarsBlock(Identifier, false, true, false, false, false),
+            9908 => new WaxedExposedCopperBarsBlock(Identifier, false, false, true, true, true),
+            9909 => new WaxedExposedCopperBarsBlock(Identifier, false, false, true, true, false),
+            9910 => new WaxedExposedCopperBarsBlock(Identifier, false, false, true, false, true),
+            9911 => new WaxedExposedCopperBarsBlock(Identifier, false, false, true, false, false),
+            9912 => new WaxedExposedCopperBarsBlock(Identifier, false, false, false, true, true),
+            9913 => new WaxedExposedCopperBarsBlock(Identifier, false, false, false, true, false),
+            9914 => new WaxedExposedCopperBarsBlock(Identifier, false, false, false, false, true),
+            9915 => new WaxedExposedCopperBarsBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

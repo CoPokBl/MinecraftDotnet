@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WitherSkeletonWallSkullBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:wither_wall_skull", "block.minecraft.wither_skeleton_skull", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:wither_skeleton_skull", BlockInfo.VanillaOnly, "minecraft:blocks/wither_skeleton_skull");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S516, BlockShapes.S516, BlockShapes.S1, BlockShapes.S516, BlockShapes.S516, BlockShapes.S516);
+    private static readonly BlockInfo Data = new("block.minecraft.wither_skeleton_skull", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:wither_skeleton_skull", BlockInfo.VanillaOnly, "minecraft:blocks/wither_skeleton_skull");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Popped, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S516, BlockShapes.S516, BlockShapes.S1, BlockShapes.S516, BlockShapes.S516, BlockShapes.S516);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S517, CollisionShape = BlockShapes.S517, OcclusionShape = BlockShapes.S517, VisualShape = BlockShapes.S517, SupportShape = BlockShapes.S517 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S518, CollisionShape = BlockShapes.S518, OcclusionShape = BlockShapes.S518, VisualShape = BlockShapes.S518, SupportShape = BlockShapes.S518 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S519, CollisionShape = BlockShapes.S519, OcclusionShape = BlockShapes.S519, VisualShape = BlockShapes.S519, SupportShape = BlockShapes.S519 };
@@ -20,15 +20,15 @@ public record WitherSkeletonWallSkullBlock(Identifier Identifier, Direction Faci
         I0, I0, I1, I1, I2, I2, I3, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 10987];
+    public BlockStateInfo StateInfo => States[StateId - 12754];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record WitherSkeletonWallSkullBlock(Identifier Identifier, Direction Faci
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record WitherSkeletonWallSkullBlock(Identifier Identifier, Direction Faci
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,20 +78,20 @@ public record WitherSkeletonWallSkullBlock(Identifier Identifier, Direction Faci
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 10987,
-                    false => 10988,
+                    true => 12754,
+                    false => 12755,
                 },
                 Direction.South => Powered switch {
-                    true => 10989,
-                    false => 10990,
+                    true => 12756,
+                    false => 12757,
                 },
                 Direction.West => Powered switch {
-                    true => 10991,
-                    false => 10992,
+                    true => 12758,
+                    false => 12759,
                 },
                 Direction.East => Powered switch {
-                    true => 10993,
-                    false => 10994,
+                    true => 12760,
+                    false => 12761,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -100,14 +100,14 @@ public record WitherSkeletonWallSkullBlock(Identifier Identifier, Direction Faci
     
     public IBlock WithState(uint state) {
         return state switch {
-            10987 => new WitherSkeletonWallSkullBlock(Identifier, Direction.North, true),
-            10988 => new WitherSkeletonWallSkullBlock(Identifier, Direction.North, false),
-            10989 => new WitherSkeletonWallSkullBlock(Identifier, Direction.South, true),
-            10990 => new WitherSkeletonWallSkullBlock(Identifier, Direction.South, false),
-            10991 => new WitherSkeletonWallSkullBlock(Identifier, Direction.West, true),
-            10992 => new WitherSkeletonWallSkullBlock(Identifier, Direction.West, false),
-            10993 => new WitherSkeletonWallSkullBlock(Identifier, Direction.East, true),
-            10994 => new WitherSkeletonWallSkullBlock(Identifier, Direction.East, false),
+            12754 => new WitherSkeletonWallSkullBlock(Identifier, Direction.North, true),
+            12755 => new WitherSkeletonWallSkullBlock(Identifier, Direction.North, false),
+            12756 => new WitherSkeletonWallSkullBlock(Identifier, Direction.South, true),
+            12757 => new WitherSkeletonWallSkullBlock(Identifier, Direction.South, false),
+            12758 => new WitherSkeletonWallSkullBlock(Identifier, Direction.West, true),
+            12759 => new WitherSkeletonWallSkullBlock(Identifier, Direction.West, false),
+            12760 => new WitherSkeletonWallSkullBlock(Identifier, Direction.East, true),
+            12761 => new WitherSkeletonWallSkullBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

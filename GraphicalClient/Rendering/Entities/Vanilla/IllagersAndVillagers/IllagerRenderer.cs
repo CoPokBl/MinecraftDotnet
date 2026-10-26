@@ -51,7 +51,7 @@ public abstract class IllagerRenderer<S> : MobRenderer<S, IllagerModel<S>> where
         state.ArmPose = GetArmPose(entity);
         state.MaxCrossbowChargeDuration = state.ArmPose == IllagerArmPose.CrossbowCharge ? GetChargeDuration(HumanoidEntityData.UseItem(entity)) : 0;
         state.TicksUsingItemValue = HumanoidEntityData.Of(entity).GetTicksUsingItem(entity, partialTick);
-        state.AttackAnim = entity.GetAttackAnim(partialTick);
+        state.AttackAnim = entity.GetSwingAnimation(partialTick);
         state.IsAggressive = HumanoidEntityData.IsAggressive(entity);
     }
 

@@ -11,29 +11,29 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WildflowersBlock(Identifier Identifier, Direction Facing, int FlowerAmount) : IBlock, IHorizontalFacing, IStackable {
-    private static readonly BlockInfo Data = new("minecraft:flower_bed", "block.minecraft.wildflowers", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:wildflowers", BlockInfo.VanillaOnly, "minecraft:blocks/wildflowers");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 7, "pink_petals", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S794, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S795 };
+    private static readonly BlockInfo Data = new("block.minecraft.wildflowers", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:wildflowers", BlockInfo.VanillaOnly, "minecraft:blocks/wildflowers");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Popped, 7, "pink_petals", NoteBlockInstrument.Harp, true, false, false, true, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S795, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S796 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S115 };
-    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S796 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S797 };
-    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S798 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S799 };
-    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S800 };
-    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S801 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S797 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S798 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S799 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S800 };
+    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S801 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S802 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I2, I3, I4, I2, I2, I5, I6, I2, I2, I7, I8, I2, I2
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 30323];
+    public BlockStateInfo StateInfo => States[StateId - 33680];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -47,7 +47,6 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -67,6 +66,7 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -87,31 +87,31 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
         get {
             return Facing switch {
                 Direction.North => FlowerAmount switch {
-                    1 => 30323,
-                    2 => 30324,
-                    3 => 30325,
-                    4 => 30326,
+                    1 => 33680,
+                    2 => 33681,
+                    3 => 33682,
+                    4 => 33683,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 Direction.South => FlowerAmount switch {
-                    1 => 30327,
-                    2 => 30328,
-                    3 => 30329,
-                    4 => 30330,
+                    1 => 33684,
+                    2 => 33685,
+                    3 => 33686,
+                    4 => 33687,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 Direction.West => FlowerAmount switch {
-                    1 => 30331,
-                    2 => 30332,
-                    3 => 30333,
-                    4 => 30334,
+                    1 => 33688,
+                    2 => 33689,
+                    3 => 33690,
+                    4 => 33691,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 Direction.East => FlowerAmount switch {
-                    1 => 30335,
-                    2 => 30336,
-                    3 => 30337,
-                    4 => 30338,
+                    1 => 33692,
+                    2 => 33693,
+                    3 => 33694,
+                    4 => 33695,
                     _ => throw new ArgumentOutOfRangeException(nameof(FlowerAmount), FlowerAmount, "Unknown value for property flower_amount.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -121,22 +121,22 @@ public record WildflowersBlock(Identifier Identifier, Direction Facing, int Flow
     
     public IBlock WithState(uint state) {
         return state switch {
-            30323 => new WildflowersBlock(Identifier, Direction.North, 1),
-            30324 => new WildflowersBlock(Identifier, Direction.North, 2),
-            30325 => new WildflowersBlock(Identifier, Direction.North, 3),
-            30326 => new WildflowersBlock(Identifier, Direction.North, 4),
-            30327 => new WildflowersBlock(Identifier, Direction.South, 1),
-            30328 => new WildflowersBlock(Identifier, Direction.South, 2),
-            30329 => new WildflowersBlock(Identifier, Direction.South, 3),
-            30330 => new WildflowersBlock(Identifier, Direction.South, 4),
-            30331 => new WildflowersBlock(Identifier, Direction.West, 1),
-            30332 => new WildflowersBlock(Identifier, Direction.West, 2),
-            30333 => new WildflowersBlock(Identifier, Direction.West, 3),
-            30334 => new WildflowersBlock(Identifier, Direction.West, 4),
-            30335 => new WildflowersBlock(Identifier, Direction.East, 1),
-            30336 => new WildflowersBlock(Identifier, Direction.East, 2),
-            30337 => new WildflowersBlock(Identifier, Direction.East, 3),
-            30338 => new WildflowersBlock(Identifier, Direction.East, 4),
+            33680 => new WildflowersBlock(Identifier, Direction.North, 1),
+            33681 => new WildflowersBlock(Identifier, Direction.North, 2),
+            33682 => new WildflowersBlock(Identifier, Direction.North, 3),
+            33683 => new WildflowersBlock(Identifier, Direction.North, 4),
+            33684 => new WildflowersBlock(Identifier, Direction.South, 1),
+            33685 => new WildflowersBlock(Identifier, Direction.South, 2),
+            33686 => new WildflowersBlock(Identifier, Direction.South, 3),
+            33687 => new WildflowersBlock(Identifier, Direction.South, 4),
+            33688 => new WildflowersBlock(Identifier, Direction.West, 1),
+            33689 => new WildflowersBlock(Identifier, Direction.West, 2),
+            33690 => new WildflowersBlock(Identifier, Direction.West, 3),
+            33691 => new WildflowersBlock(Identifier, Direction.West, 4),
+            33692 => new WildflowersBlock(Identifier, Direction.East, 1),
+            33693 => new WildflowersBlock(Identifier, Direction.East, 2),
+            33694 => new WildflowersBlock(Identifier, Direction.East, 3),
+            33695 => new WildflowersBlock(Identifier, Direction.East, 4),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

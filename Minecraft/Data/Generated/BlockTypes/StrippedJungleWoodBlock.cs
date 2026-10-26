@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record StrippedJungleWoodBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
-    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.stripped_jungle_wood", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stripped_jungle_wood", BlockInfo.VanillaOnly, "minecraft:blocks/stripped_jungle_wood");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.Normal, 10, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.stripped_jungle_wood", 2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stripped_jungle_wood", BlockInfo.VanillaOnly, "minecraft:blocks/stripped_jungle_wood");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.PushPull, 10, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record StrippedJungleWoodBlock(Identifier Identifier, Axis Axis) : IBlock
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record StrippedJungleWoodBlock(Identifier Identifier, Axis Axis) : IBlock
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,9 +69,9 @@ public record StrippedJungleWoodBlock(Identifier Identifier, Axis Axis) : IBlock
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 234,
-                Axis.Y => 235,
-                Axis.Z => 236,
+                Axis.X => 246,
+                Axis.Y => 247,
+                Axis.Z => 248,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -79,9 +79,9 @@ public record StrippedJungleWoodBlock(Identifier Identifier, Axis Axis) : IBlock
     
     public IBlock WithState(uint state) {
         return state switch {
-            234 => new StrippedJungleWoodBlock(Identifier, Axis.X),
-            235 => new StrippedJungleWoodBlock(Identifier, Axis.Y),
-            236 => new StrippedJungleWoodBlock(Identifier, Axis.Z),
+            246 => new StrippedJungleWoodBlock(Identifier, Axis.X),
+            247 => new StrippedJungleWoodBlock(Identifier, Axis.Y),
+            248 => new StrippedJungleWoodBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -71,7 +71,12 @@ public static class ArgumentTypeInfos {
             Wire.LootTableArgumentType => ResourceOrIdArgument.LootTable(context),
             Wire.LootPredicateArgumentType => ResourceOrIdArgument.LootPredicate(context),
             Wire.LootModifierArgumentType => ResourceOrIdArgument.LootModifier(context),
+            Wire.ContextFloatProviderArgumentType => ResourceOrIdArgument.FloatProvider(context),
+            Wire.ContextIntProviderArgumentType => ResourceOrIdArgument.IntProvider(context),
+            Wire.SlotSourceArgumentType => new SlotSourceArgument(context),
             Wire.DialogArgumentType => ResourceOrIdArgument.Dialog(context),
+            Wire.FeatureArgumentType => ResourceOrIdArgument.Feature(context),
+            Wire.SwingAnimationArgumentType => new SwingAnimationArgument(),
             Wire.UuidArgumentType => new UuidArgument(),
             _ => throw new NotSupportedException($"No client argument type for {template.Identifier}")
         };

@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MushroomStemBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool West) : IBlock, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:huge_mushroom", "block.minecraft.mushroom_stem", 0.2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mushroom_stem", BlockInfo.VanillaOnly, "minecraft:blocks/mushroom_stem");
-    private static readonly BlockStateInfo I0 = new(0.2f, 0, 15, PushReaction.Normal, 3, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.mushroom_stem", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mushroom_stem", BlockInfo.VanillaOnly, "minecraft:blocks/mushroom_stem");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 15, PushReaction.PushPull, 3, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record MushroomStemBlock(Identifier Identifier, bool Down, bool East, boo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record MushroomStemBlock(Identifier Identifier, bool Down, bool East, boo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -94,44 +94,44 @@ public record MushroomStemBlock(Identifier Identifier, bool Down, bool East, boo
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7894,
-                                    false => 7895,
+                                    true => 9628,
+                                    false => 9629,
                                 },
                                 false => West switch {
-                                    true => 7896,
-                                    false => 7897,
+                                    true => 9630,
+                                    false => 9631,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7898,
-                                    false => 7899,
+                                    true => 9632,
+                                    false => 9633,
                                 },
                                 false => West switch {
-                                    true => 7900,
-                                    false => 7901,
+                                    true => 9634,
+                                    false => 9635,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7902,
-                                    false => 7903,
+                                    true => 9636,
+                                    false => 9637,
                                 },
                                 false => West switch {
-                                    true => 7904,
-                                    false => 7905,
+                                    true => 9638,
+                                    false => 9639,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7906,
-                                    false => 7907,
+                                    true => 9640,
+                                    false => 9641,
                                 },
                                 false => West switch {
-                                    true => 7908,
-                                    false => 7909,
+                                    true => 9642,
+                                    false => 9643,
                                 },
                             },
                         },
@@ -140,44 +140,44 @@ public record MushroomStemBlock(Identifier Identifier, bool Down, bool East, boo
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7910,
-                                    false => 7911,
+                                    true => 9644,
+                                    false => 9645,
                                 },
                                 false => West switch {
-                                    true => 7912,
-                                    false => 7913,
+                                    true => 9646,
+                                    false => 9647,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7914,
-                                    false => 7915,
+                                    true => 9648,
+                                    false => 9649,
                                 },
                                 false => West switch {
-                                    true => 7916,
-                                    false => 7917,
+                                    true => 9650,
+                                    false => 9651,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7918,
-                                    false => 7919,
+                                    true => 9652,
+                                    false => 9653,
                                 },
                                 false => West switch {
-                                    true => 7920,
-                                    false => 7921,
+                                    true => 9654,
+                                    false => 9655,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7922,
-                                    false => 7923,
+                                    true => 9656,
+                                    false => 9657,
                                 },
                                 false => West switch {
-                                    true => 7924,
-                                    false => 7925,
+                                    true => 9658,
+                                    false => 9659,
                                 },
                             },
                         },
@@ -188,44 +188,44 @@ public record MushroomStemBlock(Identifier Identifier, bool Down, bool East, boo
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7926,
-                                    false => 7927,
+                                    true => 9660,
+                                    false => 9661,
                                 },
                                 false => West switch {
-                                    true => 7928,
-                                    false => 7929,
+                                    true => 9662,
+                                    false => 9663,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7930,
-                                    false => 7931,
+                                    true => 9664,
+                                    false => 9665,
                                 },
                                 false => West switch {
-                                    true => 7932,
-                                    false => 7933,
+                                    true => 9666,
+                                    false => 9667,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7934,
-                                    false => 7935,
+                                    true => 9668,
+                                    false => 9669,
                                 },
                                 false => West switch {
-                                    true => 7936,
-                                    false => 7937,
+                                    true => 9670,
+                                    false => 9671,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7938,
-                                    false => 7939,
+                                    true => 9672,
+                                    false => 9673,
                                 },
                                 false => West switch {
-                                    true => 7940,
-                                    false => 7941,
+                                    true => 9674,
+                                    false => 9675,
                                 },
                             },
                         },
@@ -234,44 +234,44 @@ public record MushroomStemBlock(Identifier Identifier, bool Down, bool East, boo
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7942,
-                                    false => 7943,
+                                    true => 9676,
+                                    false => 9677,
                                 },
                                 false => West switch {
-                                    true => 7944,
-                                    false => 7945,
+                                    true => 9678,
+                                    false => 9679,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7946,
-                                    false => 7947,
+                                    true => 9680,
+                                    false => 9681,
                                 },
                                 false => West switch {
-                                    true => 7948,
-                                    false => 7949,
+                                    true => 9682,
+                                    false => 9683,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7950,
-                                    false => 7951,
+                                    true => 9684,
+                                    false => 9685,
                                 },
                                 false => West switch {
-                                    true => 7952,
-                                    false => 7953,
+                                    true => 9686,
+                                    false => 9687,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7954,
-                                    false => 7955,
+                                    true => 9688,
+                                    false => 9689,
                                 },
                                 false => West switch {
-                                    true => 7956,
-                                    false => 7957,
+                                    true => 9690,
+                                    false => 9691,
                                 },
                             },
                         },
@@ -283,70 +283,70 @@ public record MushroomStemBlock(Identifier Identifier, bool Down, bool East, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            7894 => new MushroomStemBlock(Identifier, true, true, true, true, true, true),
-            7895 => new MushroomStemBlock(Identifier, true, true, true, true, true, false),
-            7896 => new MushroomStemBlock(Identifier, true, true, true, true, false, true),
-            7897 => new MushroomStemBlock(Identifier, true, true, true, true, false, false),
-            7898 => new MushroomStemBlock(Identifier, true, true, true, false, true, true),
-            7899 => new MushroomStemBlock(Identifier, true, true, true, false, true, false),
-            7900 => new MushroomStemBlock(Identifier, true, true, true, false, false, true),
-            7901 => new MushroomStemBlock(Identifier, true, true, true, false, false, false),
-            7902 => new MushroomStemBlock(Identifier, true, true, false, true, true, true),
-            7903 => new MushroomStemBlock(Identifier, true, true, false, true, true, false),
-            7904 => new MushroomStemBlock(Identifier, true, true, false, true, false, true),
-            7905 => new MushroomStemBlock(Identifier, true, true, false, true, false, false),
-            7906 => new MushroomStemBlock(Identifier, true, true, false, false, true, true),
-            7907 => new MushroomStemBlock(Identifier, true, true, false, false, true, false),
-            7908 => new MushroomStemBlock(Identifier, true, true, false, false, false, true),
-            7909 => new MushroomStemBlock(Identifier, true, true, false, false, false, false),
-            7910 => new MushroomStemBlock(Identifier, true, false, true, true, true, true),
-            7911 => new MushroomStemBlock(Identifier, true, false, true, true, true, false),
-            7912 => new MushroomStemBlock(Identifier, true, false, true, true, false, true),
-            7913 => new MushroomStemBlock(Identifier, true, false, true, true, false, false),
-            7914 => new MushroomStemBlock(Identifier, true, false, true, false, true, true),
-            7915 => new MushroomStemBlock(Identifier, true, false, true, false, true, false),
-            7916 => new MushroomStemBlock(Identifier, true, false, true, false, false, true),
-            7917 => new MushroomStemBlock(Identifier, true, false, true, false, false, false),
-            7918 => new MushroomStemBlock(Identifier, true, false, false, true, true, true),
-            7919 => new MushroomStemBlock(Identifier, true, false, false, true, true, false),
-            7920 => new MushroomStemBlock(Identifier, true, false, false, true, false, true),
-            7921 => new MushroomStemBlock(Identifier, true, false, false, true, false, false),
-            7922 => new MushroomStemBlock(Identifier, true, false, false, false, true, true),
-            7923 => new MushroomStemBlock(Identifier, true, false, false, false, true, false),
-            7924 => new MushroomStemBlock(Identifier, true, false, false, false, false, true),
-            7925 => new MushroomStemBlock(Identifier, true, false, false, false, false, false),
-            7926 => new MushroomStemBlock(Identifier, false, true, true, true, true, true),
-            7927 => new MushroomStemBlock(Identifier, false, true, true, true, true, false),
-            7928 => new MushroomStemBlock(Identifier, false, true, true, true, false, true),
-            7929 => new MushroomStemBlock(Identifier, false, true, true, true, false, false),
-            7930 => new MushroomStemBlock(Identifier, false, true, true, false, true, true),
-            7931 => new MushroomStemBlock(Identifier, false, true, true, false, true, false),
-            7932 => new MushroomStemBlock(Identifier, false, true, true, false, false, true),
-            7933 => new MushroomStemBlock(Identifier, false, true, true, false, false, false),
-            7934 => new MushroomStemBlock(Identifier, false, true, false, true, true, true),
-            7935 => new MushroomStemBlock(Identifier, false, true, false, true, true, false),
-            7936 => new MushroomStemBlock(Identifier, false, true, false, true, false, true),
-            7937 => new MushroomStemBlock(Identifier, false, true, false, true, false, false),
-            7938 => new MushroomStemBlock(Identifier, false, true, false, false, true, true),
-            7939 => new MushroomStemBlock(Identifier, false, true, false, false, true, false),
-            7940 => new MushroomStemBlock(Identifier, false, true, false, false, false, true),
-            7941 => new MushroomStemBlock(Identifier, false, true, false, false, false, false),
-            7942 => new MushroomStemBlock(Identifier, false, false, true, true, true, true),
-            7943 => new MushroomStemBlock(Identifier, false, false, true, true, true, false),
-            7944 => new MushroomStemBlock(Identifier, false, false, true, true, false, true),
-            7945 => new MushroomStemBlock(Identifier, false, false, true, true, false, false),
-            7946 => new MushroomStemBlock(Identifier, false, false, true, false, true, true),
-            7947 => new MushroomStemBlock(Identifier, false, false, true, false, true, false),
-            7948 => new MushroomStemBlock(Identifier, false, false, true, false, false, true),
-            7949 => new MushroomStemBlock(Identifier, false, false, true, false, false, false),
-            7950 => new MushroomStemBlock(Identifier, false, false, false, true, true, true),
-            7951 => new MushroomStemBlock(Identifier, false, false, false, true, true, false),
-            7952 => new MushroomStemBlock(Identifier, false, false, false, true, false, true),
-            7953 => new MushroomStemBlock(Identifier, false, false, false, true, false, false),
-            7954 => new MushroomStemBlock(Identifier, false, false, false, false, true, true),
-            7955 => new MushroomStemBlock(Identifier, false, false, false, false, true, false),
-            7956 => new MushroomStemBlock(Identifier, false, false, false, false, false, true),
-            7957 => new MushroomStemBlock(Identifier, false, false, false, false, false, false),
+            9628 => new MushroomStemBlock(Identifier, true, true, true, true, true, true),
+            9629 => new MushroomStemBlock(Identifier, true, true, true, true, true, false),
+            9630 => new MushroomStemBlock(Identifier, true, true, true, true, false, true),
+            9631 => new MushroomStemBlock(Identifier, true, true, true, true, false, false),
+            9632 => new MushroomStemBlock(Identifier, true, true, true, false, true, true),
+            9633 => new MushroomStemBlock(Identifier, true, true, true, false, true, false),
+            9634 => new MushroomStemBlock(Identifier, true, true, true, false, false, true),
+            9635 => new MushroomStemBlock(Identifier, true, true, true, false, false, false),
+            9636 => new MushroomStemBlock(Identifier, true, true, false, true, true, true),
+            9637 => new MushroomStemBlock(Identifier, true, true, false, true, true, false),
+            9638 => new MushroomStemBlock(Identifier, true, true, false, true, false, true),
+            9639 => new MushroomStemBlock(Identifier, true, true, false, true, false, false),
+            9640 => new MushroomStemBlock(Identifier, true, true, false, false, true, true),
+            9641 => new MushroomStemBlock(Identifier, true, true, false, false, true, false),
+            9642 => new MushroomStemBlock(Identifier, true, true, false, false, false, true),
+            9643 => new MushroomStemBlock(Identifier, true, true, false, false, false, false),
+            9644 => new MushroomStemBlock(Identifier, true, false, true, true, true, true),
+            9645 => new MushroomStemBlock(Identifier, true, false, true, true, true, false),
+            9646 => new MushroomStemBlock(Identifier, true, false, true, true, false, true),
+            9647 => new MushroomStemBlock(Identifier, true, false, true, true, false, false),
+            9648 => new MushroomStemBlock(Identifier, true, false, true, false, true, true),
+            9649 => new MushroomStemBlock(Identifier, true, false, true, false, true, false),
+            9650 => new MushroomStemBlock(Identifier, true, false, true, false, false, true),
+            9651 => new MushroomStemBlock(Identifier, true, false, true, false, false, false),
+            9652 => new MushroomStemBlock(Identifier, true, false, false, true, true, true),
+            9653 => new MushroomStemBlock(Identifier, true, false, false, true, true, false),
+            9654 => new MushroomStemBlock(Identifier, true, false, false, true, false, true),
+            9655 => new MushroomStemBlock(Identifier, true, false, false, true, false, false),
+            9656 => new MushroomStemBlock(Identifier, true, false, false, false, true, true),
+            9657 => new MushroomStemBlock(Identifier, true, false, false, false, true, false),
+            9658 => new MushroomStemBlock(Identifier, true, false, false, false, false, true),
+            9659 => new MushroomStemBlock(Identifier, true, false, false, false, false, false),
+            9660 => new MushroomStemBlock(Identifier, false, true, true, true, true, true),
+            9661 => new MushroomStemBlock(Identifier, false, true, true, true, true, false),
+            9662 => new MushroomStemBlock(Identifier, false, true, true, true, false, true),
+            9663 => new MushroomStemBlock(Identifier, false, true, true, true, false, false),
+            9664 => new MushroomStemBlock(Identifier, false, true, true, false, true, true),
+            9665 => new MushroomStemBlock(Identifier, false, true, true, false, true, false),
+            9666 => new MushroomStemBlock(Identifier, false, true, true, false, false, true),
+            9667 => new MushroomStemBlock(Identifier, false, true, true, false, false, false),
+            9668 => new MushroomStemBlock(Identifier, false, true, false, true, true, true),
+            9669 => new MushroomStemBlock(Identifier, false, true, false, true, true, false),
+            9670 => new MushroomStemBlock(Identifier, false, true, false, true, false, true),
+            9671 => new MushroomStemBlock(Identifier, false, true, false, true, false, false),
+            9672 => new MushroomStemBlock(Identifier, false, true, false, false, true, true),
+            9673 => new MushroomStemBlock(Identifier, false, true, false, false, true, false),
+            9674 => new MushroomStemBlock(Identifier, false, true, false, false, false, true),
+            9675 => new MushroomStemBlock(Identifier, false, true, false, false, false, false),
+            9676 => new MushroomStemBlock(Identifier, false, false, true, true, true, true),
+            9677 => new MushroomStemBlock(Identifier, false, false, true, true, true, false),
+            9678 => new MushroomStemBlock(Identifier, false, false, true, true, false, true),
+            9679 => new MushroomStemBlock(Identifier, false, false, true, true, false, false),
+            9680 => new MushroomStemBlock(Identifier, false, false, true, false, true, true),
+            9681 => new MushroomStemBlock(Identifier, false, false, true, false, true, false),
+            9682 => new MushroomStemBlock(Identifier, false, false, true, false, false, true),
+            9683 => new MushroomStemBlock(Identifier, false, false, true, false, false, false),
+            9684 => new MushroomStemBlock(Identifier, false, false, false, true, true, true),
+            9685 => new MushroomStemBlock(Identifier, false, false, false, true, true, false),
+            9686 => new MushroomStemBlock(Identifier, false, false, false, true, false, true),
+            9687 => new MushroomStemBlock(Identifier, false, false, false, true, false, false),
+            9688 => new MushroomStemBlock(Identifier, false, false, false, false, true, true),
+            9689 => new MushroomStemBlock(Identifier, false, false, false, false, true, false),
+            9690 => new MushroomStemBlock(Identifier, false, false, false, false, false, true),
+            9691 => new MushroomStemBlock(Identifier, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

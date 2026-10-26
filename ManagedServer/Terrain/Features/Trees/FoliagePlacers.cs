@@ -3,6 +3,7 @@ using ManagedServer.Terrain.Features.Values;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Schemas.Vec;
 
 namespace ManagedServer.Terrain.Features.Trees;
@@ -598,5 +599,142 @@ public static class FoliagePlacers {
             return corner && random.NextFloat() < CornerHoleChance;
         }
     }
-}
 
+    /// <summary>
+    /// <c>PoplarFoliagePlacer</c>: a tall column of leaves shaped as a lopsided rhombus in plan, with a
+    /// cross of sideways logs hidden in one row.
+    /// </summary>
+    /// <remarks>
+    /// The rows are placed top three first, then down to row one, then the log cross at row
+    /// <c>height - 4</c>, then the two rows below the attachment, and that order is the draw order. A
+    /// position on the edge of one of the two partial top rows is skipped without the hole draw;
+    /// every other position draws one <c>nextFloat</c> whether or not it ends up inside the shape.
+    /// <p/>
+    /// A log in the cross goes only where the level already holds exactly the state the foliage
+    /// provider draws for that position, so the provider draws once per candidate and the trunk
+    /// provider once more per log placed. The log is written through the foliage setter, as vanilla's
+    /// is, so the decorators see it as a leaf.
+    /// </remarks>
+    public sealed record Poplar(IIntProvider Radius, IIntProvider Offset, IIntProvider Height, float SideHoleChance)
+        : FoliagePlacer(Radius, Offset) {
+
+        protected override void CreateFoliage(IFeatureLevel level, ITreeWriter writer, RandomSource random,
+            TreeConfiguration config, int treeHeight, FoliageAttachment attachment, int foliageHeight,
+            int leafRadius, int offset) {
+
+            bool doubleTrunk = attachment.DoubleTrunk;
+            Vec3<int> foliagePos = attachment.Pos.WithY(attachment.Pos.Y + offset);
+            int currentRadius = leafRadius + attachment.RadiusOffset - 1;
+            bool flip = random.NextBoolean();
+
+            PoplarRow(level, writer, random, config, foliagePos, currentRadius - 2, foliageHeight - 1, doubleTrunk,
+                foliageHeight, flip);
+            PoplarRow(level, writer, random, config, foliagePos, currentRadius - 1, foliageHeight - 2, doubleTrunk,
+                foliageHeight, flip);
+            PoplarRow(level, writer, random, config, foliagePos, currentRadius - 1, foliageHeight - 3, doubleTrunk,
+                foliageHeight, flip);
+
+            for (int y = foliageHeight - 4; y >= 1; y--) {
+                PoplarRow(level, writer, random, config, foliagePos, currentRadius, y, doubleTrunk, foliageHeight,
+                    flip);
+            }
+
+            ReplaceLeavesWithLog(level, writer, config, random, foliagePos, currentRadius, foliageHeight - 4,
+                doubleTrunk, foliageHeight, flip);
+            PoplarRow(level, writer, random, config, foliagePos, currentRadius - 1, 0, doubleTrunk, foliageHeight,
+                flip);
+            PoplarRow(level, writer, random, config, foliagePos, Mth.Clamp(currentRadius - 2, 1, 2), -1,
+                doubleTrunk, foliageHeight, flip);
+        }
+
+        private static void ReplaceLeavesWithLog(IFeatureLevel level, ITreeWriter writer, TreeConfiguration config,
+            RandomSource random, Vec3<int> origin, int currentRadius, int y, bool doubleTrunk, int foliageHeight,
+            bool flip) {
+
+            int extra = doubleTrunk ? 1 : 0;
+
+            for (int dx = -currentRadius; dx <= currentRadius + extra; dx++) {
+                for (int dz = -currentRadius; dz <= currentRadius + extra; dz++) {
+                    int absDz = Math.Abs(dz);
+                    int absDx = Math.Abs(dx);
+
+                    if (!IsWithinRhombusShape(currentRadius, absDx, absDz,
+                            CornerBlocksToCut(dx, dz, currentRadius, IsPartialRow(foliageHeight, y), flip), 2)
+                        || !(absDz == 0 && currentRadius - absDx >= 4 || absDx == 0 && currentRadius - absDz >= 4)) {
+                        continue;
+                    }
+
+                    Vec3<int> pos = origin + new Vec3<int>(dx, y, dz);
+                    Axis axis = absDz == 0 ? Axis.X : Axis.Z;
+
+                    IBlock leaf = config.FoliageProvider.GetState(level, random, pos.X, pos.Y, pos.Z);
+                    if (level.GetState(pos.X, pos.Y, pos.Z) == leaf.StateId) {
+                        IBlock log = config.TrunkProvider.GetState(level, random, pos.X, pos.Y, pos.Z);
+                        writer.SetFoliage(pos, TrunkPlacers.WithAxis(log, axis));
+                    }
+                }
+            }
+        }
+
+        public override int FoliageHeight(RandomSource random, int treeHeight, TreeConfiguration config) {
+            return Height.Sample(random);
+        }
+
+        private void PoplarRow(IFeatureLevel level, ITreeWriter writer, RandomSource random,
+            TreeConfiguration config, Vec3<int> origin, int currentRadius, int y, bool doubleTrunk,
+            int foliageHeight, bool flip) {
+
+            int extra = doubleTrunk ? 1 : 0;
+
+            for (int dx = -currentRadius; dx <= currentRadius + extra; dx++) {
+                for (int dz = -currentRadius; dz <= currentRadius + extra; dz++) {
+                    if (!ShouldSkip(random, dx, y, dz, currentRadius, foliageHeight, flip)) {
+                        TryPlaceLeaf(level, writer, random, config, origin + new Vec3<int>(dx, y, dz));
+                    }
+                }
+            }
+        }
+
+        private bool ShouldSkip(RandomSource random, int dx, int y, int dz, int currentRadius, int foliageHeight,
+            bool flip) {
+
+            bool partial = IsPartialRow(foliageHeight, y);
+            int cornerBlocksToCut = CornerBlocksToCut(dx, dz, currentRadius, partial, flip);
+            int absDx = Math.Abs(dx);
+            int absDz = Math.Abs(dz);
+            bool isRhombusEdgeBlock = absDx == currentRadius || absDz == currentRadius;
+
+            if (partial && isRhombusEdgeBlock) {
+                return true;
+            }
+
+            int additionalSideRemoval = random.NextFloat() <= SideHoleChance ? 1 : 0;
+            return !IsWithinRhombusShape(currentRadius, absDx, absDz, cornerBlocksToCut, additionalSideRemoval);
+        }
+
+        /// <summary>Never reached: every row goes through <see cref="PoplarRow"/>, which needs the row's context.</summary>
+        protected override bool ShouldSkipLocation(RandomSource random, int dx, int y, int dz, int currentRadius,
+            bool doubleTrunk) {
+
+            throw new InvalidOperationException("The poplar's rows need more context than this.");
+        }
+
+        private static int CornerBlocksToCut(int dx, int dz, int currentRadius, bool partial, bool flip) {
+            bool isSmallCorner = flip
+                ? dx > 0 && dz > 0 || dz < 0 && dx < 0
+                : dx > 0 && dz < 0 || dz > 0 && dx < 0;
+
+            return isSmallCorner ? currentRadius - 1 : partial ? currentRadius + 1 : currentRadius;
+        }
+
+        private static bool IsWithinRhombusShape(int currentRadius, int absDx, int absDz, int cornerBlocksToCut,
+            int additionalSideRemoval) {
+
+            return absDx + absDz <= currentRadius * 2 - (cornerBlocksToCut + additionalSideRemoval);
+        }
+
+        private static bool IsPartialRow(int foliageHeight, int y) {
+            return foliageHeight - 1 == y || foliageHeight - 2 == y;
+        }
+    }
+}

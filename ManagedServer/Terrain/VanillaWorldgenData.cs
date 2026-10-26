@@ -2,8 +2,8 @@ using System.Text.Json;
 using ManagedServer.Terrain.Biomes;
 using ManagedServer.Terrain.Data;
 using ManagedServer.Terrain.Density;
+using ManagedServer.Terrain.Material;
 using ManagedServer.Terrain.Noise;
-using ManagedServer.Terrain.Surface;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 
@@ -24,10 +24,10 @@ namespace ManagedServer.Terrain;
 /// a consumer layers their own pack over it and overrides one function.
 /// <p/>
 /// <see cref="Load"/> is cached per registry and source, so a server with several worlds off one pack
-/// parses this once. Resolving is lazy and memoised, and cycles are reported rather than being
-/// followed forever.
+/// parses this once. A reference is resolved when a compiler first follows it, which can be from any
+/// world's generation thread, so resolution is locked.
 /// </remarks>
-public sealed class VanillaWorldgenData : IDensityFunctionSource {
+public sealed class VanillaWorldgenData : IDensityFunctionSource, IMaterialRuleSource {
     private static readonly Dictionary<(MinecraftRegistry, IDatapackSource), VanillaWorldgenData>
         Cache = new();
 
@@ -35,29 +35,43 @@ public sealed class VanillaWorldgenData : IDensityFunctionSource {
 
     private readonly MinecraftRegistry _registry;
     private readonly IDatapackSource _source;
-    private readonly Dictionary<Identifier, NoiseParameters> _noiseParameters = [];
+    private readonly Dictionary<Identifier, NormalNoise> _noises = [];
     private readonly Dictionary<Identifier, JsonDocument> _densityFunctionJson = [];
     private readonly Dictionary<Identifier, JsonDocument> _noiseSettingsJson = [];
+    private readonly Dictionary<Identifier, JsonDocument> _materialRuleJson = [];
+    private readonly Dictionary<Identifier, JsonDocument> _materialConditionJson = [];
 
     private readonly Dictionary<Identifier, IDensityFunction> _densityFunctions = [];
-    private readonly HashSet<Identifier> _resolving = [];
+    private readonly Dictionary<Identifier, IMaterialRule> _materialRules = [];
+    private readonly Dictionary<Identifier, IMaterialCondition> _materialConditions = [];
+    private readonly Lock _resolveLock = new();
 
     private readonly Dictionary<Identifier, NoiseGeneratorSettings> _noiseSettings = [];
     private readonly Dictionary<Identifier, ClimateParameterList<Identifier>> _biomeParameterLists = [];
 
     private readonly DensityFunctionParser _densityParser;
-    private readonly SurfaceRuleParser _surfaceParser;
+    private readonly MaterialRuleParser _materialParser;
 
     private VanillaWorldgenData(MinecraftRegistry registry, IDatapackSource source) {
         _registry = registry;
         _source = source;
         _densityParser = new DensityFunctionParser(this);
-        _surfaceParser = new SurfaceRuleParser(registry);
+        _materialParser = new MaterialRuleParser(registry, _densityParser, this);
 
         foreach (DatapackEntry entry in source.Entries("worldgen/noise")) {
             using Stream stream = source.Open(entry.Path);
             using JsonDocument document = JsonDocument.Parse(stream);
-            _noiseParameters[entry.Id] = ParseNoiseParameters(document.RootElement);
+            _noises[entry.Id] = new NormalNoise(DensityFunctionParser.ParseNoiseParameters(document.RootElement));
+        }
+
+        foreach (DatapackEntry entry in source.Entries("worldgen/material_rule")) {
+            using Stream stream = source.Open(entry.Path);
+            _materialRuleJson[entry.Id] = JsonDocument.Parse(stream);
+        }
+
+        foreach (DatapackEntry entry in source.Entries("worldgen/material_condition")) {
+            using Stream stream = source.Open(entry.Path);
+            _materialConditionJson[entry.Id] = JsonDocument.Parse(stream);
         }
 
         // The two kept as documents are resolved lazily, since a density function references others
@@ -72,7 +86,7 @@ public sealed class VanillaWorldgenData : IDensityFunctionSource {
             _noiseSettingsJson[entry.Id] = JsonDocument.Parse(stream);
         }
 
-        if (_noiseParameters.Count == 0 || _densityFunctionJson.Count == 0) {
+        if (_noises.Count == 0 || _densityFunctionJson.Count == 0) {
             throw new InvalidOperationException(
                 $"\"{source.Describe()}\" carries no worldgen data: it has no "
                 + "data/<namespace>/worldgen/noise or /density_function. A vanilla server jar is a "
@@ -99,37 +113,44 @@ public sealed class VanillaWorldgenData : IDensityFunctionSource {
         }
     }
 
-    public IReadOnlyDictionary<Identifier, NoiseParameters> NoiseParameters => _noiseParameters;
+    /// <summary>The <c>worldgen/noise</c> registry.</summary>
+    public IReadOnlyDictionary<Identifier, NormalNoise> Noises => _noises;
 
-    public bool HasNoise(Identifier id) => _noiseParameters.ContainsKey(id);
+    public NormalNoise? ResolveNoise(Identifier id) => _noises.GetValueOrDefault(id);
 
     /// <summary>
-    /// A density function by its registry id, built on first use.
+    /// A density function by its registry id, parsed on first use. Parsing does not follow the
+    /// references inside it, so a cycle in a consumer's pack surfaces when the function is compiled.
     /// </summary>
-    /// <remarks>
-    /// Resolution is recursive because the files reference each other, and the guard is what turns a
-    /// cycle into a message rather than a stack overflow. The vanilla data has none; a consumer's
-    /// override could.
-    /// </remarks>
     public IDensityFunction Resolve(Identifier id) {
-        if (_densityFunctions.TryGetValue(id, out IDensityFunction? existing)) {
-            return existing;
-        }
+        return ResolveEntry(id, _densityFunctions, _densityFunctionJson, "density function", _densityParser.Parse);
+    }
 
-        if (!_densityFunctionJson.TryGetValue(id, out JsonDocument? document)) {
-            throw new InvalidOperationException($"No density function registered as \"{id}\".");
-        }
+    /// <summary>A material rule by its registry id, parsed on first use.</summary>
+    public IMaterialRule ResolveRule(Identifier id) {
+        return ResolveEntry(id, _materialRules, _materialRuleJson, "material rule", _materialParser.ParseRule);
+    }
 
-        if (!_resolving.Add(id)) {
-            throw new InvalidOperationException($"Density function \"{id}\" refers to itself.");
-        }
+    /// <summary>A material condition by its registry id, parsed on first use.</summary>
+    public IMaterialCondition ResolveCondition(Identifier id) {
+        return ResolveEntry(id, _materialConditions, _materialConditionJson, "material condition", _materialParser.ParseCondition);
+    }
 
-        try {
-            IDensityFunction function = _densityParser.Parse(document.RootElement);
-            _densityFunctions[id] = function;
-            return function;
-        } finally {
-            _resolving.Remove(id);
+    private T ResolveEntry<T>(Identifier id, Dictionary<Identifier, T> parsed, Dictionary<Identifier, JsonDocument> json, string kind,
+        Func<JsonElement, T> parse) {
+
+        lock (_resolveLock) {
+            if (parsed.TryGetValue(id, out T? existing)) {
+                return existing;
+            }
+
+            if (!json.TryGetValue(id, out JsonDocument? document)) {
+                throw new InvalidOperationException($"No {kind} registered as \"{id}\".");
+            }
+
+            T value = parse(document.RootElement);
+            parsed[id] = value;
+            return value;
         }
     }
 
@@ -147,15 +168,14 @@ public sealed class VanillaWorldgenData : IDensityFunctionSource {
         JsonElement noise = root.GetProperty("noise");
 
         NoiseGeneratorSettings settings = new(
-            new NoiseSettings(noise.GetProperty("min_y").GetInt32(), noise.GetProperty("height").GetInt32(),
-                noise.GetProperty("size_horizontal").GetInt32(), noise.GetProperty("size_vertical").GetInt32()),
-            _surfaceParser.ParseBlockState(root.GetProperty("default_block")),
-            _surfaceParser.ParseBlockState(root.GetProperty("default_fluid")),
+            new NoiseSettings(noise.GetProperty("min_y").GetInt32(), noise.GetProperty("height").GetInt32()),
+            StateParser.ReadJson(_registry, root.GetProperty("default_block")).StateId,
+            StateParser.ReadJson(_registry, root.GetProperty("default_fluid")).StateId,
             ParseRouter(root.GetProperty("noise_router")),
-            _surfaceParser.ParseRule(root.GetProperty("surface_rule")),
+            _materialParser.ParseRule(root.GetProperty("material_rule")),
             root.GetProperty("sea_level").GetInt32(),
-            root.GetProperty("aquifers_enabled").GetBoolean(),
-            root.GetProperty("ore_veins_enabled").GetBoolean(),
+            root.GetProperty("disable_mob_generation").GetBoolean(),
+            root.TryGetProperty("aquifers", out JsonElement aquifers) ? ParseAquifers(aquifers) : null,
             root.GetProperty("legacy_random_source").GetBoolean());
 
         _noiseSettings[id] = settings;
@@ -164,21 +184,24 @@ public sealed class VanillaWorldgenData : IDensityFunctionSource {
 
     private NoiseRouter ParseRouter(JsonElement element) {
         return new NoiseRouter(
-            _densityParser.Parse(element.GetProperty("barrier")),
-            _densityParser.Parse(element.GetProperty("fluid_level_floodedness")),
-            _densityParser.Parse(element.GetProperty("fluid_level_spread")),
-            _densityParser.Parse(element.GetProperty("lava")),
             _densityParser.Parse(element.GetProperty("temperature")),
             _densityParser.Parse(element.GetProperty("vegetation")),
             _densityParser.Parse(element.GetProperty("continents")),
             _densityParser.Parse(element.GetProperty("erosion")),
             _densityParser.Parse(element.GetProperty("depth")),
             _densityParser.Parse(element.GetProperty("ridges")),
-            _densityParser.Parse(element.GetProperty("preliminary_surface_level")),
-            _densityParser.Parse(element.GetProperty("final_density")),
-            _densityParser.Parse(element.GetProperty("vein_toggle")),
-            _densityParser.Parse(element.GetProperty("vein_ridged")),
-            _densityParser.Parse(element.GetProperty("vein_gap")));
+            _densityParser.Parse(element.GetProperty("chunk_surface_level")),
+            _densityParser.Parse(element.GetProperty("final_density")));
+    }
+
+    private AquiferConfig ParseAquifers(JsonElement element) {
+        return new AquiferConfig(
+            _densityParser.Parse(element.GetProperty("barrier")),
+            _densityParser.Parse(element.GetProperty("fluid_level_floodedness")),
+            _densityParser.Parse(element.GetProperty("fluid_level_spread")),
+            _densityParser.Parse(element.GetProperty("lava")),
+            _densityParser.Parse(element.GetProperty("exclusion")),
+            _densityParser.Parse(element.GetProperty("surface_level")));
     }
 
     /// <summary>
@@ -217,14 +240,4 @@ public sealed class VanillaWorldgenData : IDensityFunctionSource {
         _biomeParameterLists[preset] = list;
         return list;
     }
-
-    private static NoiseParameters ParseNoiseParameters(JsonElement element) {
-        List<double> amplitudes = [];
-        foreach (JsonElement amplitude in element.GetProperty("amplitudes").EnumerateArray()) {
-            amplitudes.Add(amplitude.GetDouble());
-        }
-
-        return new NoiseParameters(element.GetProperty("firstOctave").GetInt32(), amplitudes);
-    }
-
 }

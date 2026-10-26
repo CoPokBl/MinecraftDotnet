@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BoneBlockBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
-    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.bone_block", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:bone_block", BlockInfo.VanillaOnly, "minecraft:blocks/bone_block");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.Normal, 2, "bone_block", NoteBlockInstrument.Xylophone, false, true, true, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.bone_block", 2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:bone_block", BlockInfo.VanillaOnly, "minecraft:blocks/bone_block");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.PushPull, 2, "bone_block", NoteBlockInstrument.Xylophone, false, true, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record BoneBlockBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAl
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record BoneBlockBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAl
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,9 +69,9 @@ public record BoneBlockBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAl
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 14848,
-                Axis.Y => 14849,
-                Axis.Z => 14850,
+                Axis.X => 16829,
+                Axis.Y => 16830,
+                Axis.Z => 16831,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -79,9 +79,9 @@ public record BoneBlockBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAl
     
     public IBlock WithState(uint state) {
         return state switch {
-            14848 => new BoneBlockBlock(Identifier, Axis.X),
-            14849 => new BoneBlockBlock(Identifier, Axis.Y),
-            14850 => new BoneBlockBlock(Identifier, Axis.Z),
+            16829 => new BoneBlockBlock(Identifier, Axis.X),
+            16830 => new BoneBlockBlock(Identifier, Axis.Y),
+            16831 => new BoneBlockBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

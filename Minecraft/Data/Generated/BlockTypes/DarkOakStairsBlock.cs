@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record DarkOakStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.dark_oak_stairs", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:dark_oak_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/dark_oak_stairs");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 26, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.dark_oak_stairs", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:dark_oak_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/dark_oak_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 26, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record DarkOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 12132];
+    public BlockStateInfo StateInfo => States[StateId - 13899];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record DarkOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record DarkOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record DarkOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12132,
-                            false => 12133,
+                            true => 13899,
+                            false => 13900,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12134,
-                            false => 12135,
+                            true => 13901,
+                            false => 13902,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12136,
-                            false => 12137,
+                            true => 13903,
+                            false => 13904,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12138,
-                            false => 12139,
+                            true => 13905,
+                            false => 13906,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12140,
-                            false => 12141,
+                            true => 13907,
+                            false => 13908,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12142,
-                            false => 12143,
+                            true => 13909,
+                            false => 13910,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12144,
-                            false => 12145,
+                            true => 13911,
+                            false => 13912,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12146,
-                            false => 12147,
+                            true => 13913,
+                            false => 13914,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12148,
-                            false => 12149,
+                            true => 13915,
+                            false => 13916,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12150,
-                            false => 12151,
+                            true => 13917,
+                            false => 13918,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record DarkOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12152,
-                            false => 12153,
+                            true => 13919,
+                            false => 13920,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12154,
-                            false => 12155,
+                            true => 13921,
+                            false => 13922,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12156,
-                            false => 12157,
+                            true => 13923,
+                            false => 13924,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12158,
-                            false => 12159,
+                            true => 13925,
+                            false => 13926,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12160,
-                            false => 12161,
+                            true => 13927,
+                            false => 13928,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12162,
-                            false => 12163,
+                            true => 13929,
+                            false => 13930,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12164,
-                            false => 12165,
+                            true => 13931,
+                            false => 13932,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12166,
-                            false => 12167,
+                            true => 13933,
+                            false => 13934,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12168,
-                            false => 12169,
+                            true => 13935,
+                            false => 13936,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12170,
-                            false => 12171,
+                            true => 13937,
+                            false => 13938,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record DarkOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12172,
-                            false => 12173,
+                            true => 13939,
+                            false => 13940,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12174,
-                            false => 12175,
+                            true => 13941,
+                            false => 13942,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12176,
-                            false => 12177,
+                            true => 13943,
+                            false => 13944,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12178,
-                            false => 12179,
+                            true => 13945,
+                            false => 13946,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12180,
-                            false => 12181,
+                            true => 13947,
+                            false => 13948,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12182,
-                            false => 12183,
+                            true => 13949,
+                            false => 13950,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12184,
-                            false => 12185,
+                            true => 13951,
+                            false => 13952,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12186,
-                            false => 12187,
+                            true => 13953,
+                            false => 13954,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12188,
-                            false => 12189,
+                            true => 13955,
+                            false => 13956,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12190,
-                            false => 12191,
+                            true => 13957,
+                            false => 13958,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record DarkOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12192,
-                            false => 12193,
+                            true => 13959,
+                            false => 13960,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12194,
-                            false => 12195,
+                            true => 13961,
+                            false => 13962,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12196,
-                            false => 12197,
+                            true => 13963,
+                            false => 13964,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12198,
-                            false => 12199,
+                            true => 13965,
+                            false => 13966,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12200,
-                            false => 12201,
+                            true => 13967,
+                            false => 13968,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 12202,
-                            false => 12203,
+                            true => 13969,
+                            false => 13970,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 12204,
-                            false => 12205,
+                            true => 13971,
+                            false => 13972,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 12206,
-                            false => 12207,
+                            true => 13973,
+                            false => 13974,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 12208,
-                            false => 12209,
+                            true => 13975,
+                            false => 13976,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 12210,
-                            false => 12211,
+                            true => 13977,
+                            false => 13978,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record DarkOakStairsBlock(Identifier Identifier, Direction Facing, TopBot
     
     public IBlock WithState(uint state) {
         return state switch {
-            12132 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            12133 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            12134 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            12135 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            12136 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            12137 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            12138 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            12139 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            12140 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            12141 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            12142 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            12143 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            12144 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12145 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12146 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            12147 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            12148 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12149 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12150 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            12151 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            12152 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            12153 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            12154 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            12155 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            12156 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            12157 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            12158 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            12159 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            12160 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            12161 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            12162 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            12163 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            12164 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12165 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12166 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            12167 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            12168 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12169 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12170 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            12171 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            12172 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            12173 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            12174 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            12175 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            12176 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            12177 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            12178 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            12179 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            12180 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            12181 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            12182 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            12183 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            12184 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12185 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12186 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            12187 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            12188 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12189 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12190 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            12191 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            12192 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            12193 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            12194 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            12195 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            12196 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            12197 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            12198 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            12199 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            12200 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            12201 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            12202 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            12203 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            12204 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            12205 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            12206 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            12207 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            12208 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            12209 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            12210 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            12211 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            13899 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            13900 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            13901 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            13902 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            13903 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            13904 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            13905 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            13906 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            13907 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            13908 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            13909 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            13910 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            13911 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13912 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13913 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            13914 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            13915 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13916 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13917 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            13918 => new DarkOakStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            13919 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            13920 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            13921 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            13922 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            13923 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            13924 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            13925 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            13926 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            13927 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            13928 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            13929 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            13930 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            13931 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13932 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13933 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            13934 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            13935 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13936 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13937 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            13938 => new DarkOakStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            13939 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            13940 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            13941 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            13942 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            13943 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            13944 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            13945 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            13946 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            13947 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            13948 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            13949 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            13950 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            13951 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13952 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13953 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            13954 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            13955 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13956 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13957 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            13958 => new DarkOakStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            13959 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            13960 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            13961 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            13962 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            13963 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            13964 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            13965 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            13966 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            13967 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            13968 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            13969 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            13970 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            13971 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13972 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13973 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            13974 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            13975 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13976 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13977 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            13978 => new DarkOakStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

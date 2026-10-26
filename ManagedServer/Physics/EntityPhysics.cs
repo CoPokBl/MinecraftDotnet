@@ -374,7 +374,7 @@ public static class EntityPhysics {
             BlockPhysicsData.Entry landedOn = BlockLandedOn(world, entity);
             double gravity = Gravity(entity);
 
-            restitution = -velocity.Y >= gravity && !suppressing && !landedOn.SuppressesBounce
+            restitution = -velocity.Y > gravity && !suppressing && !landedOn.SuppressesBounce
                 ? Math.Max(restitution, BlockBounciness(entity, landedOn))
                 : 0.0;
         }

@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TargetBlock(Identifier Identifier, int Power) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:target", "block.minecraft.target", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:target", BlockInfo.VanillaOnly, "minecraft:blocks/target");
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 15, PushReaction.Normal, 14, "grass", NoteBlockInstrument.Harp, false, true, false, true, true, false, false, false, true, true, true, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.target", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:target", BlockInfo.VanillaOnly, "minecraft:blocks/target");
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 15, PushReaction.PushPull, 14, "grass", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, true, true, true, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record TargetBlock(Identifier Identifier, int Power) : IBlock {
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record TargetBlock(Identifier Identifier, int Power) : IBlock {
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -67,22 +67,22 @@ public record TargetBlock(Identifier Identifier, int Power) : IBlock {
     public uint StateId {
         get {
             return Power switch {
-                0 => 21752,
-                1 => 21753,
-                2 => 21754,
-                3 => 21755,
-                4 => 21756,
-                5 => 21757,
-                6 => 21758,
-                7 => 21759,
-                8 => 21760,
-                9 => 21761,
-                10 => 21762,
-                11 => 21763,
-                12 => 21764,
-                13 => 21765,
-                14 => 21766,
-                15 => 21767,
+                0 => 25109,
+                1 => 25110,
+                2 => 25111,
+                3 => 25112,
+                4 => 25113,
+                5 => 25114,
+                6 => 25115,
+                7 => 25116,
+                8 => 25117,
+                9 => 25118,
+                10 => 25119,
+                11 => 25120,
+                12 => 25121,
+                13 => 25122,
+                14 => 25123,
+                15 => 25124,
                 _ => throw new ArgumentOutOfRangeException(nameof(Power), Power, "Unknown value for property power.")
             };
         }
@@ -90,22 +90,22 @@ public record TargetBlock(Identifier Identifier, int Power) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            21752 => new TargetBlock(Identifier, 0),
-            21753 => new TargetBlock(Identifier, 1),
-            21754 => new TargetBlock(Identifier, 2),
-            21755 => new TargetBlock(Identifier, 3),
-            21756 => new TargetBlock(Identifier, 4),
-            21757 => new TargetBlock(Identifier, 5),
-            21758 => new TargetBlock(Identifier, 6),
-            21759 => new TargetBlock(Identifier, 7),
-            21760 => new TargetBlock(Identifier, 8),
-            21761 => new TargetBlock(Identifier, 9),
-            21762 => new TargetBlock(Identifier, 10),
-            21763 => new TargetBlock(Identifier, 11),
-            21764 => new TargetBlock(Identifier, 12),
-            21765 => new TargetBlock(Identifier, 13),
-            21766 => new TargetBlock(Identifier, 14),
-            21767 => new TargetBlock(Identifier, 15),
+            25109 => new TargetBlock(Identifier, 0),
+            25110 => new TargetBlock(Identifier, 1),
+            25111 => new TargetBlock(Identifier, 2),
+            25112 => new TargetBlock(Identifier, 3),
+            25113 => new TargetBlock(Identifier, 4),
+            25114 => new TargetBlock(Identifier, 5),
+            25115 => new TargetBlock(Identifier, 6),
+            25116 => new TargetBlock(Identifier, 7),
+            25117 => new TargetBlock(Identifier, 8),
+            25118 => new TargetBlock(Identifier, 9),
+            25119 => new TargetBlock(Identifier, 10),
+            25120 => new TargetBlock(Identifier, 11),
+            25121 => new TargetBlock(Identifier, 12),
+            25122 => new TargetBlock(Identifier, 13),
+            25123 => new TargetBlock(Identifier, 14),
+            25124 => new TargetBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

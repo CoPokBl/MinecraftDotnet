@@ -77,10 +77,10 @@ public sealed class ResourcePackSource(PackFiles files, IResourceSource fallback
 
     private TextureImage? ModelPermutation(Minecraft.Schemas.Identifier sprite) => Permutations.Sprite("items", sprite) ?? Permutations.Sprite("blocks", sprite);
 
-    /// <summary>A sprite one of the named atlas's <c>paletted_permutations</c> sources makes, <c>armor_trims</c> say; null when none does.</summary>
-    public TextureImage? AtlasPermutation(string atlas, Minecraft.Schemas.Identifier sprite) {
+    /// <summary>A texture recoloured to a palette, as <c>PalettedTextureManager</c> prepares one.</summary>
+    public TextureImage? PalettedTexture(Minecraft.Schemas.Identifier baseTexture, Minecraft.Schemas.Identifier paletteId) {
         lock (_gate) {
-            return Permutations.Sprite(atlas, sprite);
+            return Permutations.PalettedTexture(baseTexture, paletteId);
         }
     }
 

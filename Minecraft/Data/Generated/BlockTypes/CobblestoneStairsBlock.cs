@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CobblestoneStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.cobblestone_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cobblestone_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/cobblestone_stairs");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.cobblestone_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cobblestone_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/cobblestone_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record CobblestoneStairsBlock(Identifier Identifier, Direction Facing, To
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 5747];
+    public BlockStateInfo StateInfo => States[StateId - 7335];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record CobblestoneStairsBlock(Identifier Identifier, Direction Facing, To
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record CobblestoneStairsBlock(Identifier Identifier, Direction Facing, To
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record CobblestoneStairsBlock(Identifier Identifier, Direction Facing, To
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 5747,
-                            false => 5748,
+                            true => 7335,
+                            false => 7336,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 5749,
-                            false => 5750,
+                            true => 7337,
+                            false => 7338,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 5751,
-                            false => 5752,
+                            true => 7339,
+                            false => 7340,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 5753,
-                            false => 5754,
+                            true => 7341,
+                            false => 7342,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 5755,
-                            false => 5756,
+                            true => 7343,
+                            false => 7344,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 5757,
-                            false => 5758,
+                            true => 7345,
+                            false => 7346,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 5759,
-                            false => 5760,
+                            true => 7347,
+                            false => 7348,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 5761,
-                            false => 5762,
+                            true => 7349,
+                            false => 7350,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 5763,
-                            false => 5764,
+                            true => 7351,
+                            false => 7352,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 5765,
-                            false => 5766,
+                            true => 7353,
+                            false => 7354,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record CobblestoneStairsBlock(Identifier Identifier, Direction Facing, To
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 5767,
-                            false => 5768,
+                            true => 7355,
+                            false => 7356,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 5769,
-                            false => 5770,
+                            true => 7357,
+                            false => 7358,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 5771,
-                            false => 5772,
+                            true => 7359,
+                            false => 7360,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 5773,
-                            false => 5774,
+                            true => 7361,
+                            false => 7362,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 5775,
-                            false => 5776,
+                            true => 7363,
+                            false => 7364,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 5777,
-                            false => 5778,
+                            true => 7365,
+                            false => 7366,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 5779,
-                            false => 5780,
+                            true => 7367,
+                            false => 7368,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 5781,
-                            false => 5782,
+                            true => 7369,
+                            false => 7370,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 5783,
-                            false => 5784,
+                            true => 7371,
+                            false => 7372,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 5785,
-                            false => 5786,
+                            true => 7373,
+                            false => 7374,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record CobblestoneStairsBlock(Identifier Identifier, Direction Facing, To
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 5787,
-                            false => 5788,
+                            true => 7375,
+                            false => 7376,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 5789,
-                            false => 5790,
+                            true => 7377,
+                            false => 7378,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 5791,
-                            false => 5792,
+                            true => 7379,
+                            false => 7380,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 5793,
-                            false => 5794,
+                            true => 7381,
+                            false => 7382,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 5795,
-                            false => 5796,
+                            true => 7383,
+                            false => 7384,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 5797,
-                            false => 5798,
+                            true => 7385,
+                            false => 7386,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 5799,
-                            false => 5800,
+                            true => 7387,
+                            false => 7388,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 5801,
-                            false => 5802,
+                            true => 7389,
+                            false => 7390,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 5803,
-                            false => 5804,
+                            true => 7391,
+                            false => 7392,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 5805,
-                            false => 5806,
+                            true => 7393,
+                            false => 7394,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record CobblestoneStairsBlock(Identifier Identifier, Direction Facing, To
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 5807,
-                            false => 5808,
+                            true => 7395,
+                            false => 7396,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 5809,
-                            false => 5810,
+                            true => 7397,
+                            false => 7398,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 5811,
-                            false => 5812,
+                            true => 7399,
+                            false => 7400,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 5813,
-                            false => 5814,
+                            true => 7401,
+                            false => 7402,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 5815,
-                            false => 5816,
+                            true => 7403,
+                            false => 7404,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 5817,
-                            false => 5818,
+                            true => 7405,
+                            false => 7406,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 5819,
-                            false => 5820,
+                            true => 7407,
+                            false => 7408,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 5821,
-                            false => 5822,
+                            true => 7409,
+                            false => 7410,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 5823,
-                            false => 5824,
+                            true => 7411,
+                            false => 7412,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 5825,
-                            false => 5826,
+                            true => 7413,
+                            false => 7414,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record CobblestoneStairsBlock(Identifier Identifier, Direction Facing, To
     
     public IBlock WithState(uint state) {
         return state switch {
-            5747 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            5748 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            5749 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            5750 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            5751 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            5752 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            5753 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            5754 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            5755 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            5756 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            5757 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            5758 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            5759 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            5760 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            5761 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            5762 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            5763 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            5764 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            5765 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            5766 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            5767 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            5768 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            5769 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            5770 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            5771 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            5772 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            5773 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            5774 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            5775 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            5776 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            5777 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            5778 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            5779 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            5780 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            5781 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            5782 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            5783 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            5784 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            5785 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            5786 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            5787 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            5788 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            5789 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            5790 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            5791 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            5792 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            5793 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            5794 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            5795 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            5796 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            5797 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            5798 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            5799 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            5800 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            5801 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            5802 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            5803 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            5804 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            5805 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            5806 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            5807 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            5808 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            5809 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            5810 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            5811 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            5812 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            5813 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            5814 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            5815 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            5816 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            5817 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            5818 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            5819 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            5820 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            5821 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            5822 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            5823 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            5824 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            5825 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            5826 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            7335 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            7336 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            7337 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            7338 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            7339 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            7340 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            7341 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            7342 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            7343 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            7344 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            7345 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            7346 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            7347 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            7348 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            7349 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            7350 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            7351 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            7352 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            7353 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            7354 => new CobblestoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            7355 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            7356 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            7357 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            7358 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            7359 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            7360 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            7361 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            7362 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            7363 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            7364 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            7365 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            7366 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            7367 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            7368 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            7369 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            7370 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            7371 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            7372 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            7373 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            7374 => new CobblestoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            7375 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            7376 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            7377 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            7378 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            7379 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            7380 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            7381 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            7382 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            7383 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            7384 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            7385 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            7386 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            7387 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            7388 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            7389 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            7390 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            7391 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            7392 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            7393 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            7394 => new CobblestoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            7395 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            7396 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            7397 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            7398 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            7399 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            7400 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            7401 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            7402 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            7403 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            7404 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            7405 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            7406 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            7407 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            7408 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            7409 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            7410 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            7411 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            7412 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            7413 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            7414 => new CobblestoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

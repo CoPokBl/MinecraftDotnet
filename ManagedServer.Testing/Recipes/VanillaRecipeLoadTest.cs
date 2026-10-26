@@ -30,8 +30,8 @@ public class VanillaRecipeLoadTest {
         DatapackCraftingRecipes recipes = Load();
 
         Assert.Multiple(() => {
-            Assert.That(recipes.Recipes.OfType<ShapedRecipe>().Count(), Is.EqualTo(733));
-            Assert.That(recipes.Recipes.OfType<ShapelessRecipe>().Count(), Is.EqualTo(323));
+            Assert.That(recipes.Recipes.OfType<ShapedRecipe>().Count(), Is.EqualTo(827));
+            Assert.That(recipes.Recipes.OfType<ShapelessRecipe>().Count(), Is.EqualTo(375));
             Assert.That(recipes.Recipes.OfType<TransmuteRecipe>().Count(), Is.EqualTo(33));
         });
     }
@@ -49,6 +49,7 @@ public class VanillaRecipeLoadTest {
 
         Assert.That(reasons, Is.EqualTo(new[] {
             "recipe type minecraft:blasting",
+            "recipe type minecraft:brewing",
             "recipe type minecraft:campfire_cooking",
             "recipe type minecraft:crafting_decorated_pot",
             "recipe type minecraft:crafting_dye",
@@ -67,6 +68,17 @@ public class VanillaRecipeLoadTest {
             "recipe type minecraft:smoking",
             "recipe type minecraft:stonecutting"
         }));
+    }
+
+    /// <summary>
+    /// Map cloning names no result item, which is <c>TransmuteResult</c> keeping whatever map went in.
+    /// </summary>
+    [Test]
+    public void ReadsATransmuteResultWithNoItem() {
+        TransmuteRecipe cloning = Load().Recipes.OfType<TransmuteRecipe>()
+            .Single(recipe => recipe.Id == Identifier.Parse("minecraft:map_cloning"));
+
+        Assert.That(cloning.Result.Item, Is.Null);
     }
 
     /// <summary>

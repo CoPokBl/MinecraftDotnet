@@ -83,10 +83,15 @@ public sealed partial class MinecraftClient {
         }
         if (!player.IsPassenger) {
             SetValuesFromPositionPacket(PositionMoveRotation.Change(packet.Position, packet.Velocity, packet.Yaw, packet.Pitch), packet.Flags, player, false);
-            Level?.Predictions.OnTeleport();
         }
-        Send(new ServerBoundConfirmTeleportPacket { TeleportId = packet.TeleportId });
-        SendPlayerPosition(player);
+        Send(new ServerBoundConfirmTeleportPacket {
+            TeleportId = packet.TeleportId,
+            Position = new Vec3<double>(player.Position.X, player.Position.Y, player.Position.Z),
+            Yaw = player.YRot,
+            Pitch = player.XRot
+        });
+        Level?.Predictions.OnTeleport();
+        Interactions.StopDestroyBlock();
     }
 
     private void SendPlayerPosition(LocalPlayer player) {
@@ -117,21 +122,25 @@ public sealed partial class MinecraftClient {
         });
     }
 
-    /// <summary><c>ClientPacketListener.handleEntityPositionSync</c>, which leaves the packet's velocity unread.</summary>
+    /// <summary><c>ClientPacketListener.handleEntityPositionSync</c>.</summary>
     internal void HandleEntityTeleport(ClientBoundTeleportEntityPacket packet) {
         if (!Entities.TryGetValue(packet.EntityId, out ClientEntity? entity)) {
             return;
         }
         Vec3d position = new(packet.Position.X, packet.Position.Y, packet.Position.Z);
+        PositionPath path = packet.Steps is { Count: > 0 } steps
+            ? new PositionPath.Stepped(steps.Select(step => new PositionStep(new Vec3d(step.Position.X, step.Position.Y, step.Position.Z), step.TickOffset)).ToArray())
+            : PositionPath.Of(position);
         entity.SetCodecBase(position);
         if (entity == Player || entity.IsLocalInstanceAuthoritative) {
             return;
         }
-        if (entity.Position.DistanceToSqr(position) > 4096.0) {
-            entity.Snap(position, packet.Yaw.DegreesF, packet.Pitch.DegreesF);
+        bool tooBigToInterpolate = entity.Position.DistanceToSqr(position) > 4096.0;
+        if (IsTickingEntity(entity) && !tooBigToInterpolate) {
+            entity.MoveOrInterpolateTo(path, packet.Yaw.DegreesF, packet.Pitch.DegreesF, true);
         }
         else {
-            entity.InterpolateTo(position, packet.Yaw.DegreesF, packet.Pitch.DegreesF);
+            entity.SnapTo(position, packet.Yaw.DegreesF, packet.Pitch.DegreesF);
         }
         if (!entity.IsInterpolating && Player != null && entity.HasIndirectPassenger(Player)) {
             entity.PositionRider(Player);
@@ -149,14 +158,12 @@ public sealed partial class MinecraftClient {
         if (!Entities.TryGetValue(packet.EntityId, out ClientEntity? entity)) {
             if (_removedPlayerVehicleId == packet.EntityId && Player is { } player) {
                 SetValuesFromPositionPacket(change, packet.Flags, player, false);
-                SendPlayerPosition(player);
             }
             return;
         }
 
         bool hasRelative = (packet.Flags & TeleportFlags.RelativePosition) != 0;
-        bool ticking = Level != null && Level.HasChunk((int)Math.Floor(entity.Position.X) >> 4, (int)Math.Floor(entity.Position.Z) >> 4);
-        bool interpolate = ticking || !entity.IsLocalInstanceAuthoritative || hasRelative;
+        bool interpolate = IsTickingEntity(entity) || !entity.IsLocalInstanceAuthoritative || hasRelative;
         bool wasInterpolated = SetValuesFromPositionPacket(change, packet.Flags, entity, interpolate);
         entity.SetOnGroundFromServer(packet.OnGround);
         if (!wasInterpolated && Player != null && entity.HasIndirectPassenger(Player)) {
@@ -169,21 +176,28 @@ public sealed partial class MinecraftClient {
     }
 
     /// <summary>
-    /// <c>ClientPacketListener.setValuesFromPositionPacket</c>. <c>PositionMoveRotation.of</c> reads the
-    /// rotation the entity has rather than the one it is interpolating to.
+    /// <c>ClientLevel.isTickingEntity</c>: the client ticks what stands in a chunk it holds.
+    /// </summary>
+    private bool IsTickingEntity(ClientEntity entity) =>
+        Level != null && Level.HasChunk((int)Math.Floor(entity.Position.X) >> 4, (int)Math.Floor(entity.Position.Z) >> 4);
+
+    /// <summary>
+    /// <c>ClientPacketListener.setValuesFromPositionPacket</c>. <c>PositionMoveRotation.of</c> starts from
+    /// where an interpolation in progress is heading, rotation included.
     /// </summary>
     private static bool SetValuesFromPositionPacket(PositionMoveRotation change, TeleportFlags relatives, ClientEntity entity, bool interpolate) {
-        PositionMoveRotation current = new(entity.InterpolationTarget, entity.DeltaMovement, entity.YRot, entity.XRot);
+        PositionAndRotation client = entity.ClientPositionAndRotation;
+        PositionMoveRotation current = new(client.Position, entity.DeltaMovement, client.YRot, client.XRot);
         PositionMoveRotation absolute = PositionMoveRotation.CalculateAbsolute(current, change, relatives);
         if (interpolate && !(current.Position.DistanceToSqr(absolute.Position) > 4096.0)) {
-            entity.InterpolateTo(absolute.Position, absolute.YRot, absolute.XRot);
+            entity.MoveOrInterpolateTo(absolute.Position, absolute.YRot, absolute.XRot);
             entity.DeltaMovement = absolute.DeltaMovement;
             return true;
         }
         entity.Position = absolute.Position;
         entity.DeltaMovement = absolute.DeltaMovement;
-        entity.YRot = absolute.YRot;
-        entity.XRot = absolute.XRot;
+        entity.SetYRot(absolute.YRot);
+        entity.SetXRot(absolute.XRot);
         PositionMoveRotation old = PositionMoveRotation.CalculateAbsolute(new(entity.OldPosition, Vec3d.Zero, entity.YRotO, entity.XRotO), change, relatives);
         entity.OldPosition = old.Position;
         entity.YRotO = old.YRot;
@@ -229,8 +243,8 @@ public sealed partial class MinecraftClient {
             return;
         }
         Vec3d target = new(packet.Position.X, packet.Position.Y, packet.Position.Z);
-        if (Math.Sqrt(target.DistanceToSqr(vehicle.InterpolationTarget)) > 1.0E-5F) {
-            vehicle.CancelInterpolation();
+        if (Math.Sqrt(target.DistanceToSqr(vehicle.ClientPosition)) > 1.0E-5F) {
+            vehicle.Interpolation.Cancel();
             // Entity.absSnapTo.
             Vec3d clamped = new(Math.Clamp(target.X, -3.0E7, 3.0E7), target.Y, Math.Clamp(target.Z, -3.0E7, 3.0E7));
             vehicle.OldPosition = clamped;
@@ -242,10 +256,11 @@ public sealed partial class MinecraftClient {
 
     /// <summary><c>ServerboundMoveVehiclePacket.fromEntity</c>.</summary>
     internal void SendMoveVehicle(ClientEntity vehicle) {
+        PositionAndRotation current = vehicle.ClientPositionAndRotation;
         Send(new ServerBoundMoveVehiclePacket {
-            Position = new Vec3<double>(vehicle.Position.X, vehicle.Position.Y, vehicle.Position.Z),
-            Yaw = Angle.FromDegrees(vehicle.YRot),
-            Pitch = Angle.FromDegrees(vehicle.XRot),
+            Position = new Vec3<double>(current.Position.X, current.Position.Y, current.Position.Z),
+            Yaw = Angle.FromDegrees(current.YRot),
+            Pitch = Angle.FromDegrees(current.XRot),
             OnGround = vehicle.OnGround
         });
     }

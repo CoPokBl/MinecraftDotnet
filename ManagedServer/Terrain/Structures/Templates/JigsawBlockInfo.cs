@@ -25,11 +25,14 @@ public enum JointType {
 /// This is the one place a block entity's contents are read during generation, and it is only possible
 /// because the contents travel <b>inside the template</b> rather than in the world: a jigsaw block's
 /// pool, name and target are saved with the template, so no port of a live block entity is needed.
+/// <p/>
+/// <see cref="Name"/> is null only for the jigsaw a feature pool element makes up, and a null name
+/// accepts any target. One read from a template defaults to <c>minecraft:empty</c> instead.
 /// </remarks>
 public readonly record struct JigsawBlockInfo(
     TemplateBlockInfo Info,
     JointType JointType,
-    Identifier Name,
+    Identifier? Name,
     Identifier Pool,
     Identifier Target,
     int PlacementPriority,
@@ -100,8 +103,8 @@ public readonly record struct JigsawBlockInfo(
     /// <remarks>
     /// Three conditions, and the middle one is what the joint type is for: the fronts must be
     /// opposite, the <b>tops must match unless the source is rollable</b>, and this one's target must
-    /// be the other one's name. Dropping the top test lets a rollable connection through in any
-    /// rotation, which is the point of it.
+    /// be the other one's name, or the other one must have none. Dropping the top test lets a rollable
+    /// connection through in any rotation, which is the point of it.
     /// </remarks>
     public static bool CanAttach(MinecraftRegistry registry, JigsawBlockInfo source,
         JigsawBlockInfo target) {
@@ -113,6 +116,6 @@ public readonly record struct JigsawBlockInfo(
 
         return sourceFront == targetFront.Opposite()
             && (source.JointType == JointType.Rollable || sourceTop == targetTop)
-            && source.Target.Equals(target.Name);
+            && (target.Name is null || source.Target.Equals(target.Name));
     }
 }

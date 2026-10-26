@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WaxedCopperChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock, IAxisAligned, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:chain", "block.minecraft.waxed_copper_chain", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_copper_chain", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_copper_chain");
-    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.Normal, 0, "chain", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S505, BlockShapes.S505, BlockShapes.S1, BlockShapes.S1, BlockShapes.S505, BlockShapes.S505);
+    private static readonly BlockInfo Data = new("block.minecraft.waxed_copper_chain", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_copper_chain", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_copper_chain");
+    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.PushPull, 0, "chain", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S505, BlockShapes.S505, BlockShapes.S1, BlockShapes.S1, BlockShapes.S505, BlockShapes.S505);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S331, CollisionShape = BlockShapes.S331, VisualShape = BlockShapes.S331, SupportShape = BlockShapes.S331 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S331, CollisionShape = BlockShapes.S331, VisualShape = BlockShapes.S331, SupportShape = BlockShapes.S331 };
@@ -22,15 +22,15 @@ public record WaxedCopperChainBlock(Identifier Identifier, Axis Axis, bool Water
         I0, I1, I2, I3, I4, I5
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 8276];
+    public BlockStateInfo StateInfo => States[StateId - 10010];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -44,7 +44,6 @@ public record WaxedCopperChainBlock(Identifier Identifier, Axis Axis, bool Water
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -64,6 +63,7 @@ public record WaxedCopperChainBlock(Identifier Identifier, Axis Axis, bool Water
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -80,16 +80,16 @@ public record WaxedCopperChainBlock(Identifier Identifier, Axis Axis, bool Water
         get {
             return Axis switch {
                 Axis.X => Waterlogged switch {
-                    true => 8276,
-                    false => 8277,
+                    true => 10010,
+                    false => 10011,
                 },
                 Axis.Y => Waterlogged switch {
-                    true => 8278,
-                    false => 8279,
+                    true => 10012,
+                    false => 10013,
                 },
                 Axis.Z => Waterlogged switch {
-                    true => 8280,
-                    false => 8281,
+                    true => 10014,
+                    false => 10015,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
@@ -98,12 +98,12 @@ public record WaxedCopperChainBlock(Identifier Identifier, Axis Axis, bool Water
     
     public IBlock WithState(uint state) {
         return state switch {
-            8276 => new WaxedCopperChainBlock(Identifier, Axis.X, true),
-            8277 => new WaxedCopperChainBlock(Identifier, Axis.X, false),
-            8278 => new WaxedCopperChainBlock(Identifier, Axis.Y, true),
-            8279 => new WaxedCopperChainBlock(Identifier, Axis.Y, false),
-            8280 => new WaxedCopperChainBlock(Identifier, Axis.Z, true),
-            8281 => new WaxedCopperChainBlock(Identifier, Axis.Z, false),
+            10010 => new WaxedCopperChainBlock(Identifier, Axis.X, true),
+            10011 => new WaxedCopperChainBlock(Identifier, Axis.X, false),
+            10012 => new WaxedCopperChainBlock(Identifier, Axis.Y, true),
+            10013 => new WaxedCopperChainBlock(Identifier, Axis.Y, false),
+            10014 => new WaxedCopperChainBlock(Identifier, Axis.Z, true),
+            10015 => new WaxedCopperChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

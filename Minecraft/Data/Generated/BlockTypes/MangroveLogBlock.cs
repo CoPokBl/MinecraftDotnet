@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MangroveLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxisAligned {
-    private static readonly BlockInfo Data = new("minecraft:rotated_pillar", "block.minecraft.mangrove_log", 2f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_log", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_log");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.Normal, 34, "wood", NoteBlockInstrument.Bass, false, true, false, true, true, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_log", 2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:mangrove_log", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_log");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 15, PushReaction.PushPull, 34, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { MapColorId = 28 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 160];
+    public BlockStateInfo StateInfo => States[StateId - 163];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record MangroveLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxis
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record MangroveLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxis
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -73,9 +73,9 @@ public record MangroveLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxis
     public uint StateId {
         get {
             return Axis switch {
-                Axis.X => 160,
-                Axis.Y => 161,
-                Axis.Z => 162,
+                Axis.X => 163,
+                Axis.Y => 164,
+                Axis.Z => 165,
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
         }
@@ -83,9 +83,9 @@ public record MangroveLogBlock(Identifier Identifier, Axis Axis) : IBlock, IAxis
     
     public IBlock WithState(uint state) {
         return state switch {
-            160 => new MangroveLogBlock(Identifier, Axis.X),
-            161 => new MangroveLogBlock(Identifier, Axis.Y),
-            162 => new MangroveLogBlock(Identifier, Axis.Z),
+            163 => new MangroveLogBlock(Identifier, Axis.X),
+            164 => new MangroveLogBlock(Identifier, Axis.Y),
+            165 => new MangroveLogBlock(Identifier, Axis.Z),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

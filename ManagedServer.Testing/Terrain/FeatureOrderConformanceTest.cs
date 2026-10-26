@@ -89,35 +89,49 @@ public class FeatureOrderConformanceTest {
 
     [Test]
     public void TheGlobalFeatureOrderMatchesVanilla() {
+        foreach (Dimension dimension in Read()) {
+            AssertOrder(dimension, GeneratorFor(dimension.Name).PossibleBiomes);
+        }
+    }
+
+    /// <summary>
+    /// The sort alone, fed the biome list vanilla's own source offers, so a difference in the biome
+    /// source cannot stand in front of one in the sorter or in the feature data.
+    /// </summary>
+    [Test]
+    public void TheGlobalFeatureOrderMatchesVanillaOverVanillasBiomes() {
+        foreach (Dimension dimension in Read()) {
+            AssertOrder(dimension, dimension.Biomes.Select(Identifier.Parse).ToList());
+        }
+    }
+
+    private static void AssertOrder(Dimension dimension, IReadOnlyList<Identifier> biomes) {
         VanillaFeatureData data = VanillaFeatureData.Load(VanillaPack.Source);
 
-        foreach (Dimension dimension in Read()) {
-            BiomeFeatureTable table =
-                data.TableFor(GeneratorFor(dimension.Name).PossibleBiomes);
+        BiomeFeatureTable table = data.TableFor(biomes);
 
-            // Vanilla drops a step nothing reaches off the end of its list; ours keeps as many steps as
-            // the biomes have. Comparing the steps vanilla has is the whole of what seeds anything.
-            Assert.That(table.StepCount, Is.GreaterThanOrEqualTo(dimension.Steps.Length),
-                $"{dimension.Name}: fewer decoration steps than vanilla has features for.");
+        // Vanilla drops a step nothing reaches off the end of its list; ours keeps as many steps as
+        // the biomes have. Comparing the steps vanilla has is the whole of what seeds anything.
+        Assert.That(table.StepCount, Is.GreaterThanOrEqualTo(dimension.Steps.Length),
+            $"{dimension.Name}: fewer decoration steps than vanilla has features for.");
 
-            for (int step = 0; step < dimension.Steps.Length; step++) {
-                // The whole list, untranscribed slots included. A feature's index in it is what seeds
-                // it, so a slot dropped rather than left empty renumbers everything after it and puts
-                // it somewhere else; comparing only the features that were built cannot see that.
-                string[] ours = table.GlobalStep(step)
-                    .Select(feature => feature?.Id?.ToString() ?? "<not transcribed>")
-                    .ToArray();
+        for (int step = 0; step < dimension.Steps.Length; step++) {
+            // The whole list, untranscribed slots included. A feature's index in it is what seeds
+            // it, so a slot dropped rather than left empty renumbers everything after it and puts
+            // it somewhere else; comparing only the features that were built cannot see that.
+            string[] ours = table.GlobalStep(step)
+                .Select(feature => feature?.Id?.ToString() ?? "<not transcribed>")
+                .ToArray();
 
-                string[] theirs = dimension.Steps[step]
-                    .Select(id => table.GlobalStep(step).Any(feature => feature?.Id?.ToString() == id)
-                        ? id
-                        : "<not transcribed>")
-                    .ToArray();
+            string[] theirs = dimension.Steps[step]
+                .Select(id => table.GlobalStep(step).Any(feature => feature?.Id?.ToString() == id)
+                    ? id
+                    : "<not transcribed>")
+                .ToArray();
 
-                Assert.That(ours, Is.EqualTo(theirs),
-                    $"{dimension.Name} step {step}: the global feature order differs from vanilla's, so "
-                    + "every feature after the first difference is seeded wrongly.");
-            }
+            Assert.That(ours, Is.EqualTo(theirs),
+                $"{dimension.Name} step {step}: the global feature order differs from vanilla's, so "
+                + "every feature after the first difference is seeded wrongly.");
         }
     }
 }

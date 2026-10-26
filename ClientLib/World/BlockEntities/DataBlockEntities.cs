@@ -14,50 +14,6 @@ using NBT.Tags;
 
 namespace ClientLib.World.BlockEntities;
 
-/// <summary><c>SignText</c>: four lines, their filtered copies, the dye and whether a glow ink sac has been used.</summary>
-public sealed record SignText(TextComponent[] Messages, TextComponent[] FilteredMessages, DyeColor Color, bool HasGlowingText) {
-    public static readonly SignText Empty = new(EmptyLines(), EmptyLines(), DyeColor.Black, false);
-
-    private static TextComponent[] EmptyLines() => [TextComponent.Empty(), TextComponent.Empty(), TextComponent.Empty(), TextComponent.Empty()];
-
-    public TextComponent[] GetMessages(bool shouldFilter) => shouldFilter ? FilteredMessages : Messages;
-
-    public TextComponent GetMessage(int line, bool shouldFilter) => GetMessages(shouldFilter)[line];
-
-    /// <summary><c>setMessage(int, Component)</c>: one line, filtered and not, in a new text.</summary>
-    public SignText SetMessage(int line, TextComponent message) {
-        TextComponent[] messages = (TextComponent[])Messages.Clone(), filtered = (TextComponent[])FilteredMessages.Clone();
-        messages[line] = message;
-        filtered[line] = message;
-        return this with { Messages = messages, FilteredMessages = filtered };
-    }
-
-    /// <summary><c>DIRECT_CODEC</c>; the empty text when the tag is not one, as <c>orElseGet(SignText::new)</c>.</summary>
-    public static SignText Read(INbtTag? tag) {
-        if (tag is not CompoundTag compound || Lines(compound["messages"]) is not { } messages) {
-            return Empty;
-        }
-        TextComponent[] filtered = Lines(compound["filtered_messages"]) ?? messages;
-        DyeColor color = compound["color"] is StringTag name && Enum.TryParse(name.Value.Replace("_", ""), true, out DyeColor parsed) ? parsed : DyeColor.Black;
-        bool glowing = compound["has_glowing_text"] is { } glow && glow.GetBoolean();
-        return new SignText(messages, filtered, color, glowing);
-    }
-
-    /// <summary><c>LINES_CODEC</c>: exactly four components.</summary>
-    private static TextComponent[]? Lines(INbtTag? tag) {
-        if (tag is not ListTag list || list.Tags.Length != 4) {
-            return null;
-        }
-        try {
-            return list.Tags.ToArray().Select(TextComponent.FromTag).ToArray();
-        }
-        catch (Exception e) when (e is not OutOfMemoryException) {
-            // FromTag throws a bare Exception for content it does not know; the codec would fail the same way.
-            return null;
-        }
-    }
-}
-
 /// <summary><c>SignBlockEntity</c> and <c>HangingSignBlockEntity</c>.</summary>
 public sealed class SignBlockEntity(IBlockEntityType type, int x, int y, int z, IBlock state) : ClientBlockEntity(type, x, y, z, state) {
     public SignText FrontText { get; private set; } = SignText.Empty;
@@ -129,24 +85,32 @@ public sealed class DecoratedPotBlockEntity(IBlockEntityType type, int x, int y,
     /// <summary><c>WobbleStyle.duration</c>.</summary>
     public static int Duration(WobbleStyle style) => style == WobbleStyle.Positive ? 7 : 10;
 
-    /// <summary><c>PotDecorations</c> in back, left, right, front order; null for a side with no sherd, which a brick also is.</summary>
-    public IItem?[] Sherds { get; private set; } = new IItem?[4];
+    /// <summary>
+    /// The pattern asset of each side, in back, left, right, front order; null for a side with nothing on
+    /// it or with an item that provides no pottery pattern, which a brick is.
+    /// </summary>
+    public Identifier?[] Patterns { get; private set; } = new Identifier?[4];
 
     public long WobbleStartedAtTick;
     public WobbleStyle? LastWobbleStyle;
 
     protected override void LoadAdditional(CompoundTag tag, MinecraftRegistry registry) {
-        IItem[] items = tag["sherds"] is { } sherds ? BannerBlockEntity.Decode<IItem[]>(() => DataComponent.PotDecorations.FromNbt(sherds, registry)) ?? [] : [];
-        Sherds = Decorations(items);
+        Patterns = tag["sherds"] is { } sherds && BannerBlockEntity.Decode<PotDecorationsComponent.Data>(() => DataComponent.PotDecorations.FromNbt(sherds, registry)) is { } decorations
+            ? PatternsOf(decorations, registry)
+            : new Identifier?[4];
     }
 
-    /// <summary><c>new PotDecorations(List)</c>.</summary>
-    public static IItem?[] Decorations(IReadOnlyList<IItem> items) {
-        IItem?[] sides = new IItem?[4];
-        for (int i = 0; i < 4 && i < items.Count; i++) {
-            sides[i] = items[i].Identifier.Equals(Item.Brick.Identifier) ? null : items[i];
+    /// <summary><c>DecoratedPotRenderer.getSideSprite</c>'s lookup: a side's item's <c>provides_pottery_pattern</c>, by its asset.</summary>
+    public static Identifier?[] PatternsOf(PotDecorationsComponent.Data decorations, MinecraftRegistry registry) {
+        return [Pattern(decorations.Back), Pattern(decorations.Left), Pattern(decorations.Right), Pattern(decorations.Front)];
+
+        Identifier? Pattern(ItemStack? side) {
+            if (side == null || !Interaction.ItemComponents.Has(side, DataComponent.ProvidesPotteryPattern)) {
+                return null;
+            }
+            Identifier name = Interaction.ItemComponents.Get(side, DataComponent.ProvidesPotteryPattern);
+            return registry.DecoratedPotPatterns.Contains(name) ? registry.DecoratedPotPatterns[name].AssetId : (Identifier?)null;
         }
-        return sides;
     }
 
     public override bool TriggerEvent(int b0, int b1) {

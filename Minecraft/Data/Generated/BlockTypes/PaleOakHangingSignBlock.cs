@@ -11,26 +11,26 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PaleOakHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock, IAttached, IRotated, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:ceiling_hanging_sign", "block.minecraft.pale_oak_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:pale_oak_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/pale_oak_hanging_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 14, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.pale_oak_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:pale_oak_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/pale_oak_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 14, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
     private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 6355];
+    public BlockStateInfo StateInfo => States[StateId - 7951];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -44,7 +44,6 @@ public record PaleOakHangingSignBlock(Identifier Identifier, bool Attached, int 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -64,6 +63,7 @@ public record PaleOakHangingSignBlock(Identifier Identifier, bool Attached, int 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -83,135 +83,135 @@ public record PaleOakHangingSignBlock(Identifier Identifier, bool Attached, int 
             return Attached switch {
                 true => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 6355,
-                        false => 6356,
+                        true => 7951,
+                        false => 7952,
                     },
                     1 => Waterlogged switch {
-                        true => 6357,
-                        false => 6358,
+                        true => 7953,
+                        false => 7954,
                     },
                     2 => Waterlogged switch {
-                        true => 6359,
-                        false => 6360,
+                        true => 7955,
+                        false => 7956,
                     },
                     3 => Waterlogged switch {
-                        true => 6361,
-                        false => 6362,
+                        true => 7957,
+                        false => 7958,
                     },
                     4 => Waterlogged switch {
-                        true => 6363,
-                        false => 6364,
+                        true => 7959,
+                        false => 7960,
                     },
                     5 => Waterlogged switch {
-                        true => 6365,
-                        false => 6366,
+                        true => 7961,
+                        false => 7962,
                     },
                     6 => Waterlogged switch {
-                        true => 6367,
-                        false => 6368,
+                        true => 7963,
+                        false => 7964,
                     },
                     7 => Waterlogged switch {
-                        true => 6369,
-                        false => 6370,
+                        true => 7965,
+                        false => 7966,
                     },
                     8 => Waterlogged switch {
-                        true => 6371,
-                        false => 6372,
+                        true => 7967,
+                        false => 7968,
                     },
                     9 => Waterlogged switch {
-                        true => 6373,
-                        false => 6374,
+                        true => 7969,
+                        false => 7970,
                     },
                     10 => Waterlogged switch {
-                        true => 6375,
-                        false => 6376,
+                        true => 7971,
+                        false => 7972,
                     },
                     11 => Waterlogged switch {
-                        true => 6377,
-                        false => 6378,
+                        true => 7973,
+                        false => 7974,
                     },
                     12 => Waterlogged switch {
-                        true => 6379,
-                        false => 6380,
+                        true => 7975,
+                        false => 7976,
                     },
                     13 => Waterlogged switch {
-                        true => 6381,
-                        false => 6382,
+                        true => 7977,
+                        false => 7978,
                     },
                     14 => Waterlogged switch {
-                        true => 6383,
-                        false => 6384,
+                        true => 7979,
+                        false => 7980,
                     },
                     15 => Waterlogged switch {
-                        true => 6385,
-                        false => 6386,
+                        true => 7981,
+                        false => 7982,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 6387,
-                        false => 6388,
+                        true => 7983,
+                        false => 7984,
                     },
                     1 => Waterlogged switch {
-                        true => 6389,
-                        false => 6390,
+                        true => 7985,
+                        false => 7986,
                     },
                     2 => Waterlogged switch {
-                        true => 6391,
-                        false => 6392,
+                        true => 7987,
+                        false => 7988,
                     },
                     3 => Waterlogged switch {
-                        true => 6393,
-                        false => 6394,
+                        true => 7989,
+                        false => 7990,
                     },
                     4 => Waterlogged switch {
-                        true => 6395,
-                        false => 6396,
+                        true => 7991,
+                        false => 7992,
                     },
                     5 => Waterlogged switch {
-                        true => 6397,
-                        false => 6398,
+                        true => 7993,
+                        false => 7994,
                     },
                     6 => Waterlogged switch {
-                        true => 6399,
-                        false => 6400,
+                        true => 7995,
+                        false => 7996,
                     },
                     7 => Waterlogged switch {
-                        true => 6401,
-                        false => 6402,
+                        true => 7997,
+                        false => 7998,
                     },
                     8 => Waterlogged switch {
-                        true => 6403,
-                        false => 6404,
+                        true => 7999,
+                        false => 8000,
                     },
                     9 => Waterlogged switch {
-                        true => 6405,
-                        false => 6406,
+                        true => 8001,
+                        false => 8002,
                     },
                     10 => Waterlogged switch {
-                        true => 6407,
-                        false => 6408,
+                        true => 8003,
+                        false => 8004,
                     },
                     11 => Waterlogged switch {
-                        true => 6409,
-                        false => 6410,
+                        true => 8005,
+                        false => 8006,
                     },
                     12 => Waterlogged switch {
-                        true => 6411,
-                        false => 6412,
+                        true => 8007,
+                        false => 8008,
                     },
                     13 => Waterlogged switch {
-                        true => 6413,
-                        false => 6414,
+                        true => 8009,
+                        false => 8010,
                     },
                     14 => Waterlogged switch {
-                        true => 6415,
-                        false => 6416,
+                        true => 8011,
+                        false => 8012,
                     },
                     15 => Waterlogged switch {
-                        true => 6417,
-                        false => 6418,
+                        true => 8013,
+                        false => 8014,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
@@ -221,70 +221,70 @@ public record PaleOakHangingSignBlock(Identifier Identifier, bool Attached, int 
     
     public IBlock WithState(uint state) {
         return state switch {
-            6355 => new PaleOakHangingSignBlock(Identifier, true, 0, true),
-            6356 => new PaleOakHangingSignBlock(Identifier, true, 0, false),
-            6357 => new PaleOakHangingSignBlock(Identifier, true, 1, true),
-            6358 => new PaleOakHangingSignBlock(Identifier, true, 1, false),
-            6359 => new PaleOakHangingSignBlock(Identifier, true, 2, true),
-            6360 => new PaleOakHangingSignBlock(Identifier, true, 2, false),
-            6361 => new PaleOakHangingSignBlock(Identifier, true, 3, true),
-            6362 => new PaleOakHangingSignBlock(Identifier, true, 3, false),
-            6363 => new PaleOakHangingSignBlock(Identifier, true, 4, true),
-            6364 => new PaleOakHangingSignBlock(Identifier, true, 4, false),
-            6365 => new PaleOakHangingSignBlock(Identifier, true, 5, true),
-            6366 => new PaleOakHangingSignBlock(Identifier, true, 5, false),
-            6367 => new PaleOakHangingSignBlock(Identifier, true, 6, true),
-            6368 => new PaleOakHangingSignBlock(Identifier, true, 6, false),
-            6369 => new PaleOakHangingSignBlock(Identifier, true, 7, true),
-            6370 => new PaleOakHangingSignBlock(Identifier, true, 7, false),
-            6371 => new PaleOakHangingSignBlock(Identifier, true, 8, true),
-            6372 => new PaleOakHangingSignBlock(Identifier, true, 8, false),
-            6373 => new PaleOakHangingSignBlock(Identifier, true, 9, true),
-            6374 => new PaleOakHangingSignBlock(Identifier, true, 9, false),
-            6375 => new PaleOakHangingSignBlock(Identifier, true, 10, true),
-            6376 => new PaleOakHangingSignBlock(Identifier, true, 10, false),
-            6377 => new PaleOakHangingSignBlock(Identifier, true, 11, true),
-            6378 => new PaleOakHangingSignBlock(Identifier, true, 11, false),
-            6379 => new PaleOakHangingSignBlock(Identifier, true, 12, true),
-            6380 => new PaleOakHangingSignBlock(Identifier, true, 12, false),
-            6381 => new PaleOakHangingSignBlock(Identifier, true, 13, true),
-            6382 => new PaleOakHangingSignBlock(Identifier, true, 13, false),
-            6383 => new PaleOakHangingSignBlock(Identifier, true, 14, true),
-            6384 => new PaleOakHangingSignBlock(Identifier, true, 14, false),
-            6385 => new PaleOakHangingSignBlock(Identifier, true, 15, true),
-            6386 => new PaleOakHangingSignBlock(Identifier, true, 15, false),
-            6387 => new PaleOakHangingSignBlock(Identifier, false, 0, true),
-            6388 => new PaleOakHangingSignBlock(Identifier, false, 0, false),
-            6389 => new PaleOakHangingSignBlock(Identifier, false, 1, true),
-            6390 => new PaleOakHangingSignBlock(Identifier, false, 1, false),
-            6391 => new PaleOakHangingSignBlock(Identifier, false, 2, true),
-            6392 => new PaleOakHangingSignBlock(Identifier, false, 2, false),
-            6393 => new PaleOakHangingSignBlock(Identifier, false, 3, true),
-            6394 => new PaleOakHangingSignBlock(Identifier, false, 3, false),
-            6395 => new PaleOakHangingSignBlock(Identifier, false, 4, true),
-            6396 => new PaleOakHangingSignBlock(Identifier, false, 4, false),
-            6397 => new PaleOakHangingSignBlock(Identifier, false, 5, true),
-            6398 => new PaleOakHangingSignBlock(Identifier, false, 5, false),
-            6399 => new PaleOakHangingSignBlock(Identifier, false, 6, true),
-            6400 => new PaleOakHangingSignBlock(Identifier, false, 6, false),
-            6401 => new PaleOakHangingSignBlock(Identifier, false, 7, true),
-            6402 => new PaleOakHangingSignBlock(Identifier, false, 7, false),
-            6403 => new PaleOakHangingSignBlock(Identifier, false, 8, true),
-            6404 => new PaleOakHangingSignBlock(Identifier, false, 8, false),
-            6405 => new PaleOakHangingSignBlock(Identifier, false, 9, true),
-            6406 => new PaleOakHangingSignBlock(Identifier, false, 9, false),
-            6407 => new PaleOakHangingSignBlock(Identifier, false, 10, true),
-            6408 => new PaleOakHangingSignBlock(Identifier, false, 10, false),
-            6409 => new PaleOakHangingSignBlock(Identifier, false, 11, true),
-            6410 => new PaleOakHangingSignBlock(Identifier, false, 11, false),
-            6411 => new PaleOakHangingSignBlock(Identifier, false, 12, true),
-            6412 => new PaleOakHangingSignBlock(Identifier, false, 12, false),
-            6413 => new PaleOakHangingSignBlock(Identifier, false, 13, true),
-            6414 => new PaleOakHangingSignBlock(Identifier, false, 13, false),
-            6415 => new PaleOakHangingSignBlock(Identifier, false, 14, true),
-            6416 => new PaleOakHangingSignBlock(Identifier, false, 14, false),
-            6417 => new PaleOakHangingSignBlock(Identifier, false, 15, true),
-            6418 => new PaleOakHangingSignBlock(Identifier, false, 15, false),
+            7951 => new PaleOakHangingSignBlock(Identifier, true, 0, true),
+            7952 => new PaleOakHangingSignBlock(Identifier, true, 0, false),
+            7953 => new PaleOakHangingSignBlock(Identifier, true, 1, true),
+            7954 => new PaleOakHangingSignBlock(Identifier, true, 1, false),
+            7955 => new PaleOakHangingSignBlock(Identifier, true, 2, true),
+            7956 => new PaleOakHangingSignBlock(Identifier, true, 2, false),
+            7957 => new PaleOakHangingSignBlock(Identifier, true, 3, true),
+            7958 => new PaleOakHangingSignBlock(Identifier, true, 3, false),
+            7959 => new PaleOakHangingSignBlock(Identifier, true, 4, true),
+            7960 => new PaleOakHangingSignBlock(Identifier, true, 4, false),
+            7961 => new PaleOakHangingSignBlock(Identifier, true, 5, true),
+            7962 => new PaleOakHangingSignBlock(Identifier, true, 5, false),
+            7963 => new PaleOakHangingSignBlock(Identifier, true, 6, true),
+            7964 => new PaleOakHangingSignBlock(Identifier, true, 6, false),
+            7965 => new PaleOakHangingSignBlock(Identifier, true, 7, true),
+            7966 => new PaleOakHangingSignBlock(Identifier, true, 7, false),
+            7967 => new PaleOakHangingSignBlock(Identifier, true, 8, true),
+            7968 => new PaleOakHangingSignBlock(Identifier, true, 8, false),
+            7969 => new PaleOakHangingSignBlock(Identifier, true, 9, true),
+            7970 => new PaleOakHangingSignBlock(Identifier, true, 9, false),
+            7971 => new PaleOakHangingSignBlock(Identifier, true, 10, true),
+            7972 => new PaleOakHangingSignBlock(Identifier, true, 10, false),
+            7973 => new PaleOakHangingSignBlock(Identifier, true, 11, true),
+            7974 => new PaleOakHangingSignBlock(Identifier, true, 11, false),
+            7975 => new PaleOakHangingSignBlock(Identifier, true, 12, true),
+            7976 => new PaleOakHangingSignBlock(Identifier, true, 12, false),
+            7977 => new PaleOakHangingSignBlock(Identifier, true, 13, true),
+            7978 => new PaleOakHangingSignBlock(Identifier, true, 13, false),
+            7979 => new PaleOakHangingSignBlock(Identifier, true, 14, true),
+            7980 => new PaleOakHangingSignBlock(Identifier, true, 14, false),
+            7981 => new PaleOakHangingSignBlock(Identifier, true, 15, true),
+            7982 => new PaleOakHangingSignBlock(Identifier, true, 15, false),
+            7983 => new PaleOakHangingSignBlock(Identifier, false, 0, true),
+            7984 => new PaleOakHangingSignBlock(Identifier, false, 0, false),
+            7985 => new PaleOakHangingSignBlock(Identifier, false, 1, true),
+            7986 => new PaleOakHangingSignBlock(Identifier, false, 1, false),
+            7987 => new PaleOakHangingSignBlock(Identifier, false, 2, true),
+            7988 => new PaleOakHangingSignBlock(Identifier, false, 2, false),
+            7989 => new PaleOakHangingSignBlock(Identifier, false, 3, true),
+            7990 => new PaleOakHangingSignBlock(Identifier, false, 3, false),
+            7991 => new PaleOakHangingSignBlock(Identifier, false, 4, true),
+            7992 => new PaleOakHangingSignBlock(Identifier, false, 4, false),
+            7993 => new PaleOakHangingSignBlock(Identifier, false, 5, true),
+            7994 => new PaleOakHangingSignBlock(Identifier, false, 5, false),
+            7995 => new PaleOakHangingSignBlock(Identifier, false, 6, true),
+            7996 => new PaleOakHangingSignBlock(Identifier, false, 6, false),
+            7997 => new PaleOakHangingSignBlock(Identifier, false, 7, true),
+            7998 => new PaleOakHangingSignBlock(Identifier, false, 7, false),
+            7999 => new PaleOakHangingSignBlock(Identifier, false, 8, true),
+            8000 => new PaleOakHangingSignBlock(Identifier, false, 8, false),
+            8001 => new PaleOakHangingSignBlock(Identifier, false, 9, true),
+            8002 => new PaleOakHangingSignBlock(Identifier, false, 9, false),
+            8003 => new PaleOakHangingSignBlock(Identifier, false, 10, true),
+            8004 => new PaleOakHangingSignBlock(Identifier, false, 10, false),
+            8005 => new PaleOakHangingSignBlock(Identifier, false, 11, true),
+            8006 => new PaleOakHangingSignBlock(Identifier, false, 11, false),
+            8007 => new PaleOakHangingSignBlock(Identifier, false, 12, true),
+            8008 => new PaleOakHangingSignBlock(Identifier, false, 12, false),
+            8009 => new PaleOakHangingSignBlock(Identifier, false, 13, true),
+            8010 => new PaleOakHangingSignBlock(Identifier, false, 13, false),
+            8011 => new PaleOakHangingSignBlock(Identifier, false, 14, true),
+            8012 => new PaleOakHangingSignBlock(Identifier, false, 14, false),
+            8013 => new PaleOakHangingSignBlock(Identifier, false, 15, true),
+            8014 => new PaleOakHangingSignBlock(Identifier, false, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

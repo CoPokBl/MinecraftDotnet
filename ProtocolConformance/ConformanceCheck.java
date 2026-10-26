@@ -203,7 +203,10 @@ public final class ConformanceCheck {
         Map<String, Tag> entries = received.computeIfAbsent(registryId, k -> new LinkedHashMap<>());
         for (int i = 0; i < count; i++) {
             String entryId = packet.readUtf();
-            entries.put(entryId, packet.readBoolean() ? packet.readNbt() : null);
+            // RegistrySynchronization.PackedRegistryEntry carries any tag, not only a compound: a
+            // block_transformer element is a list.
+            entries.put(entryId, net.minecraft.network.codec.ByteBufCodecs.TAG.apply(net.minecraft.network.codec.ByteBufCodecs::optional)
+                .decode(packet).orElse(null));
         }
     }
 

@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool HasBottle1, bool HasBottle2) : IBlock {
-    private static readonly BlockInfo Data = new("minecraft:brewing_stand", "block.minecraft.brewing_stand", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:brewing_stand", "minecraft:brewing_stand", BlockInfo.VanillaOnly, "minecraft:blocks/brewing_stand");
-    private static readonly BlockStateInfo I0 = new(0.5f, 1, 0, PushReaction.Normal, 6, "stone", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S398, BlockShapes.S398, BlockShapes.S1, BlockShapes.S1, BlockShapes.S398, BlockShapes.S398);
+    private static readonly BlockInfo Data = new("block.minecraft.brewing_stand", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:brewing_stand", "minecraft:brewing_stand", BlockInfo.VanillaOnly, "minecraft:blocks/brewing_stand");
+    private static readonly BlockStateInfo I0 = new(0.5f, 1, 0, PushReaction.PushPull, 6, "stone", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S398, BlockShapes.S398, BlockShapes.S1, BlockShapes.S1, BlockShapes.S398, BlockShapes.S398);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -69,22 +69,22 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
             return HasBottle0 switch {
                 true => HasBottle1 switch {
                     true => HasBottle2 switch {
-                        true => 9452,
-                        false => 9453,
+                        true => 11186,
+                        false => 11187,
                     },
                     false => HasBottle2 switch {
-                        true => 9454,
-                        false => 9455,
+                        true => 11188,
+                        false => 11189,
                     },
                 },
                 false => HasBottle1 switch {
                     true => HasBottle2 switch {
-                        true => 9456,
-                        false => 9457,
+                        true => 11190,
+                        false => 11191,
                     },
                     false => HasBottle2 switch {
-                        true => 9458,
-                        false => 9459,
+                        true => 11192,
+                        false => 11193,
                     },
                 },
             };
@@ -93,14 +93,14 @@ public record BrewingStandBlock(Identifier Identifier, bool HasBottle0, bool Has
     
     public IBlock WithState(uint state) {
         return state switch {
-            9452 => new BrewingStandBlock(Identifier, true, true, true),
-            9453 => new BrewingStandBlock(Identifier, true, true, false),
-            9454 => new BrewingStandBlock(Identifier, true, false, true),
-            9455 => new BrewingStandBlock(Identifier, true, false, false),
-            9456 => new BrewingStandBlock(Identifier, false, true, true),
-            9457 => new BrewingStandBlock(Identifier, false, true, false),
-            9458 => new BrewingStandBlock(Identifier, false, false, true),
-            9459 => new BrewingStandBlock(Identifier, false, false, false),
+            11186 => new BrewingStandBlock(Identifier, true, true, true),
+            11187 => new BrewingStandBlock(Identifier, true, true, false),
+            11188 => new BrewingStandBlock(Identifier, true, false, true),
+            11189 => new BrewingStandBlock(Identifier, true, false, false),
+            11190 => new BrewingStandBlock(Identifier, false, true, true),
+            11191 => new BrewingStandBlock(Identifier, false, true, false),
+            11192 => new BrewingStandBlock(Identifier, false, false, true),
+            11193 => new BrewingStandBlock(Identifier, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

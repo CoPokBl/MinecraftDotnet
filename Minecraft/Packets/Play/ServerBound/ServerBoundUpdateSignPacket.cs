@@ -19,13 +19,14 @@ public class ServerBoundUpdateSignPacket : ServerBoundPacket {
         AssertLength(Lines, 4);
         return w
             .WritePosition(Location)
-            .WriteBoolean(IsFrontText)
-            .WriteArray(Lines, (line, writer) => writer.WriteString(line));
+            .WriteArray(Lines, (line, writer) => writer.WriteString(line))
+            // SignTextSlot: BACK is 0 and FRONT is 1.
+            .WriteVarInt(IsFrontText ? 1 : 0);
     }
 
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundUpdateSignPacket {
         Location = r.ReadPosition(),
-        IsFrontText = r.ReadBoolean(),
-        Lines = r.ReadArray(4, reader => reader.ReadString())
+        Lines = r.ReadArray(4, reader => reader.ReadString()),
+        IsFrontText = r.ReadVarInt() == 1
     };
 }

@@ -47,7 +47,7 @@ public interface IWallConnected : IBlock {
 }
 
 /// <summary>
-/// Redstone wire's four horizontal connections, vanilla's <c>RedStoneWireBlock</c>. One block.
+/// Redstone wire's four horizontal connections, vanilla's <c>RedstoneWireBlock</c>. One block.
 /// <p/>
 /// Separate from <see cref="IFaceConnected"/> for <see cref="IWallConnected"/>'s reason: a side is
 /// <c>none</c>, <c>side</c> or <c>up</c> rather than on or off, and the <c>up</c> value is what makes

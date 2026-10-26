@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RedSandstoneStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.red_sandstone_stairs", 0.8f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:red_sandstone_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/red_sandstone_stairs");
-    private static readonly BlockStateInfo I0 = new(0.8f, 0, 1, PushReaction.Normal, 15, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.red_sandstone_stairs", 0.8f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:red_sandstone_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/red_sandstone_stairs");
+    private static readonly BlockStateInfo I0 = new(0.8f, 0, 1, PushReaction.PushPull, 15, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record RedSandstoneStairsBlock(Identifier Identifier, Direction Facing, T
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 13250];
+    public BlockStateInfo StateInfo => States[StateId - 15097];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record RedSandstoneStairsBlock(Identifier Identifier, Direction Facing, T
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record RedSandstoneStairsBlock(Identifier Identifier, Direction Facing, T
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record RedSandstoneStairsBlock(Identifier Identifier, Direction Facing, T
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 13250,
-                            false => 13251,
+                            true => 15097,
+                            false => 15098,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 13252,
-                            false => 13253,
+                            true => 15099,
+                            false => 15100,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 13254,
-                            false => 13255,
+                            true => 15101,
+                            false => 15102,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 13256,
-                            false => 13257,
+                            true => 15103,
+                            false => 15104,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 13258,
-                            false => 13259,
+                            true => 15105,
+                            false => 15106,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 13260,
-                            false => 13261,
+                            true => 15107,
+                            false => 15108,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 13262,
-                            false => 13263,
+                            true => 15109,
+                            false => 15110,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 13264,
-                            false => 13265,
+                            true => 15111,
+                            false => 15112,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 13266,
-                            false => 13267,
+                            true => 15113,
+                            false => 15114,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 13268,
-                            false => 13269,
+                            true => 15115,
+                            false => 15116,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record RedSandstoneStairsBlock(Identifier Identifier, Direction Facing, T
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 13270,
-                            false => 13271,
+                            true => 15117,
+                            false => 15118,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 13272,
-                            false => 13273,
+                            true => 15119,
+                            false => 15120,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 13274,
-                            false => 13275,
+                            true => 15121,
+                            false => 15122,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 13276,
-                            false => 13277,
+                            true => 15123,
+                            false => 15124,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 13278,
-                            false => 13279,
+                            true => 15125,
+                            false => 15126,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 13280,
-                            false => 13281,
+                            true => 15127,
+                            false => 15128,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 13282,
-                            false => 13283,
+                            true => 15129,
+                            false => 15130,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 13284,
-                            false => 13285,
+                            true => 15131,
+                            false => 15132,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 13286,
-                            false => 13287,
+                            true => 15133,
+                            false => 15134,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 13288,
-                            false => 13289,
+                            true => 15135,
+                            false => 15136,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record RedSandstoneStairsBlock(Identifier Identifier, Direction Facing, T
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 13290,
-                            false => 13291,
+                            true => 15137,
+                            false => 15138,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 13292,
-                            false => 13293,
+                            true => 15139,
+                            false => 15140,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 13294,
-                            false => 13295,
+                            true => 15141,
+                            false => 15142,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 13296,
-                            false => 13297,
+                            true => 15143,
+                            false => 15144,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 13298,
-                            false => 13299,
+                            true => 15145,
+                            false => 15146,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 13300,
-                            false => 13301,
+                            true => 15147,
+                            false => 15148,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 13302,
-                            false => 13303,
+                            true => 15149,
+                            false => 15150,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 13304,
-                            false => 13305,
+                            true => 15151,
+                            false => 15152,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 13306,
-                            false => 13307,
+                            true => 15153,
+                            false => 15154,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 13308,
-                            false => 13309,
+                            true => 15155,
+                            false => 15156,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record RedSandstoneStairsBlock(Identifier Identifier, Direction Facing, T
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 13310,
-                            false => 13311,
+                            true => 15157,
+                            false => 15158,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 13312,
-                            false => 13313,
+                            true => 15159,
+                            false => 15160,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 13314,
-                            false => 13315,
+                            true => 15161,
+                            false => 15162,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 13316,
-                            false => 13317,
+                            true => 15163,
+                            false => 15164,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 13318,
-                            false => 13319,
+                            true => 15165,
+                            false => 15166,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 13320,
-                            false => 13321,
+                            true => 15167,
+                            false => 15168,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 13322,
-                            false => 13323,
+                            true => 15169,
+                            false => 15170,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 13324,
-                            false => 13325,
+                            true => 15171,
+                            false => 15172,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 13326,
-                            false => 13327,
+                            true => 15173,
+                            false => 15174,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 13328,
-                            false => 13329,
+                            true => 15175,
+                            false => 15176,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record RedSandstoneStairsBlock(Identifier Identifier, Direction Facing, T
     
     public IBlock WithState(uint state) {
         return state switch {
-            13250 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            13251 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            13252 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            13253 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            13254 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            13255 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            13256 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            13257 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            13258 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            13259 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            13260 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            13261 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            13262 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            13263 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            13264 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            13265 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            13266 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            13267 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            13268 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            13269 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            13270 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            13271 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            13272 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            13273 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            13274 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            13275 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            13276 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            13277 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            13278 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            13279 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            13280 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            13281 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            13282 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            13283 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            13284 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            13285 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            13286 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            13287 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            13288 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            13289 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            13290 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            13291 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            13292 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            13293 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            13294 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            13295 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            13296 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            13297 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            13298 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            13299 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            13300 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            13301 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            13302 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            13303 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            13304 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            13305 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            13306 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            13307 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            13308 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            13309 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            13310 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            13311 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            13312 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            13313 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            13314 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            13315 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            13316 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            13317 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            13318 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            13319 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            13320 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            13321 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            13322 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            13323 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            13324 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            13325 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            13326 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            13327 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            13328 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            13329 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            15097 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            15098 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            15099 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            15100 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            15101 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            15102 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            15103 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            15104 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            15105 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            15106 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            15107 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            15108 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            15109 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            15110 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            15111 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            15112 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            15113 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            15114 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            15115 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            15116 => new RedSandstoneStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            15117 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            15118 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            15119 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            15120 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            15121 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            15122 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            15123 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            15124 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            15125 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            15126 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            15127 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            15128 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            15129 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            15130 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            15131 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            15132 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            15133 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            15134 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            15135 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            15136 => new RedSandstoneStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            15137 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            15138 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            15139 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            15140 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            15141 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            15142 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            15143 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            15144 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            15145 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            15146 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            15147 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            15148 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            15149 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            15150 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            15151 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            15152 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            15153 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            15154 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            15155 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            15156 => new RedSandstoneStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            15157 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            15158 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            15159 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            15160 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            15161 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            15162 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            15163 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            15164 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            15165 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            15166 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            15167 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            15168 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            15169 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            15170 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            15171 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            15172 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            15173 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            15174 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            15175 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            15176 => new RedSandstoneStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

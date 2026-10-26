@@ -77,6 +77,8 @@ public class EntityMetaContainer {
         { MetaFieldType.ResolvableProfile, (reg, reader) => new MetaField<object>(MetaFieldType.ResolvableProfile, ProfileComponent.Read(reader, reg)) },
         { MetaFieldType.HumanoidArm, (_, reader) => new MetaField<HumanoidArm>(MetaFieldType.HumanoidArm,
             (HumanoidArm)reader.ReadVarInt()) },
+        { MetaFieldType.DyeColor, (_, reader) => new MetaField<DyeColor>(MetaFieldType.DyeColor,
+            (DyeColor)reader.ReadVarInt()) },
     };
     
     private static readonly Dictionary<MetaFieldType, Action<MinecraftRegistry, DataWriter, MetaField>> FieldTypeWriters = new() {
@@ -137,6 +139,7 @@ public class EntityMetaContainer {
         { MetaFieldType.Quaternion, (_, writer, field) => writer.WriteQuaternion(field.GetValue<Quaternion>()) },
         { MetaFieldType.ResolvableProfile, (reg, writer, field) => new ProfileComponent().WriteData((ProfileComponent.Data)field.Value, writer, reg) },
         { MetaFieldType.HumanoidArm, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<HumanoidArm>()) },
+        { MetaFieldType.DyeColor, (_, writer, field) => writer.WriteVarInt((int)field.GetValue<DyeColor>()) },
     };
 
     public EntityMetaContainer ReadData(MinecraftRegistry reg, DataReader reader) {

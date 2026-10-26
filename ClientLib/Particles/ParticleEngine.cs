@@ -147,20 +147,37 @@ public sealed partial class ParticleEngine {
         if (!Enabled) {
             return;
         }
+        Minecraft.Schemas.Vec.Vec3<float> speed = packet.MaxSpeed;
         if (packet.ParticleCount == 0) {
-            double xa = packet.MaxSpeed * packet.Offset.X;
-            double ya = packet.MaxSpeed * packet.Offset.Y;
-            double za = packet.MaxSpeed * packet.Offset.Z;
+            double xa = speed.X * packet.Offset.X;
+            double ya = speed.Y * packet.Offset.Y;
+            double za = speed.Z * packet.Offset.Z;
             AddParticle(packet.Particle, packet.LongDistance, packet.AlwaysVisible, packet.Position.X, packet.Position.Y, packet.Position.Z, xa, ya, za);
+            return;
+        }
+        if (packet.Randomization != ClientBoundParticlePacket.RandomizationType.Default) {
+            for (int i = 0; i < packet.ParticleCount; i++) {
+                double xVariance = Random.NextDouble() * packet.Offset.X;
+                double yVariance = Random.NextDouble() * packet.Offset.Y;
+                double zVariance = Random.NextDouble() * packet.Offset.Z;
+                double xa = speed.X, ya = speed.Y, za = speed.Z;
+                if (packet.Randomization == ClientBoundParticlePacket.RandomizationType.AlternativeWithSpeed) {
+                    xa *= Random.NextDouble();
+                    ya *= Random.NextDouble();
+                    za *= Random.NextDouble();
+                }
+                AddParticle(packet.Particle, packet.LongDistance, packet.AlwaysVisible,
+                    packet.Position.X + xVariance, packet.Position.Y + yVariance, packet.Position.Z + zVariance, xa, ya, za);
+            }
             return;
         }
         for (int i = 0; i < packet.ParticleCount; i++) {
             double xVariance = Random.NextGaussian() * packet.Offset.X;
             double yVariance = Random.NextGaussian() * packet.Offset.Y;
             double zVariance = Random.NextGaussian() * packet.Offset.Z;
-            double xa = Random.NextGaussian() * packet.MaxSpeed;
-            double ya = Random.NextGaussian() * packet.MaxSpeed;
-            double za = Random.NextGaussian() * packet.MaxSpeed;
+            double xa = Random.NextGaussian() * speed.X;
+            double ya = Random.NextGaussian() * speed.Y;
+            double za = Random.NextGaussian() * speed.Z;
             AddParticle(packet.Particle, packet.LongDistance, packet.AlwaysVisible,
                 packet.Position.X + xVariance, packet.Position.Y + yVariance, packet.Position.Z + zVariance, xa, ya, za);
         }

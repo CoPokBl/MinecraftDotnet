@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Orientation, bool Triggered) : IBlock, IOriented {
-    private static readonly BlockInfo Data = new("minecraft:crafter", "block.minecraft.crafter", 3.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:crafter", "minecraft:crafter", BlockInfo.VanillaOnly, "minecraft:blocks/crafter");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 15, PushReaction.Normal, 11, "stone", NoteBlockInstrument.Harp, false, true, false, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.crafter", 3.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:crafter", "minecraft:crafter", BlockInfo.VanillaOnly, "minecraft:blocks/crafter");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 15, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Harp, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Ori
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Ori
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -71,103 +71,103 @@ public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Ori
             return Crafting switch {
                 true => Orientation switch {
                     Orientation.DownEast => Triggered switch {
-                        true => 32102,
-                        false => 32103,
+                        true => 35459,
+                        false => 35460,
                     },
                     Orientation.DownNorth => Triggered switch {
-                        true => 32104,
-                        false => 32105,
+                        true => 35461,
+                        false => 35462,
                     },
                     Orientation.DownSouth => Triggered switch {
-                        true => 32106,
-                        false => 32107,
+                        true => 35463,
+                        false => 35464,
                     },
                     Orientation.DownWest => Triggered switch {
-                        true => 32108,
-                        false => 32109,
+                        true => 35465,
+                        false => 35466,
                     },
                     Orientation.UpEast => Triggered switch {
-                        true => 32110,
-                        false => 32111,
+                        true => 35467,
+                        false => 35468,
                     },
                     Orientation.UpNorth => Triggered switch {
-                        true => 32112,
-                        false => 32113,
+                        true => 35469,
+                        false => 35470,
                     },
                     Orientation.UpSouth => Triggered switch {
-                        true => 32114,
-                        false => 32115,
+                        true => 35471,
+                        false => 35472,
                     },
                     Orientation.UpWest => Triggered switch {
-                        true => 32116,
-                        false => 32117,
+                        true => 35473,
+                        false => 35474,
                     },
                     Orientation.WestUp => Triggered switch {
-                        true => 32118,
-                        false => 32119,
+                        true => 35475,
+                        false => 35476,
                     },
                     Orientation.EastUp => Triggered switch {
-                        true => 32120,
-                        false => 32121,
+                        true => 35477,
+                        false => 35478,
                     },
                     Orientation.NorthUp => Triggered switch {
-                        true => 32122,
-                        false => 32123,
+                        true => 35479,
+                        false => 35480,
                     },
                     Orientation.SouthUp => Triggered switch {
-                        true => 32124,
-                        false => 32125,
+                        true => 35481,
+                        false => 35482,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Orientation), Orientation, "Unknown value for property orientation.")
                 },
                 false => Orientation switch {
                     Orientation.DownEast => Triggered switch {
-                        true => 32126,
-                        false => 32127,
+                        true => 35483,
+                        false => 35484,
                     },
                     Orientation.DownNorth => Triggered switch {
-                        true => 32128,
-                        false => 32129,
+                        true => 35485,
+                        false => 35486,
                     },
                     Orientation.DownSouth => Triggered switch {
-                        true => 32130,
-                        false => 32131,
+                        true => 35487,
+                        false => 35488,
                     },
                     Orientation.DownWest => Triggered switch {
-                        true => 32132,
-                        false => 32133,
+                        true => 35489,
+                        false => 35490,
                     },
                     Orientation.UpEast => Triggered switch {
-                        true => 32134,
-                        false => 32135,
+                        true => 35491,
+                        false => 35492,
                     },
                     Orientation.UpNorth => Triggered switch {
-                        true => 32136,
-                        false => 32137,
+                        true => 35493,
+                        false => 35494,
                     },
                     Orientation.UpSouth => Triggered switch {
-                        true => 32138,
-                        false => 32139,
+                        true => 35495,
+                        false => 35496,
                     },
                     Orientation.UpWest => Triggered switch {
-                        true => 32140,
-                        false => 32141,
+                        true => 35497,
+                        false => 35498,
                     },
                     Orientation.WestUp => Triggered switch {
-                        true => 32142,
-                        false => 32143,
+                        true => 35499,
+                        false => 35500,
                     },
                     Orientation.EastUp => Triggered switch {
-                        true => 32144,
-                        false => 32145,
+                        true => 35501,
+                        false => 35502,
                     },
                     Orientation.NorthUp => Triggered switch {
-                        true => 32146,
-                        false => 32147,
+                        true => 35503,
+                        false => 35504,
                     },
                     Orientation.SouthUp => Triggered switch {
-                        true => 32148,
-                        false => 32149,
+                        true => 35505,
+                        false => 35506,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Orientation), Orientation, "Unknown value for property orientation.")
                 },
@@ -177,54 +177,54 @@ public record CrafterBlock(Identifier Identifier, bool Crafting, Orientation Ori
     
     public IBlock WithState(uint state) {
         return state switch {
-            32102 => new CrafterBlock(Identifier, true, Orientation.DownEast, true),
-            32103 => new CrafterBlock(Identifier, true, Orientation.DownEast, false),
-            32104 => new CrafterBlock(Identifier, true, Orientation.DownNorth, true),
-            32105 => new CrafterBlock(Identifier, true, Orientation.DownNorth, false),
-            32106 => new CrafterBlock(Identifier, true, Orientation.DownSouth, true),
-            32107 => new CrafterBlock(Identifier, true, Orientation.DownSouth, false),
-            32108 => new CrafterBlock(Identifier, true, Orientation.DownWest, true),
-            32109 => new CrafterBlock(Identifier, true, Orientation.DownWest, false),
-            32110 => new CrafterBlock(Identifier, true, Orientation.UpEast, true),
-            32111 => new CrafterBlock(Identifier, true, Orientation.UpEast, false),
-            32112 => new CrafterBlock(Identifier, true, Orientation.UpNorth, true),
-            32113 => new CrafterBlock(Identifier, true, Orientation.UpNorth, false),
-            32114 => new CrafterBlock(Identifier, true, Orientation.UpSouth, true),
-            32115 => new CrafterBlock(Identifier, true, Orientation.UpSouth, false),
-            32116 => new CrafterBlock(Identifier, true, Orientation.UpWest, true),
-            32117 => new CrafterBlock(Identifier, true, Orientation.UpWest, false),
-            32118 => new CrafterBlock(Identifier, true, Orientation.WestUp, true),
-            32119 => new CrafterBlock(Identifier, true, Orientation.WestUp, false),
-            32120 => new CrafterBlock(Identifier, true, Orientation.EastUp, true),
-            32121 => new CrafterBlock(Identifier, true, Orientation.EastUp, false),
-            32122 => new CrafterBlock(Identifier, true, Orientation.NorthUp, true),
-            32123 => new CrafterBlock(Identifier, true, Orientation.NorthUp, false),
-            32124 => new CrafterBlock(Identifier, true, Orientation.SouthUp, true),
-            32125 => new CrafterBlock(Identifier, true, Orientation.SouthUp, false),
-            32126 => new CrafterBlock(Identifier, false, Orientation.DownEast, true),
-            32127 => new CrafterBlock(Identifier, false, Orientation.DownEast, false),
-            32128 => new CrafterBlock(Identifier, false, Orientation.DownNorth, true),
-            32129 => new CrafterBlock(Identifier, false, Orientation.DownNorth, false),
-            32130 => new CrafterBlock(Identifier, false, Orientation.DownSouth, true),
-            32131 => new CrafterBlock(Identifier, false, Orientation.DownSouth, false),
-            32132 => new CrafterBlock(Identifier, false, Orientation.DownWest, true),
-            32133 => new CrafterBlock(Identifier, false, Orientation.DownWest, false),
-            32134 => new CrafterBlock(Identifier, false, Orientation.UpEast, true),
-            32135 => new CrafterBlock(Identifier, false, Orientation.UpEast, false),
-            32136 => new CrafterBlock(Identifier, false, Orientation.UpNorth, true),
-            32137 => new CrafterBlock(Identifier, false, Orientation.UpNorth, false),
-            32138 => new CrafterBlock(Identifier, false, Orientation.UpSouth, true),
-            32139 => new CrafterBlock(Identifier, false, Orientation.UpSouth, false),
-            32140 => new CrafterBlock(Identifier, false, Orientation.UpWest, true),
-            32141 => new CrafterBlock(Identifier, false, Orientation.UpWest, false),
-            32142 => new CrafterBlock(Identifier, false, Orientation.WestUp, true),
-            32143 => new CrafterBlock(Identifier, false, Orientation.WestUp, false),
-            32144 => new CrafterBlock(Identifier, false, Orientation.EastUp, true),
-            32145 => new CrafterBlock(Identifier, false, Orientation.EastUp, false),
-            32146 => new CrafterBlock(Identifier, false, Orientation.NorthUp, true),
-            32147 => new CrafterBlock(Identifier, false, Orientation.NorthUp, false),
-            32148 => new CrafterBlock(Identifier, false, Orientation.SouthUp, true),
-            32149 => new CrafterBlock(Identifier, false, Orientation.SouthUp, false),
+            35459 => new CrafterBlock(Identifier, true, Orientation.DownEast, true),
+            35460 => new CrafterBlock(Identifier, true, Orientation.DownEast, false),
+            35461 => new CrafterBlock(Identifier, true, Orientation.DownNorth, true),
+            35462 => new CrafterBlock(Identifier, true, Orientation.DownNorth, false),
+            35463 => new CrafterBlock(Identifier, true, Orientation.DownSouth, true),
+            35464 => new CrafterBlock(Identifier, true, Orientation.DownSouth, false),
+            35465 => new CrafterBlock(Identifier, true, Orientation.DownWest, true),
+            35466 => new CrafterBlock(Identifier, true, Orientation.DownWest, false),
+            35467 => new CrafterBlock(Identifier, true, Orientation.UpEast, true),
+            35468 => new CrafterBlock(Identifier, true, Orientation.UpEast, false),
+            35469 => new CrafterBlock(Identifier, true, Orientation.UpNorth, true),
+            35470 => new CrafterBlock(Identifier, true, Orientation.UpNorth, false),
+            35471 => new CrafterBlock(Identifier, true, Orientation.UpSouth, true),
+            35472 => new CrafterBlock(Identifier, true, Orientation.UpSouth, false),
+            35473 => new CrafterBlock(Identifier, true, Orientation.UpWest, true),
+            35474 => new CrafterBlock(Identifier, true, Orientation.UpWest, false),
+            35475 => new CrafterBlock(Identifier, true, Orientation.WestUp, true),
+            35476 => new CrafterBlock(Identifier, true, Orientation.WestUp, false),
+            35477 => new CrafterBlock(Identifier, true, Orientation.EastUp, true),
+            35478 => new CrafterBlock(Identifier, true, Orientation.EastUp, false),
+            35479 => new CrafterBlock(Identifier, true, Orientation.NorthUp, true),
+            35480 => new CrafterBlock(Identifier, true, Orientation.NorthUp, false),
+            35481 => new CrafterBlock(Identifier, true, Orientation.SouthUp, true),
+            35482 => new CrafterBlock(Identifier, true, Orientation.SouthUp, false),
+            35483 => new CrafterBlock(Identifier, false, Orientation.DownEast, true),
+            35484 => new CrafterBlock(Identifier, false, Orientation.DownEast, false),
+            35485 => new CrafterBlock(Identifier, false, Orientation.DownNorth, true),
+            35486 => new CrafterBlock(Identifier, false, Orientation.DownNorth, false),
+            35487 => new CrafterBlock(Identifier, false, Orientation.DownSouth, true),
+            35488 => new CrafterBlock(Identifier, false, Orientation.DownSouth, false),
+            35489 => new CrafterBlock(Identifier, false, Orientation.DownWest, true),
+            35490 => new CrafterBlock(Identifier, false, Orientation.DownWest, false),
+            35491 => new CrafterBlock(Identifier, false, Orientation.UpEast, true),
+            35492 => new CrafterBlock(Identifier, false, Orientation.UpEast, false),
+            35493 => new CrafterBlock(Identifier, false, Orientation.UpNorth, true),
+            35494 => new CrafterBlock(Identifier, false, Orientation.UpNorth, false),
+            35495 => new CrafterBlock(Identifier, false, Orientation.UpSouth, true),
+            35496 => new CrafterBlock(Identifier, false, Orientation.UpSouth, false),
+            35497 => new CrafterBlock(Identifier, false, Orientation.UpWest, true),
+            35498 => new CrafterBlock(Identifier, false, Orientation.UpWest, false),
+            35499 => new CrafterBlock(Identifier, false, Orientation.WestUp, true),
+            35500 => new CrafterBlock(Identifier, false, Orientation.WestUp, false),
+            35501 => new CrafterBlock(Identifier, false, Orientation.EastUp, true),
+            35502 => new CrafterBlock(Identifier, false, Orientation.EastUp, false),
+            35503 => new CrafterBlock(Identifier, false, Orientation.NorthUp, true),
+            35504 => new CrafterBlock(Identifier, false, Orientation.NorthUp, false),
+            35505 => new CrafterBlock(Identifier, false, Orientation.SouthUp, true),
+            35506 => new CrafterBlock(Identifier, false, Orientation.SouthUp, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

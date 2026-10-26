@@ -24,8 +24,6 @@ public sealed class ClientShulker : ClientEntity {
 
     public ClientShulker(MinecraftClient client) {
         _client = client;
-        // Shulker.getInterpolation is null: a position from the server applies at once.
-        InterpolationSteps = 0;
     }
 
     /// <summary><c>Shulker.setPos</c>: the centre of its block, unless it rides something.</summary>

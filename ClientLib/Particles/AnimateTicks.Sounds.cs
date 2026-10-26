@@ -20,6 +20,7 @@ public readonly record struct AnimateTickSound(ISoundType Sound, SoundCategory C
 
 public sealed partial class AnimateTicks {
     private static readonly Identifier PaleOakLogs = "minecraft:pale_oak_logs";
+    private static readonly Identifier PoplarLeafAmbienceBlocks = "minecraft:required_for_poplar_leaf_ambience";
     private static readonly Identifier Terracotta = "minecraft:terracotta";
     private static readonly Identifier DriedGhastSoundBlocks = "minecraft:triggers_ambient_dried_ghast_block_sounds";
     private static readonly Identifier DesertVegetationSoundBlocks = "minecraft:triggers_ambient_desert_dry_vegetation_block_sounds";
@@ -34,6 +35,32 @@ public sealed partial class AnimateTicks {
     /// <summary><c>Level.playLocalSound(x, y, z, ...)</c> with no distance delay, which every animate tick passes.</summary>
     private void Sound(ISoundType sound, SoundCategory category, double x, double y, double z, float volume, float pitch) =>
         SoundPlayed?.Invoke(new AnimateTickSound(sound, category, volume, pitch, x, y, z));
+
+    /// <summary>
+    /// <c>AmbientLeavesBlockSoundPlayer.playAmbientLeavesSounds</c> as poplar leaves register it: one in 300, and
+    /// only once the counts reach exactly one satisfying block and three of the same leaves part way round.
+    /// </summary>
+    private void AmbientPoplarLeaves(ClientLevel level, ushort state, int x, int y, int z) {
+        if (_random.NextInt(300) != 0) {
+            return;
+        }
+        Identifier block = level.Registry.Blocks.GetByStateId(state).Identifier;
+        int nearbyLogs = 0, nearbyLeaves = 0;
+        foreach (int horizontal in Horizontal) {
+            (int dx, _, int dz) = Steps[horizontal];
+            ushort neighbour = level.GetState(x + dx, y, z + dz);
+            if (InTag(level, PoplarLeafAmbienceBlocks, neighbour)) {
+                nearbyLogs++;
+            }
+            if (level.Registry.Blocks.GetByStateId(neighbour).Identifier == block) {
+                nearbyLeaves++;
+            }
+            if (nearbyLogs == 1 && nearbyLeaves == 3) {
+                Sound(SoundType.PoplarLeavesAmbient, SoundCategory.Ambient, x, y, z, 1.0F, 1.0F);
+                return;
+            }
+        }
+    }
 
     #region AmbientDesertBlockSoundsPlayer
 

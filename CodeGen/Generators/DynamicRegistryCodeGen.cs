@@ -49,16 +49,24 @@ public static class DynamicRegistryCodeGen {
         }
 
         foreach ((string key, JToken? value) in entries) {
-            if (value is not JObject obj) {
+            // A few elements are a bare list rather than an object, block_transformer among them, and
+            // those are handed to FromNbt as the list.
+            string cast;
+            if (value is JObject obj) {
+                foreach (string field in dropFields ?? []) {
+                    obj.Remove(field);
+                }
+                cast = "(CompoundTag)";
+            }
+            else if (value is JArray && dropFields is null) {
+                cast = "";
+            }
+            else {
                 Console.WriteLine($"Warning: Invalid {className} entry for key: " + key);
                 continue;
             }
 
-            foreach (string field in dropFields ?? []) {
-                obj.Remove(field);
-            }
-
-            string objJsonStr = obj.ToString(Formatting.None);
+            string objJsonStr = value.ToString(Formatting.None);
             fileEntries.Add($"public static readonly {interfaceName} {CodeGenUtils.NamespacedIdToPascalName(key)} = " +
                             $"VanillaRegistry.Data.{registryProperty}[\"{key}\"];");
 
@@ -66,7 +74,7 @@ public static class DynamicRegistryCodeGen {
             // other way round, where the entries file builds it and the registry adds it, makes the
             // two static initialisers circular, and whichever runs second sees the other's fields as null.
             regEntries.Add($"{CodeGenUtils.GetIndentation(2)}Data.{registryProperty}.Add({interfaceName}.FromNbt(" +
-                           $"\"{key}\", (CompoundTag)INbtTag.FromJson(\"\"\" {objJsonStr} \"\"\"), Data));");
+                           $"\"{key}\", {cast}INbtTag.FromJson(\"\"\" {objJsonStr} \"\"\"), Data));");
         }
 
         CodeGenUtils.CreateVanillaEntriesFile(className, typeNamespace ?? className, fileEntries.ToArray());
@@ -91,7 +99,7 @@ public static class DynamicRegistryCodeGen {
         foreach (string file in Directory.EnumerateFiles(folder, "*.json", SearchOption.AllDirectories)
                      .OrderBy(f => f, StringComparer.Ordinal)) {
             string name = Path.GetRelativePath(folder, file).Replace(Path.DirectorySeparatorChar, '/');
-            result["minecraft:" + name[..^".json".Length]] = JObject.Parse(File.ReadAllText(file));
+            result["minecraft:" + name[..^".json".Length]] = JToken.Parse(File.ReadAllText(file));
         }
 
         return result;

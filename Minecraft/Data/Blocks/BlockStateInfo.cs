@@ -13,13 +13,14 @@ namespace Minecraft.Data.Blocks;
 /// Instances are shared: two states that describe the same thing get the same one.
 /// </summary>
 /// <param name="LightDampening">How much light the block takes out of what passes through it.</param>
-/// <param name="BlocksMotion">
-/// Whether the block stops an entity walking into it, which is not the same as having a collision
-/// shape: a lily pad has one and does not block motion.
-/// </param>
 /// <param name="RandomlyTicking">Whether the block gets random ticks, as crops and leaves do.</param>
 /// <param name="Suffocating">Whether standing inside the block suffocates.</param>
 /// <param name="ViewBlocking">Whether standing inside the block blinds the client.</param>
+/// <param name="ViewBlockingNearPlane">
+/// Whether it blinds the client only where the camera's near plane box meets the occlusion shape,
+/// <c>Blocks.NEAR_PLANE_INTERSECTS_OUTLINE</c>, which slabs and stairs use. Never set together with
+/// <paramref name="ViewBlocking"/>.
+/// </param>
 /// <param name="Instrument">What a note block sitting on top of this one plays.</param>
 /// <param name="ValidSpawnFor">
 /// The entity types that can spawn on this state, or null when every type can. Vanilla's predicate
@@ -51,7 +52,6 @@ public sealed record BlockStateInfo(
     bool CanRespawnIn,
     bool Occludes,
     bool RequiresTool,
-    bool BlocksMotion,
     bool Flammable,
     bool Air,
     bool Liquid,
@@ -62,6 +62,7 @@ public sealed record BlockStateInfo(
     bool RandomlyTicking,
     bool Suffocating,
     bool ViewBlocking,
+    bool ViewBlockingNearPlane,
     bool SpawnTerrainParticles,
     bool PathfindableLand,
     bool PathfindableWater,

@@ -19,8 +19,32 @@ namespace ManagedServer.Features.Basic;
 public class BlockBreakingFeature : ScopedFeature {
     private static readonly Tag<AtomicCounter> BreakTickCounterTag = new("managedserver:blockbreakingfeat:block_break_tick_counter");
     private static readonly Tag<Timer?> BlockBreakAnimationTimerTag = new("managedserver:blockbreakingfeat:block_break_animation_timer");
-    
+    private static readonly Tag<Destroying?> DestroyingTag = new("managedserver:blockbreakingfeat:destroying");
+
+    /// <summary>The level event for a mining tick that also plays the hit sound, every fourth tick.</summary>
+    private const int DestroyHitEvent = 2020;
+
+    /// <summary>The level event for every other mining tick, particles only.</summary>
+    private const int DestroyTickEvent = 2019;
+
+    /// <summary>
+    /// <c>ServerPlayerGameMode</c>'s <c>isDestroyingBlock</c>, <c>destroyPos</c>,
+    /// <c>destroyProgressStart</c> and <c>destroyDirection</c>. The direction is the face as the
+    /// packet numbers it, which is <c>Direction.ordinal</c>.
+    /// </summary>
+    private sealed class Destroying(Vec3<int> pos, ulong startTick, BlockFace direction) {
+        public Vec3<int> Pos { get; } = pos;
+        public ulong StartTick { get; } = startTick;
+        public BlockFace Direction { get; set; } = direction;
+    }
+
     public override void Register() {
+        AddEventHandler<ServerTickEvent>(e => {
+            foreach (Player player in e.Server.Players) {
+                TickDestroying(e.Server.CurrentTick, player);
+            }
+        });
+
         AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundPlayerActionPacket packet) {
                 return;
@@ -32,8 +56,14 @@ public class BlockBreakingFeature : ScopedFeature {
 
             switch (packet.ActionStatus) {
                 case ServerBoundPlayerActionPacket.Status.StartedDigging:
-                    ProcessDigStart(e.Player, packet.Location);
+                    ProcessDigStart(e.Player, packet.Location, packet.Face);
                     e.Player.SendPacket(ackPacket);
+                    break;
+                case ServerBoundPlayerActionPacket.Status.ChangeDestroyDirection:
+                    // Unacknowledged, as vanilla leaves it: the client sends it with sequence zero.
+                    if (e.Player.GetTagOrNull(DestroyingTag) is { } destroying) {
+                        destroying.Direction = packet.Face;
+                    }
                     break;
                 case ServerBoundPlayerActionPacket.Status.CancelledDigging:
                     ProcessDigCancel(e.Player, packet.Location);
@@ -47,7 +77,32 @@ public class BlockBreakingFeature : ScopedFeature {
         });
     }
     
-    private void ProcessDigStart(Player player, Vec3<int> pos) {
+    /// <summary>
+    /// The mining half of <c>ServerPlayerGameMode.tick</c>: a destroy whose block has gone stops, and
+    /// one still going sends the mining level event with the direction as its data. Ticks are counted
+    /// on the server's clock rather than the game mode's own, so which tick is a fourth one can be one
+    /// off upstream's, depending on whether the start packet was handled before or after the tick.
+    /// </summary>
+    private static void TickDestroying(ulong currentTick, Player player) {
+        if (player.GetTagOrNull(DestroyingTag) is not { } destroying || player.World is not { } world) {
+            return;
+        }
+
+        if (world.GetBlock(destroying.Pos).Air) {
+            player.SetTag(DestroyingTag, null);
+            return;
+        }
+
+        ulong ticksSpentDestroying = currentTick - destroying.StartTick;
+        world.GetAudienceOf(destroying.Pos).SendPacket(new ClientBoundWorldEventPacket {
+            Event = ticksSpentDestroying % 4 == 0 ? DestroyHitEvent : DestroyTickEvent,
+            Location = destroying.Pos,
+            Data = (int)destroying.Direction,
+            DisableRelativeVolume = false
+        });
+    }
+
+    private void ProcessDigStart(Player player, Vec3<int> pos, BlockFace face) {
         IBlock block = player.World!.GetBlock(pos);
         
         PlayerStartBreakingBlockEvent startEvent = new() {
@@ -77,6 +132,7 @@ public class BlockBreakingFeature : ScopedFeature {
         }
         
         // mining over time
+        player.SetTag(DestroyingTag, new Destroying(pos, Scope.Server.CurrentTick, face));
         player.GetTagOrNull(BlockBreakAnimationTimerTag)?.Dispose();
         float breakSeconds = breakTicks / 20.0f;
         TimeSpan breakTickDuration = TimeSpan.FromSeconds(breakSeconds / 9f);  // 9 break ticks occur before it breaks
@@ -92,6 +148,7 @@ public class BlockBreakingFeature : ScopedFeature {
     }
 
     private void ProcessDigEnd(Player player, Vec3<int> pos) {
+        player.SetTag(DestroyingTag, null);
         StopBlockBreakAnimation(player, pos);
         
         IBlock block = player.World!.GetBlock(pos);
@@ -108,7 +165,14 @@ public class BlockBreakingFeature : ScopedFeature {
             World = player.World!
         };
         Scope.Events.CallEvent(cancelEvent);
-        
+
+        // ServerPlayerGameMode.abortDestroyBlock: a cancel naming another block than the one being
+        // destroyed clears that one's cracks as well.
+        if (player.GetTagOrNull(DestroyingTag) is { } destroying && destroying.Pos != pos) {
+            StopBlockBreakAnimation(player, destroying.Pos);
+        }
+
+        player.SetTag(DestroyingTag, null);
         StopBlockBreakAnimation(player, pos);
     }
     

@@ -10,21 +10,11 @@ using Minecraft.Schemas.Sound;
 namespace GraphicalClient.Audio;
 
 /// <summary>
-/// What the player's hands sound like to the player: <c>MultiPlayerGameMode.continueDestroyBlock</c>'s
-/// hit, and the <c>level.playSound(player, ...)</c> calls an item's <c>useOn</c> makes, which a server
+/// What the player's hands sound like to the player: the hit as <c>MultiPlayerGameMode.startDestroyBlock</c>
+/// starts digging, and the <c>level.playSound(player, ...)</c> calls an item's <c>useOn</c> makes, which a server
 /// plays to everyone else.
 /// </summary>
 public sealed class GameModeSounds {
-    private static readonly HashSet<Identifier> Hoes = [
-        Item.WoodenHoe.Identifier, Item.StoneHoe.Identifier, Item.CopperHoe.Identifier, Item.IronHoe.Identifier,
-        Item.GoldenHoe.Identifier, Item.DiamondHoe.Identifier, Item.NetheriteHoe.Identifier
-    ];
-
-    private static readonly HashSet<Identifier> Shovels = [
-        Item.WoodenShovel.Identifier, Item.StoneShovel.Identifier, Item.CopperShovel.Identifier, Item.IronShovel.Identifier,
-        Item.GoldenShovel.Identifier, Item.DiamondShovel.Identifier, Item.NetheriteShovel.Identifier
-    ];
-
     private readonly ClientSounds _sounds;
     private readonly MinecraftClient _client;
     private readonly LegacyRandom _levelRandom = new();
@@ -37,7 +27,7 @@ public sealed class GameModeSounds {
         client.Interactions.PlacedBlock += (pos, placedState, item) => BlockItemPlace(pos, placedState, item.Type.Identifier);
     }
 
-    /// <summary>The hit sound in <c>continueDestroyBlock</c>, a <c>SimpleSoundInstance</c> at the block's centre.</summary>
+    /// <summary><c>ClientLevel.playBreakingSound</c> as digging starts, a <c>SimpleSoundInstance</c> at the block's centre.</summary>
     private void DestroyHit((int X, int Y, int Z) pos, IBlock state) {
         BlockSoundGroup soundType = BlockSoundGroups.Of(state);
         PlayAt(pos, soundType.Hit, (soundType.Volume + 1.0F) / 8.0F, soundType.Pitch * 0.5F);
@@ -53,33 +43,14 @@ public sealed class GameModeSounds {
     /// at the clicked block and the one against its face.
     /// </summary>
     private void UsedItemOn(UseOnOutcome use) {
-        Identifier item = use.Item.Type.Identifier;
-        bool clickedChanged = use.ClickedAfter != use.ClickedBefore;
-        if (Hoes.Contains(item)) {
-            // HoeItem.useOn: every till rewrites the clicked block.
-            if (clickedChanged) {
-                PlayAt(use.Clicked, SoundType.HoeTill, 1.0F, 1.0F);
-            }
-        }
-        else if (Shovels.Contains(item)) {
-            // ShovelItem.useOn: flattening plays here; putting out a campfire is a level event the server sends.
-            if (clickedChanged && StateOf(use.ClickedAfter).Identifier.Equals(Block.DirtPath.Identifier)) {
-                PlayAt(use.Clicked, SoundType.ShovelFlatten, 1.0F, 1.0F);
-            }
-        }
-        else if (item.Equals(Item.FlintAndSteel.Identifier)) {
+        if (use.Item.Type.Identifier.Equals(Item.FlintAndSteel.Identifier)) {
             FlintAndSteelUseOn(use);
         }
-        else {
-            // AxeItem.evaluateNewBlockState; waxing sounds in its level event instead.
-            ISoundType? axe = ToolUseOn.Classify(item, StateOf(use.ClickedBefore), StateOf(use.ClickedAfter)) switch {
-                ToolBlockChange.Strip => SoundType.AxeStrip,
-                ToolBlockChange.Scrape => SoundType.AxeScrape,
-                ToolBlockChange.WaxOff => SoundType.AxeWaxOff,
-                _ => null
-            };
-            if (axe != null) {
-                PlayAt(use.Clicked, axe, 1.0F, 1.0F);
+        else if (use.Tool is { Sound: { } sound } tool) {
+            // BlockTransformer.transformBlock's sound, or HoneycombItem.useOn's.
+            PlayAt(use.Clicked, sound, 1.0F, 1.0F);
+            if (tool.PartnerRepeatsSound) {
+                PlayAt(use.Clicked, sound, 1.0F, 1.0F);
             }
         }
     }

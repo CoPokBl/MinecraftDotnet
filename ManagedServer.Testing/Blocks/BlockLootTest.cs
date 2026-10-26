@@ -14,7 +14,7 @@ using ManagedServer.Testing.Terrain;
 namespace ManagedServer.Testing.Blocks;
 
 /// <summary>
-/// What the generated tables actually give back. The generator only guarantees the table was read;
+/// What the vanilla tables actually give back. The parser only guarantees the table was read;
 /// these pin that rolling it produces vanilla's answers.
 /// <p/>
 /// Most cases are asserted over many rolls rather than one, because a loot table is a distribution:

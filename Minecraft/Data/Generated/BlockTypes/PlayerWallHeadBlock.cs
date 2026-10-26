@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PlayerWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:player_wall_head", "block.minecraft.player_head", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:player_head", BlockInfo.VanillaOnly, "minecraft:blocks/player_head");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S516, BlockShapes.S516, BlockShapes.S1, BlockShapes.S516, BlockShapes.S516, BlockShapes.S516);
+    private static readonly BlockInfo Data = new("block.minecraft.player_head", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:player_head", BlockInfo.VanillaOnly, "minecraft:blocks/player_head");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Popped, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S516, BlockShapes.S516, BlockShapes.S1, BlockShapes.S516, BlockShapes.S516, BlockShapes.S516);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S517, CollisionShape = BlockShapes.S517, OcclusionShape = BlockShapes.S517, VisualShape = BlockShapes.S517, SupportShape = BlockShapes.S517 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S518, CollisionShape = BlockShapes.S518, OcclusionShape = BlockShapes.S518, VisualShape = BlockShapes.S518, SupportShape = BlockShapes.S518 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S519, CollisionShape = BlockShapes.S519, OcclusionShape = BlockShapes.S519, VisualShape = BlockShapes.S519, SupportShape = BlockShapes.S519 };
@@ -20,15 +20,15 @@ public record PlayerWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         I0, I0, I1, I1, I2, I2, I3, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 11067];
+    public BlockStateInfo StateInfo => States[StateId - 12834];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record PlayerWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record PlayerWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,20 +78,20 @@ public record PlayerWallHeadBlock(Identifier Identifier, Direction Facing, bool 
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 11067,
-                    false => 11068,
+                    true => 12834,
+                    false => 12835,
                 },
                 Direction.South => Powered switch {
-                    true => 11069,
-                    false => 11070,
+                    true => 12836,
+                    false => 12837,
                 },
                 Direction.West => Powered switch {
-                    true => 11071,
-                    false => 11072,
+                    true => 12838,
+                    false => 12839,
                 },
                 Direction.East => Powered switch {
-                    true => 11073,
-                    false => 11074,
+                    true => 12840,
+                    false => 12841,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -100,14 +100,14 @@ public record PlayerWallHeadBlock(Identifier Identifier, Direction Facing, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            11067 => new PlayerWallHeadBlock(Identifier, Direction.North, true),
-            11068 => new PlayerWallHeadBlock(Identifier, Direction.North, false),
-            11069 => new PlayerWallHeadBlock(Identifier, Direction.South, true),
-            11070 => new PlayerWallHeadBlock(Identifier, Direction.South, false),
-            11071 => new PlayerWallHeadBlock(Identifier, Direction.West, true),
-            11072 => new PlayerWallHeadBlock(Identifier, Direction.West, false),
-            11073 => new PlayerWallHeadBlock(Identifier, Direction.East, true),
-            11074 => new PlayerWallHeadBlock(Identifier, Direction.East, false),
+            12834 => new PlayerWallHeadBlock(Identifier, Direction.North, true),
+            12835 => new PlayerWallHeadBlock(Identifier, Direction.North, false),
+            12836 => new PlayerWallHeadBlock(Identifier, Direction.South, true),
+            12837 => new PlayerWallHeadBlock(Identifier, Direction.South, false),
+            12838 => new PlayerWallHeadBlock(Identifier, Direction.West, true),
+            12839 => new PlayerWallHeadBlock(Identifier, Direction.West, false),
+            12840 => new PlayerWallHeadBlock(Identifier, Direction.East, true),
+            12841 => new PlayerWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

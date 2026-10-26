@@ -95,12 +95,12 @@ public record {name}(Identifier Identifier, {args}) : IBlock{interfaces} {
     /// </summary>
     private const string ForwardingProperties =
 """
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -114,7 +114,6 @@ public record {name}(Identifier Identifier, {args}) : IBlock{interfaces} {
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -134,6 +133,7 @@ public record {name}(Identifier Identifier, {args}) : IBlock{interfaces} {
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -423,8 +423,7 @@ public static class Block {
             // FETCH ADDITIONAL DATA
             JObject dataEntry = blocksDataJson[id]!.ToObject<JObject>()!;
             int protocolId = dataEntry["id"]!.ToObject<int>();
-            string category = blockData["definition"]!["type"]!.ToObject<string>()!;
-            string blockInfo = BlockInfoCode(dataEntry, category);
+            string blockInfo = BlockInfoCode(dataEntry);
             Dictionary<int, string[]> stateValues = StateValuesByStateId(dataEntry, shapes);
 
             // do we need a record?
@@ -898,7 +897,7 @@ public static class Block {
     /// odd blocks whose shapes move with their position, and leaving it off keeps it out of every other
     /// block's generated line.
     /// </summary>
-    private static string BlockInfoCode(JObject dataEntry, string category) {
+    private static string BlockInfoCode(JObject dataEntry) {
         int shapeOffsets = dataEntry["shapeOffsets"]?.ToObject<int>() ?? 0;
 
         List<string> initialisers = [];
@@ -913,7 +912,7 @@ public static class Block {
         }
 
         string init = initialisers.Count == 0 ? "" : $" {{ {string.Join(", ", initialisers)} }}";
-        return $"new({BlockInfoArguments(dataEntry, category)}){init}";
+        return $"new({BlockInfoArguments(dataEntry)}){init}";
     }
 
     /// <summary>The dumper's bitmask as named flags, in the same order it sets them.</summary>
@@ -923,7 +922,7 @@ public static class Block {
         return string.Join(" | ", set);
     }
 
-    private static string BlockInfoArguments(JObject dataEntry, string category) {
+    private static string BlockInfoArguments(JObject dataEntry) {
         string offsetType = dataEntry["offsetType"]?.ToObject<string>() switch {
             null => "None",
             "xz" => "Xz",
@@ -936,10 +935,11 @@ public static class Block {
             ? "BlockInfo.VanillaOnly"
             : "[" + string.Join(", ", features.Select(f => Str(f.ToObject<string>()))) + "]";
 
-        return $"{Str(category)}, {Str(dataEntry["translationKey"]!.ToObject<string>())}, " +
+        return $"{Str(dataEntry["translationKey"]!.ToObject<string>())}, " +
                $"{Num(dataEntry["explosionResistance"])}f, {Num(dataEntry["friction"])}f, " +
                $"{Num(dataEntry["speedFactor"])}f, {Num(dataEntry["jumpFactor"])}f, " +
-               $"{Num(dataEntry["bounceRestitution"])}f, {Bool(dataEntry["gravity"])}, " +
+               $"{Num(dataEntry["bounceRestitution"])}f, {Num(dataEntry["fallDistanceReduction"])}f, " +
+               $"{Bool(dataEntry["gravity"])}, " +
                $"{Bool(dataEntry["dynamicShape"])}, BlockOffsetType.{offsetType}, " +
                $"{Num(dataEntry["maxHorizontalOffset"])}f, {Num(dataEntry["maxVerticalOffset"])}f, " +
                $"{Str(dataEntry["blockEntity"]?["namespace"]?.ToObject<string>())}, " +
@@ -950,9 +950,9 @@ public static class Block {
     /// <summary>The names of the <c>BlockStateInfo</c> members, in constructor order.</summary>
     private static readonly string[] StateMembers = [
         "Hardness", "LightEmission", "LightDampening", "PushReaction", "MapColorId", "SoundType", "Instrument",
-        "CanRespawnIn", "Occludes", "RequiresTool", "BlocksMotion", "Flammable", "Air", "Liquid",
+        "CanRespawnIn", "Occludes", "RequiresTool", "Flammable", "Air", "Liquid",
         "Replaceable", "Solid", "RedstoneConductor", "SignalSource", "RandomlyTicking", "Suffocating",
-        "ViewBlocking", "SpawnTerrainParticles", "PathfindableLand", "PathfindableWater", "PathfindableAir",
+        "ViewBlocking", "ViewBlockingNearPlane", "SpawnTerrainParticles", "PathfindableLand", "PathfindableWater", "PathfindableAir",
         "ValidSpawnFor", "Fluid", "BlockShape", "CollisionShape",
         "InteractionShape", "OcclusionShape", "VisualShape", "SupportShape"
     ];
@@ -975,10 +975,11 @@ public static class Block {
 
     private static string[] StateValues(Func<string, JToken?> state, ShapeTable shapes) {
         string pushReaction = state("pushReaction")!.ToObject<string>() switch {
-            "NORMAL" => "Normal",
-            "DESTROY" => "Destroy",
-            "BLOCK" => "Block",
-            "PUSH_ONLY" => "PushOnly",
+            "PUSH_PULL" => "PushPull",
+            "PUSH" => "Push",
+            "POPPED" => "Popped",
+            "IMMOVEABLE" => "Immoveable",
+            "IGNORE_ENTITY" => "IgnoreEntity",
             string other => throw new ArgumentOutOfRangeException(nameof(state), other, "Unknown push reaction.")
         };
 
@@ -998,7 +999,6 @@ public static class Block {
             Bool(state("canRespawnIn")),
             Bool(state("occludes")),
             Bool(state("requiresTool")),
-            Bool(state("blocksMotion")),
             Bool(state("flammable")),
             Bool(state("air")),
             Bool(state("liquid")),
@@ -1009,6 +1009,7 @@ public static class Block {
             Bool(state("randomlyTicking")),
             Bool(state("suffocating")),
             Bool(state("viewBlocking")),
+            Bool(state("viewBlockingNearPlane")),
             Bool(state("spawnTerrainParticles")),
             Bool(state("pathfindableLand")),
             Bool(state("pathfindableWater")),

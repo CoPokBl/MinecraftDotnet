@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record ExposedCopperBarsBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:weathering_copper_bar", "block.minecraft.exposed_copper_bars", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:exposed_copper_bars", BlockInfo.VanillaOnly, "minecraft:blocks/exposed_copper_bars");
-    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.Normal, 0, "copper", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S372, BlockShapes.S372, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S372);
+    private static readonly BlockInfo Data = new("block.minecraft.exposed_copper_bars", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:exposed_copper_bars", BlockInfo.VanillaOnly, "minecraft:blocks/exposed_copper_bars");
+    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.PushPull, 0, "copper", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, true, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S372, BlockShapes.S372, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S372);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S373, CollisionShape = BlockShapes.S373, SupportShape = BlockShapes.S373 };
     private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S373, CollisionShape = BlockShapes.S373, SupportShape = BlockShapes.S373 };
@@ -48,15 +48,15 @@ public record ExposedCopperBarsBlock(Identifier Identifier, bool East, bool Nort
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 8022];
+    public BlockStateInfo StateInfo => States[StateId - 9756];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -70,7 +70,6 @@ public record ExposedCopperBarsBlock(Identifier Identifier, bool East, bool Nort
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -90,6 +89,7 @@ public record ExposedCopperBarsBlock(Identifier Identifier, bool East, bool Nort
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -125,44 +125,44 @@ public record ExposedCopperBarsBlock(Identifier Identifier, bool East, bool Nort
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 8022,
-                                false => 8023,
+                                true => 9756,
+                                false => 9757,
                             },
                             false => West switch {
-                                true => 8024,
-                                false => 8025,
+                                true => 9758,
+                                false => 9759,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 8026,
-                                false => 8027,
+                                true => 9760,
+                                false => 9761,
                             },
                             false => West switch {
-                                true => 8028,
-                                false => 8029,
+                                true => 9762,
+                                false => 9763,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 8030,
-                                false => 8031,
+                                true => 9764,
+                                false => 9765,
                             },
                             false => West switch {
-                                true => 8032,
-                                false => 8033,
+                                true => 9766,
+                                false => 9767,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 8034,
-                                false => 8035,
+                                true => 9768,
+                                false => 9769,
                             },
                             false => West switch {
-                                true => 8036,
-                                false => 8037,
+                                true => 9770,
+                                false => 9771,
                             },
                         },
                     },
@@ -171,44 +171,44 @@ public record ExposedCopperBarsBlock(Identifier Identifier, bool East, bool Nort
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 8038,
-                                false => 8039,
+                                true => 9772,
+                                false => 9773,
                             },
                             false => West switch {
-                                true => 8040,
-                                false => 8041,
+                                true => 9774,
+                                false => 9775,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 8042,
-                                false => 8043,
+                                true => 9776,
+                                false => 9777,
                             },
                             false => West switch {
-                                true => 8044,
-                                false => 8045,
+                                true => 9778,
+                                false => 9779,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 8046,
-                                false => 8047,
+                                true => 9780,
+                                false => 9781,
                             },
                             false => West switch {
-                                true => 8048,
-                                false => 8049,
+                                true => 9782,
+                                false => 9783,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 8050,
-                                false => 8051,
+                                true => 9784,
+                                false => 9785,
                             },
                             false => West switch {
-                                true => 8052,
-                                false => 8053,
+                                true => 9786,
+                                false => 9787,
                             },
                         },
                     },
@@ -219,38 +219,38 @@ public record ExposedCopperBarsBlock(Identifier Identifier, bool East, bool Nort
     
     public IBlock WithState(uint state) {
         return state switch {
-            8022 => new ExposedCopperBarsBlock(Identifier, true, true, true, true, true),
-            8023 => new ExposedCopperBarsBlock(Identifier, true, true, true, true, false),
-            8024 => new ExposedCopperBarsBlock(Identifier, true, true, true, false, true),
-            8025 => new ExposedCopperBarsBlock(Identifier, true, true, true, false, false),
-            8026 => new ExposedCopperBarsBlock(Identifier, true, true, false, true, true),
-            8027 => new ExposedCopperBarsBlock(Identifier, true, true, false, true, false),
-            8028 => new ExposedCopperBarsBlock(Identifier, true, true, false, false, true),
-            8029 => new ExposedCopperBarsBlock(Identifier, true, true, false, false, false),
-            8030 => new ExposedCopperBarsBlock(Identifier, true, false, true, true, true),
-            8031 => new ExposedCopperBarsBlock(Identifier, true, false, true, true, false),
-            8032 => new ExposedCopperBarsBlock(Identifier, true, false, true, false, true),
-            8033 => new ExposedCopperBarsBlock(Identifier, true, false, true, false, false),
-            8034 => new ExposedCopperBarsBlock(Identifier, true, false, false, true, true),
-            8035 => new ExposedCopperBarsBlock(Identifier, true, false, false, true, false),
-            8036 => new ExposedCopperBarsBlock(Identifier, true, false, false, false, true),
-            8037 => new ExposedCopperBarsBlock(Identifier, true, false, false, false, false),
-            8038 => new ExposedCopperBarsBlock(Identifier, false, true, true, true, true),
-            8039 => new ExposedCopperBarsBlock(Identifier, false, true, true, true, false),
-            8040 => new ExposedCopperBarsBlock(Identifier, false, true, true, false, true),
-            8041 => new ExposedCopperBarsBlock(Identifier, false, true, true, false, false),
-            8042 => new ExposedCopperBarsBlock(Identifier, false, true, false, true, true),
-            8043 => new ExposedCopperBarsBlock(Identifier, false, true, false, true, false),
-            8044 => new ExposedCopperBarsBlock(Identifier, false, true, false, false, true),
-            8045 => new ExposedCopperBarsBlock(Identifier, false, true, false, false, false),
-            8046 => new ExposedCopperBarsBlock(Identifier, false, false, true, true, true),
-            8047 => new ExposedCopperBarsBlock(Identifier, false, false, true, true, false),
-            8048 => new ExposedCopperBarsBlock(Identifier, false, false, true, false, true),
-            8049 => new ExposedCopperBarsBlock(Identifier, false, false, true, false, false),
-            8050 => new ExposedCopperBarsBlock(Identifier, false, false, false, true, true),
-            8051 => new ExposedCopperBarsBlock(Identifier, false, false, false, true, false),
-            8052 => new ExposedCopperBarsBlock(Identifier, false, false, false, false, true),
-            8053 => new ExposedCopperBarsBlock(Identifier, false, false, false, false, false),
+            9756 => new ExposedCopperBarsBlock(Identifier, true, true, true, true, true),
+            9757 => new ExposedCopperBarsBlock(Identifier, true, true, true, true, false),
+            9758 => new ExposedCopperBarsBlock(Identifier, true, true, true, false, true),
+            9759 => new ExposedCopperBarsBlock(Identifier, true, true, true, false, false),
+            9760 => new ExposedCopperBarsBlock(Identifier, true, true, false, true, true),
+            9761 => new ExposedCopperBarsBlock(Identifier, true, true, false, true, false),
+            9762 => new ExposedCopperBarsBlock(Identifier, true, true, false, false, true),
+            9763 => new ExposedCopperBarsBlock(Identifier, true, true, false, false, false),
+            9764 => new ExposedCopperBarsBlock(Identifier, true, false, true, true, true),
+            9765 => new ExposedCopperBarsBlock(Identifier, true, false, true, true, false),
+            9766 => new ExposedCopperBarsBlock(Identifier, true, false, true, false, true),
+            9767 => new ExposedCopperBarsBlock(Identifier, true, false, true, false, false),
+            9768 => new ExposedCopperBarsBlock(Identifier, true, false, false, true, true),
+            9769 => new ExposedCopperBarsBlock(Identifier, true, false, false, true, false),
+            9770 => new ExposedCopperBarsBlock(Identifier, true, false, false, false, true),
+            9771 => new ExposedCopperBarsBlock(Identifier, true, false, false, false, false),
+            9772 => new ExposedCopperBarsBlock(Identifier, false, true, true, true, true),
+            9773 => new ExposedCopperBarsBlock(Identifier, false, true, true, true, false),
+            9774 => new ExposedCopperBarsBlock(Identifier, false, true, true, false, true),
+            9775 => new ExposedCopperBarsBlock(Identifier, false, true, true, false, false),
+            9776 => new ExposedCopperBarsBlock(Identifier, false, true, false, true, true),
+            9777 => new ExposedCopperBarsBlock(Identifier, false, true, false, true, false),
+            9778 => new ExposedCopperBarsBlock(Identifier, false, true, false, false, true),
+            9779 => new ExposedCopperBarsBlock(Identifier, false, true, false, false, false),
+            9780 => new ExposedCopperBarsBlock(Identifier, false, false, true, true, true),
+            9781 => new ExposedCopperBarsBlock(Identifier, false, false, true, true, false),
+            9782 => new ExposedCopperBarsBlock(Identifier, false, false, true, false, true),
+            9783 => new ExposedCopperBarsBlock(Identifier, false, false, true, false, false),
+            9784 => new ExposedCopperBarsBlock(Identifier, false, false, false, true, true),
+            9785 => new ExposedCopperBarsBlock(Identifier, false, false, false, true, false),
+            9786 => new ExposedCopperBarsBlock(Identifier, false, false, false, false, true),
+            9787 => new ExposedCopperBarsBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

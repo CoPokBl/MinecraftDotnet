@@ -1,5 +1,5 @@
 using System.Buffers;
-using ManagedServer.Terrain.Surface;
+using ManagedServer.Terrain.Material;
 
 namespace ManagedServer.Terrain;
 
@@ -19,7 +19,7 @@ namespace ManagedServer.Terrain;
 /// The heightmap is maintained as blocks are written, since it is vanilla's <c>WORLD_SURFACE_WG</c>
 /// and both the surface builder and the badlands extension read it back mid pass.
 /// </remarks>
-public sealed class ChunkColumn : ISurfaceColumn, IColumnStates {
+public sealed class ChunkColumn : IMaterialColumn, IColumnStates {
     private readonly int _minY;
     private readonly int _maxY;
     private readonly uint _airState;
@@ -126,7 +126,25 @@ public sealed class ChunkColumn : ISurfaceColumn, IColumnStates {
         _heights[localX * 16 + localZ] = highest;
     }
 
-    // --- ISurfaceColumn -----------------------------------------------------
+    /// <summary>
+    /// The top block of the highest section holding anything, <c>getHighestFilledSectionIndex</c> as
+    /// a y, or one below the world when nothing has been written. Read straight after the fill, where
+    /// the stored heights are exact.
+    /// </summary>
+    public int HighestFilledSectionTopY() {
+        int highest = _minY;
+        foreach (int height in _heights) {
+            highest = Math.Max(highest, height);
+        }
+
+        if (highest <= _minY) {
+            return _minY - 1;
+        }
+
+        return ((highest - 1) >> 4 << 4) + 15;
+    }
+
+    // --- IMaterialColumn -----------------------------------------------------
 
     public void SetColumn(int blockX, int blockZ) {
         _columnX = blockX & 15;
@@ -142,7 +160,7 @@ public sealed class ChunkColumn : ISurfaceColumn, IColumnStates {
     }
 
     public void SetBlock(int blockY, uint stateId) {
-        // Silently ignored outside the world, as vanilla's block column is: the surface rules run over
+        // Silently ignored outside the world, as vanilla's block column is: the material rules run over
         // a height range that can reach past the build limit.
         Write(_columnX, blockY, _columnZ, stateId);
     }

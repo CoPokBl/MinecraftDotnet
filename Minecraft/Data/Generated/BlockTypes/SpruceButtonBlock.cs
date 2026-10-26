@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record SpruceButtonBlock(Identifier Identifier, AttachDirection Face, Direction Facing, bool Powered) : IBlock, IAttachFaced, IHorizontalFacing, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:button", "block.minecraft.spruce_button", 0.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:spruce_button", BlockInfo.VanillaOnly, "minecraft:blocks/spruce_button");
-    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Destroy, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S0, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.spruce_button", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:spruce_button", BlockInfo.VanillaOnly, "minecraft:blocks/spruce_button");
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Popped, 0, "wood", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, true, false, true, [], null, BlockShapes.S0, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S2 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S3 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S4 };
@@ -32,15 +32,15 @@ public record SpruceButtonBlock(Identifier Identifier, AttachDirection Face, Dir
         I0, I1, I0, I1, I2, I3, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I12, I13, I14, I15, I14, I15
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 10699];
+    public BlockStateInfo StateInfo => States[StateId - 12442];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -54,7 +54,6 @@ public record SpruceButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -74,6 +73,7 @@ public record SpruceButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -93,58 +93,58 @@ public record SpruceButtonBlock(Identifier Identifier, AttachDirection Face, Dir
             return Face switch {
                 AttachDirection.Floor => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10699,
-                        false => 10700,
+                        true => 12442,
+                        false => 12443,
                     },
                     Direction.South => Powered switch {
-                        true => 10701,
-                        false => 10702,
+                        true => 12444,
+                        false => 12445,
                     },
                     Direction.West => Powered switch {
-                        true => 10703,
-                        false => 10704,
+                        true => 12446,
+                        false => 12447,
                     },
                     Direction.East => Powered switch {
-                        true => 10705,
-                        false => 10706,
+                        true => 12448,
+                        false => 12449,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Wall => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10707,
-                        false => 10708,
+                        true => 12450,
+                        false => 12451,
                     },
                     Direction.South => Powered switch {
-                        true => 10709,
-                        false => 10710,
+                        true => 12452,
+                        false => 12453,
                     },
                     Direction.West => Powered switch {
-                        true => 10711,
-                        false => 10712,
+                        true => 12454,
+                        false => 12455,
                     },
                     Direction.East => Powered switch {
-                        true => 10713,
-                        false => 10714,
+                        true => 12456,
+                        false => 12457,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 AttachDirection.Ceiling => Facing switch {
                     Direction.North => Powered switch {
-                        true => 10715,
-                        false => 10716,
+                        true => 12458,
+                        false => 12459,
                     },
                     Direction.South => Powered switch {
-                        true => 10717,
-                        false => 10718,
+                        true => 12460,
+                        false => 12461,
                     },
                     Direction.West => Powered switch {
-                        true => 10719,
-                        false => 10720,
+                        true => 12462,
+                        false => 12463,
                     },
                     Direction.East => Powered switch {
-                        true => 10721,
-                        false => 10722,
+                        true => 12464,
+                        false => 12465,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -155,30 +155,30 @@ public record SpruceButtonBlock(Identifier Identifier, AttachDirection Face, Dir
     
     public IBlock WithState(uint state) {
         return state switch {
-            10699 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
-            10700 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
-            10701 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
-            10702 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
-            10703 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
-            10704 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
-            10705 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
-            10706 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
-            10707 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
-            10708 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
-            10709 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
-            10710 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
-            10711 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
-            10712 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
-            10713 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
-            10714 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
-            10715 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
-            10716 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
-            10717 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
-            10718 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
-            10719 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
-            10720 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
-            10721 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
-            10722 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
+            12442 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.North, true),
+            12443 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.North, false),
+            12444 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.South, true),
+            12445 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.South, false),
+            12446 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.West, true),
+            12447 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.West, false),
+            12448 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.East, true),
+            12449 => new SpruceButtonBlock(Identifier, AttachDirection.Floor, Direction.East, false),
+            12450 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.North, true),
+            12451 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.North, false),
+            12452 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.South, true),
+            12453 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.South, false),
+            12454 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.West, true),
+            12455 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.West, false),
+            12456 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.East, true),
+            12457 => new SpruceButtonBlock(Identifier, AttachDirection.Wall, Direction.East, false),
+            12458 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, true),
+            12459 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.North, false),
+            12460 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, true),
+            12461 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.South, false),
+            12462 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, true),
+            12463 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.West, false),
+            12464 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, true),
+            12465 => new SpruceButtonBlock(Identifier, AttachDirection.Ceiling, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

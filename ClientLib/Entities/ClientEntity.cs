@@ -6,13 +6,15 @@ using Minecraft.Schemas.Entities.Meta;
 using Minecraft.Text;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities;
+using Minecraft.Schemas.Vec;
+using Minecraft.Packets.Play.ClientBound;
 using Direction = Minecraft.Schemas.Blocks.BlockEnums.Direction;
 
 namespace ClientLib.Entities;
 
 /// <summary>
-/// An entity the server told the client about. Positions are moved toward what the server last said
-/// over a few ticks, as <c>InterpolationHandler</c> does, rather than snapped.
+/// An entity the server told the client about. Positions from the server reach it through its
+/// <see cref="Interpolation"/>, as vanilla's <c>moveOrInterpolateTo</c> does.
 /// </summary>
 public partial class ClientEntity {
     public int Id { get; set; }
@@ -51,20 +53,12 @@ public partial class ClientEntity {
     /// </summary>
     public bool MovesFreely { get; set; }
 
-    public int InterpolationSteps { get; set; } = 3;
-
     public double Width => Type.Width;
     public double Height => Type.Height;
     public double EyeHeight => Type.EyeHeight;
 
     /// <summary><c>Entity.getBoundingBox</c> through <c>EntityDimensions.makeBoundingBox</c>, unless the class tracks its own.</summary>
-    public virtual Box BoundingBox {
-        get {
-            (float width, float height) = Dimensions;
-            float half = width / 2.0F;
-            return new Box(Position.X - half, Position.Y, Position.Z - half, Position.X + half, Position.Y + height, Position.Z + half);
-        }
-    }
+    public virtual Box BoundingBox => MakeBoundingBox(Position);
 
     /// <summary>
     /// <c>Entity.getDimensions</c> for the current pose: an interaction's own synced size, <c>LivingEntity.getDimensions</c>
@@ -122,86 +116,140 @@ public partial class ClientEntity {
     private IEntityType? _classesOf;
     private EntityClass[] _classes = [];
 
-    /// <summary><c>VecDeltaCodec</c>: the last position the server sent, in its quantised form.</summary>
-    private long _baseX, _baseY, _baseZ;
-
-    private int _lerpSteps;
-    private Vec3d _lerpPosition;
-    private float _lerpYRot, _lerpXRot;
     private int _lerpHeadSteps;
     private float _lerpHeadYRot;
 
-    public void SetCodecBase(Vec3d position) {
-        _baseX = Encode(position.X);
-        _baseY = Encode(position.Y);
-        _baseZ = Encode(position.Z);
-    }
+    /// <summary><c>VecDeltaCodec.base</c>: the last position the server sent, as it was sent.</summary>
+    private Vec3d _codecBase;
 
-    private static long Encode(double value) => (long)Math.Round(value * 4096.0, MidpointRounding.AwayFromZero);
+    public Vec3d CodecBase => _codecBase;
+
+    public void SetCodecBase(Vec3d position) => _codecBase = position;
+
+    private static long Encode(double value) => Minecraft.Schemas.Mth.JavaRound(value * 4096.0);
+
+    private static double Decode(long value) => value / 4096.0;
 
     /// <summary><c>VecDeltaCodec.decode</c>, which leaves an axis that did not move exactly where it was.</summary>
     public Vec3d DecodeDelta(long xa, long ya, long za) {
         if (xa == 0 && ya == 0 && za == 0) {
-            return new Vec3d(_baseX / 4096.0, _baseY / 4096.0, _baseZ / 4096.0);
+            return _codecBase;
         }
-        return new Vec3d((_baseX + xa) / 4096.0, (_baseY + ya) / 4096.0, (_baseZ + za) / 4096.0);
-    }
-
-    public void Snap(Vec3d position, float yRot, float xRot) {
-        Position = position;
-        OldPosition = position;
-        YRot = YRotO = yRot;
-        XRot = XRotO = xRot;
-        _lerpSteps = 0;
+        double x = xa == 0 ? _codecBase.X : Decode(Encode(_codecBase.X) + xa);
+        double y = ya == 0 ? _codecBase.Y : Decode(Encode(_codecBase.Y) + ya);
+        double z = za == 0 ? _codecBase.Z : Decode(Encode(_codecBase.Z) + za);
+        return new Vec3d(x, y, z);
     }
 
     /// <summary>
-    /// <c>Entity.moveOrInterpolateTo</c> through <c>InterpolationHandler.interpolateTo</c>. A repeat of the
-    /// target in progress does not restart it: a server that resends a teleport would otherwise hold the entity
-    /// short of it for another three ticks, where its box pushes the local player.
+    /// <c>VecDelta.decode</c>: each step of a stepped delta is relative to the one before it, and the base
+    /// is left where it was for the caller to move.
     /// </summary>
-    public virtual void InterpolateTo(Vec3d position, float yRot, float xRot) {
-        if (InterpolationSteps == 0) {
-            Position = position;
-            YRot = yRot;
-            XRot = xRot;
-            _lerpSteps = 0;
-            return;
+    public PositionPath DecodeDelta(MovementDelta.Step[]? steps, Vec3<float> delta) {
+        if (steps is not { Length: > 0 }) {
+            return PositionPath.Of(DecodeDelta(Shorts(delta.X), Shorts(delta.Y), Shorts(delta.Z)));
         }
-        if (_lerpSteps > 0 && InterpolationHandler.JavaEquals(_lerpYRot, yRot) && InterpolationHandler.JavaEquals(_lerpXRot, xRot)
-            && InterpolationHandler.JavaEquals(_lerpPosition, position)) {
-            return;
+        PositionStep[] output = new PositionStep[steps.Length];
+        Vec3d originalBase = _codecBase;
+        for (int i = 0; i < steps.Length; i++) {
+            MovementDelta.Step step = steps[i];
+            Vec3d position = DecodeDelta(Shorts(step.Delta.X), Shorts(step.Delta.Y), Shorts(step.Delta.Z));
+            output[i] = new PositionStep(position, step.Ticks);
+            _codecBase = position;
         }
-        _lerpSteps = InterpolationSteps;
-        _lerpPosition = position;
-        _lerpYRot = yRot;
-        _lerpXRot = xRot;
+        _codecBase = originalBase;
+        return new PositionPath.Stepped(output);
+
+        // The protocol layer hands the shorts back divided by 4096, which a float holds exactly.
+        static long Shorts(float blocks) => (long)Math.Round(blocks * 4096.0);
     }
 
-    public virtual void InterpolateTo(Vec3d position) => InterpolateTo(position, _lerpSteps > 0 ? _lerpYRot : YRot, _lerpSteps > 0 ? _lerpXRot : XRot);
+    /// <summary>
+    /// <c>Entity.interpolationHandler</c>, from <c>createInterpolationHandler</c>. Nothing interpolates until
+    /// <see cref="InterpolationHandlers.For"/> gives the entity its class's handler.
+    /// </summary>
+    public IInterpolationHandler Interpolation { get; set; } = NoOpInterpolationHandler.Instance;
 
-    public virtual void InterpolateRotation(float yRot, float xRot) => InterpolateTo(_lerpSteps > 0 ? _lerpPosition : Position, yRot, xRot);
+    /// <summary><c>Entity.snapTo</c>, which leaves an interpolation in progress running from the new position.</summary>
+    public void SnapTo(Vec3d position, float yRot, float xRot) {
+        Position = position;
+        SetYRot(yRot);
+        SetXRot(xRot);
+        OldPosition = position;
+        YRotO = YRot;
+        XRotO = XRot;
+    }
 
-    public bool IsInterpolating => _lerpSteps > 0;
+    /// <summary>
+    /// The spawn's placement, as <c>recreateFromPacket</c> makes it: nothing of an earlier interpolation
+    /// survives, since there was none.
+    /// </summary>
+    public void Snap(Vec3d position, float yRot, float xRot) {
+        SnapTo(position, yRot, xRot);
+        Interpolation.Cancel();
+    }
 
-    /// <summary><c>InterpolationHandler.position</c>: where the interpolation is heading, or where the entity is.</summary>
-    public Vec3d InterpolationTarget => _lerpSteps > 0 ? _lerpPosition : Position;
+    /// <summary><c>Entity.setRot</c>.</summary>
+    public void SetRot(float yRot, float xRot) {
+        SetYRot(yRot % 360.0F);
+        SetXRot(xRot % 360.0F);
+    }
 
-    public void CancelInterpolation() => _lerpSteps = 0;
-
-    protected bool StepInterpolation() {
-        if (_lerpSteps <= 0) {
-            return false;
+    /// <summary><c>Entity.setYRot</c>, which drops a rotation that is not finite.</summary>
+    public void SetYRot(float yRot) {
+        if (float.IsFinite(yRot)) {
+            YRot = yRot;
         }
-        double alpha = 1.0 / _lerpSteps;
-        Position = new Vec3d(
-            Lerp(alpha, Position.X, _lerpPosition.X),
-            Lerp(alpha, Position.Y, _lerpPosition.Y),
-            Lerp(alpha, Position.Z, _lerpPosition.Z));
-        YRot = (float)RotLerp(alpha, YRot, _lerpYRot);
-        XRot = (float)Lerp(alpha, XRot, _lerpXRot);
-        _lerpSteps--;
-        return true;
+    }
+
+    /// <summary><c>Entity.setXRot</c>.</summary>
+    public void SetXRot(float xRot) {
+        if (float.IsFinite(xRot)) {
+            XRot = Math.Clamp(xRot % 360.0F, -90.0F, 90.0F);
+        }
+    }
+
+    /// <summary><c>Entity.storePositionAndRotation</c>.</summary>
+    public PositionAndRotation StorePositionAndRotation() => new(Position, YRot, XRot);
+
+    /// <summary><c>Entity.getClientPositionAndRotation</c>: where the interpolation is heading, or where the entity is.</summary>
+    public PositionAndRotation ClientPositionAndRotation => Interpolation.Target ?? StorePositionAndRotation();
+
+    /// <summary><c>Entity.getClientPosition</c>.</summary>
+    public Vec3d ClientPosition => Interpolation.Target?.Position ?? Position;
+
+    public bool IsInterpolating => Interpolation.HasActiveInterpolation;
+
+    /// <summary><c>Entity.moveOrInterpolateTo</c>: an entity that does not interpolate takes the position at once.</summary>
+    public void MoveOrInterpolateTo(PositionPath? position, float yRot, float xRot, bool hasRotation) {
+        if (!Interpolation.InterpolateTo(position, yRot, xRot, hasRotation)) {
+            if (position != null) {
+                Position = position.EndPosition;
+            }
+            if (hasRotation) {
+                SetRot(yRot, xRot);
+            }
+        }
+    }
+
+    public void MoveOrInterpolateTo(Vec3d position, float yRot, float xRot) => MoveOrInterpolateTo(PositionPath.Of(position), yRot, xRot, true);
+
+    /// <summary><c>Entity.onInterpolationStart</c>.</summary>
+    public virtual void OnInterpolationStart(IInterpolationHandler interpolation) {
+    }
+
+    /// <summary><c>Entity.makeBoundingBox</c> through <c>EntityDimensions.makeBoundingBox</c>: the half width is a float before it is widened.</summary>
+    public virtual Box MakeBoundingBox(Vec3d position) {
+        (float width, float height) = Dimensions;
+        float half = width / 2.0F;
+        return new Box(position.X - half, position.Y, position.Z - half, position.X + half, position.Y + height, position.Z + half);
+    }
+
+    /// <summary>
+    /// <c>Entity.handleEntityEvent</c>, for what an event changes in the entity's own state. The particles
+    /// and sounds of events are <see cref="Particles.EntityParticles"/>' and the audio's.
+    /// </summary>
+    public virtual void HandleEntityEvent(ClientBoundEntityEventPacket.EntityEventType status) {
     }
 
     /// <summary><c>Entity.setOnGround</c>, as a server position update calls it.</summary>
@@ -220,8 +268,11 @@ public partial class ClientEntity {
         XRotO = XRot;
         YHeadRotO = YHeadRot;
 
-        if (!StepInterpolation() && MovesFreely) {
+        Interpolation.Interpolate();
+        if (MovesFreely) {
+            // Projectile.getMoveSimulationType is SERVER_AND_CLIENT, so the move is recorded as predicted.
             Position += DeltaMovement;
+            Interpolation.ApplyPredictedMovement(DeltaMovement);
         }
 
         if (_lerpHeadSteps > 0) {
@@ -235,8 +286,6 @@ public partial class ClientEntity {
         }
 
         TickHurtAndDeath();
-        AttackAnimO = AttackAnim;
-        UpdateSwingTime();
     }
 
     public static double Lerp(double alpha, double from, double to) => from + alpha * (to - from);

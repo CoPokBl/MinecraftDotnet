@@ -11,32 +11,32 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record MediumAmethystBudBlock(Identifier Identifier, Cardinal Facing, bool Waterlogged) : IBlock, IDirectional, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:amethyst_cluster", "block.minecraft.medium_amethyst_bud", 1.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:medium_amethyst_bud", BlockInfo.VanillaOnly, "minecraft:blocks/medium_amethyst_bud");
-    private static readonly BlockStateInfo I0 = new(1.5f, 2, 1, PushReaction.Destroy, 24, "large_amethyst_bud", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S643, BlockShapes.S643, BlockShapes.S1, BlockShapes.S1, BlockShapes.S643, BlockShapes.S643);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
-    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S644, CollisionShape = BlockShapes.S644, VisualShape = BlockShapes.S644, SupportShape = BlockShapes.S644 };
-    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S644, CollisionShape = BlockShapes.S644, VisualShape = BlockShapes.S644, SupportShape = BlockShapes.S644 };
-    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S645, CollisionShape = BlockShapes.S645, VisualShape = BlockShapes.S645, SupportShape = BlockShapes.S645 };
-    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S645, CollisionShape = BlockShapes.S645, VisualShape = BlockShapes.S645, SupportShape = BlockShapes.S645 };
-    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S646, CollisionShape = BlockShapes.S646, VisualShape = BlockShapes.S646, SupportShape = BlockShapes.S646 };
-    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S646, CollisionShape = BlockShapes.S646, VisualShape = BlockShapes.S646, SupportShape = BlockShapes.S646 };
-    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S647, CollisionShape = BlockShapes.S647, VisualShape = BlockShapes.S647, SupportShape = BlockShapes.S647 };
-    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S647, CollisionShape = BlockShapes.S647, VisualShape = BlockShapes.S647, SupportShape = BlockShapes.S647 };
-    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S648, CollisionShape = BlockShapes.S648, VisualShape = BlockShapes.S648, SupportShape = BlockShapes.S648 };
-    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S648, CollisionShape = BlockShapes.S648, VisualShape = BlockShapes.S648, SupportShape = BlockShapes.S648 };
+    private static readonly BlockInfo Data = new("block.minecraft.medium_amethyst_bud", 1.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:medium_amethyst_bud", BlockInfo.VanillaOnly, "minecraft:blocks/medium_amethyst_bud");
+    private static readonly BlockStateInfo I0 = new(1.5f, 2, 1, PushReaction.Popped, 24, "large_amethyst_bud", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S644, BlockShapes.S644, BlockShapes.S1, BlockShapes.S1, BlockShapes.S644, BlockShapes.S644);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S645, CollisionShape = BlockShapes.S645, VisualShape = BlockShapes.S645, SupportShape = BlockShapes.S645 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S645, CollisionShape = BlockShapes.S645, VisualShape = BlockShapes.S645, SupportShape = BlockShapes.S645 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S646, CollisionShape = BlockShapes.S646, VisualShape = BlockShapes.S646, SupportShape = BlockShapes.S646 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S646, CollisionShape = BlockShapes.S646, VisualShape = BlockShapes.S646, SupportShape = BlockShapes.S646 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S647, CollisionShape = BlockShapes.S647, VisualShape = BlockShapes.S647, SupportShape = BlockShapes.S647 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S647, CollisionShape = BlockShapes.S647, VisualShape = BlockShapes.S647, SupportShape = BlockShapes.S647 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S648, CollisionShape = BlockShapes.S648, VisualShape = BlockShapes.S648, SupportShape = BlockShapes.S648 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S648, CollisionShape = BlockShapes.S648, VisualShape = BlockShapes.S648, SupportShape = BlockShapes.S648 };
+    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S649, CollisionShape = BlockShapes.S649, VisualShape = BlockShapes.S649, SupportShape = BlockShapes.S649 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S649, CollisionShape = BlockShapes.S649, VisualShape = BlockShapes.S649, SupportShape = BlockShapes.S649 };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 23428];
+    public BlockStateInfo StateInfo => States[StateId - 26785];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -50,7 +50,6 @@ public record MediumAmethystBudBlock(Identifier Identifier, Cardinal Facing, boo
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -70,6 +69,7 @@ public record MediumAmethystBudBlock(Identifier Identifier, Cardinal Facing, boo
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -86,28 +86,28 @@ public record MediumAmethystBudBlock(Identifier Identifier, Cardinal Facing, boo
         get {
             return Facing switch {
                 Cardinal.North => Waterlogged switch {
-                    true => 23428,
-                    false => 23429,
+                    true => 26785,
+                    false => 26786,
                 },
                 Cardinal.East => Waterlogged switch {
-                    true => 23430,
-                    false => 23431,
+                    true => 26787,
+                    false => 26788,
                 },
                 Cardinal.South => Waterlogged switch {
-                    true => 23432,
-                    false => 23433,
+                    true => 26789,
+                    false => 26790,
                 },
                 Cardinal.West => Waterlogged switch {
-                    true => 23434,
-                    false => 23435,
+                    true => 26791,
+                    false => 26792,
                 },
                 Cardinal.Up => Waterlogged switch {
-                    true => 23436,
-                    false => 23437,
+                    true => 26793,
+                    false => 26794,
                 },
                 Cardinal.Down => Waterlogged switch {
-                    true => 23438,
-                    false => 23439,
+                    true => 26795,
+                    false => 26796,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -116,18 +116,18 @@ public record MediumAmethystBudBlock(Identifier Identifier, Cardinal Facing, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            23428 => new MediumAmethystBudBlock(Identifier, Cardinal.North, true),
-            23429 => new MediumAmethystBudBlock(Identifier, Cardinal.North, false),
-            23430 => new MediumAmethystBudBlock(Identifier, Cardinal.East, true),
-            23431 => new MediumAmethystBudBlock(Identifier, Cardinal.East, false),
-            23432 => new MediumAmethystBudBlock(Identifier, Cardinal.South, true),
-            23433 => new MediumAmethystBudBlock(Identifier, Cardinal.South, false),
-            23434 => new MediumAmethystBudBlock(Identifier, Cardinal.West, true),
-            23435 => new MediumAmethystBudBlock(Identifier, Cardinal.West, false),
-            23436 => new MediumAmethystBudBlock(Identifier, Cardinal.Up, true),
-            23437 => new MediumAmethystBudBlock(Identifier, Cardinal.Up, false),
-            23438 => new MediumAmethystBudBlock(Identifier, Cardinal.Down, true),
-            23439 => new MediumAmethystBudBlock(Identifier, Cardinal.Down, false),
+            26785 => new MediumAmethystBudBlock(Identifier, Cardinal.North, true),
+            26786 => new MediumAmethystBudBlock(Identifier, Cardinal.North, false),
+            26787 => new MediumAmethystBudBlock(Identifier, Cardinal.East, true),
+            26788 => new MediumAmethystBudBlock(Identifier, Cardinal.East, false),
+            26789 => new MediumAmethystBudBlock(Identifier, Cardinal.South, true),
+            26790 => new MediumAmethystBudBlock(Identifier, Cardinal.South, false),
+            26791 => new MediumAmethystBudBlock(Identifier, Cardinal.West, true),
+            26792 => new MediumAmethystBudBlock(Identifier, Cardinal.West, false),
+            26793 => new MediumAmethystBudBlock(Identifier, Cardinal.Up, true),
+            26794 => new MediumAmethystBudBlock(Identifier, Cardinal.Up, false),
+            26795 => new MediumAmethystBudBlock(Identifier, Cardinal.Down, true),
+            26796 => new MediumAmethystBudBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

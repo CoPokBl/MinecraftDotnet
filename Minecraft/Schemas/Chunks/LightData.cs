@@ -61,10 +61,10 @@ public class LightData : IWritable {
     }
 
     public void Write(DataWriter w) {
-        w.WritePrefixedArray((ReadOnlySpan<long>)SkyLightMask.ToLongArray());
-        w.WritePrefixedArray((ReadOnlySpan<long>)BlockLightMask.ToLongArray());
-        w.WritePrefixedArray((ReadOnlySpan<long>)EmptySkyLightMask.ToLongArray());
-        w.WritePrefixedArray((ReadOnlySpan<long>)EmptyBlockLightMask.ToLongArray());
+        w.WritePrefixedArray((ReadOnlySpan<byte>)SkyLightMask.ToJavaByteArray());
+        w.WritePrefixedArray((ReadOnlySpan<byte>)BlockLightMask.ToJavaByteArray());
+        w.WritePrefixedArray((ReadOnlySpan<byte>)EmptySkyLightMask.ToJavaByteArray());
+        w.WritePrefixedArray((ReadOnlySpan<byte>)EmptyBlockLightMask.ToJavaByteArray());
 
         // Bulk rather than a nested WritePrefixedArray: a lit chunk carries 48 sections of 2048 bytes,
         // so a delegate per byte is a hundred thousand calls to append a hundred kilobytes.
@@ -90,7 +90,7 @@ public class LightData : IWritable {
         };
 
         static BitArray ReadMask(DataReader r) {
-            return r.ReadPrefixedArray(reader => reader.ReadLong()).ToBitArray();
+            return r.Read(r.ReadVarInt()).FromJavaByteArray();
         }
 
         static byte[][] ReadLightArrays(DataReader r) {

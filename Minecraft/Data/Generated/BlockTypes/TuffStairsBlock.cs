@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TuffStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.tuff_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:tuff_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/tuff_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 43, "tuff", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.tuff_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:tuff_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/tuff_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 43, "tuff", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record TuffStairsBlock(Identifier Identifier, Direction Facing, TopBottom
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 23459];
+    public BlockStateInfo StateInfo => States[StateId - 26816];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record TuffStairsBlock(Identifier Identifier, Direction Facing, TopBottom
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record TuffStairsBlock(Identifier Identifier, Direction Facing, TopBottom
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record TuffStairsBlock(Identifier Identifier, Direction Facing, TopBottom
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 23459,
-                            false => 23460,
+                            true => 26816,
+                            false => 26817,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 23461,
-                            false => 23462,
+                            true => 26818,
+                            false => 26819,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 23463,
-                            false => 23464,
+                            true => 26820,
+                            false => 26821,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 23465,
-                            false => 23466,
+                            true => 26822,
+                            false => 26823,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 23467,
-                            false => 23468,
+                            true => 26824,
+                            false => 26825,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 23469,
-                            false => 23470,
+                            true => 26826,
+                            false => 26827,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 23471,
-                            false => 23472,
+                            true => 26828,
+                            false => 26829,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 23473,
-                            false => 23474,
+                            true => 26830,
+                            false => 26831,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 23475,
-                            false => 23476,
+                            true => 26832,
+                            false => 26833,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 23477,
-                            false => 23478,
+                            true => 26834,
+                            false => 26835,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record TuffStairsBlock(Identifier Identifier, Direction Facing, TopBottom
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 23479,
-                            false => 23480,
+                            true => 26836,
+                            false => 26837,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 23481,
-                            false => 23482,
+                            true => 26838,
+                            false => 26839,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 23483,
-                            false => 23484,
+                            true => 26840,
+                            false => 26841,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 23485,
-                            false => 23486,
+                            true => 26842,
+                            false => 26843,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 23487,
-                            false => 23488,
+                            true => 26844,
+                            false => 26845,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 23489,
-                            false => 23490,
+                            true => 26846,
+                            false => 26847,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 23491,
-                            false => 23492,
+                            true => 26848,
+                            false => 26849,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 23493,
-                            false => 23494,
+                            true => 26850,
+                            false => 26851,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 23495,
-                            false => 23496,
+                            true => 26852,
+                            false => 26853,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 23497,
-                            false => 23498,
+                            true => 26854,
+                            false => 26855,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record TuffStairsBlock(Identifier Identifier, Direction Facing, TopBottom
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 23499,
-                            false => 23500,
+                            true => 26856,
+                            false => 26857,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 23501,
-                            false => 23502,
+                            true => 26858,
+                            false => 26859,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 23503,
-                            false => 23504,
+                            true => 26860,
+                            false => 26861,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 23505,
-                            false => 23506,
+                            true => 26862,
+                            false => 26863,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 23507,
-                            false => 23508,
+                            true => 26864,
+                            false => 26865,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 23509,
-                            false => 23510,
+                            true => 26866,
+                            false => 26867,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 23511,
-                            false => 23512,
+                            true => 26868,
+                            false => 26869,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 23513,
-                            false => 23514,
+                            true => 26870,
+                            false => 26871,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 23515,
-                            false => 23516,
+                            true => 26872,
+                            false => 26873,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 23517,
-                            false => 23518,
+                            true => 26874,
+                            false => 26875,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record TuffStairsBlock(Identifier Identifier, Direction Facing, TopBottom
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 23519,
-                            false => 23520,
+                            true => 26876,
+                            false => 26877,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 23521,
-                            false => 23522,
+                            true => 26878,
+                            false => 26879,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 23523,
-                            false => 23524,
+                            true => 26880,
+                            false => 26881,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 23525,
-                            false => 23526,
+                            true => 26882,
+                            false => 26883,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 23527,
-                            false => 23528,
+                            true => 26884,
+                            false => 26885,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 23529,
-                            false => 23530,
+                            true => 26886,
+                            false => 26887,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 23531,
-                            false => 23532,
+                            true => 26888,
+                            false => 26889,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 23533,
-                            false => 23534,
+                            true => 26890,
+                            false => 26891,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 23535,
-                            false => 23536,
+                            true => 26892,
+                            false => 26893,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 23537,
-                            false => 23538,
+                            true => 26894,
+                            false => 26895,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record TuffStairsBlock(Identifier Identifier, Direction Facing, TopBottom
     
     public IBlock WithState(uint state) {
         return state switch {
-            23459 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            23460 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            23461 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            23462 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            23463 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            23464 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            23465 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            23466 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            23467 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            23468 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            23469 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            23470 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            23471 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            23472 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            23473 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            23474 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            23475 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            23476 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            23477 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            23478 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            23479 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            23480 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            23481 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            23482 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            23483 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            23484 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            23485 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            23486 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            23487 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            23488 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            23489 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            23490 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            23491 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            23492 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            23493 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            23494 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            23495 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            23496 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            23497 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            23498 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            23499 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            23500 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            23501 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            23502 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            23503 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            23504 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            23505 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            23506 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            23507 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            23508 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            23509 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            23510 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            23511 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            23512 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            23513 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            23514 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            23515 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            23516 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            23517 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            23518 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            23519 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            23520 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            23521 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            23522 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            23523 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            23524 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            23525 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            23526 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            23527 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            23528 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            23529 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            23530 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            23531 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            23532 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            23533 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            23534 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            23535 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            23536 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            23537 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            23538 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            26816 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            26817 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            26818 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            26819 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            26820 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            26821 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            26822 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            26823 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            26824 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            26825 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            26826 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            26827 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            26828 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            26829 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            26830 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            26831 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            26832 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            26833 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            26834 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            26835 => new TuffStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            26836 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            26837 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            26838 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            26839 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            26840 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            26841 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            26842 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            26843 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            26844 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            26845 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            26846 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            26847 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            26848 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            26849 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            26850 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            26851 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            26852 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            26853 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            26854 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            26855 => new TuffStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            26856 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            26857 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            26858 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            26859 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            26860 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            26861 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            26862 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            26863 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            26864 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            26865 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            26866 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            26867 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            26868 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            26869 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            26870 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            26871 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            26872 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            26873 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            26874 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            26875 => new TuffStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            26876 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            26877 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            26878 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            26879 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            26880 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            26881 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            26882 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            26883 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            26884 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            26885 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            26886 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            26887 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            26888 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            26889 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            26890 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            26891 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            26892 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            26893 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            26894 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            26895 => new TuffStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

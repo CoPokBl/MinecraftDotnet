@@ -345,7 +345,7 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
             Update(HeightmapType.WorldSurface, local, localX, localZ, y,
                 (flags & HeightmapStates.NotAir) != 0);
             Update(HeightmapType.OceanFloor, local, localX, localZ, y,
-                _level.Blocks.BlocksMotionAt(stateId));
+                _level.Blocks.BlocksMotionInHeightmapAt(stateId));
             Update(HeightmapType.MotionBlocking, local, localX, localZ, y,
                 (flags & HeightmapStates.MotionBlocking) != 0);
             Update(HeightmapType.MotionBlockingNoLeaves, local, localX, localZ, y,
@@ -384,7 +384,7 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
                     haveSurface = true;
                 }
 
-                if (!haveFloor && _level.Blocks.BlocksMotionAt(state)) {
+                if (!haveFloor && _level.Blocks.BlocksMotionInHeightmapAt(state)) {
                     oceanFloor = y + 1;
                     haveFloor = true;
                 }
@@ -457,7 +457,7 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
         return type switch {
             HeightmapType.WorldSurface or HeightmapType.WorldSurfaceWorldgen =>
                 (flags & HeightmapStates.NotAir) != 0,
-            HeightmapType.OceanFloor or HeightmapType.OceanFloorWorldgen => Blocks.BlocksMotionAt(stateId),
+            HeightmapType.OceanFloor or HeightmapType.OceanFloorWorldgen => Blocks.BlocksMotionInHeightmapAt(stateId),
             HeightmapType.MotionBlocking => (flags & HeightmapStates.MotionBlocking) != 0,
             HeightmapType.MotionBlockingNoLeaves => (flags & HeightmapStates.MotionBlockingNoLeaves) != 0,
             _ => false

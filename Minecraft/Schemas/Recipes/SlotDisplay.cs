@@ -1,3 +1,4 @@
+using Minecraft.Schemas.Tags;
 using Minecraft.Data;
 using Minecraft.Data.Components;
 using Minecraft.Data.Items;
@@ -31,7 +32,7 @@ public abstract record SlotDisplay : INetworkType<SlotDisplay> {
             "minecraft:any_fuel" => AnyFuel.Instance,
             "minecraft:item" => new Item(reg.Items[r.ReadVarInt()]),
             "minecraft:item_stack" => new Stack(ItemStack.ReadTemplateData(r, reg)),
-            "minecraft:tag" => new Tag(r.ReadString()),
+            "minecraft:tag" => new Tag(r.Read<IdSet>(reg)),
             "minecraft:with_any_potion" => new WithAnyPotion(ReadData(r, reg)),
             "minecraft:only_with_component" => new OnlyWithComponent(ReadData(r, reg), reg.DataComponents[r.ReadVarInt()]),
             "minecraft:dyed" => new Dyed(ReadData(r, reg), ReadData(r, reg)),
@@ -81,12 +82,15 @@ public abstract record SlotDisplay : INetworkType<SlotDisplay> {
         }
     }
 
-    /// <summary>Cycles through every item in an item tag.</summary>
-    public record Tag(Identifier TagName) : SlotDisplay {
+    /// <summary>
+    /// Cycles through every item in a set: an item tag, or the items listed inline, which is how
+    /// <c>Ingredient.display</c> shows every ingredient.
+    /// </summary>
+    public record Tag(IdSet Items) : SlotDisplay {
         public override Identifier Type => "minecraft:tag";
 
         protected override void WriteContents(DataWriter w, MinecraftRegistry reg) {
-            w.Write(TagName);
+            w.Write(Items, reg);
         }
     }
 

@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WaxedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered) : IBlock, ILit, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:copper_bulb_block", "block.minecraft.waxed_copper_bulb", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_copper_bulb", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_copper_bulb");
-    private static readonly BlockStateInfo I0 = new(3f, 15, 15, PushReaction.Normal, 15, "copper_bulb", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, false, false, false, true, true, true, false, false, false, [], null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.waxed_copper_bulb", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_copper_bulb", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_copper_bulb");
+    private static readonly BlockStateInfo I0 = new(3f, 15, 15, PushReaction.PushPull, 15, "copper_bulb", NoteBlockInstrument.Harp, false, true, true, false, false, false, false, true, false, false, false, true, true, false, true, false, false, false, [], null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0, ValidSpawnFor = null };
     private static readonly BlockStateInfo[] States = [
         I0, I0, I1, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 29552];
+    public BlockStateInfo StateInfo => States[StateId - 32909];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record WaxedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record WaxedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -76,12 +76,12 @@ public record WaxedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered
         get {
             return Lit switch {
                 true => Powered switch {
-                    true => 29552,
-                    false => 29553,
+                    true => 32909,
+                    false => 32910,
                 },
                 false => Powered switch {
-                    true => 29554,
-                    false => 29555,
+                    true => 32911,
+                    false => 32912,
                 },
             };
         }
@@ -89,10 +89,10 @@ public record WaxedCopperBulbBlock(Identifier Identifier, bool Lit, bool Powered
     
     public IBlock WithState(uint state) {
         return state switch {
-            29552 => new WaxedCopperBulbBlock(Identifier, true, true),
-            29553 => new WaxedCopperBulbBlock(Identifier, true, false),
-            29554 => new WaxedCopperBulbBlock(Identifier, false, true),
-            29555 => new WaxedCopperBulbBlock(Identifier, false, false),
+            32909 => new WaxedCopperBulbBlock(Identifier, true, true),
+            32910 => new WaxedCopperBulbBlock(Identifier, true, false),
+            32911 => new WaxedCopperBulbBlock(Identifier, false, true),
+            32912 => new WaxedCopperBulbBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

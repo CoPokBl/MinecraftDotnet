@@ -8,16 +8,13 @@
 # the committed file. Needs the server jar the CodeGen project downloads, so run CodeGen for the
 # version first.
 #
-# This is the step terrain.sh stops short of. That one pins all fifteen entries of the NoiseRouter, the
-# climate sample and the biome the parameter list picks, at exact zero tolerance; it says nothing about
-# what those numbers become. The aquifer turning barrier and the two fluid_level noises into water, lava
-# or stone, OreVeinifier turning the three vein noises into ore, the interpolation walk over the cells,
-# and the whole surface rule tree on top of it were all visible only through worldparity.sh, whose error
-# bar is about a third of its own value.
+# This is the step terrain.sh stops short of. That one pins the density functions, the climate sample
+# and the biome the parameter list picks, exactly; this pins what they become: the aquifer deciding
+# water, lava or stone, the material rules with the ore veins in them, and the carvers.
 #
-# It is a pass and not a baseline. All three are pure functions of the world seed and the chunk
-# position: no neighbour's blocks are read, no random is shared across chunks, and nothing depends on
-# the order chunks were asked for. So a difference here is the port and nothing else. The carver pass
+# It is a pass and not a baseline. No neighbour's blocks are read and no random is shared across
+# chunks; the one order dependence, the climate search's warm start, is the same on both sides because
+# both generate these chunks in this order. So a difference here is the port and nothing else. The carver pass
 # replaying every chunk within eight is not an exception: a source chunk's carvers are seeded from the
 # world seed, the carver's index in that chunk's biome's list and the source chunk position alone.
 #
@@ -29,7 +26,7 @@
 # are reproducible run to run over these chunks. A pass fixture is only worth having while that holds.
 set -euo pipefail
 
-version="${1:-26.2}"
+version="${1:-26.3}"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 jars="$repo/CodeGen/bin/Debug/net10.0"
 work="${TMPDIR:-/tmp}/mcdotnet-conformance"
@@ -38,13 +35,13 @@ fixture="$repo/ManagedServer.Testing/Terrain/vanilla-terrainstage.bin.gz"
 # The seed every worldgen fixture in the tree uses, so a chunk can be looked at with TestServer.
 seed=1234567890
 
-# One chunk per biome, all 55 of them, which is what decides whether this measures anything: the
-# surface rule tree branches on the biome before anything else, so a run over fifteen of them leaves
+# One chunk per biome, all 56 of them, which is what decides whether this measures anything: the
+# material rules branch on the biome before anything else, so a run over fifteen of them leaves
 # forty biomes' rules touched by nothing. Coordinates are where each biome first appears at this seed,
 # printed by ManagedServer.Testing/Terrain/FindStructureClusters, which searches for every biome the
 # climate table can name rather than a list someone has to keep up to date.
 #
-# Plus one chunk that is not here for its biome. Both of the passes SurfaceSystem runs around the rule
+# Plus one chunk that is not here for its biome. Both of the passes MaterialSystem runs around the rule
 # pass have to be reached: the badlands spires come with the badlands, but an iceberg is a roll on top
 # of a frozen ocean rather than a property of it, so that chunk is picked for holding one.
 chunks=(
@@ -54,6 +51,7 @@ chunks=(
     "-8:32"       # birch_forest
     "152:-152"    # cherry_grove
     "-56:-8"      # cold_ocean
+    "-96:152"     # dappled_forest
     "-24:32"      # dark_forest
     "-64:-48"     # deep_cold_ocean
     "24:-80"      # deep_dark
@@ -103,7 +101,7 @@ chunks=(
     "-120:-216"   # windswept_hills
     "232:48"      # windswept_savanna
     "24:168"      # wooded_badlands
-    "-82:14"      # a frozen ocean chunk carrying a large iceberg, which is a pass of its own
+    "-81:14"      # a frozen ocean chunk carrying a large iceberg, which is a pass of its own
 )
 
 server_jar="$jars/versions/$version/server-$version.jar"

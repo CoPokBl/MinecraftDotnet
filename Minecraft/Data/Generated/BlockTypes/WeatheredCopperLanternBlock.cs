@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WeatheredCopperLanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged) : IBlock, IHanging, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:weathering_lantern", "block.minecraft.weathered_copper_lantern", 3.5f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:weathered_copper_lantern", BlockInfo.VanillaOnly, "minecraft:blocks/weathered_copper_lantern");
-    private static readonly BlockStateInfo I0 = new(3.5f, 15, 1, PushReaction.Destroy, 6, "lantern", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, false, true, false, false, true, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S508, BlockShapes.S508, BlockShapes.S1, BlockShapes.S1, BlockShapes.S508, BlockShapes.S508);
+    private static readonly BlockInfo Data = new("block.minecraft.weathered_copper_lantern", 3.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:weathered_copper_lantern", BlockInfo.VanillaOnly, "minecraft:blocks/weathered_copper_lantern");
+    private static readonly BlockStateInfo I0 = new(3.5f, 15, 1, PushReaction.Popped, 6, "lantern", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, true, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S508, BlockShapes.S508, BlockShapes.S1, BlockShapes.S1, BlockShapes.S508, BlockShapes.S508);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S509, CollisionShape = BlockShapes.S509, VisualShape = BlockShapes.S509, SupportShape = BlockShapes.S509 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S509, CollisionShape = BlockShapes.S509, VisualShape = BlockShapes.S509, SupportShape = BlockShapes.S509 };
@@ -20,15 +20,15 @@ public record WeatheredCopperLanternBlock(Identifier Identifier, bool Hanging, b
         I0, I1, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 20853];
+    public BlockStateInfo StateInfo => States[StateId - 24210];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record WeatheredCopperLanternBlock(Identifier Identifier, bool Hanging, b
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record WeatheredCopperLanternBlock(Identifier Identifier, bool Hanging, b
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,12 +78,12 @@ public record WeatheredCopperLanternBlock(Identifier Identifier, bool Hanging, b
         get {
             return Hanging switch {
                 true => Waterlogged switch {
-                    true => 20853,
-                    false => 20854,
+                    true => 24210,
+                    false => 24211,
                 },
                 false => Waterlogged switch {
-                    true => 20855,
-                    false => 20856,
+                    true => 24212,
+                    false => 24213,
                 },
             };
         }
@@ -91,10 +91,10 @@ public record WeatheredCopperLanternBlock(Identifier Identifier, bool Hanging, b
     
     public IBlock WithState(uint state) {
         return state switch {
-            20853 => new WeatheredCopperLanternBlock(Identifier, true, true),
-            20854 => new WeatheredCopperLanternBlock(Identifier, true, false),
-            20855 => new WeatheredCopperLanternBlock(Identifier, false, true),
-            20856 => new WeatheredCopperLanternBlock(Identifier, false, false),
+            24210 => new WeatheredCopperLanternBlock(Identifier, true, true),
+            24211 => new WeatheredCopperLanternBlock(Identifier, true, false),
+            24212 => new WeatheredCopperLanternBlock(Identifier, false, true),
+            24213 => new WeatheredCopperLanternBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

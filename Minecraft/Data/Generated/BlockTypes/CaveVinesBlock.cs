@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBlock, IAged, IBerried {
-    private static readonly BlockInfo Data = new("minecraft:cave_vines", "block.minecraft.cave_vines", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:glow_berries", BlockInfo.VanillaOnly, "minecraft:blocks/cave_vines");
-    private static readonly BlockStateInfo I0 = new(0f, 14, 0, PushReaction.Destroy, 7, "cave_vines", NoteBlockInstrument.Harp, true, false, false, false, true, false, false, false, false, false, false, true, false, false, true, true, false, true, [], null, BlockShapes.S401, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.cave_vines", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:glow_berries", BlockInfo.VanillaOnly, "minecraft:blocks/cave_vines");
+    private static readonly BlockStateInfo I0 = new(0f, 14, 0, PushReaction.Popped, 7, "cave_vines", NoteBlockInstrument.Harp, true, false, false, true, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S401, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0 };
     private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = false };
     private static readonly BlockStateInfo I3 = I0 with { LightEmission = 0, RandomlyTicking = false };
@@ -20,15 +20,15 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
         I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 30249];
+    public BlockStateInfo StateInfo => States[StateId - 33606];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -78,108 +78,108 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
         get {
             return Age switch {
                 0 => Berries switch {
-                    true => 30249,
-                    false => 30250,
+                    true => 33606,
+                    false => 33607,
                 },
                 1 => Berries switch {
-                    true => 30251,
-                    false => 30252,
+                    true => 33608,
+                    false => 33609,
                 },
                 2 => Berries switch {
-                    true => 30253,
-                    false => 30254,
+                    true => 33610,
+                    false => 33611,
                 },
                 3 => Berries switch {
-                    true => 30255,
-                    false => 30256,
+                    true => 33612,
+                    false => 33613,
                 },
                 4 => Berries switch {
-                    true => 30257,
-                    false => 30258,
+                    true => 33614,
+                    false => 33615,
                 },
                 5 => Berries switch {
-                    true => 30259,
-                    false => 30260,
+                    true => 33616,
+                    false => 33617,
                 },
                 6 => Berries switch {
-                    true => 30261,
-                    false => 30262,
+                    true => 33618,
+                    false => 33619,
                 },
                 7 => Berries switch {
-                    true => 30263,
-                    false => 30264,
+                    true => 33620,
+                    false => 33621,
                 },
                 8 => Berries switch {
-                    true => 30265,
-                    false => 30266,
+                    true => 33622,
+                    false => 33623,
                 },
                 9 => Berries switch {
-                    true => 30267,
-                    false => 30268,
+                    true => 33624,
+                    false => 33625,
                 },
                 10 => Berries switch {
-                    true => 30269,
-                    false => 30270,
+                    true => 33626,
+                    false => 33627,
                 },
                 11 => Berries switch {
-                    true => 30271,
-                    false => 30272,
+                    true => 33628,
+                    false => 33629,
                 },
                 12 => Berries switch {
-                    true => 30273,
-                    false => 30274,
+                    true => 33630,
+                    false => 33631,
                 },
                 13 => Berries switch {
-                    true => 30275,
-                    false => 30276,
+                    true => 33632,
+                    false => 33633,
                 },
                 14 => Berries switch {
-                    true => 30277,
-                    false => 30278,
+                    true => 33634,
+                    false => 33635,
                 },
                 15 => Berries switch {
-                    true => 30279,
-                    false => 30280,
+                    true => 33636,
+                    false => 33637,
                 },
                 16 => Berries switch {
-                    true => 30281,
-                    false => 30282,
+                    true => 33638,
+                    false => 33639,
                 },
                 17 => Berries switch {
-                    true => 30283,
-                    false => 30284,
+                    true => 33640,
+                    false => 33641,
                 },
                 18 => Berries switch {
-                    true => 30285,
-                    false => 30286,
+                    true => 33642,
+                    false => 33643,
                 },
                 19 => Berries switch {
-                    true => 30287,
-                    false => 30288,
+                    true => 33644,
+                    false => 33645,
                 },
                 20 => Berries switch {
-                    true => 30289,
-                    false => 30290,
+                    true => 33646,
+                    false => 33647,
                 },
                 21 => Berries switch {
-                    true => 30291,
-                    false => 30292,
+                    true => 33648,
+                    false => 33649,
                 },
                 22 => Berries switch {
-                    true => 30293,
-                    false => 30294,
+                    true => 33650,
+                    false => 33651,
                 },
                 23 => Berries switch {
-                    true => 30295,
-                    false => 30296,
+                    true => 33652,
+                    false => 33653,
                 },
                 24 => Berries switch {
-                    true => 30297,
-                    false => 30298,
+                    true => 33654,
+                    false => 33655,
                 },
                 25 => Berries switch {
-                    true => 30299,
-                    false => 30300,
+                    true => 33656,
+                    false => 33657,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
@@ -188,58 +188,58 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
     
     public IBlock WithState(uint state) {
         return state switch {
-            30249 => new CaveVinesBlock(Identifier, 0, true),
-            30250 => new CaveVinesBlock(Identifier, 0, false),
-            30251 => new CaveVinesBlock(Identifier, 1, true),
-            30252 => new CaveVinesBlock(Identifier, 1, false),
-            30253 => new CaveVinesBlock(Identifier, 2, true),
-            30254 => new CaveVinesBlock(Identifier, 2, false),
-            30255 => new CaveVinesBlock(Identifier, 3, true),
-            30256 => new CaveVinesBlock(Identifier, 3, false),
-            30257 => new CaveVinesBlock(Identifier, 4, true),
-            30258 => new CaveVinesBlock(Identifier, 4, false),
-            30259 => new CaveVinesBlock(Identifier, 5, true),
-            30260 => new CaveVinesBlock(Identifier, 5, false),
-            30261 => new CaveVinesBlock(Identifier, 6, true),
-            30262 => new CaveVinesBlock(Identifier, 6, false),
-            30263 => new CaveVinesBlock(Identifier, 7, true),
-            30264 => new CaveVinesBlock(Identifier, 7, false),
-            30265 => new CaveVinesBlock(Identifier, 8, true),
-            30266 => new CaveVinesBlock(Identifier, 8, false),
-            30267 => new CaveVinesBlock(Identifier, 9, true),
-            30268 => new CaveVinesBlock(Identifier, 9, false),
-            30269 => new CaveVinesBlock(Identifier, 10, true),
-            30270 => new CaveVinesBlock(Identifier, 10, false),
-            30271 => new CaveVinesBlock(Identifier, 11, true),
-            30272 => new CaveVinesBlock(Identifier, 11, false),
-            30273 => new CaveVinesBlock(Identifier, 12, true),
-            30274 => new CaveVinesBlock(Identifier, 12, false),
-            30275 => new CaveVinesBlock(Identifier, 13, true),
-            30276 => new CaveVinesBlock(Identifier, 13, false),
-            30277 => new CaveVinesBlock(Identifier, 14, true),
-            30278 => new CaveVinesBlock(Identifier, 14, false),
-            30279 => new CaveVinesBlock(Identifier, 15, true),
-            30280 => new CaveVinesBlock(Identifier, 15, false),
-            30281 => new CaveVinesBlock(Identifier, 16, true),
-            30282 => new CaveVinesBlock(Identifier, 16, false),
-            30283 => new CaveVinesBlock(Identifier, 17, true),
-            30284 => new CaveVinesBlock(Identifier, 17, false),
-            30285 => new CaveVinesBlock(Identifier, 18, true),
-            30286 => new CaveVinesBlock(Identifier, 18, false),
-            30287 => new CaveVinesBlock(Identifier, 19, true),
-            30288 => new CaveVinesBlock(Identifier, 19, false),
-            30289 => new CaveVinesBlock(Identifier, 20, true),
-            30290 => new CaveVinesBlock(Identifier, 20, false),
-            30291 => new CaveVinesBlock(Identifier, 21, true),
-            30292 => new CaveVinesBlock(Identifier, 21, false),
-            30293 => new CaveVinesBlock(Identifier, 22, true),
-            30294 => new CaveVinesBlock(Identifier, 22, false),
-            30295 => new CaveVinesBlock(Identifier, 23, true),
-            30296 => new CaveVinesBlock(Identifier, 23, false),
-            30297 => new CaveVinesBlock(Identifier, 24, true),
-            30298 => new CaveVinesBlock(Identifier, 24, false),
-            30299 => new CaveVinesBlock(Identifier, 25, true),
-            30300 => new CaveVinesBlock(Identifier, 25, false),
+            33606 => new CaveVinesBlock(Identifier, 0, true),
+            33607 => new CaveVinesBlock(Identifier, 0, false),
+            33608 => new CaveVinesBlock(Identifier, 1, true),
+            33609 => new CaveVinesBlock(Identifier, 1, false),
+            33610 => new CaveVinesBlock(Identifier, 2, true),
+            33611 => new CaveVinesBlock(Identifier, 2, false),
+            33612 => new CaveVinesBlock(Identifier, 3, true),
+            33613 => new CaveVinesBlock(Identifier, 3, false),
+            33614 => new CaveVinesBlock(Identifier, 4, true),
+            33615 => new CaveVinesBlock(Identifier, 4, false),
+            33616 => new CaveVinesBlock(Identifier, 5, true),
+            33617 => new CaveVinesBlock(Identifier, 5, false),
+            33618 => new CaveVinesBlock(Identifier, 6, true),
+            33619 => new CaveVinesBlock(Identifier, 6, false),
+            33620 => new CaveVinesBlock(Identifier, 7, true),
+            33621 => new CaveVinesBlock(Identifier, 7, false),
+            33622 => new CaveVinesBlock(Identifier, 8, true),
+            33623 => new CaveVinesBlock(Identifier, 8, false),
+            33624 => new CaveVinesBlock(Identifier, 9, true),
+            33625 => new CaveVinesBlock(Identifier, 9, false),
+            33626 => new CaveVinesBlock(Identifier, 10, true),
+            33627 => new CaveVinesBlock(Identifier, 10, false),
+            33628 => new CaveVinesBlock(Identifier, 11, true),
+            33629 => new CaveVinesBlock(Identifier, 11, false),
+            33630 => new CaveVinesBlock(Identifier, 12, true),
+            33631 => new CaveVinesBlock(Identifier, 12, false),
+            33632 => new CaveVinesBlock(Identifier, 13, true),
+            33633 => new CaveVinesBlock(Identifier, 13, false),
+            33634 => new CaveVinesBlock(Identifier, 14, true),
+            33635 => new CaveVinesBlock(Identifier, 14, false),
+            33636 => new CaveVinesBlock(Identifier, 15, true),
+            33637 => new CaveVinesBlock(Identifier, 15, false),
+            33638 => new CaveVinesBlock(Identifier, 16, true),
+            33639 => new CaveVinesBlock(Identifier, 16, false),
+            33640 => new CaveVinesBlock(Identifier, 17, true),
+            33641 => new CaveVinesBlock(Identifier, 17, false),
+            33642 => new CaveVinesBlock(Identifier, 18, true),
+            33643 => new CaveVinesBlock(Identifier, 18, false),
+            33644 => new CaveVinesBlock(Identifier, 19, true),
+            33645 => new CaveVinesBlock(Identifier, 19, false),
+            33646 => new CaveVinesBlock(Identifier, 20, true),
+            33647 => new CaveVinesBlock(Identifier, 20, false),
+            33648 => new CaveVinesBlock(Identifier, 21, true),
+            33649 => new CaveVinesBlock(Identifier, 21, false),
+            33650 => new CaveVinesBlock(Identifier, 22, true),
+            33651 => new CaveVinesBlock(Identifier, 22, false),
+            33652 => new CaveVinesBlock(Identifier, 23, true),
+            33653 => new CaveVinesBlock(Identifier, 23, false),
+            33654 => new CaveVinesBlock(Identifier, 24, true),
+            33655 => new CaveVinesBlock(Identifier, 24, false),
+            33656 => new CaveVinesBlock(Identifier, 25, true),
+            33657 => new CaveVinesBlock(Identifier, 25, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

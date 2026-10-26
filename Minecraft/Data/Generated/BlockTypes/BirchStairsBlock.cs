@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BirchStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.birch_stairs", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:birch_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/birch_stairs");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 2, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.birch_stairs", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:birch_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/birch_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 2, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record BirchStairsBlock(Identifier Identifier, Direction Facing, TopBotto
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 9808];
+    public BlockStateInfo StateInfo => States[StateId - 11550];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record BirchStairsBlock(Identifier Identifier, Direction Facing, TopBotto
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record BirchStairsBlock(Identifier Identifier, Direction Facing, TopBotto
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record BirchStairsBlock(Identifier Identifier, Direction Facing, TopBotto
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9808,
-                            false => 9809,
+                            true => 11550,
+                            false => 11551,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9810,
-                            false => 9811,
+                            true => 11552,
+                            false => 11553,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9812,
-                            false => 9813,
+                            true => 11554,
+                            false => 11555,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9814,
-                            false => 9815,
+                            true => 11556,
+                            false => 11557,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9816,
-                            false => 9817,
+                            true => 11558,
+                            false => 11559,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9818,
-                            false => 9819,
+                            true => 11560,
+                            false => 11561,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9820,
-                            false => 9821,
+                            true => 11562,
+                            false => 11563,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9822,
-                            false => 9823,
+                            true => 11564,
+                            false => 11565,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9824,
-                            false => 9825,
+                            true => 11566,
+                            false => 11567,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9826,
-                            false => 9827,
+                            true => 11568,
+                            false => 11569,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record BirchStairsBlock(Identifier Identifier, Direction Facing, TopBotto
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9828,
-                            false => 9829,
+                            true => 11570,
+                            false => 11571,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9830,
-                            false => 9831,
+                            true => 11572,
+                            false => 11573,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9832,
-                            false => 9833,
+                            true => 11574,
+                            false => 11575,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9834,
-                            false => 9835,
+                            true => 11576,
+                            false => 11577,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9836,
-                            false => 9837,
+                            true => 11578,
+                            false => 11579,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9838,
-                            false => 9839,
+                            true => 11580,
+                            false => 11581,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9840,
-                            false => 9841,
+                            true => 11582,
+                            false => 11583,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9842,
-                            false => 9843,
+                            true => 11584,
+                            false => 11585,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9844,
-                            false => 9845,
+                            true => 11586,
+                            false => 11587,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9846,
-                            false => 9847,
+                            true => 11588,
+                            false => 11589,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record BirchStairsBlock(Identifier Identifier, Direction Facing, TopBotto
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9848,
-                            false => 9849,
+                            true => 11590,
+                            false => 11591,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9850,
-                            false => 9851,
+                            true => 11592,
+                            false => 11593,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9852,
-                            false => 9853,
+                            true => 11594,
+                            false => 11595,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9854,
-                            false => 9855,
+                            true => 11596,
+                            false => 11597,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9856,
-                            false => 9857,
+                            true => 11598,
+                            false => 11599,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9858,
-                            false => 9859,
+                            true => 11600,
+                            false => 11601,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9860,
-                            false => 9861,
+                            true => 11602,
+                            false => 11603,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9862,
-                            false => 9863,
+                            true => 11604,
+                            false => 11605,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9864,
-                            false => 9865,
+                            true => 11606,
+                            false => 11607,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9866,
-                            false => 9867,
+                            true => 11608,
+                            false => 11609,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record BirchStairsBlock(Identifier Identifier, Direction Facing, TopBotto
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9868,
-                            false => 9869,
+                            true => 11610,
+                            false => 11611,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9870,
-                            false => 9871,
+                            true => 11612,
+                            false => 11613,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9872,
-                            false => 9873,
+                            true => 11614,
+                            false => 11615,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9874,
-                            false => 9875,
+                            true => 11616,
+                            false => 11617,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9876,
-                            false => 9877,
+                            true => 11618,
+                            false => 11619,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 9878,
-                            false => 9879,
+                            true => 11620,
+                            false => 11621,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 9880,
-                            false => 9881,
+                            true => 11622,
+                            false => 11623,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 9882,
-                            false => 9883,
+                            true => 11624,
+                            false => 11625,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 9884,
-                            false => 9885,
+                            true => 11626,
+                            false => 11627,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 9886,
-                            false => 9887,
+                            true => 11628,
+                            false => 11629,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record BirchStairsBlock(Identifier Identifier, Direction Facing, TopBotto
     
     public IBlock WithState(uint state) {
         return state switch {
-            9808 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            9809 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            9810 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            9811 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            9812 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            9813 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            9814 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            9815 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            9816 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            9817 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            9818 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            9819 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            9820 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            9821 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            9822 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            9823 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            9824 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            9825 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            9826 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            9827 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            9828 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            9829 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            9830 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            9831 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            9832 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            9833 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            9834 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            9835 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            9836 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            9837 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            9838 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            9839 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            9840 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            9841 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            9842 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            9843 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            9844 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            9845 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            9846 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            9847 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            9848 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            9849 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            9850 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            9851 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            9852 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            9853 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            9854 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            9855 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            9856 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            9857 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            9858 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            9859 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            9860 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            9861 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            9862 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            9863 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            9864 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            9865 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            9866 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            9867 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            9868 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            9869 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            9870 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            9871 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            9872 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            9873 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            9874 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            9875 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            9876 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            9877 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            9878 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            9879 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            9880 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            9881 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            9882 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            9883 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            9884 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            9885 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            9886 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            9887 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            11550 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            11551 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            11552 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            11553 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            11554 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            11555 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            11556 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            11557 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            11558 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            11559 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            11560 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            11561 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            11562 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            11563 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            11564 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            11565 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            11566 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            11567 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            11568 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            11569 => new BirchStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            11570 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            11571 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            11572 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            11573 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            11574 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            11575 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            11576 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            11577 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            11578 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            11579 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            11580 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            11581 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            11582 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            11583 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            11584 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            11585 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            11586 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            11587 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            11588 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            11589 => new BirchStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            11590 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            11591 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            11592 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            11593 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            11594 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            11595 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            11596 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            11597 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            11598 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            11599 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            11600 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            11601 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            11602 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            11603 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            11604 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            11605 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            11606 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            11607 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            11608 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            11609 => new BirchStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            11610 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            11611 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            11612 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            11613 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            11614 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            11615 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            11616 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            11617 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            11618 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            11619 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            11620 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            11621 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            11622 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            11623 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            11624 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            11625 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            11626 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            11627 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            11628 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            11629 => new BirchStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

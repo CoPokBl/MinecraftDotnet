@@ -118,8 +118,6 @@ public class ClientRideableMob(MinecraftClient client) : ClientVehicle(client), 
         TickHurtAndDeath();
         AiStep();
         TickBodyRotation();
-        AttackAnimO = AttackAnim;
-        UpdateSwingTime();
         AfterControlledTick();
     }
 
@@ -136,7 +134,6 @@ public class ClientRideableMob(MinecraftClient client) : ClientVehicle(client), 
         if (_noJumpDelay > 0) {
             _noJumpDelay--;
         }
-        StepInterpolation();
 
         Vec3d movement = DeltaMovement;
         double dx = Math.Abs(movement.X) < 0.003 ? 0.0 : movement.X;
@@ -172,12 +169,6 @@ public class ClientRideableMob(MinecraftClient client) : ClientVehicle(client), 
 
     /// <summary><c>LivingEntity.getRiddenSpeed</c>.</summary>
     protected virtual float RiddenSpeed(LocalPlayer controller) => Speed;
-
-    /// <summary><c>Entity.setRot</c>.</summary>
-    protected void SetRot(float yRot, float xRot) {
-        YRot = yRot % 360.0F;
-        XRot = xRot % 360.0F;
-    }
 
     /// <summary><c>LivingEntity.travel</c>.</summary>
     protected virtual void Travel(Vec3d input) {

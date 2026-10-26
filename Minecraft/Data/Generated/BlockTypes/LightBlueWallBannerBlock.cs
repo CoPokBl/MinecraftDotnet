@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record LightBlueWallBannerBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
-    private static readonly BlockInfo Data = new("minecraft:wall_banner", "block.minecraft.light_blue_banner", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:banner", "minecraft:light_blue_banner", BlockInfo.VanillaOnly, "minecraft:blocks/light_blue_banner");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S388, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockInfo Data = new("block.minecraft.light_blue_banner", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:banner", "minecraft:light_blue_banner", BlockInfo.VanillaOnly, "minecraft:blocks/light_blue_banner");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S388, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S389 };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S390 };
     private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S391 };
@@ -20,15 +20,15 @@ public record LightBlueWallBannerBlock(Identifier Identifier, Direction Facing) 
         I0, I1, I2, I3
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 13195];
+    public BlockStateInfo StateInfo => States[StateId - 15042];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -42,7 +42,6 @@ public record LightBlueWallBannerBlock(Identifier Identifier, Direction Facing) 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -62,6 +61,7 @@ public record LightBlueWallBannerBlock(Identifier Identifier, Direction Facing) 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -75,10 +75,10 @@ public record LightBlueWallBannerBlock(Identifier Identifier, Direction Facing) 
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 13195,
-                Direction.South => 13196,
-                Direction.West => 13197,
-                Direction.East => 13198,
+                Direction.North => 15042,
+                Direction.South => 15043,
+                Direction.West => 15044,
+                Direction.East => 15045,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -86,10 +86,10 @@ public record LightBlueWallBannerBlock(Identifier Identifier, Direction Facing) 
     
     public IBlock WithState(uint state) {
         return state switch {
-            13195 => new LightBlueWallBannerBlock(Identifier, Direction.North),
-            13196 => new LightBlueWallBannerBlock(Identifier, Direction.South),
-            13197 => new LightBlueWallBannerBlock(Identifier, Direction.West),
-            13198 => new LightBlueWallBannerBlock(Identifier, Direction.East),
+            15042 => new LightBlueWallBannerBlock(Identifier, Direction.North),
+            15043 => new LightBlueWallBannerBlock(Identifier, Direction.South),
+            15044 => new LightBlueWallBannerBlock(Identifier, Direction.West),
+            15045 => new LightBlueWallBannerBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

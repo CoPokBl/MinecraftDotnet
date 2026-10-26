@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record NetherBrickFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
-    private static readonly BlockInfo Data = new("minecraft:fence", "block.minecraft.nether_brick_fence", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:nether_brick_fence", BlockInfo.VanillaOnly, "minecraft:blocks/nether_brick_fence");
-    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Normal, 35, "nether_bricks", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockInfo Data = new("block.minecraft.nether_brick_fence", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:nether_brick_fence", BlockInfo.VanillaOnly, "minecraft:blocks/nether_brick_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 35, "nether_bricks", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
     private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
     private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
@@ -48,15 +48,15 @@ public record NetherBrickFenceBlock(Identifier Identifier, bool East, bool North
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 9335];
+    public BlockStateInfo StateInfo => States[StateId - 11069];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -70,7 +70,6 @@ public record NetherBrickFenceBlock(Identifier Identifier, bool East, bool North
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -90,6 +89,7 @@ public record NetherBrickFenceBlock(Identifier Identifier, bool East, bool North
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -125,44 +125,44 @@ public record NetherBrickFenceBlock(Identifier Identifier, bool East, bool North
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 9335,
-                                false => 9336,
+                                true => 11069,
+                                false => 11070,
                             },
                             false => West switch {
-                                true => 9337,
-                                false => 9338,
+                                true => 11071,
+                                false => 11072,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 9339,
-                                false => 9340,
+                                true => 11073,
+                                false => 11074,
                             },
                             false => West switch {
-                                true => 9341,
-                                false => 9342,
+                                true => 11075,
+                                false => 11076,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 9343,
-                                false => 9344,
+                                true => 11077,
+                                false => 11078,
                             },
                             false => West switch {
-                                true => 9345,
-                                false => 9346,
+                                true => 11079,
+                                false => 11080,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 9347,
-                                false => 9348,
+                                true => 11081,
+                                false => 11082,
                             },
                             false => West switch {
-                                true => 9349,
-                                false => 9350,
+                                true => 11083,
+                                false => 11084,
                             },
                         },
                     },
@@ -171,44 +171,44 @@ public record NetherBrickFenceBlock(Identifier Identifier, bool East, bool North
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 9351,
-                                false => 9352,
+                                true => 11085,
+                                false => 11086,
                             },
                             false => West switch {
-                                true => 9353,
-                                false => 9354,
+                                true => 11087,
+                                false => 11088,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 9355,
-                                false => 9356,
+                                true => 11089,
+                                false => 11090,
                             },
                             false => West switch {
-                                true => 9357,
-                                false => 9358,
+                                true => 11091,
+                                false => 11092,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 9359,
-                                false => 9360,
+                                true => 11093,
+                                false => 11094,
                             },
                             false => West switch {
-                                true => 9361,
-                                false => 9362,
+                                true => 11095,
+                                false => 11096,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 9363,
-                                false => 9364,
+                                true => 11097,
+                                false => 11098,
                             },
                             false => West switch {
-                                true => 9365,
-                                false => 9366,
+                                true => 11099,
+                                false => 11100,
                             },
                         },
                     },
@@ -219,38 +219,38 @@ public record NetherBrickFenceBlock(Identifier Identifier, bool East, bool North
     
     public IBlock WithState(uint state) {
         return state switch {
-            9335 => new NetherBrickFenceBlock(Identifier, true, true, true, true, true),
-            9336 => new NetherBrickFenceBlock(Identifier, true, true, true, true, false),
-            9337 => new NetherBrickFenceBlock(Identifier, true, true, true, false, true),
-            9338 => new NetherBrickFenceBlock(Identifier, true, true, true, false, false),
-            9339 => new NetherBrickFenceBlock(Identifier, true, true, false, true, true),
-            9340 => new NetherBrickFenceBlock(Identifier, true, true, false, true, false),
-            9341 => new NetherBrickFenceBlock(Identifier, true, true, false, false, true),
-            9342 => new NetherBrickFenceBlock(Identifier, true, true, false, false, false),
-            9343 => new NetherBrickFenceBlock(Identifier, true, false, true, true, true),
-            9344 => new NetherBrickFenceBlock(Identifier, true, false, true, true, false),
-            9345 => new NetherBrickFenceBlock(Identifier, true, false, true, false, true),
-            9346 => new NetherBrickFenceBlock(Identifier, true, false, true, false, false),
-            9347 => new NetherBrickFenceBlock(Identifier, true, false, false, true, true),
-            9348 => new NetherBrickFenceBlock(Identifier, true, false, false, true, false),
-            9349 => new NetherBrickFenceBlock(Identifier, true, false, false, false, true),
-            9350 => new NetherBrickFenceBlock(Identifier, true, false, false, false, false),
-            9351 => new NetherBrickFenceBlock(Identifier, false, true, true, true, true),
-            9352 => new NetherBrickFenceBlock(Identifier, false, true, true, true, false),
-            9353 => new NetherBrickFenceBlock(Identifier, false, true, true, false, true),
-            9354 => new NetherBrickFenceBlock(Identifier, false, true, true, false, false),
-            9355 => new NetherBrickFenceBlock(Identifier, false, true, false, true, true),
-            9356 => new NetherBrickFenceBlock(Identifier, false, true, false, true, false),
-            9357 => new NetherBrickFenceBlock(Identifier, false, true, false, false, true),
-            9358 => new NetherBrickFenceBlock(Identifier, false, true, false, false, false),
-            9359 => new NetherBrickFenceBlock(Identifier, false, false, true, true, true),
-            9360 => new NetherBrickFenceBlock(Identifier, false, false, true, true, false),
-            9361 => new NetherBrickFenceBlock(Identifier, false, false, true, false, true),
-            9362 => new NetherBrickFenceBlock(Identifier, false, false, true, false, false),
-            9363 => new NetherBrickFenceBlock(Identifier, false, false, false, true, true),
-            9364 => new NetherBrickFenceBlock(Identifier, false, false, false, true, false),
-            9365 => new NetherBrickFenceBlock(Identifier, false, false, false, false, true),
-            9366 => new NetherBrickFenceBlock(Identifier, false, false, false, false, false),
+            11069 => new NetherBrickFenceBlock(Identifier, true, true, true, true, true),
+            11070 => new NetherBrickFenceBlock(Identifier, true, true, true, true, false),
+            11071 => new NetherBrickFenceBlock(Identifier, true, true, true, false, true),
+            11072 => new NetherBrickFenceBlock(Identifier, true, true, true, false, false),
+            11073 => new NetherBrickFenceBlock(Identifier, true, true, false, true, true),
+            11074 => new NetherBrickFenceBlock(Identifier, true, true, false, true, false),
+            11075 => new NetherBrickFenceBlock(Identifier, true, true, false, false, true),
+            11076 => new NetherBrickFenceBlock(Identifier, true, true, false, false, false),
+            11077 => new NetherBrickFenceBlock(Identifier, true, false, true, true, true),
+            11078 => new NetherBrickFenceBlock(Identifier, true, false, true, true, false),
+            11079 => new NetherBrickFenceBlock(Identifier, true, false, true, false, true),
+            11080 => new NetherBrickFenceBlock(Identifier, true, false, true, false, false),
+            11081 => new NetherBrickFenceBlock(Identifier, true, false, false, true, true),
+            11082 => new NetherBrickFenceBlock(Identifier, true, false, false, true, false),
+            11083 => new NetherBrickFenceBlock(Identifier, true, false, false, false, true),
+            11084 => new NetherBrickFenceBlock(Identifier, true, false, false, false, false),
+            11085 => new NetherBrickFenceBlock(Identifier, false, true, true, true, true),
+            11086 => new NetherBrickFenceBlock(Identifier, false, true, true, true, false),
+            11087 => new NetherBrickFenceBlock(Identifier, false, true, true, false, true),
+            11088 => new NetherBrickFenceBlock(Identifier, false, true, true, false, false),
+            11089 => new NetherBrickFenceBlock(Identifier, false, true, false, true, true),
+            11090 => new NetherBrickFenceBlock(Identifier, false, true, false, true, false),
+            11091 => new NetherBrickFenceBlock(Identifier, false, true, false, false, true),
+            11092 => new NetherBrickFenceBlock(Identifier, false, true, false, false, false),
+            11093 => new NetherBrickFenceBlock(Identifier, false, false, true, true, true),
+            11094 => new NetherBrickFenceBlock(Identifier, false, false, true, true, false),
+            11095 => new NetherBrickFenceBlock(Identifier, false, false, true, false, true),
+            11096 => new NetherBrickFenceBlock(Identifier, false, false, true, false, false),
+            11097 => new NetherBrickFenceBlock(Identifier, false, false, false, true, true),
+            11098 => new NetherBrickFenceBlock(Identifier, false, false, false, true, false),
+            11099 => new NetherBrickFenceBlock(Identifier, false, false, false, false, true),
+            11100 => new NetherBrickFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -57,7 +57,8 @@ public sealed class EquipmentLayerRenderer {
                     colors.Add(unchecked((uint)color));
                 }
             }
-            RenderTrimmed(textures, colors, TrimSpriteId(trim, layerType, equipmentAssetId), trim.Pattern.Decal, renderFoil, model, state, pose, context);
+            (Identifier baseTexture, Identifier? paletteId) = TrimTexture(trim, layerType, GetAsset(equipmentAssetId));
+            RenderTrimmed(textures, colors, baseTexture, paletteId, trim.Pattern.Decal, renderFoil, model, state, pose, context);
             return;
         }
         bool modelPosed = false;
@@ -86,27 +87,39 @@ public sealed class EquipmentLayerRenderer {
         }
     }
 
-    /// <summary><c>TrimSpriteKey.spriteId</c>, through <c>ArmorTrim.layerAssetId</c>.</summary>
-    private static Identifier TrimSpriteId(TrimComponent.Data trim, EquipmentClientInfo.LayerType layerType, Identifier equipmentAssetId) {
-        string suffix = trim.Material.OverrideArmorAssets.TryGetValue(equipmentAssetId, out string? asset) ? asset : trim.Material.AssetName;
-        Identifier pattern = trim.Pattern.AssetId;
-        return new Identifier(pattern.Namespace, $"{EquipmentClientInfo.TrimAssetPrefix(layerType)}/{pattern.Key}_{suffix}");
+    /// <summary>
+    /// <c>TrimTextureKey.getOrPrepareTexture</c>'s choice: the pattern's texture under the layer type's prefix and
+    /// the material's palette, unless an override of the equipment asset matches. An override with no palette
+    /// draws the texture as it is.
+    /// </summary>
+    private static (Identifier BaseTexture, Identifier? PaletteId) TrimTexture(TrimComponent.Data trim, EquipmentClientInfo.LayerType layerType,
+        EquipmentClientInfo equipmentInfo) {
+        Identifier textureId = trim.Pattern.AssetId;
+        Identifier? paletteId = trim.Material.PaletteId;
+        foreach (EquipmentClientInfo.TrimOverride trimOverride in equipmentInfo.TrimOverrides) {
+            if (trimOverride.Matches(trim)) {
+                textureId = trimOverride.Texture ?? textureId;
+                paletteId = trimOverride.Palette;
+                break;
+            }
+        }
+        return (new Identifier(textureId.Namespace, $"{EquipmentClientInfo.TrimAssetPrefix(layerType)}/{textureId.Key}"), paletteId);
     }
 
     /// <summary>
-    /// The layers and then the trim sprite from the <c>armor_trims</c> atlas, as one texture drawn once: vanilla
+    /// The layers and then the trim's paletted texture, as one texture drawn once: vanilla
     /// draws each as the same model again and the later wins its depth test, which a coplanar redraw here
     /// would lose. Each is <c>armorCutoutNoCull</c>, so a texel under alpha 0.1 leaves what is beneath; a decal
-    /// pattern tests for equal depth, so it only covers texels a layer drew. A trim sprite the atlas lacks is
-    /// the missing checks over the whole model, as vanilla's atlas answers.
+    /// pattern tests for equal depth, so it only covers texels a layer drew. A trim texture the packs lack is
+    /// the missing checks over the whole model, as <c>PalettedTextureManager</c>'s missing handle draws.
     /// </summary>
-    private void RenderTrimmed<S>(List<string> textures, List<uint> colors, Identifier trimSprite, bool decal, bool renderFoil, EntityModel<S> model, S state,
-        PoseStack pose, EntityRenderContext context) where S : EntityRenderState {
+    private void RenderTrimmed<S>(List<string> textures, List<uint> colors, Identifier trimTexture, Identifier? paletteId, bool decal, bool renderFoil,
+        EntityModel<S> model, S state, PoseStack pose, EntityRenderContext context) where S : EntityRenderState {
         System.Text.StringBuilder key = new("trimmed:");
         for (int i = 0; i < textures.Count; i++) {
             key.Append(textures[i]).Append('#').Append(colors[i].ToString("X8")).Append('|');
         }
-        key.Append(trimSprite).Append(decal ? "|decal" : "");
+        key.Append(trimTexture).Append('@').Append(paletteId?.ToString() ?? "none").Append(decal ? "|decal" : "");
         EntityTextures entityTextures = context.Textures;
         EntityTexture? texture = entityTextures.Get(key.ToString(), () => {
             List<(TextureImage Image, uint Color)> layers = [];
@@ -115,7 +128,10 @@ public sealed class EquipmentLayerRenderer {
                     layers.Add((image, colors[i]));
                 }
             }
-            TextureImage trim = _pack.AtlasPermutation("armor_trims", trimSprite) ?? EntityTextures.MissingImage();
+            TextureImage? trimImage = paletteId is { } palette
+                ? _pack.PalettedTexture(trimTexture, palette)
+                : entityTextures.LoadIdentifier($"{trimTexture.Namespace}:textures/{trimTexture.Key}.png");
+            TextureImage trim = trimImage ?? EntityTextures.MissingImage();
             return ComposeTrimmed(layers, trim, decal);
         });
         if (texture == null) {

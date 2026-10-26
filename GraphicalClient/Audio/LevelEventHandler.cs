@@ -61,15 +61,14 @@ public sealed class LevelEventHandler(ClientSounds sounds, ClientLevel level, Fu
         [1050] = (SoundType.CrafterFail, SoundCategory.Blocks, 1.0F, Even, false),
         [1051] = (SoundType.WindChargeThrow, SoundCategory.Blocks, 0.5F, random => 0.4F / (random.NextFloat() * 0.4F + 0.8F), false),
         [1052] = (SoundType.SulfurSpikeLand, SoundCategory.Blocks, 2.0F, Slight, false),
+        [1053] = (SoundType.SplashPotionBreak, SoundCategory.Neutral, 1.0F, Slight, false),
+        [1054] = (SoundType.SplashPotionBreak, SoundCategory.Neutral, 1.0F, Slight, false),
         [1501] = (SoundType.LavaExtinguish, SoundCategory.Blocks, 0.5F, Fizz, false),
         [1502] = (SoundType.RedstoneTorchBurnout, SoundCategory.Blocks, 0.5F, Fizz, false),
         [1503] = (SoundType.EndPortalFrameFill, SoundCategory.Blocks, 1.0F, Even, false),
         [1505] = (SoundType.BoneMealUse, SoundCategory.Blocks, 1.0F, Even, false),
-        [2002] = (SoundType.SplashPotionBreak, SoundCategory.Neutral, 1.0F, Slight, false),
-        [2007] = (SoundType.SplashPotionBreak, SoundCategory.Neutral, 1.0F, Slight, false),
         [3000] = (SoundType.EndGatewaySpawn, SoundCategory.Blocks, 10.0F, random => (1.0F + (random.NextFloat() - random.NextFloat()) * 0.2F) * 0.7F, false),
         [3001] = (SoundType.EnderDragonGrowl, SoundCategory.Hostile, 64.0F, random => 0.8F + random.NextFloat() * 0.3F, false),
-        [3003] = (SoundType.HoneycombWaxOn, SoundCategory.Blocks, 1.0F, Even, false),
         [3012] = (SoundType.TrialSpawnerSpawnMob, SoundCategory.Blocks, 1.0F, Varied, true),
         [3013] = (SoundType.TrialSpawnerDetectPlayer, SoundCategory.Blocks, 1.0F, Varied, true),
         [3014] = (SoundType.TrialSpawnerEjectItem, SoundCategory.Blocks, 1.0F, Varied, true),
@@ -143,6 +142,13 @@ public sealed class LevelEventHandler(ClientSounds sounds, ClientLevel level, Fu
                 if (StateById(data) is { Air: false } state) {
                     BlockSoundGroup soundType = BlockSoundGroups.Of(state);
                     sounds.PlayAtBlock(x, y, z, soundType.Break, SoundCategory.Blocks, (soundType.Volume + 1.0F) / 2.0F, soundType.Pitch * 0.8F);
+                }
+                break;
+            case 2020:
+                // ClientLevel.addBreakingBlockEffects' playBreakingSound, every fourth tick anyone digs, the player included.
+                if (level.GetBlock(x, y, z) is { Air: false } dug) {
+                    BlockSoundGroup soundType = BlockSoundGroups.Of(dug);
+                    sounds.PlayAtBlock(x, y, z, soundType.Hit, SoundCategory.Blocks, (soundType.Volume + 1.0F) / 8.0F, soundType.Pitch * 0.5F);
                 }
                 break;
             case 2006:

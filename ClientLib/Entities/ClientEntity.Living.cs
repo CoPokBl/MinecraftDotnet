@@ -66,14 +66,13 @@ public partial class ClientEntity {
     /// <summary><c>Entity.invulnerableTime</c> as the client keeps it: 20 after a hit, 10 after the local player heals.</summary>
     public int InvulnerableTime { get; set; }
 
-    /// <summary><c>LivingEntity.swinging</c>, <c>swingTime</c> and <c>swingingArm</c>.</summary>
-    public bool Swinging { get; private set; }
-    public int SwingTime { get; private set; }
-    public Hand SwingingArm { get; private set; } = Hand.MainHand;
+    /// <summary><c>LivingEntity.swingState</c>.</summary>
+    public SwingState SwingState { get; } = new();
 
-    /// <summary><c>LivingEntity.attackAnim</c>: how far through its swing, 0 to 1.</summary>
-    public float AttackAnim { get; private set; }
-    public float AttackAnimO { get; protected set; }
+    public bool IsSwinging => SwingState.IsSwinging;
+
+    /// <summary><c>LivingEntity.getCurrentSwing</c>.</summary>
+    public SwingState.Swing? CurrentSwing => SwingState.Current;
 
     /// <summary><c>LivingEntity.deathTime</c>: ticks since its health reached zero, which tips the body over.</summary>
     public int DeathTime { get; private set; }
@@ -131,61 +130,27 @@ public partial class ClientEntity {
     /// <summary><c>LivingEntity.DATA_HEALTH_ID</c>, or full health until the server says otherwise.</summary>
     public virtual float CurrentHealth => Get(EntityDataFields.LivingEntity.Health, 1.0F);
 
-    /// <summary><c>LivingEntity.swing</c>: a swing restarts only once the last is halfway through.</summary>
-    public void Swing(Hand hand) {
-        if (!Swinging || SwingTime >= CurrentSwingDuration() / 2 || SwingTime < 0) {
-            SwingTime = -1;
-            Swinging = true;
-            SwingingArm = hand;
-        }
-    }
-
-    /// <summary><c>LivingEntity.getCurrentSwingDuration</c>.</summary>
-    private int CurrentSwingDuration() {
-        int duration = ItemInHand(SwingingArm).Get(DataComponent.SwingAnimation).Duration;
-        MobEffectInstance? haste = GetEffect(PotionEffectType.Haste), conduit = GetEffect(PotionEffectType.ConduitPower);
-        if (haste != null || conduit != null) {
-            return duration - (1 + Math.Max(haste?.Amplifier ?? 0, conduit?.Amplifier ?? 0));
-        }
-        return GetEffect(PotionEffectType.MiningFatigue) is { } fatigue ? duration + (1 + fatigue.Amplifier) * 2 : duration;
-    }
-
     /// <summary>
-    /// <c>LivingEntity.updateSwingTime</c>. Only <c>Monster</c>, <c>Player</c> and <c>Mannequin</c> call it
-    /// from their <c>aiStep</c>, so any other mob's swing never moves its arms.
+    /// <c>LivingEntity.swing</c>: a swing restarts only once the last is past its first half. Nothing is
+    /// sent: an attack sends its own punch, and the server swings for every other use itself.
     /// </summary>
-    protected void UpdateSwingTime() {
-        if (!Is(EntityClass.Monster) && !Is(EntityClass.Player) && !Is(EntityClass.Mannequin)) {
-            return;
-        }
-        int duration = CurrentSwingDuration();
-        if (Swinging) {
-            SwingTime++;
-            if (SwingTime >= duration) {
-                SwingTime = 0;
-                Swinging = false;
-            }
-        }
-        else {
-            SwingTime = 0;
-        }
-        AttackAnim = (float)SwingTime / duration;
+    public bool Swing(Hand hand, SwingAnimation animation) {
+        return SwingState.StartIfAble(hand, animation, SwingState.ModifiedDuration(animation,
+            GetEffect(PotionEffectType.Haste)?.Amplifier, GetEffect(PotionEffectType.ConduitPower)?.Amplifier,
+            GetEffect(PotionEffectType.MiningFatigue)?.Amplifier));
     }
 
-    /// <summary><c>LivingEntity.getAttackAnim</c>.</summary>
-    public float GetAttackAnim(float partialTick) {
-        float diff = AttackAnim - AttackAnimO;
-        if (diff < 0.0F) {
-            diff++;
-        }
-        return AttackAnimO + diff * partialTick;
-    }
+    /// <summary><c>LivingEntity.getSwingAnimation</c>: how far through the current swing, 0 to 1.</summary>
+    public float GetSwingAnimation(float partialTick) => SwingState.GetAnimation(partialTick);
 
     /// <summary>
-    /// <c>LivingEntity.baseTick</c>'s hurt countdown, <c>tickDeath</c>'s death count and <c>tickEffects</c>;
-    /// the server removes a dead entity once the count reaches 20.
+    /// <c>LivingEntity.baseTick</c>'s swing and hurt countdown, <c>tickDeath</c>'s death count and
+    /// <c>tickEffects</c>; the server removes a dead entity once the count reaches 20.
     /// </summary>
     protected void TickHurtAndDeath() {
+        if (IsLiving) {
+            SwingState.Tick();
+        }
         if (HurtTime > 0) {
             HurtTime--;
         }
@@ -221,7 +186,7 @@ public partial class ClientEntity {
             float difference = Math.Abs(Wrap(YRot) - walkDirection);
             target = 95.0F < difference && difference < 265.0F ? walkDirection - 180.0F : walkDirection;
         }
-        if (AttackAnim > 0.0F) {
+        if (SwingState.Animation > 0.0F) {
             target = YRot;
         }
         YBodyRot += Wrap(target - YBodyRot) * 0.3F;
@@ -267,8 +232,8 @@ public partial class ClientEntity {
     /// <summary><c>Entity.onSyncedDataUpdated</c>, after the field at the index was set.</summary>
     public virtual void OnSyncedDataUpdated(int index) {
         // Display.onSyncedDataUpdated: the teleport duration is the number of steps a move is interpolated over.
-        if (index == EntityDataFields.Display.PosRotInterpolationDuration.Index && Is(EntityClass.Display)) {
-            InterpolationSteps = Get(EntityDataFields.Display.PosRotInterpolationDuration);
+        if (index == EntityDataFields.Display.PosRotInterpolationDuration.Index && Is(EntityClass.Display) && Interpolation is LinearInterpolationHandler linear) {
+            linear.SetInterpolationLength(Get(EntityDataFields.Display.PosRotInterpolationDuration));
         }
         // LivingEntity.setPosToBed.
         if (IsLiving && index == EntityDataFields.LivingEntity.SleepingPos.Index && SleepingPos is { } bed) {

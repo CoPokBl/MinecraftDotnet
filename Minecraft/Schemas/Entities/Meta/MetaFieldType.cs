@@ -53,5 +53,6 @@ public enum MetaFieldType {
     Vector3 = 39,
     Quaternion = 40,
     ResolvableProfile = 41,
-    HumanoidArm = 42
+    HumanoidArm = 42,
+    DyeColor = 43
 }

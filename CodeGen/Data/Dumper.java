@@ -21,12 +21,18 @@ import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.Bootstrap;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.ServerPacksSource;
+import net.minecraft.server.packs.resources.MultiPackResourceManager;
+import net.minecraft.tags.TagLoader;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -41,7 +47,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.EmptyBlockGetter;
@@ -58,6 +63,7 @@ import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -85,6 +91,13 @@ public final class Dumper {
 
         SharedConstants.tryDetectVersion();
         Bootstrap.bootStrap();
+
+        // Several state values are tag tests, suffocation and view blocking among them, and with the
+        // tags unbound every one of them reads false without complaint.
+        MultiPackResourceManager resources = new MultiPackResourceManager(
+                PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource().fullResources()));
+        TagLoader.loadTagsForExistingRegistries(resources, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY))
+                .forEach(Registry.PendingTags::apply);
 
         write(out.resolve("block.json"), blocks());
         write(out.resolve("entity_type.json"), entityTypes());
@@ -114,7 +127,7 @@ public final class Dumper {
     private static void reportUnknownMembers() {
         report("BlockBehaviour.Properties", declaredFieldNames(BlockBehaviour.Properties.class), Set.of(
                 // Dumped, either directly or through the state values below.
-                "bounceRestitution", "canOcclude", "descriptionId", "destroyTime", "explosionResistance",
+                "bounceRestitution", "fallDistanceReduction", "canOcclude", "descriptionId", "destroyTime", "explosionResistance",
                 "friction", "hasCollision", "id", "instrument", "isAir", "isRedstoneConductor",
                 "jumpFactor", "lightEmission", "liquid", "mapColor", "offsetFunction", "pushReaction",
                 "replaceable", "requiresCorrectToolForDrops", "soundType", "speedFactor",
@@ -129,7 +142,7 @@ public final class Dumper {
 
         report("BlockState", zeroArgMethodNames(BlockBehaviour.BlockStateBase.class), Set.of(
                 // Dumped.
-                "blocksMotion", "canBeReplaced", "canOcclude", "getLightDampening", "getLightEmission",
+                "canBeReplaced", "canOcclude", "getLightDampening", "getLightEmission",
                 "getOcclusionShape", "getPistonPushReaction", "getSoundType", "hasOffsetFunction",
                 "isAir", "isSignalSource", "isSolid", "liquid", "requiresCorrectToolForDrops",
                 "instrument", "isRandomlyTicking", "shouldSpawnTerrainParticles", "getFluidState",
@@ -206,6 +219,7 @@ public final class Dumper {
             json.put("speedFactor", block.getSpeedFactor());
             json.put("jumpFactor", block.getJumpFactor());
             json.put("bounceRestitution", block.getBounceRestitution());
+            json.put("fallDistanceReduction", block.getFallDistanceReduction());
             json.put("defaultStateId", Block.BLOCK_STATE_REGISTRY.getId(defaultState));
             json.put("gravity", block instanceof net.minecraft.world.level.block.FallingBlock);
             json.put("dynamicShape", getBoolean(Hidden.DYNAMIC_SHAPE, block));
@@ -301,6 +315,8 @@ public final class Dumper {
         return blocks;
     }
 
+    private static final AABB NOWHERE = new AABB(1000, 1000, 1000, 1000, 1000, 1000);
+
     /** Everything about a block that can vary between its states. */
     private static Obj state(Block block, BlockState blockState, Map<SoundType, String> soundNames) {
         Obj json = new Obj();
@@ -312,7 +328,6 @@ public final class Dumper {
         json.put("mapColorId", blockState.getMapColor(EmptyBlockGetter.INSTANCE, BlockPos.ZERO).id);
         json.put("occludes", blockState.canOcclude());
         json.put("requiresTool", blockState.requiresCorrectToolForDrops());
-        json.put("blocksMotion", blockState.blocksMotion());
         json.put("flammable", flammable(blockState));
         json.put("air", blockState.isAir());
         json.put("liquid", blockState.liquid());
@@ -324,7 +339,13 @@ public final class Dumper {
         json.put("randomlyTicking", blockState.isRandomlyTicking());
         json.put("instrument", blockState.instrument().name().toLowerCase(Locale.ROOT));
         json.put("suffocating", blockState.isSuffocating(EmptyBlockGetter.INSTANCE, BlockPos.ZERO));
-        json.put("viewBlocking", blockState.isViewBlocking(EmptyBlockGetter.INSTANCE, BlockPos.ZERO));
+        // The near plane box only matters to the blocks whose predicate tests it against their
+        // occlusion shape, so asking with a box that meets nothing and with one that fills the cell
+        // separates the constant answer from the one the client works out per frame.
+        boolean viewBlocking = blockState.isViewBlocking(EmptyBlockGetter.INSTANCE, BlockPos.ZERO, NOWHERE);
+        json.put("viewBlocking", viewBlocking);
+        json.put("viewBlockingNearPlane",
+                !viewBlocking && blockState.isViewBlocking(EmptyBlockGetter.INSTANCE, BlockPos.ZERO, new AABB(0, 0, 0, 1, 1, 1)));
         json.put("spawnTerrainParticles", blockState.shouldSpawnTerrainParticles());
         json.put("validSpawn", validSpawn(blockState));
         // What the node evaluator asks first of every candidate block. It takes an argument, so
@@ -627,13 +648,12 @@ public final class Dumper {
     }
 
     /**
-     * The block to block maps the tools turn a clicked block through: what an axe strips, what copper
-     * weathers to next, and what a honeycomb waxes. Each is in its map's own order; the inverses an axe
-     * scrapes and unwaxes by are the same pairs read backwards.
+     * The block to block maps copper and honeycomb are built on: what copper weathers to next, and
+     * what a honeycomb waxes. Each is in its map's own order; the inverses are the same pairs read
+     * backwards. What a tool turns a block into is the block_transformer registry, which is data.
      */
     private static Obj blockConversions() {
         Obj json = new Obj();
-        json.put("strippables", blockPairs(Strippables.get()));
         json.put("weathering", blockPairs(WeatheringCopper.NEXT_BY_BLOCK.get()));
         json.put("waxables", blockPairs(HoneycombItem.WAXABLES.get()));
         return json;
@@ -643,17 +663,6 @@ public final class Dumper {
         Obj json = new Obj();
         pairs.forEach((from, to) -> json.put(BuiltInRegistries.BLOCK.getKey(from).toString(), BuiltInRegistries.BLOCK.getKey(to).toString()));
         return json;
-    }
-
-    /** {@code AxeItem.STRIPPABLES} is protected, so a subclass names it; it is never constructed. */
-    private static final class Strippables extends AxeItem {
-        private Strippables() {
-            super(null, 0.0F, 0.0F, null);
-        }
-
-        static Map<Block, Block> get() {
-            return STRIPPABLES;
-        }
     }
 
     private static Map<String, SoundType> invert(Map<SoundType, String> names) {

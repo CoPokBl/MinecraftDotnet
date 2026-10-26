@@ -11,22 +11,22 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record BirchSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock, IRotated, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:standing_sign", "block.minecraft.birch_sign", 1f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:birch_sign", BlockInfo.VanillaOnly, "minecraft:blocks/birch_sign");
-    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.Normal, 2, "wood", NoteBlockInstrument.Bass, true, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, false, true, [], "minecraft:water", BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
-    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockInfo Data = new("block.minecraft.birch_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:birch_sign", BlockInfo.VanillaOnly, "minecraft:blocks/birch_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 2, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo[] States = [
         I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 5399];
+    public BlockStateInfo StateInfo => States[StateId - 6955];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -40,7 +40,6 @@ public record BirchSignBlock(Identifier Identifier, int Rotation, bool Waterlogg
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -60,6 +59,7 @@ public record BirchSignBlock(Identifier Identifier, int Rotation, bool Waterlogg
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -76,68 +76,68 @@ public record BirchSignBlock(Identifier Identifier, int Rotation, bool Waterlogg
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 5399,
-                    false => 5400,
+                    true => 6955,
+                    false => 6956,
                 },
                 1 => Waterlogged switch {
-                    true => 5401,
-                    false => 5402,
+                    true => 6957,
+                    false => 6958,
                 },
                 2 => Waterlogged switch {
-                    true => 5403,
-                    false => 5404,
+                    true => 6959,
+                    false => 6960,
                 },
                 3 => Waterlogged switch {
-                    true => 5405,
-                    false => 5406,
+                    true => 6961,
+                    false => 6962,
                 },
                 4 => Waterlogged switch {
-                    true => 5407,
-                    false => 5408,
+                    true => 6963,
+                    false => 6964,
                 },
                 5 => Waterlogged switch {
-                    true => 5409,
-                    false => 5410,
+                    true => 6965,
+                    false => 6966,
                 },
                 6 => Waterlogged switch {
-                    true => 5411,
-                    false => 5412,
+                    true => 6967,
+                    false => 6968,
                 },
                 7 => Waterlogged switch {
-                    true => 5413,
-                    false => 5414,
+                    true => 6969,
+                    false => 6970,
                 },
                 8 => Waterlogged switch {
-                    true => 5415,
-                    false => 5416,
+                    true => 6971,
+                    false => 6972,
                 },
                 9 => Waterlogged switch {
-                    true => 5417,
-                    false => 5418,
+                    true => 6973,
+                    false => 6974,
                 },
                 10 => Waterlogged switch {
-                    true => 5419,
-                    false => 5420,
+                    true => 6975,
+                    false => 6976,
                 },
                 11 => Waterlogged switch {
-                    true => 5421,
-                    false => 5422,
+                    true => 6977,
+                    false => 6978,
                 },
                 12 => Waterlogged switch {
-                    true => 5423,
-                    false => 5424,
+                    true => 6979,
+                    false => 6980,
                 },
                 13 => Waterlogged switch {
-                    true => 5425,
-                    false => 5426,
+                    true => 6981,
+                    false => 6982,
                 },
                 14 => Waterlogged switch {
-                    true => 5427,
-                    false => 5428,
+                    true => 6983,
+                    false => 6984,
                 },
                 15 => Waterlogged switch {
-                    true => 5429,
-                    false => 5430,
+                    true => 6985,
+                    false => 6986,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -146,38 +146,38 @@ public record BirchSignBlock(Identifier Identifier, int Rotation, bool Waterlogg
     
     public IBlock WithState(uint state) {
         return state switch {
-            5399 => new BirchSignBlock(Identifier, 0, true),
-            5400 => new BirchSignBlock(Identifier, 0, false),
-            5401 => new BirchSignBlock(Identifier, 1, true),
-            5402 => new BirchSignBlock(Identifier, 1, false),
-            5403 => new BirchSignBlock(Identifier, 2, true),
-            5404 => new BirchSignBlock(Identifier, 2, false),
-            5405 => new BirchSignBlock(Identifier, 3, true),
-            5406 => new BirchSignBlock(Identifier, 3, false),
-            5407 => new BirchSignBlock(Identifier, 4, true),
-            5408 => new BirchSignBlock(Identifier, 4, false),
-            5409 => new BirchSignBlock(Identifier, 5, true),
-            5410 => new BirchSignBlock(Identifier, 5, false),
-            5411 => new BirchSignBlock(Identifier, 6, true),
-            5412 => new BirchSignBlock(Identifier, 6, false),
-            5413 => new BirchSignBlock(Identifier, 7, true),
-            5414 => new BirchSignBlock(Identifier, 7, false),
-            5415 => new BirchSignBlock(Identifier, 8, true),
-            5416 => new BirchSignBlock(Identifier, 8, false),
-            5417 => new BirchSignBlock(Identifier, 9, true),
-            5418 => new BirchSignBlock(Identifier, 9, false),
-            5419 => new BirchSignBlock(Identifier, 10, true),
-            5420 => new BirchSignBlock(Identifier, 10, false),
-            5421 => new BirchSignBlock(Identifier, 11, true),
-            5422 => new BirchSignBlock(Identifier, 11, false),
-            5423 => new BirchSignBlock(Identifier, 12, true),
-            5424 => new BirchSignBlock(Identifier, 12, false),
-            5425 => new BirchSignBlock(Identifier, 13, true),
-            5426 => new BirchSignBlock(Identifier, 13, false),
-            5427 => new BirchSignBlock(Identifier, 14, true),
-            5428 => new BirchSignBlock(Identifier, 14, false),
-            5429 => new BirchSignBlock(Identifier, 15, true),
-            5430 => new BirchSignBlock(Identifier, 15, false),
+            6955 => new BirchSignBlock(Identifier, 0, true),
+            6956 => new BirchSignBlock(Identifier, 0, false),
+            6957 => new BirchSignBlock(Identifier, 1, true),
+            6958 => new BirchSignBlock(Identifier, 1, false),
+            6959 => new BirchSignBlock(Identifier, 2, true),
+            6960 => new BirchSignBlock(Identifier, 2, false),
+            6961 => new BirchSignBlock(Identifier, 3, true),
+            6962 => new BirchSignBlock(Identifier, 3, false),
+            6963 => new BirchSignBlock(Identifier, 4, true),
+            6964 => new BirchSignBlock(Identifier, 4, false),
+            6965 => new BirchSignBlock(Identifier, 5, true),
+            6966 => new BirchSignBlock(Identifier, 5, false),
+            6967 => new BirchSignBlock(Identifier, 6, true),
+            6968 => new BirchSignBlock(Identifier, 6, false),
+            6969 => new BirchSignBlock(Identifier, 7, true),
+            6970 => new BirchSignBlock(Identifier, 7, false),
+            6971 => new BirchSignBlock(Identifier, 8, true),
+            6972 => new BirchSignBlock(Identifier, 8, false),
+            6973 => new BirchSignBlock(Identifier, 9, true),
+            6974 => new BirchSignBlock(Identifier, 9, false),
+            6975 => new BirchSignBlock(Identifier, 10, true),
+            6976 => new BirchSignBlock(Identifier, 10, false),
+            6977 => new BirchSignBlock(Identifier, 11, true),
+            6978 => new BirchSignBlock(Identifier, 11, false),
+            6979 => new BirchSignBlock(Identifier, 12, true),
+            6980 => new BirchSignBlock(Identifier, 12, false),
+            6981 => new BirchSignBlock(Identifier, 13, true),
+            6982 => new BirchSignBlock(Identifier, 13, false),
+            6983 => new BirchSignBlock(Identifier, 14, true),
+            6984 => new BirchSignBlock(Identifier, 14, false),
+            6985 => new BirchSignBlock(Identifier, 15, true),
+            6986 => new BirchSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

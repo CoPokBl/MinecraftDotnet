@@ -99,12 +99,12 @@ public class BlockBreakSpeedTest {
     }
 
     [Test]
-    public void TestMiningFatigueUsesVanillasTable() {
+    public void TestMiningFatigueIsAPowerOfAThird() {
         Assert.That(BreakTicks("diamond_pickaxe", "stone", miningFatigueAmplifier: 0), Is.EqualTo(19));
         Assert.That(BreakTicks("diamond_pickaxe", "stone", miningFatigueAmplifier: 1), Is.EqualTo(63));
-        // Level three drops by a factor of 33, not 3, in vanilla.
-        Assert.That(BreakTicks("diamond_pickaxe", "stone", miningFatigueAmplifier: 2), Is.EqualTo(2084));
-        Assert.That(BreakTicks("diamond_pickaxe", "stone", miningFatigueAmplifier: 5), Is.EqualTo(6945));
+        // 0.3 to the power of the level, with no floor under it past level three.
+        Assert.That(BreakTicks("diamond_pickaxe", "stone", miningFatigueAmplifier: 2), Is.EqualTo(209));
+        Assert.That(BreakTicks("diamond_pickaxe", "stone", miningFatigueAmplifier: 5), Is.EqualTo(7717));
     }
 
     [Test]

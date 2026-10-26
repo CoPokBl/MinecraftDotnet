@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record QuartzStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.quartz_stairs", 0.8f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:quartz_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/quartz_stairs");
-    private static readonly BlockStateInfo I0 = new(0.8f, 0, 1, PushReaction.Normal, 14, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.quartz_stairs", 0.8f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:quartz_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/quartz_stairs");
+    private static readonly BlockStateInfo I0 = new(0.8f, 0, 1, PushReaction.PushPull, 14, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record QuartzStairsBlock(Identifier Identifier, Direction Facing, TopBott
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 11328];
+    public BlockStateInfo StateInfo => States[StateId - 13095];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record QuartzStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record QuartzStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record QuartzStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11328,
-                            false => 11329,
+                            true => 13095,
+                            false => 13096,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11330,
-                            false => 11331,
+                            true => 13097,
+                            false => 13098,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11332,
-                            false => 11333,
+                            true => 13099,
+                            false => 13100,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11334,
-                            false => 11335,
+                            true => 13101,
+                            false => 13102,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11336,
-                            false => 11337,
+                            true => 13103,
+                            false => 13104,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11338,
-                            false => 11339,
+                            true => 13105,
+                            false => 13106,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11340,
-                            false => 11341,
+                            true => 13107,
+                            false => 13108,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11342,
-                            false => 11343,
+                            true => 13109,
+                            false => 13110,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11344,
-                            false => 11345,
+                            true => 13111,
+                            false => 13112,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11346,
-                            false => 11347,
+                            true => 13113,
+                            false => 13114,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record QuartzStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11348,
-                            false => 11349,
+                            true => 13115,
+                            false => 13116,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11350,
-                            false => 11351,
+                            true => 13117,
+                            false => 13118,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11352,
-                            false => 11353,
+                            true => 13119,
+                            false => 13120,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11354,
-                            false => 11355,
+                            true => 13121,
+                            false => 13122,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11356,
-                            false => 11357,
+                            true => 13123,
+                            false => 13124,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11358,
-                            false => 11359,
+                            true => 13125,
+                            false => 13126,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11360,
-                            false => 11361,
+                            true => 13127,
+                            false => 13128,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11362,
-                            false => 11363,
+                            true => 13129,
+                            false => 13130,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11364,
-                            false => 11365,
+                            true => 13131,
+                            false => 13132,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11366,
-                            false => 11367,
+                            true => 13133,
+                            false => 13134,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record QuartzStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11368,
-                            false => 11369,
+                            true => 13135,
+                            false => 13136,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11370,
-                            false => 11371,
+                            true => 13137,
+                            false => 13138,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11372,
-                            false => 11373,
+                            true => 13139,
+                            false => 13140,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11374,
-                            false => 11375,
+                            true => 13141,
+                            false => 13142,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11376,
-                            false => 11377,
+                            true => 13143,
+                            false => 13144,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11378,
-                            false => 11379,
+                            true => 13145,
+                            false => 13146,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11380,
-                            false => 11381,
+                            true => 13147,
+                            false => 13148,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11382,
-                            false => 11383,
+                            true => 13149,
+                            false => 13150,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11384,
-                            false => 11385,
+                            true => 13151,
+                            false => 13152,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11386,
-                            false => 11387,
+                            true => 13153,
+                            false => 13154,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record QuartzStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11388,
-                            false => 11389,
+                            true => 13155,
+                            false => 13156,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11390,
-                            false => 11391,
+                            true => 13157,
+                            false => 13158,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11392,
-                            false => 11393,
+                            true => 13159,
+                            false => 13160,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11394,
-                            false => 11395,
+                            true => 13161,
+                            false => 13162,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11396,
-                            false => 11397,
+                            true => 13163,
+                            false => 13164,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11398,
-                            false => 11399,
+                            true => 13165,
+                            false => 13166,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11400,
-                            false => 11401,
+                            true => 13167,
+                            false => 13168,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11402,
-                            false => 11403,
+                            true => 13169,
+                            false => 13170,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11404,
-                            false => 11405,
+                            true => 13171,
+                            false => 13172,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11406,
-                            false => 11407,
+                            true => 13173,
+                            false => 13174,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record QuartzStairsBlock(Identifier Identifier, Direction Facing, TopBott
     
     public IBlock WithState(uint state) {
         return state switch {
-            11328 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            11329 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            11330 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            11331 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            11332 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            11333 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            11334 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            11335 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            11336 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            11337 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            11338 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            11339 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            11340 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            11341 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            11342 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            11343 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            11344 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            11345 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            11346 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            11347 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            11348 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            11349 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            11350 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            11351 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            11352 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            11353 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            11354 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            11355 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            11356 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            11357 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            11358 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            11359 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            11360 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            11361 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            11362 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            11363 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            11364 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            11365 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            11366 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            11367 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            11368 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            11369 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            11370 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            11371 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            11372 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            11373 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            11374 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            11375 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            11376 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            11377 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            11378 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            11379 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            11380 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            11381 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            11382 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            11383 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            11384 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            11385 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            11386 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            11387 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            11388 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            11389 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            11390 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            11391 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            11392 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            11393 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            11394 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            11395 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            11396 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            11397 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            11398 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            11399 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            11400 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            11401 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            11402 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            11403 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            11404 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            11405 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            11406 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            11407 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            13095 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            13096 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            13097 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            13098 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            13099 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            13100 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            13101 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            13102 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            13103 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            13104 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            13105 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            13106 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            13107 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13108 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13109 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            13110 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            13111 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13112 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13113 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            13114 => new QuartzStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            13115 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            13116 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            13117 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            13118 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            13119 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            13120 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            13121 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            13122 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            13123 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            13124 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            13125 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            13126 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            13127 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13128 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13129 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            13130 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            13131 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13132 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13133 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            13134 => new QuartzStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            13135 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            13136 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            13137 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            13138 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            13139 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            13140 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            13141 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            13142 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            13143 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            13144 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            13145 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            13146 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            13147 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13148 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13149 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            13150 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            13151 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13152 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13153 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            13154 => new QuartzStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            13155 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            13156 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            13157 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            13158 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            13159 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            13160 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            13161 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            13162 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            13163 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            13164 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            13165 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            13166 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            13167 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13168 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13169 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            13170 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            13171 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13172 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13173 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            13174 => new QuartzStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

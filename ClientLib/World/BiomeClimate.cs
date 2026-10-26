@@ -14,9 +14,9 @@ public static class BiomeClimate {
         Snow
     }
 
-    private static readonly PerlinSimplexNoise TemperatureNoise = new(new LegacyRandomSource(1234L), [0]);
-    private static readonly PerlinSimplexNoise FrozenTemperatureNoise = new(new LegacyRandomSource(3456L), [-2, -1, 0]);
-    private static readonly PerlinSimplexNoise BiomeInfoNoise = new(new LegacyRandomSource(2345L), [0]);
+    private static readonly SimplexNoise TemperatureNoise = new(new LegacyRandomSource(1234L));
+    private static readonly FrozenNoise FrozenTemperatureNoise = new(new LegacyRandomSource(3456L));
+    private static readonly SimplexNoise BiomeInfoNoise = new(new LegacyRandomSource(2345L));
 
     /// <summary>
     /// <c>LevelReader.getNoiseBiome</c>: a missing chunk is <c>ClientLevel.getUncachedNoiseBiome</c>, which is
@@ -109,7 +109,7 @@ public static class BiomeClimate {
         float adjustedTemperature = ModifyTemperature(biome, x, z, biome.Temperature);
         int snowLevel = seaLevel + 17;
         if (y > snowLevel) {
-            float v = (float)(TemperatureNoise.GetValue(x / 8.0F, z / 8.0F) * 8.0);
+            float v = TemperatureNoise.GetValue(x / 8.0F, z / 8.0F) * 8.0F;
             return adjustedTemperature - (v + y - snowLevel) * 0.05F / 40.0F;
         }
         return adjustedTemperature;
@@ -120,7 +120,7 @@ public static class BiomeClimate {
         if (biome.TemperatureModifier != TemperatureModifier.Frozen) {
             return baseTemperature;
         }
-        double groundValueLargeVariation = FrozenTemperatureNoise.GetValue(x * 0.05, z * 0.05) * 7.0;
+        double groundValueLargeVariation = FrozenTemperatureNoise.GetValue(x * 0.05, z * 0.05) * 7.0F;
         double groundValueEdgeVariation = BiomeInfoNoise.GetValue(x * 0.2, z * 0.2);
         if (groundValueLargeVariation + groundValueEdgeVariation < 0.3) {
             double groundValueSmallVariation = BiomeInfoNoise.GetValue(x * 0.09, z * 0.09);
@@ -132,51 +132,24 @@ public static class BiomeClimate {
     }
 
     /// <summary>
-    /// <c>PerlinSimplexNoise</c>, for the octave sets the climate builds, none of them positive. Octaves run
-    /// highest frequency first and the value factor grows.
+    /// <c>Biome.FROZEN_TEMPERATURE_NOISE</c>: three simplex layers at frequencies 1, 0.5 and 0.25 summed in
+    /// float, drawn from one generator in that order.
     /// </summary>
-    private sealed class PerlinSimplexNoise {
-        private readonly SimplexNoise?[] _noiseLevels;
-        private readonly double _highestFreqValueFactor;
-        private readonly double _highestFreqInputFactor;
+    private sealed class FrozenNoise(RandomSource random) {
+        private readonly SimplexNoise _first = new(random);
+        private readonly SimplexNoise _second = new(random);
+        private readonly SimplexNoise _third = new(random);
 
-        public PerlinSimplexNoise(RandomSource random, int[] octaveSet) {
-            int lowFreqOctaves = -octaveSet.Min();
-            int highFreqOctaves = octaveSet.Max();
-            int octaves = lowFreqOctaves + highFreqOctaves + 1;
-            SimplexNoise zeroOctave = new(random);
-            _noiseLevels = new SimplexNoise?[octaves];
-            if (highFreqOctaves >= 0 && highFreqOctaves < octaves && octaveSet.Contains(0)) {
-                _noiseLevels[highFreqOctaves] = zeroOctave;
-            }
-            for (int i = highFreqOctaves + 1; i < octaves; i++) {
-                if (octaveSet.Contains(highFreqOctaves - i)) {
-                    _noiseLevels[i] = new SimplexNoise(random);
-                }
-                else {
-                    random.ConsumeCount(262);
-                }
-            }
-            _highestFreqInputFactor = Math.Pow(2.0, highFreqOctaves);
-            _highestFreqValueFactor = 1.0 / (Math.Pow(2.0, octaves) - 1.0);
-        }
-
-        public double GetValue(double x, double y) {
-            double value = 0.0;
-            double factor = _highestFreqInputFactor;
-            double valueFactor = _highestFreqValueFactor;
-            foreach (SimplexNoise? level in _noiseLevels) {
-                if (level != null) {
-                    value += level.GetValue(x * factor, y * factor) * valueFactor;
-                }
-                factor /= 2.0;
-                valueFactor *= 2.0;
-            }
+        public float GetValue(double x, double y) {
+            float value = 0.0F;
+            value += 0.14285715F * _first.GetValue(x * 1.0, y * 1.0);
+            value += 0.2857143F * _second.GetValue(x * 0.5, y * 0.5);
+            value += 0.5714286F * _third.GetValue(x * 0.25, y * 0.25);
             return value;
         }
     }
 
-    /// <summary><c>SimplexNoise</c>, two dimensional only.</summary>
+    /// <summary><c>SimplexNoise</c> with its offsets discarded, two dimensional only.</summary>
     private sealed class SimplexNoise {
         private static readonly int[][] Gradient = [
             [1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0],
@@ -192,7 +165,7 @@ public static class BiomeClimate {
         private readonly int[] _p = new int[512];
 
         public SimplexNoise(RandomSource random) {
-            // xo, yo and zo: drawn for the stream's sake, unused by the plane sampler without noise start.
+            // The three offsets are drawn for the stream's sake and multiplied by zero.
             random.NextDouble();
             random.NextDouble();
             random.NextDouble();
@@ -217,7 +190,7 @@ public static class BiomeClimate {
             return t * t * (g[0] * x + g[1] * y);
         }
 
-        public double GetValue(double xin, double yin) {
+        public float GetValue(double xin, double yin) {
             double s = (xin + yin) * F2;
             int i = Mth.Floor(xin + s);
             int j = Mth.Floor(yin + s);
@@ -235,7 +208,7 @@ public static class BiomeClimate {
             int gi0 = P(ii + P(jj)) % 12;
             int gi1 = P(ii + i1 + P(jj + j1)) % 12;
             int gi2 = P(ii + 1 + P(jj + 1)) % 12;
-            return 70.0 * (CornerNoise(gi0, x0, y0, 0.5) + CornerNoise(gi1, x1, y1, 0.5) + CornerNoise(gi2, x2, y2, 0.5));
+            return (float)(70.0 * (CornerNoise(gi0, x0, y0, 0.5) + CornerNoise(gi1, x1, y1, 0.5) + CornerNoise(gi2, x2, y2, 0.5)));
         }
     }
 }

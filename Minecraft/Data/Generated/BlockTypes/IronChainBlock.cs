@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record IronChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock, IAxisAligned, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:chain", "block.minecraft.iron_chain", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:iron_chain", BlockInfo.VanillaOnly, "minecraft:blocks/iron_chain");
-    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.Normal, 0, "chain", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S505, BlockShapes.S505, BlockShapes.S1, BlockShapes.S1, BlockShapes.S505, BlockShapes.S505);
+    private static readonly BlockInfo Data = new("block.minecraft.iron_chain", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:iron_chain", BlockInfo.VanillaOnly, "minecraft:blocks/iron_chain");
+    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.PushPull, 0, "chain", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S505, BlockShapes.S505, BlockShapes.S1, BlockShapes.S1, BlockShapes.S505, BlockShapes.S505);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S331, CollisionShape = BlockShapes.S331, VisualShape = BlockShapes.S331, SupportShape = BlockShapes.S331 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S331, CollisionShape = BlockShapes.S331, VisualShape = BlockShapes.S331, SupportShape = BlockShapes.S331 };
@@ -22,15 +22,15 @@ public record IronChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged)
         I0, I1, I2, I3, I4, I5
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 8246];
+    public BlockStateInfo StateInfo => States[StateId - 9980];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -44,7 +44,6 @@ public record IronChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged)
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -64,6 +63,7 @@ public record IronChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged)
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -80,16 +80,16 @@ public record IronChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged)
         get {
             return Axis switch {
                 Axis.X => Waterlogged switch {
-                    true => 8246,
-                    false => 8247,
+                    true => 9980,
+                    false => 9981,
                 },
                 Axis.Y => Waterlogged switch {
-                    true => 8248,
-                    false => 8249,
+                    true => 9982,
+                    false => 9983,
                 },
                 Axis.Z => Waterlogged switch {
-                    true => 8250,
-                    false => 8251,
+                    true => 9984,
+                    false => 9985,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
@@ -98,12 +98,12 @@ public record IronChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged)
     
     public IBlock WithState(uint state) {
         return state switch {
-            8246 => new IronChainBlock(Identifier, Axis.X, true),
-            8247 => new IronChainBlock(Identifier, Axis.X, false),
-            8248 => new IronChainBlock(Identifier, Axis.Y, true),
-            8249 => new IronChainBlock(Identifier, Axis.Y, false),
-            8250 => new IronChainBlock(Identifier, Axis.Z, true),
-            8251 => new IronChainBlock(Identifier, Axis.Z, false),
+            9980 => new IronChainBlock(Identifier, Axis.X, true),
+            9981 => new IronChainBlock(Identifier, Axis.X, false),
+            9982 => new IronChainBlock(Identifier, Axis.Y, true),
+            9983 => new IronChainBlock(Identifier, Axis.Y, false),
+            9984 => new IronChainBlock(Identifier, Axis.Z, true),
+            9985 => new IronChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

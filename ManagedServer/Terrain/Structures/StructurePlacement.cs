@@ -136,6 +136,12 @@ public interface IStructurePlacementState {
 
     /// <summary>The ring positions worked out for a concentric rings placement.</summary>
     IReadOnlyList<Vec2<int>> RingPositionsFor(ConcentricRingsStructurePlacement placement);
+
+    /// <summary>
+    /// <c>getDimensionOrigin</c>: the chunk holding the dimension's spawn search result, or chunk zero
+    /// for a generator with nothing to search for.
+    /// </summary>
+    Vec2<int> DimensionOrigin { get; }
 }
 
 /// <summary>
@@ -213,6 +219,24 @@ public sealed class ConcentricRingsStructurePlacement(Vec3<int> locateOffset,
         }
 
         return false;
+    }
+}
+
+/// <summary>
+/// <c>DimensionOriginStructurePlacement</c>: the one chunk the dimension's origin is in, and nothing else.
+/// </summary>
+/// <remarks>
+/// Upstream this is not a spreading placement and has none of the fields the base here carries. It
+/// takes the base's neutral values, a zero locate offset, a frequency of one and no exclusion zone,
+/// which make the frequency and exclusion tests pass without a draw, so the result is the chunk test
+/// alone as it is in vanilla. No vanilla structure set uses it.
+/// </remarks>
+public sealed class DimensionOriginStructurePlacement()
+    : StructurePlacement(new Vec3<int>(0, 0, 0), FrequencyReductionMethod.Default, 1.0f, 0, null) {
+
+    protected override bool IsPlacementChunk(IStructurePlacementState state, int sourceX, int sourceZ) {
+        Vec2<int> origin = state.DimensionOrigin;
+        return origin.X == sourceX && origin.Y == sourceZ;
     }
 }
 

@@ -18,14 +18,21 @@ namespace ManagedServer.Terrain.Surface;
 /// what makes their patches line up across a biome boundary.
 /// </remarks>
 public static class BiomeClimate {
-    private static readonly PerlinSimplexNoise TemperatureNoise =
-        new(new LegacyRandomSource(1234L), [0]);
+    private static readonly SimplexNoise TemperatureNoise = new(new LegacyRandomSource(1234L), true);
 
-    private static readonly PerlinSimplexNoise FrozenTemperatureNoise =
-        new(new LegacyRandomSource(3456L), [-2, -1, 0]);
+    private static readonly NoiseStack FrozenTemperatureNoise = CreateFrozenTemperatureNoise();
 
-    private static readonly PerlinSimplexNoise BiomeInfoNoise =
-        new(new LegacyRandomSource(2345L), [0]);
+    /// <summary><c>Biome.BIOME_INFO_NOISE</c>, which the feature placement noises also read.</summary>
+    public static readonly SimplexNoise BiomeInfoNoise = new(new LegacyRandomSource(2345L), true);
+
+    private static NoiseStack CreateFrozenTemperatureNoise() {
+        LegacyRandomSource random = new(3456L);
+        return NoiseStack.CreateBuilder()
+            .Add(new SimplexNoise(random, true), 1.0, 0.14285715F)
+            .Add(new SimplexNoise(random, true), 0.5, 0.2857143F)
+            .Add(new SimplexNoise(random, true), 0.25, 0.5714286F)
+            .Build();
+    }
 
     /// <summary>
     /// <c>Biome.getTemperature</c>. Vanilla caches this per position; this recomputes, since the
@@ -41,7 +48,7 @@ public static class BiomeClimate {
 
         // The noise is sampled at eighth scale and the falloff is a fortieth of a twentieth per block,
         // so the line is gradual and ragged rather than flat.
-        float variation = (float)(TemperatureNoise.GetValue(x / 8.0f, z / 8.0f, false) * 8.0);
+        float variation = TemperatureNoise.Get(x / 8.0F, z / 8.0F) * 8.0F;
         return baseTemperature - (variation + y - snowLevel) * 0.05f / 40.0f;
     }
 
@@ -51,11 +58,11 @@ public static class BiomeClimate {
             return baseTemperature;
         }
 
-        double largeVariation = FrozenTemperatureNoise.GetValue(x * 0.05, z * 0.05, false) * 7.0;
-        double edgeVariation = BiomeInfoNoise.GetValue(x * 0.2, z * 0.2, false);
+        double largeVariation = FrozenTemperatureNoise.Get(x * 0.05, z * 0.05) * 7.0F;
+        double edgeVariation = BiomeInfoNoise.Get(x * 0.2, z * 0.2);
 
         if (largeVariation + edgeVariation < 0.3) {
-            double smallVariation = BiomeInfoNoise.GetValue(x * 0.09, z * 0.09, false);
+            double smallVariation = BiomeInfoNoise.Get(x * 0.09, z * 0.09);
             if (smallVariation < 0.8) {
                 return 0.2f;
             }

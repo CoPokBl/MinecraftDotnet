@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, TopBottom Half, bool Open, bool Powered, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IOpenable, IPowered, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:trapdoor", "block.minecraft.oak_trapdoor", 3f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:oak_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/oak_trapdoor");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 13, "wood", NoteBlockInstrument.Bass, false, false, false, true, false, false, false, false, true, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockInfo Data = new("block.minecraft.oak_trapdoor", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:oak_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/oak_trapdoor");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
@@ -28,15 +28,15 @@ public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, TopBotto
         I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I4, I5, I4, I5, I6, I7, I6, I7, I2, I3, I2, I3, I6, I7, I6, I7, I4, I5, I4, I5, I8, I9, I8, I9, I2, I3, I2, I3, I8, I9, I8, I9, I4, I5, I4, I5, I10, I11, I10, I11, I2, I3, I2, I3, I10, I11, I10, I11, I4, I5, I4, I5
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 7114];
+    public BlockStateInfo StateInfo => States[StateId - 8784];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -50,7 +50,6 @@ public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, TopBotto
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -70,6 +69,7 @@ public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, TopBotto
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -95,44 +95,44 @@ public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, TopBotto
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7114,
-                                false => 7115,
+                                true => 8784,
+                                false => 8785,
                             },
                             false => Waterlogged switch {
-                                true => 7116,
-                                false => 7117,
+                                true => 8786,
+                                false => 8787,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7118,
-                                false => 7119,
+                                true => 8788,
+                                false => 8789,
                             },
                             false => Waterlogged switch {
-                                true => 7120,
-                                false => 7121,
+                                true => 8790,
+                                false => 8791,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7122,
-                                false => 7123,
+                                true => 8792,
+                                false => 8793,
                             },
                             false => Waterlogged switch {
-                                true => 7124,
-                                false => 7125,
+                                true => 8794,
+                                false => 8795,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7126,
-                                false => 7127,
+                                true => 8796,
+                                false => 8797,
                             },
                             false => Waterlogged switch {
-                                true => 7128,
-                                false => 7129,
+                                true => 8798,
+                                false => 8799,
                             },
                         },
                     },
@@ -142,44 +142,44 @@ public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, TopBotto
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7130,
-                                false => 7131,
+                                true => 8800,
+                                false => 8801,
                             },
                             false => Waterlogged switch {
-                                true => 7132,
-                                false => 7133,
+                                true => 8802,
+                                false => 8803,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7134,
-                                false => 7135,
+                                true => 8804,
+                                false => 8805,
                             },
                             false => Waterlogged switch {
-                                true => 7136,
-                                false => 7137,
+                                true => 8806,
+                                false => 8807,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7138,
-                                false => 7139,
+                                true => 8808,
+                                false => 8809,
                             },
                             false => Waterlogged switch {
-                                true => 7140,
-                                false => 7141,
+                                true => 8810,
+                                false => 8811,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7142,
-                                false => 7143,
+                                true => 8812,
+                                false => 8813,
                             },
                             false => Waterlogged switch {
-                                true => 7144,
-                                false => 7145,
+                                true => 8814,
+                                false => 8815,
                             },
                         },
                     },
@@ -189,44 +189,44 @@ public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, TopBotto
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7146,
-                                false => 7147,
+                                true => 8816,
+                                false => 8817,
                             },
                             false => Waterlogged switch {
-                                true => 7148,
-                                false => 7149,
+                                true => 8818,
+                                false => 8819,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7150,
-                                false => 7151,
+                                true => 8820,
+                                false => 8821,
                             },
                             false => Waterlogged switch {
-                                true => 7152,
-                                false => 7153,
+                                true => 8822,
+                                false => 8823,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7154,
-                                false => 7155,
+                                true => 8824,
+                                false => 8825,
                             },
                             false => Waterlogged switch {
-                                true => 7156,
-                                false => 7157,
+                                true => 8826,
+                                false => 8827,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7158,
-                                false => 7159,
+                                true => 8828,
+                                false => 8829,
                             },
                             false => Waterlogged switch {
-                                true => 7160,
-                                false => 7161,
+                                true => 8830,
+                                false => 8831,
                             },
                         },
                     },
@@ -236,44 +236,44 @@ public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, TopBotto
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7162,
-                                false => 7163,
+                                true => 8832,
+                                false => 8833,
                             },
                             false => Waterlogged switch {
-                                true => 7164,
-                                false => 7165,
+                                true => 8834,
+                                false => 8835,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7166,
-                                false => 7167,
+                                true => 8836,
+                                false => 8837,
                             },
                             false => Waterlogged switch {
-                                true => 7168,
-                                false => 7169,
+                                true => 8838,
+                                false => 8839,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7170,
-                                false => 7171,
+                                true => 8840,
+                                false => 8841,
                             },
                             false => Waterlogged switch {
-                                true => 7172,
-                                false => 7173,
+                                true => 8842,
+                                false => 8843,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7174,
-                                false => 7175,
+                                true => 8844,
+                                false => 8845,
                             },
                             false => Waterlogged switch {
-                                true => 7176,
-                                false => 7177,
+                                true => 8846,
+                                false => 8847,
                             },
                         },
                     },
@@ -286,70 +286,70 @@ public record OakTrapdoorBlock(Identifier Identifier, Direction Facing, TopBotto
     
     public IBlock WithState(uint state) {
         return state switch {
-            7114 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
-            7115 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
-            7116 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
-            7117 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
-            7118 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
-            7119 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
-            7120 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
-            7121 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
-            7122 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
-            7123 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
-            7124 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
-            7125 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
-            7126 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
-            7127 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
-            7128 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
-            7129 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
-            7130 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
-            7131 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
-            7132 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
-            7133 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
-            7134 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
-            7135 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
-            7136 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
-            7137 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
-            7138 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
-            7139 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
-            7140 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
-            7141 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
-            7142 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
-            7143 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
-            7144 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
-            7145 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
-            7146 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
-            7147 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
-            7148 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
-            7149 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
-            7150 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
-            7151 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
-            7152 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
-            7153 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
-            7154 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
-            7155 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
-            7156 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
-            7157 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
-            7158 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
-            7159 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
-            7160 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
-            7161 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
-            7162 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
-            7163 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
-            7164 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
-            7165 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
-            7166 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
-            7167 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
-            7168 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
-            7169 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
-            7170 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
-            7171 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
-            7172 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
-            7173 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
-            7174 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
-            7175 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
-            7176 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
-            7177 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
+            8784 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
+            8785 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
+            8786 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
+            8787 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
+            8788 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
+            8789 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
+            8790 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
+            8791 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
+            8792 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
+            8793 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
+            8794 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
+            8795 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
+            8796 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
+            8797 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
+            8798 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
+            8799 => new OakTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
+            8800 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
+            8801 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
+            8802 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
+            8803 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
+            8804 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
+            8805 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
+            8806 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
+            8807 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
+            8808 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
+            8809 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
+            8810 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
+            8811 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
+            8812 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
+            8813 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
+            8814 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
+            8815 => new OakTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
+            8816 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
+            8817 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
+            8818 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
+            8819 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
+            8820 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
+            8821 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
+            8822 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
+            8823 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
+            8824 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
+            8825 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
+            8826 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
+            8827 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
+            8828 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
+            8829 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
+            8830 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
+            8831 => new OakTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
+            8832 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
+            8833 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
+            8834 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
+            8835 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
+            8836 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
+            8837 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
+            8838 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
+            8839 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
+            8840 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
+            8841 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
+            8842 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
+            8843 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
+            8844 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
+            8845 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
+            8846 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
+            8847 => new OakTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

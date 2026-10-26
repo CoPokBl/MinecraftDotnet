@@ -525,7 +525,6 @@ public class EntityManager(EventNode<IServerEvent> baseEventNode, int viewDistan
             new ClientBoundTeleportEntityPacket {
                 EntityId = entity.NetId,
                 Position = newPos,
-                Velocity = Vec3<double>.Zero,
                 Pitch = pitch,
                 Yaw = yaw,
                 OnGround = true

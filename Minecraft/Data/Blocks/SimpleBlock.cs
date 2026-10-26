@@ -7,12 +7,12 @@ namespace Minecraft.Data.Blocks;
 
 /// <summary>A block with exactly one state, which is most of them.</summary>
 public record SimpleBlock(Identifier Identifier, uint StateId, BlockInfo Info, BlockStateInfo StateInfo) : IBlock {
-    public Identifier Category => Info.Category;
     public float ExplosionResistance => Info.ExplosionResistance;
     public float Friction => Info.Friction;
     public float SpeedFactor => Info.SpeedFactor;
     public float JumpFactor => Info.JumpFactor;
     public float BounceRestitution => Info.BounceRestitution;
+    public float FallDistanceReduction => Info.FallDistanceReduction;
     public bool Gravity => Info.Gravity;
     public string TranslationKey => Info.TranslationKey;
     public Identifier? BlockEntity => Info.BlockEntity;
@@ -26,7 +26,6 @@ public record SimpleBlock(Identifier Identifier, uint StateId, BlockInfo Info, B
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -46,6 +45,7 @@ public record SimpleBlock(Identifier Identifier, uint StateId, BlockInfo Info, B
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;

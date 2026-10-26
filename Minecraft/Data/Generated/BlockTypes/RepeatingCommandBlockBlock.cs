@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RepeatingCommandBlockBlock(Identifier Identifier, bool Conditional, Cardinal Facing) : IBlock, IDirectional {
-    private static readonly BlockInfo Data = new("minecraft:command", "block.minecraft.repeating_command_block", 3600000f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:command_block", "minecraft:repeating_command_block", BlockInfo.VanillaOnly, null);
-    private static readonly BlockStateInfo I0 = new(-1f, 0, 15, PushReaction.Normal, 24, "stone", NoteBlockInstrument.Harp, false, true, true, true, false, false, false, false, true, true, false, false, true, true, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockInfo Data = new("block.minecraft.repeating_command_block", 3600000f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:command_block", "minecraft:repeating_command_block", BlockInfo.VanillaOnly, null);
+    private static readonly BlockStateInfo I0 = new(-1f, 0, 15, PushReaction.PushPull, 24, "stone", NoteBlockInstrument.Harp, false, true, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record RepeatingCommandBlockBlock(Identifier Identifier, bool Conditional
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record RepeatingCommandBlockBlock(Identifier Identifier, bool Conditional
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -70,21 +70,21 @@ public record RepeatingCommandBlockBlock(Identifier Identifier, bool Conditional
         get {
             return Conditional switch {
                 true => Facing switch {
-                    Cardinal.North => 14817,
-                    Cardinal.East => 14818,
-                    Cardinal.South => 14819,
-                    Cardinal.West => 14820,
-                    Cardinal.Up => 14821,
-                    Cardinal.Down => 14822,
+                    Cardinal.North => 16798,
+                    Cardinal.East => 16799,
+                    Cardinal.South => 16800,
+                    Cardinal.West => 16801,
+                    Cardinal.Up => 16802,
+                    Cardinal.Down => 16803,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
-                    Cardinal.North => 14823,
-                    Cardinal.East => 14824,
-                    Cardinal.South => 14825,
-                    Cardinal.West => 14826,
-                    Cardinal.Up => 14827,
-                    Cardinal.Down => 14828,
+                    Cardinal.North => 16804,
+                    Cardinal.East => 16805,
+                    Cardinal.South => 16806,
+                    Cardinal.West => 16807,
+                    Cardinal.Up => 16808,
+                    Cardinal.Down => 16809,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
             };
@@ -93,18 +93,18 @@ public record RepeatingCommandBlockBlock(Identifier Identifier, bool Conditional
     
     public IBlock WithState(uint state) {
         return state switch {
-            14817 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.North),
-            14818 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.East),
-            14819 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.South),
-            14820 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.West),
-            14821 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.Up),
-            14822 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.Down),
-            14823 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.North),
-            14824 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.East),
-            14825 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.South),
-            14826 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.West),
-            14827 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.Up),
-            14828 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.Down),
+            16798 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.North),
+            16799 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.East),
+            16800 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.South),
+            16801 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.West),
+            16802 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.Up),
+            16803 => new RepeatingCommandBlockBlock(Identifier, true, Cardinal.Down),
+            16804 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.North),
+            16805 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.East),
+            16806 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.South),
+            16807 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.West),
+            16808 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.Up),
+            16809 => new RepeatingCommandBlockBlock(Identifier, false, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

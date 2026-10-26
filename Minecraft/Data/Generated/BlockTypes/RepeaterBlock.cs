@@ -11,18 +11,18 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, bool Locked, bool Powered) : IBlock, IHorizontalFacing, ILocked, IPowered {
-    private static readonly BlockInfo Data = new("minecraft:repeater", "block.minecraft.repeater", 0f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:repeater", BlockInfo.VanillaOnly, "minecraft:blocks/repeater");
-    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Destroy, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S124, BlockShapes.S124, BlockShapes.S1, BlockShapes.S124, BlockShapes.S124, BlockShapes.S124);
+    private static readonly BlockInfo Data = new("block.minecraft.repeater", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:repeater", BlockInfo.VanillaOnly, "minecraft:blocks/repeater");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Popped, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, true, false, false, false, false, true, true, false, true, [], null, BlockShapes.S124, BlockShapes.S124, BlockShapes.S1, BlockShapes.S124, BlockShapes.S124, BlockShapes.S124);
 
     public BlockStateInfo StateInfo => I0;
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -36,7 +36,6 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -56,6 +55,7 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -76,42 +76,42 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
                 1 => Facing switch {
                     Direction.North => Locked switch {
                         true => Powered switch {
-                            true => 7034,
-                            false => 7035,
+                            true => 8704,
+                            false => 8705,
                         },
                         false => Powered switch {
-                            true => 7036,
-                            false => 7037,
+                            true => 8706,
+                            false => 8707,
                         },
                     },
                     Direction.South => Locked switch {
                         true => Powered switch {
-                            true => 7038,
-                            false => 7039,
+                            true => 8708,
+                            false => 8709,
                         },
                         false => Powered switch {
-                            true => 7040,
-                            false => 7041,
+                            true => 8710,
+                            false => 8711,
                         },
                     },
                     Direction.West => Locked switch {
                         true => Powered switch {
-                            true => 7042,
-                            false => 7043,
+                            true => 8712,
+                            false => 8713,
                         },
                         false => Powered switch {
-                            true => 7044,
-                            false => 7045,
+                            true => 8714,
+                            false => 8715,
                         },
                     },
                     Direction.East => Locked switch {
                         true => Powered switch {
-                            true => 7046,
-                            false => 7047,
+                            true => 8716,
+                            false => 8717,
                         },
                         false => Powered switch {
-                            true => 7048,
-                            false => 7049,
+                            true => 8718,
+                            false => 8719,
                         },
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -119,42 +119,42 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
                 2 => Facing switch {
                     Direction.North => Locked switch {
                         true => Powered switch {
-                            true => 7050,
-                            false => 7051,
+                            true => 8720,
+                            false => 8721,
                         },
                         false => Powered switch {
-                            true => 7052,
-                            false => 7053,
+                            true => 8722,
+                            false => 8723,
                         },
                     },
                     Direction.South => Locked switch {
                         true => Powered switch {
-                            true => 7054,
-                            false => 7055,
+                            true => 8724,
+                            false => 8725,
                         },
                         false => Powered switch {
-                            true => 7056,
-                            false => 7057,
+                            true => 8726,
+                            false => 8727,
                         },
                     },
                     Direction.West => Locked switch {
                         true => Powered switch {
-                            true => 7058,
-                            false => 7059,
+                            true => 8728,
+                            false => 8729,
                         },
                         false => Powered switch {
-                            true => 7060,
-                            false => 7061,
+                            true => 8730,
+                            false => 8731,
                         },
                     },
                     Direction.East => Locked switch {
                         true => Powered switch {
-                            true => 7062,
-                            false => 7063,
+                            true => 8732,
+                            false => 8733,
                         },
                         false => Powered switch {
-                            true => 7064,
-                            false => 7065,
+                            true => 8734,
+                            false => 8735,
                         },
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -162,42 +162,42 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
                 3 => Facing switch {
                     Direction.North => Locked switch {
                         true => Powered switch {
-                            true => 7066,
-                            false => 7067,
+                            true => 8736,
+                            false => 8737,
                         },
                         false => Powered switch {
-                            true => 7068,
-                            false => 7069,
+                            true => 8738,
+                            false => 8739,
                         },
                     },
                     Direction.South => Locked switch {
                         true => Powered switch {
-                            true => 7070,
-                            false => 7071,
+                            true => 8740,
+                            false => 8741,
                         },
                         false => Powered switch {
-                            true => 7072,
-                            false => 7073,
+                            true => 8742,
+                            false => 8743,
                         },
                     },
                     Direction.West => Locked switch {
                         true => Powered switch {
-                            true => 7074,
-                            false => 7075,
+                            true => 8744,
+                            false => 8745,
                         },
                         false => Powered switch {
-                            true => 7076,
-                            false => 7077,
+                            true => 8746,
+                            false => 8747,
                         },
                     },
                     Direction.East => Locked switch {
                         true => Powered switch {
-                            true => 7078,
-                            false => 7079,
+                            true => 8748,
+                            false => 8749,
                         },
                         false => Powered switch {
-                            true => 7080,
-                            false => 7081,
+                            true => 8750,
+                            false => 8751,
                         },
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -205,42 +205,42 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
                 4 => Facing switch {
                     Direction.North => Locked switch {
                         true => Powered switch {
-                            true => 7082,
-                            false => 7083,
+                            true => 8752,
+                            false => 8753,
                         },
                         false => Powered switch {
-                            true => 7084,
-                            false => 7085,
+                            true => 8754,
+                            false => 8755,
                         },
                     },
                     Direction.South => Locked switch {
                         true => Powered switch {
-                            true => 7086,
-                            false => 7087,
+                            true => 8756,
+                            false => 8757,
                         },
                         false => Powered switch {
-                            true => 7088,
-                            false => 7089,
+                            true => 8758,
+                            false => 8759,
                         },
                     },
                     Direction.West => Locked switch {
                         true => Powered switch {
-                            true => 7090,
-                            false => 7091,
+                            true => 8760,
+                            false => 8761,
                         },
                         false => Powered switch {
-                            true => 7092,
-                            false => 7093,
+                            true => 8762,
+                            false => 8763,
                         },
                     },
                     Direction.East => Locked switch {
                         true => Powered switch {
-                            true => 7094,
-                            false => 7095,
+                            true => 8764,
+                            false => 8765,
                         },
                         false => Powered switch {
-                            true => 7096,
-                            false => 7097,
+                            true => 8766,
+                            false => 8767,
                         },
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -252,70 +252,70 @@ public record RepeaterBlock(Identifier Identifier, int Delay, Direction Facing, 
     
     public IBlock WithState(uint state) {
         return state switch {
-            7034 => new RepeaterBlock(Identifier, 1, Direction.North, true, true),
-            7035 => new RepeaterBlock(Identifier, 1, Direction.North, true, false),
-            7036 => new RepeaterBlock(Identifier, 1, Direction.North, false, true),
-            7037 => new RepeaterBlock(Identifier, 1, Direction.North, false, false),
-            7038 => new RepeaterBlock(Identifier, 1, Direction.South, true, true),
-            7039 => new RepeaterBlock(Identifier, 1, Direction.South, true, false),
-            7040 => new RepeaterBlock(Identifier, 1, Direction.South, false, true),
-            7041 => new RepeaterBlock(Identifier, 1, Direction.South, false, false),
-            7042 => new RepeaterBlock(Identifier, 1, Direction.West, true, true),
-            7043 => new RepeaterBlock(Identifier, 1, Direction.West, true, false),
-            7044 => new RepeaterBlock(Identifier, 1, Direction.West, false, true),
-            7045 => new RepeaterBlock(Identifier, 1, Direction.West, false, false),
-            7046 => new RepeaterBlock(Identifier, 1, Direction.East, true, true),
-            7047 => new RepeaterBlock(Identifier, 1, Direction.East, true, false),
-            7048 => new RepeaterBlock(Identifier, 1, Direction.East, false, true),
-            7049 => new RepeaterBlock(Identifier, 1, Direction.East, false, false),
-            7050 => new RepeaterBlock(Identifier, 2, Direction.North, true, true),
-            7051 => new RepeaterBlock(Identifier, 2, Direction.North, true, false),
-            7052 => new RepeaterBlock(Identifier, 2, Direction.North, false, true),
-            7053 => new RepeaterBlock(Identifier, 2, Direction.North, false, false),
-            7054 => new RepeaterBlock(Identifier, 2, Direction.South, true, true),
-            7055 => new RepeaterBlock(Identifier, 2, Direction.South, true, false),
-            7056 => new RepeaterBlock(Identifier, 2, Direction.South, false, true),
-            7057 => new RepeaterBlock(Identifier, 2, Direction.South, false, false),
-            7058 => new RepeaterBlock(Identifier, 2, Direction.West, true, true),
-            7059 => new RepeaterBlock(Identifier, 2, Direction.West, true, false),
-            7060 => new RepeaterBlock(Identifier, 2, Direction.West, false, true),
-            7061 => new RepeaterBlock(Identifier, 2, Direction.West, false, false),
-            7062 => new RepeaterBlock(Identifier, 2, Direction.East, true, true),
-            7063 => new RepeaterBlock(Identifier, 2, Direction.East, true, false),
-            7064 => new RepeaterBlock(Identifier, 2, Direction.East, false, true),
-            7065 => new RepeaterBlock(Identifier, 2, Direction.East, false, false),
-            7066 => new RepeaterBlock(Identifier, 3, Direction.North, true, true),
-            7067 => new RepeaterBlock(Identifier, 3, Direction.North, true, false),
-            7068 => new RepeaterBlock(Identifier, 3, Direction.North, false, true),
-            7069 => new RepeaterBlock(Identifier, 3, Direction.North, false, false),
-            7070 => new RepeaterBlock(Identifier, 3, Direction.South, true, true),
-            7071 => new RepeaterBlock(Identifier, 3, Direction.South, true, false),
-            7072 => new RepeaterBlock(Identifier, 3, Direction.South, false, true),
-            7073 => new RepeaterBlock(Identifier, 3, Direction.South, false, false),
-            7074 => new RepeaterBlock(Identifier, 3, Direction.West, true, true),
-            7075 => new RepeaterBlock(Identifier, 3, Direction.West, true, false),
-            7076 => new RepeaterBlock(Identifier, 3, Direction.West, false, true),
-            7077 => new RepeaterBlock(Identifier, 3, Direction.West, false, false),
-            7078 => new RepeaterBlock(Identifier, 3, Direction.East, true, true),
-            7079 => new RepeaterBlock(Identifier, 3, Direction.East, true, false),
-            7080 => new RepeaterBlock(Identifier, 3, Direction.East, false, true),
-            7081 => new RepeaterBlock(Identifier, 3, Direction.East, false, false),
-            7082 => new RepeaterBlock(Identifier, 4, Direction.North, true, true),
-            7083 => new RepeaterBlock(Identifier, 4, Direction.North, true, false),
-            7084 => new RepeaterBlock(Identifier, 4, Direction.North, false, true),
-            7085 => new RepeaterBlock(Identifier, 4, Direction.North, false, false),
-            7086 => new RepeaterBlock(Identifier, 4, Direction.South, true, true),
-            7087 => new RepeaterBlock(Identifier, 4, Direction.South, true, false),
-            7088 => new RepeaterBlock(Identifier, 4, Direction.South, false, true),
-            7089 => new RepeaterBlock(Identifier, 4, Direction.South, false, false),
-            7090 => new RepeaterBlock(Identifier, 4, Direction.West, true, true),
-            7091 => new RepeaterBlock(Identifier, 4, Direction.West, true, false),
-            7092 => new RepeaterBlock(Identifier, 4, Direction.West, false, true),
-            7093 => new RepeaterBlock(Identifier, 4, Direction.West, false, false),
-            7094 => new RepeaterBlock(Identifier, 4, Direction.East, true, true),
-            7095 => new RepeaterBlock(Identifier, 4, Direction.East, true, false),
-            7096 => new RepeaterBlock(Identifier, 4, Direction.East, false, true),
-            7097 => new RepeaterBlock(Identifier, 4, Direction.East, false, false),
+            8704 => new RepeaterBlock(Identifier, 1, Direction.North, true, true),
+            8705 => new RepeaterBlock(Identifier, 1, Direction.North, true, false),
+            8706 => new RepeaterBlock(Identifier, 1, Direction.North, false, true),
+            8707 => new RepeaterBlock(Identifier, 1, Direction.North, false, false),
+            8708 => new RepeaterBlock(Identifier, 1, Direction.South, true, true),
+            8709 => new RepeaterBlock(Identifier, 1, Direction.South, true, false),
+            8710 => new RepeaterBlock(Identifier, 1, Direction.South, false, true),
+            8711 => new RepeaterBlock(Identifier, 1, Direction.South, false, false),
+            8712 => new RepeaterBlock(Identifier, 1, Direction.West, true, true),
+            8713 => new RepeaterBlock(Identifier, 1, Direction.West, true, false),
+            8714 => new RepeaterBlock(Identifier, 1, Direction.West, false, true),
+            8715 => new RepeaterBlock(Identifier, 1, Direction.West, false, false),
+            8716 => new RepeaterBlock(Identifier, 1, Direction.East, true, true),
+            8717 => new RepeaterBlock(Identifier, 1, Direction.East, true, false),
+            8718 => new RepeaterBlock(Identifier, 1, Direction.East, false, true),
+            8719 => new RepeaterBlock(Identifier, 1, Direction.East, false, false),
+            8720 => new RepeaterBlock(Identifier, 2, Direction.North, true, true),
+            8721 => new RepeaterBlock(Identifier, 2, Direction.North, true, false),
+            8722 => new RepeaterBlock(Identifier, 2, Direction.North, false, true),
+            8723 => new RepeaterBlock(Identifier, 2, Direction.North, false, false),
+            8724 => new RepeaterBlock(Identifier, 2, Direction.South, true, true),
+            8725 => new RepeaterBlock(Identifier, 2, Direction.South, true, false),
+            8726 => new RepeaterBlock(Identifier, 2, Direction.South, false, true),
+            8727 => new RepeaterBlock(Identifier, 2, Direction.South, false, false),
+            8728 => new RepeaterBlock(Identifier, 2, Direction.West, true, true),
+            8729 => new RepeaterBlock(Identifier, 2, Direction.West, true, false),
+            8730 => new RepeaterBlock(Identifier, 2, Direction.West, false, true),
+            8731 => new RepeaterBlock(Identifier, 2, Direction.West, false, false),
+            8732 => new RepeaterBlock(Identifier, 2, Direction.East, true, true),
+            8733 => new RepeaterBlock(Identifier, 2, Direction.East, true, false),
+            8734 => new RepeaterBlock(Identifier, 2, Direction.East, false, true),
+            8735 => new RepeaterBlock(Identifier, 2, Direction.East, false, false),
+            8736 => new RepeaterBlock(Identifier, 3, Direction.North, true, true),
+            8737 => new RepeaterBlock(Identifier, 3, Direction.North, true, false),
+            8738 => new RepeaterBlock(Identifier, 3, Direction.North, false, true),
+            8739 => new RepeaterBlock(Identifier, 3, Direction.North, false, false),
+            8740 => new RepeaterBlock(Identifier, 3, Direction.South, true, true),
+            8741 => new RepeaterBlock(Identifier, 3, Direction.South, true, false),
+            8742 => new RepeaterBlock(Identifier, 3, Direction.South, false, true),
+            8743 => new RepeaterBlock(Identifier, 3, Direction.South, false, false),
+            8744 => new RepeaterBlock(Identifier, 3, Direction.West, true, true),
+            8745 => new RepeaterBlock(Identifier, 3, Direction.West, true, false),
+            8746 => new RepeaterBlock(Identifier, 3, Direction.West, false, true),
+            8747 => new RepeaterBlock(Identifier, 3, Direction.West, false, false),
+            8748 => new RepeaterBlock(Identifier, 3, Direction.East, true, true),
+            8749 => new RepeaterBlock(Identifier, 3, Direction.East, true, false),
+            8750 => new RepeaterBlock(Identifier, 3, Direction.East, false, true),
+            8751 => new RepeaterBlock(Identifier, 3, Direction.East, false, false),
+            8752 => new RepeaterBlock(Identifier, 4, Direction.North, true, true),
+            8753 => new RepeaterBlock(Identifier, 4, Direction.North, true, false),
+            8754 => new RepeaterBlock(Identifier, 4, Direction.North, false, true),
+            8755 => new RepeaterBlock(Identifier, 4, Direction.North, false, false),
+            8756 => new RepeaterBlock(Identifier, 4, Direction.South, true, true),
+            8757 => new RepeaterBlock(Identifier, 4, Direction.South, true, false),
+            8758 => new RepeaterBlock(Identifier, 4, Direction.South, false, true),
+            8759 => new RepeaterBlock(Identifier, 4, Direction.South, false, false),
+            8760 => new RepeaterBlock(Identifier, 4, Direction.West, true, true),
+            8761 => new RepeaterBlock(Identifier, 4, Direction.West, true, false),
+            8762 => new RepeaterBlock(Identifier, 4, Direction.West, false, true),
+            8763 => new RepeaterBlock(Identifier, 4, Direction.West, false, false),
+            8764 => new RepeaterBlock(Identifier, 4, Direction.East, true, true),
+            8765 => new RepeaterBlock(Identifier, 4, Direction.East, true, false),
+            8766 => new RepeaterBlock(Identifier, 4, Direction.East, false, true),
+            8767 => new RepeaterBlock(Identifier, 4, Direction.East, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

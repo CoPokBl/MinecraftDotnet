@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record PurpurStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:stair", "block.minecraft.purpur_stairs", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:purpur_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/purpur_stairs");
-    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.Normal, 16, "stone", NoteBlockInstrument.Basedrum, false, true, true, true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockInfo Data = new("block.minecraft.purpur_stairs", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:purpur_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/purpur_stairs");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 1, PushReaction.PushPull, 16, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
@@ -64,15 +64,15 @@ public record PurpurStairsBlock(Identifier Identifier, Direction Facing, TopBott
         I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 14716];
+    public BlockStateInfo StateInfo => States[StateId - 16697];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -86,7 +86,6 @@ public record PurpurStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -106,6 +105,7 @@ public record PurpurStairsBlock(Identifier Identifier, Direction Facing, TopBott
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -128,47 +128,47 @@ public record PurpurStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.North => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 14716,
-                            false => 14717,
+                            true => 16697,
+                            false => 16698,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 14718,
-                            false => 14719,
+                            true => 16699,
+                            false => 16700,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 14720,
-                            false => 14721,
+                            true => 16701,
+                            false => 16702,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 14722,
-                            false => 14723,
+                            true => 16703,
+                            false => 16704,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 14724,
-                            false => 14725,
+                            true => 16705,
+                            false => 16706,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 14726,
-                            false => 14727,
+                            true => 16707,
+                            false => 16708,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 14728,
-                            false => 14729,
+                            true => 16709,
+                            false => 16710,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 14730,
-                            false => 14731,
+                            true => 16711,
+                            false => 16712,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 14732,
-                            false => 14733,
+                            true => 16713,
+                            false => 16714,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 14734,
-                            false => 14735,
+                            true => 16715,
+                            false => 16716,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -177,47 +177,47 @@ public record PurpurStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.South => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 14736,
-                            false => 14737,
+                            true => 16717,
+                            false => 16718,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 14738,
-                            false => 14739,
+                            true => 16719,
+                            false => 16720,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 14740,
-                            false => 14741,
+                            true => 16721,
+                            false => 16722,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 14742,
-                            false => 14743,
+                            true => 16723,
+                            false => 16724,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 14744,
-                            false => 14745,
+                            true => 16725,
+                            false => 16726,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 14746,
-                            false => 14747,
+                            true => 16727,
+                            false => 16728,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 14748,
-                            false => 14749,
+                            true => 16729,
+                            false => 16730,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 14750,
-                            false => 14751,
+                            true => 16731,
+                            false => 16732,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 14752,
-                            false => 14753,
+                            true => 16733,
+                            false => 16734,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 14754,
-                            false => 14755,
+                            true => 16735,
+                            false => 16736,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -226,47 +226,47 @@ public record PurpurStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.West => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 14756,
-                            false => 14757,
+                            true => 16737,
+                            false => 16738,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 14758,
-                            false => 14759,
+                            true => 16739,
+                            false => 16740,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 14760,
-                            false => 14761,
+                            true => 16741,
+                            false => 16742,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 14762,
-                            false => 14763,
+                            true => 16743,
+                            false => 16744,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 14764,
-                            false => 14765,
+                            true => 16745,
+                            false => 16746,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 14766,
-                            false => 14767,
+                            true => 16747,
+                            false => 16748,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 14768,
-                            false => 14769,
+                            true => 16749,
+                            false => 16750,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 14770,
-                            false => 14771,
+                            true => 16751,
+                            false => 16752,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 14772,
-                            false => 14773,
+                            true => 16753,
+                            false => 16754,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 14774,
-                            false => 14775,
+                            true => 16755,
+                            false => 16756,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -275,47 +275,47 @@ public record PurpurStairsBlock(Identifier Identifier, Direction Facing, TopBott
                 Direction.East => Half switch {
                     TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 14776,
-                            false => 14777,
+                            true => 16757,
+                            false => 16758,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 14778,
-                            false => 14779,
+                            true => 16759,
+                            false => 16760,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 14780,
-                            false => 14781,
+                            true => 16761,
+                            false => 16762,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 14782,
-                            false => 14783,
+                            true => 16763,
+                            false => 16764,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 14784,
-                            false => 14785,
+                            true => 16765,
+                            false => 16766,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
                     TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 14786,
-                            false => 14787,
+                            true => 16767,
+                            false => 16768,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 14788,
-                            false => 14789,
+                            true => 16769,
+                            false => 16770,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 14790,
-                            false => 14791,
+                            true => 16771,
+                            false => 16772,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 14792,
-                            false => 14793,
+                            true => 16773,
+                            false => 16774,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 14794,
-                            false => 14795,
+                            true => 16775,
+                            false => 16776,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
@@ -328,86 +328,86 @@ public record PurpurStairsBlock(Identifier Identifier, Direction Facing, TopBott
     
     public IBlock WithState(uint state) {
         return state switch {
-            14716 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
-            14717 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
-            14718 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
-            14719 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
-            14720 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
-            14721 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
-            14722 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
-            14723 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
-            14724 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
-            14725 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
-            14726 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
-            14727 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
-            14728 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
-            14729 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
-            14730 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
-            14731 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
-            14732 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
-            14733 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
-            14734 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
-            14735 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
-            14736 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
-            14737 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
-            14738 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
-            14739 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
-            14740 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
-            14741 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
-            14742 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
-            14743 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
-            14744 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
-            14745 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
-            14746 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
-            14747 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
-            14748 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
-            14749 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
-            14750 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
-            14751 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
-            14752 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
-            14753 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
-            14754 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
-            14755 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
-            14756 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
-            14757 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
-            14758 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
-            14759 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
-            14760 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
-            14761 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
-            14762 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
-            14763 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
-            14764 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
-            14765 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
-            14766 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
-            14767 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
-            14768 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
-            14769 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
-            14770 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
-            14771 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
-            14772 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
-            14773 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
-            14774 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
-            14775 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
-            14776 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
-            14777 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
-            14778 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
-            14779 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
-            14780 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
-            14781 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
-            14782 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
-            14783 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
-            14784 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
-            14785 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
-            14786 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
-            14787 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
-            14788 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
-            14789 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
-            14790 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
-            14791 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
-            14792 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
-            14793 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
-            14794 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
-            14795 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
+            16697 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            16698 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            16699 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            16700 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            16701 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            16702 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            16703 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            16704 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            16705 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            16706 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            16707 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            16708 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            16709 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            16710 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            16711 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            16712 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            16713 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            16714 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            16715 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            16716 => new PurpurStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            16717 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            16718 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            16719 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            16720 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            16721 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            16722 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            16723 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            16724 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            16725 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            16726 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            16727 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            16728 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            16729 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            16730 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            16731 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            16732 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            16733 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            16734 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            16735 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            16736 => new PurpurStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            16737 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            16738 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            16739 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            16740 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            16741 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            16742 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            16743 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            16744 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            16745 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            16746 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            16747 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            16748 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            16749 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            16750 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            16751 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            16752 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            16753 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            16754 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            16755 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            16756 => new PurpurStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            16757 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            16758 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            16759 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            16760 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            16761 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            16762 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            16763 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            16764 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            16765 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            16766 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            16767 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            16768 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            16769 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            16770 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            16771 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            16772 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            16773 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            16774 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            16775 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            16776 => new PurpurStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

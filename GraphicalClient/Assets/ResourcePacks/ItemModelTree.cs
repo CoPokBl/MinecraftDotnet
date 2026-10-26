@@ -703,11 +703,6 @@ public sealed class ItemModelTree(BlockModelBaker baker, Rendering.BiomeColours.
                 int fallback = Default(-13083194);
                 return q => (uint)ItemModelProperties.PotionColour(q.Stack, fallback) & 0xFFFFFF;
             }
-            case "map_color": {
-                // MapItemColor.DEFAULT.
-                int fallback = Default(4603950);
-                return q => (uint)ItemModelProperties.MapColour(q.Stack, fallback) & 0xFFFFFF;
-            }
             case "custom_model_data": {
                 int index = source.Value<int?>("index") ?? 0;
                 int fallback = Default(-1);

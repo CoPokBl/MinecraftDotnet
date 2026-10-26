@@ -111,7 +111,7 @@ public class SquidRenderer : AgeableMobRenderer<SquidRenderState, SquidModel> {
             float diffBetweenDirectionAndFacing = Mth.Abs(Mth.WrapDegrees(yRot) - walkDirection);
             yBodyRotT = 95.0F < diffBetweenDirectionAndFacing && diffBetweenDirectionAndFacing < 265.0F ? walkDirection - 180.0F : walkDirection;
         }
-        if (entity.AttackAnim > 0.0F) {
+        if (entity.SwingState.Animation > 0.0F) {
             yBodyRotT = yRot;
         }
         // tickHeadTurn.

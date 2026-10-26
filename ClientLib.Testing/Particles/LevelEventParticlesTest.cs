@@ -26,12 +26,12 @@ public class LevelEventParticlesTest {
     /// <summary>The level events vanilla's <c>levelEvent</c> only plays a sound for, or nothing.</summary>
     private static readonly int[] SoundOnly = [
         1000, 1001, 1002, 1004, 1009, 1010, 1011, 1015, 1016, 1017, 1018, 1019, 1020, 1021, 1022, 1024, 1025, 1026, 1027, 1029, 1030, 1031,
-        1032, 1033, 1034, 1035, 1039, 1040, 1041, 1042, 1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050, 1051, 1052, 3001
+        1032, 1033, 1034, 1035, 1039, 1040, 1041, 1042, 1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050, 1051, 1052, 1053, 1054, 3001
     ];
 
     /// <summary>The level events with particles that need nothing particular at the position.</summary>
     private static readonly int[] Unconditional = [
-        1501, 1502, 1503, 2000, 2002, 2003, 2004, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 3000, 3002, 3003, 3004, 3005, 3006, 3007, 3009,
+        1501, 1502, 1503, 2000, 2002, 2003, 2004, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2015, 2016, 2017, 2018, 3000, 3002, 3003, 3004, 3005, 3006, 3007, 3009,
         3011, 3012, 3013, 3014, 3016, 3017, 3018, 3019, 3020, 3021
     ];
 
@@ -96,6 +96,44 @@ public class LevelEventParticlesTest {
         engine.LevelEvent(2001, 2, Floor, 2, int.MaxValue);
         engine.LevelEvent(2001, 2, Floor, 2, 0);
         Assert.That(engine.Pending.Length, Is.EqualTo(128), "an unknown id is air, which makes nothing");
+    }
+
+    [Test]
+    public void ABlockDestroyedQuietlyThrowsTheSameFragments() {
+        (_, ParticleEngine engine) = World();
+        engine.LevelEvent(2014, 2, Floor, 2, (int)Block.Stone.StateId);
+        Assert.That(engine.Pending.Length, Is.EqualTo(64));
+    }
+
+    /// <summary>2019 and 2020 are one crack particle off the face their data names, here up, on the block being dug.</summary>
+    [Test]
+    public void DestroyProgressCracksTheFaceBeingDug() {
+        (_, ParticleEngine engine) = World();
+        engine.LevelEvent(2019, 2, Floor - 1, 2, 1);
+        engine.LevelEvent(2020, 2, Floor - 1, 2, 1);
+        Assert.That(engine.Pending.Length, Is.EqualTo(2));
+        foreach (ParticleState p in engine.Pending) {
+            Assert.That(p.Y, Is.EqualTo(Floor + 0.1F).Within(1.0E-6));
+            Assert.That(p.X, Is.InRange(2.1, 2.9));
+        }
+        engine.LevelEvent(2019, 2, Floor, 2, 1);
+        Assert.That(engine.Pending.Length, Is.EqualTo(2), "air cracks nothing");
+    }
+
+    /// <summary>
+    /// 2015 packs where the dragon egg went as offsets of 16, 8 and 16; the portal trail runs from there back
+    /// to where it was.
+    /// </summary>
+    [Test]
+    public void ATeleportTrailRunsBetweenThePackedPositions() {
+        (_, ParticleEngine engine) = World();
+        int packed = (5 + 16 & 0xFF) << 16 | (-2 + 8 & 0xFF) << 8 | (0 + 16 & 0xFF);
+        engine.LevelEvent(2015, 2, Floor, 2, packed);
+        Assert.That(engine.Pending.Length, Is.EqualTo(128));
+        foreach (ParticleState p in engine.Pending) {
+            Assert.That(p.X, Is.InRange(2.0, 8.0));
+            Assert.That(p.Z, Is.InRange(2.0, 3.0));
+        }
     }
 
     [Test]
@@ -181,24 +219,16 @@ public class LevelEventParticlesTest {
     }
 
     [Test]
-    public void ToolUsesAreToldFromWhatChanged() {
-        Identifier axe = Item.IronAxe.Identifier, honeycomb = Item.Honeycomb.Identifier;
-        Assert.That(ToolUseOn.Classify(axe, Block.OakLog, Block.StrippedOakLog), Is.EqualTo(ToolBlockChange.Strip));
-        Assert.That(ToolUseOn.Classify(axe, Block.ExposedCopper, Block.CopperBlock), Is.EqualTo(ToolBlockChange.Scrape));
-        Assert.That(ToolUseOn.Classify(axe, Block.WaxedExposedCopper, Block.ExposedCopper), Is.EqualTo(ToolBlockChange.WaxOff));
-        Assert.That(ToolUseOn.Classify(honeycomb, Block.CopperBlock, Block.WaxedCopperBlock), Is.EqualTo(ToolBlockChange.WaxOn));
-        Assert.That(ToolUseOn.Classify(axe, Block.ExposedCopper, Block.ExposedCopper), Is.EqualTo(ToolBlockChange.None));
-        Assert.That(ToolUseOn.Classify(Item.Stick.Identifier, Block.ExposedCopper, Block.CopperBlock), Is.EqualTo(ToolBlockChange.None));
-    }
-
-    [Test]
     public void ScrapingADoubleChestScrapesBothHalves() {
         (MinecraftClient client, _) = World();
         List<(int Type, int X, int Z)> events = [];
         client.Level!.LevelEvent += (type, x, _, z, _) => events.Add((type, x, z));
         IBlock left = ((IHorizontalFacing)((IChestTyped)Block.ExposedCopperChest).WithType(ChestType.Left)).WithFacing(Direction.North);
-        ToolUseOn.RaiseLevelEvents(client.Level, new UseOnOutcome(Hand.MainHand, new ItemStack(Item.IronAxe),
-            (2, Floor, 2), (ushort)left.StateId, (ushort)Block.CopperChest.StateId, (2, Floor + 1, 2), 0, 0));
+        IBlock scraped = ((IHorizontalFacing)((IChestTyped)Block.CopperChest).WithType(ChestType.Left)).WithFacing(Direction.North);
+        UseOnOutcome use = new(Hand.MainHand, new ItemStack(Item.IronAxe), (2, Floor, 2), BlockFace.PosY,
+            (ushort)left.StateId, (ushort)scraped.StateId, (2, Floor + 1, 2), 0, 0);
+        use = use with { Tool = ToolUseOn.Classify(client.Interactions.Transforms, client.Level, use) };
+        ToolUseOn.RaiseLevelEvents(client.Level, use);
         // ChestBlock.getConnectedDirection: a left half facing north joins the block clockwise of north, east.
         Assert.That(events, Is.EqualTo(new List<(int, int, int)> { (3005, 2, 2), (3005, 3, 2) }));
     }

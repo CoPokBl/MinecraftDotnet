@@ -11,8 +11,8 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WaxedExposedCopperTrapdoorBlock(Identifier Identifier, Direction Facing, TopBottom Half, bool Open, bool Powered, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IOpenable, IPowered, IWaterlogged {
-    private static readonly BlockInfo Data = new("minecraft:trapdoor", "block.minecraft.waxed_exposed_copper_trapdoor", 6f, 0.6f, 1f, 1f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_exposed_copper_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_exposed_copper_trapdoor");
-    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Normal, 44, "copper", NoteBlockInstrument.Harp, false, false, true, true, false, false, false, false, true, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockInfo Data = new("block.minecraft.waxed_exposed_copper_trapdoor", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_exposed_copper_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_exposed_copper_trapdoor");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 44, "copper", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
     private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
     private static readonly BlockStateInfo I2 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
     private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
@@ -28,15 +28,15 @@ public record WaxedExposedCopperTrapdoorBlock(Identifier Identifier, Direction F
         I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I4, I5, I4, I5, I6, I7, I6, I7, I2, I3, I2, I3, I6, I7, I6, I7, I4, I5, I4, I5, I8, I9, I8, I9, I2, I3, I2, I3, I8, I9, I8, I9, I4, I5, I4, I5, I10, I11, I10, I11, I2, I3, I2, I3, I10, I11, I10, I11, I4, I5, I4, I5
     ];
 
-    public BlockStateInfo StateInfo => States[StateId - 29328];
+    public BlockStateInfo StateInfo => States[StateId - 32685];
 
     public BlockInfo Info => Data;
-    public Identifier Category => Data.Category;
     public float ExplosionResistance => Data.ExplosionResistance;
     public float Friction => Data.Friction;
     public float SpeedFactor => Data.SpeedFactor;
     public float JumpFactor => Data.JumpFactor;
     public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
     public bool Gravity => Data.Gravity;
     public string TranslationKey => Data.TranslationKey;
     public Identifier? BlockEntity => Data.BlockEntity;
@@ -50,7 +50,6 @@ public record WaxedExposedCopperTrapdoorBlock(Identifier Identifier, Direction F
     public bool Air => StateInfo.Air;
     public bool Occludes => StateInfo.Occludes;
     public bool RequiresTool => StateInfo.RequiresTool;
-    public bool BlocksMotion => StateInfo.BlocksMotion;
     public int LightEmission => StateInfo.LightEmission;
     public int LightDampening => StateInfo.LightDampening;
     public bool Replaceable => StateInfo.Replaceable;
@@ -70,6 +69,7 @@ public record WaxedExposedCopperTrapdoorBlock(Identifier Identifier, Direction F
     public bool RandomlyTicking => StateInfo.RandomlyTicking;
     public bool Suffocating => StateInfo.Suffocating;
     public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
     public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
     public bool PathfindableLand => StateInfo.PathfindableLand;
     public bool PathfindableWater => StateInfo.PathfindableWater;
@@ -95,44 +95,44 @@ public record WaxedExposedCopperTrapdoorBlock(Identifier Identifier, Direction F
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 29328,
-                                false => 29329,
+                                true => 32685,
+                                false => 32686,
                             },
                             false => Waterlogged switch {
-                                true => 29330,
-                                false => 29331,
+                                true => 32687,
+                                false => 32688,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 29332,
-                                false => 29333,
+                                true => 32689,
+                                false => 32690,
                             },
                             false => Waterlogged switch {
-                                true => 29334,
-                                false => 29335,
+                                true => 32691,
+                                false => 32692,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 29336,
-                                false => 29337,
+                                true => 32693,
+                                false => 32694,
                             },
                             false => Waterlogged switch {
-                                true => 29338,
-                                false => 29339,
+                                true => 32695,
+                                false => 32696,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 29340,
-                                false => 29341,
+                                true => 32697,
+                                false => 32698,
                             },
                             false => Waterlogged switch {
-                                true => 29342,
-                                false => 29343,
+                                true => 32699,
+                                false => 32700,
                             },
                         },
                     },
@@ -142,44 +142,44 @@ public record WaxedExposedCopperTrapdoorBlock(Identifier Identifier, Direction F
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 29344,
-                                false => 29345,
+                                true => 32701,
+                                false => 32702,
                             },
                             false => Waterlogged switch {
-                                true => 29346,
-                                false => 29347,
+                                true => 32703,
+                                false => 32704,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 29348,
-                                false => 29349,
+                                true => 32705,
+                                false => 32706,
                             },
                             false => Waterlogged switch {
-                                true => 29350,
-                                false => 29351,
+                                true => 32707,
+                                false => 32708,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 29352,
-                                false => 29353,
+                                true => 32709,
+                                false => 32710,
                             },
                             false => Waterlogged switch {
-                                true => 29354,
-                                false => 29355,
+                                true => 32711,
+                                false => 32712,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 29356,
-                                false => 29357,
+                                true => 32713,
+                                false => 32714,
                             },
                             false => Waterlogged switch {
-                                true => 29358,
-                                false => 29359,
+                                true => 32715,
+                                false => 32716,
                             },
                         },
                     },
@@ -189,44 +189,44 @@ public record WaxedExposedCopperTrapdoorBlock(Identifier Identifier, Direction F
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 29360,
-                                false => 29361,
+                                true => 32717,
+                                false => 32718,
                             },
                             false => Waterlogged switch {
-                                true => 29362,
-                                false => 29363,
+                                true => 32719,
+                                false => 32720,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 29364,
-                                false => 29365,
+                                true => 32721,
+                                false => 32722,
                             },
                             false => Waterlogged switch {
-                                true => 29366,
-                                false => 29367,
+                                true => 32723,
+                                false => 32724,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 29368,
-                                false => 29369,
+                                true => 32725,
+                                false => 32726,
                             },
                             false => Waterlogged switch {
-                                true => 29370,
-                                false => 29371,
+                                true => 32727,
+                                false => 32728,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 29372,
-                                false => 29373,
+                                true => 32729,
+                                false => 32730,
                             },
                             false => Waterlogged switch {
-                                true => 29374,
-                                false => 29375,
+                                true => 32731,
+                                false => 32732,
                             },
                         },
                     },
@@ -236,44 +236,44 @@ public record WaxedExposedCopperTrapdoorBlock(Identifier Identifier, Direction F
                     TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 29376,
-                                false => 29377,
+                                true => 32733,
+                                false => 32734,
                             },
                             false => Waterlogged switch {
-                                true => 29378,
-                                false => 29379,
+                                true => 32735,
+                                false => 32736,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 29380,
-                                false => 29381,
+                                true => 32737,
+                                false => 32738,
                             },
                             false => Waterlogged switch {
-                                true => 29382,
-                                false => 29383,
+                                true => 32739,
+                                false => 32740,
                             },
                         },
                     },
                     TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 29384,
-                                false => 29385,
+                                true => 32741,
+                                false => 32742,
                             },
                             false => Waterlogged switch {
-                                true => 29386,
-                                false => 29387,
+                                true => 32743,
+                                false => 32744,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 29388,
-                                false => 29389,
+                                true => 32745,
+                                false => 32746,
                             },
                             false => Waterlogged switch {
-                                true => 29390,
-                                false => 29391,
+                                true => 32747,
+                                false => 32748,
                             },
                         },
                     },
@@ -286,70 +286,70 @@ public record WaxedExposedCopperTrapdoorBlock(Identifier Identifier, Direction F
     
     public IBlock WithState(uint state) {
         return state switch {
-            29328 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
-            29329 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
-            29330 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
-            29331 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
-            29332 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
-            29333 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
-            29334 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
-            29335 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
-            29336 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
-            29337 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
-            29338 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
-            29339 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
-            29340 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
-            29341 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
-            29342 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
-            29343 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
-            29344 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
-            29345 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
-            29346 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
-            29347 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
-            29348 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
-            29349 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
-            29350 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
-            29351 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
-            29352 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
-            29353 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
-            29354 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
-            29355 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
-            29356 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
-            29357 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
-            29358 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
-            29359 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
-            29360 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
-            29361 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
-            29362 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
-            29363 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
-            29364 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
-            29365 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
-            29366 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
-            29367 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
-            29368 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
-            29369 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
-            29370 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
-            29371 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
-            29372 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
-            29373 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
-            29374 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
-            29375 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
-            29376 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
-            29377 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
-            29378 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
-            29379 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
-            29380 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
-            29381 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
-            29382 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
-            29383 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
-            29384 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
-            29385 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
-            29386 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
-            29387 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
-            29388 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
-            29389 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
-            29390 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
-            29391 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
+            32685 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
+            32686 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
+            32687 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
+            32688 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
+            32689 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
+            32690 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
+            32691 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
+            32692 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
+            32693 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
+            32694 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
+            32695 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
+            32696 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
+            32697 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
+            32698 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
+            32699 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
+            32700 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
+            32701 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
+            32702 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
+            32703 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
+            32704 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
+            32705 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
+            32706 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
+            32707 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
+            32708 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
+            32709 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
+            32710 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
+            32711 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
+            32712 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
+            32713 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
+            32714 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
+            32715 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
+            32716 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
+            32717 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
+            32718 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
+            32719 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
+            32720 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
+            32721 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
+            32722 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
+            32723 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
+            32724 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
+            32725 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
+            32726 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
+            32727 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
+            32728 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
+            32729 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
+            32730 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
+            32731 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
+            32732 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
+            32733 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
+            32734 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
+            32735 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
+            32736 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
+            32737 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
+            32738 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
+            32739 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
+            32740 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
+            32741 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
+            32742 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
+            32743 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
+            32744 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
+            32745 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
+            32746 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
+            32747 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
+            32748 => new WaxedExposedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -496,7 +496,7 @@ public final class PlacementHarness {
      */
     private static void bindTags() {
         MultiPackResourceManager resources = new MultiPackResourceManager(
-                PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource()));
+                PackType.SERVER_DATA, List.of(ServerPacksSource.createVanillaPackSource().fullResources()));
 
         TagLoader.loadTagsForExistingRegistries(
                         resources, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY))

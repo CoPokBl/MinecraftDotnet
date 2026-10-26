@@ -31,10 +31,7 @@ public abstract class HumanoidMobRenderer<S, M> : AgeableMobRenderer<S, M>
 
     protected virtual ArmPose GetArmPose(ClientEntity mob, HumanoidArm arm, EntityRenderContext context) {
         ItemStack itemHeldByArm = ArmedEntityRenderState.ItemHeldByArm(mob, arm);
-        if (HumanoidMobRenderer.IsStab(itemHeldByArm) && mob.Swinging) {
-            return ArmPose.Spear;
-        }
-        return HumanoidEntityData.IsSpear(itemHeldByArm, context) ? ArmPose.Spear : ArmPose.Empty;
+        return HumanoidMobRenderer.UsesSpearPose(itemHeldByArm, arm, mob, context) ? ArmPose.Spear : ArmPose.Empty;
     }
 
     public override void ExtractRenderState(ClientEntity entity, S state, float partialTick, EntityRenderContext context) {
@@ -47,8 +44,13 @@ public abstract class HumanoidMobRenderer<S, M> : AgeableMobRenderer<S, M>
 
 /// <summary><c>HumanoidMobRenderer</c>'s statics, for the humanoid renderers that are not mob renderers.</summary>
 public static class HumanoidMobRenderer {
-    /// <summary>A stack whose swing is the spear's stab.</summary>
-    public static bool IsStab(ItemStack stack) => stack.Has(DataComponent.SwingAnimation) && stack.Get(DataComponent.SwingAnimation).Type == SwingAnimationType.Stab;
+    /// <summary><c>usesSpearPose</c>: the arm is part way through a stab, or holds a spear.</summary>
+    public static bool UsesSpearPose(ItemStack item, HumanoidArm arm, ClientEntity entity, EntityRenderContext context) {
+        HumanoidArm mainArm = ArmedEntityRenderState.MainArmOf(entity);
+        return entity.CurrentSwing is { } swing && (swing.Hand == Hand.MainHand ? mainArm : ArmedEntityRenderState.Opposite(mainArm)) == arm
+                                                && swing.Animation.Type == SwingAnimationType.Stab
+               || HumanoidEntityData.IsSpear(item, context);
+    }
 
     /// <summary><c>extractHumanoidRenderState</c>.</summary>
     public static void ExtractHumanoidRenderState(ClientEntity entity, HumanoidRenderState state, float partialTick, ItemRenderer items, EntityRenderContext context) {
@@ -89,6 +91,6 @@ public static class HumanoidMobRenderer {
 
     private static HumanoidArm GetAttackArm(ClientEntity entity) {
         HumanoidArm mainArm = ArmedEntityRenderState.MainArmOf(entity);
-        return entity.SwingingArm != Hand.OffHand ? mainArm : ArmedEntityRenderState.Opposite(mainArm);
+        return entity.CurrentSwing?.Hand != Hand.OffHand ? mainArm : ArmedEntityRenderState.Opposite(mainArm);
     }
 }

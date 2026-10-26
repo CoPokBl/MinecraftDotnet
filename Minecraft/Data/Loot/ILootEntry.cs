@@ -14,68 +14,78 @@ public interface ILootEntry {
 
 /// <summary>
 /// Vanilla's <c>LootPoolEntryContainer</c>. <see cref="Expand"/> is the whole of the difference
-/// between an item and an alternatives block: a singleton offers itself when its conditions hold, and
-/// a composite delegates to its children.
+/// between an item and an alternatives block: a single entry offers itself when its condition holds,
+/// and a composite delegates to its children.
+/// <p/>
+/// The modifier belongs to the container rather than to what it produces, so a composite's modifier
+/// runs on every child's stack, after the child's own (<c>LootPoolEntryContainer.adjustOutput</c>).
 /// </summary>
-public abstract record LootEntryContainer(ILootCondition[] Conditions) {
+public abstract record LootEntryContainer(ILootCondition? Condition, LootFunction? Modifier) {
     /// <summary>
     /// Adds the entries this container offers to <paramref name="output"/> and reports whether it
     /// offered any. <b>The return value is what makes <c>alternatives</c> work</b>: it stops at the
     /// first child that says yes, so a silk touch branch shadows the branch after it.
     /// </summary>
-    public abstract bool Expand(LootContext context, List<ILootEntry> output);
-
-    protected bool CanRun(LootContext context) {
-        foreach (ILootCondition condition in Conditions) {
-            if (!condition.Test(context)) {
-                return false;
-            }
+    public bool Expand(LootContext context, List<ILootEntry> output) {
+        if (Condition != null && !Condition.Test(context)) {
+            return false;
         }
 
-        return true;
+        if (Modifier == null) {
+            return ExpandRaw(context, output);
+        }
+
+        int first = output.Count;
+        bool expanded = ExpandRaw(context, output);
+        for (int i = first; i < output.Count; i++) {
+            output[i] = new ModifiedEntry(output[i], Modifier);
+        }
+
+        return expanded;
+    }
+
+    protected abstract bool ExpandRaw(LootContext context, List<ILootEntry> output);
+
+    private sealed record ModifiedEntry(ILootEntry Inner, LootFunction Modifier) : ILootEntry {
+        public int GetWeight(float luck) => Inner.GetWeight(luck);
+
+        public void CreateItemStack(Action<ItemStack> output, LootContext context) {
+            Inner.CreateItemStack(stack => output(Modifier.Apply(stack, context)), context);
+        }
     }
 }
 
 /// <summary>
-/// <c>LootPoolSingletonContainer</c>: one entry, carrying a weight, a quality and its own functions.
-/// The functions run on what this entry produces, before the pool's and the table's.
+/// <c>SingleEntryContainerBase</c>: one entry, carrying a weight and a quality.
 /// </summary>
 public abstract record LootSingletonEntry(
-    ILootCondition[] Conditions,
+    ILootCondition? Condition,
     int Weight,
     int Quality,
-    LootFunction[] Functions) : LootEntryContainer(Conditions), ILootEntry {
+    LootFunction? Modifier) : LootEntryContainer(Condition, Modifier), ILootEntry {
 
-    public override bool Expand(LootContext context, List<ILootEntry> output) {
-        if (!CanRun(context)) {
-            return false;
-        }
-
+    protected override bool ExpandRaw(LootContext context, List<ILootEntry> output) {
         output.Add(this);
         return true;
     }
 
-    /// <summary><c>LootPoolSingletonContainer.EntryBase.getWeight</c>.</summary>
+    /// <summary><c>UniformContainerBase.EntryBase.getWeight</c>.</summary>
     public int GetWeight(float luck) {
         return Math.Max(Mth.Floor(Weight + Quality * luck), 0);
     }
 
-    public void CreateItemStack(Action<ItemStack> output, LootContext context) {
-        CreateRawItemStack(stack => output(LootTable.ApplyAll(Functions, stack, context)), context);
-    }
-
-    protected abstract void CreateRawItemStack(Action<ItemStack> output, LootContext context);
+    public abstract void CreateItemStack(Action<ItemStack> output, LootContext context);
 }
 
-/// <summary><c>LootItem</c>: one stack of one item, count one before the functions run.</summary>
+/// <summary><c>LootItem</c>: one stack of one item, count one before any modifier runs.</summary>
 public sealed record ItemLootEntry(
     Identifier Item,
-    ILootCondition[] Conditions,
+    ILootCondition? Condition,
     int Weight,
     int Quality,
-    LootFunction[] Functions) : LootSingletonEntry(Conditions, Weight, Quality, Functions) {
+    LootFunction? Modifier) : LootSingletonEntry(Condition, Weight, Quality, Modifier) {
 
-    protected override void CreateRawItemStack(Action<ItemStack> output, LootContext context) {
+    public override void CreateItemStack(Action<ItemStack> output, LootContext context) {
         output(new ItemStack(context.Registry.Items[Item]));
     }
 }
@@ -90,12 +100,12 @@ public sealed record ItemLootEntry(
 /// </summary>
 public sealed record DynamicLootEntry(
     Identifier Name,
-    ILootCondition[] Conditions,
+    ILootCondition? Condition,
     int Weight,
     int Quality,
-    LootFunction[] Functions) : LootSingletonEntry(Conditions, Weight, Quality, Functions) {
+    LootFunction? Modifier) : LootSingletonEntry(Condition, Weight, Quality, Modifier) {
 
-    protected override void CreateRawItemStack(Action<ItemStack> output, LootContext context) { }
+    public override void CreateItemStack(Action<ItemStack> output, LootContext context) { }
 }
 
 /// <summary>
@@ -105,13 +115,10 @@ public sealed record DynamicLootEntry(
 /// </summary>
 public sealed record AlternativesLootEntry(
     LootEntryContainer[] Children,
-    ILootCondition[] Conditions) : LootEntryContainer(Conditions) {
+    ILootCondition? Condition,
+    LootFunction? Modifier) : LootEntryContainer(Condition, Modifier) {
 
-    public override bool Expand(LootContext context, List<ILootEntry> output) {
-        if (!CanRun(context)) {
-            return false;
-        }
-
+    protected override bool ExpandRaw(LootContext context, List<ILootEntry> output) {
         foreach (LootEntryContainer child in Children) {
             if (child.Expand(context, output)) {
                 return true;
